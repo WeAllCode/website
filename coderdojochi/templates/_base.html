@@ -1,0 +1,54 @@
+{% load staticfiles i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8">
+        <meta property="og:url" content="http://coderdojochi.org" />
+        <meta property="og:image" content="http://coderdojochi.org/assets/images/logo.png" />
+        <meta property="og:title" content="CoderDojoChi" />
+        <title>{% block title_base %}CoderDojoChi | {% block title %}{{ SITE_NAME }}{% endblock %}{% endblock %}</title>
+        <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon" />
+        {% block style_base %}
+        <link href="{% static "css/cdc.css" %}" rel="stylesheet">
+        {% block extra_style %}{% endblock %}
+        {% endblock %}
+
+        {% block html5shim %}
+        <!--[if lt IE 9]><script src="{% static "js/libs/html5shiv/html5shiv.js" %}"></script><![endif]-->
+        {% endblock %}
+
+        {% block extra_head %}{% endblock %}
+    </head>
+
+    <body class="{% block body_class %}{% endblock %}">
+        <div class="wrap">
+            {% include "_nav.html" %}
+            {% block body_base %}
+                <div class="container">
+                    {% include "_messages.html" %}
+                    {% block content %}{% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+        {% block footer_base %}
+        <footer>
+            <div class="container">
+                <p class="text-center muted copyright">&copy;{% now "Y" %}. All rights reserved.</p>
+            </div>
+        </footer>
+        {% endblock %}
+
+        {% block script_base %}
+        <script src="{% static "build/js/cdc.min.js" %}"></script>
+
+        {% block extra_script %}{% endblock %}
+        {% endblock %}
+
+        {% block extra_body %}{% endblock %}
+
+        <!-- Analytics -->
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//stats.g.doubleclick.net/dc.js','ga');ga('create', 'UA-38950032-2', 'coderdojochi.org');ga('send', 'pageview');
+        </script>
+
+    </body>
+</html>

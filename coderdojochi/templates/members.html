@@ -1,0 +1,20 @@
+{% extends "_base.html" %}
+
+{% block title %}Members{% endblock %}
+
+{% block body_class %}members{% endblock %}
+
+{% block content %}
+<h1>YOU ARE {{ user }}! YAAAA!!!</h1>
+<h2>Upcoming Classes:</h2>
+{% if upcoming_classes %}
+<ul>
+    {% for class in upcoming_classes %}
+    <li>{{ class.title }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You don't have any upcoming classes yet!</p>
+{% endif %}
+<p><a href="{% url 'home' %}">back</a></p>
+{% endblock %}

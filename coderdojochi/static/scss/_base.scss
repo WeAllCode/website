@@ -1,0 +1,201 @@
+// ---------------------------------------------------------------------------
+// Imports
+
+@import "compass/utilities";
+@import "susy";
+
+// ---------------------------------------------------------------------------
+// Basic Grid
+
+$total-columns  : 12;
+$column-width   : 4em;
+$gutter-width   : 1em;
+$grid-padding   : $gutter-width;
+
+// ---------------------------------------------------------------------------
+// Media Queries
+
+$extra-large-desktop-layout: 130em 12;
+$large-desktop-layout: 95em 12 130em;
+$desktop-layout: 59em 12;
+$tablet-layout: 40em 12 59em;
+$tablet-and-up: 40em 12;
+$small-tablet-and-up: 55em 12;
+
+// ---------------------------------------------------------------------------
+// Colors
+
+$gray: #999;
+$light-gray: #eee;
+
+
+// ---------------------------------------------------------------------------
+// Mixins
+
+@mixin opacity($trans: 0.5) {
+    filter: alpha(opacity=($trans * 100));
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=#{$trans * 100})';
+    -moz-opacity: $trans;
+    -khtml-opacity: $trans;
+    opacity: $trans;
+}
+
+@mixin border-radius($radius: 3px 3px 3px 3px) {
+    -moz-border-radius: $radius;
+    -webkit-border-radius: $radius;
+    border-radius: $radius;
+}
+
+@mixin transition($transitions: all 1s ease) {
+    -moz-transition: $transitions;
+    -webkit-transition: $transitions;
+    -o-transition: $transitions;
+    transition: $transitions;
+}
+
+
+@mixin display-flex() {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+@mixin flex($flex: auto) {
+    -webkit-box-flex: $flex;
+    -moz-box-flex: $flex;
+    -webkit-flex: $flex;
+    -ms-flex: $flex;
+    flex: $flex;
+}
+
+@mixin horizontal-gradient($start, $end) {
+    background-color: $start;
+    background-image: -moz-linear-gradient(left, $start, $end);
+    background-image: -webkit-gradient(linear, left top, right top, color-stop(0, $start), color-stop(1, $end));
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$start}', endColorStr='#{$end}', gradientType=1);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$start}', endColorStr='#{$end}', gradientType=1)";
+}
+
+@mixin vertical-gradient($start, $end) {
+  background-color: $start;
+  background-image: -moz-linear-gradient(top, $start, $end);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, $start), color-stop(1, $end));
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$start}', EndColorStr='#{$end}');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$start}', EndColorStr='#{$end}')";
+}
+
+@mixin radial-gradient($start, $end) {
+    /* fallback */
+    background-color: $end;
+    background: -webkit-gradient(radial, center center, 0, center center, 460, from($start), to($end));
+    background: -webkit-radial-gradient(circle, $start, $end);
+    background: -moz-radial-gradient(circle, $start, $end);
+    background: -ms-radial-gradient(circle, $start, $end);
+}
+
+
+@mixin box-shadow($settings: 0 2px 0 0 #000) {
+    -moz-box-shadow: $settings;
+    -webkit-box-shadow: $settings;
+    box-shadow: $settings;
+}
+
+@mixin button() {
+
+    font: 14px sans-serif;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 1px 1px 1px #000000;
+
+    display: inline-block;
+    padding: 10px 8px;
+    margin: 0 0 5px 0;
+    min-width: 75px;
+
+    @include border-radius(3px);
+
+    background: rgba(58, 177, 239, 0.9);
+
+    @include box-shadow(0px 2px 0px 0px #287ca8);
+
+    &.active {
+        background: #a9d36b !important;
+        @include box-shadow(0px 2px 0px 0px #75d36b);
+    }
+
+    @include at-breakpoint($desktop-layout) {
+        margin: 0 5px 10px 0;
+    }
+
+    @include at-breakpoint($tablet-layout) {
+        margin: 0 5px 10px 0;
+    }
+}
+
+@mixin columns($count: 3, $gap: 20px, $fill: auto) {
+    -webkit-column-count: $count;
+    -webkit-column-gap: $gap;
+    -webkit-column-fill: $fill;
+    -moz-column-count: $count;
+    -moz-column-gap: $gap;
+    -moz-column-fill: $fill;
+    column-count: $count;
+    column-gap: $gap;
+    column-fill: $fill;
+}
+
+@mixin column-break-inside($break: avoid) {
+    -webkit-column-break-inside: $break;
+    -moz-column-break-inside: $break;
+    column-break-inside: $break;
+}
+
+@mixin box-sizing($sizing: border-box) {
+    -webkit-box-sizing: $sizing;
+    -moz-box-sizing: $sizing;
+    box-sizing: $sizing;
+}
+
+@mixin blur($value: 3px) {
+    -webkit-filter: blur($value);
+    -moz-filter: blur($value);
+    -o-filter: blur($value);
+    -ms-filter: blur($value);
+    filter: blur($value);
+}
+
+
+
+// ---------------------------------------------------------------------------
+// Placeholder Helpers
+
+%ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    /* IE 6/7 fallback */
+    *text-indent: -9999px;
+
+    &:before {
+        content: "";
+        display: block;
+        width: 0;
+        height: 150%;
+    }
+}
+
+%clearfix {
+    zoom:1;
+    &:before, &:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        overflow: hidden;
+    }
+    &:after {
+        clear: both;
+    }
+}
