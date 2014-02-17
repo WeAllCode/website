@@ -32,7 +32,6 @@ class Member(models.Model):
 
 class Student(models.Model):
     user = models.ForeignKey(CDCUser)
-
     active = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)

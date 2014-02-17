@@ -4,8 +4,13 @@
         <a href="/" class="brand">CoderDojo Chicago</a>
         <nav role="navigation">
             <ul>
-                <li><a href="{% url 'members' %}">Members</a></li>
+                <li>{% if request.path != '/members/' %}<a href="{% url 'members' %}">{% endif %}Members{% if request.path != '/members' %}</a>{% endif %}</li>
                 <li><a href="/admin">Admin</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+                {% else %}
+                <li>{% if request.path != '/accounts/login/' %}<a href="{% url 'auth_login' %}">{% endif %}Login{% if request.path != '/accounts/login/' %}</a>{% endif %}</li>
+                {% endif %}
             </ul>
         </nav>
     </div>

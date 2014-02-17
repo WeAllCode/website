@@ -1,4 +1,4 @@
-"""
+'''
 Django settings for coderdojochi project.
 
 For more information on this file, see
@@ -6,7 +6,7 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
+'''
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -50,11 +50,24 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.request'
+)
+
 ROOT_URLCONF = 'coderdojochi.urls'
 
 WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
 AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+
+LOGIN_REDIRECT_URL = '/members'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -81,29 +94,29 @@ USE_TZ = True
 
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PACKAGE_ROOT, "media")
+# Example: '/var/www/example.com/media/'
+MEDIA_ROOT = os.path.join(PACKAGE_ROOT, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
-# Examples: "http://example.com/media/", "http://media.example.com/"
+# Examples: 'http://example.com/media/', 'http://media.example.com/'
 MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/var/www/example.com/static/"
-MEDIA_ROOT = os.path.join(PACKAGE_ROOT, "static")
+# in apps' 'static/' subdirectories and in STATICFILES_DIRS.
+# Example: '/var/www/example.com/static/'
+MEDIA_ROOT = os.path.join(PACKAGE_ROOT, 'static')
 
 # URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
+# Example: 'http://example.com/static/', 'http://static.example.com/'
 STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Put strings here, like '/home/html/static' or 'C:/www/django/static'.
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     #'/Users/bkellgren/Sites/arb/arb/admin_bootstrap/static',
-    os.path.join(PACKAGE_ROOT, "static"),
+    os.path.join(PACKAGE_ROOT, 'static'),
 )
