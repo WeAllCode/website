@@ -59,4 +59,7 @@ nosetests.xml
 .project
 .pydevproject
 
-arb/local_settings.py
+# Django Development
+
+*.sqlite3
+coderdojochi/migrations
