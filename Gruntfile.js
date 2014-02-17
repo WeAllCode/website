@@ -99,7 +99,7 @@ module.exports = function(grunt) {
         },
 
         jshint: {
-            files: ['<%= files.js %>/**/*.js'],
+            files: ['<%= files.js %>/*.js'],
             options: {
                 forin: true,
                 noarg: true,
@@ -115,8 +115,7 @@ module.exports = function(grunt) {
                 devel: true,
                 maxerr: 100,
                 ignores: [
-                    '<%= files.js %>/vendor/**/*.js',
-                    '<%= files.js %>/**/*.min.js'
+                    '<%= files.js %>/*.min.js'
                 ],
                 // ignore certain warnings
                 '-W040': true

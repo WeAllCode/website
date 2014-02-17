@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block title %}My Dojo{% endblock %}
+
+{% block body_class %}dojo{% endblock %}
+
+{% block content %}
+<h1>Hello {{ user }}. Thanks for being a CoderDojoChi {{ user.role }}!</h1>
+<p><a href="{% url 'home' %}">back</a></p>
+
+{% if form %}
+<h2>Mentor Bio:</h2>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="submit">Save</button>
+</form>
+{% endif %}
+
+<h2>Upcoming Classes:</h2>
+{% if upcoming_classes %}
+<ul>
+    {% for class in upcoming_classes %}
+    <li>{{ class.title }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You don't have any upcoming classes yet!</p>
+{% endif %}
+
+{% endblock %}

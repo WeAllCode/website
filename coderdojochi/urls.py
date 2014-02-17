@@ -8,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'coderdojochi.views.home', name='home'),
-    url(r'^members/$', 'coderdojochi.views.members', name='members'),
+    url(r'^dojo/$', 'coderdojochi.views.dojo', name='dojo'),
 
     #override the default urls
     url(r'^password/change/$', auth_views.password_change, name='password_change'),

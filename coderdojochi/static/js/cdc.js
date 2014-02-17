@@ -8,14 +8,12 @@ CoderDojoChi.org Global JS
 
 var CDC = CDC || {};
 
-
 CDC.global = (function($, document, window, undefined) {
     "use strict";
 
     // app global properties
 
     var $thing;
-
 
     /* Public Methods _________________________________________________________________ */
 
@@ -33,6 +31,10 @@ CDC.global = (function($, document, window, undefined) {
         $(document)
             .on('click', '.thing', click);
 
+        // remove any alerts
+        setTimeout(function(){
+            $('.alert').fadeOut();
+        }, 3000);
     }
 
     /* Private Methods ________________________________________________________________ */
@@ -48,3 +50,7 @@ CDC.global = (function($, document, window, undefined) {
     };
 
 }(jQuery, document, window, undefined));
+
+$(function (){
+    CDC.global.init();
+});

@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    # django contrib
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +39,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #vendor
+    'registration',
+    'south',
+
+    #coderdojochi
     'coderdojochi',
 )
 
@@ -67,7 +73,12 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
 AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
-LOGIN_REDIRECT_URL = '/members'
+# django-registration
+ACCOUNT_ACTIVATION_DAYS = 7
+LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases

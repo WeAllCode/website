@@ -6,6 +6,15 @@
 {% block content %}
 <form method="post" action=".">
     {% csrf_token %}
+
+    <p class="required">
+        <label for="id_role">Desired Role:</label>
+        <select id="id_role" name="role">
+            <option value="mentor">Mentor</option>
+            <option value="student">Student</option>
+        </select>
+    </p>
+
     {{ form.as_p }}
 
     <input type="submit" value="{% trans 'Submit' %}" />
