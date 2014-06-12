@@ -10,7 +10,7 @@
 <div class="panels">
     <div class="splash panel">
         <div class="panel-content">
-            <video autoplay loop muted poster="{% static "images/splash-bg.jpg" %}" class="bg-video">
+            <video autoplay loop muted poster="{% static "images/transparent.png" %}" class="bg-video">
                 <source src="{% static "video/class_timelapse.mp4" %}" type="video/webm">
             </video>
             <div class="clouds">
@@ -55,6 +55,7 @@ $(function (){
         $('html, body').animate({
             scrollTop: $(".welcome:first").offset().top
         }, 750);
+        $(this).off('click');
     })
 });
 
