@@ -1,8 +1,7 @@
-{% extends "_base.html" %}
+{% extends "registration/_base.html" %}
 {% load i18n %}
+{% block title_placeholder %}Activation Sent{% endblock %}
 
-{% block title %}Activation Sent{% endblock %}
-
-{% block content %}
+{% block content_placeholder %}
 <p>{% trans "You are now registered. Activation email sent." %}</p>
 {% endblock %}

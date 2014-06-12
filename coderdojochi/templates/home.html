@@ -1,10 +1,62 @@
 {% extends "_base.html" %}
 
+{% load staticfiles i18n %}
+
 {% block title %}Welcome!{% endblock %}
 
 {% block body_class %}homepage{% endblock %}
 
 {% block content %}
-<h1>CoderDojoChi</h1>
-<p>Welcome!</p>
+<div class="panels">
+    <div class="splash panel">
+        <div class="panel-content">
+            <video autoplay loop muted poster="{% static "images/splash-bg.jpg" %}" class="bg-video">
+                <source src="{% static "video/class_timelapse.mp4" %}" type="video/webm">
+            </video>
+            <div class="clouds">
+                <div class="cloud-1"></div>
+                <div class="cloud-2"></div>
+                <div class="cloud-3"></div>
+                <div class="cloud-4"></div>
+                <div class="cloud-5"></div>
+            </div>
+        </div>
+    </div>
+    <div class="welcome panel">
+        <div class="panel-content">
+            <div class="container">
+                <h1>This is our code, and yours.</h1>
+                <p class="highlight">We are here to open doors that are otherwise closed.</p>
+                <p class="highlight">We are here to freely offer our knowledge.</p>
+                <p class="highlight">We speak the language of the future.</p>
+                <p class="highlight">A language that does not discriminate by race, religion, nationality, or gender.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_script %}
+<script src="{% static "js/vendor/jquery.scrollTo.js" %}"></script>
+<script src="{% static "js/vendor/jquery.snapscroll.js" %}"></script>
+<script src="{% static "js/vendor/skrollr.min.js" %}"></script>
+<script>
+// init skrollr
+var skrollrAPI = skrollr.init({forceHeight: false});
+
+$(function (){
+    $('.panels:first').snapscroll({
+        scrollSpeed: 750,
+        scrollEndSpeed: 300
+    });
+    $('.brand').on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: $(".welcome:first").offset().top
+        }, 750);
+    })
+});
+
+</script>
 {% endblock %}
