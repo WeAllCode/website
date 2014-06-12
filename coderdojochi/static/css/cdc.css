@@ -636,16 +636,16 @@ footer a:hover {
   width: auto;
   height: auto;
   z-index: -100;
-  background: url(/static/images/splash-bg.jpg) no-repeat;
+  background: transparent url(/static/images/splash-bg.jpg) no-repeat;
   background-size: cover;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003241}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003237}}
 .welcome {
   background: url(/static/images/welcome-hero.jpg) no-repeat;
   background-size: cover;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003245}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003241}}
 .welcome h1 {
   color: #fff;
   font-size: 5em;
@@ -654,7 +654,7 @@ footer a:hover {
   line-height: 1.1;
   margin-top: 120px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003254}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003250}}
 .welcome .highlight {
   margin-bottom: 15px;
   padding: 10px;
@@ -666,7 +666,7 @@ footer a:hover {
   clear: both;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003266}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003262}}
 .clouds {
   position: absolute;
   overflow: hidden;
@@ -681,7 +681,7 @@ footer a:hover {
   -o-transform: translatez(0);
   transform: translatez(0);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003276}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003272}}
 .clouds div {
   width: 200px;
   height: 60px;
@@ -691,7 +691,7 @@ footer a:hover {
   border-radius: 200px;
   position: relative;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003283}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003279}}
 .clouds div:before, .clouds div:after {
   content: '';
   position: absolute;
@@ -709,7 +709,7 @@ footer a:hover {
   -o-transform: rotate(30deg);
   transform: rotate(30deg);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003296}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003292}}
 .clouds div:after {
   width: 120px;
   height: 120px;
@@ -717,7 +717,7 @@ footer a:hover {
   left: auto;
   right: 15px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003305}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003301}}
 .clouds .cloud-1 {
   -webkit-animation: moveclouds 30s linear infinite;
   -moz-animation: moveclouds 30s linear infinite;
@@ -728,7 +728,7 @@ footer a:hover {
   -khtml-opacity: 0.85;
   opacity: 0.85;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003310}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003306}}
 .clouds .cloud-2 {
   left: 200px;
   -webkit-transform: scale(0.5);
@@ -745,7 +745,7 @@ footer a:hover {
   -moz-animation: moveclouds 50s linear infinite;
   -o-animation: moveclouds 50s linear infinite;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003318}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003314}}
 .clouds .cloud-3 {
   left: -450px;
   top: -150px;
@@ -763,7 +763,7 @@ footer a:hover {
   -moz-animation: moveclouds 40s linear infinite;
   -o-animation: moveclouds 40s linear infinite;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003327}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003323}}
 .clouds .cloud-4 {
   left: 470px;
   top: -250px;
@@ -781,7 +781,7 @@ footer a:hover {
   -moz-animation: moveclouds 36s linear infinite;
   -o-animation: moveclouds 36s linear infinite;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003336}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003332}}
 .clouds .cloud-5 {
   left: -150px;
   top: -150px;
@@ -801,6 +801,18 @@ footer a:hover {
 }
 
 @-webkit-keyframes moveclouds {
+  /* line 343, ../scss/cdc.scss */
+  0% {
+    margin-left: 100%;
+  }
+
+  /* line 344, ../scss/cdc.scss */
+  100% {
+    margin-left: -20%;
+  }
+}
+
+@-moz-keyframes moveclouds {
   /* line 347, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
@@ -812,25 +824,13 @@ footer a:hover {
   }
 }
 
-@-moz-keyframes moveclouds {
+@-o-keyframes moveclouds {
   /* line 351, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
   }
 
   /* line 352, ../scss/cdc.scss */
-  100% {
-    margin-left: -20%;
-  }
-}
-
-@-o-keyframes moveclouds {
-  /* line 355, ../scss/cdc.scss */
-  0% {
-    margin-left: 100%;
-  }
-
-  /* line 356, ../scss/cdc.scss */
   100% {
     margin-left: -20%;
   }
