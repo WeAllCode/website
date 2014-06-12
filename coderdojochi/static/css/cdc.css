@@ -674,7 +674,7 @@ footer a:hover {
   width: 100%;
   top: 35%;
   z-index: 2;
-  padding: 120px 0;
+  padding: 100px 0;
   -webkit-transform: translatez(0);
   -moz-transform: translatez(0);
   -ms-transform: translatez(0);
@@ -698,8 +698,6 @@ footer a:hover {
   background: #fff;
   width: 100px;
   height: 80px;
-  z-index: 2;
-  position: absolute;
   top: -15px;
   left: 10px;
   -moz-border-radius: 100px;
@@ -711,7 +709,7 @@ footer a:hover {
   -o-transform: rotate(30deg);
   transform: rotate(30deg);
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003298}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003296}}
 .clouds div:after {
   width: 120px;
   height: 120px;
@@ -719,7 +717,7 @@ footer a:hover {
   left: auto;
   right: 15px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003307}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003305}}
 .clouds .cloud-1 {
   -webkit-animation: moveclouds 30s linear infinite;
   -moz-animation: moveclouds 30s linear infinite;
@@ -730,7 +728,7 @@ footer a:hover {
   -khtml-opacity: 0.85;
   opacity: 0.85;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003312}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003310}}
 .clouds .cloud-2 {
   left: 200px;
   -webkit-transform: scale(0.5);
@@ -747,7 +745,7 @@ footer a:hover {
   -moz-animation: moveclouds 50s linear infinite;
   -o-animation: moveclouds 50s linear infinite;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003320}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003318}}
 .clouds .cloud-3 {
   left: -450px;
   top: -150px;
@@ -765,7 +763,7 @@ footer a:hover {
   -moz-animation: moveclouds 40s linear infinite;
   -o-animation: moveclouds 40s linear infinite;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003329}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003327}}
 .clouds .cloud-4 {
   left: 470px;
   top: -250px;
@@ -783,7 +781,7 @@ footer a:hover {
   -moz-animation: moveclouds 36s linear infinite;
   -o-animation: moveclouds 36s linear infinite;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003338}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003336}}
 .clouds .cloud-5 {
   left: -150px;
   top: -150px;
@@ -803,36 +801,36 @@ footer a:hover {
 }
 
 @-webkit-keyframes moveclouds {
-  /* line 349, ../scss/cdc.scss */
+  /* line 347, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
   }
 
-  /* line 350, ../scss/cdc.scss */
+  /* line 348, ../scss/cdc.scss */
   100% {
     margin-left: -20%;
   }
 }
 
 @-moz-keyframes moveclouds {
-  /* line 353, ../scss/cdc.scss */
+  /* line 351, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
   }
 
-  /* line 354, ../scss/cdc.scss */
+  /* line 352, ../scss/cdc.scss */
   100% {
     margin-left: -20%;
   }
 }
 
 @-o-keyframes moveclouds {
-  /* line 357, ../scss/cdc.scss */
+  /* line 355, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
   }
 
-  /* line 358, ../scss/cdc.scss */
+  /* line 356, ../scss/cdc.scss */
   100% {
     margin-left: -20%;
   }
