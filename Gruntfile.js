@@ -28,16 +28,16 @@ module.exports = function(grunt) {
         },
 
         watch: {
-            scripts: {
-                files: [
-                    '<%= files.grunt %>',
-                    '<%= files.js %>/**/*.js'
-                ],
-                tasks: ['jshint'],
-                options: {
-                    livereload: true
-                }
-            },
+            // scripts: {
+            //     files: [
+            //         '<%= files.grunt %>',
+            //         '<%= files.js %>/**/*.js'
+            //     ],
+            //     tasks: ['jshint'],
+            //     options: {
+            //         livereload: true
+            //     }
+            // },
             scss: {
                 files: ['<%= files.sass %>/**/*.scss'],
                 tasks: ['compass:dev']

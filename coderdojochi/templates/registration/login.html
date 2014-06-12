@@ -1,9 +1,9 @@
-{% extends "_base.html" %}
+{% extends "registration/_base.html" %}
 {% load i18n %}
 
-{% block title %}Login{% endblock %}
+{% block title_placeholder %}Login{% endblock %}
 
-{% block content %}
+{% block content_placeholder %}
     <form method="post" action=".">
         {% csrf_token %}
         {{ form.as_p }}

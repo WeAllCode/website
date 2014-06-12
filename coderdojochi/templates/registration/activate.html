@@ -1,20 +1,20 @@
-{% extends "_base.html" %}
+{% extends "registration/_base.html" %}
 {% load i18n %}
 
-{% block title %}Account Activated!{% endblock %}
+{% block title_placeholder %}Account Activated!{% endblock %}
 
-{% block content %}
+{% block content_placeholder %}
 
-{% if account %}
+    {% if account %}
 
-<p>{% trans "Account successfully activated" %}</p>
+    <p>{% trans "Account successfully activated" %}</p>
 
-<p><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></p>
+    <p><a href="{% url 'auth_login' %}">{% trans "Log in" %}</a></p>
 
-{% else %}
+    {% else %}
 
-<p>{% trans "Account activation failed" %}</p>
+    <p>{% trans "Account activation failed" %}</p>
 
-{% endif %}
+    {% endif %}
 
 {% endblock %}

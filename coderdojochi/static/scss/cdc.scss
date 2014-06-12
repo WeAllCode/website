@@ -10,22 +10,6 @@ $global-spacing: 10px;
 @import 'global/*.png';
 @include all-global-sprites;
 
-
-// ---------------------------------------------------------------------------
-// Fonts
-
-@font-face {
-    font-family: 'Proxima Nova';
-    src: url('fonts/proximanova-regular-webfont.eot');
-    src: url('fonts/proximanova-regular-webfont.eot?#iefix') format('embedded-opentype'),
-    url('fonts/proximanova-regular-webfont.woff') format('woff'),
-    url('fonts/proximanova-regular-webfont.ttf') format('truetype'),
-    url('fonts/proximanova-regular-webfont.svg#proxima_nova_rgregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
 // ---------------------------------------------------------------------------
 // Global Helpers
 
@@ -52,11 +36,24 @@ $global-spacing: 10px;
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 
-
+body{
+    font-family: 'Open Sans', sans-serif;
+}
 
 /* -------------------------------------------------------------------------*/
 /* Global Layout */
 
+html, body {
+    height: 100%;
+}
+
+body {
+    padding-top: 140px;
+
+    &.homepage {
+        padding-top: 0;
+    }
+}
 
 .container {
     @include container;
@@ -64,13 +61,116 @@ $global-spacing: 10px;
 }
 
 .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    background: rgba(255,255,255,.8);
+    overflow: visible;
+    z-index: 3;
+    @include transform(translatez(0));
 
-    .brand {
+    .social {
+
+        li {
+            a {
+                color: #666;
+                font-size: 1.5em;
+                margin-left: 5px;
+                padding: 0;
+
+                &:hover {
+                    color: #222;
+                    background: none;
+                }
+            }
+        }
+    }
+
+    .banner {
+        background: #86C447;
+        height: 40px;
+        margin-top: 20px;
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        float: left;
+
+        &.nav-right {
+            float: right;
+        }
+    }
+
+    li {
+        display: inline-block;
+
+        a {
+            display: block;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #fff;
+            letter-spacing: .05em;
+            font-weight: 600;
+            height: 40px;
+            line-height: 40px;
+            padding: 0 10px;
+
+            &:hover, &.active {
+                background: #4f9752;
+            }
+        }
+    }
+}
+
+.brand {
+    position: fixed;
+    left: 50%;
+    top: 15px;
+    margin-left: -94px;
+    z-index: 4;
+    @include perspective(800px);
+
+    .logo {
         display: block;
         @extend .global-logo;
         @extend %ir;
+
+        @include transform(rotateX(0deg) rotateY(0deg) rotateZ(0deg));
+        @include transition(all .4s ease-in-out);
+        @include transform-style(preserve-3d);
+
+        &:hover{
+            @include transform(rotateX(0deg) rotateY(360deg) rotateZ(0deg));
+        }
     }
 }
+
+footer {
+    color: #666;
+
+    p {
+        margin: 10px 0;
+        font-size: .9em;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    a {
+        display: inline-block;
+        color: #333;
+        text-decoration: none;
+        margin-left: 10px;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
 
 /* -------------------------------------------------------------------------*/
 /* Modules */
@@ -81,7 +181,7 @@ $global-spacing: 10px;
     padding: 15px;
     margin-bottom: 10px;
     border: 1px solid transparent;
-    border-radius: 4px;
+    @include border-radius(4px);
 
     &.alert-success {
         background-color: #dff0d8;
@@ -90,7 +190,169 @@ $global-spacing: 10px;
     }
 }
 
+.panels {
+    display: inline;
+}
+
+.panel {
+    height: 100%;
+    width: 100%;
+    display: table;
+}
+
+.panel-content {
+    display: table-cell;
+    vertical-align: middle;
+
+    .splash & {
+        vertical-align: auto;
+    }
+}
+
+.hero-image {
+    min-width: 100%;
+}
+
 /* -------------------------------------------------------------------------*/
 /* Pages */
+
+// homepage
+
+.bg-video {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    background: url(/static/images/splash-bg.jpg) no-repeat;
+    background-size: cover;
+}
+
+.splash {
+
+}
+
+.welcome {
+    background: url(/static/images/welcome-hero.jpg) no-repeat;
+    background-size: cover;
+
+    h1 {
+        color: #fff;
+        font-size: 5em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        line-height: 1.1;
+        margin-top: 120px;
+    }
+
+    .highlight {
+        margin-bottom: 15px;
+        padding: 10px;
+        background: #FFF;
+        background: rgba(255, 255, 255, 0.6);
+        font-size: 20px;
+        line-height: 1.25;
+        float: left;
+        clear: both;
+    }
+}
+
+.clouds{
+    position: absolute;
+    overflow: hidden;
+    left: 0;
+    width: 100%;
+    top: 35%;
+    z-index: 2;
+    padding: 120px 0;
+    @include transform(translatez(0));
+
+    div {
+        width: 200px;
+        height: 60px;
+        background: #fff;
+        @include border-radius(200px);
+        position: relative;
+
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            background: #fff;
+            width: 100px;
+            height: 80px;
+            z-index: 2;
+            position: absolute;
+            top: -15px;
+            left: 10px;
+
+            @include border-radius(100px);
+            @include transform(rotate(30deg));
+        }
+
+        &:after {
+            width: 120px;
+            height: 120px;
+            top: -55px;
+            left: auto;
+            right: 15px;
+        }
+    }
+
+    .cloud-1 {
+        @include animation(moveclouds 30s linear infinite);
+        @include opacity(0.85);
+    }
+
+    .cloud-2 {
+        left: 200px;
+
+        @include transform(scale(0.5));
+        @include opacity(0.5);
+        @include animation(moveclouds 50s linear infinite);
+    }
+
+    .cloud-3 {
+        left: -450px;
+        top: -150px;
+
+        @include transform(scale(0.7));
+        @include opacity(0.8);
+        @include animation(moveclouds 40s linear infinite);
+    }
+
+    .cloud-4 {
+        left: 470px;
+        top: -250px;
+
+        @include transform(scale(0.6));
+        @include opacity(0.6);
+        @include animation(moveclouds 36s linear infinite);
+    }
+
+    .cloud-5 {
+        left: -150px;
+        top: -150px;
+
+        @include transform(scale(0.7));
+        @include opacity(0.7);
+        @include animation(moveclouds 40s linear infinite);
+    }
+}
+
+@-webkit-keyframes moveclouds {
+    0% {margin-left: 100%;}
+    100% {margin-left: -20%;}
+}
+@-moz-keyframes moveclouds {
+    0% {margin-left: 100%;}
+    100% {margin-left: -20%;}
+}
+@-o-keyframes moveclouds {
+    0% {margin-left: 100%;}
+    100% {margin-left: -20%;}
+}
 
 

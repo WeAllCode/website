@@ -24,13 +24,6 @@ CDC.global = (function($, document, window, undefined) {
             data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
         });
 
-        // select dom elements
-        $thing = $('.thing');
-
-        // attach events
-        $(document)
-            .on('click', '.thing', click);
-
         // remove any alerts
         setTimeout(function(){
             $('.alert').fadeOut();
