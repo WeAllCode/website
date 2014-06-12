@@ -230,12 +230,8 @@ footer {
     width: auto;
     height: auto;
     z-index: -100;
-    background: url(/static/images/splash-bg.jpg) no-repeat;
+    background: transparent url(/static/images/splash-bg.jpg) no-repeat;
     background-size: cover;
-}
-
-.splash {
-
 }
 
 .welcome {
