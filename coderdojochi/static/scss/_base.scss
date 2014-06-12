@@ -53,6 +53,33 @@ $light-gray: #eee;
     transition: $transitions;
 }
 
+@mixin perspective($perspective) {
+    -moz-perspective: $perspective;
+    -webkit-perspective: $perspective;
+    -ms-perspective: $perspective;
+    -o-perspective: $perspective;
+    perspective: $perspective;
+}
+
+@mixin animation($animation) {
+    -webkit-animation: $animation;
+    -moz-animation: $animation;
+    -o-animation: $animation;
+}
+
+@mixin transform-style($transform-style) {
+    -webkit-transform-style: $transform-style;
+    -moz-transform-style: $transform-style;
+}
+
+@mixin transform($transform) {
+    -webkit-transform: $transform;
+    -moz-transform: $transform;
+    -ms-transform: $transform;
+    -o-transform: $transform;
+    transform: $transform;
+}
+
 
 @mixin display-flex() {
     display: -webkit-box;

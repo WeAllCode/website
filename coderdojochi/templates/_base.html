@@ -8,6 +8,8 @@
         <title>{% block title_base %}CoderDojoChi | {% block title %}{{ SITE_NAME }}{% endblock %}{% endblock %}</title>
         <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon" />
         {% block style_base %}
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="{% static "css/cdc.css" %}" rel="stylesheet">
         {% block extra_style %}{% endblock %}
         {% endblock %}
@@ -20,19 +22,15 @@
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
-        <div class="wrap">
-            {% include "_nav.html" %}
-            {% block body_base %}
-                <div class="container">
-                    {% include "_messages.html" %}
-                    {% block content %}{% endblock %}
-                </div>
-            {% endblock %}
-        </div>
+        {% include "_nav.html" %}
+        {% block body_base %}
+            {% include "_messages.html" %}
+            {% block content %}{% endblock %}
+        {% endblock %}
         {% block footer_base %}
         <footer>
             <div class="container">
-                <p class="text-center muted copyright">&copy;{% now "Y" %}. All rights reserved.</p>
+                <p class="text-center copyright">&copy;{% now "Y" %}. All rights reserved. <span class="pull-right"><a href="#">Contact Us</a> <a href="#">Privacy &amp; Terms</a></span></p>
             </div>
         </footer>
         {% endblock %}
@@ -40,6 +38,7 @@
         {% block script_base %}
         <script src="{% static "js/vendor/jquery.min.js" %}"></script>
         <script src="{% static "js/cdc.js" %}"></script>
+
         {% block extra_script %}{% endblock %}
         {% endblock %}
 
