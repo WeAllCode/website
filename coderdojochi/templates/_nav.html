@@ -11,9 +11,9 @@
         <div class="container">
             <nav role="navigation">
                 <ul>
-                    <li><a{% if request.path == '/classes/' %} class="active"{% endif %} href="#">Classes</a></li>
-                    <li><a{% if request.path == '/volunteer/' %} class="active"{% endif %} href="#">Volunteer</a></li>
-                    <li><a{% if request.path == '/faq/' %} class="active"{% endif %} href="#">FAQs</a></li>
+                    <li><a{% if request.path == '/classes/' %} class="active"{% endif %} href="{% url 'classes' %}">Classes</a></li>
+                    <li><a{% if request.path == '/volunteer/' %} class="active"{% endif %} href="{% url 'volunteer' %}">Volunteer</a></li>
+                    <li><a{% if request.path == '/faq/' %} class="active"{% endif %} href="{% url 'faqs' %}">FAQs</a></li>
                 </ul>
                 <ul class="nav-right">
                     {% if user.is_authenticated %}
