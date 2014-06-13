@@ -21,6 +21,18 @@ def home(request, template_name="home.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
+def classes(request, template_name="classes.html"):
+
+    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+
+def volunteer(request, template_name="volunteer.html"):
+
+    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+
+def faqs(request, template_name="faqs.html"):
+
+    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+
 @login_required
 def dojo(request, template_name="dojo.html"):
 
