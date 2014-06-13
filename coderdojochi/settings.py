@@ -131,3 +131,20 @@ STATICFILES_DIRS = (
     #'/Users/bkellgren/Sites/arb/arb/admin_bootstrap/static',
     os.path.join(PACKAGE_ROOT, 'static'),
 )
+
+# search for environment specific settings to override settings.py
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
+try:
+    from test_settings import *
+except ImportError:
+    pass
+
+try:
+    from production_settings import *
+except ImportError:
+    pass
