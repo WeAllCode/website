@@ -63,3 +63,4 @@ nosetests.xml
 
 *.sqlite3
 coderdojochi/migrations
+test_settings.py
