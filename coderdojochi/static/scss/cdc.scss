@@ -147,7 +147,7 @@ body {
         @include transition(all .4s ease-in-out);
         @include transform-style(preserve-3d);
 
-        &:hover{
+        .homepage &:hover{
             @include transform(rotateX(0deg) rotateY(360deg) rotateZ(0deg));
         }
     }
@@ -221,18 +221,24 @@ footer {
 
 // homepage
 
-.bg-video {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -100;
-    background: transparent url(/static/images/splash-bg.jpg) no-repeat;
-    background-size: cover;
+
+.splash {
+
+    .bg-video {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        z-index: -100;
+        background: transparent url(/static/images/splash-bg.jpg) no-repeat;
+        background-size: cover;
+    }
 }
+
+
 
 .welcome {
     background: url(/static/images/welcome-hero.jpg) no-repeat;
