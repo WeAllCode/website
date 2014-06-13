@@ -2,6 +2,7 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext as _
+from django.utils import formats
 
 from django.template.defaultfilters import slugify
 
@@ -64,4 +65,4 @@ class Class(models.Model):
         verbose_name_plural = _("classes")
 
     def __unicode__(self):
-        return self.date + '|' + self.title
+        return self.title + ' | ' + formats.date_format(self.date, "SHORT_DATETIME_FORMAT")
