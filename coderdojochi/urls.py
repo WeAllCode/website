@@ -8,6 +8,11 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'coderdojochi.views.home', name='home'),
+
+    url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
+    url(r'^classes/$', 'coderdojochi.views.classes', name='classes'),
+    url(r'^faqs/$', 'coderdojochi.views.faqs', name='faqs'),
+
     url(r'^dojo/$', 'coderdojochi.views.dojo', name='dojo'),
 
     #override the default urls
