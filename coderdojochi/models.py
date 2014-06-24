@@ -46,16 +46,17 @@ class Student(models.Model):
     def __unicode__(self):
         return self.user.username
 
-
 class Class(models.Model):
     title = models.CharField(max_length=255)
-    date = models.DateTimeField(blank=True, null=True)
+    slug = models.SlugField(max_length=40, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     capacity = models.IntegerField(blank=True, null=True)
     teacher = models.ForeignKey(Mentor, blank=True, null=True, related_name="class_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="class_mentors")
     students = models.ManyToManyField(Student, blank=True, null=True)
-
     active = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
@@ -64,5 +65,12 @@ class Class(models.Model):
         verbose_name = _("class")
         verbose_name_plural = _("classes")
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Class, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.slug
+
     def __unicode__(self):
-        return self.title + ' | ' + formats.date_format(self.date, "SHORT_DATETIME_FORMAT")
+        return self.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")

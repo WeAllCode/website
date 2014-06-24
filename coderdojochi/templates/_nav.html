@@ -1,4 +1,4 @@
-{% load static %}
+{% load static avatar_tags %}
 <div class="navbar">
     <div class="container social" {% if request.path == '/' %}data-250="margin-top: -40px;" data-500="margin-top: 0px;"{% endif %}>
         <ul class="nav-right">
@@ -17,7 +17,7 @@
                 </ul>
                 <ul class="nav-right">
                     {% if user.is_authenticated %}
-                    <li><a{% if request.path == '/dojo/' %} class="active"{% endif %} href="{% url 'dojo' %}">My Dojo</a></li>
+                    <li><a{% if request.path == '/dojo/' %} class="active"{% endif %} href="{% url 'dojo' %}">{% avatar user 25 %} My Dojo</a></li>
                     {% if user.is_staff %}
                     <li><a href="/admin">Admin</a></li>
                     {% endif %}

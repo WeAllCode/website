@@ -8,10 +8,14 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'coderdojochi.views.home', name='home'),
+    url(r'^faqs/$', 'coderdojochi.views.faqs', name='faqs'),
 
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
+
+    url(r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$', 'coderdojochi.views.classes', name='classes'),
     url(r'^classes/$', 'coderdojochi.views.classes', name='classes'),
-    url(r'^faqs/$', 'coderdojochi.views.faqs', name='faqs'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/$', 'coderdojochi.views.class_detail', name='class_detail'),
+
 
     url(r'^dojo/$', 'coderdojochi.views.dojo', name='dojo'),
 
@@ -25,6 +29,7 @@ urlpatterns = patterns('',
 
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^avatar/', include('avatar.urls')),
 )
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
