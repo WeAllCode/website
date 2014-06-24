@@ -13,7 +13,6 @@ CDC.global = (function($, document, window, undefined) {
 
     // app global properties
 
-    var $thing;
 
     /* Public Methods _________________________________________________________________ */
 
@@ -26,20 +25,26 @@ CDC.global = (function($, document, window, undefined) {
 
         // remove any alerts
         setTimeout(function(){
-            $('.alert').fadeOut();
+            $('.alert-fade').parent().fadeOut();
         }, 3000);
+    }
+
+    function openPopUp(url, height, width) {
+        height = (height) ? height: 600;
+        width = (width) ? width: 400;
+        var newWindow = window.open(url, 'name', 'height=' + height + ',width=' + width);
+        if (window.focus) { newWindow.focus() }
+        return false;
     }
 
     /* Private Methods ________________________________________________________________ */
 
-    function click() {
-        console.log('clicked thing');
-    }
 
     /* Expose Public Methods ________________________________________________________________ */
 
     return {
-        init: init
+        init: init,
+        openPopUp: openPopUp
     };
 
 }(jQuery, document, window, undefined));

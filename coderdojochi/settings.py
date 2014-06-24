@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     #vendor
     'registration',
     'south',
+    'avatar',
 
     #coderdojochi
     'coderdojochi',
@@ -131,6 +132,16 @@ STATICFILES_DIRS = (
     #'/Users/bkellgren/Sites/arb/arb/admin_bootstrap/static',
     os.path.join(PACKAGE_ROOT, 'static'),
 )
+
+TEMPLATE_DIRS = (
+    '/Users/bkellgren/Sites/coderdojochi/coderdojochi/templates/',
+)
+
+# Vender App Config
+
+AVATAR_GRAVATAR_BACKUP = False
+AVATAR_DEFAULT_URL = 'http://www.gravatar.com/avatar/?s=350&d=mm'
+
 
 # search for environment specific settings to override settings.py
 

@@ -33,11 +33,21 @@ $global-spacing: 10px;
     display: none;
 }
 
+.min-height {
+    min-height: 480px;
+}
+
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 
 body{
     font-family: 'Open Sans', sans-serif;
+}
+
+h1 small,
+h2 small {
+    color: #999;
+    font-weight: normal;
 }
 
 /* -------------------------------------------------------------------------*/
@@ -58,10 +68,6 @@ body {
 .container {
     @include container;
     @extend %clearfix;
-
-    body > & {
-        min-height: 480px;
-    }
 }
 
 .navbar {
@@ -126,6 +132,10 @@ body {
             &:hover, &.active {
                 background: #4f9752;
             }
+
+            img {
+                vertical-align: text-bottom;
+            }
         }
     }
 }
@@ -178,21 +188,6 @@ footer {
 /* -------------------------------------------------------------------------*/
 /* Modules */
 
-.alert {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid transparent;
-    @include border-radius(4px);
-
-    &.alert-success {
-        background-color: #dff0d8;
-        border-color: #d6e9c6;
-        color: #3c763d;
-    }
-}
-
 .panels {
     display: inline;
 }
@@ -214,6 +209,29 @@ footer {
 
 .hero-image {
     min-width: 100%;
+}
+
+form {
+    p {
+        margin: .5em 0;
+    }
+}
+
+.errorlist {
+    padding: 0;
+    margin: 0;
+
+    li {
+        background-color: #f2dede;
+        border-color: #ebccd1;
+        color: #a94442;
+        padding: 5px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        display: block;
+        font-size: .9em;
+        margin: .25em 0;
+    }
 }
 
 /* -------------------------------------------------------------------------*/
@@ -359,3 +377,78 @@ footer {
 }
 
 
+// my dojo
+
+.dojo-profile {
+    @include span-columns(4);
+    @include nth-omega(2n);
+
+    .avatar {
+        width: 100%;
+    }
+}
+
+.dojo-content {
+    @include span-columns(8);
+    @include nth-omega(2n);
+}
+
+// classes
+
+.calendar {
+
+    margin-top: 20px;
+
+    table {
+        color: #999;
+        width: 100%;
+
+        border: 1px solid #ddd;
+        border-collapse: collapse;
+
+        th {
+            border: 1px solid #ddd;
+            font-size: .9em;
+            color: #999;
+            padding: 5px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        td {
+           border: 1px solid #ddd;
+           height: 5em;
+           width: 5em;
+           padding: 5px;
+           vertical-align: top;
+        }
+
+        caption {
+           font-size: 300%;
+           font-style: italic;
+        }
+    }
+
+    .filled {
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: inline-block;
+            margin: 5px 0;
+            padding: 0;
+
+            a {
+                font-size: .9em;
+                background: #4f9752;
+                color: #fff;
+                padding: 4px;
+            }
+        }
+    }
+
+}
