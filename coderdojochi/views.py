@@ -13,16 +13,25 @@ from coderdojochi.models import Class, Mentor, Student
 from coderdojochi.forms import MentorForm
 
 from calendar import HTMLCalendar
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from itertools import groupby
 
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 
+import calendar
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
 
+
+def add_months(sourcedate, months):
+    month = sourcedate.month - 1 + months
+    year = sourcedate.year + month / 12
+    month = month % 12 + 1
+    day = min(sourcedate.day,calendar.monthrange(year,month)[1])
+
+    return date(year,month,day)
 
 def home(request, template_name="home.html"):
 
@@ -32,15 +41,24 @@ def classes(request, year=False, month=False, template_name="classes.html"):
 
     now = datetime.now()
 
-    year = year if year else now.year
-    month = month if month else now.month
+    year = int(year) if year else now.year
+    month = int(month) if month else now.month
 
-    classes = Class.objects.filter(active=True, start_date__year=year, start_date__month=month).order_by('start_date')
+    calendar_date = date(day=1, month=month, year=year)
+    prev_date = add_months(calendar_date,-1)
+    next_date = add_months(calendar_date,1)
+
+    all_classes = Class.objects.filter(active=True).order_by('start_date')
+    classes = all_classes.filter(start_date__year=year, start_date__month=month).order_by('start_date')
     cal = ClassesCalendar(classes).formatmonth(year, month)
 
     return render_to_response(template_name,{
+        'all_classes': all_classes,
         'classes': classes,
-        'calendar': mark_safe(cal)
+        'calendar': mark_safe(cal),
+        'calendar_date': calendar_date,
+        'prev_date': prev_date,
+        'next_date': next_date
     }, context_instance=RequestContext(request))
 
 
@@ -104,7 +122,9 @@ class ClassesCalendar(HTMLCalendar):
                 body = ['<ul>']
                 for cdc_class in self.classes[day]:
                     body.append('<li>')
-                    body.append('<a href="%s">' % cdc_class.get_absolute_url())
+                    remaining_spots = cdc_class.capacity - cdc_class.students.all().count()
+                    dayclass = 'unavailable' if not remaining_spots else 'available'
+                    body.append('<a class="' + dayclass + '" href="%s">' % cdc_class.get_absolute_url())
                     body.append(esc(cdc_class.title))
                     body.append('</a></li>')
                 body.append('</ul>')
