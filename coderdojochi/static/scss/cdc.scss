@@ -38,6 +38,9 @@ $global-spacing: 10px;
 }
 
 .drop-caps {
+
+    overflow: hidden;
+
     &:first-letter {
         float: left;
         font-size: 75px;
@@ -403,8 +406,12 @@ form {
 // my dojo
 
 .dojo-profile {
-    @include span-columns(4);
-    @include nth-omega(2n);
+    @include span-columns(12);
+
+    @include at-breakpoint($small-tablet-and-up) {
+        @include span-columns(4);
+        @include nth-omega(2n);
+    }
 
     .avatar {
         width: 100%;
@@ -412,8 +419,12 @@ form {
 }
 
 .dojo-content {
-    @include span-columns(8);
-    @include nth-omega(2n);
+    @include span-columns(12);
+
+    @include at-breakpoint($small-tablet-and-up) {
+        @include span-columns(8);
+        @include nth-omega(2n);
+    }
 }
 
 // classes
@@ -522,5 +533,34 @@ form {
 
     img {
         width: 100%;
+    }
+}
+
+.mentors {
+    overflow: hidden;
+
+    .mentor {
+        margin: 0 0 10px 0;
+        overflow: hidden;
+
+        img {
+            border: 2px solid #222;
+            width: 150px;
+            height: 150px;
+            float: left;
+        }
+
+        .info {
+            float: left;
+            margin-left: 20px;
+
+            .title {
+                margin-bottom: 5px;
+            }
+
+            p {
+                margin-top: 5px;
+            }
+        }
     }
 }
