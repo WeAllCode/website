@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n %}
+{% load i18n avatar_tags %}
 
 {% block title %}{{ class.title }}{% endblock %}
 
@@ -8,6 +8,34 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ class.title }}</h1>
+    <h1 class="light">{{ class.title }} <small>{{ class.start_date|date }} from {{ class.start_date|time }} to {{ class.end_date|time }}</small></h1>
+    <p class="lead drop-caps">{{ class.description|safe }}</p>
+    <div class="clearfix">
+        <div class="class-detail-content">
+            <h2>Class Information</h2>
+            <h4>When:</h4>
+            <p>{{ class.start_date|date }} from {{ class.start_date|time }} to {{ class.end_date|time }}</p>
+            <h4>Where:</h4>
+            <p>{{ class.location }}</p>
+            <h4>Additional Info:</h4>
+            <p>{{ class.additional_info|safe }}</p>
+        </div>
+        <div class="class-detail-sidebar-right">
+            <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ class.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ class.location }}&amp;size=500x500&amp;sensor=false"></a>
+        </div>
+    </div>
+    <h2 id="sign-up">Sign up</h2>
+    <div class="well">
+    {% if user.is_authenticated %}
+    <p>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">Logout.</a></p>
+    <p><a href="{% url 'class_sign_up' class.start_date.year class.start_date.month class.start_date.day class.slug %}" class="btn btn-success btn-lg">Sign up {% ifequal user.role 'mentor'%}to mentor{% else %}for this class{% endifequal %} now!</a></p>
+    {% else %}
+    <p>To sign up for this class, <a href="{% url 'auth_login' %}?next={% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">login</a> or <a href="{% url 'registration_register' %}">register</a>.</p>
+    {% endif %}
+    </div>
+    <h2>Teacher</h2>
+
+    <h2>Mentors</h2>
+
 </div>
 {% endblock %}

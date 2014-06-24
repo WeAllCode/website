@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'registration',
     'south',
     'avatar',
+    'bootstrap3',
 
     #coderdojochi
     'coderdojochi',
@@ -76,7 +77,7 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 # django-registration
 ACCOUNT_ACTIVATION_DAYS = 7
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dojo/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

@@ -49,7 +49,8 @@ class Student(models.Model):
 class Class(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=40, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
