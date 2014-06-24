@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% load avatar_tags %}
+{% load avatar_tags bootstrap3 %}
 
 {% block title %}My Dojo{% endblock %}
 
@@ -21,7 +21,7 @@
             {% if form %}
             <form action="" method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% bootstrap_form form %}
                 <button class="submit btn btn-default">Save</button>
             </form>
             {% endif %}
@@ -44,19 +44,19 @@
                 </ul>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have no upcoming classes. <a href="#">Sign up now!</a></p>
+                <p class="text-center text-muted">You have no upcoming classes. <a href="{% url 'classes' %}">Find one now!</a></p>
                 {% endif %}
             </div>
             <div class="tab-pane" id="past">
-                {% if upcoming_classes %}
+                {% if past_classes %}
                 <ul>
-                    {% for class in upcoming_classes %}
+                    {% for class in past_classes %}
                     <li>{{ class.title }}</li>
                     {% endfor %}
                 </ul>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have not participated in any classes yet. <a href="#">Sign up now!</a></p>
+                <p class="text-center text-muted">You have not participated in any classes yet. <a href="{% url 'classes' %}">Find one now!</a></p>
                 {% endif %}
             </div>
         </div>

@@ -37,6 +37,18 @@ $global-spacing: 10px;
     min-height: 480px;
 }
 
+.drop-caps {
+    &:first-letter {
+        float: left;
+        font-size: 75px;
+        line-height: 60px;
+        padding-top: 4px;
+        padding-right: 8px;
+        padding-left: 3px;
+        font-family: Georgia;
+    }
+}
+
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 
@@ -44,11 +56,18 @@ body{
     font-family: 'Open Sans', sans-serif;
 }
 
-h1 small,
-h2 small {
-    color: #999;
-    font-weight: normal;
+h1, h2, h3 {
+    small {
+       color: #999;
+        font-weight: normal;
+        display: block;
+    }
+
+    &.light {
+        font-weight: normal;
+    }
 }
+
 
 /* -------------------------------------------------------------------------*/
 /* Global Layout */
@@ -68,6 +87,10 @@ body {
 .container {
     @include container;
     @extend %clearfix;
+
+    &.registration {
+        max-width: 540px;
+    }
 }
 
 .navbar {
@@ -76,7 +99,7 @@ body {
     left: 0;
     width: 100%;
     background: #fff;
-    background: rgba(255,255,255,.8);
+    background: rgba(255,255,255,.95);
     overflow: visible;
     z-index: 3;
     @include transform(translatez(0));
@@ -440,30 +463,20 @@ form {
 
     .filled {
 
-        ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        li {
-            display: inline-block;
+        a {
+            font-size: .9em;
+            background: #4f9752;
+            color: #fff;
+            padding: 4px;
             margin: 5px 0;
-            padding: 0;
+            display: block;
 
-            a {
-                font-size: .9em;
-                background: #4f9752;
-                color: #fff;
-                padding: 4px;
+            &.unavailable {
+                background-color: #999;
+            }
 
-                &.unavailable {
-                    background-color: #999;
-                }
+            small {
 
-                small {
-
-                }
             }
         }
     }
@@ -476,4 +489,38 @@ form {
         background: #f8f8f8;
     }
 
+}
+
+// class-detail
+
+.class-detail-content {
+    @include span-columns(12);
+
+    @include at-breakpoint($small-tablet-and-up) {
+        @include span-columns(8);
+    }
+}
+
+.class-detail-sidebar-right {
+    @include span-columns(12);
+
+    @include at-breakpoint($small-tablet-and-up) {
+        @include span-columns(4);
+        @include nth-omega(2n);
+    }
+}
+
+.map {
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    border: 2px solid #86C447;
+
+    &:hover {
+      border: 2px solid #4f9752;
+    }
+
+    img {
+        width: 100%;
+    }
 }
