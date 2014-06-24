@@ -65,26 +65,59 @@ def classes(request, year=False, month=False, template_name="classes.html"):
 def class_detail(request, year, month, day, slug, template_name="class-detail.html"):
     class_obj = get_object_or_404(Class, slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
 
+    if request.user.role == 'mentor':
+        mentor = get_object_or_404(Mentor, user=request.user)
+        user_signed_up = True if mentor in class_obj.mentors.all() else False
+    else:
+        student = get_object_or_404(Student, user=request.user)
+        user_signed_up = True if student in class_obj.student.all() else False
+
+
     return render_to_response(template_name,{
-        'class': class_obj
+        'class': class_obj,
+        'user_signed_up': user_signed_up
     }, context_instance=RequestContext(request))
 
 def class_sign_up(request, year, month, day, slug, template_name="class-sign-up.html"):
     class_obj = get_object_or_404(Class, slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
 
+    if request.user.role == 'mentor':
+        mentor = get_object_or_404(Mentor, user=request.user)
+        user_signed_up = True if mentor in class_obj.mentors.all() else False
+    else:
+        student = get_object_or_404(Student, user=request.user)
+        user_signed_up = True if student in class_obj.student.all() else False
+
+    undo = False
+
     if request.method == 'POST':
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
-            class_obj.mentors.add(mentor)
+            if mentor in class_obj.mentors.all():
+                class_obj.mentors.remove(mentor)
+                undo = True
+            else:
+                class_obj.mentors.add(mentor)
         else:
             student = get_object_or_404(Student, user=request.user)
-            class_obj.students.add(student)
+            if student in class_obj.students.all():
+                class_obj.students.remove(student)
+                undo = True
+            else:
+                class_obj.students.add(student)
+
         class_obj.save()
-        messages.add_message(request, messages.SUCCESS, 'Sign up successful, see you there!')
-        return HttpResponseRedirect(reverse('dojo'))
+
+        if undo:
+            messages.add_message(request, messages.SUCCESS, 'You are no longer attending the class. Thanks for letting us know!')
+        else:
+            messages.add_message(request, messages.SUCCESS, 'Sign up successful, see you there!')
+
+        return HttpResponseRedirect(reverse('class_detail', args=(class_obj.start_date.year, class_obj.start_date.month, class_obj.start_date.day, class_obj.slug)))
 
     return render_to_response(template_name,{
-        'class': class_obj
+        'class': class_obj,
+        'user_signed_up': user_signed_up
     }, context_instance=RequestContext(request))
 
 
@@ -102,8 +135,8 @@ def dojo(request, template_name="dojo.html"):
     if request.user.role == 'mentor':
         mentor = get_object_or_404(Mentor, user=request.user)
         mentor_classes = Class.objects.filter(mentors=mentor)
-        upcoming_classes = mentor_classes.filter(active=True)
-        past_classes = mentor_classes.exclude(active=True)
+        upcoming_classes = mentor_classes.filter(active=True).order_by('start_date')
+        past_classes = mentor_classes.exclude(active=True).order_by('start_date')
         account = mentor
 
         if request.method == 'POST':
@@ -119,8 +152,8 @@ def dojo(request, template_name="dojo.html"):
     else:
         student = get_object_or_404(Student, user=request.user)
         student_classes = Class.objects.filter(students=student)
-        upcoming_classes = upcoming_classes.filter(active=True)
-        past_classes = upcoming_classes.exclude(active=True)
+        upcoming_classes = upcoming_classes.filter(active=True).order_by('start_date')
+        past_classes = upcoming_classes.exclude(active=True).order_by('start_date')
         account = student
         form = False
 
