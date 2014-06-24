@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="light">{{ class.title }} <small>{{ class.start_date|date }} from {{ class.start_date|time }} to {{ class.end_date|time }}</small></h1>
+    <h1 class="light">{% if class.course %}<small>{{ class.course }}:</small> {% endif %}{{ class.title }} <small><i class="fa fa-clock-o"></i> {{ class.start_date|date }} from {{ class.start_date|time }} to {{ class.end_date|time }}</small></h1>
     <div class="clearfix">
         <div class="class-detail-content">
             <p class="lead drop-caps">{{ class.description|safe }}</p>

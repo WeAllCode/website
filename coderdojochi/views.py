@@ -183,6 +183,8 @@ class ClassesCalendar(HTMLCalendar):
                     remaining_spots = cdc_class.capacity - cdc_class.students.all().count()
                     dayclass = 'unavailable' if not remaining_spots else 'available'
                     body.append('<a class="' + dayclass + '" href="%s">' % cdc_class.get_absolute_url())
+                    if cdc_class.course:
+                        body.append(esc(cdc_class.course) + ': ')
                     body.append(esc(cdc_class.title))
                     body.append('</a>')
                 return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
