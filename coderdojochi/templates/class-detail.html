@@ -32,7 +32,7 @@
                     <p>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">Logout.</a></p>
                     <p><a href="{% url 'class_sign_up' class.start_date.year class.start_date.month class.start_date.day class.slug %}" class="btn btn-success btn-lg">Sign up {% ifequal user.role 'mentor'%}to mentor{% else %}for this class{% endifequal %} now!</a></p>
                     {% else %}
-                    <p>To sign up for this class, <a href="{% url 'auth_login' %}?next={% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">login</a> or <a href="{% url 'registration_register' %}">register</a>.</p>
+                    <p><a href="{% url 'auth_login' %}?next={% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">Login</a> or <a href="{% url 'registration_register' %}">register</a> to sign up for this class.</p>
                     {% endif %}
                 {% endif %}
             </div>
