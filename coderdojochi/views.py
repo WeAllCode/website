@@ -64,6 +64,25 @@ def classes(request, year=False, month=False, template_name="classes.html"):
 
 def class_detail(request, year, month, day, slug, template_name="class-detail.html"):
     class_obj = get_object_or_404(Class, slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
+
+    return render_to_response(template_name,{
+        'class': class_obj
+    }, context_instance=RequestContext(request))
+
+def class_sign_up(request, year, month, day, slug, template_name="class-sign-up.html"):
+    class_obj = get_object_or_404(Class, slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
+
+    if request.method == 'POST':
+        if request.user.role == 'mentor':
+            mentor = get_object_or_404(Mentor, user=request.user)
+            class_obj.mentors.add(mentor)
+        else:
+            student = get_object_or_404(Student, user=request.user)
+            class_obj.students.add(student)
+        class_obj.save()
+        messages.add_message(request, messages.SUCCESS, 'Sign up successful, see you there!')
+        return HttpResponseRedirect(reverse('dojo'))
+
     return render_to_response(template_name,{
         'class': class_obj
     }, context_instance=RequestContext(request))
@@ -81,8 +100,11 @@ def faqs(request, template_name="faqs.html"):
 def dojo(request, template_name="dojo.html"):
 
     if request.user.role == 'mentor':
-        upcoming_classes = Class.objects.filter(mentors=request.user)
-        account = Mentor.objects.get(user=request.user)
+        mentor = get_object_or_404(Mentor, user=request.user)
+        mentor_classes = Class.objects.filter(mentors=mentor)
+        upcoming_classes = mentor_classes.filter(active=True)
+        past_classes = mentor_classes.exclude(active=True)
+        account = mentor
 
         if request.method == 'POST':
             form = MentorForm(request.POST, instance=account)
@@ -95,13 +117,17 @@ def dojo(request, template_name="dojo.html"):
         else:
             form = MentorForm(instance=account)
     else:
-        upcoming_classes = Class.objects.filter(students=request.user)
-        account = Student.objects.get(user=request.user)
+        student = get_object_or_404(Student, user=request.user)
+        student_classes = Class.objects.filter(students=student)
+        upcoming_classes = upcoming_classes.filter(active=True)
+        past_classes = upcoming_classes.exclude(active=True)
+        account = student
         form = False
 
     return render_to_response(template_name, {
         'account': account,
         'upcoming_classes': upcoming_classes,
+        'past_classes': past_classes,
         'form': form
     }, context_instance=RequestContext(request))
 
@@ -119,15 +145,13 @@ class ClassesCalendar(HTMLCalendar):
                 cssclass += ' today'
             if day in self.classes:
                 cssclass += ' filled'
-                body = ['<ul>']
+                body = []
                 for cdc_class in self.classes[day]:
-                    body.append('<li>')
                     remaining_spots = cdc_class.capacity - cdc_class.students.all().count()
                     dayclass = 'unavailable' if not remaining_spots else 'available'
                     body.append('<a class="' + dayclass + '" href="%s">' % cdc_class.get_absolute_url())
                     body.append(esc(cdc_class.title))
-                    body.append('</a></li>')
-                body.append('</ul>')
+                    body.append('</a>')
                 return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
             return self.day_cell(cssclass, day)
         return self.day_cell('noday', '&nbsp;')

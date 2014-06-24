@@ -2,5 +2,5 @@
 {% load i18n %}
 
 {% block content_placeholder %}
-<p>{% trans "Your account is now activated." %}</p>
+<div class="alert alert-success">{% trans "Your account is now activated." %} <a href="{% url 'auth_login' %}">Log in</a>.</div>
 {% endblock %}
