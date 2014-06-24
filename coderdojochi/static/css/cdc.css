@@ -888,13 +888,18 @@ form p {
   margin-top: 20px;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003402}}
+.calendar .controls {
+  margin-bottom: 10px;
+  text-align: center;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003407}}
 .calendar table {
   color: #999;
   width: 100%;
   border: 1px solid #ddd;
   border-collapse: collapse;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003409}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003414}}
 .calendar table th {
   border: 1px solid #ddd;
   font-size: .9em;
@@ -903,7 +908,7 @@ form p {
   text-transform: uppercase;
   text-align: center;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003418}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003423}}
 .calendar table td {
   border: 1px solid #ddd;
   height: 5em;
@@ -911,27 +916,43 @@ form p {
   padding: 5px;
   vertical-align: top;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003426}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003431}}
 .calendar table caption {
   font-size: 300%;
   font-style: italic;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003434}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003437}}
+.calendar tbody .month {
+  display: none;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003443}}
 .calendar .filled ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003440}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003449}}
 .calendar .filled li {
   display: inline-block;
   margin: 5px 0;
   padding: 0;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003445}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003454}}
 .calendar .filled li a {
   font-size: .9em;
   background: #4f9752;
   color: #fff;
   padding: 4px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003460}}
+.calendar .filled li a.unavailable {
+  background-color: #999;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003471}}
+.calendar .today {
+  font-weight: bold;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003475}}
+.calendar .noday {
+  background: #f8f8f8;
 }

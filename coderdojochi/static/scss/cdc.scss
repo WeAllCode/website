@@ -399,6 +399,11 @@ form {
 
     margin-top: 20px;
 
+    .controls {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
     table {
         color: #999;
         width: 100%;
@@ -429,6 +434,10 @@ form {
         }
     }
 
+    tbody .month {
+        display: none;
+    }
+
     .filled {
 
         ul {
@@ -447,8 +456,24 @@ form {
                 background: #4f9752;
                 color: #fff;
                 padding: 4px;
+
+                &.unavailable {
+                    background-color: #999;
+                }
+
+                small {
+
+                }
             }
         }
+    }
+
+    .today {
+        font-weight: bold;
+    }
+
+    .noday {
+        background: #f8f8f8;
     }
 
 }
