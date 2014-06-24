@@ -12,7 +12,7 @@ MentorType = (
 )
 
 class CDCUser(AbstractUser):
-    role = models.CharField(choices=MentorType, max_length=10, blank=True, null=True)
+    role = models.CharField(choices=MentorType, max_length=10, default='student')
     admin_notes = models.TextField(blank=True, null=True)
 
 class Mentor(models.Model):

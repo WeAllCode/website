@@ -5,17 +5,7 @@
 {% block content_placeholder %}
 <form method="post" action=".">
     {% csrf_token %}
-
-    <div class="required form-group">
-        <label for="id_role">Desired Role:</label>
-        <select id="id_role" name="role" class="form-control">
-            <option value="mentor">Mentor</option>
-            <option value="student">Student</option>
-        </select>
-    </div>
-
     {% bootstrap_form form %}
-
     <input class="btn btn-success" type="submit" value="{% trans 'Register' %}" />
 </form>
 {% endblock %}

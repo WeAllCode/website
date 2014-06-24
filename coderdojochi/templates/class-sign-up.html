@@ -8,11 +8,11 @@
 
 {% block content %}
 <div class="container registration min-height">
-    <h1 class="light">Sign up {% ifequal user.role 'mentor' %}to mentor {% endifequal %}for the class <strong>"{{ class.title }}"</strong> on <strong>{{ class.start_date|date }}</strong> from <strong>{{ class.start_date|time }}</strong> to <strong>{{ class.end_date|time }}</strong>?</h1>
+    <h1 class="light">{% if user_signed_up %}You can no longer make it{% else %}Sign up{% endif %} {% ifequal user.role 'mentor' %}to mentor {% endifequal %}for the class <strong>"{{ class.title }}"</strong> on <strong>{{ class.start_date|date }}</strong> from <strong>{{ class.start_date|time }}</strong> to <strong>{{ class.end_date|time }}</strong>?</h1>
     <form class="form" method="POST" action="">
         {% csrf_token %}
-        <button class="btn btn-success btn-lg">Yes, sign me up!</button>
-        <a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}" class="btn btn-default">Not yet</a>
+        <button class="btn btn-{% if user_signed_up %}danger{% else %}success{% endif %} btn-lg">{% if user_signed_up %}I can no longer make it{% else %}Yes, sign me up!{% endif %}</button>
+        <a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}" class="btn btn-default">{% if user_signed_up %}Nevermind{% else %}Not yet{% endif %}</a>
     </form>
     <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ class.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ class.location }}&amp;size=550x550&amp;sensor=false"></a>
 </div>
