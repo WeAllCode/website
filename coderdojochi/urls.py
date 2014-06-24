@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
     url(r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$', 'coderdojochi.views.classes', name='classes'),
     url(r'^classes/$', 'coderdojochi.views.classes', name='classes'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/sign-up/$', 'coderdojochi.views.class_sign_up', name='class_sign_up'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/$', 'coderdojochi.views.class_detail', name='class_detail'),
 
 
