@@ -65,12 +65,16 @@ def classes(request, year=False, month=False, template_name="classes.html"):
 def class_detail(request, year, month, day, slug, template_name="class-detail.html"):
     class_obj = get_object_or_404(Class, slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
 
-    if request.user.role == 'mentor':
-        mentor = get_object_or_404(Mentor, user=request.user)
-        user_signed_up = True if mentor in class_obj.mentors.all() else False
+    if request.user.is_authenticated():
+
+        if request.user.role == 'mentor':
+            mentor = get_object_or_404(Mentor, user=request.user)
+            user_signed_up = True if mentor in class_obj.mentors.all() else False
+        else:
+            student = get_object_or_404(Student, user=request.user)
+            user_signed_up = True if student in class_obj.student.all() else False
     else:
-        student = get_object_or_404(Student, user=request.user)
-        user_signed_up = True if student in class_obj.student.all() else False
+        user_signed_up = False
 
 
     return render_to_response(template_name,{
