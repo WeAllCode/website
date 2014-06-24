@@ -11,7 +11,7 @@
         <div class="container">
             <nav role="navigation">
                 <ul>
-                    <li><a{% if request.path == '/classes/' %} class="active"{% endif %} href="{% url 'classes' %}">Classes</a></li>
+                    <li><a{% if '/classes/' in request.path %} class="active"{% endif %} href="{% url 'classes' %}">Classes</a></li>
                     <li><a{% if request.path == '/volunteer/' %} class="active"{% endif %} href="{% url 'volunteer' %}">Volunteer</a></li>
                     <li><a{% if request.path == '/faq/' %} class="active"{% endif %} href="{% url 'faqs' %}">FAQs</a></li>
                 </ul>

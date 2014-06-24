@@ -1,33 +1,89 @@
 {% extends "_base.html" %}
 
-{% load i18n %}
+{% load i18n coderdojochi_extras %}
 
-{% block title %}Classes{% endblock %}
+{% block title %}Class Schedule{% endblock %}
 
 {% block body_class %}classes{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>{% trans "Classes" %}</h1>
+    <h1>{% trans "Class Schedule" %}</h1>
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#calendar" data-toggle="tab">Calendar</a></li>
-        <li><a href="#list" data-toggle="tab">List</a></li>
+        <li class="active"><a href="#calendar" data-toggle="tab"><i class="fa fa-calendar"></i> Calendar</a></li>
+        <li><a href="#list" data-toggle="tab"><i class="fa fa-list"></i> List</a></li>
     </ul>
 
     <div class="tab-content">
         <div class="tab-pane active" id="calendar">
             <div class="calendar">
+                <div class="btn-group controls">
+                    <a href="{% url 'classes' prev_date.year prev_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i></a>
+                    <select name="calendar-month-select" id="calendar-month-select" size="1">
+                        <option value="1"{% ifequal calendar_date.month 1 %} selected{% endifequal %}>January</option>
+                        <option value="2"{% ifequal calendar_date.month 2 %} selected{% endifequal %}>February</option>
+                        <option value="3"{% ifequal calendar_date.month 3 %} selected{% endifequal %}>March</option>
+                        <option value="4"{% ifequal calendar_date.month 4 %} selected{% endifequal %}>April</option>
+                        <option value="5"{% ifequal calendar_date.month 5 %} selected{% endifequal %}>May</option>
+                        <option value="6"{% ifequal calendar_date.month 6 %} selected{% endifequal %}>June</option>
+                        <option value="7"{% ifequal calendar_date.month 7 %} selected{% endifequal %}>July</option>
+                        <option value="8"{% ifequal calendar_date.month 8 %} selected{% endifequal %}>August</option>
+                        <option value="9"{% ifequal calendar_date.month 9 %} selected{% endifequal %}>September</option>
+                        <option value="10"{% ifequal calendar_date.month 10 %} selected{% endifequal %}>October</option>
+                        <option value="11"{% ifequal calendar_date.month 11 %} selected{% endifequal %}>November</option>
+                        <option value="12"{% ifequal calendar_date.month 12 %} selected{% endifequal %}>December</option>
+                    </select>
+                    <select name="calendar-year-select" id="calendar-year-select" size="1">
+                        <option value="2014"{% ifequal calendar_date.year 2014 %} selected{% endifequal %}>2014</option>
+                        <option value="2015"{% ifequal calendar_date.year 2015 %} selected{% endifequal %}>2015</option>
+                    </select>
+                    <a href="{% url 'classes' next_date.year next_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></a>
+                </div>
                 {{ calendar }}
             </div>
         </div>
         <div class="tab-pane" id="list">
-            <ul>
-            {% for class in classes %}
-                <li><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></li>
-            {% endfor %}
-            </ul>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Date</th>
+                        <th>Remaining</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for class in all_classes %}
+                    <tr>
+                        <td><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></td>
+                        <td>{{ class.start_date|date }} <span class="text-muted">{{ class.start_date|time }}</span></td>
+                        <td>{{ class.capacity|subtract:class.students.all.count }}</td>
+                        <td>
+                            {% if class.capacity|subtract:class.students.all.count %}
+                            <a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}" class="btn btn-success btn-sm">Sign up now!</a>
+                            {% else %}
+                            <button class="btn btn-default btn-sm disabled" disabled>Class is full</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+$(function(){
+    $('#calendar-month-select').on('change', function() {
+        window.location = '/classes/{{calendar_date.year }}/' + $(this).val();
+    });
+    $('#calendar-year-select').on('change', function() {
+        window.location = '/classes/' + $(this).val() + '/{{calendar_date.month }}';
+    });
+});
+</script>
 {% endblock %}
