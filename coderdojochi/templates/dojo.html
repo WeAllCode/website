@@ -1,33 +1,66 @@
 {% extends "_base.html" %}
+{% load avatar_tags %}
 
 {% block title %}My Dojo{% endblock %}
 
 {% block body_class %}dojo{% endblock %}
 
 {% block content %}
+
+{% if not account.first_name %}
 <div class="container">
-    <h1>Hello {{ user }}. Thanks for being a CoderDojoChi {{ user.role }}!</h1>
-    <p><a href="{% url 'home' %}">back</a></p>
+    <div class="alert alert-warning"><i class="fa fa-warning"></i> Please complete your profile information below. <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>
+</div>
+{% endif %}
+<div class="container">
+    <div class="dojo-profile">
+        <div class="well well-sm">
+            <img src="{% avatar_url user %}" class="avatar">
+            <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
+            <h2>@{{ user }} <small>{{ user.role }}</small></h2>
+            {% if form %}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="submit btn btn-default">Save</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <div class="dojo-content">
+        <h2>Your Classes</h2>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
+            <li><a href="#past" data-toggle="tab">Past</a></li>
+        </ul>
 
-    {% if form %}
-    <h2>Mentor Bio:</h2>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="submit">Save</button>
-    </form>
-    {% endif %}
-
-    <h2>Upcoming Classes:</h2>
-    {% if upcoming_classes %}
-    <ul>
-        {% for class in upcoming_classes %}
-        <li>{{ class.title }}</li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>You don't have any upcoming classes yet!</p>
-    {% endif %}
+        <div class="tab-content">
+            <div class="tab-pane active" id="upcoming">
+                {% if upcoming_classes %}
+                <ul>
+                    {% for class in upcoming_classes %}
+                    <li>{{ class.title }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <br>
+                <p class="text-center text-muted">You have no upcoming classes. <a href="#">Sign up now!</a></p>
+                {% endif %}
+            </div>
+            <div class="tab-pane" id="past">
+                {% if upcoming_classes %}
+                <ul>
+                    {% for class in upcoming_classes %}
+                    <li>{{ class.title }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <br>
+                <p class="text-center text-muted">You have not participated in any classes yet. <a href="#">Sign up now!</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
