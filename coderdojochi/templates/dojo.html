@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="dojo-content">
-        <h2>Your Classes</h2>
+        <h2>My Classes</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
             <li><a href="#past" data-toggle="tab">Past</a></li>
@@ -37,23 +37,38 @@
         <div class="tab-content">
             <div class="tab-pane active" id="upcoming">
                 {% if upcoming_classes %}
-                <ul>
+                <br>
+                <table class="table table-striped">
+                    <tbody>
                     {% for class in upcoming_classes %}
-                    <li>{{ class.title }}</li>
+                        <tr>
+                            <td><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></td>
+                            <td>{{ class.start_date|date }} <span class="text-muted">@ {{ class.start_date|time }}</span></td>
+                        </tr>
                     {% endfor %}
-                </ul>
+                    </tbody>
+                </table>
                 {% else %}
                 <br>
                 <p class="text-center text-muted">You have no upcoming classes. <a href="{% url 'classes' %}">Find one now!</a></p>
                 {% endif %}
+
+
+
+
             </div>
             <div class="tab-pane" id="past">
                 {% if past_classes %}
-                <ul>
+                <table class="table table-striped">
+                    <tbody>
                     {% for class in past_classes %}
-                    <li>{{ class.title }}</li>
+                        <tr>
+                            <td><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></td>
+                            <td>{{ class.start_date|date }} <span class="text-muted">@ {{ class.start_date|time }}</span></td>
+                        </tr>
                     {% endfor %}
-                </ul>
+                    </tbody>
+                </table>
                 {% else %}
                 <br>
                 <p class="text-center text-muted">You have not participated in any classes yet. <a href="{% url 'classes' %}">Find one now!</a></p>
