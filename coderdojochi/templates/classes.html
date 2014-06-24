@@ -9,5 +9,25 @@
 {% block content %}
 <div class="container">
     <h1>{% trans "Classes" %}</h1>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#calendar" data-toggle="tab">Calendar</a></li>
+        <li><a href="#list" data-toggle="tab">List</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="calendar">
+            <div class="calendar">
+                {{ calendar }}
+            </div>
+        </div>
+        <div class="tab-pane" id="list">
+            <ul>
+            {% for class in classes %}
+                <li><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}
