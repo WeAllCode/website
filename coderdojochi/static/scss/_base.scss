@@ -3,30 +3,30 @@
 
 @import "compass/utilities";
 @import "susy";
+@import "breakpoint";
 
 // ---------------------------------------------------------------------------
 // Basic Grid
 
-$total-columns  : 12;
-$column-width   : 4em;
-$gutter-width   : 1em;
-$grid-padding   : $gutter-width;
+$susy: (
+    container: 1200px,
+    columns: 12,
+    gutters: .25,
+    global-box-sizing: content-box
+);
 
 // ---------------------------------------------------------------------------
 // Media Queries
 
-$extra-large-desktop-layout: 130em 12;
-$large-desktop-layout: 95em 12 130em;
-$desktop-layout: 59em 12;
-$tablet-layout: 40em 12 59em;
-$tablet-and-up: 40em 12;
-$small-tablet-and-up: 32em 12;
+$desktop-and-up: 65em;
+$tablet-and-up: 40em;
 
 // ---------------------------------------------------------------------------
 // Colors
 
-$gray: #999;
+$gray: #666;
 $light-gray: #eee;
+$green: #86C447;
 
 
 // ---------------------------------------------------------------------------

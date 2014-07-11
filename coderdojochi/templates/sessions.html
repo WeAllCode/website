@@ -19,7 +19,7 @@
         <div class="tab-pane active" id="calendar">
             <div class="calendar">
                 <div class="btn-group controls">
-                    <a href="{% url 'classes' prev_date.year prev_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i></a>
+                    <a href="{% url 'sessions' prev_date.year prev_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i></a>
                     <select name="calendar-month-select" id="calendar-month-select" size="1">
                         <option value="1"{% ifequal calendar_date.month 1 %} selected{% endifequal %}>January</option>
                         <option value="2"{% ifequal calendar_date.month 2 %} selected{% endifequal %}>February</option>
@@ -38,7 +38,7 @@
                         <option value="2014"{% ifequal calendar_date.year 2014 %} selected{% endifequal %}>2014</option>
                         <option value="2015"{% ifequal calendar_date.year 2015 %} selected{% endifequal %}>2015</option>
                     </select>
-                    <a href="{% url 'classes' next_date.year next_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></a>
+                    <a href="{% url 'sessions' next_date.year next_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></a>
                 </div>
                 {{ calendar }}
             </div>

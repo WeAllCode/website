@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="welcome panel">
+    <div class="mission panel">
         <div class="panel-content">
             <div class="container">
                 <h1>{% trans "This is our code, and yours." %}</h1>
@@ -53,7 +53,7 @@ $(function (){
     $('.brand').on('click', function(e) {
         e.preventDefault();
         $('html, body').animate({
-            scrollTop: $(".welcome:first").offset().top
+            scrollTop: $(".mission:first").offset().top
         }, 750);
         $(this).off('click');
     })

@@ -1,9 +1,9 @@
 {
-  "name": "socialcrunch-mobile",
+  "name": "coderdojochi",
   "version": "0.0.1",
-  "description": "Socialcrunch static mobile code intended for PhoneGap.",
+  "description": "CoderDojoChi.org grunt packages",
   "authors": {
-    "SocialCrunch Pimp Ass Playa's": "dev@socialcrunch.com"
+    "CoderDojoChi": "brett@coderdojochi.org"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

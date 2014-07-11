@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% load avatar_tags bootstrap3 %}
+{% load avatar_tags bootstrap3 humanize %}
 
 {% block title %}My Dojo{% endblock %}
 
@@ -17,7 +17,12 @@
         <div class="well well-sm">
             <img src="{% avatar_url user %}" class="avatar">
             <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
-            <h2>@{{ user }} <small>{{ user.role }}</small></h2>
+            <h2>
+                @{{ user }}
+                <small>Role: {{ user.role|capfirst }}</small>
+                <small>Joined: {{ account.created_at|naturalday|capfirst }}</small>
+            </h2>
+
             {% if form %}
             <form action="" method="post">
                 {% csrf_token %}
@@ -36,42 +41,38 @@
 
         <div class="tab-content">
             <div class="tab-pane active" id="upcoming">
-                {% if upcoming_classes %}
+                {% if upcoming_sessions %}
                 <br>
                 <table class="table table-striped">
                     <tbody>
-                    {% for class in upcoming_classes %}
+                    {% for session in upcoming_sessions %}
                         <tr>
-                            <td><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></td>
-                            <td>{{ class.start_date|date }} <span class="text-muted">@ {{ class.start_date|time }}</span></td>
+                            <td><a href="{% url 'class_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{{ session.title }}</a></td>
+                            <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have no upcoming classes. <a href="{% url 'classes' %}">Find one now!</a></p>
+                <p class="text-center text-muted">You have no upcoming sessions. <a href="{% url 'sessions' %}">Find one now!</a></p>
                 {% endif %}
-
-
-
-
             </div>
             <div class="tab-pane" id="past">
-                {% if past_classes %}
+                {% if past_sessions %}
                 <table class="table table-striped">
                     <tbody>
-                    {% for class in past_classes %}
+                    {% for session in past_sessions %}
                         <tr>
-                            <td><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></td>
-                            <td>{{ class.start_date|date }} <span class="text-muted">@ {{ class.start_date|time }}</span></td>
+                            <td><a href="{% url 'class_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{{ session.title }}</a></td>
+                            <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have not participated in any classes yet. <a href="{% url 'classes' %}">Find one now!</a></p>
+                <p class="text-center text-muted">You have not participated in any sessions yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
                 {% endif %}
             </div>
         </div>

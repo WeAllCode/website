@@ -61,9 +61,10 @@ body{
 
 h1, h2, h3 {
     small {
-       color: #999;
+        color: #999;
         font-weight: normal;
         display: block;
+        font-size: .7em;
     }
 
     &.light {
@@ -90,10 +91,16 @@ body {
 .container {
     @include container;
     @extend %clearfix;
+    padding: 0 10px;
 
     &.registration {
         max-width: 540px;
     }
+}
+
+.row {
+    @extend %clearfix;
+    margin: 10px 0;
 }
 
 .navbar {
@@ -125,7 +132,7 @@ body {
     }
 
     .banner {
-        background: #86C447;
+        background: $green;
         height: 40px;
         margin-top: 20px;
     }
@@ -162,6 +169,11 @@ body {
             img {
                 vertical-align: text-bottom;
             }
+        }
+
+        &.nav-text {
+            color: #fff;
+            margin-right: 10px;
         }
     }
 }
@@ -284,8 +296,8 @@ form {
 
 
 
-.welcome {
-    background: url(/static/images/welcome-hero.jpg) no-repeat;
+.mission {
+    background: url(/static/images/mission-hero.jpg) no-repeat;
     background-size: cover;
 
     h1 {
@@ -403,14 +415,48 @@ form {
 }
 
 
+// welcome
+
+.welcome {
+    .role {
+        @include span(12);
+        @include opacity(.8);
+        height: 200px;
+        margin-bottom: 10px;
+
+
+        button {
+            height: 100%;
+            width: 100%;
+        }
+
+        @include breakpoint($tablet-and-up) {
+            @include span(6);
+
+            &:last-child {
+                @include span(last 6);
+            }
+        }
+
+        i {
+            font-size: 4em;
+            display: block;
+            margin-top: 20px;
+        }
+
+        &:hover {
+            @include opacity(1);
+        }
+    }
+}
+
 // my dojo
 
 .dojo-profile {
-    @include span-columns(12);
+    @include span(12);
 
-    @include at-breakpoint($small-tablet-and-up) {
-        @include span-columns(4);
-        @include nth-omega(2n);
+    @include breakpoint($tablet-and-up) {
+        @include span(4);
     }
 
     .avatar {
@@ -419,11 +465,10 @@ form {
 }
 
 .dojo-content {
-    @include span-columns(12);
+    @include span(12);
 
-    @include at-breakpoint($small-tablet-and-up) {
-        @include span-columns(8);
-        @include nth-omega(2n);
+    @include breakpoint($tablet-and-up) {
+        @include span(last 8);
     }
 }
 
@@ -505,19 +550,18 @@ form {
 // class-detail
 
 .class-detail-content {
-    @include span-columns(12);
+    @include span(12);
 
-    @include at-breakpoint($small-tablet-and-up) {
-        @include span-columns(8);
+    @include breakpoint($tablet-and-up) {
+        @include span(8);
     }
 }
 
 .class-detail-sidebar-right {
-    @include span-columns(12);
+    @include span(12);
 
-    @include at-breakpoint($small-tablet-and-up) {
-        @include span-columns(4);
-        @include nth-omega(2n);
+    @include breakpoint($tablet-and-up) {
+        @include span(last 4);
     }
 }
 
