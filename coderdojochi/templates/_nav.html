@@ -11,12 +11,13 @@
         <div class="container">
             <nav role="navigation">
                 <ul>
-                    <li><a{% if '/classes/' in request.path %} class="active"{% endif %} href="{% url 'classes' %}">Classes</a></li>
+                    <li><a{% if '/classes/' in request.path %} class="active"{% endif %} href="{% url 'sessions' %}">Classes</a></li>
                     <li><a{% if request.path == '/volunteer/' %} class="active"{% endif %} href="{% url 'volunteer' %}">Volunteer</a></li>
                     <li><a{% if request.path == '/faq/' %} class="active"{% endif %} href="{% url 'faqs' %}">FAQs</a></li>
                 </ul>
                 <ul class="nav-right">
                     {% if user.is_authenticated %}
+                    <li class="nav-text">Welcome {{ user }}!</li>
                     <li><a{% if request.path == '/dojo/' %} class="active"{% endif %} href="{% url 'dojo' %}">{% avatar user 25 %} My Dojo</a></li>
                     {% if user.is_staff %}
                     <li><a href="/admin">Admin</a></li>
@@ -24,6 +25,7 @@
                     <li><a href="{% url 'auth_logout' %}">Logout</a></li>
                     {% else %}
                     <li><a{% if request.path == '/accounts/login/' %} class="active"{% endif %} href="{% url 'auth_login' %}">Login</a></li>
+                    <li><a{% if request.path == '/accounts/register/' %} class="active"{% endif %} href="{% url 'registration_register' %}">Register</a></li>
                     {% endif %}
                 </ul>
             </nav>
