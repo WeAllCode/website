@@ -12,11 +12,13 @@ urlpatterns = patterns('',
 
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
 
-    url(r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$', 'coderdojochi.views.classes', name='classes'),
-    url(r'^classes/$', 'coderdojochi.views.classes', name='classes'),
-    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/sign-up/$', 'coderdojochi.views.class_sign_up', name='class_sign_up'),
-    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/$', 'coderdojochi.views.class_detail', name='class_detail'),
+    url(r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$', 'coderdojochi.views.sessions', name='sessions'),
+    url(r'^classes/$', 'coderdojochi.views.sessions', name='sessions'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/sign-up/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/$', 'coderdojochi.views.session_detail', name='session_detail'),
 
+
+    url(r'^welcome/$', 'coderdojochi.views.welcome', name='welcome'),
 
     url(r'^dojo/$', 'coderdojochi.views.dojo', name='dojo'),
 

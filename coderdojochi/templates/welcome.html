@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+
+{% load i18n avatar_tags bootstrap3 %}
+
+{% block title %}{{ class.title }} Sign Up{% endblock %}
+
+{% block body_class %}welcome{% endblock %}
+
+{% block content %}
+<div class="container registration min-height">
+    {% if role %}
+        {% if role == 'guardian' %}
+        <h1>Tell us a little more <small>Before you sign up your student(s), tell us a little more about yourself...</small></h1>
+        {% endif %}
+        {% if role == 'mentor' %}
+        <h1>Tell us a little more <small>Before you sign up to mentor classes, tell us a little more about yourself...</small></h1>
+        {% endif %}
+        {% if form %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button class="submit btn btn-primary btn-lg">Continue</button>
+        </form>
+        {% endif %}
+    {% else %}
+    <h1>Welcome to CoderDojoChi! <small>Thanks for registering!  Please choose from the following...</small></h1>
+    <div class="row">
+        <form method="post" action="" class="role">
+            {% csrf_token %}
+            <input type="hidden" name="role" value="parent">
+            <button>I would like to sign up my student(s)<i class="fa fa-graduation-cap"></i></button>
+        </form>
+        <form method="post" action="" class="role">
+            {% csrf_token %}
+            <input type="hidden" name="role" value="mentor">
+            <button>I would like to help mentor students<i class="fa fa-suitcase "></i></button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

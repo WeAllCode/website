@@ -3,6 +3,7 @@
 {% block title_placeholder %}Register{% endblock %}
 
 {% block content_placeholder %}
+<h2>Register <small>Create an account to sign up for classes and stay in touch.</small></h2>
 <form method="post" action=".">
     {% csrf_token %}
     {% bootstrap_form form %}
