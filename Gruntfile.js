@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             sprites: '<%= files.static %>/sprites',
             builtJS: '<%= files.static %>/build/js',
             builtCSS: '<%= files.static %>/build/css',
-            sourceMap: 'cdc-mobile.min.map'
+            sourceMap: 'cdc.min.map'
         },
 
         watch: {
@@ -62,7 +62,7 @@ module.exports = function(grunt) {
         compass: {
             dist: {
                 options: {
-                    require: ['susy'],
+                    require: ['susy', 'breakpoint'],
                     sassDir: '<%= files.sass %>',
                     cssDir: '<%= files.css %>',
                     imagesDir: '<%= files.img %>',
@@ -77,7 +77,7 @@ module.exports = function(grunt) {
             },
             dev: {
                 options: {
-                    require: ['susy'],
+                    require: ['susy', 'breakpoint'],
                     sassDir: '<%= files.sass %>',
                     cssDir: '<%= files.css %>',
                     imagesDir: '<%= files.img %>',
