@@ -10,30 +10,43 @@
 <div class="container registration min-height">
     {% if role %}
         {% if role == 'guardian' %}
-        <h1>Tell us a little more <small>Before you sign up your student(s), tell us a little more about yourself...</small></h1>
+            {% if not add_student %}
+            <h1>Tell us a little more <small>Before you sign up your student(s), tell us a little more about yourself...</small></h1>
+            {% else %}
+                {% if students %}
+                    <h1><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>You're all set! <small>Now you can <a href="{% url 'sessions' %}">view upcoming classes</a>, <a href="{% url 'dojo' %}">check out your dojo</a> or register another student below.</small></h1>
+                {% else %}
+                    <h1>Welcome {{ account.first_name }}! <small>Register your first student now <small class="light">(you can register additional students later)</small></small></h1>
+                {% endif %}
+            {% endif %}
         {% endif %}
         {% if role == 'mentor' %}
         <h1>Tell us a little more <small>Before you sign up to mentor classes, tell us a little more about yourself...</small></h1>
         {% endif %}
         {% if form %}
+        {% if add_student %}
+        <hr>
+        <h2>Register a{% if students %}nother{% endif %} student <small class="light">Complete the form below to register a{% if students %}nother{% endif %} student.</small></h2>
+        {% endif %}
         <form action="" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <button class="submit btn btn-primary btn-lg">Continue</button>
+            <button class="submit btn btn-primary btn-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
         </form>
         {% endif %}
     {% else %}
-    <h1>Welcome to CoderDojoChi! <small>Thanks for registering!  Please choose from the following...</small></h1>
+    <h1>Thanks for registering! <small>Let's get started...</small></h1>
+    <h2 class="text-muted">Who are you?</h2>
     <div class="row">
         <form method="post" action="" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="parent">
-            <button>I would like to sign up my student(s)<i class="fa fa-graduation-cap"></i></button>
+            <button class="btn btn-success">A Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
         </form>
         <form method="post" action="" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="mentor">
-            <button>I would like to help mentor students<i class="fa fa-suitcase "></i></button>
+            <button class="btn btn-success">A Mentor <small>Join our team!</small><i class="fa fa-suitcase "></i></button>
         </form>
     </div>
     {% endif %}
