@@ -31,7 +31,7 @@
         <form action="" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <button class="submit btn btn-primary btn-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
+            <button class="submit btn btn-success btn-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
         </form>
         {% endif %}
     {% else %}
