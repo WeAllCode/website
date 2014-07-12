@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'south',
     'avatar',
     'bootstrap3',
+    'html5',
 
     #coderdojochi
     'coderdojochi',

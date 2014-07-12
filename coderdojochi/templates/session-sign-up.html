@@ -2,18 +2,20 @@
 
 {% load i18n avatar_tags %}
 
-{% block title %}{{ class.title }} Sign Up{% endblock %}
+{% block title %}{{ session.course.title }} Sign Up{% endblock %}
 
 {% block body_class %}class-sign-up{% endblock %}
 
 {% block content %}
 <div class="container registration min-height">
-    <h1 class="light">{% if user_signed_up %}You can no longer make it{% else %}Sign up{% endif %} {% ifequal user.role 'mentor' %}to mentor {% endifequal %}for the class <strong>"{{ class.title }}"</strong> on <strong>{{ class.start_date|date }}</strong> from <strong>{{ class.start_date|time }}</strong> to <strong>{{ class.end_date|time }}</strong>?</h1>
+    <h1 class="light">
+    {% if user_signed_up %}{% ifequal user.role 'mentor' %}You{% else %}<strong>{{ student.first_name }} {{ student.last_name }}</strong> {% endifequal %} can no longer make it{% else %}{% ifequal user.role 'mentor' %}Sign up{% else %}Enroll <strong>{{ student.first_name }} {{ student.last_name }}</strong> {% endifequal %}{% endif %} {% ifequal user.role 'mentor' %}to mentor for{% else %}in{% endifequal %} the class <strong>"{{ session.course.title }}"</strong> on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>?</h1>
     <form class="form" method="POST" action="">
         {% csrf_token %}
-        <button class="btn btn-{% if user_signed_up %}danger{% else %}success{% endif %} btn-lg">{% if user_signed_up %}I can no longer make it{% else %}Yes, sign me up!{% endif %}</button>
-        <a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}" class="btn btn-default">{% if user_signed_up %}Nevermind{% else %}Not yet{% endif %}</a>
+        <button class="btn btn-{% if user_signed_up %}danger{% else %}success{% endif %} btn-lg">{% if user_signed_up %}Yes, cancel{% else %}Yes, can't wait!{% endif %}</button>
+        <a href="{% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-default">{% if user_signed_up %}Nevermind{% else %}Not yet{% endif %}</a>
     </form>
-    <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ class.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ class.location }}&amp;size=550x550&amp;sensor=false"></a>
+    <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=550x550&amp;sensor=false"></a>
+    <p class="text-center"><a target="_blank" href="https://www.google.com/maps/preview?q={{ session.location }}">Open in Google Maps</a></p>
 </div>
 {% endblock %}

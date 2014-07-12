@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
 from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order
-from coderdojochi.forms import MentorForm, GuardianForm
+from coderdojochi.forms import MentorForm, GuardianForm, StudentForm
 
 from calendar import HTMLCalendar
 from datetime import date, datetime, timedelta
@@ -37,10 +37,13 @@ def home(request, template_name="home.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
+@login_required
 def welcome(request, template_name="welcome.html"):
 
     user = request.user
     account = False
+    add_student = False
+    students = False
     form = False
     role = user.role if user.role else False
 
@@ -49,12 +52,23 @@ def welcome(request, template_name="welcome.html"):
             if role == 'mentor':
                 form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
             else:
-                form = GuardianForm(request.POST, instance=get_object_or_404(Guardian, user=user))
+                account = get_object_or_404(Guardian, user=user)
+                if not account.first_name:
+                    form = GuardianForm(request.POST, instance=account)
+                else:
+                    form = StudentForm(request.POST)
+                    if form.is_valid():
+                        new_student = form.save(commit=False)
+                        new_student.guardian = account
+                        new_student.save()
+                        messages.add_message(request, messages.SUCCESS, 'Student Registered.')
+                    return HttpResponseRedirect(reverse('welcome'))
 
             if form.is_valid():
                 form.save()
-                messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
-                return HttpResponseRedirect(reverse('dojo'))
+                if role == 'mentor' or account.get_students().count():
+                    messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
+                    return HttpResponseRedirect(reverse('dojo'))
             else:
                 messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
         else:
@@ -79,17 +93,26 @@ def welcome(request, template_name="welcome.html"):
         if role == 'guardian':
             guardian = get_object_or_404(Guardian, user=user)
             account = guardian
-            form = GuardianForm(instance=account)
-
+            if not account.first_name:
+                form = GuardianForm(instance=account)
+            else:
+                add_student = True
+                form = StudentForm(initial={'guardian': guardian.pk})
 
     if account and account.first_name:
-        return HttpResponseRedirect(reverse('dojo'))
+        if role == 'mentor':
+            return HttpResponseRedirect(reverse('dojo'))
+        else:
+            students = account.get_students() if account.get_students().count() else False
 
     return render_to_response(template_name, {
         'role': role,
         'account': account,
-        'form': form
+        'form': form,
+        'add_student': add_student,
+        'students': students,
     }, context_instance=RequestContext(request))
+
 
 def sessions(request, year=False, month=False, template_name="sessions.html"):
 
@@ -119,63 +142,77 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
 def session_detail(request, year, month, day, slug, template_name="session-detail.html"):
     session_obj = get_object_or_404(Session, course__slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
 
-    if request.user.is_authenticated():
+    mentor_signed_up = False
+    is_guardian = False
+    students = False
 
+    if request.user.is_authenticated():
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
-            user_signed_up = True if mentor in session_obj.mentors.all() else False
+            mentor_signed_up = True if mentor in session_obj.mentors.all() else False
         else:
-            student = get_object_or_404(Student, user=request.user)
-            user_signed_up = True if student in session_obj.student.all() else False
+            guardian = get_object_or_404(Guardian, user=request.user)
+            is_guardian = True
+            students = guardian.get_students() if guardian.get_students().count() else False
     else:
         user_signed_up = False
 
 
     return render_to_response(template_name,{
         'session': session_obj,
-        'user_signed_up': user_signed_up
+        'mentor_signed_up': mentor_signed_up,
+        'is_guardian': is_guardian,
+        'students': students,
     }, context_instance=RequestContext(request))
 
-def session_sign_up(request, year, month, day, slug, template_name="session-sign-up.html"):
-    session_obj = get_object_or_404(Session, slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
+
+@login_required
+def session_sign_up(request, year, month, day, slug, student_id=False, template_name="session-sign-up.html"):
+
+    session_obj = get_object_or_404(Session, course__slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
+    student = False
+    guardian = False
 
     if request.user.role == 'mentor':
         mentor = get_object_or_404(Mentor, user=request.user)
         user_signed_up = True if mentor in session_obj.mentors.all() else False
     else:
-        student = get_object_or_404(Student, user=request.user)
-        user_signed_up = True if student in session_obj.student.all() else False
+        student = get_object_or_404(Student, id=student_id)
+        guardian = get_object_or_404(Guardian, user=request.user)
+        user_signed_up = True if student.is_registered_for_session(session_obj) else False
 
     undo = False
 
     if request.method == 'POST':
+
         if request.user.role == 'mentor':
-            mentor = get_object_or_404(Mentor, user=request.user)
-            if mentor in session_obj.mentors.all():
+            if user_signed_up:
                 session_obj.mentors.remove(mentor)
                 undo = True
             else:
                 session_obj.mentors.add(mentor)
         else:
-            student = get_object_or_404(Student, user=request.user)
-            if student in session_obj.get_current_students().all():
-                session_obj.students.remove(student)
+            if user_signed_up:
+                order = get_object_or_404(Order, student=student, session=session_obj)
+                order.delete()
                 undo = True
             else:
-                session_obj.students.add(student)
+                ip = '1234132324'
+                order = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
         session_obj.save()
 
         if undo:
-            messages.add_message(request, messages.SUCCESS, 'You are no longer attending the class. Thanks for letting us know!')
+            messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
         else:
-            messages.add_message(request, messages.SUCCESS, 'Sign up successful, see you there!')
+            messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug)))
 
     return render_to_response(template_name,{
         'session': session_obj,
-        'user_signed_up': user_signed_up
+        'user_signed_up': user_signed_up,
+        'student': student
     }, context_instance=RequestContext(request))
 
 
@@ -190,7 +227,9 @@ def faqs(request, template_name="faqs.html"):
 @login_required
 def dojo(request, template_name="dojo.html"):
 
-    context = {}
+    context = {
+        'user': request.user
+    }
 
     if request.user.role:
 
@@ -291,3 +330,37 @@ class SessionsCalendar(HTMLCalendar):
 
     def day_cell(self, cssclass, body):
         return '<td class="%s">%s</td>' % (cssclass, body)
+
+
+@login_required
+def student_detail(request, student_id=False, template_name="student-detail.html"):
+
+    access = True
+
+    if request.user.role == 'guardian' and student_id:
+        student = get_object_or_404(Student, id=student_id)
+        guardian = get_object_or_404(Guardian, user=request.user)
+
+        if not student.guardian == guardian:
+            access = False
+
+        form = StudentForm(instance=student)
+    else:
+        access = False
+
+
+    if not access:
+        return HttpResponseRedirect(reverse('dojo'))
+        messages.add_message(request, messages.ERROR, 'You do not have permissions to edit this student.')
+
+
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Student Updated.')
+            return HttpResponseRedirect(reverse('dojo'))
+
+    return render_to_response(template_name, {
+        'form': form
+    }, context_instance=RequestContext(request))
