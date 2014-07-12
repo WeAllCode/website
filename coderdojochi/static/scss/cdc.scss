@@ -61,10 +61,14 @@ body{
 
 h1, h2, h3 {
     small {
-        color: #999;
+        color: #666;
         font-weight: normal;
         display: block;
-        font-size: .7em;
+        font-size: .6em;
+
+        &.light {
+            color: #999;
+        }
     }
 
     &.light {
@@ -118,13 +122,13 @@ body {
 
         li {
             a {
-                color: #666;
+                color: #999;
                 font-size: 1.5em;
                 margin-left: 5px;
                 padding: 0;
 
                 &:hover {
-                    color: #222;
+                    color: #444;
                     background: none;
                 }
             }
@@ -420,7 +424,7 @@ form {
 .welcome {
     .role {
         @include span(12);
-        @include opacity(.8);
+        @include opacity(.9);
         height: 200px;
         margin-bottom: 10px;
 
@@ -428,6 +432,18 @@ form {
         button {
             height: 100%;
             width: 100%;
+            font-size: 2em;
+
+            small {
+                display: block;
+                font-size: .5em;
+            }
+
+            i {
+                font-size: 2em;
+                display: block;
+                margin-top: 20px;
+            }
         }
 
         @include breakpoint($tablet-and-up) {
@@ -438,11 +454,6 @@ form {
             }
         }
 
-        i {
-            font-size: 4em;
-            display: block;
-            margin-top: 20px;
-        }
 
         &:hover {
             @include opacity(1);
@@ -606,5 +617,13 @@ form {
                 margin-top: 5px;
             }
         }
+    }
+}
+
+.students {
+    width: 100%;
+
+    td {
+        padding: 5px;
     }
 }

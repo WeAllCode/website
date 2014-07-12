@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% load avatar_tags bootstrap3 humanize %}
+{% load avatar_tags bootstrap3 humanize coderdojochi_extras %}
 
 {% block title %}My Dojo{% endblock %}
 
@@ -33,7 +33,40 @@
         </div>
     </div>
     <div class="dojo-content">
-        <h2>My Classes</h2>
+        {% if user.role == 'guardian' %}
+            <h2>Students</h2>
+            {% if students %}
+                <table class="students table-striped ">
+                    <thead>
+                        <tr class="text-muted">
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Medical Conditions</th>
+                            <th>Medications</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.first_name }} {{ student.last_name }}</td>
+                            <td>{{ student.get_age }}</td>
+                            <td>{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
+                            <td>{% if student.medications %}Yes{% else %}No{% endif %}</td>
+                            <td>
+                                <a href="{% url 'student_detail' student.id %}" class="btn btn-sm btn-default">Edit Info</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <p><a href="{% url 'welcome' %}">Add another student</a></p>
+            {% else %}
+            <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
+            {% endif %}
+        {% endif %}
+
+        <h2>Classes</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
             <li><a href="#past" data-toggle="tab">Past</a></li>
@@ -41,38 +74,86 @@
 
         <div class="tab-content">
             <div class="tab-pane active" id="upcoming">
-                {% if upcoming_sessions %}
+                {% if upcoming_sessions or upcoming_orders %}
                 <br>
                 <table class="table table-striped">
-                    <tbody>
-                    {% for session in upcoming_sessions %}
+                    <thead>
                         <tr>
-                            <td><a href="{% url 'class_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{{ session.title }}</a></td>
-                            <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
+                            <th>Class</th>
+                            <th>Date</th>
+                            {% if user.role == 'guardian' %}
+                            <th>Student</th>
+                            {% endif %}
+                            <th></th>
                         </tr>
-                    {% endfor %}
+                    </thead>
+                    <tbody>
+                    {% if user.role == 'guardian' %}
+                        {% for order in upcoming_orders %}
+                            <tr>
+                                <td><a href="{% url 'session_detail' order.session.start_date.year order.session.start_date.month order.session.start_date.day order.session.course.slug %}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
+                                <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
+                                <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
+                                <td>{% student_register_link order.student order.session %}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        {% for session in upcoming_sessions %}
+                            <tr>
+                                <td><a href="{% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
+                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
+                                <td>
+                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-danger btn-sm">Can't make it</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                     </tbody>
                 </table>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have no upcoming sessions. <a href="{% url 'sessions' %}">Find one now!</a></p>
+                <p class="text-center text-muted">You have no upcoming classes. <a href="{% url 'sessions' %}">Find one now!</a></p>
                 {% endif %}
             </div>
             <div class="tab-pane" id="past">
-                {% if past_sessions %}
+                {% if past_sessions or past_orders %}
                 <table class="table table-striped">
-                    <tbody>
-                    {% for session in past_sessions %}
+                    <thead>
                         <tr>
-                            <td><a href="{% url 'class_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{{ session.title }}</a></td>
-                            <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
+                            <th>Class</th>
+                            <th>Date</th>
+                            {% if user.role == 'guardian' %}
+                            <th>Student</th>
+                            {% endif %}
+                            <th></th>
                         </tr>
-                    {% endfor %}
+                    </thead>
+                    <tbody>
+                    {% if user.role == 'guardian' %}
+                        {% for order in past_orders %}
+                            <tr>
+                                <td><a href="{% url 'session_detail' order.session.start_date.year order.session.start_date.month order.session.start_date.day order.session.course.slug %}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
+                                <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
+                                <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
+                                <td>{% student_register_link order.student order.session %}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        {% for session in past_sessions %}
+                            <tr>
+                                <td><a href="{% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
+                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
+                                <td>
+                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-danger btn-sm">Can't make it</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                     </tbody>
                 </table>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have not participated in any sessions yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
+                <p class="text-center text-muted">You have not participated in any classes yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
                 {% endif %}
             </div>
         </div>

@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n avatar_tags %}
+{% load i18n avatar_tags coderdojochi_extras %}
 
 {% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }}{% endblock %}
 
@@ -8,34 +8,68 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="light">{% if session.course.code %}<small>{{ session.course.code }}:</small> {% endif %}{{ session.course.title }} <small><i class="fa fa-clock-o"></i> {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</small></h1>
+    <h1 class="light">
+        {% if session.course.code %}<small>{{ session.course.code }}:</small> {% endif %}
+        {{ session.course.title }}
+        <small><i class="fa fa-clock-o"></i> {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</small>
+        <small class="light"><i class="fa fa-map-marker"></i> {{ session.location }}</small>
+    </h1>
     <div class="row">
         <div class="class-detail-content">
             <p class="lead drop-caps">{{ session.course.description|safe }}</p>
             <h2>Class Information</h2>
-            <h4>When:</h4>
+            <strong><i class="fa fa-clock-o"></i> When:</strong>
             <p>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
-            <h4>Where:</h4>
+            <strong><i class="fa fa-map-marker"></i> Where:</strong>
             <p>{{ session.location }}</p>
             {% if session.additional_info %}
-            <h4>Additional Info:</h4>
+            <strong><i class="fa fa-info"></i> Additional Info:</strong>
             <p>{{ session.additional_info|safe }}</p>
             {% endif %}
         </div>
         <div class="class-detail-sidebar-right">
             <div id="sign-up" class="well">
-                {% if user_signed_up %}
-                    <h2>You are signed up for this class!</h2>
-                    <p>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></p>
-                    <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-danger btn-sm">Oops! I can't make it...</a></p>
-                {% else %}
-                    <h2>Sign up</h2>
-                    {% if user.is_authenticated %}
-                    <p>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></p>
-                    <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-success btn-lg">Sign up {% ifequal user.role 'mentor'%}to mentor{% else %}for this class{% endifequal %} now!</a></p>
+                {% if user.is_authenticated %}
+                    {% if is_guardian %}
+                        <h2>Enroll your student{% if students and students.count > 1 %}s{% endif %} now! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
+
+                        {% if students %}
+                            <table class="students table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th>Student{% if students and students.count > 1 %}s{% endif %}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for student in students %}
+                                    <tr>
+                                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                        <td>
+                                            {% student_register_link student session %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <br>
+                            <small><a href="{% url 'welcome' %}">Need to add another student?</a></small>
+                        {% else %}
+                        <p>To enroll, you must first <a href="{% url 'welcome' %}">register a student</a>.</p>
+                        {% endif %}
+
                     {% else %}
-                    <p><a href="{% url 'auth_login' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Login</a> or <a href="{% url 'registration_register' %}">register</a> to sign up for this session.</p>
+                        {% if mentor_signed_up %}
+                            <h2>You are signed up to mentor at this class! <small>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
+                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-danger btn-sm">Oops! I can't make it...</a></p>
+                        {% else %}
+                            <h2>Sign up to mentor at this class! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
+
+                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-success btn-lg">Sign up now!</a></p>
+                        {% endif %}
                     {% endif %}
+                {% else %}
+                <p><a href="{% url 'auth_login' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Login</a> or <a href="{% url 'registration_register' %}">register</a> to sign up for this session.</p>
                 {% endif %}
             </div>
             <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x500&amp;sensor=false"></a>
