@@ -151,4 +151,4 @@ class Order(models.Model):
         verbose_name_plural = _("orders")
 
     def __unicode__(self):
-        return self.user.username + ' | ' + self.session.course.title
+        return self.student.first_name + ' ' + self.student.last_name + ' | ' + self.session.course.title
