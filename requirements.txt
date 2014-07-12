@@ -1,4 +1,11 @@
 Django==1.6.1
+Pillow==2.4.0
 South==0.8.4
-git+https://github.com/CoderDojoChi/django-registration
+django-appconf==0.6
+django-avatar==2.0
+django-bootstrap3==4.7.0
+django-html5==1.0.0
+django-registration==1.0
+pytz==2014.4
+six==1.7.2
 wsgiref==0.1.2
