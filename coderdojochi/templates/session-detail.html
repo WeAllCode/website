@@ -31,33 +31,38 @@
             <div id="sign-up" class="well">
                 {% if user.is_authenticated %}
                     {% if is_guardian %}
-                        <h2>Enroll your student{% if students and students.count > 1 %}s{% endif %} now! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
+                        {% if session.capacity|subtract:session.get_current_students.all.count %}
+                            <small class="pull-left">{{ session.capacity|subtract:session.get_current_students.all.count }} Spots Remaining</small>
+                            <h2>Enroll your student{% if students and students.count > 1 %}s{% endif %} now! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
 
-                        {% if students %}
-                            <table class="students table-striped ">
-                                <thead>
-                                    <tr>
-                                        <th>Student{% if students and students.count > 1 %}s{% endif %}</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {% for student in students %}
-                                    <tr>
-                                        <td>{{ student.first_name }} {{ student.last_name }}</td>
-                                        <td>
-                                            {% student_register_link student session %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            <br>
-                            <small><a href="{% url 'welcome' %}">Need to add another student?</a></small>
+                            {% if students %}
+                                <table class="students table-striped ">
+                                    <thead>
+                                        <tr>
+                                            <th>Student{% if students and students.count > 1 %}s{% endif %}</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for student in students %}
+                                        <tr>
+                                            <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                            <td>
+                                                {% student_register_link student session %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <br>
+                                <small><a href="{% url 'welcome' %}">Need to add another student?</a></small>
+                            {% else %}
+                            <p>To enroll, you must first <a href="{% url 'welcome' %}">register a student</a>.</p>
+                            {% endif %}
                         {% else %}
-                        <p>To enroll, you must first <a href="{% url 'welcome' %}">register a student</a>.</p>
+                            <h2>This class is currently full</h2>
+                            <p>There are currently no available spots for this class.  Please check back or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
                         {% endif %}
-
                     {% else %}
                         {% if mentor_signed_up %}
                             <h2>You are signed up to mentor at this class! <small>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
@@ -69,7 +74,7 @@
                         {% endif %}
                     {% endif %}
                 {% else %}
-                <p><a href="{% url 'auth_login' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Login</a> or <a href="{% url 'registration_register' %}">register</a> to sign up for this session.</p>
+                    <p><a href="{% url 'auth_login' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Login</a> or <a href="{% url 'registration_register' %}">register</a> to sign up for this session.</p>
                 {% endif %}
             </div>
             <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x500&amp;sensor=false"></a>
