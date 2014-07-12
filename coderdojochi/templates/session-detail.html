@@ -76,7 +76,7 @@
             <p class="text-center"><a target="_blank" href="https://www.google.com/maps/preview?q={{ session.location }}">Open in Google Maps</a></p>
         </div>
     </div>
-
+    {% if session.teacher %}
     <h2>Teacher</h2>
     <div class="mentors">
         <div class="mentor">
@@ -87,6 +87,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
     {% if session.mentors.all %}
     <h2>Mentors</h2>
