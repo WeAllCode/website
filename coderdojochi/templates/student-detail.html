@@ -12,7 +12,7 @@
 <form action="" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
-    <button class="submit btn btn-primary btn-lg">Update</button> <a href="{% url 'dojo' %}" class="btn-link">Cancel</button>
+    <button class="submit btn btn-success btn-lg">Update</button> <a href="{% url 'dojo' %}" class="btn-link">Cancel</button>
 </form>
 </div>
 {% endblock %}
