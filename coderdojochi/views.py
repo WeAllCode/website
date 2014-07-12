@@ -197,7 +197,7 @@ def session_sign_up(request, year, month, day, slug, student_id=False, template_
                 order.delete()
                 undo = True
             else:
-                ip = '1234132324'
+                ip = request.META['REMOTE_ADDR']
                 order = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
         session_obj.save()
