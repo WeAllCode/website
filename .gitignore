@@ -65,3 +65,4 @@ nosetests.xml
 coderdojochi/migrations
 test_settings.py
 .env
+local_settings.py
