@@ -10,9 +10,7 @@
 <div class="panels">
     <div class="splash panel">
         <div class="panel-content">
-            <video autoplay loop muted poster="{% static "images/transparent.png" %}" class="bg-video">
-                <source src="{% static "video/class_timelapse.mp4" %}" type="video/webm">
-            </video>
+            <div class="hero"></div>
             <div class="clouds">
                 <div class="cloud-1"></div>
                 <div class="cloud-2"></div>
@@ -46,10 +44,6 @@
 var skrollrAPI = skrollr.init({forceHeight: false});
 
 $(function (){
-    $('.panels:first').snapscroll({
-        scrollSpeed: 750,
-        scrollEndSpeed: 300
-    });
     $('.brand').on('click', function(e) {
         e.preventDefault();
         $('html, body').animate({

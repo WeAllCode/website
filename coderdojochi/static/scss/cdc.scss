@@ -284,16 +284,14 @@ form {
 
 .splash {
 
-    .bg-video {
+    .hero {
         position: absolute;
         right: 0;
         bottom: 0;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
+        width: 100%;
+        height: 100%;
         z-index: -100;
-        background: transparent url(/static/images/splash-bg.jpg) no-repeat;
+        background: transparent url(/static/images/hero3.jpg) no-repeat;
         background-size: cover;
     }
 }
@@ -301,16 +299,20 @@ form {
 
 
 .mission {
-    background: url(/static/images/mission-hero.jpg) no-repeat;
+    background: url(/static/images/hero1.jpg) no-repeat;
     background-size: cover;
 
     h1 {
-        color: #fff;
-        font-size: 5em;
+        color: #000;
+        font-size: 2.5em;
         text-transform: uppercase;
         margin-bottom: 20px;
         line-height: 1.1;
         margin-top: 120px;
+        padding: 15px;
+        background: #FFF;
+        background: rgba(255, 255, 255, 0.6);
+        float: left;
     }
 
     .highlight {
@@ -330,7 +332,7 @@ form {
     overflow: hidden;
     left: 0;
     width: 100%;
-    top: 35%;
+    top: 350px;
     z-index: 2;
     padding: 100px 0;
     @include transform(translatez(0));
