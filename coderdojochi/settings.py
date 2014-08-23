@@ -42,6 +42,7 @@ INSTALLED_APPS = (
 
     #vendor
     'registration',
+    'social_auth',
     'south',
     'avatar',
     'bootstrap3',
@@ -71,16 +72,35 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request'
 )
 
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 ROOT_URLCONF = 'coderdojochi.urls'
 
 WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
-AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
-# django-registration
+
+# Registration
 ACCOUNT_ACTIVATION_DAYS = 7
+LOGIN_URL = '/login-form/'
 LOGIN_REDIRECT_URL = '/dojo/'
+LOGIN_ERROR_URL = '/login-error/'
+GOOGLE_OAUTH2_CLIENT_ID = '294736693640-inucj2ptaap06iggukfurmqihblavbt8.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'rgdutyo5mqCN7yOIMxET9hHv'
+GOOGLE_DISPLAY_NAME = 'CoderDojoChi'
+FACEBOOK_APP_ID = '1454178301519376'
+FACEBOOK_API_SECRET = '36edff0d6d4a9686647f76f2d0f511ed'
 
+AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+
+# Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
