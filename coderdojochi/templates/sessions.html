@@ -54,14 +54,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for class in all_classes %}
+                {% for session in all_sessions %}
                     <tr>
-                        <td><a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}">{{ class.title }}</a></td>
-                        <td>{{ class.start_date|date }} <span class="text-muted">{{ class.start_date|time }}</span></td>
-                        <td>{{ class.capacity|subtract:class.students.all.count }}</td>
+                        <td><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
+                        <td>{{ session.start_date|date }} <span class="text-muted">{{ session.start_date|time }}</span></td>
+                        <td>{{ session.capacity|subtract:session.get_current_students.all.count }}</td>
                         <td>
-                            {% if class.capacity|subtract:class.students.all.count %}
-                            <a href="{% url 'class_detail' class.start_date.year class.start_date.month class.start_date.day class.slug %}" class="btn btn-success btn-sm">Sign up now!</a>
+                            {% if session.capacity|subtract:session.get_current_students.all.count %}
+                            <a href="{{ session.get_absolute_url }}" class="btn btn-success btn-sm">Sign up now!</a>
                             {% else %}
                             <button class="btn btn-default btn-sm disabled" disabled>Class is full</a>
                             {% endif %}

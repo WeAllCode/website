@@ -13,7 +13,7 @@
     <form class="form" method="POST" action="">
         {% csrf_token %}
         <button class="btn btn-{% if user_signed_up %}danger{% else %}success{% endif %} btn-lg">{% if user_signed_up %}Yes, cancel{% else %}Yes, can't wait!{% endif %}</button>
-        <a href="{% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-default">{% if user_signed_up %}Nevermind{% else %}Not yet{% endif %}</a>
+        <a href="{{ session.get_absolute_url }}" class="btn btn-default">{% if user_signed_up %}Nevermind{% else %}Not yet{% endif %}</a>
     </form>
     <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=550x550&amp;sensor=false"></a>
     <p class="text-center"><a target="_blank" href="https://www.google.com/maps/preview?q={{ session.location }}">Open in Google Maps</a></p>
