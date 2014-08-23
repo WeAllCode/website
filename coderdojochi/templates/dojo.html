@@ -91,7 +91,7 @@
                     {% if user.role == 'guardian' %}
                         {% for order in upcoming_orders %}
                             <tr>
-                                <td><a href="{% url 'session_detail' order.session.start_date.year order.session.start_date.month order.session.start_date.day order.session.course.slug %}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
+                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
                                 <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
                                 <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
                                 <td>{% student_register_link order.student order.session %}</td>
@@ -100,10 +100,10 @@
                     {% else %}
                         {% for session in upcoming_sessions %}
                             <tr>
-                                <td><a href="{% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
+                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
                                 <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                                 <td>
-                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-danger btn-sm">Can't make it</a>
+                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Can't make it</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -132,7 +132,7 @@
                     {% if user.role == 'guardian' %}
                         {% for order in past_orders %}
                             <tr>
-                                <td><a href="{% url 'session_detail' order.session.start_date.year order.session.start_date.month order.session.start_date.day order.session.course.slug %}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
+                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
                                 <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
                                 <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
                                 <td>{% student_register_link order.student order.session %}</td>
@@ -141,10 +141,10 @@
                     {% else %}
                         {% for session in past_sessions %}
                             <tr>
-                                <td><a href="{% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
+                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
                                 <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                                 <td>
-                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-danger btn-sm">Can't make it</a>
+                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Can't make it</a>
                                 </td>
                             </tr>
                         {% endfor %}

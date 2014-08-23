@@ -33,7 +33,7 @@
                     {% if is_guardian %}
                         {% if session.capacity|subtract:session.get_current_students.all.count %}
                             <small class="pull-left">{{ session.capacity|subtract:session.get_current_students.all.count }} Spots Remaining</small>
-                            <h2>Enroll your student{% if students and students.count > 1 %}s{% endif %} now! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
+                            <h2>Enroll your student{% if students and students.count > 1 %}s{% endif %} now! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ session.get_absolute_url }}">Logout.</a></small></h2>
 
                             {% if students %}
                                 <table class="students table-striped ">
@@ -65,16 +65,16 @@
                         {% endif %}
                     {% else %}
                         {% if mentor_signed_up %}
-                            <h2>You are signed up to mentor at this class! <small>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
-                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-danger btn-sm">Oops! I can't make it...</a></p>
+                            <h2>You are signed up to mentor at this class! <small>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ session.get_absolute_url }}">Logout.</a></small></h2>
+                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Oops! I can't make it...</a></p>
                         {% else %}
-                            <h2>Sign up to mentor at this class! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Logout.</a></small></h2>
+                            <h2>Sign up to mentor at this class! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ session.get_absolute_url }}">Logout.</a></small></h2>
 
-                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}" class="btn btn-success btn-lg">Sign up now!</a></p>
+                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-success btn-lg">Sign up now!</a></p>
                         {% endif %}
                     {% endif %}
                 {% else %}
-                    <p><a href="{% url 'auth_login' %}?next={% url 'session_detail' session.start_date.year session.start_date.month session.start_date.day session.course.slug %}">Login</a> or <a href="{% url 'registration_register' %}">register</a> to sign up for this session.</p>
+                    <p><a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">Login</a> or <a href="{% url 'registration_register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
                 {% endif %}
             </div>
             <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x500&amp;sensor=false"></a>
