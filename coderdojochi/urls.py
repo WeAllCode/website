@@ -35,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
 
     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'', include('social_auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^avatar/', include('avatar.urls')),
 )
