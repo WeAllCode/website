@@ -17,9 +17,9 @@ urlpatterns = patterns('',
 
     url(r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$', 'coderdojochi.views.sessions', name='sessions'),
     url(r'^classes/$', 'coderdojochi.views.sessions', name='sessions'),
-    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/sign-up/(?P<student_id>[\d]+)/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
-    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/sign-up/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
-    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/$', 'coderdojochi.views.session_detail', name='session_detail'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<class_id>[\d]+)/sign-up/(?P<student_id>[\d]+)/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<class_id>[\d]+)/sign-up/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<class_id>[\d]+)$', 'coderdojochi.views.session_detail', name='session_detail'),
 
 
     url(r'^welcome/$', 'coderdojochi.views.welcome', name='welcome'),
@@ -35,6 +35,7 @@ urlpatterns = patterns('',
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
 
     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'', include('social_auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^avatar/', include('avatar.urls')),
     url(r'^contact/', include('contact_form.urls')),
