@@ -17,6 +17,7 @@ class CDCUser(AbstractUser):
     role = models.CharField(choices=MentorType, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
 
+
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
     first_name = models.CharField(max_length=255, blank=True, null=True)
@@ -125,7 +126,7 @@ class Session(models.Model):
         verbose_name_plural = _("sessions")
 
     def get_absolute_url(self):
-        return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.course.slug
+        return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.course.slug + '/' + str(self.id)
 
     def get_current_students(self):
         students = Order.objects.filter(session=self).values('student')
