@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body_class %}contact{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{% trans "Contact" %}</h1>
+
+    <p>{{foo}}</p>
+    <p>{{bar}}</p>
+</div>
+{% endblock %}
