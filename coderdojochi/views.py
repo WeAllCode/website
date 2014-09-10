@@ -139,8 +139,8 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     }, context_instance=RequestContext(request))
 
 
-def session_detail(request, year, month, day, slug, template_name="session-detail.html"):
-    session_obj = get_object_or_404(Session, course__slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
+def session_detail(request, year, month, day, slug, class_id, template_name="session-detail.html"):
+    session_obj = get_object_or_404(Session, id=class_id)
 
     mentor_signed_up = False
     is_guardian = False
@@ -167,9 +167,9 @@ def session_detail(request, year, month, day, slug, template_name="session-detai
 
 
 @login_required
-def session_sign_up(request, year, month, day, slug, student_id=False, template_name="session-sign-up.html"):
+def session_sign_up(request, year, month, day, slug, id, student_id=False, template_name="session-sign-up.html"):
 
-    session_obj = get_object_or_404(Session, course__slug=slug, start_date__year=year, start_date__month=month, start_date__day=day)
+    session_obj = get_object_or_404(Session, id=id)
     student = False
     guardian = False
 
@@ -207,7 +207,7 @@ def session_sign_up(request, year, month, day, slug, student_id=False, template_
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
 
-        return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug)))
+        return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
     return render_to_response(template_name,{
         'session': session_obj,
