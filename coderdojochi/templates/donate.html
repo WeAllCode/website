@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block title %}Donate{% endblock %}
+
+{% block body_class %}Donate{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>
+        {% trans "Donate" %}  {{ name }}
+    </h1>
+    <p>
+        CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thanks you. 
+    </p>
+</div>
+{% endblock %}

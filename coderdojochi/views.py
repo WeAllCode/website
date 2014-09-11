@@ -364,3 +364,7 @@ def student_detail(request, student_id=False, template_name="student-detail.html
     return render_to_response(template_name, {
         'form': form
     }, context_instance=RequestContext(request))
+
+def donate(request, template_name="donate.html"):
+
+    return render_to_response(template_name,{}, context_instance=RequestContext(request))
