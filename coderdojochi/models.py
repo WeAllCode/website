@@ -8,19 +8,13 @@ from django.utils import formats
 
 from django.template.defaultfilters import slugify
 
-MentorType = (
+Roles = (
     ('mentor', 'mentor'),
-    ('gaurdian', 'gaurdian'),
+    ('guardian', 'guardian'),
 )
 
-DeviceType = {
-    ('Finch','Finch'),
-    ('Computer','Computer'),
-    ('Mouse','Mouse'),
-}
-
 class CDCUser(AbstractUser):
-    role = models.CharField(choices=MentorType, max_length=10, blank=True, null=True)
+    role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
 
 
@@ -103,6 +97,7 @@ class Course(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 
+
     class Meta:
         verbose_name = _("course")
         verbose_name_plural = _("courses")
@@ -161,14 +156,33 @@ class Order(models.Model):
         return self.student.first_name + ' ' + self.student.last_name + ' | ' + self.session.course.title
 
 class EquipmentType(models.Model):
-    deviceType  = models.CharField(choices=DeviceType, max_length=10, blank=False, null=False)
     name = models.CharField(max_length=255,blank=False,null=False)
 
-class EquipmentTable(models.Model):
-    equipType = models.ForeignKey(EquipmentType)
-    location = models.CharField(max_length=255,blank=True,null=True)
-    quantity = models.IntegerField(default=0)
-    forCourse = models.ForeignKey(Course)
-        
+    def __unicode__(self):
+        return self.name
+
+EquiptmentConditions = (
+    ('working', 'Working'),
+    ('issue', 'Issue'),
+    ('unusable', 'Unusable'),
+)
+
+class Equipment(models.Model):
+    equipment_type = models.ForeignKey(EquipmentType)
+    make = models.CharField(max_length=255)
+    model = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    asset_tag = models.CharField(max_length=255)
+    aquisition_date = models.DateTimeField(blank=False,null=False)
+    condition = models.CharField(max_length=255, choices=EquiptmentConditions)
+    notes = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("equiptment")
+        verbose_name_plural = _("equiptment")
+
+    def __unicode__(self):
+        return self.equipment_type.name + ' | ' + self.make + ' ' + self.model + ' | ' + str(self.aquisition_date)
+
         
         
