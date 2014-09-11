@@ -13,6 +13,12 @@ MentorType = (
     ('gaurdian', 'gaurdian'),
 )
 
+DeviceType = {
+    ('Finch','Finch'),
+    ('Computer','Computer'),
+    ('Mouse','Mouse'),
+}
+
 class CDCUser(AbstractUser):
     role = models.CharField(choices=MentorType, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
@@ -153,3 +159,16 @@ class Order(models.Model):
 
     def __unicode__(self):
         return self.student.first_name + ' ' + self.student.last_name + ' | ' + self.session.course.title
+
+class EquipmentType(models.Model):
+    deviceType  = models.CharField(choices=DeviceType, max_length=10, blank=False, null=False)
+    name = models.CharField(max_length=255,blank=False,null=False)
+
+class EquipmentTable(models.Model):
+    equipType = models.ForeignKey(EquipmentType)
+    location = models.CharField(max_length=255,blank=True,null=True)
+    quantity = models.IntegerField(default=0)
+    forCourse = models.ForeignKey(Course)
+        
+        
+        
