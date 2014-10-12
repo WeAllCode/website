@@ -180,6 +180,7 @@ body {
             height: 40px;
             line-height: 40px;
             padding: 0 10px;
+            font-size: .85em;
 
             &:hover, &.active {
                 background: #4f9752;
@@ -446,8 +447,17 @@ form {
             margin: 5px 0;
         }
 
+        small {
+            display: block;
+            color: #f3f3f3;
+        }
+
         a:not(.btn) {
             color: #fff;
+
+            small {
+                color: #fff;
+            }
         }
 
         em.underline {
