@@ -373,8 +373,8 @@ def donate(request, template_name="donate.html"):
 
 def sendNewSessionEmail(subject, session):
 
-    plaintext = get_template('session-update.txt')
-    htmly     = get_template('session-update.html')
+    plaintext = get_template('email/session-update.txt')
+    htmly     = get_template('email/session-update.html')
 
     d = Context({
         'user': request.user
