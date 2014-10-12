@@ -3,14 +3,6 @@
 
 
 // ---------------------------------------------------------------------------
-// Sprites
-
-$global-sprite-dimensions: true;
-$global-spacing: 10px;
-@import 'global/*.png';
-@include all-global-sprites;
-
-// ---------------------------------------------------------------------------
 // Global Helpers
 
 * {
@@ -52,6 +44,12 @@ $global-spacing: 10px;
     }
 }
 
+.ir {
+    font: 0/0 a;
+    text-shadow: none;
+    color: transparent;
+}
+
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 
@@ -76,6 +74,18 @@ h1, h2, h3 {
     }
 }
 
+/* -------------------------------------------------------------------------*/
+/* Links / Buttons */
+
+.login-facebook {
+    @include use-sprite("login-facebook", "global");
+    @extend .ir;
+}
+
+.login-google {
+    @include use-sprite("login-google", "global");
+    @extend .ir;
+}
 
 /* -------------------------------------------------------------------------*/
 /* Global Layout */
@@ -105,6 +115,11 @@ body {
 .row {
     @extend %clearfix;
     margin: 10px 0;
+}
+
+.half {
+    float: left;
+    width: 50%;
 }
 
 .navbar {
@@ -192,7 +207,7 @@ body {
 
     .logo {
         display: block;
-        @extend .global-logo;
+        @include use-sprite("logo", "global");
         @extend %ir;
 
         @include transform(rotateX(0deg) rotateY(0deg) rotateZ(0deg));
