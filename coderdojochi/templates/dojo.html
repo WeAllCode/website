@@ -91,7 +91,7 @@
                     {% if user.role == 'guardian' %}
                         {% for order in upcoming_orders %}
                             <tr>
-                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
+                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
                                 <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
                                 <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
                                 <td>{% student_register_link order.student order.session %}</td>
@@ -100,7 +100,7 @@
                     {% else %}
                         {% for session in upcoming_sessions %}
                             <tr>
-                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
+                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}({{ session.course.code }}) {% endif %}{{ session.course.title }}</a></td>
                                 <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                                 <td>
                                     <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Can't make it</a>
@@ -132,7 +132,7 @@
                     {% if user.role == 'guardian' %}
                         {% for order in past_orders %}
                             <tr>
-                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.title %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
+                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
                                 <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
                                 <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
                                 <td>{% student_register_link order.student order.session %}</td>
@@ -141,7 +141,7 @@
                     {% else %}
                         {% for session in past_sessions %}
                             <tr>
-                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.title %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
+                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
                                 <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                                 <td>
                                     <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Can't make it</a>
@@ -157,6 +157,33 @@
                 {% endif %}
             </div>
         </div>
+        <br>
+        <hr>
+        <h2>Mentor Meetings</h2>
+        {% if upcoming_meetings %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Meeting</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for meeting in upcoming_meetings %}
+                <tr>
+                    <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.title }}</a></td>
+                    <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
+                    <td>
+                        <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn btn-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}Sign up now{% endif%}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-center text-muted">No upcoming mentor meetings at this time.</p>
+        {% endif %}
     </div>
 </div>
 
