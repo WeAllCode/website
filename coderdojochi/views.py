@@ -225,6 +225,58 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
     }, context_instance=RequestContext(request))
 
 
+def meeting_detail(request, year, month, day, meeting_id, template_name="meeting-detail.html"):
+    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
+
+    mentor_signed_up = False
+
+    if request.user.is_authenticated():
+        mentor = get_object_or_404(Mentor, user=request.user)
+        mentor_signed_up = True if mentor in meeting_obj.mentors.all() else False
+
+    return render_to_response(template_name,{
+        'meeting': meeting_obj,
+        'mentor_signed_up': mentor_signed_up,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, template_name="meeting-sign-up.html"):
+
+    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
+
+    mentor = get_object_or_404(Mentor, user=request.user)
+    user_signed_up = True if mentor in meeting_obj.mentors.all() else False
+
+    undo = False
+
+    if request.method == 'POST':
+
+        if user_signed_up:
+            meeting_obj.mentors.remove(mentor)
+            undo = True
+        else:
+            meeting_obj.mentors.add(mentor)
+
+        meeting_obj.save()
+
+        if undo:
+            messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
+        else:
+            messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
+            
+            sendSystemEmail(request, 'Upcoming Mentor Meeting', 'email/meeting-update.txt', 'email/meeting-update.html', Context({
+                'user': request.user,
+                'meeting': meeting_obj
+            }))
+
+        return HttpResponseRedirect(reverse('meeting_detail', args=(meeting_obj.start_date.year, meeting_obj.start_date.month, meeting_obj.start_date.day, meeting_obj.id)))
+
+    return render_to_response(template_name,{
+        'meeting': meeting_obj,
+        'user_signed_up': user_signed_up
+    }, context_instance=RequestContext(request))
+
 def volunteer(request, template_name="volunteer.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))

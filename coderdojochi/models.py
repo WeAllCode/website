@@ -111,7 +111,7 @@ class Course(models.Model):
 
 class Session(models.Model):
     course = models.ForeignKey(Course)
-    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
@@ -135,6 +135,28 @@ class Session(models.Model):
 
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
+
+class Meeting(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="meeting_mentors")
+    active = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        verbose_name = _("meeting")
+        verbose_name_plural = _("meetings")
+
+    def get_absolute_url(self):
+        return '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id)
+
+    def __unicode__(self):
+        return self.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
 
 class Order(models.Model):
     guardian = models.ForeignKey(Guardian)
