@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^$', 'coderdojochi.views.home', name='home'),
     url(r'^faqs/$', 'coderdojochi.views.faqs', name='faqs'),
     url(r'^donate/$','coderdojochi.views.donate',name='donate'),
-
+    url(r'^about/$','coderdojochi.views.about',name='about'),
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
 
 
