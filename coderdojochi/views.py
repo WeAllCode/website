@@ -81,6 +81,11 @@ def welcome(request, template_name="welcome.html"):
                 guardian.save()
                 user.role = 'guardian'
 
+        sendSystemEmail(request, 'Welcome!', 'email/welcome.txt', 'email/welcome.html', Context({
+            'user': request.user,
+            'site_url': settings.SITE_URL
+        }))
+
         user.save()
         return HttpResponseRedirect(reverse('welcome'))
 
@@ -190,7 +195,6 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 undo = True
             else:
                 session_obj.mentors.add(mentor)
-                sendNewSessionEmail(request, 'Your upcoming class', session_obj)
         else:
             if user_signed_up:
                 order = get_object_or_404(Order, student=student, session=session_obj)
@@ -199,7 +203,6 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             else:
                 ip = request.META['REMOTE_ADDR']
                 order = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
-                sendNewSessionEmail(request, 'Your upcoming class', session_obj)
 
         session_obj.save()
 
@@ -207,6 +210,11 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
+            
+            sendSystemEmail(request, 'Upcoming class confirmation', 'email/session-update.txt', 'email/session-update.html', Context({
+                'user': request.user,
+                'session': session_obj
+            }))
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
@@ -371,22 +379,15 @@ def donate(request, template_name="donate.html"):
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
 
-def sendNewSessionEmail(request, subject, session):
+def sendSystemEmail(request, subject, txt, html, context):
 
-    plaintext = get_template('email/session-update.txt')
-    htmly     = get_template('email/session-update.html')
+    plaintext = get_template(txt)
+    htmly     = get_template(html)
 
-    d = Context({
-        'user': request.user,
-        'session': session
-    })
-
-    text_content = plaintext.render(d)
-    html_content = htmly.render(d)
+    text_content = plaintext.render(context)
+    html_content = htmly.render(context)
     
     from_email = 'CoderDojoChi', settings.DEFAULT_FROM_EMAIL
-    text_content = plaintext.render(d)
-    html_content = htmly.render(d)
     msg = EmailMultiAlternatives(subject, text_content, from_email, [request.user.email])
     msg.attach_alternative(html_content, "text/html")
 
