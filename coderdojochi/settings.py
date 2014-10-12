@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'html5',
     'contact_form',
+    'djrill',
 
     #coderdojochi
     'coderdojochi',
@@ -104,7 +105,6 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
