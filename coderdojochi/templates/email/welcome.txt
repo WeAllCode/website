@@ -1,0 +1,7 @@
+Hi {{ user}},
+{% if user.role == 'mentor' %}
+Thank you for signing up as a mentor with CoderDojoChi! Sign up to mentor your first class now! ({{ site_url }}/classes)
+{% endif %}
+{% if user.role == 'guardian' %}
+Thank you for signing up as a guardian with CoderDojoChi! Add your students ({{ site_url }}/welcome) or view upcoming classes now ({{ site_url }}/classes).
+{% endif %}
