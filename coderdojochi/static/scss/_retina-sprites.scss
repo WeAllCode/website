@@ -1,0 +1,43 @@
+/*
+ * Retina Sprites for Compass  (modified for CoderDojoChi)
+ * by:              Gaya Kessler
+ * last update:     03/11/14
+ *
+ * Usage:
+ * 1. create two folders in your image directory (in this case 'icons' and 'icons-2x').
+ * 2. adjust the foldernames defined below if you use different names.
+ * 3. create sprite images for pixel ratio 1 screens and put them in the first folder.
+ * 4. create sprite images for pixel ratio 2 screens and put them in the second folder, use the same filenames.
+ * 5. use the sprite-image in your Sass/Scss using: '@include use-sprite(<sprite-name>)'
+ */
+
+//first we'll define the folders where the sprites are and their layouts
+$global: sprite-map("global/*.png", $spacing: 5px);
+$global-2x: sprite-map("global-2x/*.png", $spacing: 5px);
+$global-url-icons: sprite-url($global);
+$global-url-icons-2x: sprite-url($global-2x);
+
+//Sprite mixin, works perfectly with standard defines
+@mixin use-sprite($image, $sprite:"global") {
+    
+    $icons: $global;
+    $icons-2x: $global-2x;
+    $sprite-url-icons: $global-url-icons;
+    $sprite-url-icons-2x: $global-url-icons-2x;
+    
+    background-image: $sprite-url-icons;
+    background-position: sprite-position($icons, $image);
+    background-repeat: no-repeat;
+    overflow: hidden;
+    display: inline-block;
+    height: image-height(sprite-file($icons, $image));
+    width: image-width(sprite-file($icons, $image));
+
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        background-image: $sprite-url-icons-2x;
+        background-size: round(image-width(sprite-path($icons-2x)) / 2) round(image-height(sprite-path($icons-2x)) / 2);
+        background-position: round(nth(sprite-position($icons-2x, $image), 1) / 2) round(nth(sprite-position($icons-2x, $image), 2) / 2);
+        height: round(image-height(sprite-file($icons-2x, $image)) / 2);
+        width: round(image-width(sprite-file($icons-2x, $image)) / 2);
+    }
+}
