@@ -428,15 +428,15 @@ form {
     .upcoming-class {
         position: absolute;
         max-width: 350px;
+        min-width: 300px;
         left: -350px;
         bottom: 30px;
         font-size: .9em;
-        padding: 15px 60px 10px 20px;
+        padding: 15px 20px 10px;
         background: #000;
         background: rgb(134, 196, 71);
         color: #fff;
         z-index: 2;
-        border-left: 5px solid #fff;
 
         .title {
             margin: 0 0 15px;
