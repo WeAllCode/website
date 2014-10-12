@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+
+{% load i18n avatar_tags %}
+
+{% block title %}{{ meeting.title }} Sign Up{% endblock %}
+
+{% block body_class %}class-sign-up{% endblock %}
+
+{% block content %}
+<div class="container registration min-height">
+    <h1 class="light">
+    {% if user_signed_up %}You can no longer make it{% else %}Sign up{% endif %} to attend the mentor meeting <strong>"{{ meeting.title }}"</strong> on <strong>{{ meeting.start_date|date }}</strong> from <strong>{{ meeting.start_date|time }}</strong> to <strong>{{ meeting.end_date|time }}</strong>?</h1>
+    <form class="form" method="POST" action="">
+        {% csrf_token %}
+        <button class="btn btn-{% if user_signed_up %}danger{% else %}success{% endif %} btn-lg">{% if user_signed_up %}Yes, cancel{% else %}Yes, can't wait!{% endif %}</button>
+        <a href="{{ meeting.get_absolute_url }}" class="btn btn-default">{% if user_signed_up %}Nevermind{% else %}Not yet{% endif %}</a>
+    </form>
+    <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ meeting.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ meeting.location }}&amp;size=550x550&amp;sensor=false"></a>
+    <p class="text-center"><a target="_blank" href="https://www.google.com/maps/preview?q={{ meeting.location }}">Open in Google Maps</a></p>
+</div>
+{% endblock %}
