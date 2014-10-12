@@ -371,7 +371,7 @@ def donate(request, template_name="donate.html"):
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
 
-def sendNewSessionEmail(subject, session):
+def sendNewSessionEmail(request, subject, session):
 
     plaintext = get_template('email/session-update.txt')
     htmly     = get_template('email/session-update.html')
