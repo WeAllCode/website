@@ -95,6 +95,7 @@ GOOGLE_OAUTH2_CLIENT_SECRET = 'rgdutyo5mqCN7yOIMxET9hHv'
 GOOGLE_DISPLAY_NAME = 'CoderDojoChi'
 FACEBOOK_APP_ID = '1454178301519376'
 FACEBOOK_API_SECRET = '36edff0d6d4a9686647f76f2d0f511ed'
+SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
 AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'

@@ -139,8 +139,8 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     }, context_instance=RequestContext(request))
 
 
-def session_detail(request, year, month, day, slug, class_id, template_name="session-detail.html"):
-    session_obj = get_object_or_404(Session, id=class_id)
+def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html"):
+    session_obj = get_object_or_404(Session, id=session_id)
 
     mentor_signed_up = False
     is_guardian = False
@@ -157,7 +157,6 @@ def session_detail(request, year, month, day, slug, class_id, template_name="ses
     else:
         user_signed_up = False
 
-
     return render_to_response(template_name,{
         'session': session_obj,
         'mentor_signed_up': mentor_signed_up,
@@ -167,9 +166,9 @@ def session_detail(request, year, month, day, slug, class_id, template_name="ses
 
 
 @login_required
-def session_sign_up(request, year, month, day, slug, id, student_id=False, template_name="session-sign-up.html"):
+def session_sign_up(request, year, month, day, slug, session_id, student_id=False, template_name="session-sign-up.html"):
 
-    session_obj = get_object_or_404(Session, id=id)
+    session_obj = get_object_or_404(Session, id=session_id)
     student = False
     guardian = False
 
