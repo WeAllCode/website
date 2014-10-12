@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm
 
 from calendar import HTMLCalendar
@@ -302,6 +302,8 @@ def dojo(request, template_name="dojo.html"):
             upcoming_sessions = mentor_sessions.filter(active=True).order_by('start_date')
             past_sessions = mentor_sessions.exclude(active=True).order_by('start_date')
 
+            upcoming_meetings = Meeting.objects.filter(active=True).order_by('start_date')
+
 
             if request.method == 'POST':
                 form = MentorForm(request.POST, instance=account)
@@ -315,6 +317,7 @@ def dojo(request, template_name="dojo.html"):
                 form = MentorForm(instance=account)
 
             context['upcoming_sessions'] = upcoming_sessions
+            context['upcoming_meetings'] = upcoming_meetings
             context['past_sessions'] = past_sessions
 
         if request.user.role == 'guardian':
