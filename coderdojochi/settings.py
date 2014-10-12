@@ -28,6 +28,8 @@ TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = ['*']
 
 
+SITE_URL = 'http://localhost:8000'
+
 # Application definition
 
 INSTALLED_APPS = (
