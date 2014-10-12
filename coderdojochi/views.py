@@ -35,7 +35,11 @@ def add_months(sourcedate, months):
 
 def home(request, template_name="home.html"):
 
-    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+    upcoming_class = Session.objects.filter(active=True).order_by('start_date').first()
+
+    return render_to_response(template_name, {
+        'upcoming_class': upcoming_class
+    }, context_instance=RequestContext(request))
 
 @login_required
 def welcome(request, template_name="welcome.html"):
@@ -430,6 +434,11 @@ def student_detail(request, student_id=False, template_name="student-detail.html
     }, context_instance=RequestContext(request))
 
 def donate(request, template_name="donate.html"):
+
+    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+
+
+def about(request, template_name="about.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
