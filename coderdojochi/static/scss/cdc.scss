@@ -118,8 +118,8 @@ body {
 }
 
 .half {
-    float: left;
     width: 50%;
+    display: inline-block;
 }
 
 .navbar {
