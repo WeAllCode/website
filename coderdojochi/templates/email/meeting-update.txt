@@ -1,5 +1,5 @@
 Hi, {{username }}.
-Thank you for signing up for the following mentor meeting...
+Thank you for signing up to attend the following mentor meeting...
 {{ meeting.title }}
 on {{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}
 at {{ meeting.location }}.
