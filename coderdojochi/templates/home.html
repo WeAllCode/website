@@ -21,7 +21,7 @@
             {% if upcoming_class %}
             <div class="upcoming-class">
                 <h3 class="title"><i class="fa fa-calendar"></i> Our next class...</h3>
-                <p>{{ upcoming_class.course.title }}</p>
+                <p>{% if session.course.code %}<small>{{ upcoming_class.course.code }}</small> {% endif %}{{ upcoming_class.course.title }}</p>
                 <p>{{ upcoming_class.start_date|date }} at {{ upcoming_class.start_date|time }}</p>
                 <p><em class="underline">{{ upcoming_class.capacity|subtract:upcoming_class.get_current_students.all.count }}</em> spots left</p>
                 <p>
