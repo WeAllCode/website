@@ -190,6 +190,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 undo = True
             else:
                 session_obj.mentors.add(mentor)
+                sendNewSessionEmail(request, 'Your upcoming class', session_obj)
         else:
             if user_signed_up:
                 order = get_object_or_404(Order, student=student, session=session_obj)
@@ -198,6 +199,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             else:
                 ip = request.META['REMOTE_ADDR']
                 order = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
+                sendNewSessionEmail(request, 'Your upcoming class', session_obj)
 
         session_obj.save()
 
@@ -367,3 +369,30 @@ def student_detail(request, student_id=False, template_name="student-detail.html
 def donate(request, template_name="donate.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
+
+
+def sendNewSessionEmail(subject, session):
+
+    plaintext = get_template('session-update.txt')
+    htmly     = get_template('session-update.html')
+
+    d = Context({
+        'user': request.user
+        'session': session
+    })
+
+    text_content = plaintext.render(d)
+    html_content = htmly.render(d)
+    
+    from_email = 'CoderDojoChi', settings.DEFAULT_FROM_EMAIL
+    text_content = plaintext.render(d)
+    html_content = htmly.render(d)
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [request.user.email])
+    msg.attach_alternative(html_content, "text/html")
+
+    # Optional Mandrill-specific extensions:
+    # msg.tags = ['one tag', 'two tag', 'red tag', 'blue tag']
+    # msg.metadata = {'user_id': '8675309'}
+
+    # Send it:
+    msg.send()
