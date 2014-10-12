@@ -90,9 +90,9 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
 # Registration
 ACCOUNT_ACTIVATION_DAYS = 7
-LOGIN_URL = '/login-form/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dojo/'
-LOGIN_ERROR_URL = '/login-error/'
+LOGIN_ERROR_URL = '/accounts/login/'
 GOOGLE_OAUTH2_CLIENT_ID = '294736693640-inucj2ptaap06iggukfurmqihblavbt8.apps.googleusercontent.com'
 GOOGLE_OAUTH2_CLIENT_SECRET = 'rgdutyo5mqCN7yOIMxET9hHv'
 GOOGLE_DISPLAY_NAME = 'CoderDojoChi'
