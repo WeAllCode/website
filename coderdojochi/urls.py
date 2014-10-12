@@ -22,6 +22,8 @@ urlpatterns = patterns('',
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)$', 'coderdojochi.views.session_detail', name='session_detail'),
 
+    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)/sign-up/$', 'coderdojochi.views.meeting_sign_up', name='meeting_sign_up'),
+    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)$', 'coderdojochi.views.meeting_detail', name='meeting_detail'),
 
     url(r'^welcome/$', 'coderdojochi.views.welcome', name='welcome'),
 
