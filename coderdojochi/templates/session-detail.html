@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container">
     <h1 class="light">
-        {% if session.course.code %}<small>{{ session.course.code }}:</small> {% endif %}
+        {% if session.course.code %}<small>{{ session.course.code }}</small> {% endif %}
         {{ session.course.title }}
         <small><i class="fa fa-clock-o"></i> {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</small>
         <small class="light"><i class="fa fa-map-marker"></i> {{ session.location }}</small>

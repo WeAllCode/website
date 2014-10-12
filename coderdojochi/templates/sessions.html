@@ -56,7 +56,7 @@
                 <tbody>
                 {% for session in all_sessions %}
                     <tr>
-                        <td><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
+                        <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}<small>{{ session.course.code }}</small> {% endif %}{{ session.course.title }}</a></td>
                         <td>{{ session.start_date|date }} <span class="text-muted">{{ session.start_date|time }}</span></td>
                         <td>{{ session.capacity|subtract:session.get_current_students.all.count }}</td>
                         <td>
