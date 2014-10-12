@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^faqs/$', 'coderdojochi.views.faqs', name='faqs'),
     url(r'^donate/$','coderdojochi.views.donate',name='donate'),
     url(r'^about/$','coderdojochi.views.about',name='about'),
+    url(r'^privacy/$','coderdojochi.views.privacy',name='privacy'),
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
 
 

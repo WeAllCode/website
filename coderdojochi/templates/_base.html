@@ -31,7 +31,7 @@
         {% block footer_base %}
         <footer>
             <div class="container">
-                <p class="text-muted">&copy;{% now "Y" %}. All rights reserved. <span class="pull-right"><a href="{% url 'contact_form' %}">Contact Us</a> <a href="#">Privacy &amp; Terms</a></span></p>
+                <p class="text-muted">&copy;{% now "Y" %}. All rights reserved. <span class="pull-right"><a href="{% url 'contact_form' %}">Contact Us</a> <a href="{% url 'privacy' %}">Privacy &amp; Terms</a></span></p>
             </div>
         </footer>
         {% endblock %}

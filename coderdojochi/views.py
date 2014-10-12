@@ -443,6 +443,11 @@ def about(request, template_name="about.html"):
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
 
+def privacy(request, template_name="privacy.html"):
+
+    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+    
+
 def sendSystemEmail(request, subject, txt, html, context):
 
     plaintext = get_template(txt)
