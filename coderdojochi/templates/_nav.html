@@ -19,7 +19,7 @@
                     <li><a{% if request.path == '/about/' %} class="active"{% endif %} href="{% url 'about' %}">About</a></li>
                     <li><a{% if request.path == '/faq/' %} class="active"{% endif %} href="{% url 'faqs' %}">FAQs</a></li>
                     {% if user.is_authenticated %}
-                    <li><a{% if request.path == '/dojo/' %} class="active"{% endif %} href="{% url 'dojo' %}">{% avatar user 25 %} My Dojo</a></li>
+                    <li><a{% if request.path == '/dojo/' %} class="active"{% endif %} href="{% url 'dojo' %}">{% avatar user 20 %} My Dojo</a></li>
                     {% if user.is_staff %}
                     <li><a href="/admin">Admin</a></li>
                     {% endif %}
