@@ -377,7 +377,7 @@ def sendNewSessionEmail(subject, session):
     htmly     = get_template('email/session-update.html')
 
     d = Context({
-        'user': request.user
+        'user': request.user,
         'session': session
     })
 
