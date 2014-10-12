@@ -1,0 +1,6 @@
+Hi, {{username }}.
+{% if user.role == 'mentor' %}Thank you for signing up as a mentor for the following upcoming class...{% endif %}
+{% if user.role == 'guardian' %}Thank you for signing up your student for the following upcoming class...{% endif %}
+{% if session.course.code %} {{ session.course.code }}: {% endif %}{{ session.course.title }}
+on {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}
+at {{ session.location }}.
