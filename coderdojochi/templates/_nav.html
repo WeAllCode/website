@@ -21,7 +21,7 @@
                 {% if user.is_staff %}
                 <li><a href="/admin">Admin</a></li>
                 {% endif %}
-                <li><a href="{% url 'auth_logout' %}?next=/">Logout</a></li>
+                <li><a href="{% url 'auth_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
                 <li{% if '/accounts/login/' in request.path %} class="active"{% endif %}><a href="{% url 'auth_login' %}">Login</a></li>
                 <li{% if '/accounts/register/' in request.path %} class="active"{% endif %}><a href="{% url 'registration_register' %}">Register</a></li>
