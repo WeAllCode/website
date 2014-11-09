@@ -1,16 +1,19 @@
-.main-nav {
+.navbar-default {
     background-color: $cdc;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
 
-    a {
+    .navbar-nav > li > a:hover,
+    .navbar-nav > li > a:focus {
         color: #FFF;
         text-transform: uppercase;
     }
 
-    .nav-right {
-        float: right;
+    .navbar-nav > .active > a,
+    .navbar-nav > .active > a:hover,
+    .navbar-nav > .active > a:focus {
+        color: #FFF;
+        text-transform: uppercase;
     }
+
 }
 
 .logo {
