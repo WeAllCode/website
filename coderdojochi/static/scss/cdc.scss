@@ -50,6 +50,10 @@
     color: transparent;
 }
 
+.space-above {
+    margin-top: 50px;
+}
+
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 
@@ -77,6 +81,15 @@ h1, h2, h3, h4 {
 
 /* -------------------------------------------------------------------------*/
 /* Links / Buttons */
+
+a {
+    color: #000;
+    text-decoration: underline;
+
+    &:hover {
+        color: $cdc-color;
+    }
+}
 
 .login-facebook {
     @include use-sprite("login-facebook", "global");
@@ -504,6 +517,24 @@ form {
 
 .class-detail {
 
+    .class-detail-content {
+        @include span(12);
+
+        @include breakpoint($tablet-and-up) {
+            @include span(8);
+        }
+    }
+
+    .class-detail-sidebar-right {
+        @include span(12);
+        background: #fff;
+        padding: 0 26px;
+
+        @include breakpoint($tablet-and-up) {
+            @include span(last 3);
+        }
+    }
+
     .title {
         font-size: 24px;
         font-weight: 700;
@@ -513,22 +544,7 @@ form {
     .subtitle {
         @extend .title;
         font-size: 18px;
-    }
-
-    .class-detail-content {
-        @include span(12);
-
-        @include breakpoint($tablet-and-up) {
-            @include span(9);
-        }
-    }
-
-    .class-detail-sidebar-right {
-        @include span(12);
-
-        @include breakpoint($tablet-and-up) {
-            @include span(last 3);
-        }
+        margin-bottom: 30px;
     }
 
     .upcoming-class {
@@ -555,31 +571,59 @@ form {
         }
     }
 
-    .mentors {
+    .teachers {
         overflow: hidden;
+        margin-bottom: 40px;
 
-        .mentor {
+        .teacher {
             margin: 0 0 10px 0;
             overflow: hidden;
 
             img {
-                border: 2px solid #222;
-                width: 150px;
-                height: 150px;
+                width: 220px;
+                height: 220px;
                 float: left;
             }
 
             .info {
+                font-size: 12px;
                 float: left;
-                margin-left: 20px;
+                margin-left: 50px;
 
-                .title {
-                    margin-bottom: 5px;
+                .subtitle {
+                    margin-bottom: 30px;
                 }
+            }
+        }
+    }
 
-                p {
-                    margin-top: 5px;
-                }
+    .mentors {
+        overflow: hidden;
+        padding-top: 10px;
+
+        .mentor {
+
+            float: left;
+            margin-right: 20px;
+            position: relative;
+
+            img {
+                width: 140px;
+                height: 140px;
+                float: left;
+            }
+
+            .info {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                background: #000;
+                background: rgba(0,0,0,.65);
+                padding: 10px;
+                color: #fff;
+                text-transform: uppercase;
             }
         }
     }
