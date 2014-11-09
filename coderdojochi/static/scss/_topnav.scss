@@ -1,5 +1,5 @@
 .navbar-default {
-    background-color: $cdc;
+    background-color: $cdc-color;
 
     @include breakpoint($tablet-and-up) {
         .navbar-nav {
