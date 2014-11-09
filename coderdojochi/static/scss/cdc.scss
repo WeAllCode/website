@@ -57,7 +57,7 @@ body{
     font-family: 'Open Sans', sans-serif;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
     small {
         color: #666;
         font-weight: normal;
@@ -92,14 +92,6 @@ h1, h2, h3 {
 
 html, body {
     height: 100%;
-}
-
-body {
-    padding-top: 125px;
-
-    &.homepage {
-        padding-top: 0;
-    }
 }
 
 .container {
@@ -182,7 +174,6 @@ form {
 /* Pages */
 
 // homepage
-
 
 .homepage {
 
@@ -516,6 +507,17 @@ form {
 
 .class-detail {
 
+    .title {
+        font-size: 24px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .subtitle {
+        @extend .title;
+        font-size: 18px;
+    }
+
     .class-detail-content {
         @include span(12);
 
@@ -532,24 +534,27 @@ form {
         }
     }
 
-    .upcoming-classe {
+    .upcoming-class {
         .date {
             float: left;
+            margin-right: 10px;
         }
     }
 
     .map {
-        display: block;
-        width: 100%;
-        margin-top: 40px;
-        border: 2px solid #86C447;
-
-        &:hover {
-          border: 2px solid #4f9752;
-        }
-
-        img {
+        .static-map {
+            display: block;
             width: 100%;
+            margin-top: 40px;
+            border: 2px solid #86C447;
+
+            &:hover {
+              border: 2px solid #4f9752;
+            }
+
+            img {
+                width: 100%;
+            }
         }
     }
 

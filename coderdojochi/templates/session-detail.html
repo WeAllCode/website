@@ -10,14 +10,11 @@
 <div class="container">
     <div class="row">
         <div class="class-detail-content">
-            <h1 class="light">
-                {% if session.course.code %}<small>{{ session.course.code }}</small> {% endif %}
-                {{ session.course.title }}
-                <small>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</small>
-            </h1>
+            <h1 class="title">{{ session.course.title }}</h1>
+            
             <p>{{ session.course.description|safe }}</p>
             
-            <h2>Class Information</h2>
+            <h2 class="title light">Class Information</h2>
             
             <strong>Who</strong>
             <p>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
@@ -84,8 +81,9 @@
             </div>
             <p><small>{{ session.capacity|subtract:session.get_current_students.all.count }} Spots Remaining</small></p>
             <p><button class="btn btn-default">Share</button></p>
-            <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x500&amp;sensor=false"></a>
-
+            <div class="map">
+                <a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x500&amp;sensor=false"></a>
+            </div>
             <h3>Upcoming Classes</h3>
             {% for upcoming_class in upcoming_classes %}
             <div class="upcoming-class">
@@ -96,7 +94,7 @@
         </div>
     </div>
     {% if session.teacher %}
-    <h2>About the teacher</h2>
+    <h2 class="subtitle">About the teacher</h2>
     <div class="mentors">
         <div class="mentor">
             {% avatar session.teacher.user %}
@@ -109,7 +107,7 @@
     {% endif %}
 
     {% if session.mentors.all %}
-    <h2>Meet the mentors</h2>
+    <h2 class="subtitle">Meet the mentors</h2>
     <div class="mentors">
         {% for mentor in session.mentors.all %}
         <div class="mentor">
