@@ -13,6 +13,7 @@
         color: #FFF;
         text-transform: uppercase;
         font-weight: 300;
+        text-decoration: none;
     }
 
     .navbar-nav > .active > a,
@@ -20,7 +21,7 @@
     .navbar-nav > .active > a:focus {
         color: #FFF;
         background-color: transparent;
-        // text-decoration: underline;
+        text-decoration: none;
         border-bottom: 2px solid #FFF;
         padding-bottom: 5px;
     }
