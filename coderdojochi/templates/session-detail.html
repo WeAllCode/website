@@ -58,16 +58,9 @@
                 {% if user.is_authenticated %}
                     {% if is_guardian %}
                         {% if session.capacity|subtract:session.get_current_students.all.count %}
-                            <h2>Enroll your student{% if students and students.count > 1 %}s{% endif %} now! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ session.get_absolute_url }}">Logout.</a></small></h2>
-
                             {% if students %}
-                                <table class="students table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Student{% if students and students.count > 1 %}s{% endif %}</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
+                                <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-lg btn-block">Enroll student{% if students and students.count > 1 %}s{% endif %}</a></p>
+                                <!-- <table class="students table-striped">
                                     <tbody>
                                     {% for student in students %}
                                         <tr>
@@ -80,7 +73,7 @@
                                     </tbody>
                                 </table>
                                 <br>
-                                <small><a href="{% url 'welcome' %}">Need to add another student?</a></small>
+                                <small><a href="{% url 'welcome' %}">Need to add another student?</a></small> -->
                             {% else %}
                             <p>To enroll, you must first <a href="{% url 'welcome' %}">register a student</a>.</p>
                             {% endif %}
