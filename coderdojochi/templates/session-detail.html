@@ -90,7 +90,8 @@
                         {% endif %}
                     {% else %}
                         {% if mentor_signed_up %}
-                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Oops! I can't make it...</a></p>
+                            <p>You are signed up to mentor this class.</p>
+                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                         {% else %}
                             <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
                         {% endif %}
