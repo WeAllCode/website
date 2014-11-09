@@ -77,8 +77,8 @@ audio:not([controls]) {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/_normalize\.scss}line{font-family:\0000394}}
 html {
-  background: white;
-  color: black;
+  background: #fff;
+  color: #000;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
@@ -463,12 +463,12 @@ body.homepage {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003105}}
 .container {
-  max-width: 1200px;
+  max-width: 960px;
   margin-left: auto;
   margin-right: auto;
   padding: 0 10px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Library\/Ruby\/Gems\/2\.0\.0\/gems\/susy-2\.1\.2\/sass\/susy\/output\/support\/_clearfix\.scss}line{font-family:\0000312}}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Library\/Ruby\/Gems\/2\.0\.0\/gems\/susy-2\.1\.3\/sass\/susy\/output\/support\/_clearfix\.scss}line{font-family:\0000312}}
 .container:after {
   content: " ";
   display: block;
@@ -520,7 +520,7 @@ body.homepage {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003153}}
 .navbar .banner {
-  background: #86c447;
+  background: #86C447;
   height: 40px;
   margin-top: 20px;
 }
@@ -918,34 +918,25 @@ form p {
 }
 
 @-webkit-keyframes moveclouds {
-  /* line 477, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
   }
-
-  /* line 478, ../scss/cdc.scss */
   100% {
     margin-left: -20%;
   }
 }
 @-moz-keyframes moveclouds {
-  /* line 481, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
   }
-
-  /* line 482, ../scss/cdc.scss */
   100% {
     margin-left: -20%;
   }
 }
 @-o-keyframes moveclouds {
-  /* line 485, ../scss/cdc.scss */
   0% {
     margin-left: 100%;
   }
-
-  /* line 486, ../scss/cdc.scss */
   100% {
     margin-left: -20%;
   }
@@ -1114,7 +1105,7 @@ form p {
 @media (min-width: 40em) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003631}}
   .class-detail-content {
-    width: 66.10169%;
+    width: 74.57627%;
     float: left;
     margin-right: 1.69492%;
   }
@@ -1130,7 +1121,7 @@ form p {
 @media (min-width: 40em) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003639}}
   .class-detail-sidebar-right {
-    width: 32.20339%;
+    width: 23.72881%;
     float: right;
     margin-right: 0;
   }
