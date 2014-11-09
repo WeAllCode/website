@@ -628,70 +628,80 @@ form {
 
 // class-detail
 
-.class-detail-content {
-    @include span(12);
+.class-detail {
 
-    @include breakpoint($tablet-and-up) {
-        @include span(9);
-    }
-}
+    .class-detail-content {
+        @include span(12);
 
-.class-detail-sidebar-right {
-    @include span(12);
-
-    @include breakpoint($tablet-and-up) {
-        @include span(last 3);
-    }
-}
-
-.map {
-    display: block;
-    width: 100%;
-    margin-top: 40px;
-    border: 2px solid #86C447;
-
-    &:hover {
-      border: 2px solid #4f9752;
+        @include breakpoint($tablet-and-up) {
+            @include span(9);
+        }
     }
 
-    img {
+    .class-detail-sidebar-right {
+        @include span(12);
+
+        @include breakpoint($tablet-and-up) {
+            @include span(last 3);
+        }
+    }
+
+    .upcoming-classe {
+        .date {
+            float: left;
+        }
+    }
+
+    .map {
+        display: block;
         width: 100%;
-    }
-}
+        margin-top: 40px;
+        border: 2px solid #86C447;
 
-.mentors {
-    overflow: hidden;
-
-    .mentor {
-        margin: 0 0 10px 0;
-        overflow: hidden;
+        &:hover {
+          border: 2px solid #4f9752;
+        }
 
         img {
-            border: 2px solid #222;
-            width: 150px;
-            height: 150px;
-            float: left;
+            width: 100%;
         }
+    }
 
-        .info {
-            float: left;
-            margin-left: 20px;
+    .mentors {
+        overflow: hidden;
 
-            .title {
-                margin-bottom: 5px;
+        .mentor {
+            margin: 0 0 10px 0;
+            overflow: hidden;
+
+            img {
+                border: 2px solid #222;
+                width: 150px;
+                height: 150px;
+                float: left;
             }
 
-            p {
-                margin-top: 5px;
+            .info {
+                float: left;
+                margin-left: 20px;
+
+                .title {
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    margin-top: 5px;
+                }
             }
         }
     }
-}
 
-.students {
-    width: 100%;
+    .students {
+        width: 100%;
 
-    td {
-        padding: 5px;
+        td {
+            padding: 5px;
+        }
     }
+
 }

@@ -1095,89 +1095,89 @@ form p {
   background: #f8f8f8;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003631}}
-.class-detail-content {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003633}}
+.class-detail .class-detail-content {
   width: 100%;
   float: left;
   margin-left: 0;
   margin-right: 0;
 }
 @media (min-width: 40em) {
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003631}}
-  .class-detail-content {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003633}}
+  .class-detail .class-detail-content {
     width: 74.57627%;
     float: left;
     margin-right: 1.69492%;
   }
 }
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003639}}
-.class-detail-sidebar-right {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003641}}
+.class-detail .class-detail-sidebar-right {
   width: 100%;
   float: left;
   margin-left: 0;
   margin-right: 0;
 }
 @media (min-width: 40em) {
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003639}}
-  .class-detail-sidebar-right {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003641}}
+  .class-detail .class-detail-sidebar-right {
     width: 23.72881%;
     float: right;
     margin-right: 0;
   }
 }
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003647}}
-.map {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003650}}
+.class-detail .upcoming-classe .date {
+  float: left;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003655}}
+.class-detail .map {
   display: block;
   width: 100%;
   margin-top: 40px;
   border: 2px solid #86C447;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003653}}
-.map:hover {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003661}}
+.class-detail .map:hover {
   border: 2px solid #4f9752;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003657}}
-.map img {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003665}}
+.class-detail .map img {
   width: 100%;
 }
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003662}}
-.mentors {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003670}}
+.class-detail .mentors {
   overflow: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003665}}
-.mentors .mentor {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003673}}
+.class-detail .mentors .mentor {
   margin: 0 0 10px 0;
   overflow: hidden;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003669}}
-.mentors .mentor img {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003677}}
+.class-detail .mentors .mentor img {
   border: 2px solid #222;
   width: 150px;
   height: 150px;
   float: left;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003676}}
-.mentors .mentor .info {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003684}}
+.class-detail .mentors .mentor .info {
   float: left;
   margin-left: 20px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003680}}
-.mentors .mentor .info .title {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003688}}
+.class-detail .mentors .mentor .info .title {
   margin-bottom: 5px;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003684}}
-.mentors .mentor .info p {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003692}}
+.class-detail .mentors .mentor .info p {
   margin-top: 5px;
 }
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003691}}
-.students {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003699}}
+.class-detail .students {
   width: 100%;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003694}}
-.students td {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/bkellgren\/Sites\/coderdojochi\/coderdojochi\/static\/scss\/cdc\.scss}line{font-family:\00003702}}
+.class-detail .students td {
   padding: 5px;
 }
