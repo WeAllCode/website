@@ -27,6 +27,15 @@ CDC.global = (function($, document, window, undefined) {
         setTimeout(function(){
             $('.alert-fade').parent().fadeOut();
         }, 3000);
+
+        // Scroll
+        $(window).scroll(function() {
+            if ($(document).scrollTop() > 50) {
+                $('nav').addClass('shrink');
+            } else {
+                $('nav').removeClass('shrink');
+            }
+        });
     }
 
     function openPopUp(url, height, width) {
