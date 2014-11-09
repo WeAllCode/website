@@ -129,9 +129,9 @@ a {
 /* Global Layout */
 
 .container {
-    // @include container;
-    // @extend %clearfix;
-    // padding: 0 10px;
+    @include container;
+    @extend %clearfix;
+    padding: 0 10px;
 
     &.registration {
         max-width: 540px;
@@ -679,9 +679,9 @@ form {
             top: 20px;
             text-align: center;
             width: 40px;
-            
+
             margin-right: 10px;
-            
+
             strong{
                 font-size: 24px;
             }
