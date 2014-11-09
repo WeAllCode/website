@@ -3,6 +3,7 @@
 # ------------------------------
 *.DS_Store
 _internal/
+coderdojochi/static/css/*
 
 # ------------------------------
 # Grunt/Bower
