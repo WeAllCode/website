@@ -1,8 +1,10 @@
 .navbar-default {
     background-color: $cdc-color;
-    -moz-user-select: none;
+    border: 0;
+
     -webkit-user-select: none;
-    user-select: none;
+       -moz-user-select: none;
+            user-select: none;
 
     @include breakpoint($tablet-and-up) {
         .navbar-nav {
