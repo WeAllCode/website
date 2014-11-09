@@ -1,6 +1,10 @@
 @import "_base";
 @import "_normalize";
 
+html {
+    background: $off-white;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     padding-top: 160px;
