@@ -155,6 +155,8 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
     is_guardian = False
     students = False
 
+    upcoming_classes = Session.objects.filter(active=True).order_by('start_date')
+
     if request.user.is_authenticated():
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
@@ -171,6 +173,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
         'mentor_signed_up': mentor_signed_up,
         'is_guardian': is_guardian,
         'students': students,
+        'upcoming_classes': upcoming_classes
     }, context_instance=RequestContext(request))
 
 
