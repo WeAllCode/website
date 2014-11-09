@@ -10,24 +10,46 @@
 <div class="container">
     <div class="row">
         <div class="class-detail-content">
-            <h1 class="title">{{ session.course.title }}</h1>
             
+            <h1 class="title">{{ session.course.title }}</h1>
             <p>{{ session.course.description|safe }}</p>
             
-            <h2 class="title light">Class Information</h2>
-            
-            <strong>Who</strong>
-            <p>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
+            <h2 class="title light space-above">Class Information</h2>    
+            <p>Who:<br>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
 
-            <strong>When</strong>
-            <p>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
+            <p>When:<br>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
 
-            <strong>Where</strong>
-            <p>{{ session.location }}</p>
+            <p>Where:<br>{{ session.location }}</p>
 
             {% if session.additional_info %}
-            <strong><i class="fa fa-info"></i> Additional Info</strong>
-            <p>{{ session.additional_info|safe }}</p>
+            <p> Additional Info:<br>{{ session.additional_info|safe }}</p>
+            {% endif %}
+
+            {% if session.teacher %}
+            <h2 class="subtitle space-above">About the teacher</h2>
+            <div class="teachers">
+                <div class="teacher">
+                    {% avatar session.teacher.user 220 %}
+                    <div class="info">
+                        <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
+                        <p>{{ session.teacher.bio }} <a href="#">Learn more about {{ session.teacher.first_name }}.</a></p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if session.mentors.all %}
+            <h2 class="subtitle">Meet the mentors</h2>
+            <div class="mentors">
+                {% for mentor in session.mentors.all %}
+                <a href="#" class="mentor">
+                    {% avatar mentor.user 140 %}
+                    <div class="info">
+                        {{ mentor.first_name }} {{ mentor.last_name }}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
             {% endif %}
         </div>
         <div class="class-detail-sidebar-right">
@@ -93,33 +115,6 @@
             {% endfor %}
         </div>
     </div>
-    {% if session.teacher %}
-    <h2 class="subtitle">About the teacher</h2>
-    <div class="mentors">
-        <div class="mentor">
-            {% avatar session.teacher.user %}
-            <div class="info">
-                <h3 class="title">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
-                <p>{{ session.teacher.bio }}</p>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    {% if session.mentors.all %}
-    <h2 class="subtitle">Meet the mentors</h2>
-    <div class="mentors">
-        {% for mentor in session.mentors.all %}
-        <div class="mentor">
-            {% avatar mentor.user %}
-            <div class="info">
-                <h3 class="title">{{ mentor.first_name }} {{ mentor.last_name }}</h3>
-                <p>{{ mentor.bio }}</p>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
 </div>
 {% endblock %}
