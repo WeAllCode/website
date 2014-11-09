@@ -15,9 +15,11 @@
         {% block extra_style %}{% endblock %}
         {% endblock %}
 
-        {% block html5shim %}
-        <!--[if lt IE 9]><script src="{% static "js/libs/html5shiv/html5shiv.js" %}"></script><![endif]-->
-        {% endblock %}
+        <!--[if lt IE 9]>
+        <script src="{% static 'js/vendor/html5shiv.js' %}"></script>
+        <script src="{% static 'js/vendor/selectivizr.js' %}"></script>
+        <script src="{% static 'js/vendor/respond.js' %}"></script>
+        <![endif]-->
 
         {% block extra_head %}{% endblock %}
     </head>
