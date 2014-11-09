@@ -1,5 +1,8 @@
 .navbar-default {
     background-color: $cdc-color;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 
     @include breakpoint($tablet-and-up) {
         .navbar-nav {
@@ -26,9 +29,23 @@
         padding-bottom: 5px;
     }
 
+    &.shrink {
+        .navbar-brand {
+            @include use-sprite("logo-small", "global");
+            margin: 5px;
+        }
+
+        @include breakpoint($tablet-and-up) {
+            .navbar-nav {
+                margin-top: 10px;
+                margin-bottom: 5px;
+            }
+        }
+    }
+
     .navbar-brand {
         @include use-sprite("logo", "global");
-        margin: 20px;
+        margin: 20px 20px 40px;
     }
 
 }
