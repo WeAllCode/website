@@ -6,13 +6,11 @@ Django Application
 To run locally follow these steps...
 
 ```bash
-easy_install pip
-pip install virtualenv
-cd ~/Sites
-virtualenv dojo-env --no-site-packages
-source dojo-env/bin/activate
 git clone git@github.com:CoderDojoChi/coderdojochi.git
 cd coderdojochi
+pip install virtualenvwrapper
+add virtualenv wrapper to your zsh plugins -- list plugins=(virtualenvwrapper) in ~/.zshrc
+mkvirtualenv dojo-env --no-site-packages
 pip install -r requirements.txt
 python manage.py syncdb
 ```
@@ -30,8 +28,7 @@ Great success!
 Each time you start working fresh you'll need to activate virtualenv and start the django server...
 
 ```bash
-cd ~/Sites
-source dojo-env/bin/activate
-cd coderdojochi
+workon dojo-env
+cd ~/Sites/coderdojochi
 python manage.py runserver
 ```
