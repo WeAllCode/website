@@ -1,0 +1,53 @@
+@mixin button() {
+    
+    position: relative;
+    background-color: transparent;
+    color: $cdc-color;
+    border: 3px solid $cdc-color;
+    text-transform: uppercase;
+    font-weight: 400;
+    padding: 0;
+    height: 50px;
+    line-height: 45px;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    text-decoration: none;
+    text-align: center;
+
+    &.disabled,
+    &[disabled] {
+        border-color: #999;
+        color: #999;
+
+        &:hover {
+            border-color: #999;
+            color: #999;
+        }
+    }
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    &:not([disabled]):hover {
+        @include opacity(.9);
+    }
+
+    &.btn-cdc-inverse {
+        color: #fff;
+        border: 3px solid #fff;
+    }
+
+    &.btn-cdc-lg {
+        font-size: 20px;
+        height: 60px;
+        line-height: 54px;
+    }
+
+    &:focus, &:active {
+        outline: none;
+    }
+}
+

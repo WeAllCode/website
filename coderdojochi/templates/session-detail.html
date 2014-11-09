@@ -53,7 +53,7 @@
             {% endif %}
         </div>
         <div class="class-detail-sidebar-right">
-            <div id="sign-up" class="well">
+            <div id="sign-up">
                 {% if user.is_authenticated %}
                     {% if is_guardian %}
                         {% if session.capacity|subtract:session.get_current_students.all.count %}
@@ -89,22 +89,20 @@
                         {% endif %}
                     {% else %}
                         {% if mentor_signed_up %}
-                            <h2>You are signed up to mentor at this class! <small>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ session.get_absolute_url }}">Logout.</a></small></h2>
                             <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Oops! I can't make it...</a></p>
                         {% else %}
-                            <h2>Sign up to mentor at this class! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ session.get_absolute_url }}">Logout.</a></small></h2>
-
-                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-success btn-lg">Sign up now!</a></p>
+                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
                         {% endif %}
                     {% endif %}
                 {% else %}
                     <p><a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">Login</a> or <a href="{% url 'registration_register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
                 {% endif %}
             </div>
-            <p><small>{{ session.capacity|subtract:session.get_current_students.all.count }} Spots Remaining</small></p>
-            <p><button class="btn btn-default">Share</button></p>
+            <p>{{ session.capacity|subtract:session.get_current_students.all.count }} <small>open spots</small></p>
+            <hr>
+            <p><a class="unstyled" href="#"><i class="fa fa-share"></i> Share</a></p>
             <div class="map">
-                <a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x500&amp;sensor=false"></a>
+                <a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x300&amp;sensor=false"></a>
             </div>
             <h3>Upcoming Classes</h3>
             {% for upcoming_class in upcoming_classes %}

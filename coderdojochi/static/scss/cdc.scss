@@ -1,4 +1,5 @@
 @import "_base";
+@import "_buttons";
 @import "_normalize";
 
 html {
@@ -63,6 +64,12 @@ body {
     margin-top: 50px;
 }
 
+hr {
+    border: 1px dotted #ccc;
+    border-width: 0 0 1px 0;
+    margin: 0 0 10px;
+}
+
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 
@@ -93,6 +100,10 @@ a {
     &:hover {
         color: $cdc-color;
     }
+
+    &.unstyled {
+        text-decoration: none;
+    }
 }
 
 .login-facebook {
@@ -103,6 +114,10 @@ a {
 .login-google {
     @include use-sprite("login-google", "global");
     @extend .ir;
+}
+
+.btn-cdc {
+    @include button();
 }
 
 /* -------------------------------------------------------------------------*/
@@ -521,6 +536,8 @@ form {
 
 .class-detail {
 
+    padding-top: 200px;
+
     // layout
 
     .class-detail-content {
@@ -534,10 +551,10 @@ form {
     .class-detail-sidebar-right {
         @include span(12);
         background: #fff;
-        padding: 0 26px;
+        padding: 18px 26px;
 
         @include breakpoint($tablet-and-up) {
-            @include span(last 3);
+            @include span(last 3.25);
         }
     }
 
@@ -633,7 +650,7 @@ form {
         .static-map {
             display: block;
             width: 100%;
-            margin-top: 40px;
+            margin-top: 20px;
 
             img {
                 width: 100%;
