@@ -1,5 +1,5 @@
 {% load static avatar_tags %}
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -8,55 +8,25 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">CoderDojoChi</a>
+            <a class="navbar-brand text-hide" href="/">CoderDojoChi</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="#">About</a></li>
-                <li><a href="#">Classes</a></li>
-                <li><a href="#">Volunteer</a></li>
-                <li><a href="#">Donate</a></li>
-                <li><a href="#">Register</a></li>
+                <li{% if '/about/' in request.path %} class="active"{% endif %}><a href="{% url 'about' %}">About</a></li>
+                <li{% if '/classes/' in request.path %} class="active"{% endif %}><a href="{% url 'sessions' %}">Classes</a></li>
+                <li{% if '/volunteer/' in request.path %} class="active"{% endif %}><a href="{% url 'volunteer' %}">Volunteer</a></li>
+                <li{% if '/donate/' in request.path %} class="active"{% endif %}><a href="{% url 'donate' %}">Donate</a></li>
+                {% if user.is_authenticated %}
+                <li{% if '/dojo/' in request.path %} class="active"{% endif %}><a href="{% url 'dojo' %}">{% avatar user 20 %} My Dojo</a></li>
+                {% if user.is_staff %}
+                <li><a href="/admin">Admin</a></li>
+                {% endif %}
+                <li><a href="{% url 'auth_logout' %}?next=/">Logout</a></li>
+                {% else %}
+                <li{% if '/accounts/login/' in request.path %} class="active"{% endif %}><a href="{% url 'auth_login' %}">Login</a></li>
+                <li{% if '/accounts/register/' in request.path %} class="active"{% endif %}><a href="{% url 'registration_register' %}">Register</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
-
-
-<!-- <div class="navbar">
-    <div class="container social" {% if request.path == '/' %}data-250="margin-top: -40px;" data-500="margin-top: 0px;"{% endif %}>
-        <ul class="nav-right">
-            <li><a href="https://twitter.com/coderdojochi"><i class="fa fa-twitter-square"></i></a></li>
-            <li><a href="https://facebook.com/coderdojochi"><i class="fa fa-facebook-square"></i></a></li>
-            <li><a href="https://plus.google.com/101509519991726328259/"><i class="fa fa-google-plus-square"></i></a></li>
-        </ul>
-    </div>
-    <div class="banner" {% if request.path == '/' %}data-250="margin-top: 0px;" data-500="margin-top: 20px;"{% endif %}>
-        <div class="container">
-            <nav role="navigation">
-                <ul>
-                    <li><a{% if '/classes/' in request.path %} class="active"{% endif %} href="{% url 'sessions' %}">Sign up for Classes</a></li>
-                    <li><a{% if request.path == '/volunteer/' %} class="active"{% endif %} href="{% url 'volunteer' %}">Volunteer</a></li>
-                    <li><a{% if request.path == '/donate/' %} class="active"{% endif %} href="{% url 'donate' %}">Donate</a></li>
-                </ul>
-                <ul class="nav-right">
-                    <li><a{% if request.path == '/about/' %} class="active"{% endif %} href="{% url 'about' %}">About</a></li>
-                    <li><a{% if request.path == '/faq/' %} class="active"{% endif %} href="{% url 'faqs' %}">FAQs</a></li>
-                    {% if user.is_authenticated %}
-                    <li><a{% if request.path == '/dojo/' %} class="active"{% endif %} href="{% url 'dojo' %}">{% avatar user 20 %} My Dojo</a></li>
-                    {% if user.is_staff %}
-                    <li><a href="/admin">Admin</a></li>
-                    {% endif %}
-                    <li><a href="{% url 'auth_logout' %}">Logout</a></li>
-                    {% else %}
-                    <li><a{% if request.path == '/accounts/login/' %} class="active"{% endif %} href="{% url 'auth_login' %}">Login</a></li>
-                    <li><a{% if request.path == '/accounts/register/' %} class="active"{% endif %} href="{% url 'registration_register' %}">Register</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
-</div>
-<a href="/" class="brand" {% if request.path == '/' %}data-0="top: 400px;" data-500="top: 15px;"{% endif %}>
-    <span class="logo">CoderDojo Chicago</span>
-</a> -->

@@ -35,11 +35,15 @@
 
     <body class="{% block body_class %}{% endblock %}">
         {% include "_nav.html" %}
+
+        <div class="container">
         {% block body_base %}
             {% include "_messages.html" %}
             {% block content %}{% endblock %}
         {% endblock %}
         {% block footer_base %}
+        </div>
+
         <footer>
             <div class="container">
                 <p class="text-muted">&copy;{% now "Y" %}. All rights reserved. <span class="pull-right"><a href="{% url 'contact_form' %}">Contact Us</a> <a href="{% url 'privacy' %}">Privacy &amp; Terms</a></span></p>
