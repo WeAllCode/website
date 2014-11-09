@@ -19,8 +19,11 @@ $susy: (
 // ---------------------------------------------------------------------------
 // Media Queries
 
-$desktop-and-up: 65em;
-$tablet-and-up: 40em;
+$retina-phone-and-up: 320px;
+$phone-and-up: 480px;
+$tablet-and-up: 768px;
+$desktop-and-up: 992px;
+$huge-and-up: 1200px;
 
 // ---------------------------------------------------------------------------
 // Colors
