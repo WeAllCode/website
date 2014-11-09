@@ -210,6 +210,12 @@ form {
 /* -------------------------------------------------------------------------*/
 /* Pages */
 
+// auth
+
+.auth {
+    padding-top: 200px;
+}
+
 // homepage
 
 .homepage {
@@ -404,6 +410,9 @@ form {
 // welcome
 
 .welcome {
+
+    padding-top: 200px;
+
     .role {
         @include span(12);
         @include opacity(.9);
@@ -564,6 +573,10 @@ form {
         @include span(12);
 
         @include breakpoint($tablet-and-up) {
+            @include span(7);
+        }
+
+        @include breakpoint($desktop-and-up) {
             @include span(8);
         }
 
@@ -647,7 +660,12 @@ form {
 
         @include span(12);
 
+
         @include breakpoint($tablet-and-up) {
+            @include span(last 4);
+        }
+
+        @include breakpoint($desktop-and-up) {
             @include span(last 3.4);
         }
     }
