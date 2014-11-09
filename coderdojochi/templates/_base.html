@@ -36,13 +36,11 @@
     <body class="{% block body_class %}{% endblock %}">
         {% include "_nav.html" %}
 
-        <div class="container">
         {% block body_base %}
             {% include "_messages.html" %}
             {% block content %}{% endblock %}
         {% endblock %}
         {% block footer_base %}
-        </div>
 
         <footer>
             <div class="container">
