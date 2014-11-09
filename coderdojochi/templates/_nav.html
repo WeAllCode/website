@@ -1,5 +1,29 @@
 {% load static avatar_tags %}
-<div class="navbar">
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">CoderDojoChi</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="#">About</a></li>
+                <li><a href="#">Classes</a></li>
+                <li><a href="#">Volunteer</a></li>
+                <li><a href="#">Donate</a></li>
+                <li><a href="#">Register</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- <div class="navbar">
     <div class="container social" {% if request.path == '/' %}data-250="margin-top: -40px;" data-500="margin-top: 0px;"{% endif %}>
         <ul class="nav-right">
             <li><a href="https://twitter.com/coderdojochi"><i class="fa fa-twitter-square"></i></a></li>
@@ -35,4 +59,4 @@
 </div>
 <a href="/" class="brand" {% if request.path == '/' %}data-0="top: 400px;" data-500="top: 15px;"{% endif %}>
     <span class="logo">CoderDojo Chicago</span>
-</a>
+</a> -->
