@@ -55,6 +55,7 @@
 
 body{
     font-family: 'Open Sans', sans-serif;
+    margin-top: 160px;
 }
 
 h1, h2, h3, h4 {
@@ -89,10 +90,6 @@ h1, h2, h3, h4 {
 
 /* -------------------------------------------------------------------------*/
 /* Global Layout */
-
-html, body {
-    height: 100%;
-}
 
 .container {
     @include container;
