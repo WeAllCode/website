@@ -110,6 +110,7 @@ a {
     }
 }
 
+
 .login-facebook {
     @include use-sprite("login-facebook", "global");
     @extend .ir;
@@ -128,9 +129,9 @@ a {
 /* Global Layout */
 
 .container {
-    @include container;
-    @extend %clearfix;
-    padding: 0 10px;
+    // @include container;
+    // @extend %clearfix;
+    // padding: 0 10px;
 
     &.registration {
         max-width: 540px;
@@ -152,6 +153,9 @@ a {
 
 // Footer
 @import "_footer";
+
+// Homepage
+@import "_home";
 
 
 /* -------------------------------------------------------------------------*/

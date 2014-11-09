@@ -1,0 +1,13 @@
+.hero {
+    background-color: #1a676a;
+
+    .carousel-control {
+        background-image: none;
+    }
+
+    .carousel-inner {
+        .item {
+            min-height: 500px;
+        }
+    }
+}
