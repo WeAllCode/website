@@ -90,6 +90,10 @@ h1, h2, h3, h4 {
     }
 }
 
+.text-large {
+    font-size: 1.2em;
+}
+
 /* -------------------------------------------------------------------------*/
 /* Links / Buttons */
 
@@ -538,28 +542,6 @@ form {
 
     padding-top: 200px;
 
-    // layout
-
-    .class-detail-content {
-        @include span(12);
-
-        @include breakpoint($tablet-and-up) {
-            @include span(8);
-        }
-    }
-
-    .class-detail-sidebar-right {
-        @include span(12);
-        background: #fff;
-        padding: 18px 26px;
-
-        @include breakpoint($tablet-and-up) {
-            @include span(last 3.25);
-        }
-    }
-
-    // class-detail-content
-
     .title {
         font-size: 24px;
         font-weight: 700;
@@ -569,13 +551,20 @@ form {
     .subtitle {
         @extend .title;
         font-size: 18px;
-        margin-bottom: 30px;
     }
 
-    .upcoming-class {
-        .date {
-            float: left;
-            margin-right: 10px;
+    // main content
+
+    .class-detail-content {
+
+        @include span(12);
+
+        @include breakpoint($tablet-and-up) {
+            @include span(8);
+        }
+
+        .subtitle {
+            margin-bottom: 30px;
         }
     }
 
@@ -644,17 +633,60 @@ form {
         }
     }
 
-    // class-detail-sidebar-right
+    // sidebar
+
+
+    .class-detail-sidebar-right {
+        color: #666;
+        background: #fff;
+        padding: 18px 26px;
+
+        @include span(12);
+
+        @include breakpoint($tablet-and-up) {
+            @include span(last 3.4);
+        }
+    }
 
     .map {
+        margin: 20px 0 40px;
+
         .static-map {
             display: block;
             width: 100%;
-            margin-top: 20px;
 
             img {
                 width: 100%;
             }
+        }
+    }
+
+    .upcoming-class {
+
+        padding: 25px 0;
+        position: relative;
+        border-top: 1px solid $cdc-color;
+        font-size: 14px;
+        line-height: 1.3;
+
+        .date {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            text-align: center;
+            width: 40px;
+            
+            margin-right: 10px;
+            
+            strong{
+                font-size: 24px;
+            }
+        }
+
+        a {
+            padding-left: 55px;
+            display: inline-block;
+            text-transform: uppercase;
         }
     }
 
