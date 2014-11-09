@@ -1,6 +1,11 @@
 @import "_base";
 @import "_normalize";
 
+body {
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 160px;
+    background: $off-white;
+}
 
 // ---------------------------------------------------------------------------
 // Global Helpers
@@ -56,11 +61,6 @@
 
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
-
-body{
-    font-family: 'Open Sans', sans-serif;
-    margin-top: 160px;
-}
 
 h1, h2, h3, h4 {
     small {
@@ -517,6 +517,8 @@ form {
 
 .class-detail {
 
+    // layout
+
     .class-detail-content {
         @include span(12);
 
@@ -535,6 +537,8 @@ form {
         }
     }
 
+    // class-detail-content
+
     .title {
         font-size: 24px;
         font-weight: 700;
@@ -551,23 +555,6 @@ form {
         .date {
             float: left;
             margin-right: 10px;
-        }
-    }
-
-    .map {
-        .static-map {
-            display: block;
-            width: 100%;
-            margin-top: 40px;
-            border: 2px solid #86C447;
-
-            &:hover {
-              border: 2px solid #4f9752;
-            }
-
-            img {
-                width: 100%;
-            }
         }
     }
 
@@ -633,6 +620,20 @@ form {
 
         td {
             padding: 5px;
+        }
+    }
+
+    // class-detail-sidebar-right
+
+    .map {
+        .static-map {
+            display: block;
+            width: 100%;
+            margin-top: 40px;
+
+            img {
+                width: 100%;
+            }
         }
     }
 
