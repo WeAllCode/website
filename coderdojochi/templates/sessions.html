@@ -11,12 +11,40 @@
     <h1>{% trans "Class Schedule" %}</h1>
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#calendar" data-toggle="tab"><i class="fa fa-calendar"></i> Calendar</a></li>
-        <li><a href="#list" data-toggle="tab"><i class="fa fa-list"></i> List</a></li>
+        <li class="active"><a href="#list" data-toggle="tab"><i class="fa fa-list"></i> List</a></li>
+        <li><a href="#calendar" data-toggle="tab"><i class="fa fa-calendar"></i> Calendar</a></li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane active" id="calendar">
+        <div class="tab-pane active" id="list">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Date</th>
+                        <th>Remaining</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for session in all_sessions %}
+                    <tr>
+                        <td><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
+                        <td>{{ session.start_date|date }} <span class="text-muted">{{ session.start_date|time }}</span></td>
+                        <td>{{ session.capacity|subtract:session.get_current_students.all.count }}</td>
+                        <td>
+                            {% if session.capacity|subtract:session.get_current_students.all.count %}
+                            <a href="{{ session.get_absolute_url }}" class="btn btn-success btn-sm">Sign up now!</a>
+                            {% else %}
+                            <button class="btn btn-default btn-sm disabled" disabled>Class is full</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="calendar">
             <div class="calendar">
                 <div class="btn-group controls">
                     <a href="{% url 'sessions' prev_date.year prev_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i></a>
@@ -42,34 +70,6 @@
                 </div>
                 {{ calendar }}
             </div>
-        </div>
-        <div class="tab-pane" id="list">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Class</th>
-                        <th>Date</th>
-                        <th>Remaining</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for session in all_sessions %}
-                    <tr>
-                        <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}<small>{{ session.course.code }}</small> {% endif %}{{ session.course.title }}</a></td>
-                        <td>{{ session.start_date|date }} <span class="text-muted">{{ session.start_date|time }}</span></td>
-                        <td>{{ session.capacity|subtract:session.get_current_students.all.count }}</td>
-                        <td>
-                            {% if session.capacity|subtract:session.get_current_students.all.count %}
-                            <a href="{{ session.get_absolute_url }}" class="btn btn-success btn-sm">Sign up now!</a>
-                            {% else %}
-                            <button class="btn btn-default btn-sm disabled" disabled>Class is full</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
