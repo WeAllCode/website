@@ -655,8 +655,6 @@ form {
 
     .class-detail-sidebar-right {
         color: #666;
-        background: #fff;
-        padding: 18px 26px;
 
         @include span(12);
 
@@ -667,6 +665,13 @@ form {
 
         @include breakpoint($desktop-and-up) {
             @include span(last 3.4);
+        }
+
+        .content {
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 18px 26px;
+            background: #fff;
         }
     }
 
