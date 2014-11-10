@@ -19,7 +19,7 @@
 
             <p>When:<br>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
 
-            <p>Where:<br>{{ session.location }}</p>
+            <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}">{{ session.location }}</a></p>
 
             {% if session.additional_info %}
             <p> Additional Info:<br>{{ session.additional_info|safe }}</p>
