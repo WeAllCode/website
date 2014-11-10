@@ -16,13 +16,13 @@ def student_register_link(student, session):
     orders = Order.objects.filter(student=student, session=session)
 
     if orders.count():
-        button_type = 'danger'
+        button_modifier = ' danger'
         button_msg = 'Can\'t make it'
     else:
-        button_type = 'success'
+        button_modifier = ''
         button_msg = 'Enroll'
 
-    link = form = '<a href="' + reverse('session_sign_up', args=(session.start_date.year, session.start_date.month, session.start_date.day, session.course.slug, student.id)) + '" class="btn btn-' + button_type + '">' + button_msg + '</a>'
+    link = form = '<a href="' + reverse('session_sign_up', args=(session.start_date.year, session.start_date.month, session.start_date.day, session.course.slug, student.id)) + '" class="btn-cdc btn-cdc-small'+ button_modifier + '">' + button_msg + '</a>'
 
     return form
 
