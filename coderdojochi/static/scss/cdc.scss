@@ -652,7 +652,6 @@ form {
 
     // sidebar
 
-
     .class-detail-sidebar-right {
         color: #666;
 
@@ -673,6 +672,11 @@ form {
             padding: 18px 26px;
             background: #fff;
         }
+    }
+
+    .add-another {
+        display: block;
+        margin: 10px 0;
     }
 
     .map {
@@ -714,6 +718,18 @@ form {
             padding-left: 55px;
             display: inline-block;
             text-transform: uppercase;
+        }
+    }
+
+    .social-sharing {
+        font-size: 2em;
+
+        a {
+            color: #666;
+
+            &:hover {
+                color: #000;
+            }
         }
     }
 
