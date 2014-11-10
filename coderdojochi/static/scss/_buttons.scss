@@ -1,20 +1,31 @@
 @mixin button() {
-    
-    position: relative;
+
     background-color: transparent;
-    color: $cdc-color;
+    background-image: none;
     border: 3px solid $cdc-color;
-    text-transform: uppercase;
-    font-weight: 400;
-    padding: 0;
-    height: 50px;
-    line-height: 45px;
-    white-space: nowrap;
+    color: $cdc-color;
     cursor: pointer;
     display: inline-block;
     font-size: 16px;
-    text-decoration: none;
+    font-weight: 400;
+    height: 50px;
+    line-height: 45px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 0;
+    position: relative;
     text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     &.disabled,
     &[disabled] {
