@@ -1,0 +1,32 @@
+.page-donate {
+    padding-top: 100px;
+
+    .hero {
+        background-color: $cdc-color;
+        padding-top: 80px;
+
+        .title {
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 30px;
+            color: #FFF;
+        }
+    }
+
+    .donation-buttons {
+        width: 570px;
+        margin: 50px auto;
+
+        .btn-cdc {
+            width: 100px;
+        }
+    }
+
+    .btn-do-it {
+        width: 150px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 50px;
+        display: block;
+    }
+}
