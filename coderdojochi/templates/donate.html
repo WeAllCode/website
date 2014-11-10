@@ -4,9 +4,25 @@
 
 {% block title %}Donate{% endblock %}
 
-{% block body_class %}donate{% endblock %}
+{% block body_class %}page-donate{% endblock %}
 
 {% block content %}
+<div class="hero">
+	<div class="container">
+		<h1 class="title">Donate Today!</h1>
+
+		<ul class="list-inline donation-buttons">
+			<li><a href="#" class="btn-cdc btn-cdc-inverse">$10</a></li>
+			<li><a href="#" class="btn-cdc btn-cdc-inverse">$25</a></li>
+			<li><a href="#" class="btn-cdc btn-cdc-inverse">$50</a></li>
+			<li><a href="#" class="btn-cdc btn-cdc-inverse">$100</a></li>
+			<li><a href="#" class="btn-cdc btn-cdc-inverse">Other</a></li>
+		</ul>
+
+		<a href="#" class="btn-cdc btn-cdc-inverse btn-do-it">Do it.</a>
+	</div>
+</div>
+
 <div class="container">
     <h1>{% trans "You can help" %}</h1>
     <p>CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
@@ -51,7 +67,7 @@
 				<div class="radio">
 					<label>
 						<input type="radio" id="customDonationOption" name="donate-amount-option" value="other">
-						Other: 
+						Other:
 					</label>
 				</div>
 			</div>
@@ -96,7 +112,7 @@
 			e.preventDefault();
 			$donateButton.trigger('click');
 		},
-		
+
 		donateButtonClick = function(e) {
 			var amountVal = $('input[name=donate-amount-option]:checked', $amountForm).val(),
 				amount;
@@ -117,7 +133,7 @@
 			$donateForm.off('submit');
 			$donateForm.submit();
 		},
-		
+
 		amountActualFocus = function() {
 			$amountActualField.closest('.form-group').removeClass('has-error');
 			$('#customDonationOption').prop('checked', true);
