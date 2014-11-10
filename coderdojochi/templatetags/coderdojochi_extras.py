@@ -22,7 +22,7 @@ def student_register_link(student, session):
         button_modifier = ''
         button_msg = 'Enroll'
 
-    link = form = '<a href="' + reverse('session_sign_up', args=(session.start_date.year, session.start_date.month, session.start_date.day, session.course.slug, student.id)) + '" class="btn-cdc btn-cdc-small'+ button_modifier + '">' + button_msg + '</a>'
+    link = form = '<a href="' + reverse('session_sign_up', args=(session.start_date.year, session.start_date.month, session.start_date.day, session.course.slug, student.id)) + '" class="btn-cdc btn-cdc-sm'+ button_modifier + '">' + button_msg + '</a>'
 
     return form
 
