@@ -60,11 +60,11 @@
                         <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
                         {% if session.capacity|subtract:session.get_current_students.all.count %}
                             {% if students %}
-                                <table class="students table-striped">
+                                <table class="students">
                                     <tbody>
                                     {% for student in students %}
                                         <tr>
-                                            <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                            <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
                                             <td>
                                                 {% student_register_link student session %}
                                             </td>
