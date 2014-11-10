@@ -57,10 +57,10 @@
             <div class="content">
                 {% if user.is_authenticated %}
                     {% if is_guardian %}
+                        <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
                         {% if session.capacity|subtract:session.get_current_students.all.count %}
                             {% if students %}
-                                <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-lg btn-block">Enroll student{% if students and students.count > 1 %}s{% endif %}</a></p>
-                                <!-- <table class="students table-striped">
+                                <table class="students table-striped">
                                     <tbody>
                                     {% for student in students %}
                                         <tr>
@@ -72,8 +72,7 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
-                                <br>
-                                <small><a href="{% url 'welcome' %}">Need to add another student?</a></small> -->
+                                <small class="add-another"><a href="{% url 'welcome' %}">Add another student</a></small>
                             {% else %}
                             <p>To enroll, you must first <a href="{% url 'welcome' %}">register a student</a>.</p>
                             {% endif %}
@@ -107,9 +106,11 @@
                 {% endfor %}
             </div>
             <div class="content">
-                <p class="subtitle">Share this class</p>
-                <ul class="list-inline">
-                    <a class="unstyled" href="#"><i class="fa fa-facebook fw"></i></a>
+                <p><i class="fa fa-share"></i> Share</p>
+                <ul class="list-inline social-sharing">
+                    <li><a class="unstyled" href="#"><i class="fa fa-facebook-square fw"></i></a></li>
+                    <li><a class="unstyled" href="#"><i class="fa fa-twitter-square fw"></i></a></li>
+                    <li><a class="unstyled" href="#"><i class="fa fa-google-plus-square fw"></i></a></li>
                 </ul>
             </div>
         </div>
