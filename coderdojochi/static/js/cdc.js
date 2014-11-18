@@ -9,7 +9,7 @@ CoderDojoChi.org Global JS
 var CDC = CDC || {};
 
 CDC.global = (function($, document, window, undefined) {
-    "use strict";
+    'use strict';
 
     // app global properties
 
@@ -20,11 +20,13 @@ CDC.global = (function($, document, window, undefined) {
 
         // account for csrf in all ajax requests
         $.ajaxSetup({
-            data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }
         });
 
         // remove any alerts
-        setTimeout(function(){
+        setTimeout(function() {
             $('.alert-fade').parent().fadeOut();
         }, 3000);
 
@@ -39,10 +41,12 @@ CDC.global = (function($, document, window, undefined) {
     }
 
     function openPopUp(url, height, width) {
-        height = (height) ? height: 600;
-        width = (width) ? width: 400;
+        height = (height) ? height : 600;
+        width = (width) ? width : 400;
         var newWindow = window.open(url, 'name', 'height=' + height + ',width=' + width);
-        if (window.focus) { newWindow.focus() }
+        if (window.focus) {
+            newWindow.focus();
+        }
         return false;
     }
 
@@ -58,6 +62,7 @@ CDC.global = (function($, document, window, undefined) {
 
 }(jQuery, document, window, undefined));
 
-$(function (){
+$(function() {
+    'use strict';
     CDC.global.init();
 });

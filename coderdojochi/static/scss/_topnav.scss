@@ -2,13 +2,11 @@
     background-color: $cdc-color;
     border: 0;
 
-    -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
+    @include user-select(none);
 
     @include breakpoint($tablet-and-up) {
         .navbar-nav {
-            margin-top: 65px;
+            margin: 50px 0 10px;
         }
     }
 
@@ -31,23 +29,51 @@
         padding-bottom: 5px;
     }
 
-    &.shrink {
-        .navbar-brand {
-            @include use-sprite("logo-small", "global");
-            margin: 5px;
+    .navbar-collapse {
+        border: none;
+        
+        &.in, &.collapsing {
+           background: $cdc-color-dark; 
+
+            .navbar-nav > .active > a,
+            .navbar-nav > .active > a:hover,
+            .navbar-nav > .active > a:focus {
+                border: none;
+            }
         }
+        
+    }
+
+    .brand {
+
+        @include use-sprite("logo-mobile", "global");
+        position: fixed;
+        z-index: 1032;
+        left: 10px;
+        top: 2px;
+        
+        @include breakpoint($tablet-and-up) {
+            @include use-sprite("logo", "global");
+            top: auto;
+            bottom: -15px;
+            position: absolute
+        }
+    }
+
+    &.shrink {
 
         @include breakpoint($tablet-and-up) {
             .navbar-nav {
                 margin-top: 10px;
                 margin-bottom: 5px;
             }
-        }
-    }
 
-    .navbar-brand {
-        @include use-sprite("logo", "global");
-        margin: 20px 20px 40px;
+             .brand {
+                @include use-sprite("logo-small", "global");
+                bottom: -10px;
+                top: auto;
+            }
+        }
     }
 
 }

@@ -1,6 +1,5 @@
-@import "_base";
-@import "_buttons";
-@import "_normalize";
+@import 'bootstrap';
+@import 'normalize';
 
 html {
     background: $off-white;
@@ -8,15 +7,27 @@ html {
 
 body {
     font-family: 'Open Sans', sans-serif;
-    padding-top: 160px;
+    padding-top: 50px;
     background: $off-white;
+
+    @include breakpoint($tablet-and-up) {
+        padding-top: 110px;
+    }
+
+    &.page-donate {
+        padding-top: 50px;
+
+        @include breakpoint($tablet-and-up) {
+            padding-top: 110px;
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
 // Global Helpers
 
 * {
-    @include box-sizing();
+    box-sizing: border-box;
 }
 
 .hidden {
@@ -130,11 +141,20 @@ a {
 
 .container {
     @include container;
+    position: relative;
     @extend %clearfix;
     padding: 0 10px;
 
     &.registration {
-        max-width: 540px;
+        max-width: 500px;
+    }
+}
+
+.main {
+    margin: 40px 0 0;
+
+    .page-homepage &, .page-donate & {
+        margin: 0;
     }
 }
 
@@ -212,15 +232,10 @@ form {
 /* -------------------------------------------------------------------------*/
 /* Pages */
 
-// auth
-
-.auth {
-    padding-top: 200px;
-}
 
 // homepage
 
-.homepage {
+.page-homepage {
 
     .splash {
 
@@ -264,86 +279,6 @@ form {
             line-height: 1.25;
             float: left;
             clear: both;
-        }
-    }
-
-    .clouds{
-        position: absolute;
-        overflow: hidden;
-        left: 0;
-        width: 100%;
-        top: 350px;
-        z-index: 2;
-        padding: 100px 0;
-        @include transform(translatez(0));
-
-        div {
-            width: 200px;
-            height: 60px;
-            background: #fff;
-            @include border-radius(200px);
-            position: relative;
-
-            &:before, &:after {
-                content: '';
-                position: absolute;
-                background: #fff;
-                width: 100px;
-                height: 80px;
-                top: -15px;
-                left: 10px;
-
-                @include border-radius(100px);
-                @include transform(rotate(30deg));
-            }
-
-            &:after {
-                width: 120px;
-                height: 120px;
-                top: -55px;
-                left: auto;
-                right: 15px;
-            }
-        }
-
-        .cloud-1 {
-            @include animation(moveclouds 30s linear infinite);
-            @include opacity(0.85);
-        }
-
-        .cloud-2 {
-            left: 200px;
-
-            @include transform(scale(0.5));
-            @include opacity(0.5);
-            @include animation(moveclouds 50s linear infinite);
-        }
-
-        .cloud-3 {
-            left: -450px;
-            top: -150px;
-
-            @include transform(scale(0.7));
-            @include opacity(0.8);
-            @include animation(moveclouds 40s linear infinite);
-        }
-
-        .cloud-4 {
-            left: 470px;
-            top: -250px;
-
-            @include transform(scale(0.6));
-            @include opacity(0.6);
-            @include animation(moveclouds 36s linear infinite);
-        }
-
-        .cloud-5 {
-            left: -150px;
-            top: -150px;
-
-            @include transform(scale(0.7));
-            @include opacity(0.7);
-            @include animation(moveclouds 40s linear infinite);
         }
     }
 
@@ -394,20 +329,6 @@ form {
         }
     }
 }
-
-@-webkit-keyframes moveclouds {
-    0% {margin-left: 100%;}
-    100% {margin-left: -20%;}
-}
-@-moz-keyframes moveclouds {
-    0% {margin-left: 100%;}
-    100% {margin-left: -20%;}
-}
-@-o-keyframes moveclouds {
-    0% {margin-left: 100%;}
-    100% {margin-left: -20%;}
-}
-
 
 // welcome
 
