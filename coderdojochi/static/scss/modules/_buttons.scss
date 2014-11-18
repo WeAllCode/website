@@ -24,12 +24,17 @@
 
     &.disabled,
     &[disabled] {
-        border-color: #999;
-        color: #999;
+        border-color: #ccc;
+        color: #ccc;
 
         &:hover {
-            border-color: #999;
-            color: #999;
+            border-color: #ccc;
+            color: #ccc;
+        }
+
+        &.btn-cdc-inverse {
+            border-color: $cdc-color-dark;
+            color: $cdc-color-dark;
         }
     }
 
@@ -45,6 +50,12 @@
     &.btn-cdc-inverse {
         color: #fff;
         border: 2px solid #fff;
+
+        &.active {
+            border-color: #fff;
+            color: $cdc-color;
+            background: #fff;
+        }
     }
 
     &.btn-cdc-danger {
@@ -71,4 +82,3 @@
         outline: none;
     }
 }
-

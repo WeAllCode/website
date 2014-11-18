@@ -34,11 +34,13 @@
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
-        {% include "_nav.html" %}
+        {% include "_topnav.html" %}
 
         {% block body_base %}
             {% include "_messages.html" %}
-            {% block content %}{% endblock %}
+            <div role="main" class="main">
+                {% block content %}{% endblock %}
+            </div>
         {% endblock %}
         {% block footer_base %}
 
@@ -50,7 +52,14 @@
         {% endblock %}
 
         {% block script_base %}
-        <script src="{% static "js/vendor/jquery.min.js" %}"></script>
+
+        <script src="//code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+        if (!window.jQuery) {
+            document.write('<script src="{% static 'libs/jquery/jquery-1.11.1.min.js' %}"><\/script>');
+        }
+        </script>
+
         <script src="{% static "js/vendor/cdc.bootstrap.min.js" %}"></script>
         <script src="{% static "js/cdc.js" %}"></script>
 
