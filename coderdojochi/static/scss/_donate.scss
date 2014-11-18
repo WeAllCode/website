@@ -4,29 +4,64 @@
     .hero {
         background-color: $cdc-color;
         padding-top: 80px;
+        margin-bottom: 40px;
+        position: relative;
 
         .title {
             text-transform: uppercase;
             text-align: center;
             font-size: 30px;
-            color: #FFF;
+            color: #fff;
+        }
+
+        &:after {
+            position: absolute;
+            content: '';
+            bottom: -40px;
+            left: 50%;
+            margin-left: -80px;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-top: 40px solid $cdc-color;
         }
     }
 
-    .donation-buttons {
-        width: 570px;
-        margin: 50px auto;
+    .amount-buttons {
+        margin: 40px auto 10px;
+        text-align: center;
 
         .btn-cdc {
             width: 100px;
+            margin: 0 0 10px;
+        }
+    }
+
+    .amount-actual {
+
+        text-align: center;
+        display: none;
+
+        .dollar {
+            font-size: 30px;
+            color: #eee;
+            vertical-align: top;
+            margin: 0 3px 0 -22px;
+            display: inline-block;
+        }
+
+        .form-control {
+            width: 100px;
+            margin: 0 auto;
+            text-transform: uppercase;
+            text-align: center;
+            display: inline-block;
+            vertical-align: top;
         }
     }
 
     .btn-do-it {
         width: 150px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 50px;
+        margin: 30px auto 50px;
         display: block;
     }
 }

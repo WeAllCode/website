@@ -11,72 +11,24 @@
 	<div class="container">
 		<h1 class="title">Donate Today!</h1>
 
-		<ul class="list-inline donation-buttons">
-			<li><a href="#" class="btn-cdc btn-cdc-inverse">$10</a></li>
-			<li><a href="#" class="btn-cdc btn-cdc-inverse">$25</a></li>
-			<li><a href="#" class="btn-cdc btn-cdc-inverse">$50</a></li>
-			<li><a href="#" class="btn-cdc btn-cdc-inverse">$100</a></li>
-			<li><a href="#" class="btn-cdc btn-cdc-inverse">Other</a></li>
+		<ul class="list-inline amount-buttons">
+			<li><button class="btn-cdc btn-cdc-inverse" data-value="10">$10</button></li>
+			<li><button class="btn-cdc btn-cdc-inverse" data-value="25">$25</button></li>
+			<li><button class="btn-cdc btn-cdc-inverse" data-value="50">$50</button></li>
+			<li><button class="btn-cdc btn-cdc-inverse" data-value="100">$100</button></li>
+			<li><button class="btn-cdc btn-cdc-inverse" data-value="other">Other</button></li>
 		</ul>
-
-		<a href="#" class="btn-cdc btn-cdc-inverse btn-do-it">Do it.</a>
+		<div class="amount-actual">
+			<span class="dollar">$</span>
+			<input type="text" class="form-control input-lg" maxlength="6">
+		</div>
+		<button class="btn-cdc btn-cdc-inverse btn-do-it" disabled>Do it.</button>
 	</div>
 </div>
 
 <div class="container">
     <h1>{% trans "You can help" %}</h1>
     <p>CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
-    <form id="amountForm" role="form">
-		<div class="form-group">
-			<label class="control-label">How much would you like to give?</label>
-		</div>
-		<div class="form-group">
-			<div class="radio">
-				<label>
-					<input type="radio" name="donate-amount-option" value="10" checked>
-					$10
-				</label>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="radio">
-				<label>
-					<input type="radio" name="donate-amount-option" value="20">
-					$20
-				</label>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="radio">
-				<label>
-					<input type="radio" name="donate-amount-option" value="50">
-					$50
-				</label>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="radio">
-				<label>
-					<input type="radio" name="donate-amount-option" value="100">
-					$100
-				</label>
-			</div>
-		</div>
-		<div class="form-inline">
-			<div class="form-group">
-				<div class="radio">
-					<label>
-						<input type="radio" id="customDonationOption" name="donate-amount-option" value="other">
-						Other:
-					</label>
-				</div>
-			</div>
-			<div class="form-group">
-		    	<input placeholder="Amount" type="text" class="form-control" id="amountActual" maxlength="5">
-		    </div>
-	    </div>
-    </form>
-    <br>
 	<form id="donateForm" action="https://authorize.payments.amazon.com/pba/paypipeline" method="post">
 		<input type="hidden" name="returnUrl" value="http://localhost:8000/thank-you" >
 		<input type="hidden" name="processImmediate" value="1" >
@@ -93,7 +45,6 @@
 	    <input type="hidden" name="abandonUrl" value="http://localhost:8000/donate" >
 	    <input type="hidden" name="signatureVersion" value="2" >
 	    <input type="hidden" name="signature" value="PP6IfGn8HcZtkYUCX3qrR2KH183L6Vv/hu2amH5QBZ0=" >
-		<button class="btn btn-lg btn-success" id="donateBtn">Donate Now!</button>
 	</form>
 </div>
 {% endblock %}
@@ -103,49 +54,61 @@
 <script>
 	$(function() {
 		var $donateForm = $('#donateForm'),
-			$amountForm = $('#amountForm'),
-			$donateButton = $('#donateBtn'),
+			$amountButtons = $('.amount-buttons:first'),
+			$donateButton = $('.btn-do-it:first'),
 			$donateAmount = $('#donateAmount'),
-			$amountActualField = $('#amountActual'),
+			$amountActual = $('.amount-actual:first'),
+			$amountActualField = $('.form-control', $amountActual),
+
+		amountButtonClick = function() {
+			var $clicked = $(this);
+			$('.active', $amountButtons).removeClass('active');
+			$clicked.addClass('active');
+			$donateButton.attr('disabled', false);
+
+			if ($clicked.data('value') === 'other') {
+				$amountActual.show();
+				$amountActualField.focus();
+			} else {
+				$amountActual.hide();
+			}
+		},
 
 		donateFormSubmit = function(e) {
-			e.preventDefault();
 			$donateButton.trigger('click');
 		},
 
-		donateButtonClick = function(e) {
-			var amountVal = $('input[name=donate-amount-option]:checked', $amountForm).val(),
-				amount;
+		donateButtonClick = function() {
 
-			if(amountVal === 'other') {
-				var customVal = $amountActualField.val().replace('$', '');
+			var $selectedAmountButton = $('.active', $amountButtons),
+				selectedAmount = $selectedAmountButton.data('value');
 
-				if(customVal && customVal.length){
-					amount = customVal;
+			if(selectedAmount === 'other') {
+				
+				var customAmount = $amountActualField.val();
+
+				if(customAmount.length){
+					selectedAmount = parseInt(customAmount);
 				} else {
-					$amountActualField.closest('.form-group').addClass('has-error');
+					$amountActual.addClass('has-error');
+					$amountActualField.focus();
 					return false;
 				}
-			} else {
-				amount = amountVal;
 			}
-			$donateAmount.val('USD ' + amount);
+
+
+			$donateAmount.val('USD ' + selectedAmount);
 			$donateForm.off('submit');
 			$donateForm.submit();
-		},
-
-		amountActualFocus = function() {
-			$amountActualField.closest('.form-group').removeClass('has-error');
-			$('#customDonationOption').prop('checked', true);
 		};
 
 		$donateForm.submit(donateFormSubmit);
 
+		$amountButtons
+			.on('click', 'button', amountButtonClick);
+
 		$donateButton
 			.on('click', donateButtonClick);
-
-		$amountActualField
-			.on('focus', amountActualFocus);
 	});
 </script>
 {% endblock %}
