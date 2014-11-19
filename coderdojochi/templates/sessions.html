@@ -4,74 +4,47 @@
 
 {% block title %}Class Schedule{% endblock %}
 
-{% block body_class %}classes{% endblock %}
+{% block body_class %}page-classes{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>{% trans "Class Schedule" %}</h1>
-
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#list" data-toggle="tab"><i class="fa fa-list"></i> List</a></li>
-        <li><a href="#calendar" data-toggle="tab"><i class="fa fa-calendar"></i> Calendar</a></li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane active" id="list">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Class</th>
-                        <th>Date</th>
-                        <th>Remaining</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for session in all_sessions %}
-                    <tr>
-                        <td><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
-                        <td>{{ session.start_date|date }} <span class="text-muted">{{ session.start_date|time }}</span></td>
-                        <td>{{ session.capacity|subtract:session.get_current_students.all.count }}</td>
-                        <td>
-                            {% if session.capacity|subtract:session.get_current_students.all.count %}
-                            <a href="{{ session.get_absolute_url }}" class="btn btn-success btn-sm">Sign up now!</a>
-                            {% else %}
-                            <button class="btn btn-default btn-sm disabled" disabled>Class is full</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="tab-pane" id="calendar">
-            <div class="calendar">
-                <div class="btn-group controls">
-                    <a href="{% url 'sessions' prev_date.year prev_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-left"></i></a>
-                    <select name="calendar-month-select" id="calendar-month-select" size="1">
-                        <option value="1"{% ifequal calendar_date.month 1 %} selected{% endifequal %}>January</option>
-                        <option value="2"{% ifequal calendar_date.month 2 %} selected{% endifequal %}>February</option>
-                        <option value="3"{% ifequal calendar_date.month 3 %} selected{% endifequal %}>March</option>
-                        <option value="4"{% ifequal calendar_date.month 4 %} selected{% endifequal %}>April</option>
-                        <option value="5"{% ifequal calendar_date.month 5 %} selected{% endifequal %}>May</option>
-                        <option value="6"{% ifequal calendar_date.month 6 %} selected{% endifequal %}>June</option>
-                        <option value="7"{% ifequal calendar_date.month 7 %} selected{% endifequal %}>July</option>
-                        <option value="8"{% ifequal calendar_date.month 8 %} selected{% endifequal %}>August</option>
-                        <option value="9"{% ifequal calendar_date.month 9 %} selected{% endifequal %}>September</option>
-                        <option value="10"{% ifequal calendar_date.month 10 %} selected{% endifequal %}>October</option>
-                        <option value="11"{% ifequal calendar_date.month 11 %} selected{% endifequal %}>November</option>
-                        <option value="12"{% ifequal calendar_date.month 12 %} selected{% endifequal %}>December</option>
-                    </select>
-                    <select name="calendar-year-select" id="calendar-year-select" size="1">
-                        <option value="2014"{% ifequal calendar_date.year 2014 %} selected{% endifequal %}>2014</option>
-                        <option value="2015"{% ifequal calendar_date.year 2015 %} selected{% endifequal %}>2015</option>
-                    </select>
-                    <a href="{% url 'sessions' next_date.year next_date.month %}" class="btn btn-default btn-xs"><i class="fa fa-arrow-right"></i></a>
-                </div>
-                {{ calendar }}
+    <h1>Upcoming Classes</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</div>
+<div class="upcoming-sessions">
+{% if all_sessions %}
+    {% for session in all_sessions %}
+        <div class="upcoming-session" style="background-image: url(/static/images/{{ session.image_url }});">
+        <!-- <div class="upcoming-session" style="background-image: url(http://lorempixel.com/960/300/animals);"> -->
+            <div class="session-shim">
+                <div class="container">
+                    <div class="date">
+                        {{ session.start_date|date:'F' }}
+                        <span class="day">{{ session.start_date|date:'d' }}</span>
+                    </div>
+                    <div class="description">
+                        <h4 class="title">{{ session.course.title }}:</h4>
+                        <p>{{ session.course.description|safe|truncatechars:180 }} <a href="{{ session.get_absolute_url }}">Learn more.</a></p>
+                    </div>
+                    <div class="actions">
+                        {% if session.capacity|subtract:session.get_current_students.all.count %}
+                        <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Enroll</a>
+                        {% else %}
+                        <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button>
+                        {% endif %}
+                    </div>
+                </div>  
             </div>
         </div>
-    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning text-center">There are no upcoming classes at this time.  Please <a href="{% url 'contact_form' %}">contact us</a> for more information.</div>
+{% endif %}
 </div>
 {% endblock %}
 

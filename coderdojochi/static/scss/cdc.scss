@@ -151,7 +151,11 @@ a {
 }
 
 .main {
-    margin: 40px 0 0;
+    margin: 15px 0 0;
+
+    @include breakpoint($tablet-and-up) {
+        margin: 40px 0 0;
+    }
 
     .page-homepage &, .page-donate & {
         margin: 0;
@@ -399,84 +403,192 @@ form {
 
 // classes
 
-.calendar {
+.page-classes {
 
-    margin-top: 20px;
+    .upcoming-sessions {
 
-    .controls {
-        margin-bottom: 10px;
-        text-align: center;
+        margin: 20px 0;
+
+        @include breakpoint($tablet-and-up) {
+            margin: 40px 0;
+        } 
     }
 
-    table {
-        color: #999;
-        width: 100%;
+    .upcoming-session {
+        
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow: hidden;
 
-        border: 1px solid #ddd;
-        border-collapse: collapse;
+        .session-shim {
 
-        th {
-            border: 1px solid #ddd;
-            font-size: .9em;
-            color: #999;
-            padding: 5px;
-            text-transform: uppercase;
+            padding: 40px 0;
+            background: #fff;
+            background: rgba(255, 255, 255, .7);
+
+
+            @include breakpoint($tablet-and-up) {
+                padding: 60px 0;
+            } 
+        }
+  
+
+        .date {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 10px;
+            line-height: 1;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #666;
+
+            .day {
+                margin: 10px auto 0;
+                padding-top: 5px;
+                width: 50%;
+            }
+
+            @include breakpoint($tablet-and-up) {
+                @include span(2);
+                margin-bottom: 0;
+                border-bottom: none;
+                font-size: 16px;
+                padding: 0;
+
+                .day {
+                    font-weight: bold;
+                    font-size: 46px;
+                    display: block;
+                    border-top: 1px solid #000;
+                }
+            }
+        }
+
+        .description {
+
+            padding: 0 10px;
+
+            .title {
+                font-size: 24px;
+                text-transform: uppercase;
+                margin: 0 0 10px;
+                text-align: center;
+            }
+
+            p { 
+                margin: 0 0 10px;
+            }
+
+            @include breakpoint($tablet-and-up) {
+                @include span(8);
+
+                .title {
+                    text-align: left;
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .actions {
+            
+            text-align: center;
+
+            .btn-cdc {
+                margin-top: 10px;
+            }
+
+            @include breakpoint($tablet-and-up) {
+                @include span(last 2);
+
+                .btn-cdc {
+                    margin-top: 20px;
+                }
+            }
+            
+        }
+
+        
+
+    }
+
+    .calendar {
+
+        margin-top: 20px;
+
+        .controls {
+            margin-bottom: 10px;
             text-align: center;
         }
 
-        td {
-           border: 1px solid #ddd;
-           height: 5em;
-           width: 5em;
-           padding: 5px;
-           vertical-align: top;
-        }
+        table {
+            color: #999;
+            width: 100%;
 
-        caption {
-           font-size: 300%;
-           font-style: italic;
-        }
-    }
+            border: 1px solid #ddd;
+            border-collapse: collapse;
 
-    tbody .month {
-        display: none;
-    }
-
-    .filled {
-
-        a {
-            font-size: .9em;
-            background: #4f9752;
-            color: #fff;
-            padding: 4px;
-            margin: 5px 0;
-            display: block;
-
-            &.unavailable {
-                background-color: #999;
+            th {
+                border: 1px solid #ddd;
+                font-size: .9em;
+                color: #999;
+                padding: 5px;
+                text-transform: uppercase;
+                text-align: center;
             }
 
-            small {
+            td {
+               border: 1px solid #ddd;
+               height: 5em;
+               width: 5em;
+               padding: 5px;
+               vertical-align: top;
+            }
 
+            caption {
+               font-size: 300%;
+               font-style: italic;
             }
         }
-    }
 
-    .today {
-        font-weight: bold;
-    }
+        tbody .month {
+            display: none;
+        }
 
-    .noday {
-        background: #f8f8f8;
+        .filled {
+
+            a {
+                font-size: .9em;
+                background: #4f9752;
+                color: #fff;
+                padding: 4px;
+                margin: 5px 0;
+                display: block;
+
+                &.unavailable {
+                    background-color: #999;
+                }
+
+                small {
+
+                }
+            }
+        }
+
+        .today {
+            font-weight: bold;
+        }
+
+        .noday {
+            background: #f8f8f8;
+        }
+
     }
 
 }
 
 // class-detail
 
-.class-detail {
-
-    padding-top: 200px;
+.page-class-detail {
 
     .title {
         font-size: 24px;

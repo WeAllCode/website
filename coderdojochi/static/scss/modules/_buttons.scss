@@ -1,17 +1,16 @@
 @mixin button() {
 
-    background-color: transparent;
-    background-image: none;
-    border: 2px solid $cdc-color;
-    color: $cdc-color;
+    background: $cdc-color;
+    border: 2px solid #fff;
+    color: #fff;
     cursor: pointer;
     display: inline-block;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 600;
     height: 50px;
     line-height: 48px;
     margin: 0;
-    padding: 0 12px;
+    padding: 0 20px;
     position: relative;
     text-align: center;
     text-decoration: none;
@@ -38,13 +37,10 @@
         }
     }
 
-    &:hover,
-    &:focus {
-        text-decoration: none;
-    }
-
     &:not([disabled]):hover {
         @include opacity(.9);
+        color: #fff;
+        text-decoration: none;
     }
 
     &.btn-cdc-inverse {
@@ -59,7 +55,7 @@
     }
 
     &.btn-cdc-danger {
-        color: red;
+        background: red;
         border: 2px solid red;
     }
 
