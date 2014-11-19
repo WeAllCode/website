@@ -56,6 +56,7 @@
             @include use-sprite("logo", "global");
             top: auto;
             bottom: -15px;
+            left: 0;
             position: absolute
         }
     }
@@ -68,10 +69,11 @@
                 margin-bottom: 5px;
             }
 
-             .brand {
+            .brand {
                 @include use-sprite("logo-small", "global");
                 bottom: -10px;
                 top: auto;
+                left: 10px;
             }
         }
     }
