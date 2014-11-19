@@ -3,6 +3,7 @@ from django.db import models
 from datetime import date
 
 from django.contrib.auth.models import AbstractUser
+
 from django.utils.translation import ugettext as _
 from django.utils import formats
 
@@ -13,10 +14,10 @@ Roles = (
     ('guardian', 'guardian'),
 )
 
+
 class CDCUser(AbstractUser):
     role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
-
 
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
@@ -121,6 +122,7 @@ class Session(models.Model):
     active = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+    image_url = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name = _("session")
@@ -130,8 +132,7 @@ class Session(models.Model):
         return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.course.slug + '/' + str(self.id)
 
     def get_current_students(self):
-        students = Order.objects.filter(session=self).values('student')
-        return students
+        return Order.objects.filter(session=self).values('student')
 
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")

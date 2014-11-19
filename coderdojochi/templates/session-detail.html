@@ -4,7 +4,7 @@
 
 {% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }}{% endblock %}
 
-{% block body_class %}class-detail{% endblock %}
+{% block body_class %}page-class-detail{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -91,8 +91,10 @@
                 {% else %}
                     <p><a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">Login</a> or <a href="{% url 'registration_register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
                 {% endif %}
-            
-                <p><span class="text-large">{{ session.capacity|subtract:session.get_current_students.all.count }}</span> open spots</p>
+                
+                <p>
+                    <span class="text-large">{{ spots_remaining }}</span> open spots
+                </p>
                 <hr>
                 <div class="map">
                     <a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x300&amp;sensor=false&zoom=16"></a>

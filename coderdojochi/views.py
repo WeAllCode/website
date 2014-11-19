@@ -161,11 +161,14 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             mentor_signed_up = True if mentor in session_obj.mentors.all() else False
+            spots_remaining = ( session_obj.capacity / 2 ) - session_obj.mentors.all().count()
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
             is_guardian = True
             students = guardian.get_students() if guardian.get_students().count() else False
+            spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
     else:
+        spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
         user_signed_up = False
 
     return render_to_response(template_name,{
@@ -173,7 +176,8 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
         'mentor_signed_up': mentor_signed_up,
         'is_guardian': is_guardian,
         'students': students,
-        'upcoming_classes': upcoming_classes
+        'upcoming_classes': upcoming_classes,
+        'spots_remaining': spots_remaining
     }, context_instance=RequestContext(request))
 
 
