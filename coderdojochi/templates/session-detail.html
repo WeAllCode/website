@@ -8,51 +8,8 @@
 
 {% block content %}
 <div class="container">
+    <h1 class="title">{{ session.course.title }} <small>{{ session.start_date|date }}</small></h1>
     <div class="row">
-        <div class="class-detail-content">
-            
-            <h1 class="title">{{ session.course.title }}</h1>
-            <p>{{ session.course.description|safe }}</p>
-            
-            <h2 class="title light space-above">Class Information</h2>    
-            <p>Who:<br>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
-
-            <p>When:<br>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
-
-            <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}">{{ session.location }}</a></p>
-
-            {% if session.additional_info %}
-            <p> Additional Info:<br>{{ session.additional_info|safe }}</p>
-            {% endif %}
-
-            {% if session.teacher %}
-            <h2 class="subtitle space-above">About the teacher</h2>
-            <div class="teachers">
-                <div class="teacher">
-                    <a href="#">{% avatar session.teacher.user 220 %}</a>
-                    <div class="info">
-                        <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
-                        <p>{{ session.teacher.bio }}</p>
-                        <p><a href="#">Learn more about {{ session.teacher.first_name }}.</a></p>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if session.mentors.all %}
-            <h2 class="subtitle">Meet the mentors</h2>
-            <div class="mentors">
-                {% for mentor in session.mentors.all %}
-                <a href="#" class="mentor">
-                    {% avatar mentor.user 140 %}
-                    <div class="info">
-                        {{ mentor.first_name }} {{ mentor.last_name }}
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
         <div class="class-detail-sidebar-right">
             <div class="content">
                 {% if user.is_authenticated %}
@@ -91,10 +48,13 @@
                 {% else %}
                     <p><a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">Login</a> or <a href="{% url 'registration_register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
                 {% endif %}
-                
+
                 <p>
                     <span class="text-large">{{ spots_remaining }}</span> open spots
                 </p>
+
+                
+
                 <hr>
                 <div class="map">
                     <a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location }}&amp;size=500x300&amp;sensor=false&zoom=16"></a>
@@ -115,6 +75,51 @@
                     <li><a class="unstyled" href="#"><i class="fa fa-google-plus-square fw"></i></a></li>
                 </ul>
             </div>
+        </div>
+        <div class="class-detail-content">
+        
+            <p>{{ session.course.description|safe }}</p>
+            
+            <h2 class="title light space-above">Class Information</h2>    
+            <p>Who:<br>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
+
+            <p>When:<br>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
+
+            <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}">{{ session.location }}</a></p>
+
+            {% if session.additional_info %}
+            <p> Additional Info:<br>{{ session.additional_info|safe }}</p>
+            {% endif %}
+
+            {% if session.teacher %}
+            <h2 class="subtitle space-above">About the teacher</h2>
+            <div class="teachers">
+                <div class="teacher">
+                    {# <a href="#"> #}{% avatar session.teacher.user 220 %}{# </a> #}
+                    <div class="info">
+                        <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
+                        <p>{{ session.teacher.bio }}</p>
+                        {# <p><a href="#">Learn more about {{ session.teacher.first_name }}.</a></p> #}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if session.mentors.all %}
+            <h2 class="subtitle">Meet the mentors</h2>
+            <div class="mentors">
+                {% for mentor in session.mentors.all %}
+                {# <a href="#"> #}
+                <span class="mentor">
+                    {% avatar mentor.user 140 %}
+                    <div class="info">
+                        {{ mentor.first_name }} {{ mentor.last_name }}
+                    </div>
+                </span>
+                {# </a> #}
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
     </div>
 

@@ -338,8 +338,6 @@ form {
 
 .welcome {
 
-    padding-top: 200px;
-
     .role {
         @include span(12);
         @include opacity(.9);
@@ -396,8 +394,11 @@ form {
 .dojo-content {
     @include span(12);
 
+    margin-bottom: 30px;
+
     @include breakpoint($tablet-and-up) {
         @include span(last 8);
+        margin-bottom: 0;
     }
 }
 
@@ -635,9 +636,13 @@ form {
             }
 
             .info {
-                font-size: 12px;
+
                 float: left;
-                margin-left: 50px;
+
+                @include breakpoint($tablet-and-up) {
+                    @include span(4);
+                    margin-left: 50px;
+                }
 
                 .subtitle {
                     margin-bottom: 30px;
