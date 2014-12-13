@@ -13,25 +13,6 @@
 </div>
 {% endif %}
 <div class="container">
-    <div class="dojo-profile">
-        <div class="well well-sm">
-            <img src="{% avatar_url user %}" class="avatar">
-            <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
-            <h2>
-                @{{ user }}
-                <small>Role: {{ user.role|capfirst }}</small>
-                <small>Joined: {{ account.created_at|naturalday|capfirst }}</small>
-            </h2>
-
-            {% if form %}
-            <form action="" method="post">
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                <button class="submit btn btn-default">Save</button>
-            </form>
-            {% endif %}
-        </div>
-    </div>
     <div class="dojo-content">
         {% if user.role == 'guardian' %}
             <h2>Students</h2>
@@ -66,7 +47,7 @@
             {% endif %}
         {% endif %}
 
-        <h2>Classes</h2>
+        <h2>Your Classes</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
             <li><a href="#past" data-toggle="tab">Past</a></li>
@@ -158,32 +139,53 @@
             </div>
         </div>
         <br>
-        <hr>
-        <h2>Mentor Meetings</h2>
-        {% if upcoming_meetings %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Meeting</th>
-                    <th>Date</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for meeting in upcoming_meetings %}
-                <tr>
-                    <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.title }}</a></td>
-                    <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
-                    <td>
-                        <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn btn-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}Sign up now{% endif%}</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p class="text-center text-muted">No upcoming mentor meetings at this time.</p>
+        {% if user.role == 'mentor' %}
+            <hr>
+            <h2>Your Mentor Meetings</h2>
+            {% if upcoming_meetings %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Meeting</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for meeting in upcoming_meetings %}
+                    <tr>
+                        <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.title }}</a></td>
+                        <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
+                        <td>
+                            <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn btn-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}Sign up now{% endif%}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-center text-muted">No upcoming mentor meetings at this time.</p>
+            {% endif %}
         {% endif %}
+    </div>
+    <div class="dojo-profile">
+        <div class="well well-sm">
+            <img src="{% avatar_url user %}" class="avatar">
+            <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
+            <h2>
+                @{{ user }}
+                <small>Role: {{ user.role|capfirst }}</small>
+                <small>Joined: {{ account.created_at|naturalday|capfirst }}</small>
+            </h2>
+
+            {% if form %}
+            <form action="" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <button class="submit btn btn-default">Save</button>
+            </form>
+            {% endif %}
+        </div>
     </div>
 </div>
 
