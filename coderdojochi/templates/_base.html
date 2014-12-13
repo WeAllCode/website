@@ -37,8 +37,8 @@
         {% include "_topnav.html" %}
 
         {% block body_base %}
-            {% include "_messages.html" %}
             <div role="main" class="main">
+                {% include "_messages.html" %}
                 {% block content %}{% endblock %}
             </div>
         {% endblock %}

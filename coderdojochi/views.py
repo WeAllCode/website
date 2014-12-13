@@ -70,9 +70,9 @@ def welcome(request, template_name="welcome.html"):
 
             if form.is_valid():
                 form.save()
-                if role == 'mentor' or account.get_students().count():
-                    messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
-                    return HttpResponseRedirect(reverse('dojo'))
+                # if role == 'mentor' or account.get_students().count():
+                messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
+                return HttpResponseRedirect(reverse('dojo'))
             else:
                 messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
         else:
