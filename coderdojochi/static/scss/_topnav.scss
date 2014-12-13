@@ -1,6 +1,8 @@
 .navbar-default {
     background-color: $cdc-color;
     border: 0;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 14px;
 
     @include user-select(none);
 
@@ -31,9 +33,9 @@
 
     .navbar-collapse {
         border: none;
-        
+
         &.in, &.collapsing {
-           background: $cdc-color-dark; 
+           background: $cdc-color-dark;
 
             .navbar-nav > .active > a,
             .navbar-nav > .active > a:hover,
@@ -41,7 +43,7 @@
                 border: none;
             }
         }
-        
+
     }
 
     .brand {
@@ -51,7 +53,7 @@
         z-index: 1032;
         left: 10px;
         top: 2px;
-        
+
         @include breakpoint($tablet-and-up) {
             @include use-sprite("logo", "global");
             top: auto;
