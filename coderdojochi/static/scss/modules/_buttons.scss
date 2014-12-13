@@ -44,13 +44,19 @@
     }
 
     &.btn-cdc-inverse {
-        color: #fff;
-        border: 2px solid #fff;
+        
+        border-color: $cdc-color;
+        color: $cdc-color;
+        background: #fff;
+
+        &:hover {
+            color: $cdc-color;
+        }
 
         &.active {
-            border-color: #fff;
-            color: $cdc-color;
-            background: #fff;
+            background: $cdc-color;
+            color: #fff;
+            border: 2px solid #fff;
         }
     }
 
