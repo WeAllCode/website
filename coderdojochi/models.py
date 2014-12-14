@@ -14,10 +14,44 @@ Roles = (
     ('guardian', 'guardian'),
 )
 
-
 class CDCUser(AbstractUser):
     role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
+
+    def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
+        """
+        Creates and saves a User with the given username, email and password.
+        """
+        now = timezone.now()
+        if not username:
+            raise ValueError('The given username must be set')
+        email = self.normalize_email(email)
+        user = self.model(
+            username=username,
+            email=email,
+            first_name=extra_fields[ 'first_name' ],
+            last_name=extra_fields[ 'last_name' ],
+            is_staff=is_staff,
+            is_active=True,
+            is_superuser=is_superuser,
+            last_login=now,
+            date_joined=now,
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        return self._create_user(username, email, password, False, False,
+                                 **extra_fields)
+
+    def create_superuser(self, username, email, password, **extra_fields):
+        return self._create_user(username, email, password, True, True,
+                                 **extra_fields)
+
+    def get_absolute_url(self):
+        return '/dojo'
 
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
@@ -117,6 +151,7 @@ class Session(models.Model):
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     capacity = models.IntegerField(blank=True, null=True)
+    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, blank=True, null=True, related_name="session_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
     active = models.BooleanField()
@@ -207,5 +242,18 @@ class Equipment(models.Model):
     def __unicode__(self):
         return self.equipment_type.name + ' | ' + self.make + ' ' + self.model + ' | ' + str(self.aquisition_date)
 
-        
-        
+
+class EmailContent(models.Model):
+    nickname = models.CharField(max_length=255)
+    subject = models.CharField(max_length=255)
+    body = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _("email content")
+        verbose_name_plural = _("email content")
+
+    def __unicode__(self):
+        return self.nickname + ' | ' + self.subject

@@ -11,7 +11,7 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     <input type="hidden" name="next" value="{{ next }}" />
-    <input class="btn btn-lg btn-success" type="submit" value="{% trans 'Log in' %}" />
+    <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Log in' %}" />
 </form>
 <p>{% trans "Forgot password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>!</p>
 <p>{% trans "Not member" %}? <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>!</p>
