@@ -6,24 +6,19 @@ import html5.forms.widgets as html5_widgets
 
 class MentorForm(ModelForm):
 
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name','class': 'form-control'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name','class': 'form-control'}))
-    bio = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Short Bio','class': 'form-control', 'rows': 5}))
+    bio = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Short Bio','class': 'form-control', 'rows': 5}), label='Short Bio')
 
     class Meta:
         model = Mentor
-        fields = ('first_name', 'last_name', 'bio')
-
+        fields = ('bio',)
 
 class GuardianForm(ModelForm):
 
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'First Name','class': 'form-control'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Last Name','class': 'form-control'}))
-    phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Phone Number','class': 'form-control'}))
+    phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Phone Number','class': 'form-control'}), label='Phone Number')
 
     class Meta:
         model = Guardian
-        fields = ('first_name', 'last_name', 'phone')
+        fields = ('phone',)
 
 class StudentForm(ModelForm):
 

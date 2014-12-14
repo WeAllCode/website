@@ -3,10 +3,12 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, Context
 from django.template.loader import get_template
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 
 from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting
@@ -19,11 +21,81 @@ from itertools import groupby
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 
+from django.utils.translation import ugettext_lazy as _
+
 import calendar
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
 
+from registration.backends.simple.views import RegistrationView
+from registration import forms as registration_forms
+from registration import signals
+from django.contrib import auth
+from django import forms
+
+
+
+
+class CDCRegistrationForm(registration_forms.RegistrationForm):
+
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    username = forms.CharField(widget=forms.HiddenInput, required=False)
+
+    def __init__(self,*args,**kwargs):
+        forms.Form.__init__(self,*args,**kwargs)
+        #first argument, index is the position of the field you want it to come before
+        self.fields.insert(0,'first_name', forms.CharField())
+        self.fields.insert(1,'last_name', forms.CharField())
+
+    def clean_email(self):
+        """
+        Validate that the username is alphanumeric and is not already
+        in use.
+        
+        """
+        existing = User.objects.filter(username__iexact=self.cleaned_data['email'])
+        if existing.exists():
+            raise forms.ValidationError(_("A user with that email already exists."))
+        else:
+            return self.cleaned_data['email']
+
+    def clean(self):
+        """
+        Verifiy that the values entered into the two password fields
+        match. Note that an error here will end up in
+        ``non_field_errors()`` because it doesn't apply to a single
+        field.
+        
+        """
+        if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
+            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
+                raise forms.ValidationError(_("The two password fields didn't match."))
+
+        return self.cleaned_data
+
+
+class RegisterView(RegistrationView):
+    
+    form_class = CDCRegistrationForm
+
+    def register(self, request, **cleaned_data):
+
+        email, password, first_name, last_name = cleaned_data['email'], cleaned_data['password1'], cleaned_data['first_name'], cleaned_data['last_name']
+        username = email
+
+        user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
+
+        new_user = authenticate(username=username, password=password)
+        login(request, new_user)
+        signals.user_registered.send(sender=self.__class__,
+                                     user=new_user,
+                                     request=request)
+        return new_user
+
+    def get_success_url(self, request, user):
+        return (user.get_absolute_url(), (), {})
 
 def add_months(sourcedate, months):
     month = sourcedate.month - 1 + months
@@ -77,18 +149,31 @@ def welcome(request, template_name="welcome.html"):
                 messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
         else:
             if request.POST.get('role') == 'mentor':
+                role = 'mentor'
                 mentor = Mentor(user=user)
+                mentor.first_name = user.first_name
+                mentor.last_name = user.last_name
                 mentor.save()
-                user.role = 'mentor'
+                user.role = role
             else:
+                role = 'guardian'
                 guardian = Guardian(user=user)
+                guardian.first_name = user.first_name
+                guardian.last_name = user.last_name
                 guardian.save()
-                user.role = 'guardian'
+                user.role = role
 
-        sendSystemEmail(request, 'Welcome!', 'email/welcome.txt', 'email/welcome.html', Context({
-            'user': request.user,
-            'site_url': settings.SITE_URL
-        }))
+
+        if role == 'mentor':
+            sendSystemEmail(request, 'Welcome!', 'WELCOME_MENTOR', {
+                'user': request.user,
+                'site_url': settings.SITE_URL
+            })
+        else:
+            sendSystemEmail(request, 'Welcome!', 'WELCOME_GUARDIAN', {
+                'user': request.user,
+                'site_url': settings.SITE_URL
+            })
 
         user.save()
         return HttpResponseRedirect(reverse('welcome'))
@@ -222,10 +307,45 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
             
-            sendSystemEmail(request, 'Upcoming class confirmation', 'email/session-update.txt', 'email/session-update.html', Context({
-                'user': request.user,
-                'session': session_obj
-            }))
+
+            if request.user.role == 'mentor':
+
+                user_title = mentor.first_name if mentor.first_name else mentor.user.username
+
+                sendSystemEmail(request, 'Upcoming class confirmation', 'CLASS_CONFIRM_MENTOR', {
+                    'user': user_title,
+                    'class_code': session_obj.course.code,
+                    'class_title': session_obj.course.title,
+                    'class_description': session_obj.course.description,
+                    'class_start_date': session_obj.start_date,
+                    'class_start_time': session_obj.start_date,
+                    'class_end_date': session_obj.end_date,
+                    'class_end_time': session_obj.end_date,
+                    'class_location': session_obj.location,
+                    'class_additional_info': session_obj.additional_info,
+                    'site_url': settings.SITE_URL,
+                    'class_url': reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id))
+                })
+            
+            else:
+                user_title = guardian.first_name if guardian.first_name else guardian.user.username
+
+                sendSystemEmail(request, 'Upcoming class confirmation', 'CLASS_CONFIRM_GUARDIAN', {
+                    'user': user_title,
+                    'student_first_name': student.first_name,
+                    'student_last_name': student.last_name,
+                    'class_code': session_obj.course.code,
+                    'class_title': session_obj.course.title,
+                    'class_description': session_obj.course.description,
+                    'class_start_date': session_obj.start_date,
+                    'class_start_time': session_obj.start_date,
+                    'class_end_date': session_obj.end_date,
+                    'class_end_time': session_obj.end_date,
+                    'class_location': session_obj.location,
+                    'class_additional_info': session_obj.additional_info,
+                    'site_url': settings.SITE_URL,
+                    'class_url': reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id))
+                })
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
@@ -275,11 +395,22 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
             messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
-            
-            sendSystemEmail(request, 'Upcoming Mentor Meeting', 'email/meeting-update.txt', 'email/meeting-update.html', Context({
-                'user': request.user,
-                'meeting': meeting_obj
-            }))
+
+            user_title = mentor.first_name if mentor.first_name else mentor.user.username
+
+            sendSystemEmail(request, 'Upcoming mentor meeting confirmation', 'MEETING_CONFIRM_MENTOR', {
+                'user': user_title,
+                'meeting_title': meeting_obj.title,
+                'meeting_description': meeting_obj.description,
+                'meeting_start_date': meeting_obj.start_date,
+                'meeting_start_time': meeting_obj.start_date,
+                'meeting_end_date': meeting_obj.end_date,
+                'meeting_end_time': meeting_obj.end_date,
+                'meeting_location': meeting_obj.location,
+                'meeting_additional_info': meeting_obj.additional_info,
+                'site_url': settings.SITE_URL,
+                'meeting_url': reverse('meeting_detail', args=(meeting_obj.start_date.year, meeting_obj.start_date.month, meeting_obj.start_date.day, meeting_obj.id))
+            })
 
         return HttpResponseRedirect(reverse('meeting_detail', args=(meeting_obj.start_date.year, meeting_obj.start_date.month, meeting_obj.start_date.day, meeting_obj.id)))
 
@@ -453,19 +584,14 @@ def about(request, template_name="about.html"):
 def privacy(request, template_name="privacy.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
-    
 
-def sendSystemEmail(request, subject, txt, html, context):
+def sendSystemEmail(request, subject, template_name, merge_vars):
 
-    plaintext = get_template(txt)
-    htmly     = get_template(html)
-
-    text_content = plaintext.render(context)
-    html_content = htmly.render(context)
-    
-    from_email = 'CoderDojoChi', settings.DEFAULT_FROM_EMAIL
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [request.user.email])
-    msg.attach_alternative(html_content, "text/html")
+    msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
+                       to=[request.user.email])
+    msg.template_name = template_name
+    msg.global_merge_vars = merge_vars
+    msg.use_template_subject = True
 
     # Optional Mandrill-specific extensions:
     # msg.tags = ['one tag', 'two tag', 'red tag', 'blue tag']

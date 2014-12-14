@@ -90,6 +90,9 @@ hr {
 /* Global Typography */
 
 h1, h2, h3, h4 {
+
+    line-height: 1.3;
+
     small {
         color: #666;
         font-weight: normal;
@@ -241,6 +244,15 @@ form {
 /* -------------------------------------------------------------------------*/
 /* Pages */
 
+
+// auth
+
+.auth-page {
+
+    form {
+        margin-bottom: 20px;
+    }
+}
 
 // homepage
 
