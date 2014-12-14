@@ -12,10 +12,11 @@
         {% if role == 'guardian' %}
             {% if not add_student %}
             <h1>Tell us a little more about yourself...</h1>
-            <h3 class="text-muted">Before you sign up your student(s), tell us a little more about yourself...</h3>
+            <h3 class="text-muted">Before you sign up your student(s), give us the best phone number to reach you at (we will never share this with anyone)...</h3>
             {% else %}
                 {% if students %}
-                    <h1><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>You're all set! <small>Now you can <a href="{% url 'sessions' %}">view upcoming classes</a>, <a href="{% url 'dojo' %}">check out your dojo</a> or register another student below.</small></h1>
+                    <h1><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>You're all set!</h1>
+                    <h3 class="text-muted">Now you can <a href="{% url 'sessions' %}">view upcoming classes</a>, <a href="{% url 'dojo' %}">check out your dojo</a> or register another student below.</h3>
                 {% else %}
                     <h1>Register your first student now</h1>
                 {% endif %}
@@ -23,7 +24,7 @@
         {% endif %}
         {% if role == 'mentor' %}
         <h1>Tell us a little more...</h1>
-        <h3 class="text-muted">Before you sign up to mentor classes, tell us a little more about yourself...</h3>
+        <h3 class="text-muted">Before you sign up to mentor classes, come up with a short bio for yourself...</h3>
         {% endif %}
         {% if form %}
         {% if add_student %}
@@ -33,7 +34,7 @@
         <form action="" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <button class="submit btn btn-success btn-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
+            <button class="submit btn-cdc btn-cdc-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
         </form>
         {% endif %}
     {% else %}
@@ -43,12 +44,12 @@
         <form method="post" action="" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="parent">
-            <button class="btn btn-success">A Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
+            <button class="btn-cdc">A Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
         </form>
         <form method="post" action="" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="mentor">
-            <button class="btn btn-success">A Mentor <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
+            <button class="btn-cdc">A Mentor <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
         </form>
     </div>
     {% endif %}
