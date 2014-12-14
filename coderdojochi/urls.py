@@ -4,6 +4,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
+from coderdojochi.views import RegisterView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -14,6 +16,10 @@ urlpatterns = patterns('',
     url(r'^privacy/$','coderdojochi.views.privacy',name='privacy'),
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
 
+    url(r'^register/$', RegisterView.as_view(), name='register'),
+
+
+    url(r'^student/(?P<student_id>[\d]+)/$', 'coderdojochi.views.student_detail', name='student_detail'),
 
     url(r'^student/(?P<student_id>[\d]+)/$', 'coderdojochi.views.student_detail', name='student_detail'),
 
