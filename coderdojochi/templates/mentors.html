@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% load avatar_tags humanize %}
+
+{% block title %}My Dojo{% endblock %}
+
+{% block body_class %}mentors-page{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    
+    <h1>Meet the mentors</h1>
+    <div class="mentors">
+        {% for mentor in mentors %}
+        <a href="{% url 'mentor_detail' mentor.id %}">
+        <span class="mentor">
+            {% avatar mentor.user 140 %}
+            <div class="info">
+                {{ mentor.first_name }} {{ mentor.last_name }}
+            </div>
+        </span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
