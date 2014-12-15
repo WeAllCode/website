@@ -3,7 +3,7 @@
 
 {% block title %}My Dojo{% endblock %}
 
-{% block body_class %}dojo-page{% endblock %}
+{% block body_class %}page-dojo{% endblock %}
 
 {% block content %}
 
@@ -17,7 +17,7 @@
         {% if user.role == 'guardian' %}
             <h2>Students</h2>
             {% if students %}
-                <table class="students table-striped ">
+                <table class="students table table-striped ">
                     <thead>
                         <tr class="text-muted">
                             <th>Name</th>
@@ -35,7 +35,7 @@
                             <td>{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
                             <td>{% if student.medications %}Yes{% else %}No{% endif %}</td>
                             <td>
-                                <a href="{% url 'student_detail' student.id %}" class="btn btn-sm btn-default">Edit Info</a>
+                                <a href="{% url 'student_detail' student.id %}" class="btn-cdc btn-cdc-sm">Edit Info</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -84,7 +84,7 @@
                                 <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}({{ session.course.code }}) {% endif %}{{ session.course.title }}</a></td>
                                 <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                                 <td>
-                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Can't make it</a>
+                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -125,7 +125,7 @@
                                 <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
                                 <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.start_date|time }}</span></td>
                                 <td>
-                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn btn-danger btn-sm">Can't make it</a>
+                                    <a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -157,7 +157,7 @@
                         <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.title }}</a></td>
                         <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
                         <td>
-                            <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn btn-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}Sign up now{% endif%}</a>
+                            <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}Sign up now{% endif%}</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -179,7 +179,7 @@
             <form action="" method="post">
                 {% csrf_token %}
                 {% bootstrap_form form %}
-                <button class="submit btn btn-default">Save</button>
+                <button class="submit btn-cdc btn-cdc-inverse">Save</button>
             </form>
             {% endif %}
         </div>
