@@ -11,6 +11,16 @@
     <h1 class="title">{{ session.course.title }} <small>{{ session.start_date|date }}</small></h1>
     <div class="row">
         <div class="class-detail-sidebar-right">
+            {% if user.is_staff or user.role == 'mentor' %}
+            <div class="well well-sm">
+                <ul class="list-group">
+                    <a href="{% url 'check_in' session.id %}" class="list-group-item">Class Check-in</a>
+                    {% if user.is_staff %}
+                    <a href="{% url 'check_in' session.id %}" class="list-group-item">Edit Class</a>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
             <div class="content">
                 {% if user.is_authenticated %}
                     {% if is_guardian %}
@@ -52,8 +62,6 @@
                 <p>
                     <span class="text-large">{{ spots_remaining }}</span> open spots
                 </p>
-
-                
 
                 <hr>
                 <div class="map">

@@ -44,12 +44,12 @@
         <form method="post" action="" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="parent">
-            <button class="btn-cdc">A Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
+            <button class="btn btn-success">A Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
         </form>
         <form method="post" action="" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="mentor">
-            <button class="btn-cdc">A Mentor <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
+            <button class="btn btn-success">A Mentor <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
         </form>
     </div>
     {% endif %}
