@@ -538,6 +538,24 @@ class SessionsCalendar(HTMLCalendar):
         return '<td class="%s">%s</td>' % (cssclass, body)
 
 
+def mentors(request, template_name="mentors.html"):
+
+    mentors = Mentor.objects.filter(active=True)
+
+    return render_to_response(template_name, {
+        'mentors': mentors
+    }, context_instance=RequestContext(request))
+
+
+def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
+
+    mentor = get_object_or_404(Mentor, id=mentor_id)
+
+    return render_to_response(template_name, {
+        'mentor': mentor
+    }, context_instance=RequestContext(request))
+
+
 @login_required
 def student_detail(request, student_id=False, template_name="student-detail.html"):
 
