@@ -1,0 +1,32 @@
+{% extends "_base.html" %}
+{% load avatar_tags humanize %}
+
+{% block title %}My Dojo{% endblock %}
+
+{% block body_class %}mentor-detail-page{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'mentors' %}">All Mentors</a></li>
+        <li class="active">{{ mentor.first_name }} {{ mentor.last_name }}</li>
+    </ol>
+</div>
+
+
+<div class="container">
+    <div class="dojo-content">
+        <h1>{{ mentor.first_name }} {{ mentor.last_name }}</h1>
+        <h3>Bio:</h3>
+        <p>{{ mentor.bio }}</p>
+    </div>
+    <div class="dojo-profile">
+        <div class="well well-sm">
+            <img src="{% avatar_url mentor.user %}" class="avatar">
+            <h3>Joined: {{ mentor.created_at|naturalday|capfirst }}</h3>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
