@@ -19,7 +19,9 @@ urlpatterns = patterns('',
     url(r'^register/$', RegisterView.as_view(), name='register'),
 
 
-    url(r'^student/(?P<student_id>[\d]+)/$', 'coderdojochi.views.student_detail', name='student_detail'),
+
+    url(r'^mentors/(?P<mentor_id>[\d]+)/$', 'coderdojochi.views.mentor_detail', name='mentor_detail'),
+    url(r'^mentors/$', 'coderdojochi.views.mentors', name='mentors'),
 
     url(r'^student/(?P<student_id>[\d]+)/$', 'coderdojochi.views.student_detail', name='student_detail'),
 
