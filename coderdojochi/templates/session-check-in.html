@@ -1,0 +1,51 @@
+{% extends "_base.html" %}
+
+{% load i18n avatar_tags coderdojochi_extras %}
+
+{% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }}{% endblock %}
+
+{% block body_class %}page-session-check-in{% endblock %}
+
+{% block topnav %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
+        <li class="active">Class Check-in</li>
+    </ol>
+    <table class="table table-striped">
+        {% if session.get_current_orders %}
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Guardian</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody> 
+                {% for order in session.get_current_orders %}
+                <tr{% if order.check_in %} class="success"{% endif %}>
+                    <form method="post" action=".">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <td>{{ order.student.last_name }}, {{ order.student.first_name }}</td>
+                        <td><input type="text" name="order_alternate_guardian" class="form-control" value="{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.first_name }} {{ order.guardian.last_name }}{% endif %}"></td>
+                        {% if order.check_in %}
+                        <td><button class="btn-link">Undo</button></td>
+                        {% else %}
+                        <td><button class="btn-cdc btn-cdc-sm">Check In</button></td>
+                        {% endif %}
+                    </form>
+                </tr>
+                {% endfor %}     
+            </tbody>
+        {% else %}
+            <div class="alert">No orders yet.</div>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}
+
+
+{% block footer_base %}{% endblock %}

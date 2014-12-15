@@ -34,7 +34,9 @@
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
-        {% include "_topnav.html" %}
+        {% block topnav %}
+            {% include "_topnav.html" %}
+        {% endblock %}
 
         {% block body_base %}
             <div role="main" class="main">
@@ -42,8 +44,8 @@
                 {% block content %}{% endblock %}
             </div>
         {% endblock %}
-        {% block footer_base %}
 
+        {% block footer_base %}
         <footer>
             <div class="container">
                 <p class="text-muted">&copy;{% now "Y" %}. All rights reserved. <span class="pull-right"><a href="{% url 'contact_form' %}">Contact Us</a> <a href="{% url 'privacy' %}">Privacy &amp; Terms</a></span></p>

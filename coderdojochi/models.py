@@ -146,7 +146,6 @@ class Course(models.Model):
 
 class Session(models.Model):
     course = models.ForeignKey(Course)
-    
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
@@ -165,6 +164,10 @@ class Session(models.Model):
 
     def get_absolute_url(self):
         return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.course.slug + '/' + str(self.id)
+
+    def get_current_orders(self):
+
+        return Order.objects.filter(session=self).order_by('check_in', 'student__last_name')
 
     def get_current_students(self):
         return Order.objects.filter(session=self).values('student')
@@ -201,6 +204,7 @@ class Order(models.Model):
     active = models.BooleanField(default=True)
     ip = models.CharField(max_length=255, blank=True, null=True)
     check_in = models.DateTimeField(blank=True, null=True)
+    alternate_guardian = models.CharField(max_length=255, blank=True, null=True)
     affiliate = models.CharField(max_length=255, blank=True, null=True)
     order_number = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add = True)
