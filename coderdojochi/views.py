@@ -129,7 +129,7 @@ def welcome(request, template_name="welcome.html"):
                 form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
             else:
                 account = get_object_or_404(Guardian, user=user)
-                if not account.first_name:
+                if not account.phone:
                     form = GuardianForm(request.POST, instance=account)
                 else:
                     form = StudentForm(request.POST)
@@ -147,6 +147,7 @@ def welcome(request, template_name="welcome.html"):
                 return HttpResponseRedirect(reverse('dojo'))
             else:
                 messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
+                return HttpResponseRedirect(reverse('welcome'))
         else:
             if request.POST.get('role') == 'mentor':
                 role = 'mentor'
@@ -163,20 +164,19 @@ def welcome(request, template_name="welcome.html"):
                 guardian.save()
                 user.role = role
 
+            if role == 'mentor':
+                sendSystemEmail(request, 'Welcome!', 'WELCOME_MENTOR', {
+                    'user': request.user,
+                    'site_url': settings.SITE_URL
+                })
+            else:
+                sendSystemEmail(request, 'Welcome!', 'WELCOME_GUARDIAN', {
+                    'user': request.user,
+                    'site_url': settings.SITE_URL
+                })
 
-        if role == 'mentor':
-            sendSystemEmail(request, 'Welcome!', 'WELCOME_MENTOR', {
-                'user': request.user,
-                'site_url': settings.SITE_URL
-            })
-        else:
-            sendSystemEmail(request, 'Welcome!', 'WELCOME_GUARDIAN', {
-                'user': request.user,
-                'site_url': settings.SITE_URL
-            })
-
-        user.save()
-        return HttpResponseRedirect(reverse('welcome'))
+            user.save()
+            return HttpResponseRedirect(reverse('welcome'))
 
     if role:
         if role == 'mentor':
@@ -187,7 +187,7 @@ def welcome(request, template_name="welcome.html"):
         if role == 'guardian':
             guardian = get_object_or_404(Guardian, user=user)
             account = guardian
-            if not account.first_name:
+            if not account.phone:
                 form = GuardianForm(instance=account)
             else:
                 add_student = True
@@ -230,6 +230,38 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         'calendar_date': calendar_date,
         'prev_date': prev_date,
         'next_date': next_date
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def session_check_in(request, session_id, template_name="session-check-in.html"):
+    
+    if not request.user.is_staff and not request.user.role == 'mentor':
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('sessions'))
+
+    if request.method == 'POST':
+        if request.POST['order_id']:
+            
+            order = get_object_or_404(Order, id=request.POST['order_id'])
+            
+            if order.check_in:
+                order.check_in = None
+            else:
+                order.check_in = datetime.now()
+            
+            if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
+                order.alternate_guardian = request.POST['order_alternate_guardian']
+            
+            order.save()
+        else:
+            
+            messages.add_message(request, messages.ERROR, 'Invalid Order')
+
+    session_obj = get_object_or_404(Session, id=session_id)
+
+    return render_to_response(template_name,{
+        'session': session_obj,
     }, context_instance=RequestContext(request))
 
 
