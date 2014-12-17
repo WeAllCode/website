@@ -11,6 +11,7 @@ cd coderdojochi
 pip install virtualenvwrapper
 add virtualenv wrapper to your zsh plugins -- list plugins=(virtualenvwrapper) in ~/.zshrc
 mkvirtualenv dojo-env --no-site-packages
+workon dojo-env
 pip install -r requirements.txt
 python manage.py syncdb
 ```
