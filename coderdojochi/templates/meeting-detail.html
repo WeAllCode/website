@@ -4,62 +4,72 @@
 
 {% block title %}{{ meeting.title }}{% endblock %}
 
-{% block body_class %}class-detail{% endblock %}
+{% block body_class %}page-class-detail{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1 class="light">
-        {{ meeting.title }}
-        <small><i class="fa fa-clock-o"></i> {{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}</small>
-        <small class="light"><i class="fa fa-map-marker"></i> {{ meeting.location }}</small>
-    </h1>
+    <h1 class="title">{{ meeting.meeting_type.title }} <small>{{ meeting.start_date|date }}</small></h1>
     <div class="row">
-        <div class="class-detail-content">
-            <p class="lead drop-caps">{{ meeting.description|safe }}</p>
-            <h2>Meeting Information</h2>
-            <strong><i class="fa fa-clock-o"></i> When:</strong>
-            <p>{{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}</p>
-            <strong><i class="fa fa-map-marker"></i> Where:</strong>
-            <p>{{ meeting.location }}</p>
-            {% if meeting.additional_info %}
-            <strong><i class="fa fa-info"></i> Additional Info:</strong>
-            <p>{{ meeting.additional_info|safe }}</p>
-            {% endif %}
-        </div>
         <div class="class-detail-sidebar-right">
-            <div id="sign-up" class="well">
+
+            {% if user.is_staff %}
+            <div class="well well-sm">
+                <ul class="list-group">
+                    <a href="/admin/coderdojochi/meeting/{{ meeting.id }}" class="list-group-item">Edit Meeting</a>
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="content">
                 {% if user.is_authenticated %}
                     {% if mentor_signed_up %}
-                        <h2>You are signed up for this mentor meeting! <small>Logged in as {{ user.role }} <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ meeting.get_absolute_url }}">Logout.</a></small></h2>
-                        <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn btn-danger btn-sm">Oops! I can't make it...</a></p>
+                        <p>You are signed up to attend this meeting.</p>
+                        <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                     {% else %}
-                        <h2>Sign up to attend this mentor meeting! <small>Logged in as <i>{% avatar user 25 %}</i> <strong>{{ user.username }}</strong>. <a href="{% url 'auth_logout' %}?next={{ meeting.get_absolute_url }}">Logout.</a></small></h2>
-
-                        <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn btn-success btn-lg">Sign up now!</a></p>
+                        <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                     {% endif %}
                 {% else %}
-                    <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'registration_register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up to attend this meeting.</p>
+                <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
                 {% endif %}
-            </div>
-            <a target="_blank" class="map" href="https://www.google.com/maps/preview?q={{ meeting.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ meeting.location }}&amp;size=500x500&amp;sensor=false"></a>
-            <p class="text-center"><a target="_blank" href="https://www.google.com/maps/preview?q={{ meeting.location }}">Open in Google Maps</a></p>
-        </div>
-    </div>
 
-    {% if meeting.mentors.all %}
-    <h2>Mentors Attending</h2>
-    <div class="mentors">
-        {% for mentor in meeting.mentors.all %}
-        <div class="mentor">
-            {% avatar mentor.user %}
-            <div class="info">
-                <h3 class="title">{{ mentor.first_name }} {{ mentor.last_name }}</h3>
-                <p>{{ mentor.bio }}</p>
+                <hr>
+                <div class="map">
+                    <a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ meeting.location }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ meeting.location }}&amp;size=500x300&amp;sensor=false&zoom=16"></a>
+                </div>
             </div>
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
+        <div class="class-detail-content">
+            <p>{{ meeting.meeting_type.description|safe }}</p>
+            
+            <h2 class="title light space-above">Meeting Information</h2>    
+            <p>Who:<br>Teachers, coders, writers, crafters, nurturers, leaders, tinkers, go getters to name a few. If you are passionate about coding and/or teaching children, join us. Everyone is welcome, regardless of technical ability.</p>
 
+            <p>When:<br>{{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}</p>
+
+            <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ meeting.location }}">{{ meeting.location }}</a></p>
+
+            {% if meeting.additional_info %}
+            <p> Additional Info:<br>{{ meeting.additional_info|safe }}</p>
+            {% endif %}
+
+
+            {% if meeting.mentors.all %}
+            <h2 class="subtitle">Mentors Attending</h2>
+            <div class="mentors">
+                {% for mentor in meeting.mentors.all %}
+                <a href="{% url 'mentor_detail' mentor.id %}">
+                <span class="mentor">
+                    {% avatar mentor.user 140 %}
+                    <div class="info">
+                        {{ mentor.first_name }} {{ mentor.last_name }}
+                    </div>
+                </span>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
 </div>
 {% endblock %}
