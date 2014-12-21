@@ -28,7 +28,6 @@
                             {% if spots_remaining > 0 %}
                                 <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
                             {% else %}
-                                <h2>This class is currently full</h2>
                                 <p>There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
                             {% endif %}
                             <table class="students">
@@ -92,13 +91,14 @@
                         {% endif %}
                     {% endif %}
                 {% else %}
-                    <p><a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
+                    <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
+                    <p>You must <a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">login</a> or <a href="{% url 'register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
                 {% endif %}
 
                 <p>
+                    {% if spots_remaining > 0 %}
                     <span class="text-large">{{ spots_remaining }}</span> open spots
-                    {% if spots_remaining < 1 %}
-                        <br>
+                    {% else %}
                         {% if is_guardian %}
                             <span class="text-large">{{ session.waitlist_students.count }}</span> on wait list
                         {% else %}
