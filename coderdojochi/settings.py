@@ -86,8 +86,6 @@ ROOT_URLCONF = 'coderdojochi.urls'
 
 WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
-
-
 # Registration
 ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_URL = '/accounts/login/'

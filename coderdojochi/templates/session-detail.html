@@ -16,7 +16,7 @@
                 <ul class="list-group">
                     <a href="{% url 'check_in' session.id %}" class="list-group-item">Class Check-in</a>
                     {% if user.is_staff %}
-                    <a href="{% url 'check_in' session.id %}" class="list-group-item">Edit Class</a>
+                    <a href="/admin/coderdojochi/session/{{ session.id }}" class="list-group-item">Edit Class</a>
                     {% endif %}
                 </ul>
             </div>
@@ -24,43 +24,87 @@
             <div class="content">
                 {% if user.is_authenticated %}
                     {% if is_guardian %}
-                        <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
-                        {% if session.capacity|subtract:session.get_current_students.all.count %}
-                            {% if students %}
-                                <table class="students">
-                                    <tbody>
-                                    {% for student in students %}
-                                        <tr>
-                                            <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
-                                            <td>
-                                                {% student_register_link student session %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                                <small class="add-another"><a href="{% url 'welcome' %}">Add another student</a></small>
+                        {% if students %}
+                            {% if spots_remaining > 0 %}
+                                <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
                             {% else %}
-                            <p>To enroll, you must first <a href="{% url 'welcome' %}">register a student</a>.</p>
+                                <h2>This class is currently full</h2>
+                                <p>There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
                             {% endif %}
+                            <table class="students">
+                                <tbody>
+                                {% for student in students %}
+                                    <tr>
+                                        <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
+                                        <td>
+                                            {% if spots_remaining > 0 %}
+                                                {% student_register_link student session %}
+                                            {% else %}
+                                                <form action="" method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="waitlist" value="student">
+                                                    <input type="hidden" name="account_id" value="{{ student.id }}">
+                                                    {% if student in session.waitlist_students.all %}
+                                                        <input type="hidden" name="remove" value="true">
+                                                        <button class="btn-link">Remove from wait list</button>
+                                                    {% else %}
+                                                        <input type="hidden" name="remove" value="false">
+                                                        <button class="btn-link">Add to wait list</button>
+                                                    {% endif %}
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}">Add another student</a></small>
                         {% else %}
-                            <h2>This class is currently full</h2>
-                            <p>There are currently no available spots for this class.  Please check back or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
+                        <p><a href="{% url 'welcome' %}?next={{ request.path }}" class="btn-cdc btn-cdc-lg btn-block">Enroll Student</a></p>
                         {% endif %}
                     {% else %}
-                        {% if mentor_signed_up %}
-                            <p>You are signed up to mentor this class.</p>
-                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
+                        {% if spots_remaining %}
+                            {% if mentor_signed_up %}
+                                <p>You are signed up to mentor this class.</p>
+                                <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
+                            {% else %}
+                                <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
+                            {% endif %}
                         {% else %}
-                            <p><a href="{% url 'session_sign_up' session.start_date.year session.start_date.month session.start_date.day session.course.slug session.id %}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
+                            {% if account in session.waitlist_mentors.all %}
+                                <p>You are currently on the wait list for this class. We will contact you ASAP if a spot becomes available.</p>
+                            {% else %}
+                                <p>There are currently no available mentor spots for this class.</p>
+                            {% endif %}
+
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="waitlist" value="mentor">
+                                <input type="hidden" name="account_id" value="{{ account.id }}">
+                                {% if account in session.waitlist_mentors.all %}
+                                    <input type="hidden" name="remove" value="true">
+                                    <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from wait list</button>
+                                {% else %}
+                                    <input type="hidden" name="remove" value="false">
+                                    <button class="btn-cdc btn-cdc-sm">Add me to wait list</button>
+                                {% endif %}
+                            </form>
                         {% endif %}
                     {% endif %}
                 {% else %}
-                    <p><a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">Login</a> or <a href="{% url 'registration_register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
+                    <p><a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
                 {% endif %}
 
                 <p>
                     <span class="text-large">{{ spots_remaining }}</span> open spots
+                    {% if spots_remaining < 1 %}
+                        <br>
+                        {% if is_guardian %}
+                            <span class="text-large">{{ session.waitlist_students.count }}</span> on wait list
+                        {% else %}
+                            <span class="text-large">{{ session.waitlist_mentors.count }}</span> on wait list
+                        {% endif %}
+                    {% endif %}
                 </p>
 
                 <hr>
@@ -96,7 +140,7 @@
             <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location }}">{{ session.location }}</a></p>
 
             {% if session.additional_info %}
-            <p> Additional Info:<br>{{ session.additional_info|safe }}</p>
+            <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
             {% endif %}
 
             {% if session.teacher %}
