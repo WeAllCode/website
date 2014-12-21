@@ -95,7 +95,13 @@ class RegisterView(RegistrationView):
         return new_user
 
     def get_success_url(self, request, user):
-        return (user.get_absolute_url(), (), {})
+
+        url = user.get_absolute_url()
+
+        if request.GET.get('next'): 
+            url += '?next=' + request.GET.get('next')
+
+        return (url, (), {})
 
 def add_months(sourcedate, months):
     month = sourcedate.month - 1 + months
@@ -191,11 +197,7 @@ def welcome(request, template_name="welcome.html"):
 
             user.save()
 
-
-            if next:
-                return HttpResponseRedirect(next)
-            else:
-                return HttpResponseRedirect(reverse('welcome'))
+            return HttpResponseRedirect(reverse('welcome') + '?next=' + next)                
 
     if role:
         if role == 'mentor':
@@ -575,8 +577,11 @@ def dojo(request, template_name="dojo.html"):
         context['form'] = form
 
     else:
-        messages.add_message(request, messages.WARNING, 'Tell us a little about yourself before going on to your dojo')
-        return HttpResponseRedirect(reverse('welcome'))
+        if request.GET.get('next'): 
+            return HttpResponseRedirect(reverse('welcome') + '?next=' + request.GET.get('next'))
+        else:
+            messages.add_message(request, messages.WARNING, 'Tell us a little about yourself before going on to your dojo')
+            return HttpResponseRedirect(reverse('welcome'))
 
 
     return render_to_response(template_name, context, context_instance=RequestContext(request))
