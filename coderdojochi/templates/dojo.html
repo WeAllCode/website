@@ -41,7 +41,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
-                <p><a href="{% url 'welcome' %}">Add another student</a></p>
+                <p><a href="{% url 'welcome' %}?next={% url 'dojo' %}">Add another student</a></p>
             {% else %}
             <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
             {% endif %}
@@ -141,7 +141,7 @@
         <br>
         {% if user.role == 'mentor' %}
             <hr>
-            <h2>Your Mentor Meetings</h2>
+            <h2>Upcoming Mentor Meetings</h2>
             {% if upcoming_meetings %}
             <table class="table table-striped">
                 <thead>
@@ -154,10 +154,10 @@
                 <tbody>
                 {% for meeting in upcoming_meetings %}
                     <tr>
-                        <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.title }}</a></td>
+                        <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
                         <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
                         <td>
-                            <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}Sign up now{% endif%}</a>
+                            <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}RSVP{% endif%}</a>
                         </td>
                     </tr>
                 {% endfor %}

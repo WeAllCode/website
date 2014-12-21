@@ -153,6 +153,8 @@ class Session(models.Model):
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, blank=True, null=True, related_name="session_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
+    waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
+    waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
     active = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
@@ -175,9 +177,29 @@ class Session(models.Model):
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
 
-class Meeting(models.Model):
+
+class MeetingType(models.Model):
+    code = models.CharField(max_length=255, blank=True, null=True)
     title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=40, blank=True, null=True)
     description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        verbose_name = _("meeting type")
+        verbose_name_plural = _("meeting types")
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(MeetingType, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.code + ' | ' + self.title
+
+
+class Meeting(models.Model):
+    meeting_type = models.ForeignKey(MeetingType)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
@@ -195,7 +217,7 @@ class Meeting(models.Model):
         return '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id)
 
     def __unicode__(self):
-        return self.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
+        return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
 
 class Order(models.Model):
     guardian = models.ForeignKey(Guardian)
