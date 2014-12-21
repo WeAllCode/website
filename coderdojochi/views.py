@@ -124,6 +124,12 @@ def welcome(request, template_name="welcome.html"):
     role = user.role if user.role else False
 
     if request.method == 'POST':
+        
+        next = False
+
+        if request.GET.get('next'):
+            next = request.GET.get('next')
+
         if role:
             if role == 'mentor':
                 form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
@@ -138,13 +144,21 @@ def welcome(request, template_name="welcome.html"):
                         new_student.guardian = account
                         new_student.save()
                         messages.add_message(request, messages.SUCCESS, 'Student Registered.')
-                    return HttpResponseRedirect(reverse('welcome'))
+
+                    if next:
+                        return HttpResponseRedirect(next)
+                    else:
+                        return HttpResponseRedirect(reverse('welcome'))
 
             if form.is_valid():
                 form.save()
                 # if role == 'mentor' or account.get_students().count():
                 messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
-                return HttpResponseRedirect(reverse('dojo'))
+
+                if next:
+                    return HttpResponseRedirect(next)
+                else:
+                    return HttpResponseRedirect(reverse('dojo'))
             else:
                 messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
                 return HttpResponseRedirect(reverse('welcome'))
@@ -176,7 +190,12 @@ def welcome(request, template_name="welcome.html"):
                 })
 
             user.save()
-            return HttpResponseRedirect(reverse('welcome'))
+
+
+            if next:
+                return HttpResponseRedirect(next)
+            else:
+                return HttpResponseRedirect(reverse('welcome'))
 
     if role:
         if role == 'mentor':
@@ -270,29 +289,62 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
     mentor_signed_up = False
     is_guardian = False
+    account = False
     students = False
+
+    if request.method == 'POST':
+        if request.POST['waitlist']:
+
+            if request.POST['waitlist'] == 'student':
+                student = Student.objects.get(id=int(request.POST['account_id']))
+
+                if request.POST['remove'] == 'true':
+                    session_obj.waitlist_students.remove(student)
+                    session_obj.save()
+                    messages.add_message(request, messages.SUCCESS, 'You have been removed from the waitlist. Thanks for letting us know.')
+                else:
+                    session_obj.waitlist_students.add(student)
+                    session_obj.save()
+                    messages.add_message(request, messages.SUCCESS, 'Added to waitlist successfully.')
+            else:
+                mentor = Mentor.objects.get(id=int(request.POST['account_id']))
+
+                if request.POST['remove'] == 'true':
+                    session_obj.waitlist_mentors.remove(mentor)
+                    session_obj.save()
+                    messages.add_message(request, messages.SUCCESS, 'You have been removed from the waitlist. Thanks for letting us know.')
+                else:
+                    session_obj.waitlist_mentors.add(mentor)
+                    session_obj.save()
+                    messages.add_message(request, messages.SUCCESS, 'Added to waitlist successfully.')
+        else:
+            messages.add_message(request, messages.ERROR, 'Invalid request, please try again.')
+
+        return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
     upcoming_classes = Session.objects.filter(active=True).order_by('start_date')
 
     if request.user.is_authenticated():
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
+            account = mentor
             mentor_signed_up = True if mentor in session_obj.mentors.all() else False
             spots_remaining = ( session_obj.capacity / 2 ) - session_obj.mentors.all().count()
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
+            account = guardian
             is_guardian = True
             students = guardian.get_students() if guardian.get_students().count() else False
             spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
     else:
         spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
-        user_signed_up = False
 
     return render_to_response(template_name,{
         'session': session_obj,
         'mentor_signed_up': mentor_signed_up,
         'is_guardian': is_guardian,
         'students': students,
+        'account': account,
         'upcoming_classes': upcoming_classes,
         'spots_remaining': spots_remaining
     }, context_instance=RequestContext(request))
@@ -432,8 +484,8 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
 
             sendSystemEmail(request, 'Upcoming mentor meeting confirmation', 'MEETING_CONFIRM_MENTOR', {
                 'user': user_title,
-                'meeting_title': meeting_obj.title,
-                'meeting_description': meeting_obj.description,
+                'meeting_title': meeting_obj.meeting_type.title,
+                'meeting_description': meeting_obj.meeting_type.description,
                 'meeting_start_date': meeting_obj.start_date,
                 'meeting_start_time': meeting_obj.start_date,
                 'meeting_end_date': meeting_obj.end_date,

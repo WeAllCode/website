@@ -15,8 +15,7 @@
             <h3 class="text-muted">Before you sign up your student(s), give us the best phone number to reach you at (we will never share this with anyone)...</h3>
             {% else %}
                 {% if students %}
-                    <h1><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>You're all set!</h1>
-                    <h3 class="text-muted">Now you can <a href="{% url 'sessions' %}">view upcoming classes</a>, <a href="{% url 'dojo' %}">check out your dojo</a> or register another student below.</h3>
+                    <h1><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>Register another student</h1>
                 {% else %}
                     <h1>Register your first student now</h1>
                 {% endif %}
