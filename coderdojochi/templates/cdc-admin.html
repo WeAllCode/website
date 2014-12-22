@@ -1,0 +1,56 @@
+{% extends "_base.html" %}
+
+{% load i18n avatar_tags coderdojochi_extras %}
+
+{% block title %}CoderDojoChi Admin{% endblock %}
+
+{% block body_class %}page-cdc-admin{% endblock %}
+
+{% block topnav %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'home' %}">CoderDojoChi.org</a></li>
+        <li class="active">CoderDojoChi Admin</li>
+        <a class="pull-right" href="/dj-admin">Django Admin</a>
+    </ol>
+    <h2>Upcoming Sessions</h2>
+    {% if upcoming_sessions %}
+        <ul class="list-group">
+        {% for session in upcoming_sessions %}
+            <li class="list-group-item">
+                {{ session.course.title }} | {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}
+                <span class="pull-right">
+                    <a href="{% url 'check_in' session.id %}">Check-in</a> |
+                    <a href="{{ session.get_absolute_url }}">Details</a> |
+                    <a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit</a>
+                </span>
+            </li>
+        {% endfor %}  
+        </ul>  
+    {% else %}
+        <p>No upcoming sessions. <a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
+    {% endif %}
+    <h2>Past Sessions</h2>
+    {% if past_sessions %}
+        <ul class="list-group">
+        {% for session in past_sessions %}
+            <li class="list-group-item">
+                {{ session.course.title }} | {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}
+                <span class="pull-right">
+                    <a href="{% url 'stats' session.id %}">Stats</a> |
+                    <a href="{{ session.get_absolute_url }}">Details</a> |
+                    <a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit</a>
+                </span>
+            </li>
+        {% endfor %}  
+        </ul>  
+    {% else %}
+        <p>No past sessions yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+{% block footer_base %}{% endblock %}

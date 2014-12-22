@@ -168,11 +168,18 @@ class Session(models.Model):
         return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.course.slug + '/' + str(self.id)
 
     def get_current_orders(self):
-
         return Order.objects.filter(session=self).order_by('check_in', 'student__last_name')
 
-    def get_current_students(self):
-        return Order.objects.filter(session=self).values('student')
+    def get_current_students(self, checked_in=None):
+        if checked_in != None:
+            if checked_in:
+                orders = Order.objects.filter(session=self).exclude(check_in=None).values('student')
+            else:
+                orders = Order.objects.filter(session=self).filter(check_in=None).values('student')
+        else:
+            orders = Order.objects.filter(session=self).values('student')
+
+        return orders
 
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")

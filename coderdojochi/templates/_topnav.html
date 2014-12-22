@@ -19,7 +19,7 @@
                 {% if user.is_authenticated %}
                 <li{% if '/dojo/' in request.path %} class="active"{% endif %}><a href="{% url 'dojo' %}">{% avatar user 20 %} My Dojo</a></li>
                 {% if user.is_staff %}
-                <li><a href="/admin">Admin</a></li>
+                <li><a href="{% url 'cdc_admin' %}">Admin</a></li>
                 {% endif %}
                 <li><a href="{% url 'auth_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
