@@ -254,38 +254,6 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     }, context_instance=RequestContext(request))
 
 
-@login_required
-def session_check_in(request, session_id, template_name="session-check-in.html"):
-    
-    if not request.user.is_staff and not request.user.role == 'mentor':
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('sessions'))
-
-    if request.method == 'POST':
-        if request.POST['order_id']:
-            
-            order = get_object_or_404(Order, id=request.POST['order_id'])
-            
-            if order.check_in:
-                order.check_in = None
-            else:
-                order.check_in = datetime.now()
-            
-            if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
-                order.alternate_guardian = request.POST['order_alternate_guardian']
-            
-            order.save()
-        else:
-            
-            messages.add_message(request, messages.ERROR, 'Invalid Order')
-
-    session_obj = get_object_or_404(Session, id=session_id)
-
-    return render_to_response(template_name,{
-        'session': session_obj,
-    }, context_instance=RequestContext(request))
-
-
 def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html"):
     session_obj = get_object_or_404(Session, id=session_id)
 
@@ -691,6 +659,82 @@ def about(request, template_name="about.html"):
 def privacy(request, template_name="privacy.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
+
+
+
+@login_required
+def cdc_admin(request, template_name="cdc-admin.html"):
+    
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('sessions'))
+
+    sessions = Session.objects.all()
+
+    upcoming_sessions = sessions.filter(active=True).order_by('start_date')
+    past_sessions = sessions.exclude(active=True).order_by('start_date')
+
+    return render_to_response(template_name,{
+        'upcoming_sessions': upcoming_sessions,
+        'past_sessions': past_sessions
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def session_stats(request, session_id, template_name="session-stats.html"):
+    
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('sessions'))
+
+    session_obj = get_object_or_404(Session, id=session_id)
+
+    students_checked_in = session_obj.get_current_students(checked_in=True)
+    attendance_percentage = session_obj.get_current_students().count() /  students_checked_in.count() * 100
+
+    return render_to_response(template_name,{
+        'session': session_obj,
+        'students_checked_in': students_checked_in,
+        'attendance_percentage': attendance_percentage,
+    }, context_instance=RequestContext(request))
+
+@login_required
+def session_check_in(request, session_id, template_name="session-check-in.html"):
+    
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('sessions'))
+
+    session_obj = get_object_or_404(Session, id=session_id)
+
+    if request.method == 'POST':
+        
+        if 'active' in request.POST:
+            session_obj.active = False
+            session_obj.save()
+            messages.add_message(request, messages.SUCCESS, 'Class started')
+        else:
+            if 'order_id' in request.POST:
+                
+                order = get_object_or_404(Order, id=request.POST['order_id'])
+                
+                if order.check_in:
+                    order.check_in = None
+                else:
+                    order.check_in = datetime.now()
+                
+                if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
+                    order.alternate_guardian = request.POST['order_alternate_guardian']
+                
+                order.save()
+            else:
+                messages.add_message(request, messages.ERROR, 'Invalid Order')
+
+    return render_to_response(template_name,{
+        'session': session_obj,
+    }, context_instance=RequestContext(request))
+
+
 
 def sendSystemEmail(request, subject, template_name, merge_vars):
 

@@ -13,50 +13,48 @@
     <ol class="breadcrumb">
         <li><a href="{% url 'cdc_admin' %}">CoderDojoChi Admin</a></li>
         <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
-        <li class="active">Class Check-in</li>
+        <li class="active">Class Stats</li>
     </ol>
+    <div class="panel panel-default">
+        <div class="container">
+            <h3>Attendance: {{ students_checked_in.count }}/{{ session.get_current_orders.count }} ({{ attendance_percentage }}%)</h3>
+        </div>
+    </div>
+    <h3>All Students</h3>
     <table class="table table-striped">
         {% if session.get_current_orders %}
             <thead>
                 <tr>
-                    <th>Student Name</th>
-                    <th>Guardian</th>
-                    <th></th>
+                    <th>Name</th>
+                    <th>Chaperone</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Checked In</th>
                 </tr>
             </thead>
             <tbody> 
                 {% for order in session.get_current_orders %}
-                <tr{% if order.check_in %} class="success"{% endif %}>
+                <tr {% if not order.check_in %}class="text-muted"{% endif %}>
                     <form method="post" action=".">
                         {% csrf_token %}
                         <input type="hidden" name="order_id" value="{{ order.id }}">
                         <td>{{ order.student.last_name }}, {{ order.student.first_name }}</td>
-                        <td><input type="text" name="order_alternate_guardian" class="form-control" value="{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.first_name }} {{ order.guardian.last_name }}{% endif %}"></td>
+                        <td>{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.first_name }} {{ order.guardian.last_name }}{% endif %}</td>
+                        <td>{{ order.student.get_age }}</td>
+                        <td>{{ order.student.gender }}</td>
                         {% if order.check_in %}
-                        <td><button class="btn-link">Undo</button></td>
+                        <td>{{ order.check_in|time }}</td>
                         {% else %}
-                        <td><button class="btn-cdc btn-cdc-sm">Check In</button></td>
+                        <td>Did not attend</td>
                         {% endif %}
                     </form>
                 </tr>
                 {% endfor %}     
             </tbody>
         {% else %}
-            <p>No students registered.</p>
+            <p>No student data.</p>
         {% endif %}
     </table>
-
-    {% if session.active %}
-        <br>
-        <p>
-            <form method="post" action="."  class="text-center">
-                {% csrf_token %}
-                <input type="hidden" name="active" value="True">
-                <button class="btn-cdc">Start Class</button>
-            </form>
-        </p>
-    {% endif %}
-    
 </div>
 {% endblock %}
 
