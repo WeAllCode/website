@@ -11,13 +11,15 @@
     <h1 class="title">{{ session.course.title }} <small>{{ session.start_date|date }}</small></h1>
     <div class="row">
         <div class="class-detail-sidebar-right">
-            {% if user.is_staff or user.role == 'mentor' %}
+            {% if user.is_staff %}
             <div class="well well-sm">
                 <ul class="list-group">
+                    {% if session.active %}
                     <a href="{% url 'check_in' session.id %}" class="list-group-item">Class Check-in</a>
-                    {% if user.is_staff %}
-                    <a href="/admin/coderdojochi/session/{{ session.id }}" class="list-group-item">Edit Class</a>
+                    {% else %}
+                    <a href="{% url 'stats' session.id %}" class="list-group-item">Class Stats</a>
                     {% endif %}
+                    <a href="/dj-admin/coderdojochi/session/{{ session.id }}" class="list-group-item">Edit Class</a>
                 </ul>
             </div>
             {% endif %}
