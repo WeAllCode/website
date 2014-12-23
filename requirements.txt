@@ -2,17 +2,19 @@ Django==1.6.5
 Pillow==2.4.0
 South==0.8.4
 basicauth==0.2
+braintree==3.8.0
 django-appconf==0.6
 django-avatar==2.0
 django-bootstrap3==4.7.0
-django-contact-form
+django-contact-form==1.0
 django-html5==1.0.0
--e git://github.com/CoderDojoChi/django-registration.git#egg=registration
+-e git://github.com/CoderDojoChi/django-registration.git@ab5f9d2d05f5d749a0b89eec8c63ebe8a102edd1#egg=django_registration-master
 django-social-auth==0.7.28
+djrill==1.2.0
 httplib2==0.9
 oauth2==1.5.211
 python-openid==2.2.5
 pytz==2014.4
+requests==2.5.0
 six==1.7.2
 wsgiref==0.1.2
-djrill
