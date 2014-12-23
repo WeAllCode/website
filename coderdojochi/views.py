@@ -5,11 +5,12 @@ from django.template.loader import get_template
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.core.mail import EmailMessage
 from django.core.urlresolvers import reverse
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django import forms
 
 from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm
@@ -23,7 +24,7 @@ from django.utils.safestring import mark_safe
 
 from django.utils.translation import ugettext_lazy as _
 
-import calendar
+
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -31,8 +32,10 @@ User = get_user_model()
 from registration.backends.simple.views import RegistrationView
 from registration import forms as registration_forms
 from registration import signals
-from django.contrib import auth
-from django import forms
+
+import calendar
+
+import braintree
 
 
 
@@ -648,7 +651,18 @@ def student_detail(request, student_id=False, template_name="student-detail.html
 
 def donate(request, template_name="donate.html"):
 
-    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+    braintree.Configuration.configure(
+        braintree.Environment.Production,
+        'r8bv6zj5bghgng8y',
+        '7spfmswtyh8kdh4m',
+        'a06606770d1fbf4e199c91d36a04490d'
+    )
+
+    braintree_token = braintree.ClientToken.generate()
+
+    return render_to_response(template_name,{
+        'braintree_token': braintree_token
+    }, context_instance=RequestContext(request))
 
 
 def about(request, template_name="about.html"):
