@@ -179,10 +179,20 @@ a {
     margin: 10px 0;
 }
 
-.half {
-    width: 50%;
-    display: inline-block;
+
+@include breakpoint($tablet-and-up) {
+    .half {
+        width: 50%;
+        float: left;
+        padding-left: 10px; 
+
+        &:first-child {
+            padding-left: 0;
+            padding-right: 10px;
+        }
+    }
 }
+
 
 // Top Navigation
 @import "_topnav";
