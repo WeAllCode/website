@@ -27,8 +27,9 @@
                     <a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit</a>
                 </span>
             </li>
-        {% endfor %}  
-        </ul>  
+        {% endfor %}
+        </ul>
+        <p><a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
     {% else %}
         <p>No upcoming sessions. <a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
     {% endif %}
