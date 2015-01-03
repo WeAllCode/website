@@ -23,13 +23,15 @@
 
     &.disabled,
     &[disabled] {
-        border-color: #eee;;
+        border-color: #eee;
         background: #eee;
         color: #333;
 
-        &.btn-cdc-inverse {
-            border-color: $cdc-color-dark;
-            color: $cdc-color-dark;
+        &.btn-cdc-inverse,
+        &.btn-cdc-inverse:hover {
+            border-color: #eee;
+            color: #666;
+            background: #eee;
         }
     }
 
