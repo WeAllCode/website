@@ -435,7 +435,7 @@ form {
 
 // classes
 
-.page-classes {
+// .page-classes {
 
     .upcoming-sessions {
 
@@ -443,6 +443,10 @@ form {
 
         @include breakpoint($tablet-and-up) {
             margin: 40px 0;
+        }
+
+        .page-homepage & {
+            margin-top: 0;
         }
     }
 
@@ -617,7 +621,9 @@ form {
 
     }
 
-}
+
+
+// }
 
 // class-detail
 
