@@ -166,7 +166,7 @@ class Session(models.Model):
         verbose_name_plural = _("sessions")
 
     def get_absolute_url(self):
-        return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.course.slug + '/' + str(self.id)
+        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
 
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
