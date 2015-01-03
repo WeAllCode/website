@@ -298,3 +298,18 @@ class EmailContent(models.Model):
 
     def __unicode__(self):
         return self.nickname + ' | ' + self.subject
+
+class Donation(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.EmailField()
+    amount = models.IntegerField()
+    verified = models.BooleanField(default=False)
+    receipt_sent = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _("donation")
+        verbose_name_plural = _("donations")
+
+    def __unicode__(self):
+        return self.email + ' | $' + str(self.amount)
