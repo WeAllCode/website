@@ -112,7 +112,7 @@ def add_months(sourcedate, months):
 
 def home(request, template_name="home.html"):
 
-    upcoming_classes = Session.objects.filter(active=True).order_by('start_date').first()
+    upcoming_classes = Session.objects.filter(active=True).order_by('start_date')[:3]
 
     return render_to_response(template_name, {
         'upcoming_classes': upcoming_classes
