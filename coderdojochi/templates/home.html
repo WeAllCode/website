@@ -58,6 +58,37 @@
     </div>
 </div>
 
+<div class="upcoming-sessions">
+{% if upcoming_classes %}
+    {% for session in upcoming_classes %}
+        <div class="upcoming-session" style="background-image: url(/static/images/{{ session.image_url }});">
+        <!-- <div class="upcoming-session" style="background-image: url(http://lorempixel.com/960/300/animals);"> -->
+            <div class="session-shim">
+                <div class="container">
+                    <div class="date">
+                        {{ session.start_date|date:'F' }}
+                        <span class="day">{{ session.start_date|date:'d' }}</span>
+                    </div>
+                    <div class="description">
+                        <h4 class="title">{{ session.course.title }}:</h4>
+                        <p>{{ session.course.description|safe|truncatechars:180 }} <a href="{{ session.get_absolute_url }}">Learn more.</a></p>
+                    </div>
+                    <div class="actions">
+                        {% if session.capacity|subtract:session.get_current_students.all.count %}
+                        <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Enroll</a>
+                        {% else %}
+                        <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning text-center">There are no upcoming classes at this time.  Please <a href="{% url 'contact_form' %}">contact us</a> for more information.</div>
+{% endif %}
+</div>
+
 <div class="container">
     <div class="row padded-p">
         <p>CoderDojoChi is a free computer organization for kids interested in learning how to code. The Chicago Chapter was started by Ali Karbassi in March 2013; the chapter has grown with the help of many volunteers from around the Chicago area.</p>
