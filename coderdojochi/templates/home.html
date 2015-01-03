@@ -58,8 +58,8 @@
     </div>
 </div>
 
-<div class="upcoming-sessions">
 {% if upcoming_classes %}
+<div class="upcoming-sessions">
     {% for session in upcoming_classes %}
         <div class="upcoming-session" style="background-image: url(/static/images/{{ session.image_url }});">
         <!-- <div class="upcoming-session" style="background-image: url(http://lorempixel.com/960/300/animals);"> -->
@@ -84,18 +84,25 @@
             </div>
         </div>
     {% endfor %}
-{% else %}
-    <div class="alert alert-warning text-center">There are no upcoming classes at this time.  Please <a href="{% url 'contact_form' %}">contact us</a> for more information.</div>
-{% endif %}
 </div>
+{% endif %}
 
 <div class="container">
-    <div class="row padded-p">
-        <p>CoderDojoChi is a free computer organization for kids interested in learning how to code. The Chicago Chapter was started by Ali Karbassi in March 2013; the chapter has grown with the help of many volunteers from around the Chicago area.</p>
-
-        <p>The main CoderDojo organization is a not-for-profit organization founded by James Whelton and Bill Liao. It was first started in early 2011 when Whelton hacked the iPod Nano and his younger students expressed an interest in learning how to code. He set up a computer club in his school (PBC Cork) and taught basic HTML and CSS. Later that year he and Bill Liao expanded CoderDojo beyond the after-school computer club.</p>
-
-        <p>A second Dojo was launched soon after in nearby Dublin. The increasing success led to more Dojos in Ireland and around the world that are set up and run entirely by volunteers. Currently, there are nearly 200 Dojos in 24 countries. For a complete list of Dojos and more information on the project, visit <a href="http://coderdojo.com">CoderDojo.com</a>.</p>
+    <div class="row block-cta">
+        <div class="homepage-volunteer half">
+            <a href="{% url 'volunteer' %}">
+                <span class="icon-volunteer fa fa-fw fa-group"></span>
+            </a>
+            <h1>Volunteer</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet aut animi odio ad possimus illum, exercitationem totam maxime cumque neque consectetur temporibus. Eaque rem odit harum facilis, ut vel officiis.</p>
+        </div>
+        <div class="homepage-donate half">
+            <a href="{% url 'donate' %}">
+                <span class="icon-donation fa fa-fw"></span>
+            </a>
+            <h1>Donate</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet aut animi odio ad possimus illum, exercitationem totam maxime cumque neque consectetur temporibus. Eaque rem odit harum facilis, ut vel officiis.</p>
+        </div>
     </div>
 </div>
 
