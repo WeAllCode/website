@@ -148,8 +148,9 @@ class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
+    # TODO: Make location an object so that we can choose
     location = models.CharField(max_length=255, blank=True, null=True)
-    capacity = models.IntegerField(blank=True, null=True)
+    capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, blank=True, null=True, related_name="session_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
