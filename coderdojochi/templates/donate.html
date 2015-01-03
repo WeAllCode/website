@@ -22,33 +22,53 @@
 			<span class="dollar">$</span>
 			<input type="text" class="form-control input-lg" maxlength="6">
 		</div>
+		<div class="personal-info">
+			<h3 class="text-center">Please tell us a little about yourself</h3>
+			<div class="form-group">
+				<input type="text" id="firstNameInput" class="form-control input-lg" placeholder="First name e.g. William">
+			</div>
+			<div class="form-group">
+				<input type="text" id="lastNameInput"  class="form-control input-lg" placeholder="Last name e.g. Gates">
+			</div>
+			<div class="form-group">
+				<input type="email" id="emailInput"  class="form-control input-lg" placeholder="Email Address e.g. bill.gates@microsoft.com">
+			</div>
+			<h3 class="text-center">We will email you a receipt<br>(includes tax exempt information)</h3>
+			
+		</div>
 		<button class="btn-cdc btn-cdc-inverse btn-do-it" disabled>Do it.</button>
 	</div>
 </div>
 
 <div class="container">
-    <h1>{% trans "You can help" %}</h1>
+    <h2>{% trans "You can help" %}</h2>
     <p>CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
-	<form id="donateForm" action="https://authorize.payments.amazon.com/pba/paypipeline" method="post">
-		<input type="hidden" name="returnUrl" value="http://localhost:8000/thank-you" >
-		<input type="hidden" name="processImmediate" value="1">
-		<input type="hidden" name="signatureMethod" value="HmacSHA256" >
-		<input type="hidden" name="accessKey" value="11SEM03K88SD016FS1G2" >
-		<input type="hidden" name="collectShippingAddress" value="0" >
-		<input type="hidden" name="isDonationWidget" value="1" >
-		<input type="hidden" name="amazonPaymentsAccountId" value="JKKDULQESHOW758S8FHIM22IHGT897A7SXRM8L" >
-		<input type="hidden" name="referenceId" value="cdc_donation" >
-		<input type="hidden" name="cobrandingStyle" value="logo" >
-		<input type="hidden" name="immediateReturn" value="1" >
-		<input id="donateAmount" type="hidden" name="amount" value="USD 10" >
-		<input type="hidden" name="description" value="Donate to CoderDojoChi" >
-	    <input type="hidden" name="abandonUrl" value="http://localhost:8000/donate" >
-	    <input type="hidden" name="signatureVersion" value="2" >
-	    <input type="hidden" name="signature" value="UyLK9Cei3G3VYRxyHLL1Gd+TK+2eOB6CN4CZ0glgRt0=">
+
+    <h2>{% trans "Where will my donation go?" %}</h2>
+    <p>It will be gently inserted into the resident CoderDojoChi dog's anus.</p>
+
+	<form id="donateForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" >
+		<input type="hidden" name="cmd" value="_donations">
+		<input type="hidden" name="business" value="CXD22M5GNXDE4">
+		<input type="hidden" name="lc" value="US">
+		<input type="hidden" name="item_name" value="CoderDojoChi">
+		<input type="hidden" id="donationId" name="item_number" value="">
+		<input type="hidden" id="donateAmount" name="amount" value="10">
+		<input type="hidden" name="currency_code" value="USD">
+		<input type="hidden" name="no_note" value="0">
+		<input type="hidden" name="cn" value="Add a message for CoderDojoChi to read:">
+		<input type="hidden" name="no_shipping" value="1">
+		<input type="hidden" name="address_override" value="1">
+		<input type="hidden" id="paymentFirstName" name="first_name" value="">
+		<input type="hidden" id="paymentLastName" name="last_name" value="">
+		<input type="hidden" name="return" value="http://localhost:8000/donate">
+		<input type="hidden" name="notify_url" value="http://localhost:8000/donate">
+		<input type="hidden" name="cancel_return" value="http://localhost:8000/donate">
+		<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
+		<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 	</form>
 </div>
 {% endblock %}
-
 
 {% block extra_script %}
 <script>
@@ -59,6 +79,13 @@
 			$donateAmount = $('#donateAmount'),
 			$amountActual = $('.amount-actual:first'),
 			$amountActualField = $('.form-control', $amountActual),
+			$personalInfo = $('.personal-info:first'),
+			$firstNameInput = $('#firstNameInput'),
+			$lastNameInput = $('#lastNameInput'),
+			$emailInput = $('#emailInput'),
+			$donationId = $('#donationId'),
+			$paymentFirstName = $('#paymentFirstName'),
+			$paymentLastName = $('#paymentLastName'),
 
 		amountButtonClick = function() {
 			var $clicked = $(this);
@@ -66,11 +93,15 @@
 			$clicked.addClass('active');
 			$donateButton.attr('disabled', false);
 
+			// show personal information fields
+			$personalInfo.show();
+
 			if ($clicked.data('value') === 'other') {
 				$amountActual.show();
 				$amountActualField.focus();
 			} else {
 				$amountActual.hide();
+				$('.form-control:first', $personalInfo).focus();
 			}
 		},
 
@@ -81,7 +112,9 @@
 		donateButtonClick = function() {
 
 			var $selectedAmountButton = $('.active', $amountButtons),
-				selectedAmount = $selectedAmountButton.data('value');
+				selectedAmount = $selectedAmountButton.data('value'),
+				emailTest = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,
+				formData;
 
 			if(selectedAmount === 'other') {
 				
@@ -96,10 +129,52 @@
 				}
 			}
 
+			// set donation amount
+			$donateAmount.val(selectedAmount);
 
-			$donateAmount.val('USD ' + selectedAmount);
-			$donateForm.off('submit');
-			$donateForm.submit();
+			if(!$firstNameInput.val()) {
+				showError($firstNameInput, 'First name is required to receive a receipt.');
+				return false;
+			}
+
+			if(!$lastNameInput.val()) {
+				showError($lastNameInput, 'Last name is required to receive a receipt.');
+				return false;
+			}
+
+			if(!$emailInput.val() || !emailTest.test($emailInput.val())) {
+				showError($emailInput, 'A valid email address is required to receive a receipt.');
+				return false;
+			}
+
+			formData = {
+				first_name: $firstNameInput.val(),
+				last_name: $lastNameInput.val(),
+				email: $emailInput.val(),
+				amount: parseInt(selectedAmount),
+				csrfmiddlewaretoken: '{{ csrf_token }}'
+			}
+
+			// submit donation record before submitting
+			$.post('/donate/', formData, function(response) {
+				if(response !== 'failed') {
+					$paymentFirstName.val(formData.first_name);
+					$paymentLastName.val(formData.last_name);
+					$donationId.val(response);
+					$donateForm.off('submit');
+					$donateForm.submit();
+				} else {
+					alert('An error occured, please refresh the page and try again.')
+				}
+			});
+		},
+
+		showError = function ($input, message) {
+			$('.has-error', $personalInfo).removeClass('has-error');
+			$('.alert-danger', $personalInfo).remove();
+			$input.closest('.form-group')
+				.addClass('has-error')
+				.before('<div class="alert alert-danger">' + message + '</div>');
 		};
 
 		$donateForm.submit(donateFormSubmit);

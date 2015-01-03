@@ -12,7 +12,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django import forms
 
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm
 
 from calendar import HTMLCalendar
@@ -647,8 +647,44 @@ def student_detail(request, student_id=False, template_name="student-detail.html
 
 def donate(request, template_name="donate.html"):
 
+    item_number = False
+
+    if request.method == 'POST':
+
+        # if paypal notification response
+        if 'item_number' in request.POST:
+            verifyDonation(request.POST['item_number'])
+            return HttpResponse('success')
+
+        # if new donation form submit
+        if 'first_name' in request.POST and 'last_name' in request.POST and 'email' in request.POST and 'amount' in request.POST:
+            donation = Donation(first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], amount=request.POST['amount'])
+            donation.save()
+
+            return HttpResponse(donation.id)
+        else:
+            return HttpResponse('fail')
+
+    # if paypal notification response
+    if 'item_number' in request.GET:
+        verifyDonation(request.GET['item_number'])
+
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
+def verifyDonation(donation_id):
+    donation = get_object_or_404(Donation, id=donation_id)
+    donation.verified = True;
+    
+    if not donation.receipt_sent:
+        sendSystemEmail(request, 'Thank you!', 'DONATION_RECEIPT', {
+            'first_name': donation.first_name,
+            'last_name': donation.last_name,
+            'amount': donation.amount,
+            'site_url': settings.SITE_URL
+        })
+        donation.receipt_sent = True
+
+    donation.save()
 
 def about(request, template_name="about.html"):
 
