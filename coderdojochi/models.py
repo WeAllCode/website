@@ -148,8 +148,9 @@ class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
+    # TODO: Make location an object so that we can choose
     location = models.CharField(max_length=255, blank=True, null=True)
-    capacity = models.IntegerField(blank=True, null=True)
+    capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, blank=True, null=True, related_name="session_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
@@ -165,7 +166,7 @@ class Session(models.Model):
         verbose_name_plural = _("sessions")
 
     def get_absolute_url(self):
-        return '/class/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + self.course.slug + '/' + str(self.id)
+        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
 
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
