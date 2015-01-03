@@ -35,10 +35,6 @@ from registration import signals
 
 import calendar
 
-import braintree
-
-
-
 
 class CDCRegistrationForm(registration_forms.RegistrationForm):
 
@@ -651,18 +647,7 @@ def student_detail(request, student_id=False, template_name="student-detail.html
 
 def donate(request, template_name="donate.html"):
 
-    braintree.Configuration.configure(
-        braintree.Environment.Production,
-        'r8bv6zj5bghgng8y',
-        '7spfmswtyh8kdh4m',
-        'a06606770d1fbf4e199c91d36a04490d'
-    )
-
-    braintree_token = braintree.ClientToken.generate()
-
-    return render_to_response(template_name,{
-        'braintree_token': braintree_token
-    }, context_instance=RequestContext(request))
+    return render_to_response(template_name,{}, context_instance=RequestContext(request))
 
 
 def about(request, template_name="about.html"):
