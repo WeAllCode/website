@@ -184,13 +184,33 @@ def welcome(request, template_name="welcome.html"):
                 user.role = role
 
             if role == 'mentor':
+                
+                next_meeting = Meeting.objects.filter(active=True).order_by('start_date').first()
+                if next_meeting:
+                    next_intro_meeting_url = next_meeting.get_absolute_url()
+                else:
+                    next_intro_meeting_url = 'FALSE'
+
                 sendSystemEmail(request, 'Welcome!', 'WELCOME_MENTOR', {
                     'user': request.user,
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'next_intro_meeting_url': next_intro_meeting_url,
                     'site_url': settings.SITE_URL
                 })
             else:
+
+                next_class = Session.objects.filter(active=True).order_by('start_date').first()
+                if next_class:
+                    next_class_url = next_class_url.get_absolute_url()
+                else:
+                    next_class_url = 'FALSE'
+
                 sendSystemEmail(request, 'Welcome!', 'WELCOME_GUARDIAN', {
                     'user': request.user,
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'next_class_url': next_class_url,
                     'site_url': settings.SITE_URL
                 })
 
@@ -679,6 +699,7 @@ def verifyDonation(donation_id):
         sendSystemEmail(request, 'Thank you!', 'DONATION_RECEIPT', {
             'first_name': donation.first_name,
             'last_name': donation.last_name,
+            'email': donation.email,
             'amount': donation.amount,
             'site_url': settings.SITE_URL
         })
