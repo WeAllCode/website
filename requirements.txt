@@ -2,7 +2,6 @@ Django==1.6.5
 Pillow==2.4.0
 South==0.8.4
 basicauth==0.2
-braintree==3.8.0
 django-appconf==0.6
 django-avatar==2.0
 django-bootstrap3==4.7.0
