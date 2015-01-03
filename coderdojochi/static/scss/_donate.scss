@@ -6,6 +6,7 @@
         padding-top: 80px;
         margin-bottom: 40px;
         position: relative;
+        color: #fff;
 
         .title {
             text-transform: uppercase;
@@ -56,6 +57,16 @@
             text-align: center;
             display: inline-block;
             vertical-align: top;
+        }
+    }
+
+    .personal-info {
+        width: 100%;
+        margin: auto;
+        display: none;
+
+        @include breakpoint($tablet-and-up) {
+            width: 50%;
         }
     }
 
