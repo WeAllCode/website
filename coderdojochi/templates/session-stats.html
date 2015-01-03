@@ -15,9 +15,34 @@
         <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
         <li class="active">Class Stats</li>
     </ol>
-    <div class="panel panel-default">
-        <div class="container">
-            <h3>Attendance: {{ students_checked_in.count }}/{{ session.get_current_orders.count }} ({{ attendance_percentage }}%)</h3>
+    <div class="row">
+        <div class="half">
+            <div class="panel panel-default">
+                <div class="container">
+                    <h3>Attendance:</h3>
+                    <h2>{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
+                            {{ attendance_percentage }}%
+                        </div>
+                    </div>
+                    <h3>Average Age:</h3>
+                    <h2>{{ average_age }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="half">
+            <div class="panel panel-default">
+                <div class="container">
+                    <h3>Genders:</h3>
+                    <h2>Male</h2>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
+                            {{ attendance_percentage }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <h3>All Students</h3>

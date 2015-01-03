@@ -688,13 +688,24 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 
     session_obj = get_object_or_404(Session, id=session_id)
 
-    students_checked_in = session_obj.get_current_students(checked_in=True)
-    attendance_percentage = session_obj.get_current_students().count() /  students_checked_in.count() * 100
+    current_orders_checked_in = session_obj.get_current_orders(checked_in=True)
+
+    students_checked_in = current_orders_checked_in.values('student')
+    attendance_percentage = session_obj.get_current_students().count() /  current_orders_checked_in.count() * 100
+
+    # Genders
+
+    # Average Age
+    student_ages = []
+    for order in current_orders_checked_in:
+        student_ages.append(order.student.get_age())
+    average_age = reduce(lambda x, y: x + y, student_ages) / len(student_ages)
 
     return render_to_response(template_name,{
         'session': session_obj,
         'students_checked_in': students_checked_in,
         'attendance_percentage': attendance_percentage,
+        'average_age': average_age
     }, context_instance=RequestContext(request))
 
 @login_required
