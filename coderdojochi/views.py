@@ -24,7 +24,7 @@ from django.utils.safestring import mark_safe
 
 from django.utils.translation import ugettext_lazy as _
 
-
+import arrow
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -46,7 +46,7 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
         """
         Validate that the username is alphanumeric and is not already
         in use.
-        
+
         """
         existing = User.objects.filter(username__iexact=self.cleaned_data['email'])
         if existing.exists():
@@ -60,7 +60,7 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
         match. Note that an error here will end up in
         ``non_field_errors()`` because it doesn't apply to a single
         field.
-        
+
         """
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
             if self.cleaned_data['password1'] != self.cleaned_data['password2']:
@@ -70,7 +70,7 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
 
 
 class RegisterView(RegistrationView):
-    
+
     form_class = CDCRegistrationForm
 
     def register(self, request, **cleaned_data):
@@ -91,7 +91,7 @@ class RegisterView(RegistrationView):
 
         url = user.get_absolute_url()
 
-        if request.GET.get('next'): 
+        if request.GET.get('next'):
             url += '?next=' + request.GET.get('next')
 
         return (url, (), {})
@@ -123,7 +123,7 @@ def welcome(request, template_name="welcome.html"):
     role = user.role if user.role else False
 
     if request.method == 'POST':
-        
+
         next = False
 
         if request.GET.get('next'):
@@ -188,7 +188,7 @@ def welcome(request, template_name="welcome.html"):
 
                 # check for next upcoming meeting
                 next_meeting = Meeting.objects.filter(active=True).order_by('start_date').first()
-                
+
                 if next_meeting:
                     merge_vars['next_intro_meeting_url'] = next_meeting.get_absolute_url()
 
@@ -196,7 +196,7 @@ def welcome(request, template_name="welcome.html"):
             else:
                 # check for next upcoming class
                 next_class = Session.objects.filter(active=True).order_by('start_date').first()
-                
+
                 if next_class:
                     merge_vars['next_class_url'] = next_class.get_absolute_url()
 
@@ -209,7 +209,7 @@ def welcome(request, template_name="welcome.html"):
             else:
                 next = ''
 
-            return HttpResponseRedirect(reverse('welcome') + next)                
+            return HttpResponseRedirect(reverse('welcome') + next)
 
     if role:
         if role == 'mentor':
@@ -372,7 +372,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
-            
+
 
             if request.user.role == 'mentor':
 
@@ -382,15 +382,15 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
-                    'class_start_date': session_obj.start_date,
-                    'class_start_time': session_obj.start_date,
-                    'class_end_date': session_obj.end_date,
-                    'class_end_time': session_obj.end_date,
+                    'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session_obj.start_date).format('h:mm a'),
+                    'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session_obj.end_date).format('h:mm a'),
                     'class_location': session_obj.location,
                     'class_additional_info': session_obj.additional_info,
                     'class_url': session_obj.get_absolute_url()
                 })
-            
+
             else:
 
                 sendSystemEmail(request, 'Upcoming class confirmation', 'coderdojochi-class-confirm-guardian', {
@@ -552,7 +552,7 @@ def dojo(request, template_name="dojo.html"):
         context['form'] = form
 
     else:
-        if request.GET.get('next'): 
+        if request.GET.get('next'):
             return HttpResponseRedirect(reverse('welcome') + '?next=' + request.GET.get('next'))
         else:
             messages.add_message(request, messages.WARNING, 'Tell us a little about yourself before going on to your dojo')
@@ -682,7 +682,7 @@ def donate(request, template_name="donate.html"):
 def verifyDonation(donation_id):
     donation = get_object_or_404(Donation, id=donation_id)
     donation.verified = True;
-    
+
     if not donation.receipt_sent:
         sendSystemEmail(request, 'Thank you!', 'coderdojochi-donation-receipt', {
             'first_name': donation.first_name,
@@ -707,7 +707,7 @@ def privacy(request, template_name="privacy.html"):
 
 @login_required
 def cdc_admin(request, template_name="cdc-admin.html"):
-    
+
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
@@ -725,7 +725,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 
 @login_required
 def session_stats(request, session_id, template_name="session-stats.html"):
-    
+
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
@@ -754,7 +754,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 
 @login_required
 def session_check_in(request, session_id, template_name="session-check-in.html"):
-    
+
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
@@ -762,24 +762,24 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     session_obj = get_object_or_404(Session, id=session_id)
 
     if request.method == 'POST':
-        
+
         if 'active' in request.POST:
             session_obj.active = False
             session_obj.save()
             messages.add_message(request, messages.SUCCESS, 'Class started')
         else:
             if 'order_id' in request.POST:
-                
+
                 order = get_object_or_404(Order, id=request.POST['order_id'])
-                
+
                 if order.check_in:
                     order.check_in = None
                 else:
                     order.check_in = datetime.now()
-                
+
                 if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
                     order.alternate_guardian = request.POST['order_alternate_guardian']
-                
+
                 order.save()
             else:
                 messages.add_message(request, messages.ERROR, 'Invalid Order')
