@@ -42,12 +42,6 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
     last_name = forms.CharField()
     username = forms.CharField(widget=forms.HiddenInput, required=False)
 
-    def __init__(self,*args,**kwargs):
-        forms.Form.__init__(self,*args,**kwargs)
-        #first argument, index is the position of the field you want it to come before
-        self.fields.insert(0,'first_name', forms.CharField())
-        self.fields.insert(1,'last_name', forms.CharField())
-
     def clean_email(self):
         """
         Validate that the username is alphanumeric and is not already
@@ -183,40 +177,39 @@ def welcome(request, template_name="welcome.html"):
                 guardian.save()
                 user.role = role
 
+
+            merge_vars = {
+                'user': request.user.username,
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name
+            }
+
             if role == 'mentor':
-                
+
+                # check for next upcoming meeting
                 next_meeting = Meeting.objects.filter(active=True).order_by('start_date').first()
+                
                 if next_meeting:
-                    next_intro_meeting_url = next_meeting.get_absolute_url()
-                else:
-                    next_intro_meeting_url = 'FALSE'
+                    merge_vars['next_intro_meeting_url'] = next_meeting.get_absolute_url()
 
-                sendSystemEmail(request, 'Welcome!', 'WELCOME_MENTOR', {
-                    'user': request.user,
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'next_intro_meeting_url': next_intro_meeting_url,
-                    'site_url': settings.SITE_URL
-                })
+                sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-mentor', merge_vars)
             else:
-
+                # check for next upcoming class
                 next_class = Session.objects.filter(active=True).order_by('start_date').first()
+                
                 if next_class:
-                    next_class_url = next_class_url.get_absolute_url()
-                else:
-                    next_class_url = 'FALSE'
+                    merge_vars['next_class_url'] = next_class.get_absolute_url()
 
-                sendSystemEmail(request, 'Welcome!', 'WELCOME_GUARDIAN', {
-                    'user': request.user,
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'next_class_url': next_class_url,
-                    'site_url': settings.SITE_URL
-                })
+                sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-guardian', merge_vars)
 
             user.save()
 
-            return HttpResponseRedirect(reverse('welcome') + '?next=' + next)                
+            if next:
+                next = '?next=' + next
+            else:
+                next = ''
+
+            return HttpResponseRedirect(reverse('welcome') + next)                
 
     if role:
         if role == 'mentor':
@@ -383,10 +376,9 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
             if request.user.role == 'mentor':
 
-                user_title = mentor.first_name if mentor.first_name else mentor.user.username
-
-                sendSystemEmail(request, 'Upcoming class confirmation', 'CLASS_CONFIRM_MENTOR', {
-                    'user': user_title,
+                sendSystemEmail(request, 'Upcoming class confirmation', 'coderdojochi-class-confirm-mentor', {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
@@ -396,15 +388,14 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_end_time': session_obj.end_date,
                     'class_location': session_obj.location,
                     'class_additional_info': session_obj.additional_info,
-                    'site_url': settings.SITE_URL,
-                    'class_url': reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id))
+                    'class_url': session_obj.get_absolute_url()
                 })
             
             else:
-                user_title = guardian.first_name if guardian.first_name else guardian.user.username
 
-                sendSystemEmail(request, 'Upcoming class confirmation', 'CLASS_CONFIRM_GUARDIAN', {
-                    'user': user_title,
+                sendSystemEmail(request, 'Upcoming class confirmation', 'coderdojochi-class-confirm-guardian', {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
                     'student_first_name': student.first_name,
                     'student_last_name': student.last_name,
                     'class_code': session_obj.course.code,
@@ -416,8 +407,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_end_time': session_obj.end_date,
                     'class_location': session_obj.location,
                     'class_additional_info': session_obj.additional_info,
-                    'site_url': settings.SITE_URL,
-                    'class_url': reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id))
+                    'class_url': session_obj.get_absolute_url()
                 })
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
@@ -469,10 +459,9 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
 
-            user_title = mentor.first_name if mentor.first_name else mentor.user.username
-
-            sendSystemEmail(request, 'Upcoming mentor meeting confirmation', 'MEETING_CONFIRM_MENTOR', {
-                'user': user_title,
+            sendSystemEmail(request, 'Upcoming mentor meeting confirmation', 'coderdojochi-meeting-confirm-mentor', {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
                 'meeting_title': meeting_obj.meeting_type.title,
                 'meeting_description': meeting_obj.meeting_type.description,
                 'meeting_start_date': meeting_obj.start_date,
@@ -481,8 +470,7 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
                 'meeting_end_time': meeting_obj.end_date,
                 'meeting_location': meeting_obj.location,
                 'meeting_additional_info': meeting_obj.additional_info,
-                'site_url': settings.SITE_URL,
-                'meeting_url': reverse('meeting_detail', args=(meeting_obj.start_date.year, meeting_obj.start_date.month, meeting_obj.start_date.day, meeting_obj.id))
+                'meeting_url': meeting_obj.get_absolute_url()
             })
 
         return HttpResponseRedirect(reverse('meeting_detail', args=(meeting_obj.start_date.year, meeting_obj.start_date.month, meeting_obj.start_date.day, meeting_obj.id)))
@@ -696,12 +684,11 @@ def verifyDonation(donation_id):
     donation.verified = True;
     
     if not donation.receipt_sent:
-        sendSystemEmail(request, 'Thank you!', 'DONATION_RECEIPT', {
+        sendSystemEmail(request, 'Thank you!', 'coderdojochi-donation-receipt', {
             'first_name': donation.first_name,
             'last_name': donation.last_name,
             'email': donation.email,
-            'amount': donation.amount,
-            'site_url': settings.SITE_URL
+            'amount': donation.amount
         })
         donation.receipt_sent = True
 
@@ -805,10 +792,16 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
 def sendSystemEmail(request, subject, template_name, merge_vars):
 
+    # add global merge variables
+    merge_vars['current_year'] = datetime.now().year
+    merge_vars['company'] = 'CoderDojoChi'
+    merge_vars['site_url'] = settings.SITE_URL
+
     msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
                        to=[request.user.email])
     msg.template_name = template_name
     msg.global_merge_vars = merge_vars
+    msg.inline_css = True
     msg.use_template_subject = True
 
     # Optional Mandrill-specific extensions:
