@@ -154,11 +154,21 @@ def session_default_end_time():
     start = now.replace(hour=13, minute=0, second=0, microsecond=0)
     return start if start > now else start + timedelta(days=1)
 
+class Location(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    address2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=255, blank=True, null=True)
+    zip = models.CharField(max_length=255, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
 class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField(blank=True, null=True, default=session_default_start_time)
     end_date = models.DateTimeField(blank=True, null=True, default=session_default_end_time)
-    # TODO: Make location an object so that we can choose
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
@@ -203,17 +213,6 @@ class Session(models.Model):
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
 
-class Location(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-    address1 = models.CharField(max_length=255, blank=True, null=True)
-    address2 = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=255, blank=True, null=True)
-    state = models.CharField(max_length=255, blank=True, null=True)
-    zip = models.CharField(max_length=255, blank=True, null=True)
-
-    def __unicode__(self):
-        return self.name
-
 class MeetingType(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
     title = models.CharField(max_length=255)
@@ -239,7 +238,7 @@ class Meeting(models.Model):
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
-    location = models.CharField(max_length=255, blank=True, null=True)
+    location = models.ForeignKey(Location)
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="meeting_mentors")
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -291,7 +290,7 @@ class Equipment(models.Model):
     equipment_type = models.ForeignKey(EquipmentType)
     make = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
-    location = models.CharField(max_length=255)
+    location = models.ForeignKey(Location)
     asset_tag = models.CharField(max_length=255)
     aquisition_date = models.DateTimeField(blank=False,null=False)
     condition = models.CharField(max_length=255, choices=EquiptmentConditions)
