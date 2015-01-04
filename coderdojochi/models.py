@@ -159,7 +159,7 @@ class Session(models.Model):
     start_date = models.DateTimeField(blank=True, null=True, default=session_default_start_time)
     end_date = models.DateTimeField(blank=True, null=True, default=session_default_end_time)
     # TODO: Make location an object so that we can choose
-    location = models.CharField(max_length=255, blank=True, null=True)
+    location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, blank=True, null=True, related_name="session_teacher")
@@ -203,6 +203,16 @@ class Session(models.Model):
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
 
+class Location(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+    address1 = models.CharField(max_length=255, blank=True, null=True)
+    address2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=255, blank=True, null=True)
+    zip = models.CharField(max_length=255, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
 
 class MeetingType(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
