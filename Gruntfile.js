@@ -13,7 +13,7 @@ module.exports = function(grunt) {
             grunt: 'Gruntfile.js',
             root: 'coderdojochi',
             static: '<%= files.root %>/static',
-            templates: '<%= files.root %>templates',
+            templates: '<%= files.root %>/templates',
             css: '<%= files.static %>/css',
             sass: '<%= files.static %>/scss',
             js: '<%= files.static %>/js',
@@ -149,6 +149,16 @@ module.exports = function(grunt) {
             }
         },
 
+        uncss: {
+            dist: {
+                files: {
+                    '<%= files.css %>/cdc.min.css': [
+                        '<%= files.templates %>/**/*.html'
+                    ]
+                }
+            }
+        },
+
         uglify: {
             dist: {
                 options: {
@@ -216,5 +226,6 @@ module.exports = function(grunt) {
         'compass:dist',
         'autoprefixer:dev',
         'cssmin'
+        //'uncss:dist'
     ]);
 };
