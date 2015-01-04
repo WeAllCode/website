@@ -386,7 +386,12 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_start_time': arrow.get(session_obj.start_date).format('h:mm a'),
                     'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
                     'class_end_time': arrow.get(session_obj.end_date).format('h:mm a'),
-                    'class_location': session_obj.location,
+                    'class_location_name': session_obj.location.name,
+                    'class_location_address': session_obj.location.address,
+                    'class_location_address2': session_obj.location.address2,
+                    'class_location_city': session_obj.location.city,
+                    'class_location_state': session_obj.location.state,
+                    'class_location_zip': session_obj.location.zip,
                     'class_additional_info': session_obj.additional_info,
                     'class_url': session_obj.get_absolute_url()
                 })
@@ -405,7 +410,12 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_start_time': arrow.get(session_obj.start_date).format('h:mm a'),
                     'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
                     'class_end_time': arrow.get(session_obj.end_date).format('h:mm a'),
-                    'class_location': session_obj.location,
+                    'class_location_name': session_obj.location.name,
+                    'class_location_address': session_obj.location.address,
+                    'class_location_address2': session_obj.location.address2,
+                    'class_location_city': session_obj.location.city,
+                    'class_location_state': session_obj.location.state,
+                    'class_location_zip': session_obj.location.zip,
                     'class_additional_info': session_obj.additional_info,
                     'class_url': session_obj.get_absolute_url()
                 })
@@ -468,7 +478,12 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
                 'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mm a'),
                 'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
                 'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mm a'),
-                'meeting_location': meeting_obj.location,
+                'meeting_location_name': meeting_obj.location.name,
+                'meeting_location_address': meeting_obj.location.address,
+                'meeting_location_address2': meeting_obj.location.address2,
+                'meeting_location_city': meeting_obj.location.city,
+                'meeting_location_state': meeting_obj.location.state,
+                'meeting_location_zip': meeting_obj.location.zip,
                 'meeting_additional_info': meeting_obj.additional_info,
                 'meeting_url': meeting_obj.get_absolute_url()
             })
