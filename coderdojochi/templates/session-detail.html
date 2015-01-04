@@ -131,15 +131,15 @@
             </div>
         </div>
         <div class="class-detail-content">
-        
+
             <p>{{ session.course.description|safe }}</p>
-            
-            <h2 class="title light space-above">Class Information</h2>    
+
+            <h2 class="title light space-above">Class Information</h2>
             <p>Who:<br>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
 
             <p>When:<br>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
 
-            <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }}<br>{{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+            <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
 
             {% if session.additional_info %}
             <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
