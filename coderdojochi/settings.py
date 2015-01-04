@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     #vendor
     'registration',
     'social_auth',
-    'south',
     'avatar',
     'bootstrap3',
     'html5',
@@ -104,7 +103,16 @@ SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
 # Email
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+MANDRILL_API_KEY = 'oc-wXZkn5Eh5eTJH6yg7dg'
+EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
+EMAIL_HOST = 'smtp.mandrillapp.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'coderdojochi'
+EMAIL_HOST_PASSWORD = 'oc-wXZkn5Eh5eTJH6yg7dg'
+DEFAULT_FROM_EMAIL = 'info@coderdojo.webfactional.com'
+SERVER_EMAIL = 'info@coderdojo.webfactional.com'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
