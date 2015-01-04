@@ -155,12 +155,12 @@ def session_default_end_time():
     return start if start > now else start + timedelta(days=1)
 
 class Location(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    address2 = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=255, blank=True, null=True)
-    state = models.CharField(max_length=255, blank=True, null=True)
-    zip = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    address2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Address 2")
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    zip = models.CharField(max_length=255)
 
     def __unicode__(self):
         return self.name
