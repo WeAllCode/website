@@ -1,6 +1,6 @@
 from django.db import models
 
-from datetime import date
+from datetime import datetime, timedelta
 
 from django.contrib.auth.models import AbstractUser
 
@@ -59,8 +59,8 @@ class Mentor(models.Model):
     last_name = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("mentors")
@@ -75,8 +75,8 @@ class Guardian(models.Model):
     last_name = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField(default=True)
     phone = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def get_students(self):
         students = Student.objects.filter(guardian=self)
@@ -97,10 +97,10 @@ class Student(models.Model):
     gender = models.CharField(max_length=255)
     medical_conditions = models.TextField(blank=True, null=True)
     medications = models.TextField(blank=True, null=True)
-    photo_release = models.BooleanField('Photo Consent', help_text="I hereby give permission to CoderDojoChi to use the student's image and/or likeness in promotional materials.")
-    consent = models.BooleanField('General Consent', help_text="I hereby give consent for the student signed up above to participate in CoderDojoChi.")
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    photo_release = models.BooleanField('Photo Consent', help_text="I hereby give permission to CoderDojoChi to use the student's image and/or likeness in promotional materials.", default=False)
+    consent = models.BooleanField('General Consent', help_text="I hereby give consent for the student signed up above to participate in CoderDojoChi.", default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
     def is_registered_for_session(self, session):
@@ -129,8 +129,8 @@ class Course(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=40, blank=True, null=True)
     description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
     class Meta:
@@ -144,10 +144,20 @@ class Course(models.Model):
     def __unicode__(self):
         return self.code + ' | ' + self.title
 
+def session_default_start_time():
+    now = datetime.now()
+    start = now.replace(hour=10, minute=0, second=0, microsecond=0)
+    return start if start > now else start + timedelta(days=1)
+
+def session_default_end_time():
+    now = datetime.now()
+    start = now.replace(hour=13, minute=0, second=0, microsecond=0)
+    return start if start > now else start + timedelta(days=1)
+
 class Session(models.Model):
     course = models.ForeignKey(Course)
-    start_date = models.DateTimeField(blank=True, null=True)
-    end_date = models.DateTimeField(blank=True, null=True)
+    start_date = models.DateTimeField(blank=True, null=True, default=session_default_start_time)
+    end_date = models.DateTimeField(blank=True, null=True, default=session_default_end_time)
     # TODO: Make location an object so that we can choose
     location = models.CharField(max_length=255, blank=True, null=True)
     capacity = models.IntegerField(default=20)
@@ -156,9 +166,9 @@ class Session(models.Model):
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
     waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
     waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
-    active = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -199,8 +209,8 @@ class MeetingType(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=40, blank=True, null=True)
     description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("meeting type")
@@ -221,9 +231,9 @@ class Meeting(models.Model):
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="meeting_mentors")
-    active = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("meeting")
@@ -245,8 +255,8 @@ class Order(models.Model):
     alternate_guardian = models.CharField(max_length=255, blank=True, null=True)
     affiliate = models.CharField(max_length=255, blank=True, null=True)
     order_number = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("order")
@@ -289,8 +299,8 @@ class EmailContent(models.Model):
     nickname = models.CharField(max_length=255)
     subject = models.CharField(max_length=255)
     body = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
     class Meta:
