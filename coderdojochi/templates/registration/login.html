@@ -11,7 +11,7 @@
         {% bootstrap_form form %}
         <input type="hidden" name="next" value="{{ next }}" />
         <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Log in' %}" />
-        <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Register' %}" />
     </form>
+    <p>{% trans "Not member" %}? <a href="{% url 'register' %}">{% trans "Register" %}</a>!</p>
     <p>{% trans "Forgot password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>!</p>
 {% endblock %}
