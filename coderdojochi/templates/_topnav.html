@@ -15,7 +15,7 @@
                 <li{% if '/about/' in request.path %} class="active"{% endif %}><a href="{% url 'about' %}">About</a></li>
                 <li{% if '/classes/' in request.path %} class="active"{% endif %}><a href="{% url 'sessions' %}">Classes</a></li>
                 <li{% if '/volunteer/' in request.path %} class="active"{% endif %}><a href="{% url 'volunteer' %}">Volunteer</a></li>
-                <li{% if '/donate/' in request.path %} class="active"{% endif %}><a href="{% url 'donate' %}">Donate</a></li>
+                <li class="donate{% if '/donate/' in request.path %} active{% endif %}"><a href="{% url 'donate' %}">Donate</a></li>
                 {% if user.is_authenticated %}
                 <li{% if '/dojo/' in request.path %} class="active"{% endif %}><a href="{% url 'dojo' %}">{% avatar user 20 %} My Dojo</a></li>
                 {% if user.is_staff %}
@@ -23,8 +23,8 @@
                 {% endif %}
                 <li><a href="{% url 'auth_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
-                <li{% if '/accounts/login/' in request.path %} class="active"{% endif %}><a href="{% url 'auth_login' %}">Login</a></li>
-                <li{% if '/register/' in request.path %} class="active"{% endif %}><a href="{% url 'register' %}">Register</a></li>
+                <li{% if '/accounts/login/' in request.path %} class="active"{% endif %}><a href="{% url 'auth_login' %}">My Dojo</a></li>
+                <!-- <li{% if '/register/' in request.path %} class="active"{% endif %}><a href="{% url 'register' %}">Register</a></li> -->
                 {% endif %}
             </ul>
         </div>

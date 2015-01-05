@@ -4,15 +4,14 @@
 {% block title_placeholder %}Login{% endblock %}
 
 {% block content_placeholder %}
-<h1>Login</h1>
-<p><a class="login-google" href="/login/google-oauth2/">Sign in with Google</a></p>
-<p>or</p>
-<form method="post" action=".">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <input type="hidden" name="next" value="{{ next }}" />
-    <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Log in' %}" />
-</form>
-<p>{% trans "Forgot password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>!</p>
-<p>{% trans "Not member" %}? <a href="{% url 'register' %}">{% trans "Register" %}</a>!</p>
+    <h1>Login / Register</h1>
+    <p><a class="login-google" href="/login/google-oauth2/">Sign in with Google</a></p>
+    <form method="post" action=".">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Log in' %}" />
+        <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Register' %}" />
+    </form>
+    <p>{% trans "Forgot password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>!</p>
 {% endblock %}
