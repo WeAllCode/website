@@ -266,6 +266,20 @@ form {
     form {
         margin-bottom: 20px;
     }
+
+    // Registration
+    .form-horizontal {
+        .form-control {
+          width: 300px;
+          float: left;
+        }
+
+        .control-label {
+          float: left;
+          margin-right: 20px;
+          width: 150px;
+        }
+    }
 }
 
 // homepage
