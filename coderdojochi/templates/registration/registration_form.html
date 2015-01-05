@@ -6,7 +6,7 @@
 <h1>Register <small>Create an account to sign up for free classes and stay in touch.</small></h1>
 <p><a class="login-google" href="/login/google-oauth2/">Sign in with Google</a></p>
 <p>or</p>
-<form method="post" action="{% url 'register' %}?next={{ request.GET.next }}">
+<form method="post" class="form-horizontal" action="{% url 'register' %}?next={{ request.GET.next }}">
     {% csrf_token %}
     {% bootstrap_form form %}
     <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Register' %}" />
