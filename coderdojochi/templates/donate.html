@@ -8,179 +8,179 @@
 
 {% block content %}
 <div class="hero">
-	<div class="container">
-		<h1 class="title">Donate Today!</h1>
+    <div class="container">
+        <h1 class="title">Donate Today!</h1>
 
-		<ul class="list-inline amount-buttons">
-			<li><button class="btn-cdc btn-cdc-inverse" data-value="10">$10</button></li>
-			<li><button class="btn-cdc btn-cdc-inverse" data-value="25">$25</button></li>
-			<li><button class="btn-cdc btn-cdc-inverse" data-value="50">$50</button></li>
-			<li><button class="btn-cdc btn-cdc-inverse" data-value="100">$100</button></li>
-			<li><button class="btn-cdc btn-cdc-inverse" data-value="other">Other</button></li>
-		</ul>
-		<div class="amount-actual">
-			<span class="dollar">$</span>
-			<input type="text" class="form-control input-lg" maxlength="6">
-		</div>
-		<div class="personal-info">
-			<h3 class="text-center">Please tell us a little about yourself</h3>
-			<div class="form-group">
-				<input type="text" id="firstNameInput" class="form-control input-lg" placeholder="First name e.g. William">
-			</div>
-			<div class="form-group">
-				<input type="text" id="lastNameInput"  class="form-control input-lg" placeholder="Last name e.g. Gates">
-			</div>
-			<div class="form-group">
-				<input type="email" id="emailInput"  class="form-control input-lg" placeholder="Email Address e.g. bill.gates@microsoft.com">
-			</div>
-			<h3 class="text-center">We will email you a receipt<br>(includes tax exempt information)</h3>
-			
-		</div>
-		<button class="btn-cdc btn-cdc-inverse btn-do-it" disabled>Do it.</button>
-	</div>
+        <ul class="list-inline amount-buttons">
+            <li><button class="btn-cdc btn-cdc-inverse" data-value="10">$10</button></li>
+            <li><button class="btn-cdc btn-cdc-inverse" data-value="25">$25</button></li>
+            <li><button class="btn-cdc btn-cdc-inverse" data-value="50">$50</button></li>
+            <li><button class="btn-cdc btn-cdc-inverse" data-value="100">$100</button></li>
+            <li><button class="btn-cdc btn-cdc-inverse" data-value="other">Other</button></li>
+        </ul>
+        <div class="amount-actual">
+            <span class="dollar">$</span>
+            <input type="text" class="form-control input-lg" maxlength="6">
+        </div>
+        <div class="personal-info">
+            <h3 class="text-center">Please tell us a little about yourself</h3>
+            <div class="form-group">
+                <input type="text" id="firstNameInput" class="form-control input-lg" placeholder="First name e.g. William">
+            </div>
+            <div class="form-group">
+                <input type="text" id="lastNameInput"  class="form-control input-lg" placeholder="Last name e.g. Gates">
+            </div>
+            <div class="form-group">
+                <input type="email" id="emailInput"  class="form-control input-lg" placeholder="Email Address e.g. bill.gates@microsoft.com">
+            </div>
+            <h3 class="text-center">We will email you a receipt<br>(includes tax exempt information)</h3>
+
+        </div>
+        <button class="btn-cdc btn-cdc-inverse btn-do-it" disabled>Do it.</button>
+    </div>
 </div>
 
 <div class="container">
     <h2>{% trans "You can help!" %}</h2>
     <p>CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
 
-	<form id="donateForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" >
-		<input type="hidden" name="cmd" value="_donations">
-		<input type="hidden" name="business" value="CXD22M5GNXDE4">
-		<input type="hidden" name="lc" value="US">
-		<input type="hidden" name="item_name" value="CoderDojoChi">
-		<input type="hidden" id="donationId" name="item_number" value="">
-		<input type="hidden" id="donateAmount" name="amount" value="10">
-		<input type="hidden" name="currency_code" value="USD">
-		<input type="hidden" name="no_note" value="0">
-		<input type="hidden" name="cn" value="Add a message for CoderDojoChi to read:">
-		<input type="hidden" name="no_shipping" value="1">
-		<input type="hidden" name="address_override" value="1">
-		<input type="hidden" id="paymentFirstName" name="first_name" value="">
-		<input type="hidden" id="paymentLastName" name="last_name" value="">
-		<input type="hidden" name="return" value="http://localhost:8000/donate">
-		<input type="hidden" name="notify_url" value="http://localhost:8000/donate">
-		<input type="hidden" name="cancel_return" value="http://localhost:8000/donate">
-		<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
-		<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-	</form>
+    <form id="donateForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" >
+        <input type="hidden" name="cmd" value="_donations">
+        <input type="hidden" name="business" value="CXD22M5GNXDE4">
+        <input type="hidden" name="lc" value="US">
+        <input type="hidden" name="item_name" value="CoderDojoChi">
+        <input type="hidden" id="donationId" name="item_number" value="">
+        <input type="hidden" id="donateAmount" name="amount" value="10">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="no_note" value="0">
+        <input type="hidden" name="cn" value="Add a message for CoderDojoChi to read:">
+        <input type="hidden" name="no_shipping" value="1">
+        <input type="hidden" name="address_override" value="1">
+        <input type="hidden" id="paymentFirstName" name="first_name" value="">
+        <input type="hidden" id="paymentLastName" name="last_name" value="">
+        <input type="hidden" name="return" value="http://localhost:8000/donate">
+        <input type="hidden" name="notify_url" value="http://localhost:8000/donate">
+        <input type="hidden" name="cancel_return" value="http://localhost:8000/donate">
+        <input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+    </form>
 </div>
 {% endblock %}
 
 {% block extra_script %}
 <script>
-	$(function() {
-		var $donateForm = $('#donateForm'),
-			$amountButtons = $('.amount-buttons:first'),
-			$donateButton = $('.btn-do-it:first'),
-			$donateAmount = $('#donateAmount'),
-			$amountActual = $('.amount-actual:first'),
-			$amountActualField = $('.form-control', $amountActual),
-			$personalInfo = $('.personal-info:first'),
-			$firstNameInput = $('#firstNameInput'),
-			$lastNameInput = $('#lastNameInput'),
-			$emailInput = $('#emailInput'),
-			$donationId = $('#donationId'),
-			$paymentFirstName = $('#paymentFirstName'),
-			$paymentLastName = $('#paymentLastName'),
+    $(function() {
+        var $donateForm = $('#donateForm'),
+            $amountButtons = $('.amount-buttons:first'),
+            $donateButton = $('.btn-do-it:first'),
+            $donateAmount = $('#donateAmount'),
+            $amountActual = $('.amount-actual:first'),
+            $amountActualField = $('.form-control', $amountActual),
+            $personalInfo = $('.personal-info:first'),
+            $firstNameInput = $('#firstNameInput'),
+            $lastNameInput = $('#lastNameInput'),
+            $emailInput = $('#emailInput'),
+            $donationId = $('#donationId'),
+            $paymentFirstName = $('#paymentFirstName'),
+            $paymentLastName = $('#paymentLastName'),
 
-		amountButtonClick = function() {
-			var $clicked = $(this);
-			$('.active', $amountButtons).removeClass('active');
-			$clicked.addClass('active');
-			$donateButton.attr('disabled', false);
+        amountButtonClick = function() {
+            var $clicked = $(this);
+            $('.active', $amountButtons).removeClass('active');
+            $clicked.addClass('active');
+            $donateButton.attr('disabled', false);
 
-			// show personal information fields
-			$personalInfo.show();
+            // show personal information fields
+            $personalInfo.show();
 
-			if ($clicked.data('value') === 'other') {
-				$amountActual.show();
-				$amountActualField.focus();
-			} else {
-				$amountActual.hide();
-				$('.form-control:first', $personalInfo).focus();
-			}
-		},
+            if ($clicked.data('value') === 'other') {
+                $amountActual.show();
+                $amountActualField.focus();
+            } else {
+                $amountActual.hide();
+                $('.form-control:first', $personalInfo).focus();
+            }
+        },
 
-		donateFormSubmit = function(e) {
-			$donateButton.trigger('click');
-		},
+        donateFormSubmit = function(e) {
+            $donateButton.trigger('click');
+        },
 
-		donateButtonClick = function() {
+        donateButtonClick = function() {
 
-			var $selectedAmountButton = $('.active', $amountButtons),
-				selectedAmount = $selectedAmountButton.data('value'),
-				emailTest = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,
-				formData;
+            var $selectedAmountButton = $('.active', $amountButtons),
+                selectedAmount = $selectedAmountButton.data('value'),
+                emailTest = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,
+                formData;
 
-			if(selectedAmount === 'other') {
-				
-				var customAmount = $amountActualField.val();
+            if(selectedAmount === 'other') {
 
-				if(customAmount.length){
-					selectedAmount = parseInt(customAmount);
-				} else {
-					$amountActual.addClass('has-error');
-					$amountActualField.focus();
-					return false;
-				}
-			}
+                var customAmount = $amountActualField.val();
 
-			// set donation amount
-			$donateAmount.val(selectedAmount);
+                if(customAmount.length){
+                    selectedAmount = parseInt(customAmount);
+                } else {
+                    $amountActual.addClass('has-error');
+                    $amountActualField.focus();
+                    return false;
+                }
+            }
 
-			if(!$firstNameInput.val()) {
-				showError($firstNameInput, 'First name is required to receive a receipt.');
-				return false;
-			}
+            // set donation amount
+            $donateAmount.val(selectedAmount);
 
-			if(!$lastNameInput.val()) {
-				showError($lastNameInput, 'Last name is required to receive a receipt.');
-				return false;
-			}
+            if(!$firstNameInput.val()) {
+                showError($firstNameInput, 'First name is required to receive a receipt.');
+                return false;
+            }
 
-			if(!$emailInput.val() || !emailTest.test($emailInput.val())) {
-				showError($emailInput, 'A valid email address is required to receive a receipt.');
-				return false;
-			}
+            if(!$lastNameInput.val()) {
+                showError($lastNameInput, 'Last name is required to receive a receipt.');
+                return false;
+            }
 
-			formData = {
-				first_name: $firstNameInput.val(),
-				last_name: $lastNameInput.val(),
-				email: $emailInput.val(),
-				amount: parseInt(selectedAmount),
-				csrfmiddlewaretoken: '{{ csrf_token }}'
-			}
+            if(!$emailInput.val() || !emailTest.test($emailInput.val())) {
+                showError($emailInput, 'A valid email address is required to receive a receipt.');
+                return false;
+            }
 
-			// submit donation record before submitting
-			$.post('/donate/', formData, function(response) {
-				if(response !== 'failed') {
-					$paymentFirstName.val(formData.first_name);
-					$paymentLastName.val(formData.last_name);
-					$donationId.val(response);
-					$donateForm.off('submit');
-					$donateForm.submit();
-				} else {
-					alert('An error occured, please refresh the page and try again.')
-				}
-			});
-		},
+            formData = {
+                first_name: $firstNameInput.val(),
+                last_name: $lastNameInput.val(),
+                email: $emailInput.val(),
+                amount: parseInt(selectedAmount),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }
 
-		showError = function ($input, message) {
-			$('.has-error', $personalInfo).removeClass('has-error');
-			$('.alert-danger', $personalInfo).remove();
-			$input.closest('.form-group')
-				.addClass('has-error')
-				.before('<div class="alert alert-danger">' + message + '</div>');
-		};
+            // submit donation record before submitting
+            $.post('/donate/', formData, function(response) {
+                if(response !== 'failed') {
+                    $paymentFirstName.val(formData.first_name);
+                    $paymentLastName.val(formData.last_name);
+                    $donationId.val(response);
+                    $donateForm.off('submit');
+                    $donateForm.submit();
+                } else {
+                    alert('An error occured, please refresh the page and try again.')
+                }
+            });
+        },
 
-		$donateForm.submit(donateFormSubmit);
+        showError = function ($input, message) {
+            $('.has-error', $personalInfo).removeClass('has-error');
+            $('.alert-danger', $personalInfo).remove();
+            $input.closest('.form-group')
+                .addClass('has-error')
+                .before('<div class="alert alert-danger">' + message + '</div>');
+        };
 
-		$amountButtons
-			.on('click', 'button', amountButtonClick);
+        $donateForm.submit(donateFormSubmit);
 
-		$donateButton
-			.on('click', donateButtonClick);
-	});
+        $amountButtons
+            .on('click', 'button', amountButtonClick);
+
+        $donateButton
+            .on('click', donateButtonClick);
+    });
 </script>
 {% endblock %}

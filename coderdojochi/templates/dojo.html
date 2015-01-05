@@ -174,7 +174,7 @@
             <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <h3>Role: {{ user.role|capfirst }}<br>Joined: {{ account.created_at|naturalday|capfirst }}</h3>
-            
+
             {% if form %}
             <form action="" method="post">
                 {% csrf_token %}
