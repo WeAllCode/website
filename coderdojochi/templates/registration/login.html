@@ -8,8 +8,25 @@
     <h2>{% trans "Not yet a member" %}? <a href="{% url 'register' %}">{% trans "Register now" %}</a>!</h2>
     <p><a class="login-google" href="/login/google-oauth2/">Sign in with Google</a></p>
     <form method="post" action=".">
+        {% if form.errors %}
+        <div class="alert alert-danger alert-dismissable alert-link">
+            <button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>
+            Please enter a correct username and password. Note that both fields may be case-sensitive.
+        </div>
+        {% endif %}
+        
         {% csrf_token %}
-        {% bootstrap_form form %}
+
+        <div class="form-group">
+            <label class="control-label" for="id_username">Email</label>
+            <input class="form-control" id="id_username" maxlength="254" name="username" placeholder="Email" required="required" title="" type="text">
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="id_password">Password</label>
+            <input class="form-control" id="id_password" name="password" placeholder="Password" required="required" title="" type="password">
+        </div>
+
         <input type="hidden" name="next" value="{{ next }}" />
         <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Log in' %}" />
     </form>
