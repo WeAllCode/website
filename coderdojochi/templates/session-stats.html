@@ -57,7 +57,7 @@
                     <th>Checked In</th>
                 </tr>
             </thead>
-            <tbody> 
+            <tbody>
                 {% for order in session.get_current_orders %}
                 <tr {% if not order.check_in %}class="text-muted"{% endif %}>
                     <form method="post" action=".">
@@ -74,7 +74,7 @@
                         {% endif %}
                     </form>
                 </tr>
-                {% endfor %}     
+                {% endfor %}
             </tbody>
         {% else %}
             <p>No student data.</p>
