@@ -29,14 +29,14 @@ module.exports = function(grunt) {
                 browsers: ['Firefox > 25', 'last 4 versions', '> 3%', 'ie 8']
             },
 
-            dev: { 
+            dev: {
                 expand: true,
                 flatten: true,
                 src: [
-                    '<%= files.css %>/*.css', 
+                    '<%= files.css %>/*.css',
                     '!<%= files.css %>/*.min.css'
                 ],
-                dest: '<%= files.css %>/' 
+                dest: '<%= files.css %>/'
             }
         },
 
@@ -65,14 +65,14 @@ module.exports = function(grunt) {
                     raw: 'sprite_load_path = "<%= files.sprites %>"\n',
                     httpGeneratedImagesPath: '../images',
                     outputStyle: 'expanded',
-                    debugInfo: true
+                    debugInfo: false
                 }
             }
         },
 
         concurrent: {
             dev : [
-                'watch', 
+                'watch',
                 'shell:django'
             ],
             options: {
@@ -176,7 +176,7 @@ module.exports = function(grunt) {
         },
 
         watch: {
-            
+
             scripts: {
                 files: [
                     '<%= files.grunt %>',
@@ -192,7 +192,7 @@ module.exports = function(grunt) {
                     livereload: true
                 }
             },
-            
+
             scss: {
                 files: ['<%= files.sass %>/**/*.scss'],
                 tasks: [
@@ -210,9 +210,9 @@ module.exports = function(grunt) {
         }
     });
 
-    
+
     // register tasks
-    
+
     grunt.registerTask('default', [ // $ grunt
         'jsbeautifier',
         'jshint',
