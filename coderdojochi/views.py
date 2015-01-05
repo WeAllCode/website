@@ -345,6 +345,10 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
     student = False
     guardian = False
 
+    if not request.user.role:
+        messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
+        return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
+
     if request.user.role == 'mentor':
         mentor = get_object_or_404(Mentor, user=request.user)
         user_signed_up = True if mentor in session_obj.mentors.all() else False
