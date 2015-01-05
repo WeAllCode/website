@@ -76,11 +76,16 @@
 
         .homepage-volunteer {
             .icon-volunteer {
+                color: #1a676a;
                 font-size: 170px;
                 margin: 0 auto;
                 display: block;
                 margin-top: 36px;
                 margin-bottom: 75px;
+
+                &:hover {
+                    color: #87c448;
+                }
             }
         }
 
