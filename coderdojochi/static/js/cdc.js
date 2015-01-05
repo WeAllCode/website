@@ -56,6 +56,10 @@ CDC.global = (function($, document, window, undefined) {
                 $('nav').removeClass('shrink');
             }
         });
+
+        $('#carousel-home-hero').carousel({
+            interval: false
+        });
     }
 
     function openPopUp(url, height, width) {

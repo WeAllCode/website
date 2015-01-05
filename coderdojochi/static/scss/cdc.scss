@@ -206,6 +206,9 @@ a {
 // Donate
 @import "_donate";
 
+// Volunteer (page-volunteer)
+@import "_volunteer";
+
 /* -------------------------------------------------------------------------*/
 /* Modules */
 
@@ -282,137 +285,6 @@ form {
     }
 }
 
-// homepage
-
-.page-homepage {
-
-    .splash {
-
-        .hero {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -100;
-            background: transparent url(/static/images/hero3.jpg) no-repeat;
-            background-size: cover;
-        }
-    }
-
-    .mission {
-        background: url(/static/images/hero1.jpg) no-repeat;
-        background-size: cover;
-
-        h1 {
-            color: #000;
-            font-size: 2.5em;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            line-height: 1.1;
-            margin-top: 120px;
-            padding: 15px;
-            background: #FFF;
-            background: rgba(255, 255, 255, 0.6);
-            float: left;
-        }
-
-        .highlight {
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #FFF;
-            background: rgba(255, 255, 255, 0.6);
-            font-size: 20px;
-            line-height: 1.25;
-            float: left;
-            clear: both;
-        }
-    }
-
-    // .upcoming-class {
-    //     position: absolute;
-    //     max-width: 350px;
-    //     min-width: 300px;
-    //     left: -350px;
-    //     bottom: 30px;
-    //     font-size: .9em;
-    //     padding: 15px 20px 10px;
-    //     background: #000;
-    //     background: rgb(134, 196, 71);
-    //     color: #fff;
-    //     z-index: 2;
-
-    //     .title {
-    //         margin: 0 0 15px;
-    //         font-size: 1.4em;
-    //     }
-
-    //     p {
-    //         margin: 5px 0;
-    //     }
-
-    //     small {
-    //         display: block;
-    //         color: #f3f3f3;
-    //     }
-
-    //     a:not(.btn) {
-    //         color: #fff;
-
-    //         small {
-    //             color: #fff;
-    //         }
-    //     }
-
-    //     em.underline {
-    //         font-style: normal;
-    //         border-bottom: 1px dotted;
-    //         padding-bottom: 1px;
-    //     }
-
-    //     .btn {
-    //         margin-top: 10px;
-    //         text-decoration: none;
-    //     }
-    // }
-
-    .block-cta {
-        a {
-            text-decoration: none;
-        }
-
-        .homepage-volunteer {
-            .icon-volunteer {
-                font-size: 170px;
-                margin: 0 auto;
-                display: block;
-                margin-top: 36px;
-                margin-bottom: 65px;
-            }
-
-            // FIXME: Weird px issue.
-            p {
-                padding-top: 2px;
-            }
-        }
-
-        .homepage-donate {
-            .icon-donation {
-                @include use-sprite("icon-donation", "global");
-                margin: 0 auto;
-                display: block;
-
-                &:hover {
-                    @include use-sprite("icon-donation-hover", "global");
-                    margin: 0 auto;
-                    display: block;
-                }
-            }
-        }
-    }
-
-
-}
 
 // welcome
 

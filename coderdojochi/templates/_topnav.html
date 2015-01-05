@@ -17,7 +17,7 @@
                 <li{% if '/volunteer/' in request.path %} class="active"{% endif %}><a href="{% url 'volunteer' %}">Volunteer</a></li>
                 <li class="donate{% if '/donate/' in request.path %} active{% endif %}"><a href="{% url 'donate' %}">Donate</a></li>
                 {% if user.is_authenticated %}
-                <li{% if '/dojo/' in request.path %} class="active"{% endif %}><a href="{% url 'dojo' %}">{% avatar user 20 %} My Dojo</a></li>
+                <li{% if '/dojo/' in request.path %} class="active"{% endif %}><a href="{% url 'dojo' %}">My Dojo</a></li>
                 {% if user.is_staff %}
                 <li><a href="{% url 'cdc_admin' %}">Admin</a></li>
                 {% endif %}
