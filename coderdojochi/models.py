@@ -167,12 +167,12 @@ class Location(models.Model):
 
 class Session(models.Model):
     course = models.ForeignKey(Course)
-    start_date = models.DateTimeField(blank=True, null=True, default=session_default_start_time)
-    end_date = models.DateTimeField(blank=True, null=True, default=session_default_end_time)
+    start_date = models.DateTimeField(default=session_default_start_time)
+    end_date = models.DateTimeField(default=session_default_end_time)
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    teacher = models.ForeignKey(Mentor, blank=True, null=True, related_name="session_teacher")
+    teacher = models.ForeignKey(Mentor, related_name="session_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
     waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
     waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")

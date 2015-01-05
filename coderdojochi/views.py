@@ -269,6 +269,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
 def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html"):
     session_obj = get_object_or_404(Session, id=session_id)
 
+
     mentor_signed_up = False
     is_guardian = False
     account = False
@@ -307,6 +308,11 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
     upcoming_classes = Session.objects.filter(active=True, end_date__gte=datetime.now()).order_by('start_date')
 
     if request.user.is_authenticated():
+
+        if not request.user.role:
+            messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
+            return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
+
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
