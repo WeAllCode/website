@@ -3,6 +3,7 @@
     border: 0;
     font-family: 'Quicksand', sans-serif;
     font-size: 14px;
+    font-weight: 300;
 
     @include user-select(none);
 
@@ -12,12 +13,16 @@
         }
     }
 
+    .donate a {
+        font-weight: bold;
+    }
+
     .navbar-nav > li > a,
     .navbar-nav > li > a:hover,
     .navbar-nav > li > a:focus {
         color: #FFF;
         text-transform: uppercase;
-        font-weight: 300;
+
         text-decoration: none;
     }
 
