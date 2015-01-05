@@ -807,14 +807,8 @@ form {
     }
 
     .social-sharing {
-        font-size: 2em;
-
-        a {
-            color: #666;
-
-            &:hover {
-                color: #000;
-            }
+        li {
+            padding: 0;
         }
     }
 

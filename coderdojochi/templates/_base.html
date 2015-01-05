@@ -3,18 +3,17 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{% block title_base %}CoderDojoChi | {% block title %}{{ SITE_NAME }}{% endblock %}{% endblock %}</title>
+        <title>{% block notitle %}{% block title_base %}{% block title %}{% endblock %} - CoderDojoChi{% endblock %}{% endblock %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
         <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon" />
 
         <!-- Facebook -->
-        <meta property="og:url" content="http://coderdojochi.org" />
         <meta property="og:image" content="http://coderdojochi.org/assets/images/logo.png" />
-        <meta property="og:title" content="CoderDojoChi" />
+        <!-- <meta property="og:url" content="http://coderdojochi.org" /> -->
+        <!-- <meta property="og:title" content="{% block title %}{{ SITE_NAME }}{% endblock %}{% endblock %} - CoderDojoChi" /> -->
 
         {% block style_base %}
         <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,700' rel='stylesheet' type='text/css'>
