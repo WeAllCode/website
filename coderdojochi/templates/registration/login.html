@@ -4,9 +4,8 @@
 {% block title_placeholder %}Login{% endblock %}
 
 {% block content_placeholder %}
-    <h2>{% trans "Not member" %}? <a href="{% url 'register' %}">{% trans "Register" %}</a>!</h2>
-
     <h1>Login</h1>
+    <h2>{% trans "Not yet a member" %}? <a href="{% url 'register' %}">{% trans "Register now" %}</a>!</h2>
     <p><a class="login-google" href="/login/google-oauth2/">Sign in with Google</a></p>
     <form method="post" action=".">
         {% csrf_token %}
