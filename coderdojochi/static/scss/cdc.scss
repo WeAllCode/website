@@ -134,15 +134,28 @@ a {
     }
 }
 
-
-.login-facebook {
-    @include use-sprite("login-facebook", "global");
+.signup-google {
+    @include use-sprite("signup-google", "global");
     @extend .ir;
+    border-radius: 0;
 }
 
 .login-google {
     @include use-sprite("login-google", "global");
     @extend .ir;
+    border-radius: 0;
+}
+
+.signup-email {
+    @include use-sprite("signup-email", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
+.login-email {
+    @include use-sprite("login-email", "global");
+    @extend .ir;
+    border-radius: 0;
 }
 
 .btn-cdc {
@@ -159,7 +172,7 @@ a {
     padding: 0 10px;
 
     &.registration {
-        max-width: 500px;
+        max-width: 650px;
     }
 }
 
@@ -209,6 +222,9 @@ a {
 
 // Volunteer (page-volunteer)
 @import "_volunteer";
+
+// Login (page-auth)
+@import "_login";
 
 /* -------------------------------------------------------------------------*/
 /* Modules */
