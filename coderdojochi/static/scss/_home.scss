@@ -77,6 +77,18 @@
             font-size: 20px;
         }
 
+        .homepage-action {
+
+            transform: scale(.5);
+            margin: -30px auto -100px;
+            display: block;
+
+            @include breakpoint($phone-and-up) {
+                transform: scale(1);
+                margin: 0;
+            }
+        }
+
         .homepage-volunteer {
             .icon-volunteer {
                 color: #1a676a;
