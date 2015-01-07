@@ -45,18 +45,6 @@
             <p>No students registered.</p>
         {% endif %}
     </table>
-
-    {% if session.active %}
-        <br>
-        <p>
-            <form method="post" action="."  class="text-center">
-                {% csrf_token %}
-                <input type="hidden" name="active" value="True">
-                <button class="btn-cdc">Start Class</button>
-            </form>
-        </p>
-    {% endif %}
-
 </div>
 {% endblock %}
 

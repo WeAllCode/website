@@ -7,7 +7,7 @@
 
     @include user-select(none);
 
-    @include breakpoint($phone-and-up) {
+    @include breakpoint($tablet-and-up) {
         .navbar-nav {
             margin: 50px 0 10px;
         }
@@ -59,7 +59,7 @@
         left: 10px;
         top: 2px;
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             @include use-sprite("logo", "global");
             top: auto;
             bottom: -15px;
@@ -70,7 +70,7 @@
 
     &.shrink {
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             .navbar-nav {
                 margin-top: 10px;
                 margin-bottom: 5px;

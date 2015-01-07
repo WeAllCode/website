@@ -170,7 +170,7 @@
     </div>
     <div class="dojo-profile">
         <div class="well well-sm">
-            <img src="{% avatar_url user 350 %}" class="avatar">
+            <img src="{% avatar_url user 400 %}" class="avatar">
             <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <h3>Role: {{ user.role|capfirst }}<br>Joined: {{ account.created_at|naturalday|capfirst }}</h3>
