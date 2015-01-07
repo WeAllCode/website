@@ -508,7 +508,11 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
 
 def volunteer(request, template_name="volunteer.html"):
 
-    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+    mentors = Mentor.objects.filter(active=True)
+
+    return render_to_response(template_name, {
+        'mentors': mentors
+    }, context_instance=RequestContext(request))
 
 def faqs(request, template_name="faqs.html"):
 
