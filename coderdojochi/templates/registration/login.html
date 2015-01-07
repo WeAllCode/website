@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="row">
-        <form method="post" action="." class="form hide">
+        <form method="post" action="." class="form{% if not form.errors %} hide{% endif %}">
             {% if form.errors %}
             <div class="alert alert-danger alert-dismissable alert-link">
                 <button class="close" type="button" data-dismiss="alert" aria-hidden="true">×</button>
