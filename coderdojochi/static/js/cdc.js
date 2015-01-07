@@ -60,6 +60,14 @@ CDC.global = (function($, document, window, undefined) {
         $('#carousel-home-hero').carousel({
             interval: false
         });
+
+        // Login / Register email show/hide
+        $('.login-email, .signup-email').click(function() {
+            var $form = $('.main .container form');
+
+            $form.toggleClass('hide');
+            $form.find('input:not([type=hidden]):eq(0)').focus();
+        });
     }
 
     function openPopUp(url, height, width) {
