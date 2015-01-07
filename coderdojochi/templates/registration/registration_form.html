@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="row">
-        <form method="post" class="form hide" action="{% url 'register' %}?next={{ request.GET.next }}">
+        <form method="post" class="form {% if not form.errors %}hide{% endif %}" action="{% url 'register' %}?next={{ request.GET.next }}">
             {% csrf_token %}
             {% bootstrap_form form %}
             <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Register' %}" />
