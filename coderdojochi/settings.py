@@ -103,24 +103,18 @@ SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
 # Email
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-MANDRILL_API_KEY = 'oc-wXZkn5Eh5eTJH6yg7dg'
-EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
-EMAIL_HOST = 'smtp.mandrillapp.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'coderdojochi'
-EMAIL_HOST_PASSWORD = 'oc-wXZkn5Eh5eTJH6yg7dg'
-DEFAULT_FROM_EMAIL = 'info@coderdojo.webfactional.com'
-SERVER_EMAIL = 'info@coderdojo.webfactional.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'coderdojochi',                      
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': ''
     }
 }
 

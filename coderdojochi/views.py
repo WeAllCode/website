@@ -715,7 +715,9 @@ def verifyDonation(request, donation_id):
             'first_name': donation.first_name,
             'last_name': donation.last_name,
             'email': donation.email,
-            'amount': donation.amount
+            'amount': '$' + str(donation.amount),
+            'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY'),
+            'transaction_id': donation.id
         })
         donation.receipt_sent = True
 
