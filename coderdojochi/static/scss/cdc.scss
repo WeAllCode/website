@@ -11,14 +11,14 @@ body {
     padding-top: 50px;
     background: $off-white;
 
-    @include breakpoint($phone-and-up) {
+    @include breakpoint($tablet-and-up) {
         padding-top: 110px;
     }
 
     &.page-donate {
         padding-top: 50px;
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             padding-top: 110px;
         }
     }
@@ -165,7 +165,7 @@ a {
 .main {
     margin: 15px 0 0;
 
-    @include breakpoint($phone-and-up) {
+    @include breakpoint($tablet-and-up) {
         margin: 40px 0 0;
     }
 
@@ -180,7 +180,7 @@ a {
 }
 
 
-@include breakpoint($phone-and-up) {
+@include breakpoint($tablet-and-up) {
     .half {
         width: 50%;
         float: left;
@@ -288,7 +288,7 @@ form {
 
 // welcome
 
-.welcome {
+.page-welcome {
 
     .role {
         @include span(12);
@@ -314,7 +314,7 @@ form {
             }
         }
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             @include span(6);
 
             &:last-child {
@@ -334,7 +334,7 @@ form {
 .dojo-profile {
     @include span(12);
 
-    @include breakpoint($phone-and-up) {
+    @include breakpoint($tablet-and-up) {
         @include span(4);
     }
 
@@ -348,7 +348,7 @@ form {
 
     margin-bottom: 30px;
 
-    @include breakpoint($phone-and-up) {
+    @include breakpoint($tablet-and-up) {
         @include span(last 8);
         margin-bottom: 0;
     }
@@ -359,7 +359,7 @@ form {
 
     margin: 20px 0;
 
-    @include breakpoint($phone-and-up) {
+    @include breakpoint($tablet-and-up) {
         margin: 40px 0;
     }
 
@@ -382,7 +382,7 @@ form {
         background: rgba(255, 255, 255, .7);
 
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             padding: 60px 0;
         }
     }
@@ -402,7 +402,7 @@ form {
             // font-family: 'Quicksand', sans-serif;
         }
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             @include span(2);
             margin-bottom: 0;
             border-bottom: none;
@@ -433,7 +433,7 @@ form {
             margin: 0 0 10px;
         }
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             @include span(8);
 
             .title {
@@ -451,7 +451,7 @@ form {
             margin-top: 10px;
         }
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             @include span(last 2);
 
             .btn-cdc {
@@ -556,7 +556,7 @@ form {
 
         @include span(12);
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             @include span(7);
         }
 
@@ -587,7 +587,7 @@ form {
 
                 float: left;
 
-                @include breakpoint($phone-and-up) {
+                @include breakpoint($tablet-and-up) {
                     @include span(4);
                     margin-left: 50px;
                 }
@@ -615,7 +615,7 @@ form {
         @include span(12);
 
 
-        @include breakpoint($phone-and-up) {
+        @include breakpoint($tablet-and-up) {
             @include span(last 4);
         }
 
