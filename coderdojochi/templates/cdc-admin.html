@@ -16,6 +16,7 @@
         <a class="pull-right" href="/dj-admin">Django Admin</a>
     </ol>
     <h2>Upcoming Sessions</h2>
+    <p><a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
     {% if upcoming_sessions %}
         <ul class="list-group">
         {% for session in upcoming_sessions %}
@@ -29,7 +30,6 @@
             </li>
         {% endfor %}
         </ul>
-        <p><a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
     {% else %}
         <p>No upcoming sessions. <a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
     {% endif %}
@@ -40,7 +40,9 @@
             <li class="list-group-item">
                 {{ session.course.title }} | {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}
                 <span class="pull-right">
+                    {% if session.get_current_orders.count %}
                     <a href="{% url 'stats' session.id %}">Stats</a> |
+                    {% endif %}
                     <a href="{{ session.get_absolute_url }}">Details</a> |
                     <a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit</a>
                 </span>
