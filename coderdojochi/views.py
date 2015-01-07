@@ -554,8 +554,8 @@ def dojo(request, template_name="dojo.html"):
 
             students = Student.objects.filter(guardian=guardian)
             student_orders = Order.objects.filter(student__in=students)
-            upcoming_orders = student_orders.filter(active=True, end_date__gte=datetime.now()).order_by('session__start_date')
-            past_orders = student_orders.filter(active=True, end_date__gte=datetime.now()).order_by('session__start_date')
+            upcoming_orders = student_orders.filter(active=True, session__end_date__gte=datetime.now()).order_by('session__start_date')
+            past_orders = student_orders.filter(active=True, session__end_date__gte=datetime.now()).order_by('session__start_date')
 
             if request.method == 'POST':
                 form = GuardianForm(request.POST, instance=account)
