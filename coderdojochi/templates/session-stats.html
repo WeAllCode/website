@@ -15,6 +15,7 @@
         <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
         <li class="active">Class Stats</li>
     </ol>
+    {% if session.get_current_orders.count %}
     <div class="row">
         <div class="half">
             <div class="panel panel-default">
@@ -45,6 +46,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <h3>All Students</h3>
     <table class="table table-striped">
         {% if session.get_current_orders %}
@@ -77,7 +79,7 @@
                 {% endfor %}
             </tbody>
         {% else %}
-            <p>No student data.</p>
+            <p><em>No students have been checked into this class yet.</em></p>
         {% endif %}
     </table>
 </div>
