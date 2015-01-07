@@ -16,23 +16,25 @@
         <p>CoderDojoChi is an 501(c)(3) tax-exempt nonprofit organization in the United States.</p>
     </div>
     <div class="row">
-        <h2>Contact Us</h2>
-        <form method="post" action="{% url 'contact_form' %}" _lpchecked="1">
-            {% csrf_token %}
-            <div class="form-group">
-                <label class="control-label" for="id_name">Your name</label>
-                <input class="form-control" id="id_name" maxlength="100" name="name" placeholder="Your name" required="required" title="" type="text">
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="id_email">Your email address</label>
-                <input class="form-control" id="id_email" maxlength="200" name="email" placeholder="Your email address" required="required" title="" type="email">
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="id_body">Your message</label>
-                <textarea class="form-control" cols="40" id="id_body" name="body" placeholder="Your message" required="required" rows="10" title=""></textarea>
-            </div>
-            <input class="btn btn-success" type="submit" value="Submit">
-        </form>
+        <div class="half">
+            <h2>Contact Us</h2>
+            <form method="post" action="{% url 'contact_form' %}" _lpchecked="1">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="control-label" for="id_name">Your name</label>
+                    <input class="form-control" id="id_name" maxlength="100" name="name" placeholder="Your name" required="required" title="" type="text">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="id_email">Your email address</label>
+                    <input class="form-control" id="id_email" maxlength="200" name="email" placeholder="Your email address" required="required" title="" type="email">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="id_body">Your message</label>
+                    <textarea class="form-control" cols="40" id="id_body" name="body" placeholder="Your message" required="required" rows="10" title=""></textarea>
+                </div>
+                <input class="btn btn-success" type="submit" value="Submit">
+            </form>
+        </div>
     </div>
 
 </div>
