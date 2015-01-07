@@ -300,6 +300,8 @@ class Equipment(models.Model):
     aquisition_date = models.DateTimeField(blank=False,null=False)
     condition = models.CharField(max_length=255, choices=EquiptmentConditions)
     notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("equiptment")
@@ -331,6 +333,8 @@ class Donation(models.Model):
     amount = models.IntegerField()
     verified = models.BooleanField(default=False)
     receipt_sent = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = _("donation")
