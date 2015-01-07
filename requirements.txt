@@ -10,6 +10,7 @@ django-social-auth==0.7.28
 djrill==1.2.0
 httplib2==0.9
 oauth2==1.5.211
+psycopg2==2.5.1
 python-openid==2.2.5
 pytz==2014.4
 requests==2.5.0
