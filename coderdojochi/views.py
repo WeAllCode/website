@@ -686,7 +686,7 @@ def donate(request, template_name="donate.html"):
 
         # if paypal notification response
         if 'item_number' in request.POST:
-            verifyDonation(request.POST['item_number'])
+            verifyDonation(request, request.POST['item_number'])
             return HttpResponse('success')
 
         # if new donation form submit
@@ -700,13 +700,13 @@ def donate(request, template_name="donate.html"):
 
     # if paypal notification response
     if 'item_number' in request.GET:
-        verifyDonation(request.GET['item_number'])
+        verifyDonation(request, request.GET['item_number'])
 
     return render_to_response(template_name, {
         'site_url': settings.SITE_URL
     }, context_instance=RequestContext(request))
 
-def verifyDonation(donation_id):
+def verifyDonation(request, donation_id):
     donation = get_object_or_404(Donation, id=donation_id)
     donation.verified = True;
 
