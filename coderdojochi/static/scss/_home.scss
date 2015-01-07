@@ -7,7 +7,7 @@
 
     .carousel-inner {
 
-        @include breakpoint($tablet-and-up) {
+        @include breakpoint($phone-and-up) {
             .item {
                 min-height: 500px;
             }
