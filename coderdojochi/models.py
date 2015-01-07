@@ -113,7 +113,7 @@ class Student(models.Model):
         return is_registered
 
     def get_age(self):
-        today = date.today()
+        today = datetime.now()
         birthday = self.birthday
         return today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
 
