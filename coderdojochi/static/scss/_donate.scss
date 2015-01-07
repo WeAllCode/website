@@ -65,7 +65,7 @@
         margin: auto;
         display: none;
 
-        @include breakpoint($tablet-and-up) {
+        @include breakpoint($phone-and-up) {
             width: 50%;
         }
     }
