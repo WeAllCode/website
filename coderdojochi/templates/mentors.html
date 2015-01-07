@@ -14,7 +14,7 @@
         {% for mentor in mentors %}
         <a href="{% url 'mentor_detail' mentor.id %}">
         <span class="mentor">
-            {% avatar mentor.user 140 %}
+            {% avatar mentor.user 250 %}
             <div class="info">
                 {{ mentor.first_name }} {{ mentor.last_name }}
             </div>

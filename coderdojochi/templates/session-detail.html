@@ -162,7 +162,7 @@
             <h2 class="subtitle space-above">About the teacher</h2>
             <div class="teachers">
                 <div class="teacher">
-                    <a href="{% url 'mentor_detail' session.teacher.id %}">{% avatar session.teacher.user 220 %}</a>
+                    <a href="{% url 'mentor_detail' session.teacher.id %}">{% avatar session.teacher.user 400 %}</a>
                     <div class="info">
                         <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
                         <p>{{ session.teacher.bio }}</p>
@@ -178,7 +178,7 @@
                 {% for mentor in session.mentors.all %}
                 <a href="{% url 'mentor_detail' mentor.id %}">
                 <span class="mentor">
-                    {% avatar mentor.user 140 %}
+                    {% avatar mentor.user 250 %}
                     <div class="info">
                         {{ mentor.first_name }} {{ mentor.last_name }}
                     </div>

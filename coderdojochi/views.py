@@ -788,26 +788,21 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
     if request.method == 'POST':
 
-        if 'active' in request.POST:
-            session_obj.active = False
-            session_obj.save()
-            messages.add_message(request, messages.SUCCESS, 'Class started')
-        else:
-            if 'order_id' in request.POST:
+        if 'order_id' in request.POST:
 
-                order = get_object_or_404(Order, id=request.POST['order_id'])
+            order = get_object_or_404(Order, id=request.POST['order_id'])
 
-                if order.check_in:
-                    order.check_in = None
-                else:
-                    order.check_in = datetime.now()
-
-                if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
-                    order.alternate_guardian = request.POST['order_alternate_guardian']
-
-                order.save()
+            if order.check_in:
+                order.check_in = None
             else:
-                messages.add_message(request, messages.ERROR, 'Invalid Order')
+                order.check_in = datetime.now()
+
+            if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
+                order.alternate_guardian = request.POST['order_alternate_guardian']
+
+            order.save()
+        else:
+            messages.add_message(request, messages.ERROR, 'Invalid Order')
 
     return render_to_response(template_name,{
         'session': session_obj,

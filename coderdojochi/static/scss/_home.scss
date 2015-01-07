@@ -5,14 +5,14 @@
         background-image: none;
     }
 
-    .carousel-inner {
+    // .carousel-inner {
 
-        @include breakpoint($phone-and-up) {
-            .item {
-                min-height: 500px;
-            }
-        }
-    }
+    //     @include breakpoint($desktop-and-up) {
+    //         .item {
+    //             min-height: 500px;
+    //         }
+    //     }
+    // }
 }
 
 .page-homepage {
