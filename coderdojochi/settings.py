@@ -126,7 +126,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
@@ -153,12 +153,7 @@ STATICFILES_DIRS = (
     # Put strings here, like '/home/html/static' or 'C:/www/django/static'.
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    #'/Users/bkellgren/Sites/arb/arb/admin_bootstrap/static',
     os.path.join(PACKAGE_ROOT, 'static'),
-)
-
-TEMPLATE_DIRS = (
-    '/Users/bkellgren/Sites/coderdojochi/coderdojochi/templates/',
 )
 
 # Vender App Config
