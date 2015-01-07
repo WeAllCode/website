@@ -188,6 +188,11 @@ class Session(models.Model):
     def get_absolute_url(self):
         return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
 
+    # http://localhost:8000/class/2015/1/17/choose-your-adventure/1/sign-up/
+    def get_signup_url(self):
+        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
+
+
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
             if checked_in:
