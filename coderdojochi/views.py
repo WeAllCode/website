@@ -19,6 +19,7 @@ from calendar import HTMLCalendar
 from datetime import date, datetime, timedelta
 from itertools import groupby
 
+from django.utils import timezone
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 
@@ -106,7 +107,7 @@ def add_months(sourcedate, months):
 
 def home(request, template_name="home.html"):
 
-    upcoming_classes = Session.objects.filter(active=True, end_date__gte=datetime.now()).order_by('start_date')[:3]
+    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
 
     return render_to_response(template_name, {
         'upcoming_classes': upcoming_classes
@@ -243,7 +244,7 @@ def welcome(request, template_name="welcome.html"):
 
 def sessions(request, year=False, month=False, template_name="sessions.html"):
 
-    now = datetime.now()
+    now = timezone.now()
 
     year = int(year) if year else now.year
     month = int(month) if month else now.month
@@ -252,7 +253,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     prev_date = add_months(calendar_date,-1)
     next_date = add_months(calendar_date,1)
 
-    all_sessions = Session.objects.filter(active=True, end_date__gte=datetime.now()).order_by('start_date')
+    all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
     sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
     cal = SessionsCalendar(sessions).formatmonth(year, month)
 
@@ -305,7 +306,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
-    upcoming_classes = Session.objects.filter(active=True, end_date__gte=datetime.now()).order_by('start_date')
+    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
     if request.user.is_authenticated():
 
@@ -527,10 +528,10 @@ def dojo(request, template_name="dojo.html"):
             account = mentor
 
             mentor_sessions = Session.objects.filter(mentors=mentor)
-            upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=datetime.now()).order_by('start_date')
-            past_sessions = mentor_sessions.filter(active=True, end_date__lte=datetime.now()).order_by('start_date')
+            upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+            past_sessions = mentor_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
 
-            upcoming_meetings = Meeting.objects.filter(active=True, end_date__gte=datetime.now()).order_by('start_date')
+            upcoming_meetings = Meeting.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
 
             if request.method == 'POST':
@@ -554,8 +555,8 @@ def dojo(request, template_name="dojo.html"):
 
             students = Student.objects.filter(guardian=guardian)
             student_orders = Order.objects.filter(student__in=students)
-            upcoming_orders = student_orders.filter(active=True, session__end_date__gte=datetime.now()).order_by('session__start_date')
-            past_orders = student_orders.filter(active=True, session__end_date__gte=datetime.now()).order_by('session__start_date')
+            upcoming_orders = student_orders.filter(active=True, session__end_date__gte=timezone.now()).order_by('session__start_date')
+            past_orders = student_orders.filter(active=True, session__end_date__gte=timezone.now()).order_by('session__start_date')
 
             if request.method == 'POST':
                 form = GuardianForm(request.POST, instance=account)
@@ -743,8 +744,8 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 
     sessions = Session.objects.all()
 
-    upcoming_sessions = sessions.filter(active=True, end_date__gte=datetime.now()).order_by('start_date')
-    past_sessions = sessions.filter(active=True, end_date__lte=datetime.now()).order_by('start_date')
+    upcoming_sessions = sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
 
     return render_to_response(template_name,{
         'upcoming_sessions': upcoming_sessions,
@@ -806,7 +807,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
             if order.check_in:
                 order.check_in = None
             else:
-                order.check_in = datetime.now()
+                order.check_in = timezone.now()
 
             if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
                 order.alternate_guardian = request.POST['order_alternate_guardian']
@@ -823,7 +824,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 def sendSystemEmail(request, subject, template_name, merge_vars):
 
     # add global merge variables
-    merge_vars['current_year'] = datetime.now().year
+    merge_vars['current_year'] = timezone.now().year
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 

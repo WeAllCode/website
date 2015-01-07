@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth.models import AbstractUser
 
 from django.utils.translation import ugettext as _
-from django.utils import formats
+from django.utils import formats, timezone
 
 from django.template.defaultfilters import slugify
 
@@ -113,7 +113,7 @@ class Student(models.Model):
         return is_registered
 
     def get_age(self):
-        today = datetime.now()
+        today = timezone.now()
         birthday = self.birthday
         return today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
 
@@ -145,12 +145,12 @@ class Course(models.Model):
         return self.code + ' | ' + self.title
 
 def session_default_start_time():
-    now = datetime.now()
+    now = timezone.now()
     start = now.replace(hour=10, minute=0, second=0, microsecond=0)
     return start if start > now else start + timedelta(days=1)
 
 def session_default_end_time():
-    now = datetime.now()
+    now = timezone.now()
     start = now.replace(hour=13, minute=0, second=0, microsecond=0)
     return start if start > now else start + timedelta(days=1)
 
