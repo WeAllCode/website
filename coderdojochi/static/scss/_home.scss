@@ -6,8 +6,11 @@
     }
 
     .carousel-inner {
-        .item {
-            min-height: 500px;
+
+        @include breakpoint($tablet-and-up) {
+            .item {
+                min-height: 500px;
+            }
         }
     }
 }
