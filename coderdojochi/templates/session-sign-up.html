@@ -12,7 +12,7 @@
     {% if user_signed_up %}{% ifequal user.role 'mentor' %}You{% else %}<strong>{{ student.first_name }} {{ student.last_name }}</strong> {% endifequal %} can no longer make it{% else %}{% ifequal user.role 'mentor' %}Sign up{% else %}Enroll <strong>{{ student.first_name }} {{ student.last_name }}</strong> {% endifequal %}{% endif %} {% ifequal user.role 'mentor' %}to mentor for{% else %}in{% endifequal %} the class <strong>"{{ session.course.title }}"</strong> on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>?</h1>
     <form class="form" method="POST" action="">
         {% csrf_token %}
-        <button class="btn-cdc btn-cdc-{% if user_signed_up %}danger{% else %}success{% endif %} btn-cdc-lg">{% if user_signed_up %}Yes, cancel{% else %}Yes, I can't wait!{% endif %}</button>
+        <button class="btn-cdc btn-cdc-{% if user_signed_up %}danger{% else %}success{% endif %} btn-cdc-lg">{% if user_signed_up %}Yes, cancel{% else %}Yes, I'm excited!{% endif %}</button>
         <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc-sm btn-cdc-inverse">Nevermind</a>
     </form>
     <br>
