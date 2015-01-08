@@ -118,7 +118,7 @@
 
                 <hr>
                 <div class="map">
-                    <a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:+{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=203x203&amp;sensor=false&amp;zoom=15"></a>
+                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=203x203&amp;sensor=false&amp;zoom=15"></a>
                 </div>
                 <h3 class="subtitle">Upcoming Classes</h3>
                 {% for upcoming_class in upcoming_classes %}
@@ -152,7 +152,7 @@
 
             <p>When:<br>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
 
-            <p>Where:<br><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+            <p>Where:<br><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
 
             {% if session.additional_info %}
             <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
