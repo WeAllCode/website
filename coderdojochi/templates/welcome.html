@@ -30,7 +30,7 @@
         <hr>
         <h3 class="text-muted">Please complete all fields below</h3>
         {% endif %}
-        <form action="" method="post">
+        <form action="{% if next %}?next={{ next }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
             <button class="submit btn-cdc btn-cdc-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
