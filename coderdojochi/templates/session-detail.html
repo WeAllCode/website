@@ -100,7 +100,7 @@
                         {% endif %}
                     {% endif %}
                 {% else %}
-                    <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
+                    <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                     <p>You must <a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">login</a> or <a href="{% url 'register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
                 {% endif %}
 

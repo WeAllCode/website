@@ -72,6 +72,7 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
 
 class RegisterView(RegistrationView):
 
+    enroll = False
     form_class = CDCRegistrationForm
 
     def register(self, request, **cleaned_data):
@@ -92,8 +93,11 @@ class RegisterView(RegistrationView):
 
         url = user.get_absolute_url()
 
-        if request.GET.get('next'):
-            url += '?next=' + request.GET.get('next')
+        if 'next' in request.GET:
+            url += '?next=' + request.GET['next']
+
+            if self.enroll:
+                url += '&enroll=True'
 
         return (url, (), {})
 
@@ -127,8 +131,8 @@ def welcome(request, template_name="welcome.html"):
 
         next = False
 
-        if request.GET.get('next'):
-            next = request.GET.get('next')
+        if 'next' in request.GET:
+            next = request.GET['next']
 
         if role:
             if role == 'mentor':
@@ -144,9 +148,15 @@ def welcome(request, template_name="welcome.html"):
                         new_student.guardian = account
                         new_student.save()
                         messages.add_message(request, messages.SUCCESS, 'Student Registered.')
+                    else:
+                        messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
+                        return HttpResponseRedirect(reverse('welcome'))
 
                     if next:
-                        return HttpResponseRedirect(next)
+                        if 'enroll' in request.GET:
+                            return HttpResponseRedirect(next + '?enroll=True&student=' + str(new_student.id))
+                        else:
+                            return HttpResponseRedirect(next)
                     else:
                         return HttpResponseRedirect(reverse('welcome'))
 
@@ -156,7 +166,10 @@ def welcome(request, template_name="welcome.html"):
                 messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
 
                 if next:
-                    return HttpResponseRedirect(next)
+                    if 'enroll' in request.GET:
+                        return HttpResponseRedirect(next + '?enroll=True')
+                    else:
+                        return HttpResponseRedirect(next)
                 else:
                     return HttpResponseRedirect(reverse('dojo'))
             else:
@@ -233,12 +246,18 @@ def welcome(request, template_name="welcome.html"):
         else:
             students = account.get_students() if account.get_students().count() else False
 
+    if 'next' in request.GET:
+        next = request.GET['next']
+    else:
+        next = False
+
     return render_to_response(template_name, {
         'role': role,
         'account': account,
         'form': form,
         'add_student': add_student,
         'students': students,
+        'next': next
     }, context_instance=RequestContext(request))
 
 
@@ -267,17 +286,18 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     }, context_instance=RequestContext(request))
 
 
-def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html"):
+def session_detail_enroll(request, year, month, day, slug, session_id, template_name="session-detail.html"):
+    return session_detail(request, year, month, day, slug, session_id, template_name, enroll=True)
+
+def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html", enroll=False):
     session_obj = get_object_or_404(Session, id=session_id)
-
-
     mentor_signed_up = False
     is_guardian = False
     account = False
     students = False
 
     if request.method == 'POST':
-        if request.POST['waitlist']:
+        if 'waitlist' in request.POST:
 
             if request.POST['waitlist'] == 'student':
                 student = Student.objects.get(id=int(request.POST['account_id']))
@@ -312,7 +332,13 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
         if not request.user.role:
             messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
-            return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
+            
+            url = reverse('welcome') + '?next=' + session_obj.get_absolute_url()
+
+            if 'enroll' in request.GET:
+                url += '&enroll=True'
+
+            return HttpResponseRedirect(url)
 
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
@@ -325,6 +351,14 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
             is_guardian = True
             students = guardian.get_students() if guardian.get_students().count() else False
             spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
+
+            if enroll or 'enroll' in request.GET:
+                if not students:
+                    return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url() + '&enroll=True')
+                else:
+                    if 'student' in request.GET:
+                        return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/' + request.GET['student'])
+
     else:
         spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
 
@@ -582,8 +616,8 @@ def dojo(request, template_name="dojo.html"):
         context['form'] = form
 
     else:
-        if request.GET.get('next'):
-            return HttpResponseRedirect(reverse('welcome') + '?next=' + request.GET.get('next'))
+        if 'next' in request.GET:
+            return HttpResponseRedirect(reverse('welcome') + '?next=' + request.GET['next'])
         else:
             messages.add_message(request, messages.WARNING, 'Tell us a little about yourself before going on to your dojo')
             return HttpResponseRedirect(reverse('welcome'))
