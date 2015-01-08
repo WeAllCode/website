@@ -42,7 +42,7 @@
                     </div>
                     <div class="actions">
                         {% if session.capacity|subtract:session.get_current_students.all.count %}
-                        <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Enroll</a>
+                        <a href="{{ session.get_absolute_url }}?enroll=True" class="btn-cdc btn-cdc">Enroll Now</a>
                         {% else %}
                         <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button>
                         {% endif %}
