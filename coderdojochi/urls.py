@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
 
     url(r'^register/$', RegisterView.as_view(), name='register'),
+    url(r'^register/enroll/$', RegisterView.as_view(enroll=True), name='register_enroll'),
 
 
 
@@ -31,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^classes/$', 'coderdojochi.views.sessions', name='sessions'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/(?P<student_id>[\d]+)/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
+    url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/enroll/$', 'coderdojochi.views.session_detail_enroll', name='session_detail_enroll'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)$', 'coderdojochi.views.session_detail', name='session_detail'),
     
     url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)/sign-up/$', 'coderdojochi.views.meeting_sign_up', name='meeting_sign_up'),
