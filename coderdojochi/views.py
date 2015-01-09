@@ -38,10 +38,11 @@ import calendar
 
 
 class CDCRegistrationForm(registration_forms.RegistrationForm):
-
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    username = forms.CharField(widget=forms.HiddenInput, required=False)
+    
+    username = forms.RegexField(regex=r'^[\w.@+-]+$',
+                                max_length=30,
+                                widget=forms.HiddenInput,
+                                error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
 
     def clean_email(self):
         """
@@ -68,6 +69,8 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
                 raise forms.ValidationError(_("The two password fields didn't match."))
 
         return self.cleaned_data
+
+
 
 
 class RegisterView(RegistrationView):
