@@ -127,12 +127,13 @@ def welcome(request, template_name="welcome.html"):
     form = False
     role = user.role if user.role else False
 
+
+    next = False
+
+    if 'next' in request.GET:
+        next = request.GET['next']
+
     if request.method == 'POST':
-
-        next = False
-
-        if 'next' in request.GET:
-            next = request.GET['next']
 
         if role:
             if role == 'mentor':
@@ -162,7 +163,6 @@ def welcome(request, template_name="welcome.html"):
 
             if form.is_valid():
                 form.save()
-                # if role == 'mentor' or account.get_students().count():
                 messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
 
                 if next:
@@ -198,6 +198,13 @@ def welcome(request, template_name="welcome.html"):
                 'last_name': request.user.last_name
             }
 
+            if next:
+                next = '?next=' + next
+            else:
+                next = ''
+
+            user.save()
+
             if role == 'mentor':
 
                 # check for next upcoming meeting
@@ -207,6 +214,8 @@ def welcome(request, template_name="welcome.html"):
                     merge_vars['next_intro_meeting_url'] = next_meeting.get_absolute_url()
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-mentor', merge_vars)
+
+                return HttpResponseRedirect(next)
             else:
                 # check for next upcoming class
                 next_class = Session.objects.filter(active=True).order_by('start_date').first()
@@ -216,14 +225,7 @@ def welcome(request, template_name="welcome.html"):
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-guardian', merge_vars)
 
-            user.save()
-
-            if next:
-                next = '?next=' + next
-            else:
-                next = ''
-
-            return HttpResponseRedirect(reverse('welcome') + next)
+                return HttpResponseRedirect(reverse('welcome') + next)
 
     if role:
         if role == 'mentor':
@@ -242,7 +244,10 @@ def welcome(request, template_name="welcome.html"):
 
     if account and account.first_name:
         if role == 'mentor':
-            return HttpResponseRedirect(reverse('dojo'))
+            if next:
+                return HttpResponseRedirect(next)
+            else:
+                return HttpResponseRedirect(reverse('dojo'))
         else:
             students = account.get_students() if account.get_students().count() else False
 
@@ -345,6 +350,10 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
             account = mentor
             mentor_signed_up = True if mentor in session_obj.mentors.all() else False
             spots_remaining = ( session_obj.capacity / 2 ) - session_obj.mentors.all().count()
+
+            if enroll or 'enroll' in request.GET:
+                return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/')
+
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
             account = guardian
