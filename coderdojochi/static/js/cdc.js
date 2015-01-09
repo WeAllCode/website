@@ -46,7 +46,7 @@ CDC.global = (function($, document, window, undefined) {
         // remove any alerts
         setTimeout(function() {
             $('.alert-fade').parent().fadeOut();
-        }, 3000);
+        }, 5000);
 
         // Scroll
         $(window).scroll(function() {
@@ -85,8 +85,8 @@ CDC.global = (function($, document, window, undefined) {
     }
 
     function openPopUp(url, height, width) {
-        height = (height) ? height : 600;
-        width = (width) ? width : 400;
+        height = (height) ? height : 500;
+        width = (width) ? width : 600;
         var newWindow = window.open(url, 'name', 'height=' + height + ',width=' + width);
         if (window.focus) {
             newWindow.focus();
