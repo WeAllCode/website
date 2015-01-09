@@ -5,12 +5,12 @@
 _internal/
 src/
 
+
 # ------------------------------
 # Grunt/Bower
 # ------------------------------
 .sass-cache/
 node_modules/
-arb/static/components/
 
 # ------------------------------
 # Django
