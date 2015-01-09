@@ -68,6 +68,20 @@ CDC.global = (function($, document, window, undefined) {
             $form.toggleClass('hide');
             $form.find('input:not([type=hidden]):eq(0)').focus();
         });
+
+        // Student form field expand/hide
+        $('.js-expand-student-form').click(function() {
+            var $this = $(this);
+            var text = $this.text();
+
+            $this.parent().parent().find('textarea').toggleClass('hidden');
+
+            if (text === 'expand') {
+                $this.text('contract');
+            } else {
+                $this.text('expand');
+            }
+        });
     }
 
     function openPopUp(url, height, width) {
