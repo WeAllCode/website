@@ -592,11 +592,14 @@ form {
 
         .teacher {
             margin: 0 0 10px 0;
-            overflow: hidden;
+            @include container;
 
-            img {
-                width: 220px;
-                height: 220px;
+            .image {
+
+                img {
+                    width: 100%;
+                }
+                
                 float: left;
             }
 
@@ -610,7 +613,7 @@ form {
                 }
 
                 .subtitle {
-                    margin-bottom: 30px;
+                    margin: 0 0 30px;
                 }
             }
         }
