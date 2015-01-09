@@ -45,7 +45,7 @@
             <input type="hidden" name="role" value="parent">
             <button class="btn btn-success">Parent/Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
         </form>
-        <form method="post" action="" class="role">
+        <form method="post" action="{% if next %}?next={{ next }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="mentor">
             <button class="btn btn-success">Volunteer <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
