@@ -791,8 +791,7 @@ def about(request, template_name="about.html"):
 def privacy(request, template_name="privacy.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
-
-
+    
 
 @login_required
 def cdc_admin(request, template_name="cdc-admin.html"):
