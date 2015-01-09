@@ -38,7 +38,7 @@ import calendar
 
 
 class CDCRegistrationForm(registration_forms.RegistrationForm):
-    
+
     username = forms.RegexField(regex=r'^[\w.@+-]+$',
                                 max_length=30,
                                 widget=forms.HiddenInput,
@@ -776,7 +776,16 @@ def verifyDonation(request, donation_id):
 
 def about(request, template_name="about.html"):
 
-    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+    mentor_count = Mentor.objects.filter(active=True).count
+    students_served = Order.objects.exclude(check_in=None).count()
+
+    mentor_count = students_served if students_served > 30 else 30
+    students_served = students_served if students_served > 600 else 600
+
+    return render_to_response(template_name, {
+        'mentor_count': mentor_count,
+        'students_served': students_served
+    }, context_instance=RequestContext(request))
 
 
 def privacy(request, template_name="privacy.html"):
