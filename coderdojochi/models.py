@@ -2,6 +2,8 @@ from django.db import models
 
 from datetime import datetime, timedelta
 
+from django.core.validators import RegexValidator
+
 from django.contrib.auth.models import AbstractUser
 
 from django.utils.translation import ugettext as _
@@ -74,7 +76,8 @@ class Guardian(models.Model):
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField(default=True)
-    phone = models.TextField(blank=True, null=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone numbers should be numbers only. Up to 15 digits allowed.")
+    phone = models.CharField(max_length=255, validators=[phone_regex], blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
