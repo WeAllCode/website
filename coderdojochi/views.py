@@ -39,7 +39,8 @@ import calendar
 
 class CDCRegistrationForm(registration_forms.RegistrationForm):
 
-    username = forms.RegexField(regex=r'^[\w.@+-]+$',
+    username = forms.RegexField(initial='set-to-email',
+                                regex=r'^[\w.@+-]+$',
                                 max_length=30,
                                 widget=forms.HiddenInput,
                                 error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
