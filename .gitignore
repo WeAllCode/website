@@ -4,7 +4,8 @@
 *.DS_Store
 _internal/
 src/
-static/avatars/
+static/avatars/**/*
+coderdojochi/static/avatars/**/*
 
 # ------------------------------
 # Grunt/Bower
