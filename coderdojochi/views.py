@@ -882,7 +882,6 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
 def sendSystemEmail(request, subject, template_name, merge_vars):
 
-    # add global merge variables
     merge_vars['current_year'] = timezone.now().year
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
@@ -893,10 +892,4 @@ def sendSystemEmail(request, subject, template_name, merge_vars):
     msg.global_merge_vars = merge_vars
     msg.inline_css = True
     msg.use_template_subject = True
-
-    # Optional Mandrill-specific extensions:
-    # msg.tags = ['one tag', 'two tag', 'red tag', 'blue tag']
-    # msg.metadata = {'user_id': '8675309'}
-
-    # Send it:
     msg.send()

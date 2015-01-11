@@ -183,6 +183,8 @@ class Session(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
+    mentors_week_reminder_sent = models.BooleanField(default=False)
+    mentors_day_reminder_sent = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("session")
@@ -274,6 +276,8 @@ class Order(models.Model):
     order_number = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    week_reminder_sent = models.BooleanField(default=False)
+    day_reminder_sent = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("order")
