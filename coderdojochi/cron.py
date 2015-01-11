@@ -24,7 +24,7 @@ class SendReminders(CronJobBase):
         sessions_within_a_day = Session.objects.filter(active=True, mentors_day_reminder_sent=False, start_date__lte=timezone.now() + datetime.timedelta(days=1))
 
         for order in orders_within_a_week:
-        	sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian', {
+            sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian', {
                 'student_first_name': order.student.first_name,
                 'student_last_name': order.student.last_name,
                 'class_code': order.session.course.code,
@@ -41,13 +41,13 @@ class SendReminders(CronJobBase):
                 'class_location_state': order.session.location.state,
                 'class_location_zip': order.session.location.zip,
                 'class_additional_info': order.session.additional_info,
-                'class_url': order.session.get_absolute_url()
+                'class_url': order.session.get_absolute_url(),
             })
-			order.week_reminder_sent = True
-			order.save()
+            order.week_reminder_sent = True
+            order.save()
 
         for order in orders_within_a_day:
-        	sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian', {
+            sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian', {
                 'student_first_name': order.student.first_name,
                 'student_last_name': order.student.last_name,
                 'class_code': order.session.course.code,
@@ -64,14 +64,14 @@ class SendReminders(CronJobBase):
                 'class_location_state': order.session.location.state,
                 'class_location_zip': order.session.location.zip,
                 'class_additional_info': order.session.additional_info,
-                'class_url': order.session.get_absolute_url()
+                'class_url': order.session.get_absolute_url(),
             })
-			order.week_reminder_sent = True
-			order.save()
+            order.week_reminder_sent = True
+            order.save()
 
-       	for session in sessions_within_a_week:
-       		for mentor in session.mentors.all():
-	       		sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
+        for session in sessions_within_a_week:
+            for mentor in session.mentors.all():
+	           sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
                     'class_code': session.course.code,
                     'class_title': session.course.title,
                     'class_description': session.course.description,
@@ -86,14 +86,14 @@ class SendReminders(CronJobBase):
                     'class_location_state': session.location.state,
                     'class_location_zip': session.location.zip,
                     'class_additional_info': session.additional_info,
-                    'class_url': session.get_absolute_url()
+                    'class_url': session.get_absolute_url(),
                 })
-			session.mentors_week_reminder_sent = True
-			session.save()
+            session.mentors_week_reminder_sent = True
+            session.save()
 
         for session in sessions_within_a_day:
-        	for mentor in session.mentors.all():
-	       		sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
+            for mentor in session.mentors.all():
+                sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
                     'class_code': session.course.code,
                     'class_title': session.course.title,
                     'class_description': session.course.description,
@@ -108,10 +108,10 @@ class SendReminders(CronJobBase):
                     'class_location_state': session.location.state,
                     'class_location_zip': session.location.zip,
                     'class_additional_info': session.additional_info,
-                    'class_url': session.get_absolute_url()
+                    'class_url': session.get_absolute_url(),
                 })
-			session.mentors_day_reminder_sent = True
-			session.save()
+            session.mentors_day_reminder_sent = True
+            session.save()
 
 def sendSystemEmail(user, subject, template_name, merge_vars):
 
