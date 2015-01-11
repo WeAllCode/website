@@ -182,7 +182,7 @@ class Session(models.Model):
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image_url = models.CharField(max_length=255, blank=True, null=True)mentors_day_reminder_sent = models.BooleanField(default=False)
+    image_url = models.CharField(max_length=255, blank=True, null=True)
     mentors_week_reminder_sent = models.BooleanField(default=False)
     mentors_day_reminder_sent = models.BooleanField(default=False)
 
