@@ -115,7 +115,7 @@ class SendReminders(CronJobBase):
 
 def sendSystemEmail(user, subject, template_name, merge_vars):
 
-	merge_vars['first_name'] = user.first_name
+    merge_vars['first_name'] = user.first_name
     merge_vars['last_name'] = user.last_name
     merge_vars['site_url'] = settings.SITE_URL
     merge_vars['current_year'] = timezone.now().year
