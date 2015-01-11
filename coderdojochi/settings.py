@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'html5',
     'contact_form',
     'djrill',
+    'django_cron',
 
     #coderdojochi
     'coderdojochi',
@@ -63,6 +64,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+CRON_CLASSES = [
+    'coderdojochi.cron.SendReminders',
+]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
