@@ -85,7 +85,9 @@
             $paymentLastName = $('#paymentLastName'),
 
         amountButtonClick = function() {
-            var $clicked = $(this);
+            var $clicked = $(this),
+                clickedValue = $clicked.data('value');
+            
             $('.active', $amountButtons).removeClass('active');
             $clicked.addClass('active');
             $donateButton.attr('disabled', false);
@@ -93,13 +95,15 @@
             // show personal information fields
             $personalInfo.show();
 
-            if ($clicked.data('value') === 'other') {
+            if (clickedValue === 'other') {
                 $amountActual.show();
                 $amountActualField.focus();
             } else {
                 $amountActual.hide();
                 $('.form-control:first', $personalInfo).focus();
             }
+
+            ga('send', 'event', 'button', 'click', 'donation form amount selected', clickedValue);
         },
 
         donateFormSubmit = function(e) {
@@ -152,6 +156,8 @@
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             }
 
+            ga('send', 'event', 'button', 'click', 'donation form donate button clicked');
+
             // submit donation record before submitting
             $.post('/donate/', formData, function(response) {
                 if(response !== 'failed') {
@@ -181,6 +187,25 @@
 
         $donateButton
             .on('click', donateButtonClick);
+
+        // tracking code
+
+        $firstNameInput.on('focus', function() {
+            ga('send', 'event', 'input', 'focus', 'donation form first name input focus');
+        });
+
+        $lastNameInput.on('focus', function() {
+            ga('send', 'event', 'input', 'focus', 'donation form last name input focus');
+        });
+
+        $emailInput.on('focus', function() {
+            ga('send', 'event', 'input', 'focus', 'donation form email input focus');
+        });
+
+        $amountActualField.on('focus', function() {
+            ga('send', 'event', 'input', 'focus', 'donation form custom amount input focus');
+        });
+
     });
 </script>
 {% endblock %}
