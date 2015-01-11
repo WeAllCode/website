@@ -18,10 +18,10 @@ class SendReminders(CronJobBase):
     code = 'coderdojochi.send_reminders'
 
     def do(self):
-        orders_within_a_week = Order.objects.filter(active=True, week_reminder_sent=False, session__end_date__gte=timezone.now() - datetime.timedelta(days=7))
-        orders_within_a_day = Order.objects.filter(active=True, day_reminder_sent=False, session__end_date__gte=timezone.now() - datetime.timedelta(days=1))
-        sessions_within_a_week = Session.objects.filter(active=True, mentors_week_reminder_sent=False, end_date__gte=timezone.now() - datetime.timedelta(days=7))
-        sessions_within_a_day = Session.objects.filter(active=True, mentors_day_reminder_sent=False, end_date__gte=timezone.now() - datetime.timedelta(days=1))
+        orders_within_a_week = Order.objects.filter(active=True, week_reminder_sent=False, session__start_date__lte=timezone.now() + datetime.timedelta(days=7), session__start_date__gte=timezone.now() + datetime.timedelta(days=1))
+        orders_within_a_day = Order.objects.filter(active=True, day_reminder_sent=False, session__start_date__lte=timezone.now() + datetime.timedelta(days=1))
+        sessions_within_a_week = Session.objects.filter(active=True, mentors_week_reminder_sent=False, start_date__lte=timezone.now() + datetime.timedelta(days=7), start_date__gte=timezone.now() + datetime.timedelta(days=1))
+        sessions_within_a_day = Session.objects.filter(active=True, mentors_day_reminder_sent=False, start_date__lte=timezone.now() + datetime.timedelta(days=1))
 
         for order in orders_within_a_week:
         	sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian', {
