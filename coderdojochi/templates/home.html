@@ -13,7 +13,7 @@
             <div class="carousel-inner" role="listbox">
                 <div class="item active">
                     <div class="flex-video widescreen" style="margin: 0 auto;text-align:center;">
-                        <iframe src="//www.youtube.com/embed/s23D25cOREk?controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+                        <iframe id="homepage-video" src="//www.youtube.com/embed/s23D25cOREk?controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
 {% comment %}
@@ -81,5 +81,46 @@
 
 
 {% block extra_script %}
+
+<script>
+
+// This code loads the IFrame Player API code asynchronously
+var tag = document.createElement('script');
+tag.src = "http://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+// This code is called by the YouTube API to create the player object
+function onYouTubeIframeAPIReady(event) {
+  player = new YT.Player('homepage-video', {
+    events: {
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+var pauseFlag = false;
+
+function onPlayerStateChange(event) {
+    // track when user clicks to Play
+    if (event.data == YT.PlayerState.PLAYING) {
+        _gaq.push(['_trackEvent', 'Videos', 'Play', 'Homepage Video']);
+        pauseFlag = true;
+    }
+    // track when user clicks to Pause
+    if (event.data == YT.PlayerState.PAUSED && pauseFlag) {
+        _gaq.push(['_trackEvent', 'Videos', 'Pause', 'Homepage Video']);
+        pauseFlag = false;
+    }
+    // track when video ends
+    if (event.data == YT.PlayerState.ENDED) {
+        _gaq.push(['_trackEvent', 'Videos', 'Finished', 'Homepage Video']);
+    }
+}
+
+</script>
+
+
 
 {% endblock %}
