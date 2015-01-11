@@ -50,7 +50,7 @@ INSTALLED_APPS = (
     'html5',
     'contact_form',
     'djrill',
-    #'django_cron',
+    'django_cron',
 
     #coderdojochi
     'coderdojochi',
