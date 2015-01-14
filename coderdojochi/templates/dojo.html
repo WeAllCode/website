@@ -141,31 +141,33 @@
         <br>
         {% if user.role == 'mentor' %}
             <hr>
-            <h2>Upcoming Mentor Meetings</h2>
-            {% if upcoming_meetings %}
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Meeting</th>
-                        <th>Date</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for meeting in upcoming_meetings %}
-                    <tr>
-                        <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
-                        <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
-                        <td>
-                            <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}RSVP{% endif%}</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p class="text-center text-muted">No upcoming mentor meetings at this time.</p>
-            {% endif %}
+            <div class="upcoming-meetings{% if highlight == 'meetings' %} alert alert-warning{% endif %}">
+                <h2>Upcoming Mentor Meetings</h2>
+                {% if upcoming_meetings %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Meeting</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for meeting in upcoming_meetings %}
+                        <tr>
+                            <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
+                            <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
+                            <td>
+                                <a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}RSVP{% endif%}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-center text-muted">No upcoming mentor meetings at this time.</p>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
     <div class="dojo-profile">

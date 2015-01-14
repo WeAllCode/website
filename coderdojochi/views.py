@@ -399,6 +399,11 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
     if request.user.role == 'mentor':
         mentor = get_object_or_404(Mentor, user=request.user)
+
+        if not mentor.has_attended_intro_meeting:
+            messages.add_message(request, messages.WARNING, 'You must attend at least one mentor intro meeting prior to mentoring at a live class. Please RSVP for an upcoming meeting below.')
+            return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
+
         user_signed_up = True if mentor in session_obj.mentors.all() else False
     else:
         student = get_object_or_404(Student, id=student_id)
@@ -483,7 +488,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
     return render_to_response(template_name,{
         'session': session_obj,
         'user_signed_up': user_signed_up,
-        'student': student
+        'student': student,
     }, context_instance=RequestContext(request))
 
 
@@ -517,8 +522,16 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         if user_signed_up:
             meeting_obj.mentors.remove(mentor)
             undo = True
+            
+            if not Session.objects.filter(mentors=mentor, end_date__lte=timezone.now()).count():
+                mentor.has_attended_intro_meeting = False
+                mentor.save()
         else:
             meeting_obj.mentors.add(mentor)
+
+            if not mentor.has_attended_intro_meeting:
+                mentor.has_attended_intro_meeting = True
+                mentor.save()
 
         meeting_obj.save()
 
@@ -568,8 +581,13 @@ def faqs(request, template_name="faqs.html"):
 @login_required
 def dojo(request, template_name="dojo.html"):
 
+    
+
+    highlight = request.GET['highlight'] if 'highlight' in request.GET else False
+
     context = {
-        'user': request.user
+        'user': request.user,
+        'highlight': highlight,
     }
 
     if request.user.role:
