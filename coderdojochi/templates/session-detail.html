@@ -122,10 +122,12 @@
                 </div>
                 <h3 class="subtitle">Upcoming Classes</h3>
                 {% for upcoming_class in upcoming_classes %}
-                <div class="upcoming-class">
-                    <div class="date">{{ upcoming_class.start_date|date:'M' }}<br><strong>{{ upcoming_class.start_date|date:'d' }}</strong></div>
-                    <a href="{{ upcoming_class.get_absolute_url }}">{{ upcoming_class.course.title }}</a>
-                </div>
+                    {% if upcoming_class.id != session.id %}
+                    <div class="upcoming-class">
+                        <div class="date">{{ upcoming_class.start_date|date:'M' }}<br><strong>{{ upcoming_class.start_date|date:'d' }}</strong></div>
+                        <a href="{{ upcoming_class.get_absolute_url }}">{{ upcoming_class.course.title }}</a>
+                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="content">
