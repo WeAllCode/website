@@ -594,24 +594,26 @@ form {
             margin: 0 0 10px 0;
             @include container;
 
-            .image {
+            .image,
+            .info {
 
+                @include breakpoint($tablet-and-up) {
+                    @include span(6);
+                }
+                
+            }
+
+            .image {
+            
                 img {
                     width: 100%;
+                    height: auto;
                 }
                 
                 float: left;
             }
 
             .info {
-
-                float: left;
-
-                @include breakpoint($tablet-and-up) {
-                    @include span(4);
-                    margin-left: 50px;
-                }
-
                 .subtitle {
                     margin: 0 0 30px;
                 }

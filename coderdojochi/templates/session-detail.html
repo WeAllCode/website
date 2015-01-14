@@ -162,7 +162,9 @@
             <h2 class="subtitle space-above">About the teacher</h2>
             <div class="teachers">
                 <div class="teacher">
-                    <a href="{% url 'mentor_detail' session.teacher.id %}">{% avatar session.teacher.user 400 %}</a>
+                    <div class="image">
+                        <a href="{% url 'mentor_detail' session.teacher.id %}">{% avatar session.teacher.user 320 %}</a>
+                    </div>
                     <div class="info">
                         <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
                         <p>{{ session.teacher.bio|truncatechars:9 }}</p>
