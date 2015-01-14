@@ -592,28 +592,27 @@ form {
 
         .teacher {
             margin: 0 0 10px 0;
-            @include container;
-
-            .image,
-            .info {
-
-                @include breakpoint($tablet-and-up) {
-                    @include span(6);
-                }
-                
-            }
+            @extend .row;
 
             .image {
             
+                @include breakpoint($tablet-and-up) {
+                    @include span(6);
+                    
+                }
+
                 img {
                     width: 100%;
                     height: auto;
                 }
-                
-                float: left;
             }
 
             .info {
+
+                @include breakpoint($tablet-and-up) {
+                    @include span(6 last);
+                }
+
                 .subtitle {
                     margin: 0 0 30px;
                 }
