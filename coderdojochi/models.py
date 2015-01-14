@@ -63,6 +63,7 @@ class Mentor(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    has_attended_intro_meeting = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("mentors")

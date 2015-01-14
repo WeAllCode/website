@@ -16,8 +16,8 @@
         <a class="pull-right" href="/dj-admin">Django Admin</a>
     </ol>
     <h2>Upcoming Sessions</h2>
-    <p><a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
     {% if upcoming_sessions %}
+        <p><a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
         <ul class="list-group">
         {% for session in upcoming_sessions %}
             <li class="list-group-item">
