@@ -4,6 +4,8 @@ from django.core.mail import EmailMessage
 
 from django.utils import timezone
 
+from datetime import date, datetime, timedelta
+
 from django_cron import CronJobBase, Schedule
 
 from coderdojochi.models import Order, Session
