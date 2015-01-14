@@ -581,8 +581,6 @@ def faqs(request, template_name="faqs.html"):
 @login_required
 def dojo(request, template_name="dojo.html"):
 
-    
-
     highlight = request.GET['highlight'] if 'highlight' in request.GET else False
 
     context = {
@@ -625,7 +623,7 @@ def dojo(request, template_name="dojo.html"):
             students = Student.objects.filter(guardian=guardian)
             student_orders = Order.objects.filter(student__in=students)
             upcoming_orders = student_orders.filter(active=True, session__end_date__gte=timezone.now()).order_by('session__start_date')
-            past_orders = student_orders.filter(active=True, session__end_date__gte=timezone.now()).order_by('session__start_date')
+            past_orders = student_orders.filter(active=True, session__end_date__lte=timezone.now()).order_by('session__start_date')
 
             if request.method == 'POST':
                 form = GuardianForm(request.POST, instance=account)
