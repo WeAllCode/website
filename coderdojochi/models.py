@@ -231,7 +231,7 @@ class Session(models.Model):
         return orders
 
     def __unicode__(self):
-        return self.course.title + ' | ' + self.start_date
+        return self.course.title + ' | ' + str(self.start_date)
 
 class MeetingType(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
