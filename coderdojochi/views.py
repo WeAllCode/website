@@ -722,10 +722,10 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
     }, context_instance=RequestContext(request))
 
 @login_required
-def mentor_activate(request, mentor_id=False):
+def mentor_approve_avatar(request, mentor_id=False):
     
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permissions to activate mentors.')
+        messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect('/')
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
@@ -735,13 +735,13 @@ def mentor_activate(request, mentor_id=False):
     return HttpResponse('Mentor avatar approved :)')
 
 @login_required
-def mentor_reject_image(request, mentor_id=False):
-    
-    if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permissions to activate mentors.')
-        return HttpResponseRedirect('/')
+def mentor_reject_avatar(request, mentor_id=False):
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
+
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
+        return HttpResponseRedirect(reverse('auth_login')?next=mentor.get_)
 
     mentor.public = False
     mentor.save()

@@ -66,6 +66,12 @@ class Mentor(models.Model):
     has_attended_intro_meeting = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
 
+    def get_approve_avatar_url(self):
+        return settings.SITE_URL + '/mentors/' + str(self.id) + '/approve-avatar/'
+
+    def get_reject_avatar_url(self):
+        return settings.SITE_URL + '/mentors/' + str(self.id) + '/reject-avatar/'
+
     class Meta:
         verbose_name = _("mentors")
         verbose_name_plural = _("mentors")

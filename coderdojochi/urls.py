@@ -19,8 +19,8 @@ urlpatterns = patterns('',
     url(r'^register/$', RegisterView.as_view(), name='register'),
     url(r'^register/enroll/$', RegisterView.as_view(enroll=True), name='register_enroll'),
 
-    url(r'^mentors/(?P<mentor_id>[\d]+)/reject-image/$', 'coderdojochi.views.mentor_reject_image', name='mentor_reject_image'),
-    url(r'^mentors/(?P<mentor_id>[\d]+)/activate/$', 'coderdojochi.views.mentor_activate', name='mentor_activate'),
+    url(r'^mentors/(?P<mentor_id>[\d]+)/reject-avatar/$', 'coderdojochi.views.mentor_reject_avatar', name='mentor_reject_avatar'),
+    url(r'^mentors/(?P<mentor_id>[\d]+)/approve-avatar/$', 'coderdojochi.views.mentor_approve_avatar', name='mentor_approve_avatar'),
     url(r'^mentors/(?P<mentor_id>[\d]+)/$', 'coderdojochi.views.mentor_detail', name='mentor_detail'),
     url(r'^mentors/$', 'coderdojochi.views.mentors', name='mentors'),
 
