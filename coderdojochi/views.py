@@ -726,7 +726,7 @@ def mentor_approve_avatar(request, mentor_id=False):
     
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_approve_avatar_url())
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
     mentor.public = True
@@ -741,7 +741,7 @@ def mentor_reject_avatar(request, mentor_id=False):
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect(reverse('auth_login')?next=mentor.get_)
+        return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_reject_avatar_url())
 
     mentor.public = False
     mentor.save()
