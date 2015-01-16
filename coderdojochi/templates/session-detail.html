@@ -180,14 +180,16 @@
             <h2 class="subtitle">Meet the mentors</h2>
             <div class="mentors">
                 {% for mentor in session.mentors.all %}
-                <a href="{% url 'mentor_detail' mentor.id %}">
-                <span class="mentor">
-                    {% avatar mentor.user 250 %}
-                    <div class="info">
-                        {{ mentor.first_name }} {{ mentor.last_name }}
-                    </div>
-                </span>
-                </a>
+                    {% if mentor.public == True %}
+                    <a href="{% url 'mentor_detail' mentor.id %}">
+                    <span class="mentor">
+                        {% avatar mentor.user 250 %}
+                        <div class="info">
+                            {{ mentor.first_name }} {{ mentor.last_name }}
+                        </div>
+                    </span>
+                    </a>
+                    {% endif %}
                 {% endfor %}
             </div>
             {% endif %}
