@@ -172,8 +172,11 @@
     </div>
     <div class="dojo-profile">
         <div class="well well-sm">
+            {% if user.role == 'mentor' %}
             <img src="{% avatar_url user 400 %}" class="avatar">
             <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
+            {% endif %}
+            
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <h3>Joined: {{ account.created_at|naturalday|capfirst }}</h3>
 
