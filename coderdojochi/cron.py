@@ -67,7 +67,7 @@ class SendReminders(CronJobBase):
                 'class_additional_info': order.session.additional_info,
                 'class_url': order.session.get_absolute_url(),
             })
-            order.week_reminder_sent = True
+            order.day_reminder_sent = True
             order.save()
 
         for session in sessions_within_a_week:
