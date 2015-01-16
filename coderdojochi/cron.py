@@ -13,9 +13,9 @@ import datetime
 
 
 class SendReminders(CronJobBase):
-    RUN_EVERY_MINS = 120 # every 2 hours
+    RUN_AT_TIMES = ['10:00', '14:00']
 
-    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    schedule = Schedule(run_at_times=RUN_AT_TIMES)
     code = 'coderdojochi.send_reminders'
 
     def do(self):
