@@ -13,6 +13,9 @@ def avatar_updated_handler(sender, user, avatar, **kwargs):
     mentor.public = False
     mentor.save()
 
+    # create thumbnail for email
+    avatar.create_thumbnail(400, quality=80)
+
     msg = EmailMultiAlternatives(
         subject='Mentor Avatar Changed',
         body='Mentor with email ' + mentor.user.email + ' changed their avatar image.  Please approve (' + settings.SITE_URL + '/mentors/' + str(mentor.id) + '/activate/) or reject (' + settings.SITE_URL + '/mentors/' + str(mentor.id) + '/reject-image/).',
