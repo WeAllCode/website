@@ -732,7 +732,7 @@ def mentor_approve_avatar(request, mentor_id=False):
     mentor.public = True
     mentor.save()
 
-    return HttpResponse('Mentor avatar approved :)')
+    return HttpResponse('Mentor avatar approved :) This mentor account is now public.')
 
 @login_required
 def mentor_reject_avatar(request, mentor_id=False):
@@ -755,7 +755,7 @@ def mentor_reject_avatar(request, mentor_id=False):
     msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="' + settings.SITE_URL + '/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>', 'text/html')
     msg.send()
 
-    return HttpResponse('Mentor avatar rejected :/')
+    return HttpResponse('Mentor avatar rejected :/ This mentor account is no longer public. An email notice has been sent to the mentor.')
 
 
 @login_required
