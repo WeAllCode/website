@@ -22,6 +22,6 @@ def avatar_updated_handler(sender, user, avatar, **kwargs):
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[v for k,v in settings.ADMINS]
     )
-    msg.attach_alternative('<h1>Is this avatar okay?</h1><img src="' + avatar.avatar_url(400) + '"><h2><a href="' + mentor.get_approve_avatar_url() + '">Allow</a></h2><h2><a href="' + mentor.get_reject_avatar_url() + '">Deny</a></h2>', 'text/html')
+    msg.attach_alternative('<h1>Is this avatar okay?</h1><img src="' + avatar.avatar_url(400) + '"><h2><a href="' + mentor.get_approve_avatar_url() + '">Approve</a></h2><h2><a href="' + mentor.get_reject_avatar_url() + '">Reject</a></h2>', 'text/html')
 
     msg.send()
