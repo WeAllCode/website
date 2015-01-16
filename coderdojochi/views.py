@@ -3,7 +3,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, Context
 from django.template.loader import get_template
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.core.urlresolvers import reverse
 from django.contrib import messages, auth
 from django.contrib.auth import get_user_model
@@ -577,7 +577,7 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
 
 def volunteer(request, template_name="volunteer.html"):
 
-    mentors = Mentor.objects.filter(active=True)
+    mentors = Mentor.objects.filter(active=True, public=True)
 
     return render_to_response(template_name, {
         'mentors': mentors
@@ -706,7 +706,7 @@ class SessionsCalendar(HTMLCalendar):
 
 def mentors(request, template_name="mentors.html"):
 
-    mentors = Mentor.objects.filter(active=True)
+    mentors = Mentor.objects.filter(active=True, public=True)
 
     return render_to_response(template_name, {
         'mentors': mentors
@@ -720,6 +720,42 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
     return render_to_response(template_name, {
         'mentor': mentor
     }, context_instance=RequestContext(request))
+
+@login_required
+def mentor_activate(request, mentor_id=False):
+    
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permissions to activate mentors.')
+        return HttpResponseRedirect('/')
+
+    mentor = get_object_or_404(Mentor, id=mentor_id)
+    mentor.public = True
+    mentor.save()
+
+    return HttpResponse('Mentor avatar approved :)')
+
+@login_required
+def mentor_reject_image(request, mentor_id=False):
+    
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permissions to activate mentors.')
+        return HttpResponseRedirect('/')
+
+    mentor = get_object_or_404(Mentor, id=mentor_id)
+
+    mentor.public = False
+    mentor.save()
+
+    msg = EmailMultiAlternatives(
+        subject='CoderDojoChi | Avatar Rejected',
+        body='Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance. ' + settings.SITE_URL + '/dojo/',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[mentor.user.email]
+    )
+    msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="' + settings.SITE_URL + '/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>', 'text/html')
+    msg.send()
+
+    return HttpResponse('Mentor avatar rejected :/')
 
 
 @login_required
