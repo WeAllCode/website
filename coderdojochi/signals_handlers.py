@@ -15,10 +15,10 @@ def avatar_updated_handler(sender, user, avatar, **kwargs):
 
     msg = EmailMultiAlternatives(
         subject='Mentor Avatar Changed',
-        body='Mentor with email ' + mentor.user.email + ' changed their avatar image.  Please approve (' + settings.SITE_URL + '/mentors/' + str(mentor.id) + '/activate/) or reject (' + settings.SITE_URL + '/mentors/' + str(mentor.id) + '/reject-image/).',
+        body='Mentor with email ' + mentor.user.email + ' changed their avatar image.  Please approve (' + mentor.get_approve_avatar_url() + ') or reject (' + mentor.get_reject_avatar_url() + ').',
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[v for k,v in settings.ADMINS]
     )
-    msg.attach_alternative('<h1>Is this avatar okay?</h1><img src="' + avatar.avatar_url(400) + '"><h2><a href="' + settings.SITE_URL + '/mentors/' + str(mentor.id) + '/activate/">Allow</a></h2><h2><a href="' + settings.SITE_URL + '/mentors/' + str(mentor.id) + '/reject-image/">Deny</a></h2>', 'text/html')
+    msg.attach_alternative('<h1>Is this avatar okay?</h1><img src="' + avatar.avatar_url(400) + '"><h2><a href="' + mentor.get_approve_avatar_url() + '">Allow</a></h2><h2><a href="' + mentor.get_reject_avatar_url() + '">Deny</a></h2>', 'text/html')
 
     msg.send()
