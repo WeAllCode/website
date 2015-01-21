@@ -9,12 +9,13 @@
 {% block content %}
 <div class="container">
     <h1>Upcoming Classes</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>Thanks for checking out CoderDojoChi. We're thrilled that you're interested.</p>
+
+    <p>We offer several classes throughout the year, please take a moment to read about them below and sign up!</p>
+
+    <p>If you'd like to participate in other ways, please consider <a href="{% url 'volunteer' %}">donating time</a> or <a href="{% url 'donate' %}">making a contribution to our nonprofit</a>.</p>
+
+    <p>We'll see you soon!</p>
 </div>
 <div class="upcoming-sessions">
 {% if all_sessions %}
