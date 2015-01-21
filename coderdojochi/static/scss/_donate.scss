@@ -4,6 +4,7 @@
     .hero {
         background-color: $cdc-color;
         padding-top: 80px;
+        padding-bottom: 50px;
         margin-bottom: 40px;
         position: relative;
         color: #fff;
@@ -72,7 +73,7 @@
 
     .btn-do-it {
         width: 150px;
-        margin: 30px auto 50px;
+        margin: 30px auto 0;
         display: block;
     }
 }
