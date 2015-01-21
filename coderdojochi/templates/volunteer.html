@@ -12,14 +12,16 @@
 
         <p>We'd like to invite you to find out what it's like to help shape the minds of tomorrow by giving you the opportunity to volunteer at our next event. If you are passionate about <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr> and teaching children, join us. Everyone is welcome, regardless of technical ability. To join and attend our next meeting please sign up below.</p>
 
-        <p>If you are unable to attend meetings and setup CoderDojo Chicago, but would still like to help, we are in need of volunteers and sponsors who can simply help spread the word, recruit new mentors, donate equipment, space and more.</p>
+        <p>There are many opportunities to help us grow–including national grants, corporate donations, tax exemptions and more–but we need your help.</p>
 
-        <ul>
-            <li>All teaching sessions run between 10am and 1pm with breaks and food provided.</li>
-            <li>Volunteers are requested to be there between 9am and 2pm on the event day (Saturday) for setup and breakdown.</li>
-            <li>The only thing you need to bring is yourself, willingness to help new programmers learn, and a fun, cheerful attitude!</li>
-        </ul>
+        <p>We are looking for talented marketers, copywriters, designers, accountants, fundraisers, grant writers, grant researchers, and developers.</p>
 
+        <p>Even one hour of your time can help!</p>
+
+        <p>Inspired to make a difference? <a href="{% url 'auth_login' %}" class="btn-cdc">Join us now!</a></p>
+
+
+        {% if mentors %}
         <h1>Meet Our Volunteers</h1>
         <div class="mentors">
             {% for mentor in mentors %}
@@ -36,6 +38,7 @@
                 <a href="{% url 'auth_login' %}" class="btn-cdc">Join us now!</a>
             </span>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
