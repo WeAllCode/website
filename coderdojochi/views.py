@@ -72,8 +72,6 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
         return self.cleaned_data
 
 
-
-
 class RegisterView(RegistrationView):
 
     enroll = False
@@ -716,6 +714,10 @@ def mentors(request, template_name="mentors.html"):
 def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
+
+    if not mentor.public:
+        messages.add_message(request, messages.ERROR, 'Invalid mentor ID :(')
+        return HttpResponseRedirect(reverse('mentors'));
 
     return render_to_response(template_name, {
         'mentor': mentor
