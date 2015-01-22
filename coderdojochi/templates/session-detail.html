@@ -169,7 +169,7 @@
                     </div>
                     <div class="info">
                         <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
-                        <p>{{ session.teacher.bio|truncatechars:9 }}</p>
+                        <p>{{ session.teacher.bio|truncatechars:120 }}</p>
                         <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.first_name }}.</a></p>
                     </div>
                 </div>
