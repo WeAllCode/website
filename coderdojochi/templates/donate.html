@@ -35,8 +35,8 @@
             </div>
             <h3 class="text-center">We will email you a receipt<br>(includes tax exempt information)</h3>
 
+            <button class="btn-cdc btn-cdc-inverse btn-do-it" disabled>Do it.</button>
         </div>
-        <button class="btn-cdc btn-cdc-inverse btn-do-it" disabled>Do it.</button>
     </div>
 </div>
 
@@ -87,7 +87,7 @@
         amountButtonClick = function() {
             var $clicked = $(this),
                 clickedValue = $clicked.data('value');
-            
+
             $('.active', $amountButtons).removeClass('active');
             $clicked.addClass('active');
             $donateButton.attr('disabled', false);
