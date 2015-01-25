@@ -26,8 +26,6 @@ urlpatterns = patterns('',
 
     url(r'^student/(?P<student_id>[\d]+)/$', 'coderdojochi.views.student_detail', name='student_detail'),
 
-
-
     url(r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$', 'coderdojochi.views.sessions', name='sessions'),
     url(r'^classes/$', 'coderdojochi.views.sessions', name='sessions'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/(?P<student_id>[\d]+)/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
@@ -38,13 +36,11 @@ urlpatterns = patterns('',
     url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)/sign-up/$', 'coderdojochi.views.meeting_sign_up', name='meeting_sign_up'),
     url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)$', 'coderdojochi.views.meeting_detail', name='meeting_detail'),
 
-
     url(r'^admin/class/(?P<session_id>[\d]+)/stats/$', 'coderdojochi.views.session_stats', name='stats'),
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in/$', 'coderdojochi.views.session_check_in', name='check_in'),
     url(r'^admin/', 'coderdojochi.views.cdc_admin', name='cdc_admin'),
 
     url(r'^welcome/$', 'coderdojochi.views.welcome', name='welcome'),
-
     url(r'^dojo/$', 'coderdojochi.views.dojo', name='dojo'),
 
     #override the default urls
