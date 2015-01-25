@@ -956,3 +956,15 @@ def sendSystemEmail(request, subject, template_name, merge_vars):
     msg.inline_css = True
     msg.use_template_subject = True
     msg.send()
+
+
+def handler404(request):
+    response = render_to_response('404.html', {}, context_instance=RequestContext(request))
+    response.status_code = 404
+    return response
+
+
+def handler500(request):
+    response = render_to_response('500.html', {}, context_instance=RequestContext(request))
+    response.status_code = 500
+    return response
