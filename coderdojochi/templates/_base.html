@@ -1,4 +1,4 @@
-{% load staticfiles i18n %}<!DOCTYPE html>
+{% load staticfiles i18n cache %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
         <meta charset="utf-8">
@@ -45,6 +45,7 @@
         {% endblock %}
 
         {% block footer_base %}
+        {% cache 600 topnav %}
         <footer>
             <div class="container">
 
@@ -55,6 +56,7 @@
                 <p class="text-muted pull-left">&copy;2013&ndash;{% now "Y" %}. All rights reserved.</p>
             </div>
         </footer>
+        {% endcache %}
         {% endblock %}
 
         {% block script_base %}
