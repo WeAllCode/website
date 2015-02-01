@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
 from django import forms
 
 from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
@@ -111,6 +112,7 @@ def add_months(sourcedate, months):
 
     return date(year,month,day)
 
+@cache_page(60 * 60)
 def home(request, template_name="home.html"):
 
     upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
@@ -267,7 +269,7 @@ def welcome(request, template_name="welcome.html"):
         'next': next
     }, context_instance=RequestContext(request))
 
-
+@cache_page(60 * 15)
 def sessions(request, year=False, month=False, template_name="sessions.html"):
 
     now = timezone.now()
@@ -573,6 +575,7 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         'user_signed_up': user_signed_up
     }, context_instance=RequestContext(request))
 
+@cache_page(60 * 60)
 def volunteer(request, template_name="volunteer.html"):
 
     mentors = Mentor.objects.filter(active=True, public=True)
@@ -581,6 +584,7 @@ def volunteer(request, template_name="volunteer.html"):
         'mentors': mentors
     }, context_instance=RequestContext(request))
 
+@cache_page(60 * 60)
 def faqs(request, template_name="faqs.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
@@ -701,7 +705,7 @@ class SessionsCalendar(HTMLCalendar):
     def day_cell(self, cssclass, body):
         return '<td class="%s">%s</td>' % (cssclass, body)
 
-
+@cache_page(60 * 15)
 def mentors(request, template_name="mentors.html"):
 
     mentors = Mentor.objects.filter(active=True, public=True)
@@ -710,7 +714,7 @@ def mentors(request, template_name="mentors.html"):
         'mentors': mentors
     }, context_instance=RequestContext(request))
 
-
+@cache_page(60 * 15)
 def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
@@ -793,6 +797,7 @@ def student_detail(request, student_id=False, template_name="student-detail.html
         'form': form
     }, context_instance=RequestContext(request))
 
+@cache_page(60 * 60)
 def donate(request, template_name="donate.html"):
 
     item_number = False
@@ -838,6 +843,7 @@ def verifyDonation(request, donation_id):
 
     donation.save()
 
+@cache_page(60 * 60)
 def about(request, template_name="about.html"):
 
     mentor_count = Mentor.objects.filter(active=True).count
@@ -851,7 +857,7 @@ def about(request, template_name="about.html"):
         'students_served': students_served
     }, context_instance=RequestContext(request))
 
-
+@cache_page(60 * 60)
 def privacy(request, template_name="privacy.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
