@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from django import forms
 
 from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
@@ -112,10 +112,13 @@ def add_months(sourcedate, months):
 
     return date(year,month,day)
 
-@cache_page(60 * 60)
 def home(request, template_name="home.html"):
 
-    upcoming_classes = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
+    if cache.get('upcoming_public_classes'):
+        upcoming_classes = cache.get('upcoming_public_classes')
+    else:
+        upcoming_classes = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
+        cache.set('upcoming_public_classes', upcoming_classes, 600)
 
     return render_to_response(template_name, {
         'upcoming_classes': upcoming_classes
@@ -269,7 +272,6 @@ def welcome(request, template_name="welcome.html"):
         'next': next
     }, context_instance=RequestContext(request))
 
-@cache_page(60 * 15)
 def sessions(request, year=False, month=False, template_name="sessions.html"):
 
     now = timezone.now()
@@ -281,7 +283,12 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     prev_date = add_months(calendar_date,-1)
     next_date = add_months(calendar_date,1)
 
-    all_sessions = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
+    if cache.get('public_sessions'):
+        all_sessions = cache.get('public_sessions')
+    else:
+        all_sessions = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
+        cache.set('public_sessions', all_sessions, 600)
+
     sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
     cal = SessionsCalendar(sessions).formatmonth(year, month)
 
@@ -575,16 +582,18 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         'user_signed_up': user_signed_up
     }, context_instance=RequestContext(request))
 
-@cache_page(60 * 60)
 def volunteer(request, template_name="volunteer.html"):
 
-    mentors = Mentor.objects.filter(active=True, public=True)
+    if cache.get('public_mentors'):
+        mentors = cache.get('public_mentors')
+    else:
+        mentors = Mentor.objects.filter(active=True, public=True)
+        cache.set('public_mentors', mentors, 600)
 
     return render_to_response(template_name, {
         'mentors': mentors
     }, context_instance=RequestContext(request))
 
-@cache_page(60 * 60)
 def faqs(request, template_name="faqs.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
@@ -705,16 +714,18 @@ class SessionsCalendar(HTMLCalendar):
     def day_cell(self, cssclass, body):
         return '<td class="%s">%s</td>' % (cssclass, body)
 
-@cache_page(60 * 15)
 def mentors(request, template_name="mentors.html"):
 
-    mentors = Mentor.objects.filter(active=True, public=True)
+    if cache.get('public_mentors'):
+        mentors = cache.get('public_mentors')
+    else:
+        mentors = Mentor.objects.filter(active=True, public=True)
+        cache.set('public_mentors', mentors, 600)
 
     return render_to_response(template_name, {
         'mentors': mentors
     }, context_instance=RequestContext(request))
 
-@cache_page(60 * 15)
 def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
@@ -730,11 +741,12 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 @login_required
 def mentor_approve_avatar(request, mentor_id=False):
     
+    mentor = get_object_or_404(Mentor, id=mentor_id)
+
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_approve_avatar_url())
 
-    mentor = get_object_or_404(Mentor, id=mentor_id)
     mentor.public = True
     mentor.save()
 
@@ -797,7 +809,6 @@ def student_detail(request, student_id=False, template_name="student-detail.html
         'form': form
     }, context_instance=RequestContext(request))
 
-@cache_page(60 * 60)
 def donate(request, template_name="donate.html"):
 
     item_number = False
@@ -843,12 +854,20 @@ def verifyDonation(request, donation_id):
 
     donation.save()
 
-@cache_page(60 * 60)
 def about(request, template_name="about.html"):
 
-    mentor_count = Mentor.objects.filter(active=True).count
-    students_served = Order.objects.exclude(check_in=None).count()
+    if cache.get('mentor_count'):
+        mentor_count = cache.get('mentor_count')
+    else:
+        mentor_count = Mentor.objects.filter(active=True).count()
+        cache.set('mentor_count', mentor_count, 600)
 
+    if cache.get('students_served'):
+        students_served = cache.get('students_served')
+    else:
+        students_served = Order.objects.exclude(check_in=None).count()
+        cache.set('students_served', students_served, 600)
+    
     mentor_count = students_served if students_served > 30 else 30
     students_served = students_served if students_served > 600 else 600
 
@@ -857,12 +876,10 @@ def about(request, template_name="about.html"):
         'students_served': students_served
     }, context_instance=RequestContext(request))
 
-@cache_page(60 * 60)
 def privacy(request, template_name="privacy.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
     
-
 @login_required
 def cdc_admin(request, template_name="cdc-admin.html"):
 

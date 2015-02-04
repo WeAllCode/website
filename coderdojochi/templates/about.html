@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n %}
+{% load i18n cache %}
 
 {% block title %}About{% endblock %}
 
@@ -8,6 +8,7 @@
 
 {% block content %}
 <div class="container">
+    {% cache 600 about_content %}
     <h1>{% trans "About CoderDojoChi" %}</h1>
     <div class="row">
         <p>CoderDojoChi is a volunteer not for profit that teaches web, game, and app development to youth ages 7 to 17.</p>
@@ -36,6 +37,6 @@
             </form>
         </div>
     </div>
-
+    {% endcache %}
 </div>
 {% endblock %}
