@@ -1072,8 +1072,6 @@ def session_announce(request, session_id):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-guardian', {
                 'first_name': request.user.first_name,
                 'last_name': request.user.last_name,
-                'student_first_name': student.first_name,
-                'student_last_name': student.last_name,
                 'class_code': session_obj.course.code,
                 'class_title': session_obj.course.title,
                 'class_description': session_obj.course.description,
