@@ -39,10 +39,14 @@
                         <p>{{ session.course.description|safe|truncatechars:180 }} <a href="{{ session.get_absolute_url }}">Learn more.</a></p>
                     </div>
                     <div class="actions">
-                        {% if session.capacity|subtract:session.get_current_students.all.count %}
-                        <a href="{{ session.get_absolute_url }}?enroll=True" class="btn-cdc btn-cdc">Enroll Now</a>
+                        {% if session.external_enrollment_url %}
+                        <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc">Enroll now</a></p>
                         {% else %}
-                        <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button>
+                            {% if session.capacity|subtract:session.get_current_students.all.count %}
+                            <a href="{{ session.get_absolute_url }}?enroll=True" class="btn-cdc">Enroll Now</a>
+                            {% else %}
+                            <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
