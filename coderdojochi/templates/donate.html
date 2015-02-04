@@ -14,10 +14,10 @@
         <h1 class="title">Donate Today!</h1>
 
         <ul class="list-inline amount-buttons">
-            <li><button class="btn-cdc btn-cdc-inverse" data-value="10">$10</button></li>
             <li><button class="btn-cdc btn-cdc-inverse" data-value="25">$25</button></li>
             <li><button class="btn-cdc btn-cdc-inverse" data-value="50">$50</button></li>
             <li><button class="btn-cdc btn-cdc-inverse" data-value="100">$100</button></li>
+            <li><button class="btn-cdc btn-cdc-inverse" data-value="150">$150</button></li>
             <li><button class="btn-cdc btn-cdc-inverse" data-value="other">Other</button></li>
         </ul>
         <div class="amount-actual">
@@ -74,23 +74,23 @@
 {% block extra_script %}
 <script>
     $(function() {
-        var $donateForm = $('#donateForm'),
-            $amountButtons = $('.amount-buttons:first'),
-            $donateButton = $('.btn-do-it:first'),
-            $donateAmount = $('#donateAmount'),
-            $amountActual = $('.amount-actual:first'),
-            $amountActualField = $('.form-control', $amountActual),
-            $personalInfo = $('.personal-info:first'),
-            $firstNameInput = $('#firstNameInput'),
-            $lastNameInput = $('#lastNameInput'),
-            $emailInput = $('#emailInput'),
-            $donationId = $('#donationId'),
-            $paymentFirstName = $('#paymentFirstName'),
-            $paymentLastName = $('#paymentLastName'),
+        var $donateForm = $('#donateForm');
+        var $amountButtons = $('.amount-buttons:first');
+        var $donateButton = $('.btn-do-it:first');
+        var $donateAmount = $('#donateAmount');
+        var $amountActual = $('.amount-actual:first');
+        var $amountActualField = $('.form-control', $amountActual);
+        var $personalInfo = $('.personal-info:first');
+        var $firstNameInput = $('#firstNameInput');
+        var $lastNameInput = $('#lastNameInput');
+        var $emailInput = $('#emailInput');
+        var $donationId = $('#donationId');
+        var $paymentFirstName = $('#paymentFirstName');
+        var $paymentLastName = $('#paymentLastName');
 
-        amountButtonClick = function() {
-            var $clicked = $(this),
-                clickedValue = $clicked.data('value');
+        var amountButtonClick = function() {
+            var $clicked = $(this);
+            var clickedValue = $clicked.data('value');
 
             $('.active', $amountButtons).removeClass('active');
             $clicked.addClass('active');
@@ -108,18 +108,18 @@
             }
 
             ga('send', 'event', 'button', 'click', 'donation form amount selected', clickedValue);
-        },
+        };
 
-        donateFormSubmit = function(e) {
+        var donateFormSubmit = function(e) {
             $donateButton.trigger('click');
-        },
+        };
 
-        donateButtonClick = function() {
+        var donateButtonClick = function() {
 
-            var $selectedAmountButton = $('.active', $amountButtons),
-                selectedAmount = $selectedAmountButton.data('value'),
-                emailTest = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i,
-                formData;
+            var $selectedAmountButton = $('.active', $amountButtons);
+            var selectedAmount = $selectedAmountButton.data('value');
+            var emailTest = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+            var formData;
 
             if(selectedAmount === 'other') {
 
@@ -174,9 +174,9 @@
                     alert('An error occured, please refresh the page and try again.')
                 }
             });
-        },
+        };
 
-        showError = function ($input, message) {
+        var showError = function ($input, message) {
             $('.has-error', $personalInfo).removeClass('has-error');
             $('.alert-danger', $personalInfo).remove();
             $input.closest('.form-group')
