@@ -82,6 +82,8 @@ CDC.global = (function($, document, window, undefined) {
                 $this.text('expand');
             }
         });
+
+        $('[data-toggle="popover"]').popover();
     }
 
     function openPopUp(url, height, width) {

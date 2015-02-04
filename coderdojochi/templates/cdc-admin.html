@@ -23,6 +23,11 @@
             <li class="list-group-item">
                 {{ session.course.title }} | {{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}
                 <span class="pull-right">
+                    {% if session.announced_date %}
+                    <span class="text-muted">Announced on {{ session.announced_date|date }}</span>
+                    {% else %}
+                    <a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce' session.id %}'>Announce</a>" data-html="true">Announce</a>
+                    {% endif %} |
                     <a href="{% url 'check_in' session.id %}">Check-in</a> |
                     <a href="{{ session.get_absolute_url }}">Details</a> |
                     <a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit</a>
@@ -30,6 +35,9 @@
             </li>
         {% endfor %}
         </ul>
+        {% if upcoming_sessions_count > 3 and 'all_upcoming_sessions' not in request.GET %}
+        <a href="{% url 'cdc_admin' %}?all_upcoming_sessions">View all upcoming sessions</a>
+        {% endif %}
     {% else %}
         <p>No upcoming sessions. <a href="/dj-admin/coderdojochi/session/add">Add a new session now</a>.</p>
     {% endif %}
@@ -49,8 +57,57 @@
             </li>
         {% endfor %}
         </ul>
+        {% if past_sessions_count > 3 and 'all_past_sessions' not in request.GET %}
+        <a href="{% url 'cdc_admin' %}?all_past_sessions">View all past sessions</a>
+        {% endif %}
     {% else %}
         <p>No past sessions yet.</p>
+    {% endif %}
+    <br>
+    <hr>
+    <h2>Upcoming Meetings</h2>
+    {% if upcoming_meetings %}
+        <p><a href="/dj-admin/coderdojochi/meeting/add">Add a new meeting now</a>.</p>
+        <ul class="list-group">
+        {% for meeting in upcoming_meetings %}
+            <li class="list-group-item">
+                {{ meeting.meeting_type.title }} | {{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}
+                <span class="pull-right">
+                    {% if meeting.announced_date %}
+                    <span class="text-muted">Announced on {{ meeting.announced_date|date }}</span>
+                    {% else %}
+                    <a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Meeting?" data-content="<a class='btn btn-danger' href='{% url 'meeting_announce' meeting.id %}'>Announce</a>" data-html="true">Announce</a>
+                    {% endif %} |
+                    <a href="{{ meeting.get_absolute_url }}">Details</a> |
+                    <a href="/dj-admin/coderdojochi/meeting/{{ meeting.id }}">Edit</a>
+                </span>
+            </li>
+        {% endfor %}
+        </ul>
+        {% if upcoming_meetings_count > 3 and 'all_upcoming_meetings' not in request.GET %}
+        <a href="{% url 'cdc_admin' %}?all_upcoming_meetings">View all upcoming meetings</a>
+        {% endif %}
+    {% else %}
+        <p>No upcoming meetings. <a href="/dj-admin/coderdojochi/meeting/add">Add a new meeting now</a>.</p>
+    {% endif %}
+    <h2>Past Meetings</h2>
+    {% if past_meetings %}
+        <ul class="list-group">
+        {% for meeting in past_meetings %}
+            <li class="list-group-item">
+                {{ meeting.meeting_type.title }} | {{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}
+                <span class="pull-right">
+                    <a href="{{ meeting.get_absolute_url }}">Details</a> |
+                    <a href="/dj-admin/coderdojochi/meeting/{{ meeting.id }}">Edit</a>
+                </span>
+            </li>
+        {% endfor %}
+        </ul>
+        {% if past_meetings_count > 3 and 'all_past_meetings' not in request.GET %}
+        <a href="{% url 'cdc_admin' %}?all_past_meetings">View all past meetings</a>
+        {% endif %}
+    {% else %}
+        <p>No past meetings yet.</p>
     {% endif %}
 </div>
 {% endblock %}

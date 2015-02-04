@@ -582,6 +582,46 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         'user_signed_up': user_signed_up
     }, context_instance=RequestContext(request))
 
+
+def meeting_announce(request, meeting_id):
+    
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('home'))
+
+    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
+    
+    if not meeting_obj.announced_date:
+    
+        for mentor in Mentor.objects.filter(active=True):
+            sendSystemEmail(request, 'Upcoming mentor meeting', 'coderdojochi-meeting-announce-mentor', {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'meeting_title': meeting_obj.meeting_type.title,
+                'meeting_description': meeting_obj.meeting_type.description,
+                'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
+                'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mm a'),
+                'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
+                'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mm a'),
+                'meeting_location_name': meeting_obj.location.name,
+                'meeting_location_address': meeting_obj.location.address,
+                'meeting_location_address2': meeting_obj.location.address2,
+                'meeting_location_city': meeting_obj.location.city,
+                'meeting_location_state': meeting_obj.location.state,
+                'meeting_location_zip': meeting_obj.location.zip,
+                'meeting_additional_info': meeting_obj.additional_info,
+                'meeting_url': meeting_obj.get_absolute_url()
+            }, mentor.user)
+
+        meeting_obj.announced_date = timezone.now()
+        meeting_obj.save()
+        
+        messages.add_message(request, messages.SUCCESS, 'Meeting announced!')
+    else:
+        messages.add_message(request, messages.WARNING, 'Meeting already announced.')
+    
+    return HttpResponseRedirect(reverse('cdc_admin'))
+
 def volunteer(request, template_name="volunteer.html"):
 
     if cache.get('public_mentors'):
@@ -890,11 +930,41 @@ def cdc_admin(request, template_name="cdc-admin.html"):
     sessions = Session.objects.all()
 
     upcoming_sessions = sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_sessions_count = upcoming_sessions.count()
+
+    if 'all_upcoming_sessions' not in request.GET:
+        upcoming_sessions = upcoming_sessions[:3]
+
     past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
+    past_sessions_count = past_sessions.count()
+
+    if 'all_past_sessions' not in request.GET:
+        past_sessions = past_sessions[:3]
+
+    meetings = Meeting.objects.all()
+
+    upcoming_meetings = meetings.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_meetings_count = upcoming_meetings.count()
+    
+    if 'all_upcoming_meetings' not in request.GET:
+        upcoming_meetings = upcoming_meetings[:3]
+    
+    past_meetings = meetings.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
+    past_meetings_count = past_meetings.count()
+
+    if 'all_past_meetings' not in request.GET:
+        past_meetings = past_meetings[:3]
+
 
     return render_to_response(template_name,{
         'upcoming_sessions': upcoming_sessions,
-        'past_sessions': past_sessions
+        'upcoming_sessions_count': upcoming_sessions_count,
+        'past_sessions': past_sessions,
+        'past_sessions_count': past_sessions_count,
+        'upcoming_meetings': upcoming_meetings,
+        'upcoming_meetings_count': upcoming_meetings_count,
+        'past_meetings': past_meetings,
+        'past_meetings_count': past_meetings_count
     }, context_instance=RequestContext(request))
 
 
@@ -966,14 +1036,82 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     }, context_instance=RequestContext(request))
 
 
-def sendSystemEmail(request, subject, template_name, merge_vars):
+def session_announce(request, session_id):
+    
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('home'))
+
+    session_obj = get_object_or_404(Session, id=session_id)
+    
+    if not session_obj.announced_date:
+        
+        # send mentor announcements
+        for mentor in Mentor.objects.filter(active=True):
+            sendSystemEmail(request, 'Upcoming class announcement', 'coderdojochi-class-announcement-mentor', {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'class_code': session_obj.course.code,
+                'class_title': session_obj.course.title,
+                'class_description': session_obj.course.description,
+                'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
+                'class_start_time': arrow.get(session_obj.start_date).format('h:mm a'),
+                'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
+                'class_end_time': arrow.get(session_obj.end_date).format('h:mm a'),
+                'class_location_name': session_obj.location.name,
+                'class_location_address': session_obj.location.address,
+                'class_location_address2': session_obj.location.address2,
+                'class_location_city': session_obj.location.city,
+                'class_location_state': session_obj.location.state,
+                'class_location_zip': session_obj.location.zip,
+                'class_additional_info': session_obj.additional_info,
+                'class_url': session_obj.get_absolute_url()
+            }, mentor.user)
+    
+        for guardian in Guardian.objects.filter(active=True):
+            sendSystemEmail(request, 'Upcoming class announcement', 'coderdojochi-class-announcement-guardian', {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'student_first_name': student.first_name,
+                'student_last_name': student.last_name,
+                'class_code': session_obj.course.code,
+                'class_title': session_obj.course.title,
+                'class_description': session_obj.course.description,
+                'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
+                'class_start_time': arrow.get(session_obj.start_date).format('h:mm a'),
+                'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
+                'class_end_time': arrow.get(session_obj.end_date).format('h:mm a'),
+                'class_location_name': session_obj.location.name,
+                'class_location_address': session_obj.location.address,
+                'class_location_address2': session_obj.location.address2,
+                'class_location_city': session_obj.location.city,
+                'class_location_state': session_obj.location.state,
+                'class_location_zip': session_obj.location.zip,
+                'class_additional_info': session_obj.additional_info,
+                'class_url': session_obj.get_absolute_url()
+            }, guardian.user)
+        
+        session_obj.announced_date = timezone.now()
+        session_obj.save()
+        
+        messages.add_message(request, messages.SUCCESS, 'Session announced!')
+    else:
+        messages.add_message(request, messages.WARNING, 'Session already announced.')
+    
+    return HttpResponseRedirect(reverse('cdc_admin'))
+
+
+def sendSystemEmail(request, subject, template_name, merge_vars, user=False):
+
+    if not user:
+        user = request.user
 
     merge_vars['current_year'] = timezone.now().year
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 
     msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
-                       to=[request.user.email])
+                       to=[user.email])
     msg.template_name = template_name
     msg.global_merge_vars = merge_vars
     msg.inline_css = True
