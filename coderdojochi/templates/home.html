@@ -1,12 +1,14 @@
 {% extends "_base.html" %}
 
-{% load staticfiles i18n coderdojochi_extras %}
+{% load staticfiles i18n coderdojochi_extras cache %}
 
 {% block notitle %}CoderDojoChi{% endblock %}
 
 {% block body_class %}page-homepage{% endblock %}
 
 {% block content %}
+
+{% cache 600 homepage_hero_content %}
 <div class="hero">
     <div class="container">
         <div id="carousel-home-hero" class="carousel slide" data-ride="carousel">
@@ -16,17 +18,11 @@
                         <iframe id="homepage-video" src="//www.youtube.com/embed/GB9nU_gsxTI?rel=0&amp;controls=1&amp;showinfo=0&amp;autohide=1&amp;modestbranding=1" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
-{% comment %}
-                <div class="item">
-                    <div class="flex-video vimeo" style="margin: 0 auto;text-align:center;">
-                        <iframe src="//player.vimeo.com/video/108196950?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=1" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-                    </div>
-                </div>
-{% endcomment %}
             </div>
         </div>
     </div>
 </div>
+{% endcache %}
 
 {% if upcoming_classes %}
 <div class="upcoming-sessions">
@@ -56,6 +52,7 @@
 </div>
 {% endif %}
 
+{% cache 600 homepage_lower_content %}
 <div class="container">
     <div class="row block-cta">
         <div class="homepage-volunteer half">
@@ -63,8 +60,6 @@
                 <span class="icon-volunteer fa fa-fw fa-group"></span>
             </a>
             <h1>Volunteer</h1>
-            <!-- <p>If you are passionate about coding and teaching children, join us. Everyone is welcome, regardless of technical ability. We are a collective of teachers, writers, coders, designers, crafters, nurturers, hackers, leaders, and tinkers.</p> -->
-
             <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
         </div>
         <div class="homepage-donate half">
@@ -76,6 +71,7 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 {% endblock %}
 

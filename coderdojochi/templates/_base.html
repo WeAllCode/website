@@ -1,40 +1,43 @@
 {% load staticfiles i18n cache %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>{% block notitle %}{% block title_base %}{% block title %}{% endblock %} - CoderDojoChi{% endblock %}{% endblock %}</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% cache 600 meta %}
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="description" content="">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <!-- Facebook -->
+            <meta property="og:image" content="http://coderdojochi.org/assets/images/logo.png" />
+            <!-- <meta property="og:url" content="http://coderdojochi.org" /> -->
+            <!-- <meta property="og:title" content="title here - CoderDojoChi" /> -->
+            <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon" />
+        {% endcache %}
 
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon" />
+        {% cache 600 styles %}
+            <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,700' rel='stylesheet' type='text/css'>
+            <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+            <link href="{% static "css/vendor/bootstrap.min.css" %}" rel="stylesheet">
+            <link href="{% static "css/cdc.css" %}" rel="stylesheet">
 
-        <!-- Facebook -->
-        <meta property="og:image" content="http://coderdojochi.org/assets/images/logo.png" />
-        <!-- <meta property="og:url" content="http://coderdojochi.org" /> -->
-        <!-- <meta property="og:title" content="title here - CoderDojoChi" /> -->
+            <!--[if lt IE 9]>
+            <script src="{% static 'js/vendor/html5shiv.js' %}"></script>
+            <script src="{% static 'js/vendor/selectivizr.js' %}"></script>
+            <script src="{% static 'js/vendor/respond.js' %}"></script>
+            <![endif]-->
+        {% endcache %}
 
-        {% block style_base %}
-        <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,700' rel='stylesheet' type='text/css'>
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="{% static "css/vendor/bootstrap.min.css" %}" rel="stylesheet">
-        <link href="{% static "css/cdc.css" %}" rel="stylesheet">
         {% block extra_style %}{% endblock %}
-        {% endblock %}
-
-        <!--[if lt IE 9]>
-        <script src="{% static 'js/vendor/html5shiv.js' %}"></script>
-        <script src="{% static 'js/vendor/selectivizr.js' %}"></script>
-        <script src="{% static 'js/vendor/respond.js' %}"></script>
-        <![endif]-->
 
         {% block extra_head %}{% endblock %}
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
+        
         {% block topnav %}
+            {% cache 600 topnav request.user.username %}
             {% include "_topnav.html" %}
+            {% endcache %}
         {% endblock %}
 
         {% block body_base %}
@@ -45,18 +48,18 @@
         {% endblock %}
 
         {% block footer_base %}
-        {% cache 600 footer %}
-        <footer>
-            <div class="container">
+            {% cache 600 footer %}
+            <footer>
+                <div class="container">
 
-                <span class="pull-right">
-                    <a href="{% url 'contact_form' %}">Contact Us</a>
-                    <a href="{% url 'privacy' %}">Privacy &amp; Terms</a>
-                </span>
-                <p class="text-muted pull-left">&copy;2013&ndash;{% now "Y" %}. All rights reserved.</p>
-            </div>
-        </footer>
-        {% endcache %}
+                    <span class="pull-right">
+                        <a href="{% url 'contact_form' %}">Contact Us</a>
+                        <a href="{% url 'privacy' %}">Privacy &amp; Terms</a>
+                    </span>
+                    <p class="text-muted pull-left">&copy;2013&ndash;{% now "Y" %}. All rights reserved.</p>
+                </div>
+            </footer>
+            {% endcache %}
         {% endblock %}
 
         {% block script_base %}
