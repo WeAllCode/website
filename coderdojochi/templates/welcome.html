@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n avatar_tags bootstrap3 %}
+{% load i18n avatar_tags bootstrap3 staticfiles %}
 
 {% block title %}{{ class.title }} Sign Up{% endblock %}
 
@@ -53,4 +53,15 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+
+
+{% block extra_script %}
+<script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
+<script>
+    $(function() {
+        $('#id_phone').mask('(999) 999-9999');
+    });
+</script>
 {% endblock %}
