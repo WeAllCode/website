@@ -31,91 +31,93 @@
             </div>
             {% endif %}
             <div class="content">
-                {% if user.is_authenticated %}
-                    {% if is_guardian %}
-                        {% if students %}
-                            {% if spots_remaining > 0 %}
-                                <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
-                            {% else %}
-                                <p>There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
-                            {% endif %}
-                            <table class="students">
-                                <tbody>
-                                {% for student in students %}
-                                    <tr>
-                                        <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
-                                        <td>
-                                            {% if spots_remaining > 0 %}
-                                                {% student_register_link student session %}
-                                            {% else %}
-                                                <form action="" method="post">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="waitlist" value="student">
-                                                    <input type="hidden" name="account_id" value="{{ student.id }}">
-                                                    {% if student in session.waitlist_students.all %}
-                                                        <input type="hidden" name="remove" value="true">
-                                                        <button class="btn-link">Remove from wait list</button>
-                                                    {% else %}
-                                                        <input type="hidden" name="remove" value="false">
-                                                        <button class="btn-link">Add to wait list</button>
-                                                    {% endif %}
-                                                </form>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                            <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}">Add another student</a></small>
-                        {% else %}
-                        <p><a href="{% url 'welcome' %}?next={{ request.path }}" class="btn-cdc btn-cdc-lg btn-block">Enroll Student</a></p>
-                        {% endif %}
-                    {% else %}
-                        {% if spots_remaining %}
-                            {% if mentor_signed_up %}
-                                <p>You are signed up to mentor this class.</p>
-                                <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
-                            {% else %}
-                                <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
-                            {% endif %}
-                        {% else %}
-                            {% if account in session.waitlist_mentors.all %}
-                                <p>You are currently on the wait list for this class. We will contact you ASAP if a spot becomes available.</p>
-                            {% else %}
-                                <p>There are currently no available mentor spots for this class.</p>
-                            {% endif %}
-
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="waitlist" value="mentor">
-                                <input type="hidden" name="account_id" value="{{ account.id }}">
-                                {% if account in session.waitlist_mentors.all %}
-                                    <input type="hidden" name="remove" value="true">
-                                    <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from wait list</button>
-                                {% else %}
-                                    <input type="hidden" name="remove" value="false">
-                                    <button class="btn-cdc btn-cdc-sm">Add me to wait list</button>
-                                {% endif %}
-                            </form>
-                        {% endif %}
-                    {% endif %}
+                {% if session.external_enrollment_url %}
+                    <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                 {% else %}
-                    <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
-                    <p>You must <a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">login</a> or <a href="{% url 'register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
-                {% endif %}
-
-                <p>
-                    {% if spots_remaining > 0 %}
-                    <span class="text-large">{{ spots_remaining }}</span> open spots
-                    {% else %}
+                    {% if user.is_authenticated %}
                         {% if is_guardian %}
-                            <span class="text-large">{{ session.waitlist_students.count }}</span> on wait list
+                            {% if students %}
+                                {% if spots_remaining > 0 %}
+                                    <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
+                                {% else %}
+                                    <p>There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
+                                {% endif %}
+                                <table class="students">
+                                    <tbody>
+                                    {% for student in students %}
+                                        <tr>
+                                            <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
+                                            <td>
+                                                {% if spots_remaining > 0 %}
+                                                    {% student_register_link student session %}
+                                                {% else %}
+                                                    <form action="" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="waitlist" value="student">
+                                                        <input type="hidden" name="account_id" value="{{ student.id }}">
+                                                        {% if student in session.waitlist_students.all %}
+                                                            <input type="hidden" name="remove" value="true">
+                                                            <button class="btn-link">Remove from wait list</button>
+                                                        {% else %}
+                                                            <input type="hidden" name="remove" value="false">
+                                                            <button class="btn-link">Add to wait list</button>
+                                                        {% endif %}
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}">Add another student</a></small>
+                            {% else %}
+                            <p><a href="{% url 'welcome' %}?next={{ request.path }}" class="btn-cdc btn-cdc-lg btn-block">Enroll Student</a></p>
+                            {% endif %}
                         {% else %}
-                            <span class="text-large">{{ session.waitlist_mentors.count }}</span> on wait list
-                        {% endif %}
-                    {% endif %}
-                </p>
+                            {% if spots_remaining %}
+                                {% if mentor_signed_up %}
+                                    <p>You are signed up to mentor this class.</p>
+                                    <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
+                                {% else %}
+                                    <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
+                                {% endif %}
+                            {% else %}
+                                {% if account in session.waitlist_mentors.all %}
+                                    <p>You are currently on the wait list for this class. We will contact you ASAP if a spot becomes available.</p>
+                                {% else %}
+                                    <p>There are currently no available mentor spots for this class.</p>
+                                {% endif %}
 
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="waitlist" value="mentor">
+                                    <input type="hidden" name="account_id" value="{{ account.id }}">
+                                    {% if account in session.waitlist_mentors.all %}
+                                        <input type="hidden" name="remove" value="true">
+                                        <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from wait list</button>
+                                    {% else %}
+                                        <input type="hidden" name="remove" value="false">
+                                        <button class="btn-cdc btn-cdc-sm">Add me to wait list</button>
+                                    {% endif %}
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
+                        <p>You must <a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">login</a> or <a href="{% url 'register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
+                    {% endif %}
+                    <p>
+                        {% if spots_remaining > 0 %}
+                        <span class="text-large">{{ spots_remaining }}</span> open spots
+                        {% else %}
+                            {% if is_guardian %}
+                                <span class="text-large">{{ session.waitlist_students.count }}</span> on wait list
+                            {% else %}
+                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> on wait list
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                {% endif %}
                 <hr>
                 <div class="map">
                     <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=203x203&amp;sensor=false&amp;zoom=15"></a>

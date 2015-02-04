@@ -21,17 +21,20 @@
             {% endif %}
 
             <div class="content">
-                {% if user.is_authenticated %}
-                    {% if mentor_signed_up %}
-                        <p>You are signed up to attend this meeting.</p>
-                        <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
-                    {% else %}
-                        <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
-                    {% endif %}
+                {% if meeting.external_enrollment_url %}
+                    <p><a href="{{ meeting.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                 {% else %}
-                <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
+                    {% if user.is_authenticated %}
+                        {% if mentor_signed_up %}
+                            <p>You are signed up to attend this meeting.</p>
+                            <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
+                        {% else %}
+                            <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
+                        {% endif %}
+                    {% else %}
+                    <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
+                    {% endif %}
                 {% endif %}
-
                 <hr>
                 <div class="map">
                     <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img src="//maps.google.com/maps/api/staticmap?markers=location:{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;size=500x300&amp;sensor=false&zoom=16"></a>

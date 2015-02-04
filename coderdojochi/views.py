@@ -115,7 +115,7 @@ def add_months(sourcedate, months):
 @cache_page(60 * 60)
 def home(request, template_name="home.html"):
 
-    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
+    upcoming_classes = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
 
     return render_to_response(template_name, {
         'upcoming_classes': upcoming_classes
@@ -144,7 +144,7 @@ def welcome(request, template_name="welcome.html"):
                 form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
             else:
                 account = get_object_or_404(Guardian, user=user)
-                if not account.phone:
+                if not account.phone or not account.zip:
                     form = GuardianForm(request.POST, instance=account)
                 else:
                     form = StudentForm(request.POST)
@@ -212,7 +212,7 @@ def welcome(request, template_name="welcome.html"):
             if role == 'mentor':
 
                 # check for next upcoming meeting
-                next_meeting = Meeting.objects.filter(active=True).order_by('start_date').first()
+                next_meeting = Meeting.objects.filter(active=True, public=True).order_by('start_date').first()
 
                 if next_meeting:
                     merge_vars['next_intro_meeting_url'] = next_meeting.get_absolute_url()
@@ -222,7 +222,7 @@ def welcome(request, template_name="welcome.html"):
                 return HttpResponseRedirect(next)
             else:
                 # check for next upcoming class
-                next_class = Session.objects.filter(active=True).order_by('start_date').first()
+                next_class = Session.objects.filter(active=True, public=True).order_by('start_date').first()
 
                 if next_class:
                     merge_vars['next_class_url'] = next_class.get_absolute_url()
@@ -240,7 +240,7 @@ def welcome(request, template_name="welcome.html"):
         if role == 'guardian':
             guardian = get_object_or_404(Guardian, user=user)
             account = guardian
-            if not account.phone:
+            if not account.phone or not account.zip:
                 form = GuardianForm(instance=account)
             else:
                 add_student = True
@@ -281,7 +281,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     prev_date = add_months(calendar_date,-1)
     next_date = add_months(calendar_date,1)
 
-    all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    all_sessions = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
     sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
     cal = SessionsCalendar(sessions).formatmonth(year, month)
 
@@ -335,7 +335,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
-    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_classes = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
 
     if request.user.is_authenticated():
 
@@ -609,7 +609,7 @@ def dojo(request, template_name="dojo.html"):
             upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
             past_sessions = mentor_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
 
-            upcoming_meetings = Meeting.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+            upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
 
 
             if request.method == 'POST':

@@ -12,7 +12,7 @@
         {% if role == 'guardian' %}
             {% if not add_student %}
             <h1>Tell us a little more about yourself...</h1>
-            <h3 class="text-muted">Before you sign up your student(s), give us the best phone number to reach you at (we will never share this with anyone)...</h3>
+            <h3 class="text-muted">Before you sign up your student(s), give us the best phone number to reach you at. <strong>We will never share this information with anyone.</strong></h3>
             {% else %}
                 {% if students %}
                     <h1><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>Register another student</h1>
@@ -62,6 +62,7 @@
 <script>
     $(function() {
         $('#id_phone').mask('(999) 999-9999');
+        $("#id_zip").mask("99999");
     });
 </script>
 {% endblock %}
