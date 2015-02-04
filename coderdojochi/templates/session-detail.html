@@ -21,6 +21,12 @@
             {% if user.is_staff %}
             <div class="well well-sm">
                 <ul class="list-group">
+                    {% if session.announced_date %}
+                    <span class="text-muted list-group-item">Announced on {{ session.announced_date|date }}</span>
+                    {% else %}
+                    <a href="#" class="list-group-item" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce' session.id %}'>Announce</a>" data-html="true">Announce</a>
+                    {% endif %}
+
                     {% if session.active %}
                     <a href="{% url 'check_in' session.id %}" class="list-group-item">Class Check-in</a>
                     {% else %}
