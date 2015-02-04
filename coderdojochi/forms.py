@@ -17,6 +17,7 @@ class MentorForm(ModelForm):
 class GuardianForm(ModelForm):
 
     phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Phone Number','class': 'form-control'}), label='Phone Number')
+    zip = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Zip Code','class': 'form-control'}), label='Zip Code')
 
     class Meta:
         model = Guardian
