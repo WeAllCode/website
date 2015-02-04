@@ -1,12 +1,14 @@
 {% extends "_base.html" %}
 
-{% load i18n %}
+{% load i18n cache %}
 
 {% block title %}Donate{% endblock %}
 
 {% block body_class %}page-donate{% endblock %}
 
 {% block content %}
+
+{% cache 600 donate_content %}
 <div class="hero">
     <div class="container">
         <h1 class="title">Donate Today!</h1>
@@ -65,6 +67,8 @@
         <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
     </form>
 </div>
+{% endcache %}
+
 {% endblock %}
 
 {% block extra_script %}
