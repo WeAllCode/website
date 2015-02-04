@@ -21,7 +21,7 @@ class GuardianForm(ModelForm):
 
     class Meta:
         model = Guardian
-        fields = ('phone',)
+        fields = ('phone','zip',)
 
 class StudentForm(ModelForm):
 
