@@ -1,6 +1,6 @@
 {% load static avatar_tags %}
 {% load cache %}
-{% cache 600 topnav %}
+{% cache 600 topnav request.user.username %}
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -25,8 +25,7 @@
                 {% endif %}
                 <li><a href="{% url 'auth_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
-                <li{% if '/accounts/login/' in request.path or '/register/' in request.path %} class="active"{% endif %}><a href="{% url 'auth_login' %}">My Dojo</a></li>
-                <!-- <li{% if '/register/' in request.path %} class="active"{% endif %}><a href="{% url 'register' %}">Register</a></li> -->
+                <li><a href="{% url 'auth_login' %}">My Dojo</a></li>
                 {% endif %}
             </ul>
         </div>
