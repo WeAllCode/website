@@ -858,7 +858,9 @@ def student_detail(request, student_id=False, template_name="student-detail.html
 
 def donate(request, template_name="donate.html"):
 
-    item_number = False
+    # if paypal notification response
+    if 'item_number1' in request.GET:
+        verifyDonation(request, request.GET['item_number1'])
 
     if request.method == 'POST':
 
@@ -875,10 +877,6 @@ def donate(request, template_name="donate.html"):
             return HttpResponse(donation.id)
         else:
             return HttpResponse('fail')
-
-    # if paypal notification response
-    if 'item_number1' in request.GET:
-        verifyDonation(request, request.GET['item_number1'])
 
     return render_to_response(template_name, {
         'site_url': settings.SITE_URL
