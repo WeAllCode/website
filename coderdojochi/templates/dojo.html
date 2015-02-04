@@ -93,7 +93,7 @@
                 </table>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have no upcoming classes. <a href="{% url 'sessions' %}">Find one now!</a></p>
+                <p class="text-muted">You have no upcoming classes. <a href="{% url 'sessions' %}">Find one now!</a></p>
                 {% endif %}
             </div>
             <div class="tab-pane" id="past">
@@ -134,7 +134,7 @@
                 </table>
                 {% else %}
                 <br>
-                <p class="text-center text-muted">You have not participated in any classes yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
+                <p class="text-muted">You have not participated in any classes yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
                 {% endif %}
             </div>
         </div>
@@ -165,7 +165,7 @@
                     </tbody>
                 </table>
                 {% else %}
-                <p class="text-center text-muted">No upcoming mentor meetings at this time. Please check back soon.</p>
+                <p class="text-muted">No upcoming mentor meetings at this time. Please check back soon.</p>
                 {% endif %}
             </div>
         {% endif %}
