@@ -88,7 +88,7 @@ class Guardian(models.Model):
     active = models.BooleanField(default=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone numbers should be numbers only. Up to 15 digits allowed.")
     phone = models.CharField(max_length=50, validators=[phone_regex], blank=True)
-    zip = models.CharField(max_length=20, blank=True)
+    zip = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
