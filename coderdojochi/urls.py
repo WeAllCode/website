@@ -33,9 +33,11 @@ urlpatterns = patterns('',
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/$', 'coderdojochi.views.session_sign_up', name='session_sign_up'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/enroll/$', 'coderdojochi.views.session_detail_enroll', name='session_detail_enroll'),
     url(r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)$', 'coderdojochi.views.session_detail', name='session_detail'),
-    
+    url(r'^class/(?P<session_id>[\d]+)/announce/$', 'coderdojochi.views.session_announce', name='session_announce'),
+
     url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)/sign-up/$', 'coderdojochi.views.meeting_sign_up', name='meeting_sign_up'),
     url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)$', 'coderdojochi.views.meeting_detail', name='meeting_detail'),
+    url(r'^meeting/(?P<meeting_id>[\d]+)/announce/$', 'coderdojochi.views.meeting_announce', name='meeting_announce'),
 
     url(r'^admin/class/(?P<session_id>[\d]+)/stats/$', 'coderdojochi.views.session_stats', name='stats'),
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in/$', 'coderdojochi.views.session_check_in', name='check_in'),
