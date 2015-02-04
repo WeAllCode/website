@@ -267,6 +267,7 @@ class Meeting(models.Model):
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
+    image_url = models.CharField(max_length=255, blank=True, null=True)
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
