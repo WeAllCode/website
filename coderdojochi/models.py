@@ -55,7 +55,7 @@ class CDCUser(AbstractUser):
                                  **extra_fields)
 
     def get_absolute_url(self):
-        return '/dojo'
+        return settings.SITE_URL + '/dojo'
 
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
@@ -193,7 +193,7 @@ class Session(models.Model):
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     active = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
-    announced = models.BooleanField(default=False)
+    announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
@@ -205,11 +205,11 @@ class Session(models.Model):
         verbose_name_plural = _("sessions")
 
     def get_absolute_url(self):
-        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
+        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
 
     # http://localhost:8000/class/2015/1/17/choose-your-adventure/1/sign-up/
     def get_signup_url(self):
-        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
+        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
 
 
     def get_current_orders(self, checked_in=None):
@@ -267,7 +267,7 @@ class Meeting(models.Model):
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
-    announced = models.BooleanField(default=False)
+    announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -276,7 +276,7 @@ class Meeting(models.Model):
         verbose_name_plural = _("meetings")
 
     def get_absolute_url(self):
-        return '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id)
+        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id)
 
     def __unicode__(self):
         return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")

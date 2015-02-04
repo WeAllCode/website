@@ -15,6 +15,11 @@
             {% if user.is_staff %}
             <div class="well well-sm">
                 <ul class="list-group">
+                    {% if meeting.announced_date %}
+                    <span class="text-muted list-group-item">Announced on {{ meeting.announced_date|date }}</span>
+                    {% else %}
+                    <a href="#" class="list-group-item" onclick="event.preventDefault()" data-toggle="popover" title="Announce Meeting?" data-content="<a class='btn btn-danger' href='{% url 'meeting_announce' meeting.id %}'>Announce</a>" data-html="true">Announce</a>
+                    {% endif %}
                     <a href="/admin/coderdojochi/meeting/{{ meeting.id }}" class="list-group-item">Edit Meeting</a>
                 </ul>
             </div>
