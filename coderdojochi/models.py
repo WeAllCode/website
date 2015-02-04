@@ -87,7 +87,8 @@ class Guardian(models.Model):
     last_name = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField(default=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone numbers should be numbers only. Up to 15 digits allowed.")
-    phone = models.CharField(max_length=255, validators=[phone_regex], blank=True)
+    phone = models.CharField(max_length=50, validators=[phone_regex], blank=True)
+    zip = models.CharField(max_length=20, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -173,7 +174,7 @@ class Location(models.Model):
     address2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Address 2")
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
-    zip = models.CharField(max_length=255)
+    zip = models.CharField(max_length=20)
 
     def __unicode__(self):
         return self.name
@@ -189,7 +190,10 @@ class Session(models.Model):
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
     waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
     waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
+    external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     active = models.BooleanField(default=False)
+    public = models.BooleanField(default=False)
+    announced = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
@@ -260,7 +264,10 @@ class Meeting(models.Model):
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.ForeignKey(Location)
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="meeting_mentors")
+    external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
+    public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
+    announced = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
