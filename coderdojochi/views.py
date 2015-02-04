@@ -863,8 +863,8 @@ def donate(request, template_name="donate.html"):
     if request.method == 'POST':
 
         # if paypal notification response
-        if 'item_number' in request.POST:
-            verifyDonation(request, request.POST['item_number'])
+        if 'item_number1' in request.POST:
+            verifyDonation(request, request.POST['item_number1'])
             return HttpResponse('success')
 
         # if new donation form submit
@@ -877,8 +877,8 @@ def donate(request, template_name="donate.html"):
             return HttpResponse('fail')
 
     # if paypal notification response
-    if 'item_number' in request.GET:
-        verifyDonation(request, request.GET['item_number'])
+    if 'item_number1' in request.GET:
+        verifyDonation(request, request.GET['item_number1'])
 
     return render_to_response(template_name, {
         'site_url': settings.SITE_URL
