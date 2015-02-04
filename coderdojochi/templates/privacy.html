@@ -1,12 +1,13 @@
 {% extends "_base.html" %}
 
-{% load i18n %}
+{% load i18n cache %}
 
 {% block title %}Privacy & Terms{% endblock %}
 
 {% block body_class %}page-terms{% endblock %}
 
 {% block content %}
+{% cache 600 privacy_content %}
 <div class="container">
     <h1>{% trans "Privacy &amp; Terms" %}</h1>
     <h2>
@@ -136,5 +137,5 @@
 
 
     </div>
-
+{% endcache %}
 {% endblock %}
