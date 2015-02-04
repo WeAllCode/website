@@ -60,8 +60,8 @@
         <input type="hidden" name="address_override" value="1">
         <input type="hidden" id="paymentFirstName" name="first_name" value="">
         <input type="hidden" id="paymentLastName" name="last_name" value="">
-        <input type="hidden" name="return" value="{{ site_url }}/donate">
-        <input type="hidden" name="notify_url" value="{{ site_url }}/donate">
+        <input type="hidden" id="donationReturn" name="return" value="{{ site_url }}/donate">
+        <input type="hidden" id="donationNotify" name="notify_url" value="{{ site_url }}/donate">
         <input type="hidden" name="cancel_return" value="{{ site_url }}/donate">
         <input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
         <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
@@ -85,6 +85,8 @@
         var $lastNameInput = $('#lastNameInput');
         var $emailInput = $('#emailInput');
         var $donationId = $('#donationId');
+        var $donationReturn = $('#donationReturn');
+        var $donationNotify = $('#donationNotify');
         var $paymentFirstName = $('#paymentFirstName');
         var $paymentLastName = $('#paymentLastName');
 
@@ -168,6 +170,8 @@
                     $paymentFirstName.val(formData.first_name);
                     $paymentLastName.val(formData.last_name);
                     $donationId.val(response);
+                    $donationReturn.val($donationReturn.val() + '?item_number1=' + response);
+                    $donationNotify.val($donationReturn.val() + '?item_number1=' + response);
                     $donateForm.off('submit');
                     $donateForm.submit();
                 } else {
