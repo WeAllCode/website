@@ -33,7 +33,7 @@
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
-        
+
         {% block topnav %}
             {% cache 600 topnav request.user.username %}
             {% include "_topnav.html" %}
@@ -64,12 +64,8 @@
 
         {% block script_base %}
 
-        <script src="//code.jquery.com/jquery-1.11.1.js"></script>
-        <script>
-        if (!window.jQuery) {
-            document.write('<script src="{% static 'libs/jquery/jquery-1.11.1.min.js' %}"><\/script>');
-        }
-        </script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>if (!window.jQuery) {document.write('<script src="{% static 'libs/jquery/jquery-1.11.2.min.js' %}"><\/script>');}</script>
 
         <script src="{% static "js/vendor/cdc.bootstrap.min.js" %}"></script>
         <script src="{% static "js/cdc.js" %}"></script>
