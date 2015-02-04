@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
 
     url(r'^register/$', RegisterView.as_view(), name='register'),
+    url(r'^accounts/register/$', RegisterView.as_view(), name='register'),
     url(r'^register/enroll/$', RegisterView.as_view(enroll=True), name='register_enroll'),
 
     url(r'^mentors/(?P<mentor_id>[\d]+)/reject-avatar/$', 'coderdojochi.views.mentor_reject_avatar', name='mentor_reject_avatar'),
@@ -51,6 +52,7 @@ urlpatterns = patterns('',
     url(r'^password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
 
+    url(r'^login/$', auth_views.login, {'template_name': 'registration/login.html'}),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'', include('social_auth.urls')),
     url(r'^dj-admin/', include(admin.site.urls)),
