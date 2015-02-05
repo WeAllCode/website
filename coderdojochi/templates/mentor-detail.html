@@ -24,7 +24,7 @@
     <div class="dojo-profile">
         <div class="well well-sm">
             <img src="{% avatar_url mentor.user 400 %}" class="avatar">
-            <h3>Joined: {{ mentor.created_at|naturalday|capfirst }}</h3>
+            <h3>Joined: {{ mentor.user.date_joined|naturalday|capfirst }}</h3>
         </div>
     </div>
 </div>
