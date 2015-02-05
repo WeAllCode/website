@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% load avatar_tags humanize %}
 
-{% block title %}My Dojo{% endblock %}
+{% block title %}{{ mentor.first_name }} {{ mentor.last_name }}{% endblock %}
 
 {% block body_class %}page-mentor-detail{% endblock %}
 
