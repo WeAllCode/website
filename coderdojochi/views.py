@@ -538,17 +538,9 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         if user_signed_up:
             meeting_obj.mentors.remove(mentor)
             undo = True
-            
-            if not Session.objects.filter(mentors=mentor, end_date__lte=timezone.now()).count():
-                mentor.has_attended_intro_meeting = False
-                mentor.save()
         else:
             meeting_obj.mentors.add(mentor)
-
-            if not mentor.has_attended_intro_meeting:
-                mentor.has_attended_intro_meeting = True
-                mentor.save()
-
+            
         meeting_obj.save()
 
         if undo:
