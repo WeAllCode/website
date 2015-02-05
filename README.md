@@ -18,8 +18,11 @@ python manage.py syncdb
 
 Follow prompts to set up admin account
 
+You will need node.js installed for the following steps (http://nodejs.org/)
+
 ```bash
-python manage.py runserver
+npm install
+grunt
 ```
 
 Navigate to http://localhost:8000
@@ -31,5 +34,5 @@ Each time you start working fresh you'll need to activate virtualenv and start t
 ```bash
 workon dojo-env
 cd ~/Sites/coderdojochi
-python manage.py runserver
+grunt
 ```
