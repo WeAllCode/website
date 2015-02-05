@@ -178,7 +178,7 @@
             {% endif %}
             
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
-            <h3>Joined: {{ account.created_at|naturalday|capfirst }}</h3>
+            <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
 
             {% if form %}
             <form action="" method="post">
