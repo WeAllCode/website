@@ -17,7 +17,7 @@ from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Orde
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm
 
 from calendar import HTMLCalendar
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from itertools import groupby
 
 from django.utils import timezone
@@ -437,11 +437,11 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 order = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
                 # we dont want guardians getting 7 day reminder email if they sign up within 10 days
-                if session_obj.start_date < timezone.now() + datetime.timedelta(days=10):
+                if session_obj.start_date < timezone.now() + timedelta(days=10):
                     order.week_reminder_sent = True
 
                 # or 24 hours notice if signed up within 48 hours
-                if session_obj.start_date < timezone.now() + datetime.timedelta(days=2):
+                if session_obj.start_date < timezone.now() + timedelta(days=2):
                     order.week_reminder_sent = True
                     order.day_reminder_sent = True
 
@@ -540,7 +540,7 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
             undo = True
         else:
             meeting_obj.mentors.add(mentor)
-            
+
         meeting_obj.save()
 
         if undo:
