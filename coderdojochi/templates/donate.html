@@ -171,7 +171,7 @@
                     $paymentLastName.val(formData.last_name);
                     $donationId.val(response);
                     $donationReturn.val($donationReturn.val() + '?item_number1=' + response);
-                    $donationNotify.val($donationReturn.val() + '?item_number1=' + response);
+                    $donationNotify.val($donationNotify.val() + '?item_number1=' + response);
                     $donateForm.off('submit');
                     $donateForm.submit();
                 } else {
