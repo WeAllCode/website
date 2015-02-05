@@ -434,16 +434,18 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 undo = True
             else:
                 ip = request.META['REMOTE_ADDR']
-                order = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
+                order, created = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
-                # we dont want guardians getting 7 day reminder email if they sign up within 10 days
-                if session_obj.start_date < timezone.now() + timedelta(days=10):
+                # we dont want guardians getting 7 day reminder email if they sign up within 9 days
+                if session_obj.start_date < timezone.now() + timedelta(days=9):
                     order.week_reminder_sent = True
 
                 # or 24 hours notice if signed up within 48 hours
                 if session_obj.start_date < timezone.now() + timedelta(days=2):
                     order.week_reminder_sent = True
                     order.day_reminder_sent = True
+
+                order.save()
 
         session_obj.save()
 
