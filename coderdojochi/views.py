@@ -605,7 +605,7 @@ def meeting_announce(request, meeting_id):
                 'meeting_location_zip': meeting_obj.location.zip,
                 'meeting_additional_info': meeting_obj.additional_info,
                 'meeting_url': meeting_obj.get_absolute_url()
-            }, mentor.user)
+            }, mentor.user.email)
 
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
@@ -888,7 +888,7 @@ def verifyDonation(request, donation_id):
             'amount': '$' + str(donation.amount),
             'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY'),
             'transaction_id': donation.id
-        })
+        }, donation.email)
         donation.receipt_sent = True
 
     donation.save()
@@ -1065,7 +1065,7 @@ def session_announce(request, session_id):
                 'class_location_zip': session_obj.location.zip,
                 'class_additional_info': session_obj.additional_info,
                 'class_url': session_obj.get_absolute_url()
-            }, mentor.user)
+            }, mentor.user.email)
     
         for guardian in Guardian.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-guardian', {
@@ -1086,7 +1086,7 @@ def session_announce(request, session_id):
                 'class_location_zip': session_obj.location.zip,
                 'class_additional_info': session_obj.additional_info,
                 'class_url': session_obj.get_absolute_url()
-            }, guardian.user)
+            }, guardian.user.email)
         
         session_obj.announced_date = timezone.now()
         session_obj.save()
@@ -1098,17 +1098,17 @@ def session_announce(request, session_id):
     return HttpResponseRedirect(reverse('cdc_admin'))
 
 
-def sendSystemEmail(request, subject, template_name, merge_vars, user=False):
+def sendSystemEmail(request, subject, template_name, merge_vars, email=False):
 
-    if not user:
-        user = request.user
+    if not email:
+        email = request.user.email
 
     merge_vars['current_year'] = timezone.now().year
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 
     msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
-                       to=[user.email])
+                       to=[email])
     msg.template_name = template_name
     msg.global_merge_vars = merge_vars
     msg.inline_css = True
