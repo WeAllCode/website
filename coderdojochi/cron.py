@@ -48,7 +48,7 @@ class SendReminders(CronJobBase):
             order.save()
 
         for order in orders_within_a_day:
-            sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian', {
+            sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian-24-hour', {
                 'student_first_name': order.student.first_name,
                 'student_last_name': order.student.last_name,
                 'class_code': order.session.course.code,
@@ -94,7 +94,7 @@ class SendReminders(CronJobBase):
 
         for session in sessions_within_a_day:
             for mentor in session.mentors.all():
-                sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
+                sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor-24-hour', {
                     'class_code': session.course.code,
                     'class_title': session.course.title,
                     'class_description': session.course.description,
