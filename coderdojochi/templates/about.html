@@ -8,18 +8,17 @@
 
 {% block content %}
 <div class="container">
-    {% cache 600 about_content %}
     <h1>{% trans "About CoderDojoChi" %}</h1>
     <div class="row">
         <p>CoderDojoChi is a volunteer not for profit that teaches web, game, and app development to youth ages 7 to 17.</p>
-        <p>Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through play, youth can build memorable experiences with mentors.</p>
+        <p>Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors.</p>
         <p>Ali Karbassi founded CoderDojoChi in 2013. It has grown to more than {{ mentor_count }} active mentors teaching over {{ students_served }} students. We host twice monthly workshops with dozens of youth, and reach hundreds of families across the Greater Chicago area.</p>
         <p>CoderDojoChi is an 501(c)(3) tax-exempt nonprofit organization in the United States.</p>
     </div>
     <div class="row">
-        <div class="half">
+        <div class="col-sm-6">
             <h2>Contact Us</h2>
-            <form method="post" action="{% url 'contact_form' %}" _lpchecked="1">
+            <form method="post" action="{% url 'contact' %}" _lpchecked="1">
                 {% csrf_token %}
                 <div class="form-group">
                     <label class="control-label" for="id_name">Your name</label>
@@ -33,10 +32,29 @@
                     <label class="control-label" for="id_body">Your message</label>
                     <textarea class="form-control" cols="40" id="id_body" name="body" placeholder="Your message" required="required" rows="10" title=""></textarea>
                 </div>
+                <div class="form-group">
+                    <input class="form-control" id="id_human" maxlength="100" name="human" title="" type="text">
+                </div>
                 <input class="btn-cdc btn-cdc-success" type="submit" value="Submit">
             </form>
         </div>
+        <div class="col-sm-5 col-sm-offset-1">
+            <br>
+            <div>
+                <a class="icon-action" href="{% url 'volunteer' %}">
+                    <span class="icon-volunteer fa fa-fw fa-group"></span>
+                </a>
+                <h1>Volunteer</h1>
+                <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
+            </div>
+            <div>
+                <a class="icon-action" href="{% url 'donate' %}">
+                    <span class="icon-donation fa fa-fw"></span>
+                </a>
+                <h1>Donate</h1>
+                <p>Funding goes 100% towards equipment and food for youth, attendees, and mentors.</p>
+            </div>
+        </div>
     </div>
-    {% endcache %}
 </div>
 {% endblock %}

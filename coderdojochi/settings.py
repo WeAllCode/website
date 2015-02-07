@@ -48,7 +48,6 @@ INSTALLED_APPS = (
     'avatar',
     'bootstrap3',
     'html5',
-    'contact_form',
     'djrill',
     'django_cron',
 

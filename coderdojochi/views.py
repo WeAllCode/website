@@ -14,7 +14,7 @@ from django.core.cache import cache
 from django import forms
 
 from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
-from coderdojochi.forms import MentorForm, GuardianForm, StudentForm
+from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 from calendar import HTMLCalendar
 from datetime import date, timedelta
@@ -913,6 +913,43 @@ def about(request, template_name="about.html"):
     return render_to_response(template_name, {
         'mentor_count': mentor_count,
         'students_served': students_served
+    }, context_instance=RequestContext(request))
+
+def contact(request, template_name="contact.html"):
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        human = True
+
+        if form.is_valid():
+
+            if request.POST['human']:
+                messages.add_message(request, messages.ERROR, 'Bad robot.')
+                human = False
+
+            if human:
+
+                msg = EmailMultiAlternatives(
+                    subject='CoderDojoChi | Contact Form Submission',
+                    body='Contact Form Submission from ' + request.POST['name'] + ' (' + request.POST['email'] + '). ' + request.POST['body'],
+                    from_email=request.POST['email'],
+                    to=[v for k,v in settings.ADMINS]
+                )
+
+                msg.attach_alternative('<p>Contact Form Submission from ' + request.POST['name'] + ' (<a href="mailto:' + request.POST['email'] + '">' + request.POST['email'] + '</a>).</p><p>' + request.POST['body'] + '</p><p><small>You can reply to this email.</small></p>', 'text/html')
+
+                msg.send()
+
+                messages.add_message(request, messages.SUCCESS, 'Thank you for contacting us! We will respond as soon as possible.')
+            
+            form = ContactForm()
+        else:
+            messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
+    else:
+        form = ContactForm()
+
+    return render_to_response(template_name, {
+        'form': form
     }, context_instance=RequestContext(request))
 
 def privacy(request, template_name="privacy.html"):

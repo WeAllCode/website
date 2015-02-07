@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^about/$','coderdojochi.views.about',name='about'),
     url(r'^privacy/$','coderdojochi.views.privacy',name='privacy'),
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
+    url(r'^contact/', 'coderdojochi.views.contact', name='contact'),
 
     url(r'^register/$', RegisterView.as_view(), name='register'),
     url(r'^accounts/register/$', RegisterView.as_view(), name='register'),
@@ -59,7 +60,6 @@ urlpatterns = patterns('',
     url(r'', include('social_auth.urls')),
     url(r'^dj-admin/', include(admin.site.urls)),
     url(r'^avatar/', include('avatar.urls')),
-    url(r'^contact/', include('contact_form.urls')),
 )
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
