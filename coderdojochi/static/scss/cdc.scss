@@ -91,6 +91,11 @@ hr {
     margin: 0 0 10px;
 }
 
+// honeypot
+#id_human {
+    display: none;
+}
+
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 
@@ -116,6 +121,11 @@ h1, h2, h3, h4 {
 
 .text-large {
     font-size: 1.2em;
+}
+
+.text-heading {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 2em;
 }
 
 /* -------------------------------------------------------------------------*/
@@ -275,6 +285,48 @@ form {
     }
 }
 
+a.icon-action {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.icon-volunteer {
+    color: #1a676a;
+    font-size: 170px;
+    transform: scale(.5);
+    margin: -30px auto -50px;
+    display: block;
+
+    &:hover {
+        color: #87c448;
+    }
+
+    .page-homepage & {
+        transform: scale(1);
+        margin: 36px auto 75px;
+    }
+}
+
+.icon-donation {
+    @include use-sprite("icon-donation", "global");
+    display: block;
+    transform: scale(.5);
+    margin: -30px auto -90px;
+
+    &:hover {
+        @include use-sprite("icon-donation-hover", "global");
+        display: block;
+    }
+
+    .page-homepage & {
+        margin: 0 auto;
+        transform: scale(1);
+    }
+}
+
 /* -------------------------------------------------------------------------*/
 /* Pages */
 
@@ -301,7 +353,6 @@ form {
         }
     }
 }
-
 
 // welcome
 

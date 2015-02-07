@@ -35,9 +35,7 @@
     <body class="{% block body_class %}{% endblock %}">
 
         {% block topnav %}
-            {% cache 600 topnav request.user.username %}
             {% include "_topnav.html" %}
-            {% endcache %}
         {% endblock %}
 
         {% block body_base %}
@@ -48,18 +46,19 @@
         {% endblock %}
 
         {% block footer_base %}
-            {% cache 600 footer %}
             <footer>
                 <div class="container">
-
                     <span class="pull-right">
-                        <a href="{% url 'contact_form' %}">Contact Us</a>
+                        {% if 'contact' not in request.path %}
+                        <a href="{% url 'contact' %}">Contact Us</a>
+                        {% endif %}
+                        {% if 'privacy' not in request.path %}
                         <a href="{% url 'privacy' %}">Privacy &amp; Terms</a>
+                        {% endif %}
                     </span>
                     <p class="text-muted pull-left">&copy;2013&ndash;{% now "Y" %}. All rights reserved.</p>
                 </div>
             </footer>
-            {% endcache %}
         {% endblock %}
 
         {% block script_base %}

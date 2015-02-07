@@ -8,7 +8,6 @@
 
 {% block content %}
 
-{% cache 600 homepage_hero_content %}
 <div class="hero">
     <div class="container">
         <div id="carousel-home-hero" class="carousel slide" data-ride="carousel">
@@ -22,7 +21,12 @@
         </div>
     </div>
 </div>
-{% endcache %}
+<div class="homepage-about">
+    <div class="container">
+        <h1 class="text-center">{% trans "Our Mission" %}</h1>
+        <p>The CoderDojoChi mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors. We are a 100% volunteer not for profit organization that teaches web, game, and app development to youth ages 7 to 17.</p>
+    </div>
+</div>
 
 {% if upcoming_classes %}
 <div class="upcoming-sessions">
@@ -52,7 +56,7 @@
 <div class="container">
     <div class="row block-cta">
         <div class="homepage-volunteer half">
-            <a class="homepage-action" href="{% url 'volunteer' %}">
+            <a class="icon-action" href="{% url 'volunteer' %}">
                 <span class="icon-volunteer fa fa-fw fa-group"></span>
             </a>
             <h1>Volunteer</h1>
