@@ -1,3 +1,0 @@
-Contact form submission from {{ name }} ({{ email }}) on {{ site }}.
-
-{{ body }}
