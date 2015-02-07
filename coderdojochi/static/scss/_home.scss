@@ -1,5 +1,5 @@
 .hero {
-    background-color: #1a676a;
+    background-color: $cdc-color-dark-alt;
 
     .carousel-control {
         background-image: none;
@@ -20,6 +20,14 @@
     .homepage-about {
         padding: 10px 0 50px;
         font-size: 20px;
+
+        h1 {
+            background: $cdc-color;
+            color: #fff;
+            display: inline-block;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
     }
 
 
