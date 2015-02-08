@@ -49,7 +49,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'html5',
     'djrill',
-    'django_cron',
+    #'django_cron',
 
     #coderdojochi
     'coderdojochi',
