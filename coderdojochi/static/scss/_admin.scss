@@ -1,0 +1,19 @@
+.session {
+    .title {
+        font-size: 25px;
+        display: block;
+        text-transform: uppercase;
+
+        .name & {
+            font-size: 22px;
+        }
+    }
+
+    .subtitle {
+        display: block;
+    }
+
+    a {
+        text-decoration: none;
+    }
+}
