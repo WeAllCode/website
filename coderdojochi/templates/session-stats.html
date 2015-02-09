@@ -17,30 +17,32 @@
     </ol>
     {% if session.get_current_orders.count %}
     <div class="row">
-        <div class="half">
-            <div class="panel panel-default">
-                <div class="container">
-                    <h3>Attendance:</h3>
-                    <h2>{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
-                            {{ attendance_percentage }}%
-                        </div>
+        <div class="col-md-6">
+            <div class="col-xs-12 panel panel-default">
+                <h3>Attendance:</h3>
+                <h2>{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
+                        {{ attendance_percentage }}%
                     </div>
-                    <h3>Average Age:</h3>
-                    <h2>{{ average_age }}</h2>
                 </div>
             </div>
         </div>
-        <div class="half">
-            <div class="panel panel-default">
-                <div class="container">
-                    <h3>Genders:</h3>
-                    <h2>Male</h2>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
-                            {{ attendance_percentage }}%
-                        </div>
+
+        <div class="col-md-6">
+            <div class="col-xs-12 panel panel-default">
+                <h3>Average Age:</h3>
+                <h2>{{ average_age }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="col-xs-12 panel panel-default">
+                <h3>Genders:</h3>
+                <h2>Male</h2>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
+                        {{ attendance_percentage }}%
                     </div>
                 </div>
             </div>
