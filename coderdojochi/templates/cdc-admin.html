@@ -22,22 +22,32 @@
         {% for session in upcoming_sessions %}
             <div class="row session">
                 <div class="col-md-2 text-center">
-                    <span class="title">{{ session.start_date|date }}</span>
+                    <span class="title">{{ session.start_date|date:"M j" }}</span>
                     <span class="subtitle">{{ session.start_date|time }}&ndash;{{ session.end_date|time }}</span>
                 </div>
 
                 <div class="col-md-6 name">
-                    <span class="title">{{ session.course.title }}</span>
+                    <span class="title">
+                        <a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a>
+                    </span>
                     <span class="subtitle">@ {{ session.location.name }}</span>
                 </div>
 
                 <div class="col-md-2 text-center">
-                    <span class="title">{{ session.get_current_orders.count }} / {{ session.capacity }}</span>
+                    <span class="title">
+                        <a href="{% url 'check_in' session.id %}">
+                            {{ session.get_current_orders.count }} / {{ session.capacity }}
+                        </a>
+                    </span>
                     <span class="subtitle">Students</span>
                 </div>
 
                 <div class="col-md-2 text-center">
-                    <span class="title">?? / ??</span>
+                    <span class="title">
+                        <a href="#">
+                            ?? / ??
+                        </a>
+                    </span>
                     <span class="subtitle">Volunteers</span>
                 </div>
             </div>
