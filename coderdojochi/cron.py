@@ -72,14 +72,14 @@ class SendReminders(CronJobBase):
 
         for session in sessions_within_a_week:
             for mentor in session.mentors.all():
-	           sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
+               sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
                     'class_code': session.course.code,
                     'class_title': session.course.title,
                     'class_description': session.course.description,
-                    'class_start_date': arrow.get(session.start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session.start_date).format('h:mm a'),
-                    'class_end_date': arrow.get(session.end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session.end_date).format('h:mm a'),
+                    'class_start_date': arrow.get(session.mentor_start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session.mentor_start_date).format('h:mm a'),
+                    'class_end_date': arrow.get(session.mentor_end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session.mentor_end_date).format('h:mm a'),
                     'class_location_name': session.location.name,
                     'class_location_address': session.location.address,
                     'class_location_address2': session.location.address2,
@@ -98,10 +98,10 @@ class SendReminders(CronJobBase):
                     'class_code': session.course.code,
                     'class_title': session.course.title,
                     'class_description': session.course.description,
-                    'class_start_date': arrow.get(session.start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session.start_date).format('h:mm a'),
-                    'class_end_date': arrow.get(session.end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session.end_date).format('h:mm a'),
+                    'class_start_date': arrow.get(session.mentor_start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session.mentor_start_date).format('h:mm a'),
+                    'class_end_date': arrow.get(session.mentor_end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session.mentor_end_date).format('h:mm a'),
                     'class_location_name': session.location.name,
                     'class_location_address': session.location.address,
                     'class_location_address2': session.location.address2,
