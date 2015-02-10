@@ -13,7 +13,7 @@
 
 {% block content %}
 <div class="container registration min-height">
-<h1><small><small><a href="{% url 'dojo' %}">Back</a></small></small> Edit Student Info</h1>
+<h1><small><a href="{% url 'dojo' %}">Back</a></small> Edit Student Info</h1>
 <form action="" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
@@ -33,10 +33,12 @@
     $(function() {
         $('input[type=date]').pickadate({
             format: 'yyyy-mm-dd',
+            today: false,
+            clear: false,
             selectMonths: true,
-            selectYears: true,
+            selectYears: 17,
             min: -(17*365),
-            max: -(7*365)
+            max: -(5*365)
         });
     });
 </script>
