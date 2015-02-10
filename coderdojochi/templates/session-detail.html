@@ -160,7 +160,7 @@
             <h2 class="title light space-above">Class Information</h2>
             <p>Who:<br>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
 
-            <p>When:<br>{{ session.start_date|date }} from {{ session.start_date|time }} to {{ session.end_date|time }}</p>
+            <p>When:<br>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.mentor_end_date|time }}{% endif %}</p>
 
             <p>Where:<br><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
 

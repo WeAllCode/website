@@ -180,8 +180,10 @@ class Location(models.Model):
 
 class Session(models.Model):
     course = models.ForeignKey(Course)
-    start_date = models.DateTimeField(default=session_default_start_time)
-    end_date = models.DateTimeField(default=session_default_end_time)
+    start_date = models.DateTimeField(default=session_default_start_time())
+    end_date = models.DateTimeField(default=session_default_end_time())
+    mentor_start_date = models.DateTimeField(default=session_default_start_time() - timedelta(hours=1))
+    mentor_end_date = models.DateTimeField(default=session_default_end_time() + timedelta(hours=1))
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
@@ -206,10 +208,8 @@ class Session(models.Model):
     def get_absolute_url(self):
         return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
 
-    # http://localhost:8000/class/2015/1/17/choose-your-adventure/1/sign-up/
     def get_signup_url(self):
         return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
-
 
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
