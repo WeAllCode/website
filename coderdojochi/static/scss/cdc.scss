@@ -187,11 +187,7 @@ a {
 }
 
 .main {
-    margin: 15px 0 0;
-
-    @include breakpoint($tablet-and-up) {
-        margin: 30px 0 0;
-    }
+    margin: 60px 0 0;
 
     .page-homepage &, .page-donate & {
         margin: 0;
@@ -265,6 +261,12 @@ a {
 form {
     p {
         margin: .5em 0;
+    }
+
+    // bootstrap override
+    .form-control[readonly] {
+        background-color: #fff;
+        cursor: text;
     }
 }
 
