@@ -20,6 +20,8 @@ node_modules/
 *.pot
 *.pyc
 local_settings.py
+test_settings.py
+production_settings.py
 
 # ------------------------------
 # Python
