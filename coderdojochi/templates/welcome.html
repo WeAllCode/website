@@ -6,6 +6,11 @@
 
 {% block body_class %}page-welcome{% endblock %}
 
+{% block extra_style %}
+<link href="{% static "css/vendor/picker.default.css" %}" rel="stylesheet">
+<link href="{% static "css/vendor/picker.default.date.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div class="container registration min-height">
     {% if role %}
@@ -59,10 +64,22 @@
 
 {% block extra_script %}
 <script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
+<script src="{% static "js/vendor/picker.js" %}"></script>
+<script src="{% static "js/vendor/picker.date.js" %}"></script>
+<!--[if lt IE 9]>
+    <script src="{% static 'js/vendor/picker.legacy.js' %}"></script>
+<![endif]-->
 <script>
     $(function() {
         $('#id_phone').mask('(999) 999-9999');
-        $("#id_zip").mask("99999");
+        $('#id_zip').mask('99999');
+        $('input[type=date]').pickadate({
+            format: 'mm/dd/yyyy',
+            selectMonths: true,
+            selectYears: true,
+            min: -(17*365),
+            max: -(7*365)
+        });
     });
 </script>
 {% endblock %}
