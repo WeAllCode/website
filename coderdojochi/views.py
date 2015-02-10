@@ -127,6 +127,9 @@ def home(request, template_name="home.html"):
 @login_required
 def welcome(request, template_name="welcome.html"):
 
+
+    keepGoing = True
+
     user = request.user
     account = False
     add_student = False
@@ -157,31 +160,31 @@ def welcome(request, template_name="welcome.html"):
                         new_student.save()
                         messages.add_message(request, messages.SUCCESS, 'Student Registered.')
                     else:
-                        messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
-                        return HttpResponseRedirect(reverse('welcome'))
+                        keepGoing = False
+
+                    if keepGoing:
+                        if next:
+                            if 'enroll' in request.GET:
+                                return HttpResponseRedirect(next + '?enroll=True&student=' + str(new_student.id))
+                            else:
+                                return HttpResponseRedirect(next)
+                        else:
+                            return HttpResponseRedirect(reverse('welcome'))
+
+            if keepGoing:
+                if form.is_valid():
+                    form.save()
+                    messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
 
                     if next:
                         if 'enroll' in request.GET:
-                            return HttpResponseRedirect(next + '?enroll=True&student=' + str(new_student.id))
+                            return HttpResponseRedirect(next + '?enroll=True')
                         else:
                             return HttpResponseRedirect(next)
                     else:
-                        return HttpResponseRedirect(reverse('welcome'))
-
-            if form.is_valid():
-                form.save()
-                messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
-
-                if next:
-                    if 'enroll' in request.GET:
-                        return HttpResponseRedirect(next + '?enroll=True')
-                    else:
-                        return HttpResponseRedirect(next)
+                        return HttpResponseRedirect(reverse('dojo'))
                 else:
-                    return HttpResponseRedirect(reverse('dojo'))
-            else:
-                messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
-                return HttpResponseRedirect(reverse('welcome'))
+                    keepGoing = False
         else:
             if request.POST.get('role') == 'mentor':
                 role = 'mentor'
@@ -234,7 +237,7 @@ def welcome(request, template_name="welcome.html"):
 
                 return HttpResponseRedirect(reverse('welcome') + next)
 
-    if role:
+    if role and keepGoing:
         if role == 'mentor':
             mentor = get_object_or_404(Mentor, user=user)
             account = mentor
@@ -249,7 +252,7 @@ def welcome(request, template_name="welcome.html"):
                 add_student = True
                 form = StudentForm(initial={'guardian': guardian.pk})
 
-    if account and account.first_name:
+    if account and account.first_name and keepGoing:
         if role == 'mentor':
             if next:
                 return HttpResponseRedirect(next)
@@ -258,10 +261,11 @@ def welcome(request, template_name="welcome.html"):
         else:
             students = account.get_students() if account.get_students().count() else False
 
-    if 'next' in request.GET:
-        next = request.GET['next']
-    else:
-        next = False
+    if keepGoing:
+        if 'next' in request.GET:
+            next = request.GET['next']
+        else:
+            next = False
 
     return render_to_response(template_name, {
         'role': role,
