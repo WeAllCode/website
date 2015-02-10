@@ -32,9 +32,9 @@
                     {% if user.is_authenticated %}
                         {% if mentor_signed_up %}
                             <p>You are signed up to attend this meeting.</p>
-                            <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
+                            <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                         {% else %}
-                            <p><a href="{% url 'meeting_sign_up' meeting.start_date.year meeting.start_date.month meeting.start_date.day meeting.id %}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
+                            <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                         {% endif %}
                     {% else %}
                     <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
