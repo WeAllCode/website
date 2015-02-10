@@ -1,10 +1,15 @@
 {% extends "_base.html" %}
 
-{% load i18n avatar_tags bootstrap3 %}
+{% load i18n avatar_tags bootstrap3 staticfiles %}
 
 {% block title %}{{ student.first_name }} {{ student.last_name }}{% endblock %}
 
 {% block body_class %}page-student-detail{% endblock %}
+
+{% block extra_style %}
+<link href="{% static "css/vendor/picker.default.css" %}" rel="stylesheet">
+<link href="{% static "css/vendor/picker.default.date.css" %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
 <div class="container registration min-height">
@@ -15,4 +20,24 @@
     <button class="submit btn btn-success btn-lg">Update</button> <a href="{% url 'dojo' %}" class="btn-link">Cancel</button>
 </form>
 </div>
+{% endblock %}
+
+
+{% block extra_script %}
+<script src="{% static "js/vendor/picker.js" %}"></script>
+<script src="{% static "js/vendor/picker.date.js" %}"></script>
+<!--[if lt IE 9]>
+    <script src="{% static 'js/vendor/picker.legacy.js' %}"></script>
+<![endif]-->
+<script>
+    $(function() {
+        $('input[type=date]').pickadate({
+            format: 'yyyy-mm-dd',
+            selectMonths: true,
+            selectYears: true,
+            min: -(17*365),
+            max: -(7*365)
+        });
+    });
+</script>
 {% endblock %}
