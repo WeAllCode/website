@@ -48,15 +48,22 @@
             font-size: 20px;
         }
 
-        .icon-action {
-
+        .icon-action span {
+            margin: 0 auto -70px;
             transform: scale(.5);
-            margin: -30px auto -100px;
             display: block;
 
             @include breakpoint($phone-and-up) {
                 transform: scale(1);
-                margin: 0;
+                margin: 0 auto -30px;
+            }
+        }
+
+        .icon-action span.icon-volunteer {
+            margin: 36px auto -50px;
+
+            @include breakpoint($phone-and-up) {
+                margin: 36px auto 46px;
             }
         }
     }
