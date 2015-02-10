@@ -187,7 +187,12 @@ a {
 }
 
 .main {
-    margin: 60px 0 0;
+    
+    margin: 80px 0 0;
+
+    @include breakpoint($phone-and-up) { 
+        margin: 60px 0 0;
+    }
 
     .page-homepage &, .page-donate & {
         margin: 0;
@@ -305,11 +310,6 @@ a.icon-action {
     &:hover {
         color: #87c448;
     }
-
-    .page-homepage & {
-        transform: scale(1);
-        margin: 36px auto 75px;
-    }
 }
 
 .icon-donation {
@@ -321,11 +321,6 @@ a.icon-action {
     &:hover {
         @include use-sprite("icon-donation-hover", "global");
         display: block;
-    }
-
-    .page-homepage & {
-        margin: 0 auto;
-        transform: scale(1);
     }
 }
 
@@ -610,15 +605,6 @@ a.icon-action {
 
 .page-class-detail {
 
-    .title {
-        font-size: 24px;
-        text-transform: uppercase;
-    }
-
-    .subtitle {
-        @extend .title;
-        font-size: 18px;
-    }
 
     // main content
 
