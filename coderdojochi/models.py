@@ -278,6 +278,9 @@ class Meeting(models.Model):
     def get_absolute_url(self):
         return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id)
 
+    def get_signup_url(self):
+        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/sign-up/'
+
     def __unicode__(self):
         return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
 
