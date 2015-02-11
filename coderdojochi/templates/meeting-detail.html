@@ -4,6 +4,11 @@
 
 {% block title %}{{ meeting.meeting_type.title }}{% endblock %}
 
+{% block extra_meta %}
+<meta property="og:url" content="{{ meeting.get_absolute_url }}">
+<meta property="og:title" content="{{ meeting.start_date|date }} | {{ meeting.meeting_type.title }}">
+{% endblock %}
+
 {% block body_class %}page-class-detail{% endblock %}
 
 {% block content %}
