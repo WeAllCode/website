@@ -1,20 +1,23 @@
 {% load staticfiles i18n cache %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
-        <title>{% block notitle %}{% block title_base %}{% block title %}{% endblock %} - CoderDojoChi{% endblock %}{% endblock %}</title>
-        {% cache 600 meta %}
+        <title>{% block title %}CoderDojoChi - Welcome!{% endblock %}</title>
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="description" content="">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <!-- Facebook -->
-            <meta property="og:image" content="http://coderdojochi.org/assets/images/logo.png" />
-            <!-- <meta property="og:url" content="http://coderdojochi.org" /> -->
-            <!-- <meta property="og:title" content="title here - CoderDojoChi" /> -->
-            <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon" />
-        {% endcache %}
+            <meta name="description" content="CoderDojoChi is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
+            <meta property="og:description" content="CoderDojoChi is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
+            <meta property="og:image" content="http://coderdojochi.org/static/images/coderdojochi_600x300_transparent.png">
+            <meta property="og:site_name" content="CoderdojoChi">
+            <meta property="fb:app_id" content="1454178301519376">
 
-        {% cache 600 styles %}
+            {% block extra_meta %}
+            <meta property="og:url" content="http://coderdojochi.org">
+            <meta property="og:title" content="CoderDojoChi - Welcome!">
+            {% endblock %}
+            
+            
+            <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon">
             <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,700' rel='stylesheet' type='text/css'>
             <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
             <link href="{% static "css/vendor/bootstrap.min.css" %}" rel="stylesheet">
@@ -25,7 +28,6 @@
             <script src="{% static 'js/vendor/selectivizr.js' %}"></script>
             <script src="{% static 'js/vendor/respond.js' %}"></script>
             <![endif]-->
-        {% endcache %}
 
         {% block extra_style %}{% endblock %}
 

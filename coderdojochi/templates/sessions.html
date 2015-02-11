@@ -2,7 +2,12 @@
 
 {% load i18n coderdojochi_extras %}
 
-{% block title %}Class Schedule{% endblock %}
+{% block title %}Upcoming Classes{% endblock %}
+
+{% block extra_meta %}
+<meta property="og:url" content="{{ session.get_absolute_url }}">
+<meta property="og:title" content="Check out our upcoming classes!">
+{% endblock %}
 
 {% block body_class %}page-classes{% endblock %}
 
