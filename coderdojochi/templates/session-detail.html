@@ -4,6 +4,11 @@
 
 {% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }}{% endblock %}
 
+{% block extra_meta %}
+<meta property="og:url" content="{{ session.get_absolute_url }}">
+<meta property="og:title" content="{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }}">
+{% endblock %}
+
 {% block body_class %}page-class-detail{% endblock %}
 
 {% block extra_script %}
