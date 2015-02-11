@@ -6,7 +6,7 @@
 
 {% block extra_meta %}
 <meta property="og:url" content="{{ session.get_absolute_url }}">
-<meta property="og:title" content="Check out our upcoming class! -- {% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}">
+<meta property="og:title" content="Check out our upcoming class! {% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}">
 {% endblock %}
 
 {% block body_class %}page-class-detail{% endblock %}
