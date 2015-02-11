@@ -412,7 +412,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         mentor = get_object_or_404(Mentor, user=request.user)
 
         if not mentor.has_attended_intro_meeting:
-            messages.add_message(request, messages.WARNING, 'You must attend at least one mentor intro meeting prior to mentoring at a live class. Please RSVP for an upcoming meeting below.')
+            messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a mentor meeting. Please RSVP below.')
             return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
 
         user_signed_up = True if mentor in session_obj.mentors.all() else False
