@@ -25,7 +25,7 @@
         {% endcache %}
 
         {% if mentors %}
-        <h1>Meet Our Volunteers</h1>
+        <h1>Meet Our Volunteers <a href="{% url 'auth_login' %}" class="btn-cdc">Join us now!</a></h1>
         <div class="mentors">
             {% for mentor in mentors %}
             <a href="{% url 'mentor_detail' mentor.id %}" class="mentor">
@@ -35,9 +35,6 @@
                 </div>
             </a>
             {% endfor %}
-            <span class="mentor">
-                <a href="{% url 'auth_login' %}" class="btn-cdc">Join us now!</a>
-            </span>
         </div>
         {% endif %}
     </div>
