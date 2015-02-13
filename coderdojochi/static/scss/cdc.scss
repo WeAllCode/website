@@ -749,7 +749,7 @@ a.icon-action {
 
     .mentor {
 
-        display: block;
+        @include gallery(1 of 2);
         margin-bottom: 20px;
         position: relative;
 
