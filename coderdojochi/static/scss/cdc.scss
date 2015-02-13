@@ -764,8 +764,12 @@ a.icon-action {
 
         .page-class-detail &,
         .page-meeting-detail & {
-            @include gallery(1 of 3);
+            @include gallery(1 of 2);
             margin-bottom: 20px;
+
+            @include breakpoint($phone-and-up) {
+                @include gallery(1 of 3);
+            }
         }
 
         img {
