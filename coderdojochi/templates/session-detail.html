@@ -194,13 +194,11 @@
             <div class="mentors">
                 {% for mentor in session.mentors.all %}
                     {% if mentor.public == True %}
-                    <a href="{% url 'mentor_detail' mentor.id %}">
-                    <span class="mentor">
+                    <a class="mentor" href="{% url 'mentor_detail' mentor.id %}">
                         {% avatar mentor.user 250 %}
                         <div class="info">
                             {{ mentor.first_name }} {{ mentor.last_name }}
                         </div>
-                    </span>
                     </a>
                     {% endif %}
                 {% endfor %}
