@@ -70,13 +70,11 @@
             <h2 class="subtitle">Mentors Attending</h2>
             <div class="mentors">
                 {% for mentor in meeting.mentors.all %}
-                <a href="{% url 'mentor_detail' mentor.id %}">
-                <span class="mentor">
+                <a href="{% url 'mentor_detail' mentor.id %}" class="mentor">
                     {% avatar mentor.user 250 %}
                     <div class="info">
                         {{ mentor.first_name }} {{ mentor.last_name }}
                     </div>
-                </span>
                 </a>
                 {% endfor %}
             </div>
