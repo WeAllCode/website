@@ -625,7 +625,7 @@ def volunteer(request, template_name="volunteer.html"):
     if cache.get('public_mentors'):
         mentors = cache.get('public_mentors')
     else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('created_at')
+        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
         cache.set('public_mentors', mentors, 600)
 
     if cache.get('upcoming_public_meetings'):
@@ -764,7 +764,7 @@ def mentors(request, template_name="mentors.html"):
     if cache.get('public_mentors'):
         mentors = cache.get('public_mentors')
     else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('created_at')
+        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
         cache.set('public_mentors', mentors, 600)
 
     return render_to_response(template_name, {
