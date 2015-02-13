@@ -188,10 +188,10 @@ a {
 
 .main {
     
-    margin: 80px 0 0;
+    margin: 30px 0 0;
 
     @include breakpoint($phone-and-up) { 
-        margin: 60px 0 0;
+        margin: 40px 0 0;
     }
 
     .page-homepage &, .page-donate & {
