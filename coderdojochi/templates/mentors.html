@@ -9,7 +9,7 @@
 
 <div class="container">
 
-    <h1>Meet the mentors</h1>
+    <h1>Meet Our Mentors <a href="{% url 'auth_login' %}" class="btn-cdc">Join us now!</a></h1>
     <div class="mentors">
         {% for mentor in mentors %}
         <a href="{% url 'mentor_detail' mentor.id %}" class="mentor">
