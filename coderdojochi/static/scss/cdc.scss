@@ -231,9 +231,6 @@ a {
 // Donate
 @import "_donate";
 
-// Volunteer (page-volunteer)
-@import "_volunteer";
-
 // Login (page-auth)
 @import "_login";
 
@@ -752,14 +749,12 @@ a.icon-action {
 
     .mentor {
 
-        float: left;
-        margin: 0 20px 20px 0;
-        position: relative;
+        @include gallery(1 of 5);
 
         img {
-            // width: 140px;
-            // height: 140px;
-            float: left;
+            
+            width: 100%;
+            height: auto;
 
             // Grayscale
             -webkit-filter: grayscale(100%);
