@@ -41,3 +41,12 @@
     <p>{% trans "Forgot your password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>!</p>
 </div>
 {% endblock %}
+
+
+{% block extra_script %}
+<script>
+    $(function() {
+        $('#id_username').focus();
+    });
+</script>
+{% endblock %}
