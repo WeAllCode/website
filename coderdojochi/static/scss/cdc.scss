@@ -749,9 +749,18 @@ a.icon-action {
 
     .mentor {
 
-        @include gallery(1 of 5);
+        display: block;
         margin-bottom: 20px;
         position: relative;
+
+        @include breakpoint($phone-and-up) {
+            @include gallery(1 of 3);
+        }
+
+        @include breakpoint($tablet-and-up) {
+            @include gallery(1 of 5);
+            margin-bottom: 30px;
+        }
 
         img {
             
