@@ -762,6 +762,12 @@ a.icon-action {
             margin-bottom: 30px;
         }
 
+        .page-class-detail &,
+        .page-meeting-detail & {
+            @include gallery(1 of 2);
+            margin-bottom: 20px;
+        }
+
         img {
             
             width: 100%;
