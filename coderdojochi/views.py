@@ -188,18 +188,20 @@ def welcome(request, template_name="welcome.html"):
         else:
             if request.POST.get('role') == 'mentor':
                 role = 'mentor'
-                mentor = Mentor(user=user)
+                mentor, created = Mentor.objects.get_or_create(user=user)
                 mentor.first_name = user.first_name
                 mentor.last_name = user.last_name
                 mentor.save()
                 user.role = role
             else:
                 role = 'guardian'
-                guardian = Guardian(user=user)
+                guardian, created = Guardian.objects.get_or_create(user=user)
                 guardian.first_name = user.first_name
                 guardian.last_name = user.last_name
                 guardian.save()
                 user.role = role
+
+            user.save()
 
 
             merge_vars = {
@@ -212,8 +214,6 @@ def welcome(request, template_name="welcome.html"):
                 next = '?next=' + next
             else:
                 next = ''
-
-            user.save()
 
             if role == 'mentor':
 
