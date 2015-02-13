@@ -749,7 +749,8 @@ a.icon-action {
 
     .mentor {
 
-        @include gallery(1 of 5);
+        @include gallery(3 of 12);
+        position: relative;
 
         img {
             
