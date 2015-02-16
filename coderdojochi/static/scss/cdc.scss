@@ -33,6 +33,11 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Quicksand', sans-serif;
 }
 
+// Bootstrap fix
+.center-block {
+    float: none;
+}
+
 // ---------------------------------------------------------------------------
 // Global Helpers
 
@@ -187,10 +192,10 @@ a {
 }
 
 .main {
-    
+
     margin: 30px 0 0;
 
-    @include breakpoint($phone-and-up) { 
+    @include breakpoint($phone-and-up) {
         margin: 40px 0 0;
     }
 
@@ -599,151 +604,10 @@ a.icon-action {
 }
 
 // class-detail
-
-.page-class-detail {
-
-
-    // main content
-
-    .class-detail-content {
-
-        @include span(12);
-
-        @include breakpoint($tablet-and-up) {
-            @include span(7);
-        }
-
-        @include breakpoint($desktop-and-up) {
-            @include span(8);
-        }
-
-        .subtitle {
-            margin-bottom: 30px;
-        }
-    }
-
-    .teachers {
-        overflow: hidden;
-        margin-bottom: 40px;
-
-        .teacher {
-            margin: 0 0 10px 0;
-            @extend .row;
-
-            .image {
-
-                @include breakpoint($tablet-and-up) {
-                    @include span(6);
-
-                }
-
-                img {
-                    width: 100%;
-                    height: auto;
-                }
-            }
-
-            .info {
-
-                @include breakpoint($tablet-and-up) {
-                    @include span(6 last);
-                }
-
-                .subtitle {
-                    margin: 0 0 30px;
-                }
-            }
-        }
-    }
-
-    .students {
-        width: 100%;
-
-        td {
-            padding: 5px;
-        }
-    }
-
-    // sidebar
-
-    .class-detail-sidebar-right {
-        color: #666;
-
-        @include span(12);
+@import "_class-detail";
 
 
-        @include breakpoint($tablet-and-up) {
-            @include span(last 4);
-        }
-
-        @include breakpoint($desktop-and-up) {
-            @include span(last 3.4);
-        }
-
-        .content {
-            margin-bottom: 20px;
-            background: #fff;
-            padding: 18px 26px;
-            background: #fff;
-        }
-    }
-
-    .add-another {
-        display: block;
-        margin: 10px 0;
-    }
-
-    .map {
-        margin: 20px 0 40px;
-
-        .static-map {
-            display: block;
-            width: 100%;
-
-            img {
-                width: 100%;
-            }
-        }
-    }
-
-    .upcoming-class {
-
-        padding: 25px 0;
-        position: relative;
-        border-top: 1px solid $cdc-color;
-        font-size: 14px;
-        line-height: 1.3;
-
-        .date {
-            position: absolute;
-            left: 0;
-            top: 20px;
-            text-align: center;
-            width: 40px;
-
-            margin-right: 10px;
-
-            strong{
-                font-size: 24px;
-            }
-        }
-
-        a {
-            padding-left: 55px;
-            display: inline-block;
-            text-transform: uppercase;
-        }
-    }
-
-    .social-sharing {
-        li {
-            padding: 0;
-        }
-    }
-
-}
-
- .mentors {
+.mentors {
     overflow: hidden;
     padding-top: 10px;
 
@@ -773,7 +637,7 @@ a.icon-action {
         }
 
         img {
-            
+
             width: 100%;
             height: auto;
 
