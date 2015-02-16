@@ -1,9 +1,11 @@
 {
     "name": "coderdojochi",
     "version": "0.0.2",
+    "private": true,
     "description": "coderdojochi.org development dependencies",
     "authors": {
-        "CoderDojoChi": "brett@coderdojochi.org"
+        "Brett Kellgren": "brett@coderdojochi.org",
+        "Ali Karbassi": "ali@coderdojochi.org"
     },
     "devDependencies": {
         "grunt": "0.4.5",
