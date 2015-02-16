@@ -437,7 +437,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 order.delete()
                 undo = True
             else:
-                ip = request.META['REMOTE_ADDR']
+                ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
                 order, created = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
                 # we dont want guardians getting 7 day reminder email if they sign up within 9 days
