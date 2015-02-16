@@ -20,28 +20,87 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="title">{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }} <small>{{ session.start_date|date }}</small></h1>
     <div class="row">
-        <div class="class-detail-sidebar-right">
+        <div class="col-xs-12">
+            <h1 class="title">{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }} <small>{{ session.start_date|date }}</small></h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 class-detail-content">
+
+            <p>{{ session.course.description|safe }}</p>
+
+            <h2 class="title light space-above">Class Information</h2>
+
+            <h3>Who</h4>
+            <p>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
+
+            <h3>When</h3>
+            <p>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
+
+            <h3>Where</h3>
+            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+
+            <h3>FAQs</h3>
+            <p><a href="{% url 'faqs' %}">Read more here.</a></p>
+
+            {% if session.additional_info %}
+            <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
+            {% endif %}
+
+            {% if session.teacher %}
+            <h2 class="subtitle space-above">About the teacher</h2>
+            <div class="teachers">
+                <div class="teacher">
+                    <div class="image">
+                        <a href="{% url 'mentor_detail' session.teacher.id %}">{% avatar session.teacher.user 320 %}</a>
+                    </div>
+                    <div class="info">
+                        <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
+                        <p>{{ session.teacher.bio|truncatechars:120 }}</p>
+                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.first_name }}.</a></p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if session.mentors.all %}
+            <h2 class="subtitle">Meet the mentors</h2>
+            <div class="mentors">
+                {% for mentor in session.mentors.all %}
+                    {% if mentor.public == True %}
+                    <a class="mentor" href="{% url 'mentor_detail' mentor.id %}">
+                        {% avatar mentor.user 250 %}
+                        <div class="info">
+                            {{ mentor.first_name }} {{ mentor.last_name }}
+                        </div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4 class-detail-sidebar-right">
             {% if user.is_staff %}
-            <div class="well well-sm">
-                <ul class="list-group">
+            <ul class="col-xs-11 center-block well well-sm list-group list-unstyled">
+                <!-- <ul class=""> -->
                     {% if session.announced_date %}
-                    <span class="text-muted list-group-item">Announced on {{ session.announced_date|date }}</span>
+                    <li class="text-muted list-group-item">Announced on {{ session.announced_date|date }}</li>
                     {% else %}
-                    <a href="#" class="list-group-item" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce' session.id %}'>Announce</a>" data-html="true">Announce</a>
+                    <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce' session.id %}'>Announce</a>" data-html="true">Announce</a></li>
                     {% endif %}
 
                     {% if session.active %}
-                    <a href="{% url 'check_in' session.id %}" class="list-group-item">Class Check-in</a>
-                    {% else %}
-                    <a href="{% url 'stats' session.id %}" class="list-group-item">Class Stats</a>
+                    <li class="list-group-item"><a href="{% url 'check_in' session.id %}">Check-in Class</a></li>
+                    <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>
                     {% endif %}
-                    <a href="/dj-admin/coderdojochi/session/{{ session.id }}" class="list-group-item">Edit Class</a>
-                </ul>
-            </div>
+                    <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
+                <!-- </ul> -->
+            </ul>
             {% endif %}
-            <div class="content">
+            <div class="col-xs-11 center-block content">
                 {% if session.external_enrollment_url %}
                     <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                 {% else %}
@@ -143,7 +202,7 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            <div class="content">
+            <div class="col-xs-11 center-block content">
                 <p><i class="fa fa-share"></i> Share</p>
                 <ul class="list-inline social-sharing">
                     <li><span class='st_facebook_large' displayText='Facebook'></span></li>
@@ -157,53 +216,6 @@
                     <li><span class='st_email_hcount' displayText='Email'></span></li> -->
                 </ul>
             </div>
-        </div>
-        <div class="class-detail-content">
-
-            <p>{{ session.course.description|safe }}</p>
-
-            <h2 class="title light space-above">Class Information</h2>
-            <p>Who:<br>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
-
-            <p>When:<br>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
-
-            <p>Where:<br><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
-
-            {% if session.additional_info %}
-            <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
-            {% endif %}
-
-            {% if session.teacher %}
-            <h2 class="subtitle space-above">About the teacher</h2>
-            <div class="teachers">
-                <div class="teacher">
-                    <div class="image">
-                        <a href="{% url 'mentor_detail' session.teacher.id %}">{% avatar session.teacher.user 320 %}</a>
-                    </div>
-                    <div class="info">
-                        <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
-                        <p>{{ session.teacher.bio|truncatechars:120 }}</p>
-                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.first_name }}.</a></p>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if session.mentors.all %}
-            <h2 class="subtitle">Meet the mentors</h2>
-            <div class="mentors">
-                {% for mentor in session.mentors.all %}
-                    {% if mentor.public == True %}
-                    <a class="mentor" href="{% url 'mentor_detail' mentor.id %}">
-                        {% avatar mentor.user 250 %}
-                        <div class="info">
-                            {{ mentor.first_name }} {{ mentor.last_name }}
-                        </div>
-                    </a>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            {% endif %}
         </div>
     </div>
 
