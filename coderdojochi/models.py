@@ -233,6 +233,9 @@ class Session(models.Model):
 
         return orders
 
+    def get_mentor_capacity(self):
+        return self.capacity / 2
+
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
 

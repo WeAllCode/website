@@ -352,7 +352,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
         if not request.user.role:
             messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
-            
+
             url = reverse('welcome') + '?next=' + session_obj.get_absolute_url()
 
             if 'enroll' in request.GET:
@@ -364,7 +364,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
             mentor_signed_up = True if mentor in session_obj.mentors.all() else False
-            spots_remaining = ( session_obj.capacity / 2 ) - session_obj.mentors.all().count()
+            spots_remaining = session_obj.get_mentor_capacity() - session_obj.mentors.all().count()
 
             if enroll or 'enroll' in request.GET:
                 return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/')
@@ -586,15 +586,15 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
 
 
 def meeting_announce(request, meeting_id):
-    
+
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('home'))
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-    
+
     if not meeting_obj.announced_date:
-    
+
         for mentor in Mentor.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming mentor meeting', 'coderdojochi-meeting-announcement-mentor', {
                 'first_name': request.user.first_name,
@@ -617,11 +617,11 @@ def meeting_announce(request, meeting_id):
 
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
-        
+
         messages.add_message(request, messages.SUCCESS, 'Meeting announced!')
     else:
         messages.add_message(request, messages.WARNING, 'Meeting already announced.')
-    
+
     return HttpResponseRedirect(reverse('cdc_admin'))
 
 def volunteer(request, template_name="volunteer.html"):
@@ -789,7 +789,7 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
 @login_required
 def mentor_approve_avatar(request, mentor_id=False):
-    
+
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
     if not request.user.is_staff:
@@ -914,7 +914,7 @@ def about(request, template_name="about.html"):
     else:
         students_served = Order.objects.exclude(check_in=None).count()
         cache.set('students_served', students_served, 600)
-    
+
     mentor_count = students_served if students_served > 30 else 30
     students_served = students_served if students_served > 600 else 600
 
@@ -949,7 +949,7 @@ def contact(request, template_name="contact.html"):
                 msg.send()
 
                 messages.add_message(request, messages.SUCCESS, 'Thank you for contacting us! We will respond as soon as possible.')
-            
+
             form = ContactForm()
         else:
             messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
@@ -963,7 +963,7 @@ def contact(request, template_name="contact.html"):
 def privacy(request, template_name="privacy.html"):
 
     return render_to_response(template_name,{}, context_instance=RequestContext(request))
-    
+
 @login_required
 def cdc_admin(request, template_name="cdc-admin.html"):
 
@@ -989,10 +989,10 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 
     upcoming_meetings = meetings.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
     upcoming_meetings_count = upcoming_meetings.count()
-    
+
     if 'all_upcoming_meetings' not in request.GET:
         upcoming_meetings = upcoming_meetings[:3]
-    
+
     past_meetings = meetings.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
     past_meetings_count = past_meetings.count()
 
@@ -1081,15 +1081,15 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
 
 def session_announce(request, session_id):
-    
+
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('home'))
 
     session_obj = get_object_or_404(Session, id=session_id)
-    
+
     if not session_obj.announced_date:
-        
+
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-mentor', {
@@ -1111,7 +1111,7 @@ def session_announce(request, session_id):
                 'class_additional_info': session_obj.additional_info,
                 'class_url': session_obj.get_absolute_url()
             }, mentor.user.email)
-    
+
         for guardian in Guardian.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-guardian', {
                 'first_name': request.user.first_name,
@@ -1132,14 +1132,14 @@ def session_announce(request, session_id):
                 'class_additional_info': session_obj.additional_info,
                 'class_url': session_obj.get_absolute_url()
             }, guardian.user.email)
-        
+
         session_obj.announced_date = timezone.now()
         session_obj.save()
-        
+
         messages.add_message(request, messages.SUCCESS, 'Session announced!')
     else:
         messages.add_message(request, messages.WARNING, 'Session already announced.')
-    
+
     return HttpResponseRedirect(reverse('cdc_admin'))
 
 
