@@ -6,6 +6,10 @@ _internal/
 src/
 static/avatars/**/*
 coderdojochi/static/avatars/**/*
+coderdojochi/static/css/*.css
+coderdojochi/static/css/*.css.map
+coderdojochi/static/js/*.min.js
+coderdojochi/static/js/*.min.map
 
 # ------------------------------
 # Grunt/Bower
