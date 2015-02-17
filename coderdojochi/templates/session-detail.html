@@ -84,7 +84,7 @@
 
         <div class="col-md-4 class-detail-sidebar-right">
             {% if user.is_staff %}
-            <ul class="col-xs-11 center-block well well-sm list-group list-unstyled">
+            <ul class="center-block well well-sm list-group list-unstyled">
                 {% if session.active %}
                     <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
                     <li class="list-group-item">Mentors: <b>{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</b></li>
@@ -102,7 +102,7 @@
                 <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
             </ul>
             {% endif %}
-            <div class="col-xs-11 center-block content">
+            <div class="center-block content">
                 {% if session.external_enrollment_url %}
                     <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                 {% else %}
@@ -204,7 +204,7 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            <div class="col-xs-11 center-block content">
+            <div class="center-block content">
                 <p><i class="fa fa-share"></i> Share</p>
                 <ul class="list-inline social-sharing">
                     <li><span class='st_facebook_large' displayText='Facebook'></span></li>
