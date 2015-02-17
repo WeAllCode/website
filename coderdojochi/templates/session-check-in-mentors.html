@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+
+{% load i18n avatar_tags coderdojochi_extras %}
+
+{% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }}{% endblock %}
+
+{% block body_class %}page-cdc-admin{% endblock %}
+
+{% block topnav %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'cdc_admin' %}">CoderDojoChi Admin</a></li>
+        <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
+        <li class="active">Class Check-in Mentors</li>
+    </ol>
+    <div class="alert alert-warning">Coming Soon :)</div>
+</div>
+{% endblock %}
+
+
+{% block footer_base %}{% endblock %}

@@ -42,6 +42,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/class/(?P<session_id>[\d]+)/stats/$', 'coderdojochi.views.session_stats', name='stats'),
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in/$', 'coderdojochi.views.session_check_in', name='check_in'),
+    url(r'^admin/class/(?P<session_id>[\d]+)/check-in-mentors/$', 'coderdojochi.views.session_check_in_mentors', name='check_in_mentors'),
     url(r'^admin/', 'coderdojochi.views.cdc_admin', name='cdc_admin'),
 
     url(r'^welcome/$', 'coderdojochi.views.welcome', name='welcome'),
