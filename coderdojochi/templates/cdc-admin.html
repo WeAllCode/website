@@ -34,8 +34,8 @@
                     <td><a href="{{ session.get_absolute_url }}">{{ session.start_date|date:"M j" }} from {{ session.start_date|time }}&ndash;{{ session.end_date|time }}</a></td>
                     <td><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
                     <td><a href="{{ session.get_absolute_url }}">{{ session.location.name }}</a></td>
-                    <td><a href="{% url 'check_in' session.id %}">{{ session.get_current_orders.count }} / {{ session.capacity }}</a></td>
-                    <td><a href="{% url 'check_in_mentors' session.id %}">{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</a></td>
+                    <td>{% if not session.external_enrollment_url %}<a href="{% url 'check_in' session.id %}">{{ session.get_current_orders.count }} / {{ session.capacity }}</a>{% else %}N/A{% endif %}</td>
+                    <td>{% if not session.external_enrollment_url %}<a href="{% url 'check_in_mentors' session.id %}">{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</a>{% else %}N/A{% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -64,8 +64,8 @@
                     <td><a href="{{ session.get_absolute_url }}">{{ session.start_date|date:"M j" }} from {{ session.start_date|time }}&ndash;{{ session.end_date|time }}</a></td>
                     <td><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
                     <td><a href="{{ session.get_absolute_url }}">{{ session.location.name }}</a></td>
-                    <td><a href="{% url 'check_in' session.id %}">{{ session.get_current_orders.count }} / {{ session.capacity }}</a></td>
-                    <td><a href="{% url 'check_in_mentors' session.id %}">{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</a></td>
+                    <td>{% if not session.external_enrollment_url %}<a href="{% url 'check_in' session.id %}">{{ session.get_current_orders.count }} / {{ session.capacity }}</a>{% else %}N/A{% endif %}</td>
+                    <td>{% if not session.external_enrollment_url %}<a href="{% url 'check_in_mentors' session.id %}">{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</a>{% else %}N/A{% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>
