@@ -1079,6 +1079,19 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         'session': session_obj,
     }, context_instance=RequestContext(request))
 
+@login_required
+def session_check_in_mentors(request, session_id, template_name="session-check-in-mentors.html"):
+
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('sessions'))
+
+    session_obj = get_object_or_404(Session, id=session_id)
+
+    return render_to_response(template_name,{
+        'session': session_obj,
+    }, context_instance=RequestContext(request))
+
 
 def session_announce(request, session_id):
 
