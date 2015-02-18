@@ -130,10 +130,10 @@
                                                         <input type="hidden" name="account_id" value="{{ student.id }}">
                                                         {% if student in session.waitlist_students.all %}
                                                             <input type="hidden" name="remove" value="true">
-                                                            <button class="btn-link">undo wait list</button>
+                                                            <button class="btn-cdc btn-cdc-danger btn-cdc-sm">can't make it</button>
                                                         {% else %}
                                                             <input type="hidden" name="remove" value="false">
-                                                            <button class="btn-link">join wait list</button>
+                                                            <button class="btn-cdc btn-cdc-inverse btn-cdc-sm">wait list</button>
                                                         {% endif %}
                                                     </form>
                                                 {% endif %}
