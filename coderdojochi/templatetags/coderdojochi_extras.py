@@ -9,6 +9,10 @@ register = template.Library()
 def subtract(value, arg):
     return value - arg
 
+@register.assignment_tag(takes_context=False)
+def student_session_order_count(student, session):
+    orders_count = Order.objects.filter(student=student, session=session).count()
+    return orders_count
 
 @register.simple_tag
 def student_register_link(student, session):
