@@ -33,6 +33,7 @@ SITE_URL = 'http://localhost:8000'
 # Application definition
 
 INSTALLED_APPS = (
+    
     # django contrib
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +50,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'html5',
     'djrill',
+    'loginas',
     #'django_cron',
 
     #coderdojochi

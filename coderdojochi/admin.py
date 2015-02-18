@@ -4,7 +4,10 @@ from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Orde
 
 User = get_user_model()
 
-admin.site.register(User)
+class UserAdmin(admin.ModelAdmin):
+    change_form_template = 'loginas/change_form.html'
+
+admin.site.register(User, UserAdmin)
 admin.site.register(Mentor)
 admin.site.register(Guardian)
 admin.site.register(Student)

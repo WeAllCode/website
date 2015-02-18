@@ -57,6 +57,7 @@ urlpatterns = patterns('',
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
 
     url(r'^login/$', auth_views.login, {'template_name': 'registration/login.html'}),
+    url(r'^login/user/(?P<user_id>.+)/$', 'loginas.views.user_login', name='loginas-user-login'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'', include('social_auth.urls')),
     url(r'^dj-admin/', include(admin.site.urls)),
