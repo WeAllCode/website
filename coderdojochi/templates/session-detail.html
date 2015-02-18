@@ -130,10 +130,10 @@
                                                         <input type="hidden" name="account_id" value="{{ student.id }}">
                                                         {% if student in session.waitlist_students.all %}
                                                             <input type="hidden" name="remove" value="true">
-                                                            <button class="btn-link">Remove from wait list</button>
+                                                            <button class="btn-link">undo wait list</button>
                                                         {% else %}
                                                             <input type="hidden" name="remove" value="false">
-                                                            <button class="btn-link">Add to wait list</button>
+                                                            <button class="btn-link">join wait list</button>
                                                         {% endif %}
                                                     </form>
                                                 {% endif %}
@@ -144,7 +144,7 @@
                                 </table>
                                 <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True">Add another student</a></small>
                             {% else %}
-                            <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll Student</a></p>
+                            <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll</a></p>
                             {% endif %}
                         {% else %}
                             {% if spots_remaining %}
