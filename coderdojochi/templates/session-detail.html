@@ -120,7 +120,8 @@
                                         <tr>
                                             <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
                                             <td>
-                                                {% if spots_remaining > 0 %}
+                                                {% student_session_order_count student=student session=session as student_is_enrolled %}
+                                                {% if spots_remaining > 0 or student_is_enrolled %}
                                                     {% student_register_link student session %}
                                                 {% else %}
                                                     <form action="" method="post">
