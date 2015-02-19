@@ -404,6 +404,11 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
     student = False
     guardian = False
 
+
+    if session_obj.capacity <= session_obj.get_current_students().all().count():
+        messages.add_message(request, messages.ERROR, 'Sorry this class has sold out. Please sign up for the wait list and/or check back later.')
+        return HttpResponseRedirect(session_obj.get_absolute_url())
+
     if not request.user.role:
         messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
         return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
