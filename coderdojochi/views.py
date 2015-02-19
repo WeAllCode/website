@@ -404,16 +404,16 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
     student = False
     guardian = False
 
-
-    if session_obj.capacity <= session_obj.get_current_students().all().count():
-        messages.add_message(request, messages.ERROR, 'Sorry this class has sold out. Please sign up for the wait list and/or check back later.')
-        return HttpResponseRedirect(session_obj.get_absolute_url())
-
     if not request.user.role:
         messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
         return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
 
     if request.user.role == 'mentor':
+        
+        if session_obj.get_mentor_capacity() <= session_obj.mentors().all().count():
+            messages.add_message(request, messages.ERROR, 'Sorry this class is at mentor capacity.  Please check back soon and/or join us for another upcoming class!')
+            return HttpResponseRedirect(session_obj.get_absolute_url())
+
         mentor = get_object_or_404(Mentor, user=request.user)
 
         if not mentor.has_attended_intro_meeting:
@@ -422,6 +422,11 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         user_signed_up = True if mentor in session_obj.mentors.all() else False
     else:
+
+        if session_obj.capacity <= session_obj.get_current_students().all().count():
+            messages.add_message(request, messages.ERROR, 'Sorry this class has sold out. Please sign up for the wait list and/or check back later.')
+            return HttpResponseRedirect(session_obj.get_absolute_url())
+
         student = get_object_or_404(Student, id=student_id)
         guardian = get_object_or_404(Guardian, user=request.user)
         user_signed_up = True if student.is_registered_for_session(session_obj) else False
