@@ -3,6 +3,9 @@
     "version": "0.0.2",
     "private": true,
     "description": "coderdojochi.org development dependencies",
+    "scripts": {
+        "start": "grunt"
+    },
     "authors": {
         "Brett Kellgren": "brett@coderdojochi.org",
         "Ali Karbassi": "ali@coderdojochi.org"
