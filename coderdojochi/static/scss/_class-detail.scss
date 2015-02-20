@@ -54,13 +54,11 @@
 
     .class-detail-sidebar-right {
         color: #666;
+        background: #FFF;
+        border: 1px solid #CCC;
 
-        .content {
-            background: #fff;
-
-            & > p:first-child {
-                padding-top: 15px
-            }
+        p.subtitle {
+            padding-top: 15px
         }
     }
 

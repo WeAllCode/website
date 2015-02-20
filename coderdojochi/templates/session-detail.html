@@ -27,7 +27,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-8 class-detail-content">
+        <div class="col-sm-8 class-detail-content">
 
             <p>{{ session.course.description|safe }}</p>
 
@@ -82,7 +82,7 @@
             {% endif %}
         </div>
 
-        <div class="col-md-4 class-detail-sidebar-right">
+        <div class="col-sm-4 class-detail-sidebar-right">
             {% if user.is_staff %}
             <ul class="center-block well well-sm list-group list-unstyled">
                 {% if session.active %}
@@ -102,7 +102,7 @@
                 <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
             </ul>
             {% endif %}
-            <div class="center-block content">
+            <div class="center-block">
                 {% if session.external_enrollment_url %}
                     <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                 {% else %}
@@ -112,14 +112,14 @@
                                 {% if spots_remaining > 0 %}
                                     <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
                                 {% else %}
-                                    <p>There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
+                                    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
                                 {% endif %}
                                 <table class="students">
                                     <tbody>
                                     {% for student in students %}
                                         <tr>
                                             <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
-                                            <td>
+                                            <td class="text-right">
                                                 {% student_session_order_count student=student session=session as student_is_enrolled %}
                                                 {% if spots_remaining > 0 or student_is_enrolled %}
                                                     {% student_register_link student session %}
@@ -205,7 +205,7 @@
                     {% endif %}
                 {% endfor %}
             </div>
-            <div class="center-block content">
+            <div class="center-block">
                 <p><i class="fa fa-share"></i> Share</p>
                 <ul class="list-inline social-sharing">
                     <li><span class='st_facebook_large' displayText='Facebook'></span></li>
