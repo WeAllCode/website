@@ -419,7 +419,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         user_signed_up = True if mentor in session_obj.mentors.all() else False
 
         if not user_signed_up:
-            if session_obj.get_mentor_capacity() <= session_obj.mentors().all().count():
+            if session_obj.get_mentor_capacity() <= session_obj.mentors.all().count():
                 messages.add_message(request, messages.ERROR, 'Sorry this class is at mentor capacity.  Please check back soon and/or join us for another upcoming class!')
                 return HttpResponseRedirect(session_obj.get_absolute_url())
 
