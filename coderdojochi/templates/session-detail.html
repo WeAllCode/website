@@ -156,7 +156,7 @@
                                 {% endif %}
                             {% else %}
                                 {% if account in session.waitlist_mentors.all %}
-                                    <p>You are currently on the wait list for this class. We will contact you ASAP if a spot becomes available.</p>
+                                    <p>You are currently on the waitlist for this class. We will contact you ASAP if a spot becomes available.</p>
                                 {% else %}
                                     <p>There are currently no available mentor spots for this class.</p>
                                 {% endif %}
@@ -167,10 +167,10 @@
                                     <input type="hidden" name="account_id" value="{{ account.id }}">
                                     {% if account in session.waitlist_mentors.all %}
                                         <input type="hidden" name="remove" value="true">
-                                        <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from wait list</button>
+                                        <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from waitlist</button>
                                     {% else %}
                                         <input type="hidden" name="remove" value="false">
-                                        <button class="btn-cdc btn-cdc-sm">Add me to wait list</button>
+                                        <button class="btn-cdc btn-cdc-sm">Add me to waitlist</button>
                                     {% endif %}
                                 </form>
                             {% endif %}
@@ -184,9 +184,9 @@
                         <span class="text-large">{{ spots_remaining }}</span> open spots
                         {% else %}
                             {% if is_guardian %}
-                                <span class="text-large">{{ session.waitlist_students.count }}</span> on wait list
+                                <span class="text-large">{{ session.waitlist_students.count }}</span> on waitlist
                             {% else %}
-                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> on wait list
+                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> on waitlist
                             {% endif %}
                         {% endif %}
                     </p>
