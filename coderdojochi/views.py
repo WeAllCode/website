@@ -418,7 +418,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         user_signed_up = True if mentor in session_obj.mentors.all() else False
 
-        if not user_sign_up:
+        if not user_signed_up:
             if session_obj.get_mentor_capacity() <= session_obj.mentors().all().count():
                 messages.add_message(request, messages.ERROR, 'Sorry this class is at mentor capacity.  Please check back soon and/or join us for another upcoming class!')
                 return HttpResponseRedirect(session_obj.get_absolute_url())
@@ -453,7 +453,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
                 else:
                     ip = request.META['REMOTE_ADDR']
-                    
+
                 order, created = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
                 # we dont want guardians getting 7 day reminder email if they sign up within 9 days
