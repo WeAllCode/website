@@ -33,7 +33,7 @@ SITE_URL = 'http://localhost:8000'
 # Application definition
 
 INSTALLED_APPS = (
-    
+
     # django contrib
     'django.contrib.admin',
     'django.contrib.auth',
@@ -64,6 +64,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'dealer.contrib.django.Middleware',
 )
 
 CRON_CLASSES = [
@@ -78,7 +79,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.request'
+    'django.core.context_processors.request',
+    'dealer.contrib.django.context_processor',
 )
 
 AUTHENTICATION_BACKENDS = (

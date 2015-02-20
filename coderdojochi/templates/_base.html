@@ -15,8 +15,8 @@
             <meta property="og:url" content="http://coderdojochi.org">
             <meta property="og:title" content="CoderDojoChi - Welcome!">
             {% endblock %}
-            
-            
+
+
             <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon">
             <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,700' rel='stylesheet' type='text/css'>
             <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -50,15 +50,19 @@
         {% block footer_base %}
             <footer>
                 <div class="container">
-                    <span class="pull-right">
-                        {% if 'contact' not in request.path %}
-                        <a href="{% url 'contact' %}">Contact Us</a>
-                        {% endif %}
-                        {% if 'privacy' not in request.path %}
-                        <a href="{% url 'privacy' %}">Privacy &amp; Terms</a>
-                        {% endif %}
-                    </span>
-                    <p class="text-muted pull-left">&copy;2013&ndash;{% now "Y" %}. All rights reserved.</p>
+                    <div class="col-sm-6 text-muted">
+                        <p>&copy;2013&ndash;{% now "Y" %}. All rights reserved.</p>
+                    </div>
+                    <div class="col-sm-6 text-right">
+                        <p>
+                            {% if 'contact' not in request.path %}
+                            <a href="{% url 'contact' %}">Contact Us</a>
+                            {% endif %}
+                            {% if 'privacy' not in request.path %}
+                            <a href="{% url 'privacy' %}">Privacy &amp; Terms</a>
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
             </footer>
         {% endblock %}
@@ -83,9 +87,11 @@
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-          ga('create', 'UA-58354714-1', 'auto');
+          ga('create', 'UA-58354714-2', 'auto');
           ga('send', 'pageview');
+
         </script>
 
+        <!-- {{ request.revision }} -->
     </body>
 </html>
