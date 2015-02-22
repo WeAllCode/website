@@ -120,7 +120,11 @@ def home(request, template_name="home.html"):
     if cache.get('upcoming_public_classes'):
         upcoming_classes = cache.get('upcoming_public_classes')
     else:
-        upcoming_classes = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
+        upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
+        
+        if not request.user.is_authenticated() or not request.user.role == 'mentor':
+            upcoming_classes = upcoming_classes.filter(public=True)
+
         cache.set('upcoming_public_classes', upcoming_classes, 600)
 
     return render_to_response(template_name, {
@@ -129,7 +133,6 @@ def home(request, template_name="home.html"):
 
 @login_required
 def welcome(request, template_name="welcome.html"):
-
 
     keepGoing = True
 
@@ -230,8 +233,14 @@ def welcome(request, template_name="welcome.html"):
 
                 return HttpResponseRedirect(next)
             else:
+
                 # check for next upcoming class
-                next_class = Session.objects.filter(active=True, public=True).order_by('start_date').first()
+                next_class_query = Session.objects.filter(active=True).order_by('start_date').first()
+
+                if not request.user.is_authenticated() or not request.user.role == 'mentor':
+                    next_class_query = next_class_query.filter(public=True)
+
+                next_class = next_class_query
 
                 if next_class:
                     merge_vars['next_class_url'] = next_class.get_absolute_url()
@@ -293,7 +302,11 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     if cache.get('public_sessions'):
         all_sessions = cache.get('public_sessions')
     else:
-        all_sessions = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
+        all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+        
+        if not request.user.is_authenticated() or not request.user.role == 'mentor':
+            all_sessions = all_sessions.filter(public=True)
+
         cache.set('public_sessions', all_sessions, 600)
 
     sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
@@ -349,7 +362,10 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
-    upcoming_classes = Session.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+
+    if not request.user.is_authenticated() or not request.user.role == 'mentor':
+        upcoming_classes = upcoming_classes.filter(public=True)
 
     if request.user.is_authenticated():
 
