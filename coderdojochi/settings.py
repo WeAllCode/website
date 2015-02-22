@@ -170,6 +170,7 @@ AVATAR_DEFAULT_URL = 'http://www.gravatar.com/avatar/?s=350&d=mm'
 
 PAYPAL_RECEIVER_EMAIL = 'info@coderdojochi.org'
 PAYPAL_BUSINESS_ID = 'CXD22M5GNXDE4'
+PAYPAL_TEST = False
 
 # Social Auth
 
