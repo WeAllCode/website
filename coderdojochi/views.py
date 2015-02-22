@@ -1,5 +1,3 @@
-from __future__ import division
-
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, Context
@@ -1106,7 +1104,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     students_checked_in = current_orders_checked_in.values('student')
 
     if students_checked_in:
-        attendance_percentage = round((current_orders_checked_in.count() / session_obj.get_current_students().count()) * 100)
+        attendance_percentage = round((float(current_orders_checked_in.count()) / float(session_obj.get_current_students().count())) * 100)
     else:
         attendance_percentage = 0
 
