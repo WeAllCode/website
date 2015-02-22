@@ -1178,7 +1178,7 @@ def session_announce(request, session_id):
     return HttpResponseRedirect(reverse('cdc_admin'))
 
 
-def sendSystemEmail(request, subject, template_name, merge_vars, email=False):
+def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 
     if not email:
         email = request.user.email
@@ -1189,6 +1189,9 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False):
 
     msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
                        to=[email])
+    if bcc:
+        msg.bcc = bcc
+        
     msg.template_name = template_name
     msg.global_merge_vars = merge_vars
     msg.inline_css = True
