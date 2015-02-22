@@ -124,10 +124,12 @@ def home(request, template_name="home.html"):
     if cache.get('upcoming_public_classes'):
         upcoming_classes = cache.get('upcoming_public_classes')
     else:
-        upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
-        
+        upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+
         if not request.user.is_authenticated() or not request.user.role == 'mentor':
             upcoming_classes = upcoming_classes.filter(public=True)
+
+        upcoming_classes = upcoming_classes[:3]
 
         cache.set('upcoming_public_classes', upcoming_classes, 600)
 
@@ -307,7 +309,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         all_sessions = cache.get('public_sessions')
     else:
         all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
-        
+
         if not request.user.is_authenticated() or not request.user.role == 'mentor':
             all_sessions = all_sessions.filter(public=True)
 
