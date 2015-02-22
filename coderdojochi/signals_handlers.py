@@ -50,7 +50,7 @@ def donate_callback(sender, **kwargs):
                 'last_name': donation.last_name,
                 'email': donation.email,
                 'amount': '$' + str(donation.amount),
-                'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY'),
+                'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY h:ss a'),
                 'transaction_id': donation.id
             }, donation.email, [v for k,v in settings.ADMINS])
 
