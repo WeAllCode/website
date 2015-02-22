@@ -52,7 +52,7 @@ def donate_callback(sender, **kwargs):
                 'amount': '$' + str(donation.amount),
                 'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY'),
                 'transaction_id': donation.id
-            }, donation.email)
+            }, donation.email, [v for k,v in settings.ADMINS])
 
             donation.receipt_sent = True
 
