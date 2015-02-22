@@ -233,6 +233,9 @@ class Session(models.Model):
 
         return orders
 
+    def get_checked_in_students(self):
+        return Order.objects.filter(session=self).exclude(check_in=None).values('student')
+
     def get_mentor_capacity(self):
         return self.capacity / 2
 
