@@ -1,3 +1,5 @@
+from __future__ import division
+
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext, Context
@@ -20,6 +22,8 @@ from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactFor
 from calendar import HTMLCalendar
 from datetime import date, timedelta
 from itertools import groupby
+from collections import Counter
+import operator
 
 from django.utils import timezone
 from django.utils.html import conditional_escape as esc
@@ -1095,6 +1099,29 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
     session_obj = get_object_or_404(Session, id=session_id)
 
+    current_orders_checked_in = session_obj.get_current_orders(checked_in=True)
+
+    students_checked_in = current_orders_checked_in.values('student')
+
+    if students_checked_in:
+        attendance_percentage = round((current_orders_checked_in.count() / session_obj.get_current_students().count()) * 100)
+    else:
+        attendance_percentage = 0
+
+    # Genders
+    gender_count = list(Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems())
+    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+
+    # Ages
+    ages = sorted(list(e.student.get_age() for e in session_obj.get_current_orders()))
+    age_count = list(Counter(ages).iteritems())
+    age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
+
+    # Average Age
+    average_age = 0
+    if session_obj.get_current_orders():
+        average_age = int(round(sum(ages) / float(len(ages))))
+
     if request.method == 'POST':
 
         if 'order_id' in request.POST:
@@ -1115,6 +1142,11 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
     return render_to_response(template_name,{
         'session': session_obj,
+        'gender_count': gender_count,
+        'age_count': age_count,
+        'average_age': average_age,
+        'students_checked_in': students_checked_in,
+        'attendance_percentage': attendance_percentage,
     }, context_instance=RequestContext(request))
 
 @login_required
@@ -1207,7 +1239,7 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
                        to=[email])
     if bcc:
         msg.bcc = bcc
-        
+
     msg.template_name = template_name
     msg.global_merge_vars = merge_vars
     msg.inline_css = True

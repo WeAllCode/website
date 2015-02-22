@@ -130,6 +130,14 @@ class Student(models.Model):
         birthday = self.birthday
         return today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
 
+    def get_clean_gender(self):
+        if self.gender.lower() in ['male', 'm', 'boy']:
+            return 'male'
+        elif self.gender.lower() in ['female', 'f', 'girl']:
+            return 'female'
+        else:
+            return 'other'
+
     class Meta:
         verbose_name = _("student")
         verbose_name_plural = _("students")
