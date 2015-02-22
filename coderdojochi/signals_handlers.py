@@ -4,7 +4,15 @@ from django.dispatch import receiver
 
 from avatar.signals import avatar_updated
 
-from coderdojochi.models import Mentor 
+from coderdojochi.models import Mentor, Donation
+
+from coderdojochi.views import sendSystemEmail
+
+from paypal.standard.models import ST_PP_COMPLETED
+from paypal.standard.ipn.signals import valid_ipn_received
+
+import arrow
+
 
 @receiver(avatar_updated)
 def avatar_updated_handler(sender, user, avatar, **kwargs):
@@ -25,3 +33,31 @@ def avatar_updated_handler(sender, user, avatar, **kwargs):
     msg.attach_alternative('<h1>Is this avatar okay?</h1><img src="' + avatar.avatar_url(400) + '"><h2><a href="' + mentor.get_approve_avatar_url() + '">Approve</a></h2><h2><a href="' + mentor.get_reject_avatar_url() + '">Reject</a></h2>', 'text/html')
 
     msg.send()
+
+
+def donate_callback(sender, **kwargs):
+    
+    ipn_obj = sender
+
+    if ipn_obj.payment_status == ST_PP_COMPLETED:
+        donation = get_object_or_404(Donation, id=ipn_obj.invoice)
+        donation.verified = True
+        
+        if not donation.receipt_sent:
+            sendSystemEmail(False, 'Thank you!', 'coderdojochi-donation-receipt', {
+                'first_name': donation.first_name,
+                'last_name': donation.last_name,
+                'email': donation.email,
+                'amount': '$' + str(donation.amount),
+                'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY'),
+                'transaction_id': donation.id
+            }, donation.email)
+
+            donation.receipt_sent = True
+
+        donation.save()
+        
+
+valid_ipn_received.connect(donate_callback)
+
+    

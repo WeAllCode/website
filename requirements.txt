@@ -18,3 +18,4 @@ wsgiref==0.1.2
 arrow==0.4.4
 django-loginas==0.1.5
 dealer==2.0.4
+django-paypal==0.2
