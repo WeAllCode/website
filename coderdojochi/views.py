@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.views.decorators.csrf import csrf_exempt
 from django import forms
 
 from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
@@ -25,6 +26,8 @@ from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 
 from django.utils.translation import ugettext_lazy as _
+
+from paypal.standard.forms import PayPalPaymentsForm
 
 import arrow
 
@@ -872,16 +875,7 @@ def student_detail(request, student_id=False, template_name="student-detail.html
 
 def donate(request, template_name="donate.html"):
 
-    # if paypal notification response
-    if 'item_number1' in request.GET:
-        verifyDonation(request, request.GET['item_number1'])
-
     if request.method == 'POST':
-
-        # if paypal notification response
-        if 'item_number1' in request.POST:
-            verifyDonation(request, request.POST['item_number1'])
-            return HttpResponse('success')
 
         # if new donation form submit
         if 'first_name' in request.POST and 'last_name' in request.POST and 'email' in request.POST and 'amount' in request.POST:
@@ -892,26 +886,42 @@ def donate(request, template_name="donate.html"):
         else:
             return HttpResponse('fail')
 
+    paypal_dict = {
+        'business': settings.PAYPAL_BUSINESS_ID,
+        'amount': '25',
+        'item_name': 'CoderDojoChi Donation',
+        'cmd': '_donations',
+        'lc': 'US',
+        'invoice': '',
+        'currency_code': 'USD',
+        'no_note': '0',
+        'cn': 'Add a message for CoderDojoChi to read:',
+        'no_shipping': '1',
+        'address_override': '1',
+        'first_name': '',
+        'last_name': '',
+        'notify_url': settings.SITE_URL + reverse('paypal-ipn'),
+        'return_url': settings.SITE_URL + '/donate/return',
+        'cancel_return': settings.SITE_URL + '/donate/cancel',
+        'bn': 'PP-DonationsBF:btn_donateCC_LG.gif:NonHosted'
+    }
+
+    form = PayPalPaymentsForm(initial=paypal_dict)
+
     return render_to_response(template_name, {
-        'site_url': settings.SITE_URL
+        'site_url': settings.SITE_URL,
+        'form': form
     }, context_instance=RequestContext(request))
 
-def verifyDonation(request, donation_id):
-    donation = get_object_or_404(Donation, id=donation_id)
-    donation.verified = True;
+@csrf_exempt
+def donate_cancel(request):
+    messages.add_message(request, messages.ERROR, 'Looks like you cancelled the donation process. Please feel free to <a href="/contact">contact us</a> if you need any help.')
+    return HttpResponseRedirect(reverse('donate'))
 
-    if not donation.receipt_sent:
-        sendSystemEmail(request, 'Thank you!', 'coderdojochi-donation-receipt', {
-            'first_name': donation.first_name,
-            'last_name': donation.last_name,
-            'email': donation.email,
-            'amount': '$' + str(donation.amount),
-            'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY'),
-            'transaction_id': donation.id
-        }, donation.email)
-        donation.receipt_sent = True
-
-    donation.save()
+@csrf_exempt
+def donate_return(request):
+    messages.add_message(request, messages.SUCCESS, 'Your donation is being processed.  You should receive a confirmation email shortly. Thanks again!')
+    return HttpResponseRedirect(reverse('donate'))
 
 def about(request, template_name="about.html"):
 

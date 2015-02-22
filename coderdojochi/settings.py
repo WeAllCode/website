@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'html5',
     'djrill',
     'loginas',
+    'paypal.standard.ipn',
     #'django_cron',
 
     #coderdojochi
@@ -93,24 +94,11 @@ ROOT_URLCONF = 'coderdojochi.urls'
 
 WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
-# Registration
-ACCOUNT_ACTIVATION_DAYS = 7
+AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dojo/'
-LOGIN_ERROR_URL = '/accounts/login/'
-GOOGLE_OAUTH2_CLIENT_ID = '294736693640-inucj2ptaap06iggukfurmqihblavbt8.apps.googleusercontent.com'
-GOOGLE_OAUTH2_CLIENT_SECRET = 'rgdutyo5mqCN7yOIMxET9hHv'
-GOOGLE_DISPLAY_NAME = 'CoderDojoChi'
-FACEBOOK_APP_ID = '1454178301519376'
-FACEBOOK_API_SECRET = '36edff0d6d4a9686647f76f2d0f511ed'
-SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
-AUTH_USER_MODEL = 'coderdojochi.CDCUser'
-SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'
-
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
-
-# Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
@@ -168,10 +156,31 @@ STATICFILES_DIRS = (
     os.path.join(PACKAGE_ROOT, 'static'),
 )
 
-# Vender App Config
+# Registration
+
+ACCOUNT_ACTIVATION_DAYS = 7
+LOGIN_ERROR_URL = '/accounts/login/'
+
+# Gravatar
 
 AVATAR_GRAVATAR_BACKUP = False
 AVATAR_DEFAULT_URL = 'http://www.gravatar.com/avatar/?s=350&d=mm'
+
+# Paypal
+
+PAYPAL_RECEIVER_EMAIL = 'info@coderdojochi.org'
+PAYPAL_BUSINESS_ID = 'CXD22M5GNXDE4'
+
+# Social Auth
+
+GOOGLE_OAUTH2_CLIENT_ID = '294736693640-inucj2ptaap06iggukfurmqihblavbt8.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'rgdutyo5mqCN7yOIMxET9hHv'
+GOOGLE_DISPLAY_NAME = 'CoderDojoChi'
+FACEBOOK_APP_ID = '1454178301519376'
+FACEBOOK_API_SECRET = '36edff0d6d4a9686647f76f2d0f511ed'
+SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
 
 # search for environment specific settings to override settings.py

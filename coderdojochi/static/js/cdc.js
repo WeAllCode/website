@@ -43,12 +43,16 @@ CDC.global = (function($, document, window, undefined) {
             }
         });
 
-        // remove any alerts
-        setTimeout(function() {
-            $('.alert-fade').parent().fadeOut();
-        }, 5000);
+        // display any global messages 
 
-        // Scroll
+        setTimeout(function() {
+            $('.global-messages:first').animate({
+                top: 0
+            }, 250);
+        }, 500);
+
+        // Scroll listener
+
         $(window).scroll(function() {
             if ($(document).scrollTop() > 50) {
                 $('nav').addClass('shrink');
@@ -57,33 +61,15 @@ CDC.global = (function($, document, window, undefined) {
             }
         });
 
-        $('#carousel-home-hero').carousel({
-            interval: false
-        });
+        // attach event listeners to document
 
-        // Login / Register email show/hide
-        $('.login-email, .signup-email').click(function() {
-            var $form = $('.main .container form');
+        $(document)
+            // Student form field expand/hide
+            .on('click', '.js-expand-student-form', expandStudentForm)
+            // Login / Register email show/hide
+            .on('click', '.login-email, .signup-email', displayRegistrationEmailForm)
+            .on('click', '.global-messages .global-messages-close', closeGlobalMessages);
 
-            $form.toggleClass('hide');
-            $form.find('input:not([type=hidden]):eq(0)').focus();
-        });
-
-        // Student form field expand/hide
-        $('.js-expand-student-form').click(function() {
-            var $this = $(this);
-            var text = $this.text();
-
-            $this.parent().parent().find('textarea').toggleClass('hidden');
-
-            if (text === 'expand') {
-                $this.text('contract');
-            } else {
-                $this.text('expand');
-            }
-        });
-
-        $('[data-toggle="popover"]').popover();
     }
 
     function openPopUp(url, height, width) {
@@ -98,6 +84,33 @@ CDC.global = (function($, document, window, undefined) {
 
     /* Private Methods ________________________________________________________________ */
 
+    function expandStudentForm(e) {
+
+        var $this = $(e.target),
+            text = $this.text();
+
+        $this.parent().parent().find('textarea').toggleClass('hidden');
+
+        if (text === 'expand') {
+            $this.text('contract');
+        } else {
+            $this.text('expand');
+        }
+    }
+
+    function displayRegistrationEmailForm() {
+        var $form = $('.main .container form');
+        $form.toggleClass('hide');
+        $form.find('input:not([type=hidden]):eq(0)').focus();
+    }
+
+    function closeGlobalMessages() {
+        $('.global-messages:first').animate({
+            top: '-100px'
+        }, 250, function() {
+            $(this).remove();
+        });
+    }
 
     /* Expose Public Methods ________________________________________________________________ */
 

@@ -101,6 +101,36 @@ hr {
     display: none;
 }
 
+.global-messages {
+    position: absolute;
+    width: 100%;
+    z-index: 1033;
+    top: -100px;
+    left: 0;
+    padding: 10px 0;
+    text-align: center;
+    background: #fff;
+
+    a {
+        color: $cdc-color;
+    }
+
+    .global-messages-close {
+        position: absolute;
+        right: 20px;
+        top: 5px;
+        color: #888;
+
+        &:hover {
+            color: #000;
+        }
+
+        &:active {
+            outline: none;
+        }
+    }
+}
+
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 

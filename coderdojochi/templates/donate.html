@@ -8,7 +8,6 @@
 
 {% block content %}
 
-{% cache 600 donate_content %}
 <div class="hero">
     <div class="container">
         <h1 class="title">Donate Today!</h1>
@@ -46,49 +45,28 @@
     <h2>{% trans "You can help!" %}</h2>
     <p>CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
 
-    <form id="donateForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" >
-        <input type="hidden" name="cmd" value="_donations">
-        <input type="hidden" name="business" value="CXD22M5GNXDE4">
-        <input type="hidden" name="lc" value="US">
-        <input type="hidden" name="item_name" value="CoderDojoChi">
-        <input type="hidden" id="donationId" name="item_number1" value="">
-        <input type="hidden" id="donateAmount" name="amount" value="10">
-        <input type="hidden" name="currency_code" value="USD">
-        <input type="hidden" name="no_note" value="0">
-        <input type="hidden" name="cn" value="Add a message for CoderDojoChi to read:">
-        <input type="hidden" name="no_shipping" value="1">
-        <input type="hidden" name="address_override" value="1">
-        <input type="hidden" id="paymentFirstName" name="first_name" value="">
-        <input type="hidden" id="paymentLastName" name="last_name" value="">
-        <input type="hidden" id="donationReturn" name="return" value="{{ site_url }}/donate">
-        <input type="hidden" id="donationNotify" name="notify_url" value="{{ site_url }}/donate">
-        <input type="hidden" name="cancel_return" value="{{ site_url }}/donate">
-        <input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
-        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-    </form>
+    {{ form.render }}
+
 </div>
-{% endcache %}
 
 {% endblock %}
 
 {% block extra_script %}
 <script>
     $(function() {
-        var $donateForm = $('#donateForm');
+        var $donateForm = $('form');
         var $amountButtons = $('.amount-buttons:first');
         var $donateButton = $('.btn-do-it:first');
-        var $donateAmount = $('#donateAmount');
+        var $donateAmount = $('#id_amount');
         var $amountActual = $('.amount-actual:first');
         var $amountActualField = $('.form-control', $amountActual);
         var $personalInfo = $('.personal-info:first');
         var $firstNameInput = $('#firstNameInput');
         var $lastNameInput = $('#lastNameInput');
         var $emailInput = $('#emailInput');
-        var $donationId = $('#donationId');
-        var $donationReturn = $('#donationReturn');
-        var $donationNotify = $('#donationNotify');
-        var $paymentFirstName = $('#paymentFirstName');
-        var $paymentLastName = $('#paymentLastName');
+        var $invoiceNumber = $('#id_invoice');
+        var $paymentFirstName = $('#id_first_name');
+        var $paymentLastName = $('#id_last_name');
 
         var amountButtonClick = function() {
             var $clicked = $(this);
@@ -169,9 +147,7 @@
                 if(response !== 'failed') {
                     $paymentFirstName.val(formData.first_name);
                     $paymentLastName.val(formData.last_name);
-                    $donationId.val(response);
-                    $donationReturn.val($donationReturn.val() + '?item_number1=' + response);
-                    $donationNotify.val($donationNotify.val() + '?item_number1=' + response);
+                    $invoiceNumber.val(response);
                     $donateForm.off('submit');
                     $donateForm.submit();
                 } else {
