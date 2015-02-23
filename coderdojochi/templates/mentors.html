@@ -10,14 +10,17 @@
 <div class="container">
 
     <h1>Meet Our Mentors <a href="{% url 'register' %}" class="btn-cdc">Join us now!</a></h1>
-    <div class="mentors">
+
+    <div class="row mentors">
         {% for mentor in mentors %}
-        <a href="{% url 'mentor_detail' mentor.id %}" class="mentor">
-            {% avatar mentor.user 250 %}
-            <div class="info">
-                {{ mentor.first_name }} {{ mentor.last_name }}
-            </div>
-        </a>
+            {% if mentor.public == True %}
+        <div class="col-xs-12 col-sm-4 col-md-3">
+            <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                {% avatar mentor.user 175 %}
+                <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
+            </a>
+        </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>
