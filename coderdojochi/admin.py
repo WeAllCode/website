@@ -21,7 +21,8 @@ class MentorAdmin(admin.ModelAdmin):
     search_fields = ['first_name','last_name', 'user']
 
 class GuardianAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'user', 'active', 'phone', 'zip', 'created_at', 'updated_at')
+    list_display = ('first_name', 'last_name', 'user', 'phone', 'zip', 'created_at', 'updated_at')
+    list_filter = ['zip']
     ordering = ['-created_at']
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -55,7 +56,10 @@ class MeetingTypeAdmin(admin.ModelAdmin):
     pass
 
 class MeetingAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'public', 'active', 'announced_date', 'created_at')
+    ordering = ['start_date']
+    list_per_page = 100
+    date_hierarchy = 'start_date'
 
 class EquipmentTypeAdmin(admin.ModelAdmin):
     pass
