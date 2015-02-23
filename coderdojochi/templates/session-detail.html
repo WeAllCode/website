@@ -51,6 +51,7 @@
 
             {% if session.teacher %}
             <h2 class="subtitle space-above">About the teacher</h2>
+
             <div class="teachers">
                 <div class="teacher">
                     <div class="image">
@@ -67,18 +68,36 @@
 
             {% if session.mentors.all %}
             <h2 class="subtitle">Meet the mentors</h2>
-            <div class="mentors">
+
+            <div class="row mentors">
                 {% for mentor in session.mentors.all %}
                     {% if mentor.public == True %}
-                    <a class="mentor" href="{% url 'mentor_detail' mentor.id %}">
-                        {% avatar mentor.user 250 %}
-                        <div class="info">
-                            {{ mentor.first_name }} {{ mentor.last_name }}
-                        </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                        {% avatar mentor.user 175 %}
+                        <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
                     </a>
+                </div>
                     {% endif %}
                 {% endfor %}
             </div>
+
+<!--             <div class="row">
+                <div class="col-xs-12">
+                    {% for mentor in session.mentors.all %}
+                        {% if mentor.public == True %}
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <a class="" href="{% url 'mentor_detail' mentor.id %}">
+                                    {% avatar mentor.user 175 %}
+                                    <div class="info">
+                                        {{ mentor.first_name }} {{ mentor.last_name }}
+                                    </div>
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div> -->
             {% endif %}
         </div>
 
@@ -102,7 +121,7 @@
                 <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
             </ul>
             {% endif %}
-            <div class="center-block">
+            <div class="sidebar-right-section center-block">
                 {% if session.external_enrollment_url %}
                     <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                 {% else %}
@@ -191,23 +210,28 @@
                         {% endif %}
                     </p>
                 {% endif %}
-                <hr>
+            </div>
+            <div class="sidebar-right-section center-block">
                 <div class="map">
                     <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=203x203&amp;sensor=false&amp;zoom=15"></a>
                 </div>
+            </div>
+            <div class="sidebar-right-section center-block">
                 <h3 class="subtitle">Upcoming Classes</h3>
                 {% for upcoming_class in upcoming_classes %}
                     {% if upcoming_class.id != session.id %}
-                    <div class="upcoming-class">
-                        <div class="date">{{ upcoming_class.start_date|date:'M' }}<br><strong>{{ upcoming_class.start_date|date:'d' }}</strong></div>
-                        <a href="{{ upcoming_class.get_absolute_url }}">{{ upcoming_class.course.title }}</a>
+                    <div class="row upcoming-class">
+                        <div class="col-xs-3 date">{{ upcoming_class.start_date|date:'M' }} <strong>{{ upcoming_class.start_date|date:'d' }}</strong></div>
+                        <div class="col-xs-9">
+                            <a href="{{ upcoming_class.get_absolute_url }}">{{ upcoming_class.course.title }}</a>
+                        </div>
                     </div>
                     {% endif %}
                 {% endfor %}
             </div>
-            <div class="center-block">
+            <div class="sidebar-right-section center-block">
                 <p><i class="fa fa-share"></i> Share</p>
-                <ul class="list-inline social-sharing">
+                <ul class="list-inline text-center social-sharing">
                     <li><span class='st_facebook_large' displayText='Facebook'></span></li>
                     <li><span class='st_twitter_large' displayText='Tweet'></span></li>
                     <li><span class='st_linkedin_large' displayText='LinkedIn'></span></li>
