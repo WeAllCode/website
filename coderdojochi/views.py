@@ -239,12 +239,7 @@ def welcome(request, template_name="welcome.html"):
             else:
 
                 # check for next upcoming class
-                next_class_query = Session.objects.filter(active=True).order_by('start_date').first()
-
-                if not request.user.is_authenticated() or not request.user.role == 'mentor':
-                    next_class_query = next_class_query.filter(public=True)
-
-                next_class = next_class_query
+                next_class = Session.objects.filter(active=True).order_by('start_date').first()
 
                 if next_class:
                     merge_vars['next_class_url'] = next_class.get_absolute_url()
