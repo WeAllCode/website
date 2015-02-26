@@ -12,6 +12,7 @@ class UserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
     search_fields = ('first_name','last_name', 'email',)
     view_on_site = False
+    filter_horizontal = ('groups', 'user_permissions', )
 
     change_form_template = 'loginas/change_form.html'
 
@@ -51,6 +52,7 @@ class SessionAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
+    filter_horizontal = ('mentors', 'waitlist_mentors', 'waitlist_students', )
 
     def get_mentor_count(self, obj):
         return obj.mentors.count()
@@ -77,6 +79,7 @@ class MeetingAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
+    filter_horizontal = ('mentors',)
 
     def get_mentor_count(self, obj):
         return obj.mentors.count()
