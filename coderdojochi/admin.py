@@ -41,10 +41,18 @@ class CourseAdmin(admin.ModelAdmin):
     list_per_page = 100
 
 class SessionAdmin(admin.ModelAdmin):
-    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'active', 'public', 'announced_date',)
+    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'active', 'public', 'announced_date',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
+
+    def get_mentor_count(self, obj):
+        return obj.mentors.count()
+    get_mentor_count.short_description = 'Mentors'
+
+    def get_current_orders_count(self, obj):
+        return obj.get_current_orders().count()
+    get_current_orders_count.short_description = "Students"
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('guardian', 'student', 'session', 'active', 'ip', 'check_in', 'alternate_guardian', 'affiliate', 'order_number', 'created_at', 'updated_at', 'week_reminder_sent', 'day_reminder_sent',)
