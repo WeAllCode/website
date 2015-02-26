@@ -72,11 +72,15 @@ class MeetingTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
 class MeetingAdmin(admin.ModelAdmin):
-    list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'public', 'active', 'announced_date', 'created_at',)
+    list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'get_mentor_count', 'public', 'active', 'announced_date', 'created_at',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
+
+    def get_mentor_count(self, obj):
+        return obj.mentors.count()
+    get_mentor_count.short_description = 'Mentors'
 
 class EquipmentTypeAdmin(admin.ModelAdmin):
     view_on_site = False
