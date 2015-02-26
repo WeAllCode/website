@@ -11,6 +11,8 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'date_joined'
     search_fields = ('first_name','last_name', 'email',)
+    view_on_site = False
+    filter_horizontal = ('groups', 'user_permissions', )
 
     change_form_template = 'loginas/change_form.html'
 
@@ -20,6 +22,7 @@ class MentorAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'created_at'
     search_fields = ('first_name','last_name', 'user',)
+    view_on_site = False
 
 class GuardianAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'user', 'phone', 'zip', 'created_at', 'updated_at',)
@@ -28,23 +31,28 @@ class GuardianAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'created_at'
     search_fields = ('first_name','last_name', 'user',)
+    view_on_site = False
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'gender', 'guardian', 'created_at', 'updated_at', 'active',)
     ordering = ('guardian',)
     list_per_page = 100
     date_hierarchy = 'created_at'
+    view_on_site = False
 
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('code', 'title', 'slug', 'created_at', 'updated_at',)
     ordering = ('created_at',)
     list_per_page = 100
+    view_on_site = False
 
 class SessionAdmin(admin.ModelAdmin):
     list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'active', 'public', 'announced_date',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
+    view_on_site = False
+    filter_horizontal = ('mentors', 'waitlist_mentors', 'waitlist_students', )
 
     def get_mentor_count(self, obj):
         return obj.mentors.count()
@@ -60,21 +68,28 @@ class OrderAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
+    view_on_site = False
 
 class MeetingTypeAdmin(admin.ModelAdmin):
-    pass
+    view_on_site = False
 
 class MeetingAdmin(admin.ModelAdmin):
-    list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'public', 'active', 'announced_date', 'created_at',)
+    list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'get_mentor_count', 'public', 'active', 'announced_date', 'created_at',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
+    view_on_site = False
+    filter_horizontal = ('mentors',)
+
+    def get_mentor_count(self, obj):
+        return obj.mentors.count()
+    get_mentor_count.short_description = 'Mentors'
 
 class EquipmentTypeAdmin(admin.ModelAdmin):
-    pass
+    view_on_site = False
 
 class EquipmentAdmin(admin.ModelAdmin):
-    pass
+    view_on_site = False
 
 class DonationAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'amount', 'verified', 'receipt_sent', 'created_at', 'updated_at',)
@@ -82,9 +97,10 @@ class DonationAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
+    view_on_site = False
 
 class LocationAdmin(admin.ModelAdmin):
-    pass
+    view_on_site = False
 
 
 admin.site.register(User, UserAdmin)
