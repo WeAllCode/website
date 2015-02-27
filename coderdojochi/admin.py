@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ('-date_joined',)
     list_per_page = 100
     date_hierarchy = 'date_joined'
-    search_fields = ('first_name','last_name', 'email',)
+    search_fields = ('first_name', 'last_name', 'email',)
     view_on_site = False
     filter_horizontal = ('groups', 'user_permissions', )
 
@@ -21,8 +21,10 @@ class MentorAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
-    search_fields = ('first_name','last_name', 'user',)
-    view_on_site = False
+    search_fields = ('first_name', 'last_name', 'user',)
+
+    def view_on_site(self, obj):
+        return obj.get_absolute_url()
 
 class GuardianAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'user', 'phone', 'zip', 'created_at', 'updated_at',)
@@ -30,7 +32,7 @@ class GuardianAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
-    search_fields = ('first_name','last_name', 'user',)
+    search_fields = ('first_name', 'last_name', 'user',)
     view_on_site = False
 
 class StudentAdmin(admin.ModelAdmin):
@@ -53,6 +55,9 @@ class SessionAdmin(admin.ModelAdmin):
     date_hierarchy = 'start_date'
     view_on_site = False
     filter_horizontal = ('mentors', 'waitlist_mentors', 'waitlist_students', )
+
+    def view_on_site(self, obj):
+        return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
         return obj.mentors.count()
@@ -80,6 +85,9 @@ class MeetingAdmin(admin.ModelAdmin):
     date_hierarchy = 'start_date'
     view_on_site = False
     filter_horizontal = ('mentors',)
+
+    def view_on_site(self, obj):
+        return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
         return obj.mentors.count()
