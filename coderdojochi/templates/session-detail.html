@@ -33,7 +33,7 @@
 
             <h2 class="title light space-above">Class Information</h2>
 
-            <h3>Who</h4>
+            <h3>Who</h3>
             <p>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
 
             <h3>When</h3>
@@ -81,23 +81,6 @@
                     {% endif %}
                 {% endfor %}
             </div>
-
-<!--             <div class="row">
-                <div class="col-xs-12">
-                    {% for mentor in session.mentors.all %}
-                        {% if mentor.public == True %}
-                            <div class="col-xs-12 col-sm-4 col-md-3">
-                                <a class="" href="{% url 'mentor_detail' mentor.id %}">
-                                    {% avatar mentor.user 175 %}
-                                    <div class="info">
-                                        {{ mentor.first_name }} {{ mentor.last_name }}
-                                    </div>
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div> -->
             {% endif %}
         </div>
 
@@ -213,7 +196,7 @@
             </div>
             <div class="sidebar-right-section center-block">
                 <div class="map">
-                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=203x203&amp;sensor=false&amp;zoom=15"></a>
+                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=281x281&amp;sensor=false&amp;zoom=15"></a>
                 </div>
             </div>
             <div class="sidebar-right-section center-block">

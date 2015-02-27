@@ -74,6 +74,9 @@ class Mentor(models.Model):
     def get_reject_avatar_url(self):
         return settings.SITE_URL + '/mentors/' + str(self.id) + '/reject-avatar/'
 
+    def get_absolute_url(self):
+        return settings.SITE_URL + '/mentors/' + str(self.id) + '/'
+
     class Meta:
         verbose_name = _("mentors")
         verbose_name_plural = _("mentors")
