@@ -18,6 +18,10 @@ CDC.global = (function($, document, window, undefined) {
 
     function init() {
 
+        $(function() {
+            $('[data-toggle="popover"]').popover();
+        });
+
         // account for csrf in all ajax requests
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
@@ -43,7 +47,7 @@ CDC.global = (function($, document, window, undefined) {
             }
         });
 
-        // display any global messages 
+        // display any global messages
 
         setTimeout(function() {
             $('.global-messages:first').animate({
