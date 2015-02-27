@@ -627,8 +627,8 @@ def meeting_announce(request, meeting_id):
 
         for mentor in Mentor.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming mentor meeting', 'coderdojochi-meeting-announcement-mentor', {
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name,
+                'first_name': mentor.user.first_name,
+                'last_name': mentor.user.last_name,
                 'meeting_title': meeting_obj.meeting_type.title,
                 'meeting_description': meeting_obj.meeting_type.description,
                 'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
@@ -1171,8 +1171,8 @@ def session_announce(request, session_id):
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-mentor', {
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name,
+                'first_name': mentor.user.first_name,
+                'last_name': mentor.user.last_name,
                 'class_code': session_obj.course.code,
                 'class_title': session_obj.course.title,
                 'class_description': session_obj.course.description,
@@ -1192,8 +1192,8 @@ def session_announce(request, session_id):
 
         for guardian in Guardian.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-guardian', {
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name,
+                'first_name': guardian.user.first_name,
+                'last_name': guardian.user.last_name,
                 'class_code': session_obj.course.code,
                 'class_title': session_obj.course.title,
                 'class_description': session_obj.course.description,
