@@ -13,24 +13,77 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="title">{{ meeting.meeting_type.title }} <small>{{ meeting.start_date|date }}</small></h1>
     <div class="row">
-        <div class="class-detail-sidebar-right">
+        <div class="col-xs-12">
+            <h1 class="title">{{ meeting.meeting_type.title }} <small>{{ meeting.start_date|date }}</small></h1>
+        </div>
+    </div>
 
-            {% if user.is_staff %}
-            <div class="well well-sm">
-                <ul class="list-group">
-                    {% if meeting.announced_date %}
-                    <span class="text-muted list-group-item">Announced on {{ meeting.announced_date|date }}</span>
-                    {% else %}
-                    <a href="#" class="list-group-item" onclick="event.preventDefault()" data-toggle="popover" title="Announce Meeting?" data-content="<a class='btn btn-danger' href='{% url 'meeting_announce' meeting.id %}'>Announce</a>" data-html="true">Announce</a>
-                    {% endif %}
-                    <a href="/admin/coderdojochi/meeting/{{ meeting.id }}" class="list-group-item">Edit Meeting</a>
-                </ul>
-            </div>
+    <div class="row">
+        <div class="col-sm-8 class-detail-content">
+            <p>{{ meeting.meeting_type.description|safe }}</p>
+
+            <h2 class="title light space-above">Meeting Information</h2>
+
+            <h3>Who</h3>
+            <p>Teachers, coders, writers, crafters, nurturers, leaders, tinkers, go getters to name a few. If you are passionate about coding and/or teaching children, join us. Everyone is welcome, regardless of technical ability.</p>
+
+            <h3>When</h3>
+            <p>{{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}</p>
+
+            <h3>Where</h3>
+            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }}<br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
+
+            {% if meeting.additional_info %}
+            <h3>Additional Info</h3>
+            <p>{{ meeting.additional_info|safe }}</p>
             {% endif %}
 
-            <div class="content">
+            {% if meeting.mentors.all %}
+            <h2 class="subtitle">Meet the mentors</h2>
+
+            <div class="row mentors">
+                {% for mentor in meeting.mentors.all %}
+                    {% if mentor.public == True %}
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                        {% avatar mentor.user 175 %}
+                        <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
+                    </a>
+                </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-sm-4 class-detail-sidebar-right">
+            {% if user.is_staff %}
+            <ul class="center-block well well-sm list-group list-unstyled">
+                {% if meeting.active %}
+                    <!-- Todo -->
+                    <li class="list-group-item">Mentors: <b>{{ meeting.mentors.count }}</b></li>
+
+                        {% if meeting.announced_date %}
+                            <li class="text-muted list-group-item">Announced: <b>{{ meeting.announced_date|date }}</b></li>
+                        {% else %}
+                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Meeting?" data-content="<a class='btn btn-danger' href='{% url 'meeting_announce' meeting.id %}'>Announce</a>" data-html="true">Announce</a></li>
+                        {% endif %}
+
+                    <!-- Todo -->
+                    <li class="list-group-item"><a href="#">Check-in Meeting</a></li>
+                    {% else %}
+                {% endif %}
+
+                <!-- Todo -->
+                <li class="list-group-item"><a href="#">Meeting Stats</a></li>
+
+                <!-- Todo -->
+                <li class="list-group-item"><a href="/dj-admin/coderdojochi/meeting/{{ session.id }}">Edit Meeting</a></li>
+            </ul>
+            {% endif %}
+
+            <div class="sidebar-right-section center-block">
                 {% if meeting.external_enrollment_url %}
                     <p><a href="{{ meeting.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                 {% else %}
@@ -45,42 +98,15 @@
                     <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
                     {% endif %}
                 {% endif %}
-                <hr>
+            </div>
+
+            <div class="sidebar-right-section center-block">
                 <div class="map">
-                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img src="//maps.google.com/maps/api/staticmap?markers=location:{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;size=500x300&amp;sensor=false&zoom=16"></a>
+                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;size=203x203&amp;sensor=false&amp;zoom=15"></a>
                 </div>
             </div>
         </div>
-        <div class="class-detail-content">
-            <p>{{ meeting.meeting_type.description|safe }}</p>
-
-            <h2 class="title light space-above">Meeting Information</h2>
-            <p>Who:<br>Teachers, coders, writers, crafters, nurturers, leaders, tinkers, go getters to name a few. If you are passionate about coding and/or teaching children, join us. Everyone is welcome, regardless of technical ability.</p>
-
-            <p>When:<br>{{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}</p>
-
-            <p>Where:<br><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }}<br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
-
-            {% if meeting.additional_info %}
-            <p> Additional Info:<br>{{ meeting.additional_info|safe }}</p>
-            {% endif %}
-
-
-            {% if meeting.mentors.all %}
-            <h2 class="subtitle">Mentors Attending</h2>
-            <div class="mentors">
-                {% for mentor in meeting.mentors.all %}
-                <a href="{% url 'mentor_detail' mentor.id %}" class="mentor">
-                    {% avatar mentor.user 250 %}
-                    <div class="info">
-                        {{ mentor.first_name }} {{ mentor.last_name }}
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-        </div>
     </div>
+
 </div>
 {% endblock %}
