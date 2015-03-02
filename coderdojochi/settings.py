@@ -97,6 +97,7 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/dojo/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
