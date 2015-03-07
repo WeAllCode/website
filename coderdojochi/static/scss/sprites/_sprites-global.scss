@@ -1,0 +1,83 @@
+$sprite-global: (
+	icon-donation-hover: (
+		offset-x: 0px,
+		offset-y: 0px,
+		width: 250px,
+		height: 250px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	icon-donation: (
+		offset-x: -255px,
+		offset-y: 0px,
+		width: 250px,
+		height: 250px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	login-email: (
+		offset-x: -193px,
+		offset-y: -255px,
+		width: 305px,
+		height: 53px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	login-google: (
+		offset-x: 0px,
+		offset-y: -360px,
+		width: 305px,
+		height: 53px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	logo-mobile: (
+		offset-x: -642px,
+		offset-y: -58px,
+		width: 105px,
+		height: 56px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	logo-small: (
+		offset-x: -510px,
+		offset-y: -58px,
+		width: 127px,
+		height: 68px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	logo: (
+		offset-x: 0px,
+		offset-y: -255px,
+		width: 188px,
+		height: 100px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	signup-email: (
+		offset-x: 0px,
+		offset-y: -418px,
+		width: 305px,
+		height: 53px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+	signup-google: (
+		offset-x: -510px,
+		offset-y: 0px,
+		width: 305px,
+		height: 53px,
+		total-width: 815px,
+		total-height: 471px,
+		image: "../images/sprites/sprite-global.png"
+	),
+);
