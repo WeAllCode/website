@@ -4,9 +4,9 @@ if [[ "$1" == "staging" ]]; then
 
     echo "Deploying to staging..." &&
     cd /home/coderdojo/webapps/coderdojochi_staging/coderdojochi &&
-    source ../bin/activate &&
     git checkout develop &&
     git pull origin develop &&
+    source ../bin/activate &&
     pip install -r requirements.txt --exists-action=s &&
     ((pip list | grep 'South') && pip uninstall -y South) &&
     npm prune &&
@@ -21,9 +21,9 @@ elif [[ "$1" == "production" ]]; then
 
     echo "Deploying to production..." &&
     cd /home/coderdojo/webapps/coderdojochi/coderdojochi &&
-    source ../bin/activate &&
     git checkout master &&
     git pull origin master &&
+    source ../bin/activate &&
     pip install -r requirements.txt --exists-action=s &&
     ((pip list | grep 'South') && pip uninstall -y South) &&
     npm prune &&
