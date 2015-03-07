@@ -84,6 +84,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
     'dealer.contrib.django.context_processor',
+
+    # coderdojochi
+    'coderdojochi.context_processors.main_config_processor',
 )
 
 AUTHENTICATION_BACKENDS = (
