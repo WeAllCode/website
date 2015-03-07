@@ -37,7 +37,7 @@
             <p>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
 
             <h3>When</h3>
-            <p>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
+            <p>{{ session.start_date|date }} from {% if account and user.role == 'volunteer' %}{{ session.volunteer_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'volunteer' %}{{ session.volunteer_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
 
             <h3>Where</h3>
             <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
@@ -55,27 +55,27 @@
             <div class="teachers">
                 <div class="teacher">
                     <div class="image">
-                        <a href="{% url 'mentor_detail' session.teacher.id %}">{% avatar session.teacher.user 320 %}</a>
+                        <a href="{% url 'volunteer_detail' session.teacher.id %}">{% avatar session.teacher.user 320 %}</a>
                     </div>
                     <div class="info">
                         <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
                         <p>{{ session.teacher.bio|truncatechars:120 }}</p>
-                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.first_name }}.</a></p>
+                        <p><a href="{% url 'volunteer_detail' session.teacher.id %}">Learn more about {{ session.teacher.first_name }}.</a></p>
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            {% if session.mentors.all %}
-            <h2 class="subtitle">Meet the mentors</h2>
+            {% if session.volunteers.all %}
+            <h2 class="subtitle">Meet the volunteers</h2>
 
-            <div class="row mentors">
-                {% for mentor in session.mentors.all %}
-                    {% if mentor.public == True %}
+            <div class="row volunteers">
+                {% for volunteer in session.volunteers.all %}
+                    {% if volunteer.public == True %}
                 <div class="col-xs-12 col-sm-4 col-md-4">
-                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                        {% avatar mentor.user 175 %}
-                        <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
+                    <a href="{% url 'volunteer_detail' volunteer.id %}" class="thumbnail">
+                        {% avatar volunteer.user 175 %}
+                        <span class="caption text-center">{{ volunteer.first_name }} {{ volunteer.last_name }}</span>
                     </a>
                 </div>
                     {% endif %}
@@ -89,7 +89,7 @@
             <ul class="center-block well well-sm list-group list-unstyled">
                 {% if session.active %}
                     <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
-                    <li class="list-group-item">Volunteers: <b>{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</b></li>
+                    <li class="list-group-item">Volunteers: <b>{{ session.volunteers.count }} / {{ session.get_volunteer_capacity }}</b></li>
 
                         {% if session.announced_date %}
                             <li class="text-muted list-group-item">Announced: <b>{{ session.announced_date|date }}</b></li>
@@ -150,24 +150,24 @@
                             {% endif %}
                         {% else %}
                             {% if spots_remaining %}
-                                {% if mentor_signed_up %}
-                                    <p>You are signed up to mentor this class.</p>
+                                {% if volunteer_signed_up %}
+                                    <p>You are signed up to volunteer this class.</p>
                                     <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                                 {% else %}
                                     <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
                                 {% endif %}
                             {% else %}
-                                {% if account in session.waitlist_mentors.all %}
+                                {% if account in session.waitlist_volunteers.all %}
                                     <p>You are currently on the waitlist for this class. We will contact you ASAP if a spot becomes available.</p>
                                 {% else %}
-                                    <p>There are currently no available mentor spots for this class.</p>
+                                    <p>There are currently no available volunteer spots for this class.</p>
                                 {% endif %}
 
                                 <form action="" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="waitlist" value="mentor">
+                                    <input type="hidden" name="waitlist" value="volunteer">
                                     <input type="hidden" name="account_id" value="{{ account.id }}">
-                                    {% if account in session.waitlist_mentors.all %}
+                                    {% if account in session.waitlist_volunteers.all %}
                                         <input type="hidden" name="remove" value="true">
                                         <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from waitlist</button>
                                     {% else %}
@@ -188,7 +188,7 @@
                             {% if is_guardian %}
                                 <span class="text-large">{{ session.waitlist_students.count }}</span> on waitlist
                             {% else %}
-                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> on waitlist
+                                <span class="text-large">{{ session.waitlist_volunteers.count }}</span> on waitlist
                             {% endif %}
                         {% endif %}
                     </p>

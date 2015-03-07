@@ -26,9 +26,9 @@
                 {% endif %}
             {% endif %}
         {% endif %}
-        {% if role == 'mentor' %}
+        {% if role == 'volunteer' %}
         <h1>Tell us a little more...</h1>
-        <h3 class="text-muted">Before you sign up to mentor classes, come up with a short bio for yourself...</h3>
+        <h3 class="text-muted">Before you sign up to volunteer classes, come up with a short bio for yourself...</h3>
         {% endif %}
         {% if form %}
         {% if add_student %}
@@ -52,7 +52,7 @@
         </form>
         <form method="post" action="{% if next %}?next={{ next }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" class="role">
             {% csrf_token %}
-            <input type="hidden" name="role" value="mentor">
+            <input type="hidden" name="role" value="volunteer">
             <button class="btn btn-success">Volunteer <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
         </form>
     </div>

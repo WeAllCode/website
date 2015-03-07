@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container registration min-height">
     <h1 class="light">
-    {% if user_signed_up %}You can no longer make it{% else %}Sign up{% endif %} to attend the mentor meeting <strong>"{{ meeting.meeting_type.title }}"</strong> on <strong>{{ meeting.start_date|date }}</strong> from <strong>{{ meeting.start_date|time }}</strong> to <strong>{{ meeting.end_date|time }}</strong>?</h1>
+    {% if user_signed_up %}You can no longer make it{% else %}Sign up{% endif %} to attend the volunteer meeting <strong>"{{ meeting.meeting_type.title }}"</strong> on <strong>{{ meeting.start_date|date }}</strong> from <strong>{{ meeting.start_date|time }}</strong> to <strong>{{ meeting.end_date|time }}</strong>?</h1>
     <form class="form" method="POST" action="">
         {% csrf_token %}
         <button class="btn-cdc btn-cdc-{% if user_signed_up %}danger{% else %}success{% endif %} btn-cdc-lg">{% if user_signed_up %}Yes, cancel{% else %}Yes, I'm excited!{% endif %}</button>

@@ -82,7 +82,7 @@
                         {% for session in upcoming_sessions %}
                             <tr>
                                 <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}({{ session.course.code }}) {% endif %}{{ session.course.title }}</a></td>
-                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.mentor_start_date|time }}</span></td>
+                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.volunteer_start_date|time }}</span></td>
                                 <td>
                                     <a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
                                 </td>
@@ -123,7 +123,7 @@
                         {% for session in past_sessions %}
                             <tr>
                                 <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
-                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.mentor_start_date|time }}</span></td>
+                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.volunteer_start_date|time }}</span></td>
                                 <td>
                                     <a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
                                 </td>
@@ -139,7 +139,7 @@
             </div>
         </div>
         <br>
-        {% if user.role == 'mentor' %}
+        {% if user.role == 'volunteer' %}
             <hr>
             <div class="upcoming-meetings{% if highlight == 'meetings' %} alert alert-warning{% endif %}">
                 <h2>Upcoming Volunteer Meetings</h2>
@@ -158,21 +158,21 @@
                             <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
                             <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
                             <td>
-                                <a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}RSVP{% endif%}</a>
+                                <a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-{% if account in meeting.volunteers.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.volunteers.all %}Can't make it{% else %}RSVP{% endif%}</a>
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
                 {% else %}
-                <p class="text-muted">No upcoming mentor meetings at this time. Please check back soon.</p>
+                <p class="text-muted">No upcoming volunteer meetings at this time. Please check back soon.</p>
                 {% endif %}
             </div>
         {% endif %}
     </div>
     <div class="dojo-profile">
         <div class="well well-sm">
-            {% if user.role == 'mentor' %}
+            {% if user.role == 'volunteer' %}
             <img src="{% avatar_url user 400 %}" class="avatar">
             <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
             {% endif %}

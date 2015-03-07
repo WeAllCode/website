@@ -124,7 +124,7 @@ def home(request, template_name="home.html"):
     else:
         upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
-        if not request.user.is_authenticated() or not request.user.role == 'mentor':
+        if not request.user.is_authenticated() or not request.user.role == 'volunteer':
             upcoming_classes = upcoming_classes.filter(public=True)
 
         upcoming_classes = upcoming_classes[:3]
@@ -156,7 +156,7 @@ def welcome(request, template_name="welcome.html"):
     if request.method == 'POST':
 
         if role:
-            if role == 'mentor':
+            if role == 'volunteer':
                 form = VolunteerForm(request.POST, instance=get_object_or_404(Volunteer, user=user))
             else:
                 account = get_object_or_404(Guardian, user=user)
@@ -196,12 +196,12 @@ def welcome(request, template_name="welcome.html"):
                 else:
                     keepGoing = False
         else:
-            if request.POST.get('role') == 'mentor':
-                role = 'mentor'
-                mentor, created = Volunteer.objects.get_or_create(user=user)
-                mentor.first_name = user.first_name
-                mentor.last_name = user.last_name
-                mentor.save()
+            if request.POST.get('role') == 'volunteer':
+                role = 'volunteer'
+                volunteer, created = Volunteer.objects.get_or_create(user=user)
+                volunteer.first_name = user.first_name
+                volunteer.last_name = user.last_name
+                volunteer.save()
                 user.role = role
             else:
                 role = 'guardian'
@@ -225,7 +225,7 @@ def welcome(request, template_name="welcome.html"):
             else:
                 next = ''
 
-            if role == 'mentor':
+            if role == 'volunteer':
 
                 # check for next upcoming meeting
                 next_meeting = Meeting.objects.filter(active=True, public=True).order_by('start_date').first()
@@ -233,7 +233,7 @@ def welcome(request, template_name="welcome.html"):
                 if next_meeting:
                     merge_vars['next_intro_meeting_url'] = next_meeting.get_absolute_url()
 
-                sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-mentor', merge_vars)
+                sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-volunteer', merge_vars)
 
                 return HttpResponseRedirect(next)
             else:
@@ -249,9 +249,9 @@ def welcome(request, template_name="welcome.html"):
                 return HttpResponseRedirect(reverse('welcome') + next)
 
     if role and keepGoing:
-        if role == 'mentor':
-            mentor = get_object_or_404(Volunteer, user=user)
-            account = mentor
+        if role == 'volunteer':
+            volunteer = get_object_or_404(Volunteer, user=user)
+            account = volunteer
             form = VolunteerForm(instance=account)
 
         if role == 'guardian':
@@ -264,7 +264,7 @@ def welcome(request, template_name="welcome.html"):
                 form = StudentForm(initial={'guardian': guardian.pk})
 
     if account and account.first_name and keepGoing:
-        if role == 'mentor':
+        if role == 'volunteer':
             if next:
                 return HttpResponseRedirect(next)
             else:
@@ -303,7 +303,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     else:
         all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
-        if not request.user.is_authenticated() or not request.user.role == 'mentor':
+        if not request.user.is_authenticated() or not request.user.role == 'volunteer':
             all_sessions = all_sessions.filter(public=True)
 
         cache.set('public_sessions', all_sessions, 600)
@@ -326,7 +326,7 @@ def session_detail_enroll(request, year, month, day, slug, session_id, template_
 
 def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html", enroll=False):
     session_obj = get_object_or_404(Session, id=session_id)
-    mentor_signed_up = False
+    volunteer_signed_up = False
     is_guardian = False
     account = False
     students = False
@@ -346,14 +346,14 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
                     session_obj.save()
                     messages.add_message(request, messages.SUCCESS, 'Added to waitlist successfully.')
             else:
-                mentor = Volunteer.objects.get(id=int(request.POST['account_id']))
+                volunteer = Volunteer.objects.get(id=int(request.POST['account_id']))
 
                 if request.POST['remove'] == 'true':
-                    session_obj.waitlist_mentors.remove(mentor)
+                    session_obj.waitlist_volunteers.remove(volunteer)
                     session_obj.save()
                     messages.add_message(request, messages.SUCCESS, 'You have been removed from the waitlist. Thanks for letting us know.')
                 else:
-                    session_obj.waitlist_mentors.add(mentor)
+                    session_obj.waitlist_volunteers.add(volunteer)
                     session_obj.save()
                     messages.add_message(request, messages.SUCCESS, 'Added to waitlist successfully.')
         else:
@@ -363,7 +363,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
     upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
-    if not request.user.is_authenticated() or not request.user.role == 'mentor':
+    if not request.user.is_authenticated() or not request.user.role == 'volunteer':
         upcoming_classes = upcoming_classes.filter(public=True)
 
     if request.user.is_authenticated():
@@ -378,11 +378,11 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
             return HttpResponseRedirect(url)
 
-        if request.user.role == 'mentor':
-            mentor = get_object_or_404(Volunteer, user=request.user)
-            account = mentor
-            mentor_signed_up = True if mentor in session_obj.mentors.all() else False
-            spots_remaining = session_obj.get_mentor_capacity() - session_obj.mentors.all().count()
+        if request.user.role == 'volunteer':
+            volunteer = get_object_or_404(Volunteer, user=request.user)
+            account = volunteer
+            volunteer_signed_up = True if volunteer in session_obj.volunteers.all() else False
+            spots_remaining = session_obj.get_volunteer_capacity() - session_obj.volunteers.all().count()
 
             if enroll or 'enroll' in request.GET:
                 return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/')
@@ -404,7 +404,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
     else:
         spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
 
-    # only allow mentors to view non-public sessions
+    # only allow volunteers to view non-public sessions
     if not session_obj.public:
         if not request.user.is_authenticated() or is_guardian:
             messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
@@ -413,7 +413,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
     return render_to_response(template_name,{
         'session': session_obj,
-        'mentor_signed_up': mentor_signed_up,
+        'volunteer_signed_up': volunteer_signed_up,
         'is_guardian': is_guardian,
         'students': students,
         'account': account,
@@ -433,19 +433,19 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
         return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
 
-    if request.user.role == 'mentor':
+    if request.user.role == 'volunteer':
 
-        mentor = get_object_or_404(Volunteer, user=request.user)
+        volunteer = get_object_or_404(Volunteer, user=request.user)
 
-        if not mentor.has_attended_intro_meeting:
-            messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a mentor meeting. Please RSVP below.')
+        if not volunteer.has_attended_intro_meeting:
+            messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a volunteer meeting. Please RSVP below.')
             return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
 
-        user_signed_up = True if mentor in session_obj.mentors.all() else False
+        user_signed_up = True if volunteer in session_obj.volunteers.all() else False
 
         if not user_signed_up:
-            if session_obj.get_mentor_capacity() <= session_obj.mentors.all().count():
-                messages.add_message(request, messages.ERROR, 'Sorry this class is at mentor capacity.  Please check back soon and/or join us for another upcoming class!')
+            if session_obj.get_volunteer_capacity() <= session_obj.volunteers.all().count():
+                messages.add_message(request, messages.ERROR, 'Sorry this class is at volunteer capacity.  Please check back soon and/or join us for another upcoming class!')
                 return HttpResponseRedirect(session_obj.get_absolute_url())
 
     else:
@@ -462,12 +462,12 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
     if request.method == 'POST':
 
-        if request.user.role == 'mentor':
+        if request.user.role == 'volunteer':
             if user_signed_up:
-                session_obj.mentors.remove(mentor)
+                session_obj.volunteers.remove(volunteer)
                 undo = True
             else:
-                session_obj.mentors.add(mentor)
+                session_obj.volunteers.add(volunteer)
         else:
             if user_signed_up:
                 order = get_object_or_404(Order, student=student, session=session_obj)
@@ -500,18 +500,18 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
 
 
-            if request.user.role == 'mentor':
+            if request.user.role == 'volunteer':
 
-                sendSystemEmail(request, 'Upcoming class confirmation', 'coderdojochi-class-confirm-mentor', {
+                sendSystemEmail(request, 'Upcoming class confirmation', 'coderdojochi-class-confirm-volunteer', {
                     'first_name': request.user.first_name,
                     'last_name': request.user.last_name,
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
-                    'class_end_date': arrow.get(session_obj.mentor_end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session_obj.mentor_end_date).format('h:mma'),
+                    'class_start_date': arrow.get(session_obj.volunteer_start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session_obj.volunteer_start_date).format('h:mma'),
+                    'class_end_date': arrow.get(session_obj.volunteer_end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session_obj.volunteer_end_date).format('h:mma'),
                     'class_location_name': session_obj.location.name,
                     'class_location_address': session_obj.location.address,
                     'class_location_address2': session_obj.location.address2,
@@ -548,7 +548,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
 
-    # only allow mentors to view non-public sessions
+    # only allow volunteers to view non-public sessions
     if not session_obj.public:
         if not request.user.is_authenticated() or guardian:
             messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
@@ -564,15 +564,15 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 def meeting_detail(request, year, month, day, meeting_id, template_name="meeting-detail.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
-    mentor_signed_up = False
+    volunteer_signed_up = False
 
     if request.user.is_authenticated():
-        mentor = get_object_or_404(Volunteer, user=request.user)
-        mentor_signed_up = True if mentor in meeting_obj.mentors.all() else False
+        volunteer = get_object_or_404(Volunteer, user=request.user)
+        volunteer_signed_up = True if volunteer in meeting_obj.volunteers.all() else False
 
     return render_to_response(template_name,{
         'meeting': meeting_obj,
-        'mentor_signed_up': mentor_signed_up,
+        'volunteer_signed_up': volunteer_signed_up,
     }, context_instance=RequestContext(request))
 
 
@@ -581,18 +581,18 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
-    mentor = get_object_or_404(Volunteer, user=request.user)
-    user_signed_up = True if mentor in meeting_obj.mentors.all() else False
+    volunteer = get_object_or_404(Volunteer, user=request.user)
+    user_signed_up = True if volunteer in meeting_obj.volunteers.all() else False
 
     undo = False
 
     if request.method == 'POST':
 
         if user_signed_up:
-            meeting_obj.mentors.remove(mentor)
+            meeting_obj.volunteers.remove(volunteer)
             undo = True
         else:
-            meeting_obj.mentors.add(mentor)
+            meeting_obj.volunteers.add(volunteer)
 
         meeting_obj.save()
 
@@ -601,7 +601,7 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
 
-            sendSystemEmail(request, 'Upcoming mentor meeting confirmation', 'coderdojochi-meeting-confirm-mentor', {
+            sendSystemEmail(request, 'Upcoming volunteer meeting confirmation', 'coderdojochi-meeting-confirm-volunteer', {
                 'first_name': request.user.first_name,
                 'last_name': request.user.last_name,
                 'meeting_title': meeting_obj.meeting_type.title,
@@ -638,10 +638,10 @@ def meeting_announce(request, meeting_id):
 
     if not meeting_obj.announced_date:
 
-        for mentor in Volunteer.objects.filter(active=True):
-            sendSystemEmail(request, 'Upcoming mentor meeting', 'coderdojochi-meeting-announcement-mentor', {
-                'first_name': mentor.user.first_name,
-                'last_name': mentor.user.last_name,
+        for volunteer in Volunteer.objects.filter(active=True):
+            sendSystemEmail(request, 'Upcoming volunteer meeting', 'coderdojochi-meeting-announcement-volunteer', {
+                'first_name': volunteer.user.first_name,
+                'last_name': volunteer.user.last_name,
                 'meeting_title': meeting_obj.meeting_type.title,
                 'meeting_description': meeting_obj.meeting_type.description,
                 'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
@@ -656,7 +656,7 @@ def meeting_announce(request, meeting_id):
                 'meeting_location_zip': meeting_obj.location.zip,
                 'meeting_additional_info': meeting_obj.additional_info,
                 'meeting_url': meeting_obj.get_absolute_url()
-            }, mentor.user.email)
+            }, volunteer.user.email)
 
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
@@ -669,11 +669,11 @@ def meeting_announce(request, meeting_id):
 
 def volunteer(request, template_name="volunteer.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
+    if cache.get('public_volunteers'):
+        volunteers = cache.get('public_volunteers')
     else:
-        mentors = Volunteer.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
+        volunteers = Volunteer.objects.filter(active=True, public=True).order_by('user__date_joined')
+        cache.set('public_volunteers', volunteers, 600)
 
     if cache.get('upcoming_public_meetings'):
         upcoming_meetings = cache.get('upcoming_public_meetings')
@@ -682,7 +682,7 @@ def volunteer(request, template_name="volunteer.html"):
         cache.set('upcoming_public_meetings', upcoming_meetings, 600)
 
     return render_to_response(template_name, {
-        'mentors': mentors,
+        'volunteers': volunteers,
         'upcoming_meetings': upcoming_meetings
     }, context_instance=RequestContext(request))
 
@@ -702,13 +702,13 @@ def dojo(request, template_name="dojo.html"):
 
     if request.user.role:
 
-        if request.user.role == 'mentor':
-            mentor = get_object_or_404(Volunteer, user=request.user)
-            account = mentor
+        if request.user.role == 'volunteer':
+            volunteer = get_object_or_404(Volunteer, user=request.user)
+            account = volunteer
 
-            mentor_sessions = Session.objects.filter(mentors=mentor)
-            upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
-            past_sessions = mentor_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
+            volunteer_sessions = Session.objects.filter(volunteers=volunteer)
+            upcoming_sessions = volunteer_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+            past_sessions = volunteer_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
 
             upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
 
@@ -806,66 +806,66 @@ class SessionsCalendar(HTMLCalendar):
     def day_cell(self, cssclass, body):
         return '<td class="%s">%s</td>' % (cssclass, body)
 
-def mentors(request, template_name="mentors.html"):
+def volunteers(request, template_name="volunteers.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
+    if cache.get('public_volunteers'):
+        volunteers = cache.get('public_volunteers')
     else:
-        mentors = Volunteer.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
+        volunteers = Volunteer.objects.filter(active=True, public=True).order_by('user__date_joined')
+        cache.set('public_volunteers', volunteers, 600)
 
     return render_to_response(template_name, {
-        'mentors': mentors
+        'volunteers': volunteers
     }, context_instance=RequestContext(request))
 
-def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
+def volunteer_detail(request, volunteer_id=False, template_name="volunteer-detail.html"):
 
-    mentor = get_object_or_404(Volunteer, id=mentor_id)
+    volunteer = get_object_or_404(Volunteer, id=volunteer_id)
 
-    if not mentor.public:
-        messages.add_message(request, messages.ERROR, 'Invalid mentor ID :(')
-        return HttpResponseRedirect(reverse('mentors'));
+    if not volunteer.public:
+        messages.add_message(request, messages.ERROR, 'Invalid volunteer ID :(')
+        return HttpResponseRedirect(reverse('volunteers'));
 
     return render_to_response(template_name, {
-        'mentor': mentor
+        'volunteer': volunteer
     }, context_instance=RequestContext(request))
 
 @login_required
-def mentor_approve_avatar(request, mentor_id=False):
+def volunteer_approve_avatar(request, volunteer_id=False):
 
-    mentor = get_object_or_404(Volunteer, id=mentor_id)
+    volunteer = get_object_or_404(Volunteer, id=volunteer_id)
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_approve_avatar_url())
+        return HttpResponseRedirect(reverse('auth_login') + '?next=' + volunteer.get_approve_avatar_url())
 
-    mentor.public = True
-    mentor.save()
+    volunteer.public = True
+    volunteer.save()
 
-    return HttpResponse('Volunteer avatar approved :) This mentor account is now public.')
+    return HttpResponse('Volunteer avatar approved :) This volunteer account is now public.')
 
 @login_required
-def mentor_reject_avatar(request, mentor_id=False):
+def volunteer_reject_avatar(request, volunteer_id=False):
 
-    mentor = get_object_or_404(Volunteer, id=mentor_id)
+    volunteer = get_object_or_404(Volunteer, id=volunteer_id)
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_reject_avatar_url())
+        return HttpResponseRedirect(reverse('auth_login') + '?next=' + volunteer.get_reject_avatar_url())
 
-    mentor.public = False
-    mentor.save()
+    volunteer.public = False
+    volunteer.save()
 
     msg = EmailMultiAlternatives(
         subject='CoderDojoChi | Avatar Rejected',
         body='Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance. ' + settings.SITE_URL + '/dojo/',
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[mentor.user.email]
+        to=[volunteer.user.email]
     )
     msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="' + settings.SITE_URL + '/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>', 'text/html')
     msg.send()
 
-    return HttpResponse('Volunteer avatar rejected :/ This mentor account is no longer public. An email notice has been sent to the mentor.')
+    return HttpResponse('Volunteer avatar rejected :/ This volunteer account is no longer public. An email notice has been sent to the volunteer.')
 
 
 @login_required
@@ -953,11 +953,11 @@ def donate_return(request):
 
 def about(request, template_name="about.html"):
 
-    if cache.get('mentor_count'):
-        mentor_count = cache.get('mentor_count')
+    if cache.get('volunteer_count'):
+        volunteer_count = cache.get('volunteer_count')
     else:
-        mentor_count = Volunteer.objects.filter(active=True).count()
-        cache.set('mentor_count', mentor_count, 600)
+        volunteer_count = Volunteer.objects.filter(active=True).count()
+        cache.set('volunteer_count', volunteer_count, 600)
 
     if cache.get('students_served'):
         students_served = cache.get('students_served')
@@ -965,11 +965,11 @@ def about(request, template_name="about.html"):
         students_served = Order.objects.exclude(check_in=None).count()
         cache.set('students_served', students_served, 600)
 
-    mentor_count = students_served if students_served > 30 else 30
+    volunteer_count = students_served if students_served > 30 else 30
     students_served = students_served if students_served > 600 else 600
 
     return render_to_response(template_name, {
-        'mentor_count': mentor_count,
+        'volunteer_count': volunteer_count,
         'students_served': students_served
     }, context_instance=RequestContext(request))
 
@@ -1158,7 +1158,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     }, context_instance=RequestContext(request))
 
 @login_required
-def session_check_in_mentors(request, session_id, template_name="session-check-in-mentors.html"):
+def session_check_in_volunteers(request, session_id, template_name="session-check-in-volunteers.html"):
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
@@ -1181,16 +1181,16 @@ def session_announce(request, session_id):
 
     if not session_obj.announced_date:
 
-        # send mentor announcements
-        for mentor in Volunteer.objects.filter(active=True):
-            sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-mentor', {
-                'first_name': mentor.user.first_name,
-                'last_name': mentor.user.last_name,
+        # send volunteer announcements
+        for volunteer in Volunteer.objects.filter(active=True):
+            sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-volunteer', {
+                'first_name': volunteer.user.first_name,
+                'last_name': volunteer.user.last_name,
                 'class_code': session_obj.course.code,
                 'class_title': session_obj.course.title,
                 'class_description': session_obj.course.description,
-                'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
+                'class_start_date': arrow.get(session_obj.volunteer_start_date).format('dddd, MMMM D, YYYY'),
+                'class_start_time': arrow.get(session_obj.volunteer_start_date).format('h:mma'),
                 'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
                 'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
                 'class_location_name': session_obj.location.name,
@@ -1201,7 +1201,7 @@ def session_announce(request, session_id):
                 'class_location_zip': session_obj.location.zip,
                 'class_additional_info': session_obj.additional_info,
                 'class_url': session_obj.get_absolute_url()
-            }, mentor.user.email)
+            }, volunteer.user.email)
 
         for guardian in Guardian.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-guardian', {

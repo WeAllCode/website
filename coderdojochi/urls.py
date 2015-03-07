@@ -24,10 +24,10 @@ urlpatterns = patterns('',
     url(r'^accounts/register/$', RegisterView.as_view(), name='register'),
     url(r'^register/enroll/$', RegisterView.as_view(enroll=True), name='register_enroll'),
 
-    url(r'^mentors/(?P<mentor_id>[\d]+)/reject-avatar/$', 'coderdojochi.views.mentor_reject_avatar', name='mentor_reject_avatar'),
-    url(r'^mentors/(?P<mentor_id>[\d]+)/approve-avatar/$', 'coderdojochi.views.mentor_approve_avatar', name='mentor_approve_avatar'),
-    url(r'^mentors/(?P<mentor_id>[\d]+)/$', 'coderdojochi.views.mentor_detail', name='mentor_detail'),
-    url(r'^mentors/$', 'coderdojochi.views.mentors', name='mentors'),
+    url(r'^volunteers/(?P<volunteer_id>[\d]+)/reject-avatar/$', 'coderdojochi.views.volunteer_reject_avatar', name='volunteer_reject_avatar'),
+    url(r'^volunteers/(?P<volunteer_id>[\d]+)/approve-avatar/$', 'coderdojochi.views.volunteer_approve_avatar', name='volunteer_approve_avatar'),
+    url(r'^volunteers/(?P<volunteer_id>[\d]+)/$', 'coderdojochi.views.volunteer_detail', name='volunteer_detail'),
+    url(r'^volunteers/$', 'coderdojochi.views.volunteers', name='volunteers'),
 
     url(r'^student/(?P<student_id>[\d]+)/$', 'coderdojochi.views.student_detail', name='student_detail'),
 
@@ -45,7 +45,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/class/(?P<session_id>[\d]+)/stats/$', 'coderdojochi.views.session_stats', name='stats'),
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in/$', 'coderdojochi.views.session_check_in', name='check_in'),
-    url(r'^admin/class/(?P<session_id>[\d]+)/check-in-mentors/$', 'coderdojochi.views.session_check_in_mentors', name='check_in_mentors'),
+    url(r'^admin/class/(?P<session_id>[\d]+)/check-in-volunteers/$', 'coderdojochi.views.session_check_in_volunteers', name='check_in_volunteers'),
     url(r'^admin/', 'coderdojochi.views.cdc_admin', name='cdc_admin'),
 
     url(r'^welcome/$', 'coderdojochi.views.welcome', name='welcome'),

@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+{% load avatar_tags humanize %}
+
+{% block title %}My Dojo{% endblock %}
+
+{% block body_class %}page-volunteers{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>Meet Our Volunteers <a href="{% url 'register' %}" class="btn-cdc">Join us now!</a></h1>
+
+    <div class="row volunteers">
+        {% for volunteer in volunteers %}
+            {% if volunteer.public == True %}
+        <div class="col-xs-12 col-sm-4 col-md-3">
+            <a href="{% url 'volunteer_detail' volunteer.id %}" class="thumbnail">
+                {% avatar volunteer.user 175 %}
+                <span class="caption text-center">{{ volunteer.first_name }} {{ volunteer.last_name }}</span>
+            </a>
+        </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

@@ -49,19 +49,19 @@ class CourseAdmin(admin.ModelAdmin):
     view_on_site = False
 
 class SessionAdmin(admin.ModelAdmin):
-    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'active', 'public', 'announced_date',)
+    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_volunteer_count', 'active', 'public', 'announced_date',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
-    filter_horizontal = ('mentors', 'waitlist_mentors', 'waitlist_students', )
+    filter_horizontal = ('volunteers', 'waitlist_volunteers', 'waitlist_students', )
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
-    def get_mentor_count(self, obj):
-        return obj.mentors.count()
-    get_mentor_count.short_description = 'Volunteers'
+    def get_volunteer_count(self, obj):
+        return obj.volunteers.count()
+    get_volunteer_count.short_description = 'Volunteers'
 
     def get_current_orders_count(self, obj):
         return obj.get_current_orders().count()
@@ -79,19 +79,19 @@ class MeetingTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
 class MeetingAdmin(admin.ModelAdmin):
-    list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'get_mentor_count', 'public', 'active', 'announced_date', 'created_at',)
+    list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'get_volunteer_count', 'public', 'active', 'announced_date', 'created_at',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
-    filter_horizontal = ('mentors',)
+    filter_horizontal = ('volunteers',)
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
-    def get_mentor_count(self, obj):
-        return obj.mentors.count()
-    get_mentor_count.short_description = 'Volunteers'
+    def get_volunteer_count(self, obj):
+        return obj.volunteers.count()
+    get_volunteer_count.short_description = 'Volunteers'
 
 class EquipmentTypeAdmin(admin.ModelAdmin):
     view_on_site = False

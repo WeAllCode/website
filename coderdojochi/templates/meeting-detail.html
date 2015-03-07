@@ -39,16 +39,16 @@
             <p>{{ meeting.additional_info|safe }}</p>
             {% endif %}
 
-            {% if meeting.mentors.all %}
+            {% if meeting.volunteers.all %}
             <h2 class="subtitle">Attending</h2>
 
-            <div class="row mentors">
-                {% for mentor in meeting.mentors.all %}
-                    {% if mentor.public == True %}
+            <div class="row volunteers">
+                {% for volunteer in meeting.volunteers.all %}
+                    {% if volunteer.public == True %}
                 <div class="col-xs-12 col-sm-4 col-md-4">
-                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                        {% avatar mentor.user 175 %}
-                        <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
+                    <a href="{% url 'volunteer_detail' volunteer.id %}" class="thumbnail">
+                        {% avatar volunteer.user 175 %}
+                        <span class="caption text-center">{{ volunteer.first_name }} {{ volunteer.last_name }}</span>
                     </a>
                 </div>
                     {% endif %}
@@ -62,7 +62,7 @@
             <ul class="center-block well well-sm list-group list-unstyled">
                 {% if meeting.active %}
                     <!-- Todo -->
-                    <li class="list-group-item">Volunteers: <b>{{ meeting.mentors.count }}</b></li>
+                    <li class="list-group-item">Volunteers: <b>{{ meeting.volunteers.count }}</b></li>
 
                         {% if meeting.announced_date %}
                             <li class="text-muted list-group-item">Announced: <b>{{ meeting.announced_date|date }}</b></li>
@@ -88,14 +88,14 @@
                     <p><a href="{{ meeting.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                 {% else %}
                     {% if user.is_authenticated %}
-                        {% if mentor_signed_up %}
+                        {% if volunteer_signed_up %}
                             <p>You are signed up to attend this meeting.</p>
                             <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                         {% else %}
                             <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                         {% endif %}
                     {% else %}
-                    <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
+                    <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this volunteer meeting.</p>
                     {% endif %}
                 {% endif %}
             </div>

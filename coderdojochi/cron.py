@@ -21,8 +21,8 @@ class SendReminders(CronJobBase):
     def do(self):
         orders_within_a_week = Order.objects.filter(active=True, week_reminder_sent=False, session__start_date__lte=timezone.now() + datetime.timedelta(days=7), session__start_date__gte=timezone.now() + datetime.timedelta(days=1))
         orders_within_a_day = Order.objects.filter(active=True, day_reminder_sent=False, session__start_date__lte=timezone.now() + datetime.timedelta(days=1))
-        sessions_within_a_week = Session.objects.filter(active=True, mentors_week_reminder_sent=False, start_date__lte=timezone.now() + datetime.timedelta(days=7), start_date__gte=timezone.now() + datetime.timedelta(days=1))
-        sessions_within_a_day = Session.objects.filter(active=True, mentors_day_reminder_sent=False, start_date__lte=timezone.now() + datetime.timedelta(days=1))
+        sessions_within_a_week = Session.objects.filter(active=True, volunteers_week_reminder_sent=False, start_date__lte=timezone.now() + datetime.timedelta(days=7), start_date__gte=timezone.now() + datetime.timedelta(days=1))
+        sessions_within_a_day = Session.objects.filter(active=True, volunteers_day_reminder_sent=False, start_date__lte=timezone.now() + datetime.timedelta(days=1))
 
         for order in orders_within_a_week:
             sendSystemEmail(order.guardian.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-guardian', {
@@ -71,15 +71,15 @@ class SendReminders(CronJobBase):
             order.save()
 
         for session in sessions_within_a_week:
-            for mentor in session.mentors.all():
-               sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor', {
+            for volunteer in session.volunteers.all():
+               sendSystemEmail(volunteer.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-volunteer', {
                     'class_code': session.course.code,
                     'class_title': session.course.title,
                     'class_description': session.course.description,
-                    'class_start_date': arrow.get(session.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session.mentor_start_date).format('h:mma'),
-                    'class_end_date': arrow.get(session.mentor_end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session.mentor_end_date).format('h:mma'),
+                    'class_start_date': arrow.get(session.volunteer_start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session.volunteer_start_date).format('h:mma'),
+                    'class_end_date': arrow.get(session.volunteer_end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session.volunteer_end_date).format('h:mma'),
                     'class_location_name': session.location.name,
                     'class_location_address': session.location.address,
                     'class_location_address2': session.location.address2,
@@ -89,19 +89,19 @@ class SendReminders(CronJobBase):
                     'class_additional_info': session.additional_info,
                     'class_url': session.get_absolute_url(),
                 })
-            session.mentors_week_reminder_sent = True
+            session.volunteers_week_reminder_sent = True
             session.save()
 
         for session in sessions_within_a_day:
-            for mentor in session.mentors.all():
-                sendSystemEmail(mentor.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-mentor-24-hour', {
+            for volunteer in session.volunteers.all():
+                sendSystemEmail(volunteer.user, 'Upcoming class reminder', 'coderdojochi-class-reminder-volunteer-24-hour', {
                     'class_code': session.course.code,
                     'class_title': session.course.title,
                     'class_description': session.course.description,
-                    'class_start_date': arrow.get(session.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session.mentor_start_date).format('h:mma'),
-                    'class_end_date': arrow.get(session.mentor_end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session.mentor_end_date).format('h:mma'),
+                    'class_start_date': arrow.get(session.volunteer_start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session.volunteer_start_date).format('h:mma'),
+                    'class_end_date': arrow.get(session.volunteer_end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session.volunteer_end_date).format('h:mma'),
                     'class_location_name': session.location.name,
                     'class_location_address': session.location.address,
                     'class_location_address2': session.location.address2,
@@ -111,7 +111,7 @@ class SendReminders(CronJobBase):
                     'class_additional_info': session.additional_info,
                     'class_url': session.get_absolute_url(),
                 })
-            session.mentors_day_reminder_sent = True
+            session.volunteers_day_reminder_sent = True
             session.save()
 
 def sendSystemEmail(user, subject, template_name, merge_vars):

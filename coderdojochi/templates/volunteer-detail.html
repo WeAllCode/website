@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+{% load avatar_tags humanize %}
+
+{% block title %}{{ volunteer.first_name }} {{ volunteer.last_name }}{% endblock %}
+
+{% block body_class %}page-volunteer-detail{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'volunteers' %}">All Volunteers</a></li>
+        <li class="active">{{ volunteer.first_name }} {{ volunteer.last_name }}</li>
+    </ol>
+</div>
+
+
+<div class="container">
+    <div class="dojo-content">
+        <h1>{{ volunteer.first_name }} {{ volunteer.last_name }}</h1>
+        <p>{{ volunteer.bio }}</p>
+    </div>
+    <div class="dojo-profile">
+        <div class="well well-sm">
+            <img src="{% avatar_url volunteer.user 400 %}" class="avatar">
+            <h3>Joined: {{ volunteer.user.date_joined|naturalday|capfirst }}</h3>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

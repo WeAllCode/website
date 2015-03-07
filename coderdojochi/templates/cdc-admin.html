@@ -50,7 +50,7 @@
                     <td class="text-right">
                         <span class="title">
                         {% if not session.external_enrollment_url %}
-                            <a href="{% url 'check_in_mentors' session.id %}">{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</a>
+                            <a href="{% url 'check_in_volunteers' session.id %}">{{ session.volunteers.count }} / {{ session.get_volunteer_capacity }}</a>
                         {% else %}
                         N/A
                         {% endif %}
@@ -102,7 +102,7 @@
                     <td class="text-right">
                         <span class="title">
                         {% if not session.external_enrollment_url %}
-                            <a href="{% url 'check_in_mentors' session.id %}">{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</a>
+                            <a href="{% url 'check_in_volunteers' session.id %}">{{ session.volunteers.count }} / {{ session.get_volunteer_capacity }}</a>
                         {% else %}
                         N/A
                         {% endif %}

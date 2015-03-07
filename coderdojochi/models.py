@@ -14,7 +14,7 @@ from django.utils import formats, timezone
 from django.template.defaultfilters import slugify
 
 Roles = (
-    ('mentor', 'mentor'),
+    ('volunteer', 'volunteer'),
     ('guardian', 'guardian'),
 )
 
@@ -69,17 +69,17 @@ class Volunteer(models.Model):
     public = models.BooleanField(default=False)
 
     def get_approve_avatar_url(self):
-        return settings.SITE_URL + '/mentors/' + str(self.id) + '/approve-avatar/'
+        return settings.SITE_URL + '/volunteers/' + str(self.id) + '/approve-avatar/'
 
     def get_reject_avatar_url(self):
-        return settings.SITE_URL + '/mentors/' + str(self.id) + '/reject-avatar/'
+        return settings.SITE_URL + '/volunteers/' + str(self.id) + '/reject-avatar/'
 
     def get_absolute_url(self):
-        return settings.SITE_URL + '/mentors/' + str(self.id) + '/'
+        return settings.SITE_URL + '/volunteers/' + str(self.id) + '/'
 
     class Meta:
-        verbose_name = _("mentors")
-        verbose_name_plural = _("mentors")
+        verbose_name = _("volunteers")
+        verbose_name_plural = _("volunteers")
 
     def __unicode__(self):
         return self.user.username
@@ -193,14 +193,14 @@ class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField(default=session_default_start_time())
     end_date = models.DateTimeField(default=session_default_end_time())
-    mentor_start_date = models.DateTimeField(default=session_default_start_time() - timedelta(hours=1))
-    mentor_end_date = models.DateTimeField(default=session_default_end_time() + timedelta(hours=1))
+    volunteer_start_date = models.DateTimeField(default=session_default_start_time() - timedelta(hours=1))
+    volunteer_end_date = models.DateTimeField(default=session_default_end_time() + timedelta(hours=1))
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Volunteer, related_name="session_teacher")
-    mentors = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="session_mentors")
-    waitlist_mentors = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="session_waitlist_mentors")
+    volunteers = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="session_volunteers")
+    waitlist_volunteers = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="session_waitlist_volunteers")
     waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     active = models.BooleanField(default=False)
@@ -209,8 +209,8 @@ class Session(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
-    mentors_week_reminder_sent = models.BooleanField(default=False)
-    mentors_day_reminder_sent = models.BooleanField(default=False)
+    volunteers_week_reminder_sent = models.BooleanField(default=False)
+    volunteers_day_reminder_sent = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("session")
@@ -247,7 +247,7 @@ class Session(models.Model):
     def get_checked_in_students(self):
         return Order.objects.filter(session=self).exclude(check_in=None).values('student')
 
-    def get_mentor_capacity(self):
+    def get_volunteer_capacity(self):
         return self.capacity / 2
 
     def __unicode__(self):
@@ -279,7 +279,7 @@ class Meeting(models.Model):
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.ForeignKey(Location)
-    mentors = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="meeting_mentors")
+    volunteers = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="meeting_volunteers")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
