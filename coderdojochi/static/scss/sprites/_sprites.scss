@@ -1,0 +1,89 @@
+/**
+ * To create a new sprite:
+ *     1. Open sprites.js inside of gulp > tasks and add configuration for the new sprite type
+ *     2. Once the `gulp sprites` task is run a new Sass file will be created and you should import that file below
+ *     3. Add your new type to the $sprite-types map
+ *     4. Edit the sprite() mixin with your new type added in the retina portion
+ *
+ * Available sprite types:
+ *     1. "global"
+ */
+
+@import "sprites-global";
+@import "sprites-global-2x";
+
+$sprite-types: (
+    global: $sprite-global
+);
+
+@mixin sprite-size($image, $map) {
+    $width: map-get(map-get($map, $image), "total-width");
+    $height: map-get(map-get($map, $image), "total-height");
+
+    background-size: ceil($width / 2) ceil($height / 2);
+}
+
+@mixin sprite-width($image, $map, $retina: false) {
+    @if $retina == true {
+        width: ceil(map-get(map-get($map, $image), "width") / 2) + 1;
+    } @else {
+        width: map-get(map-get($map, $image), "width");
+    }
+}
+
+@mixin sprite-height($image, $map, $retina: false) {
+    @if $retina == true {
+        height: ceil(map-get(map-get($map, $image), "height") / 2) + 1;
+    } @else {
+        height: map-get(map-get($map, $image), "height");
+    }
+}
+
+@mixin sprite-position($image, $map, $retina: false) {
+    @if $retina == true {
+        background-position: ceil(map-get(map-get($map, $image), "offset-x") / 2) ceil(map-get(map-get($map, $image), "offset-y") / 2);
+    } @else {
+        background-position: map-get(map-get($map, $image), "offset-x") map-get(map-get($map, $image), "offset-y");
+    }
+}
+
+@mixin sprite-image($image, $map) {
+    background-image: url(map-get(map-get($map, $image), "image"));
+}
+
+@mixin sprite($image, $type, $size: true) {
+    $sprite-map: map-get($sprite-types, $type);
+
+    @include sprite-image($image, $sprite-map);
+    @include sprite-position($image, $sprite-map);
+    background-repeat: no-repeat;
+    overflow: hidden;
+    display: inline-block;
+
+    @if $size {
+        @include sprite-width($image, $sprite-map);
+        @include sprite-height($image, $sprite-map);
+    }
+
+    @media
+        only screen and (-webkit-min-device-pixel-ratio: 2),
+        only screen and (   min--moz-device-pixel-ratio: 2),
+        only screen and (     -o-min-device-pixel-ratio: 2/1),
+        only screen and (        min-device-pixel-ratio: 2),
+        // only screen and (                min-resolution: 192dpi),
+        only screen and (                min-resolution: 2dppx) {
+
+        @if $type == "global" {
+            $sprite-map: $sprite-global-2x;
+        }
+
+        @include sprite-image($image, $sprite-map);
+        @include sprite-size($image, $sprite-map);
+        @include sprite-position($image, $sprite-map, true);
+
+        @if $size {
+            @include sprite-width($image, $sprite-map, true);
+            @include sprite-height($image, $sprite-map, true);
+        }
+    }
+}
