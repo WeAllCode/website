@@ -180,25 +180,25 @@ a {
 }
 
 .signup-google {
-    @include use-sprite("signup-google", "global");
+    @include sprite("signup-google", "global");
     @extend .ir;
     border-radius: 0;
 }
 
 .login-google {
-    @include use-sprite("login-google", "global");
+    @include sprite("login-google", "global");
     @extend .ir;
     border-radius: 0;
 }
 
 .signup-email {
-    @include use-sprite("signup-email", "global");
+    @include sprite("signup-email", "global");
     @extend .ir;
     border-radius: 0;
 }
 
 .login-email {
-    @include use-sprite("login-email", "global");
+    @include sprite("login-email", "global");
     @extend .ir;
     border-radius: 0;
 }
@@ -345,13 +345,13 @@ a.icon-action {
 }
 
 .icon-donation {
-    @include use-sprite("icon-donation", "global");
+    @include sprite("icon-donation", "global");
     display: block;
     transform: scale(.5);
     margin: -30px auto -90px;
 
     &:hover {
-        @include use-sprite("icon-donation-hover", "global");
+        @include sprite("icon-donation-hover", "global");
         display: block;
     }
 }
