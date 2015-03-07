@@ -1,14 +1,15 @@
 // vendor
-@import 'compass/utilities';
-@import 'compass/css3/images';
-@import 'susy';
-@import 'breakpoint';
+@import "vendor/susy";
+@import "vendor/breakpoint";
 
 // defaults
 @import 'defaults';
 
 // modules
-@import 'modules/retina-sprites';
+@import "modules/retina-background-image";
 @import 'modules/css3';
 @import 'modules/utils';
 @import 'modules/buttons';
+
+//sprites
+@import "sprites/sprites";

@@ -1,0 +1,13 @@
+$sprite-{{options.sprite_type}}: (
+	{{#items}}
+	{{name}}: (
+		offset-x: {{px.offset_x}},
+		offset-y: {{px.offset_y}},
+		width: {{px.width}},
+		height: {{px.height}},
+		total-width: {{px.total_width}},
+		total-height: {{px.total_height}},
+		image: "../images/sprites/{{{escaped_image}}}"
+	),
+	{{/items}}
+);
