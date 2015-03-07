@@ -53,14 +53,14 @@
 
     .brand {
 
-        @include use-sprite("logo-mobile", "global");
+        @include sprite("logo-mobile", "global");
         position: fixed;
         z-index: 1032;
         left: 10px;
         top: 2px;
 
         @include breakpoint($tablet-and-up) {
-            @include use-sprite("logo", "global");
+            @include sprite("logo", "global");
             top: auto;
             bottom: -15px;
             left: 0;
@@ -77,7 +77,7 @@
             }
 
             .brand {
-                @include use-sprite("logo-small", "global");
+                @include sprite("logo-small", "global");
                 bottom: -10px;
                 top: auto;
                 left: 10px;

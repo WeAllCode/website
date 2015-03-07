@@ -21,7 +21,12 @@
             <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,700' rel='stylesheet' type='text/css'>
             <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
             <link href="{% static "css/vendor/bootstrap.min.css" %}" rel="stylesheet">
+
+            {% if IS_PRODUCTION %}
+            <link href="{% static "css/cdc.min.css" %}" rel="stylesheet">
+            {% else %}
             <link href="{% static "css/cdc.css" %}" rel="stylesheet">
+            {% endif %}
 
             <!--[if lt IE 9]>
             <script src="{% static 'js/vendor/html5shiv.js' %}"></script>
@@ -73,7 +78,12 @@
         <script>if (!window.jQuery) {document.write('<script src="{% static 'libs/jquery/jquery-1.11.2.min.js' %}"><\/script>');}</script>
 
         <script src="{% static "js/vendor/cdc.bootstrap.min.js" %}"></script>
+
+        {% if IS_PRODUCTION %}
+        <script src="{% static "js/cdc.min.js" %}"></script>
+        {% else %}
         <script src="{% static "js/cdc.js" %}"></script>
+        {% endif %}
 
         {% block extra_script %}{% endblock %}
         {% endblock %}

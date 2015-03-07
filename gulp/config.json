@@ -1,0 +1,8 @@
+{
+    "dev": "./coderdojochi/static/",
+    "css": "./coderdojochi/static/css",
+    "sass": "./coderdojochi/static/scss",
+    "js": "./coderdojochi/static/js",
+    "img": "./coderdojochi/static/images",
+    "sprites": "sprites"
+}
