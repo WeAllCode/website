@@ -3,7 +3,7 @@
 if [[ "$1" == "staging" ]]; then
 
     echo "Deploying to staging..." &&
-    cd /home/coderdojo/webapps/coderdojochi_staging/ &&
+    cd /home/coderdojo/webapps/coderdojochi_staging/coderdojochi &&
     source ../bin/activate &&
     git checkout develop &&
     git pull origin develop &&
@@ -20,7 +20,7 @@ if [[ "$1" == "staging" ]]; then
 elif [[ "$1" == "production" ]]; then
 
     echo "Deploying to production..." &&
-    cd /home/coderdojo/webapps/coderdojochi/ &&
+    cd /home/coderdojo/webapps/coderdojochi/coderdojochi &&
     source ../bin/activate &&
     git checkout master &&
     git pull origin master &&
