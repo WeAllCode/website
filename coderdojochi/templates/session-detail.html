@@ -89,7 +89,7 @@
             <ul class="center-block well well-sm list-group list-unstyled">
                 {% if session.active %}
                     <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
-                    <li class="list-group-item">Mentors: <b>{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</b></li>
+                    <li class="list-group-item">Volunteers: <b>{{ session.mentors.count }} / {{ session.get_mentor_capacity }}</b></li>
 
                         {% if session.announced_date %}
                             <li class="text-muted list-group-item">Announced: <b>{{ session.announced_date|date }}</b></li>

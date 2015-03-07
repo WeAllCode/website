@@ -2,16 +2,16 @@ from django import forms
 from django.forms import Form, ModelForm
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from coderdojochi.models import Mentor, Guardian, Student
+from coderdojochi.models import Volunteer, Guardian, Student
 
 import html5.forms.widgets as html5_widgets
 
-class MentorForm(ModelForm):
+class VolunteerForm(ModelForm):
 
     bio = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Short Bio','class': 'form-control', 'rows': 5}), label='Short Bio')
 
     class Meta:
-        model = Mentor
+        model = Volunteer
         fields = ('bio',)
 
 class GuardianForm(ModelForm):

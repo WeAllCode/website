@@ -14,8 +14,8 @@ from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt
 from django import forms
 
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
-from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
+from coderdojochi.models import Volunteer, Guardian, Student, Course, Session, Order, Meeting, Donation
+from coderdojochi.forms import VolunteerForm, GuardianForm, StudentForm, ContactForm
 
 from calendar import HTMLCalendar
 from datetime import date, timedelta
@@ -157,7 +157,7 @@ def welcome(request, template_name="welcome.html"):
 
         if role:
             if role == 'mentor':
-                form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
+                form = VolunteerForm(request.POST, instance=get_object_or_404(Volunteer, user=user))
             else:
                 account = get_object_or_404(Guardian, user=user)
                 if not account.phone or not account.zip:
@@ -198,7 +198,7 @@ def welcome(request, template_name="welcome.html"):
         else:
             if request.POST.get('role') == 'mentor':
                 role = 'mentor'
-                mentor, created = Mentor.objects.get_or_create(user=user)
+                mentor, created = Volunteer.objects.get_or_create(user=user)
                 mentor.first_name = user.first_name
                 mentor.last_name = user.last_name
                 mentor.save()
@@ -250,9 +250,9 @@ def welcome(request, template_name="welcome.html"):
 
     if role and keepGoing:
         if role == 'mentor':
-            mentor = get_object_or_404(Mentor, user=user)
+            mentor = get_object_or_404(Volunteer, user=user)
             account = mentor
-            form = MentorForm(instance=account)
+            form = VolunteerForm(instance=account)
 
         if role == 'guardian':
             guardian = get_object_or_404(Guardian, user=user)
@@ -346,7 +346,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
                     session_obj.save()
                     messages.add_message(request, messages.SUCCESS, 'Added to waitlist successfully.')
             else:
-                mentor = Mentor.objects.get(id=int(request.POST['account_id']))
+                mentor = Volunteer.objects.get(id=int(request.POST['account_id']))
 
                 if request.POST['remove'] == 'true':
                     session_obj.waitlist_mentors.remove(mentor)
@@ -379,7 +379,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
             return HttpResponseRedirect(url)
 
         if request.user.role == 'mentor':
-            mentor = get_object_or_404(Mentor, user=request.user)
+            mentor = get_object_or_404(Volunteer, user=request.user)
             account = mentor
             mentor_signed_up = True if mentor in session_obj.mentors.all() else False
             spots_remaining = session_obj.get_mentor_capacity() - session_obj.mentors.all().count()
@@ -428,7 +428,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
     if request.user.role == 'mentor':
 
-        mentor = get_object_or_404(Mentor, user=request.user)
+        mentor = get_object_or_404(Volunteer, user=request.user)
 
         if not mentor.has_attended_intro_meeting:
             messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a mentor meeting. Please RSVP below.')
@@ -554,7 +554,7 @@ def meeting_detail(request, year, month, day, meeting_id, template_name="meeting
     mentor_signed_up = False
 
     if request.user.is_authenticated():
-        mentor = get_object_or_404(Mentor, user=request.user)
+        mentor = get_object_or_404(Volunteer, user=request.user)
         mentor_signed_up = True if mentor in meeting_obj.mentors.all() else False
 
     return render_to_response(template_name,{
@@ -568,7 +568,7 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
-    mentor = get_object_or_404(Mentor, user=request.user)
+    mentor = get_object_or_404(Volunteer, user=request.user)
     user_signed_up = True if mentor in meeting_obj.mentors.all() else False
 
     undo = False
@@ -625,7 +625,7 @@ def meeting_announce(request, meeting_id):
 
     if not meeting_obj.announced_date:
 
-        for mentor in Mentor.objects.filter(active=True):
+        for mentor in Volunteer.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming mentor meeting', 'coderdojochi-meeting-announcement-mentor', {
                 'first_name': mentor.user.first_name,
                 'last_name': mentor.user.last_name,
@@ -659,7 +659,7 @@ def volunteer(request, template_name="volunteer.html"):
     if cache.get('public_mentors'):
         mentors = cache.get('public_mentors')
     else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
+        mentors = Volunteer.objects.filter(active=True, public=True).order_by('user__date_joined')
         cache.set('public_mentors', mentors, 600)
 
     if cache.get('upcoming_public_meetings'):
@@ -690,7 +690,7 @@ def dojo(request, template_name="dojo.html"):
     if request.user.role:
 
         if request.user.role == 'mentor':
-            mentor = get_object_or_404(Mentor, user=request.user)
+            mentor = get_object_or_404(Volunteer, user=request.user)
             account = mentor
 
             mentor_sessions = Session.objects.filter(mentors=mentor)
@@ -701,7 +701,7 @@ def dojo(request, template_name="dojo.html"):
 
 
             if request.method == 'POST':
-                form = MentorForm(request.POST, instance=account)
+                form = VolunteerForm(request.POST, instance=account)
                 if form.is_valid():
                     form.save()
                     messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
@@ -709,7 +709,7 @@ def dojo(request, template_name="dojo.html"):
                 else:
                     messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
             else:
-                form = MentorForm(instance=account)
+                form = VolunteerForm(instance=account)
 
             context['upcoming_sessions'] = upcoming_sessions
             context['upcoming_meetings'] = upcoming_meetings
@@ -798,7 +798,7 @@ def mentors(request, template_name="mentors.html"):
     if cache.get('public_mentors'):
         mentors = cache.get('public_mentors')
     else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
+        mentors = Volunteer.objects.filter(active=True, public=True).order_by('user__date_joined')
         cache.set('public_mentors', mentors, 600)
 
     return render_to_response(template_name, {
@@ -807,7 +807,7 @@ def mentors(request, template_name="mentors.html"):
 
 def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
-    mentor = get_object_or_404(Mentor, id=mentor_id)
+    mentor = get_object_or_404(Volunteer, id=mentor_id)
 
     if not mentor.public:
         messages.add_message(request, messages.ERROR, 'Invalid mentor ID :(')
@@ -820,7 +820,7 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 @login_required
 def mentor_approve_avatar(request, mentor_id=False):
 
-    mentor = get_object_or_404(Mentor, id=mentor_id)
+    mentor = get_object_or_404(Volunteer, id=mentor_id)
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
@@ -829,12 +829,12 @@ def mentor_approve_avatar(request, mentor_id=False):
     mentor.public = True
     mentor.save()
 
-    return HttpResponse('Mentor avatar approved :) This mentor account is now public.')
+    return HttpResponse('Volunteer avatar approved :) This mentor account is now public.')
 
 @login_required
 def mentor_reject_avatar(request, mentor_id=False):
 
-    mentor = get_object_or_404(Mentor, id=mentor_id)
+    mentor = get_object_or_404(Volunteer, id=mentor_id)
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
@@ -852,7 +852,7 @@ def mentor_reject_avatar(request, mentor_id=False):
     msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="' + settings.SITE_URL + '/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>', 'text/html')
     msg.send()
 
-    return HttpResponse('Mentor avatar rejected :/ This mentor account is no longer public. An email notice has been sent to the mentor.')
+    return HttpResponse('Volunteer avatar rejected :/ This mentor account is no longer public. An email notice has been sent to the mentor.')
 
 
 @login_required
@@ -943,7 +943,7 @@ def about(request, template_name="about.html"):
     if cache.get('mentor_count'):
         mentor_count = cache.get('mentor_count')
     else:
-        mentor_count = Mentor.objects.filter(active=True).count()
+        mentor_count = Volunteer.objects.filter(active=True).count()
         cache.set('mentor_count', mentor_count, 600)
 
     if cache.get('students_served'):
@@ -1169,7 +1169,7 @@ def session_announce(request, session_id):
     if not session_obj.announced_date:
 
         # send mentor announcements
-        for mentor in Mentor.objects.filter(active=True):
+        for mentor in Volunteer.objects.filter(active=True):
             sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-mentor', {
                 'first_name': mentor.user.first_name,
                 'last_name': mentor.user.last_name,

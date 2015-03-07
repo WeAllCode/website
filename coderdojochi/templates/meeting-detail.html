@@ -62,7 +62,7 @@
             <ul class="center-block well well-sm list-group list-unstyled">
                 {% if meeting.active %}
                     <!-- Todo -->
-                    <li class="list-group-item">Mentors: <b>{{ meeting.mentors.count }}</b></li>
+                    <li class="list-group-item">Volunteers: <b>{{ meeting.mentors.count }}</b></li>
 
                         {% if meeting.announced_date %}
                             <li class="text-muted list-group-item">Announced: <b>{{ meeting.announced_date|date }}</b></li>

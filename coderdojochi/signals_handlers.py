@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 
 from avatar.signals import avatar_updated
 
-from coderdojochi.models import Mentor, Donation
+from coderdojochi.models import Volunteer, Donation
 
 from coderdojochi.views import sendSystemEmail
 
@@ -18,7 +18,7 @@ import arrow
 @receiver(avatar_updated)
 def avatar_updated_handler(sender, user, avatar, **kwargs):
     
-    mentor = Mentor.objects.get(user=user)
+    mentor = Volunteer.objects.get(user=user)
     mentor.public = False
     mentor.save()
 
@@ -26,8 +26,8 @@ def avatar_updated_handler(sender, user, avatar, **kwargs):
     avatar.create_thumbnail(400, quality=80)
 
     msg = EmailMultiAlternatives(
-        subject='Mentor Avatar Changed',
-        body='Mentor with email ' + mentor.user.email + ' changed their avatar image.  Please approve (' + mentor.get_approve_avatar_url() + ') or reject (' + mentor.get_reject_avatar_url() + ').',
+        subject='Volunteer Avatar Changed',
+        body='Volunteer with email ' + mentor.user.email + ' changed their avatar image.  Please approve (' + mentor.get_approve_avatar_url() + ') or reject (' + mentor.get_reject_avatar_url() + ').',
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[v for k,v in settings.ADMINS]
     )

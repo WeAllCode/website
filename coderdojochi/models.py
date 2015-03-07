@@ -57,7 +57,7 @@ class CDCUser(AbstractUser):
     def get_absolute_url(self):
         return settings.SITE_URL + '/dojo'
 
-class Mentor(models.Model):
+class Volunteer(models.Model):
     user = models.ForeignKey(CDCUser)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
@@ -198,9 +198,9 @@ class Session(models.Model):
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    teacher = models.ForeignKey(Mentor, related_name="session_teacher")
-    mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
-    waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
+    teacher = models.ForeignKey(Volunteer, related_name="session_teacher")
+    mentors = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="session_mentors")
+    waitlist_mentors = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="session_waitlist_mentors")
     waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     active = models.BooleanField(default=False)
@@ -279,7 +279,7 @@ class Meeting(models.Model):
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.ForeignKey(Location)
-    mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="meeting_mentors")
+    mentors = models.ManyToManyField(Volunteer, blank=True, null=True, related_name="meeting_mentors")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
