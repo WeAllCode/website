@@ -80,9 +80,9 @@
         <script src="{% static "js/vendor/cdc.bootstrap.min.js" %}"></script>
 
         {% if IS_PRODUCTION %}
-        <script src="{% static "js/cdc.js" %}"></script>
-        {% else %}
         <script src="{% static "js/cdc.min.js" %}"></script>
+        {% else %}
+        <script src="{% static "js/cdc.js" %}"></script>
         {% endif %}
 
         {% block extra_script %}{% endblock %}
