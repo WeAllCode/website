@@ -84,6 +84,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
     'dealer.contrib.django.context_processor',
+
+    # coderdojochi
+    'coderdojochi.context_processors.main_config_processor',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -99,6 +102,7 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/dojo/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
