@@ -4,19 +4,15 @@ if [[ "$1" == "staging" ]]; then
 
     echo "Deploying to staging..." &&
     cd /home/coderdojo/webapps/coderdojochi_staging/coderdojochi &&
-    git stash &&
     git checkout develop &&
-    git pull origin develop &&
-    git stash pop
+    git pull origin develop
 
 elif [[ "$1" == "production" ]]; then
 
     echo "Deploying to production..." &&
     cd /home/coderdojo/webapps/coderdojochi/coderdojochi &&
-    git stash &&
     git checkout master &&
-    git pull origin master &&
-    git stash pop
+    git pull origin master
 
 else
 
