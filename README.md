@@ -13,6 +13,7 @@ add virtualenv wrapper to your zsh plugins -- list plugins=(virtualenvwrapper) i
 mkvirtualenv dojo-env --no-site-packages
 workon dojo-env
 pip install -r requirements.txt
+pip uninstall south
 python manage.py syncdb
 ```
 
@@ -22,17 +23,17 @@ You will need node.js installed for the following steps (http://nodejs.org/)
 
 ```bash
 npm install
-grunt
+gulp
 ```
 
-Navigate to http://localhost:8000
+Navigate to http://localhost:8000  (http://localhost:3000 to auto update the browser on css/js changes)
 
 Great success!
 
-Each time you start working fresh you'll need to activate virtualenv and start the django server...
+Each time you start working fresh you'll need to activate virtualenv and start the django server (via gulp)...
 
 ```bash
 workon dojo-env
 cd ~/Sites/coderdojochi
-grunt
+gulp
 ```
