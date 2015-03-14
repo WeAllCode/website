@@ -4,6 +4,7 @@
     "private": true,
     "description": "coderdojochi.org development dependencies",
     "scripts": {
+        "prestart": "./deploy.sh local",
         "start": "gulp"
     },
     "authors": {
