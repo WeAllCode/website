@@ -1,21 +1,22 @@
 Django==1.7.3
 Pillow==2.4.0
+arrow==0.4.4
+dealer==2.0.4
 django-appconf==1.0.1
 django-avatar==2.0
 django-bootstrap3==4.7.0
 django-html5==1.0.0
+django-loginas==0.1.5
+django-paypal==0.2
 -e git+http://github.com/CoderDojoChi/django-registration.git@ec1c33220c71d07ae303d1206125e043bc36a09f#egg=django_registration-master
 django-social-auth==0.7.28
 djrill==1.2.0
 httplib2==0.9
 oauth2==1.5.211
 psycopg2==2.5.1
+python-dateutil==2.4.0
 python-openid==2.2.5
 pytz==2014.4
 requests==2.5.0
 six==1.7.2
 wsgiref==0.1.2
-arrow==0.4.4
-django-loginas==0.1.5
-dealer==2.0.4
-django-paypal==0.2
