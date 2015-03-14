@@ -18,6 +18,7 @@ class UserAdmin(admin.ModelAdmin):
 
 class MentorAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'user', 'active', 'has_attended_intro_meeting', 'public', 'created_at', 'updated_at',)
+    list_filter = ('active', 'public', 'has_attended_intro_meeting',)
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -37,6 +38,7 @@ class GuardianAdmin(admin.ModelAdmin):
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'gender', 'guardian', 'created_at', 'updated_at', 'active',)
+    list_filter = ('gender',)
     ordering = ('guardian',)
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -50,6 +52,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 class SessionAdmin(admin.ModelAdmin):
     list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'active', 'public', 'announced_date',)
+    list_filter = ('active', 'public', 'location',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
@@ -80,6 +83,7 @@ class MeetingTypeAdmin(admin.ModelAdmin):
 
 class MeetingAdmin(admin.ModelAdmin):
     list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'get_mentor_count', 'public', 'active', 'announced_date', 'created_at',)
+    list_filter = ('active', 'public',)
     ordering = ('start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
