@@ -38,7 +38,7 @@
                         <p>{{ session.course.description|safe|truncatechars:180 }} <a href="{{ session.get_absolute_url }}">Learn more.</a></p>
                     </div>
                     <div class="actions">
-                        {% if session.capacity|subtract:session.get_current_students.all.count %}
+                        {% if session.get_current_students.all.count < session.capacity %}
                         <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Enroll</a>
                         {% else %}
                         <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button>
