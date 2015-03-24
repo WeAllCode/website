@@ -178,17 +178,19 @@
                             {% endif %}
                         {% endif %}
                     {% else %}
-                        <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
-                        <p>You must <a href="{% url 'auth_login' %}?next={{ session.get_absolute_url }}">login</a> or <a href="{% url 'register' %}?next={{ session.get_absolute_url }}">register</a> to sign up for this session.</p>
+                        {% if spots_remaining < 1 %}
+                        <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
+                        {% endif %}
+                        <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
                     {% endif %}
                     <p>
                         {% if spots_remaining > 0 %}
-                        <span class="text-large">{{ spots_remaining }}</span> open spots
+                        <span class="text-large">{{ spots_remaining }}</span> spots currently open
                         {% else %}
                             {% if is_guardian %}
-                                <span class="text-large">{{ session.waitlist_students.count }}</span> on waitlist
+                                <span class="text-large">{{ session.waitlist_students.count }}</span> currently on waitlist
                             {% else %}
-                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> on waitlist
+                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> currently on waitlist
                             {% endif %}
                         {% endif %}
                     </p>
