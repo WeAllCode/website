@@ -181,7 +181,7 @@
                         {% if spots_remaining < 1 %}
                         <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
                         {% endif %}
-                        <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
+                        <p><a href="{% url 'register' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="btn-cdc btn-cdc-lg btn-block">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
                     {% endif %}
                     <p>
                         {% if spots_remaining > 0 %}
