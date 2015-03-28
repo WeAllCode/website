@@ -3,21 +3,18 @@ coderdojochi
 
 Django Application
 
-To run locally follow these steps...
+## To run locally
 
-```bash
-git clone git@github.com:CoderDojoChi/coderdojochi.git
-cd coderdojochi
-pip install virtualenvwrapper
-add virtualenv wrapper to your zsh plugins -- list plugins=(virtualenvwrapper) in ~/.zshrc
-mkvirtualenv dojo-env --no-site-packages
-workon dojo-env
-pip install -r requirements.txt
-pip uninstall south
-python manage.py syncdb
-```
+1. Make sure you have python installed
+2. Install pip.
+3. Fork project.
+4. Clone forked project.
+```git clone git@github.com:USERNAME/coderdojochi.git```
+5. Go into cloned directory.
+```cd coderdojochi```
+6. Run ```npm start```.
 
-Follow prompts to set up admin account
+Follow prompts to set up admin account.
 
 You will need node.js installed for the following steps (http://nodejs.org/)
 
