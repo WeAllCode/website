@@ -1,20 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
-if [[ "$1" == "staging" ]]; then
+if [ "$1" == "staging" ]; then
 
     echo "Deploying to staging..."
     cd /home/coderdojo/webapps/coderdojochi_staging/coderdojochi
     git checkout develop
     git pull origin develop
 
-elif [[ "$1" == "production" ]]; then
+elif [ "$1" == "production" ]; then
 
     echo "Deploying to production..."
     cd /home/coderdojo/webapps/coderdojochi/coderdojochi
     git checkout master
     git pull origin master
 
-elif [[ "$1" == "local" ]]; then
+elif [ "$1" == "local" ]; then
 
     echo "Starting local..."
 
@@ -25,20 +25,20 @@ else
 
 fi
 
-if [[ "$1" != "local" ]]; then
+if [ "$1" != "local" ]; then
     source ../bin/activate
 fi
 
 pip install -q -r requirements.txt --exists-action=s
 
-if [[ $(pip list | grep 'South') ]]; then
+if [ $(pip list | grep 'South') ]; then
     pip uninstall -q -y South
 fi
 
 npm prune
 npm install
 
-if [[ "$1" == "local" ]]; then
+if [ "$1" == "local" ]; then
     python manage.py syncdb
 else
     ./node_modules/gulp/bin/gulp.js build
