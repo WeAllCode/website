@@ -54,7 +54,6 @@ INSTALLED_APPS = (
     'djrill',
     'loginas',
     'paypal.standard.ipn',
-    #'django_cron',
 
     #coderdojochi
     'coderdojochi',
