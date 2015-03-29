@@ -35,6 +35,10 @@ if [ $(pip list | grep 'South') ]; then
     pip uninstall -q -y South
 fi
 
+if [ "$1" == "local" && $(pip list | grep 'django_cron') ]; then
+    pip uninstall -q -y django_cron
+fi
+
 npm prune
 npm install
 
