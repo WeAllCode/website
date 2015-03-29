@@ -67,6 +67,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'dealer.contrib.django.Middleware',
+    'social_auth.middleware.SocialAuthExceptionMiddleware',
 )
 
 CRON_CLASSES = [
