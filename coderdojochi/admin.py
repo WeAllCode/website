@@ -22,7 +22,7 @@ class MentorAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user',)
+    search_fields = ('first_name', 'last_name', 'user__username',)
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
@@ -33,7 +33,7 @@ class GuardianAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user',)
+    search_fields = ('first_name', 'last_name', 'user__username',)
     view_on_site = False
 
 class StudentAdmin(admin.ModelAdmin):
