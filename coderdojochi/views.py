@@ -18,6 +18,9 @@ from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Orde
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 from calendar import HTMLCalendar
+
+from icalendar import Calendar, Event, vCalAddress, vText
+
 from datetime import date, timedelta
 from itertools import groupby
 from collections import Counter
@@ -31,7 +34,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from paypal.standard.forms import PayPalPaymentsForm
 
-import arrow
+import arrow, os, pytz, tempfile
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -359,7 +362,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
         else:
             messages.add_message(request, messages.ERROR, 'Invalid request, please try again.')
 
-        return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
+        return HttpResponseRedirect(session_obj.get_absolute_url())
 
     upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
@@ -546,7 +549,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_url': session_obj.get_absolute_url()
                 })
 
-        return HttpResponseRedirect(reverse('session_detail', args=(session_obj.start_date.year, session_obj.start_date.month, session_obj.start_date.day, session_obj.course.slug, session_obj.id)))
+        return HttpResponseRedirect(session_obj.get_absolute_url())
 
     # only allow mentors to view non-public sessions
     if not session_obj.public:
@@ -559,6 +562,48 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         'user_signed_up': user_signed_up,
         'student': student,
     }, context_instance=RequestContext(request))
+
+def session_ics(request, year, month, day, slug, session_id):
+    
+    session_obj = get_object_or_404(Session, id=session_id)
+
+    cal = Calendar()
+
+    cal.add('prodid', '-//CoderDojoChi//coderdojochi.org//')
+    cal.add('version', '2.0')
+
+    event = Event()
+
+    start_date_arrow = arrow.get(session_obj.start_date)
+
+    event.add('summary', session_obj.course.code + ' - ' + session_obj.course.title)
+    event.add('dtstart', start_date_arrow.naive)
+    event.add('dtend', arrow.get(session_obj.end_date).naive)
+    event.add('dtstamp', start_date_arrow.datetime)
+
+    if request.user.is_authenticated() and request.user.role == 'mentor':
+
+        mentor_start_date_arrow = arrow.get(session_obj.mentor_start_date)
+        event.add('dtstart', mentor_start_date_arrow.naive)
+        event.add('dtend', arrow.get(session_obj.mentor_end_date).naive)
+        event.add('dtstamp', mentor_start_date_arrow.datetime)
+
+    organizer = vCalAddress('MAILTO:' + session_obj.teacher.user.email)
+
+    organizer.params['cn'] = vText(session_obj.teacher.first_name  + ' ' + session_obj.teacher.last_name)
+    organizer.params['role'] = vText('TEACHER')
+    event['organizer'] = organizer
+    event['location'] = vText(session_obj.location.name + ' ' + session_obj.location.address + ' ' + session_obj.location.address2 + ' ' + session_obj.location.city + ', ' + session_obj.location.state + ' ' + session_obj.location.zip)
+    event['uid'] = 'CLASS00' + str(session_obj.id) + '@coderdojochi.org'
+    event.add('priority', 5)
+
+    cal.add_component(event)
+
+    response = HttpResponse(cal.to_ical().replace('\r\n', '\n').strip(), content_type="text/calendar")
+    response['Filename'] = session_obj.course.slug + '-' + arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mm') + '.ics'
+    response['Content-Disposition'] = 'attachment; filename=coderdojochi-' + arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mma') + '.ics'
+
+    return response
 
 
 def meeting_detail(request, year, month, day, meeting_id, template_name="meeting-detail.html"):
@@ -666,6 +711,42 @@ def meeting_announce(request, meeting_id):
         messages.add_message(request, messages.WARNING, 'Meeting already announced.')
 
     return HttpResponseRedirect(reverse('cdc_admin'))
+
+def meeting_ics(request, year, month, day, meeting_id):
+    
+    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
+
+    cal = Calendar()
+
+    cal.add('prodid', '-//CoderDojoChi//coderdojochi.org//')
+    cal.add('version', '2.0')
+
+    event = Event()
+
+    start_date_arrow = arrow.get(meeting_obj.start_date)
+
+    event.add('summary', meeting_obj.meeting_type.code + ' - ' + meeting_obj.meeting_type.title)
+    event.add('dtstart', start_date_arrow.naive)
+    event.add('dtend', arrow.get(meeting_obj.end_date).naive)
+    event.add('dtstamp', start_date_arrow.datetime)
+
+    organizer = vCalAddress('MAILTO:ali@coderdojochi.org')
+
+    organizer.params['cn'] = vText('Ali Karbassi')
+    organizer.params['role'] = vText('FOUNDER')
+    event['organizer'] = organizer
+    event['location'] = vText(meeting_obj.location.name + ' ' + meeting_obj.location.address + ' ' + meeting_obj.location.address2 + ' ' + meeting_obj.location.city + ', ' + meeting_obj.location.state + ' ' + meeting_obj.location.zip)
+    event['uid'] = 'MEETING00' + str(meeting_obj.id) + '@coderdojochi.org'
+    event.add('priority', 5)
+
+    cal.add_component(event)
+
+    response = HttpResponse(cal.to_ical().replace('\r\n', '\n').strip(), content_type="text/calendar")
+    response['Filename'] = meeting_obj.meeting_type.slug + '-' + arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mm') + '.ics'
+    response['Content-Disposition'] = 'attachment; filename=coderdojochi-' + arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mma') + '.ics'
+
+    return response
+
 
 def volunteer(request, template_name="volunteer.html"):
 

@@ -30,6 +30,7 @@
 
             <h3>When</h3>
             <p>{{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}</p>
+            <p><i class="fa fa-calendar"></i> <a href="{{ meeting.get_ics_url }}">Add to your calendar</a></p>
 
             <h3>Where</h3>
             <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }}<br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
