@@ -235,6 +235,7 @@ def welcome(request, template_name="welcome.html"):
 
                 if next_meeting:
                     merge_vars['next_intro_meeting_url'] = next_meeting.get_absolute_url()
+                    merge_vars['next_intro_meeting_ics_url'] = next_meeting.get_ics_url()
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-mentor', merge_vars)
 
@@ -246,6 +247,7 @@ def welcome(request, template_name="welcome.html"):
 
                 if next_class:
                     merge_vars['next_class_url'] = next_class.get_absolute_url()
+                    merge_vars['next_class_ics_url'] = next_class.get_ics_url()
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-guardian', merge_vars)
 
@@ -522,7 +524,8 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_location_state': session_obj.location.state,
                     'class_location_zip': session_obj.location.zip,
                     'class_additional_info': session_obj.additional_info,
-                    'class_url': session_obj.get_absolute_url()
+                    'class_url': session_obj.get_absolute_url(),
+                    'class_ics_url': session_obj.get_ics_url()
                 })
 
             else:
@@ -546,7 +549,8 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'class_location_state': session_obj.location.state,
                     'class_location_zip': session_obj.location.zip,
                     'class_additional_info': session_obj.additional_info,
-                    'class_url': session_obj.get_absolute_url()
+                    'class_url': session_obj.get_absolute_url(),
+                    'class_ics_url': session_obj.get_ics_url()
                 })
 
         return HttpResponseRedirect(session_obj.get_absolute_url())
@@ -662,7 +666,8 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
                 'meeting_location_state': meeting_obj.location.state,
                 'meeting_location_zip': meeting_obj.location.zip,
                 'meeting_additional_info': meeting_obj.additional_info,
-                'meeting_url': meeting_obj.get_absolute_url()
+                'meeting_url': meeting_obj.get_absolute_url(),
+                'meeting_ics_url': meeting_obj.get_ics_url()
             })
 
         return HttpResponseRedirect(reverse('meeting_detail', args=(meeting_obj.start_date.year, meeting_obj.start_date.month, meeting_obj.start_date.day, meeting_obj.id)))
@@ -700,7 +705,8 @@ def meeting_announce(request, meeting_id):
                 'meeting_location_state': meeting_obj.location.state,
                 'meeting_location_zip': meeting_obj.location.zip,
                 'meeting_additional_info': meeting_obj.additional_info,
-                'meeting_url': meeting_obj.get_absolute_url()
+                'meeting_url': meeting_obj.get_absolute_url(),
+                'meeting_ics_url': meeting_obj.get_ics_url()
             }, mentor.user.email)
 
         meeting_obj.announced_date = timezone.now()
@@ -1281,7 +1287,8 @@ def session_announce(request, session_id):
                 'class_location_state': session_obj.location.state,
                 'class_location_zip': session_obj.location.zip,
                 'class_additional_info': session_obj.additional_info,
-                'class_url': session_obj.get_absolute_url()
+                'class_url': session_obj.get_absolute_url(),
+                'class_ics_url': session_obj.get_ics_url()
             }, mentor.user.email)
 
         for guardian in Guardian.objects.filter(active=True):
@@ -1302,7 +1309,8 @@ def session_announce(request, session_id):
                 'class_location_state': session_obj.location.state,
                 'class_location_zip': session_obj.location.zip,
                 'class_additional_info': session_obj.additional_info,
-                'class_url': session_obj.get_absolute_url()
+                'class_url': session_obj.get_absolute_url(),
+                'class_ics_url': session_obj.get_ics_url()
             }, guardian.user.email)
 
         session_obj.announced_date = timezone.now()
