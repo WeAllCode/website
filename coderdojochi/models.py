@@ -224,6 +224,9 @@ class Session(models.Model):
     def get_signup_url(self):
         return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
 
+    def get_ics_url(self):
+        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/calendar/'
+
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
             if checked_in:
@@ -303,6 +306,9 @@ class Meeting(models.Model):
 
     def get_signup_url(self):
         return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/sign-up/'
+
+    def get_ics_url(self):
+        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/calendar/'
 
     def __unicode__(self):
         return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
