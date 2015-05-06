@@ -1,63 +1,12 @@
 from django import forms
-from django.forms import Form, ModelForm, FileField, ValidationError
+from django.forms import Form, ModelForm
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from coderdojochi.models import Mentor, Guardian, Student
 
 import html5.forms.widgets as html5_widgets
 
-class CDCForm(Form):
- 
-    # strip leading or trailing whitespace
-    def _clean_fields(self):
-        for name, field in self.fields.items():
-            # value_from_datadict() gets the data from the data dictionaries.
-            # Each widget type knows how to retrieve its own data, because some
-            # widgets split data over several HTML fields.
-            value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
-            try:
-                if isinstance(field, FileField):
-                    initial = self.initial.get(name, field.initial)
-                    value = field.clean(value, initial)
-                else:
-                    if isinstance(value, basestring):
-                        value = field.clean(value.strip())
-                    else:
-                        value = field.clean(value)
-                self.cleaned_data[name] = value
-                if hasattr(self, 'clean_%s' % name):
-                    value = getattr(self, 'clean_%s' % name)()
-                    self.cleaned_data[name] = value
-            except ValidationError as e:
-                self.add_error(name, e)
-
-class CDCModelForm(ModelForm):           
-                    
-    # strip leading or trailing whitespace
-    def _clean_fields(self):
-        for name, field in self.fields.items():
-            # value_from_datadict() gets the data from the data dictionaries.
-            # Each widget type knows how to retrieve its own data, because some
-            # widgets split data over several HTML fields.
-            value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
-            try:
-                if isinstance(field, FileField):
-                    initial = self.initial.get(name, field.initial)
-                    value = field.clean(value, initial)
-                else:
-                    if isinstance(value, basestring):
-                        value = field.clean(value.strip())
-                    else:
-                        value = field.clean(value)
-                self.cleaned_data[name] = value
-                if hasattr(self, 'clean_%s' % name):
-                    value = getattr(self, 'clean_%s' % name)()
-                    self.cleaned_data[name] = value
-            except ValidationError as e:
-                self.add_error(name, e)
-
-
-class MentorForm(CDCModelForm):
+class MentorForm(ModelForm):
 
     bio = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Short Bio','class': 'form-control', 'rows': 5}), label='Short Bio')
 
@@ -65,7 +14,7 @@ class MentorForm(CDCModelForm):
         model = Mentor
         fields = ('bio',)
 
-class GuardianForm(CDCModelForm):
+class GuardianForm(ModelForm):
 
     phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Phone Number','class': 'form-control'}), label='Phone Number')
     zip = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Zip Code','class': 'form-control'}), label='Zip Code')
@@ -74,7 +23,7 @@ class GuardianForm(CDCModelForm):
         model = Guardian
         fields = ('phone','zip',)
 
-class StudentForm(CDCModelForm):
+class StudentForm(ModelForm):
 
     first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Jane','class': 'form-control'}), label='First Name')
     last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Doe','class': 'form-control'}), label='Last Name')
@@ -89,9 +38,10 @@ class StudentForm(CDCModelForm):
         model = Student
         exclude = ('guardian', 'created_at', 'updated_at', 'active')
 
-class ContactForm(CDCForm):
+class ContactForm(forms.Form):
 
     name = forms.CharField(max_length=100, label='Your name')
     email = forms.EmailField(max_length=200, label='Your email address')
     body = forms.CharField(widget=forms.Textarea, label='Your message')
     human = forms.CharField(max_length=100, label=False, required=False)
+
