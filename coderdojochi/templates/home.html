@@ -32,7 +32,7 @@
 {% if upcoming_classes %}
 <div class="upcoming-sessions">
     {% for session in upcoming_classes %}
-        <div class="upcoming-session" style="background-image: url({% if session.bg_image %}{{ session.bg_image.url }}{% else %}/static/images/{{ session.image_url }}{% endif %});">
+        <div class="upcoming-session" style="background-image: url(/static/images/{{ session.image_url }});">
             <div class="session-shim">
                 <div class="container">
                     <div class="date">

@@ -25,7 +25,8 @@
 <div class="upcoming-sessions">
 {% if all_sessions %}
     {% for session in all_sessions %}
-        <div class="upcoming-session" style="background-image: url({% if session.bg_image %}{{ session.bg_image.url }}{% else %}/static/images/{{ session.image_url }}{% endif %});">
+        <div class="upcoming-session" style="background-image: url(/static/images/{{ session.image_url }});">
+        <!-- <div class="upcoming-session" style="background-image: url(http://lorempixel.com/960/300/animals);"> -->
             <div class="session-shim">
                 <div class="container">
                     <div class="date">
