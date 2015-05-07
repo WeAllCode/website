@@ -85,7 +85,7 @@ class RegisterView(RegistrationView):
 
     def register(self, request, **cleaned_data):
 
-        email, password, first_name, last_name = cleaned_data['email'], cleaned_data['password1'], cleaned_data['first_name'], cleaned_data['last_name']
+        email, password, first_name, last_name = cleaned_data['email'], cleaned_data['password1'], cleaned_data['first_name'].strip(), cleaned_data['last_name'].strip()
         username = email
 
         user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
