@@ -901,6 +901,16 @@ def student_detail(request, student_id=False, template_name="student-detail.html
         'form': form
     }, context_instance=RequestContext(request))
 
+@csrf_exempt
+def donate_cancel(request):
+    messages.add_message(request, messages.ERROR, 'Looks like you cancelled the donation process. Please feel free to <a href="/contact">contact us</a> if you need any help.')
+    return HttpResponseRedirect(reverse('donate'))
+
+@csrf_exempt
+def donate_return(request):
+    messages.add_message(request, messages.SUCCESS, 'Your donation is being processed.  You should receive a confirmation email shortly. Thanks again!')
+    return HttpResponseRedirect(reverse('donate'))
+
 def donate(request, template_name="donate.html"):
 
     if request.method == 'POST':
@@ -941,15 +951,12 @@ def donate(request, template_name="donate.html"):
         'form': form
     }, context_instance=RequestContext(request))
 
-@csrf_exempt
-def donate_cancel(request):
-    messages.add_message(request, messages.ERROR, 'Looks like you cancelled the donation process. Please feel free to <a href="/contact">contact us</a> if you need any help.')
-    return HttpResponseRedirect(reverse('donate'))
 
-@csrf_exempt
-def donate_return(request):
-    messages.add_message(request, messages.SUCCESS, 'Your donation is being processed.  You should receive a confirmation email shortly. Thanks again!')
-    return HttpResponseRedirect(reverse('donate'))
+def sponsorship(request, template_name="sponsorship.html"):
+
+    return render_to_response(template_name, {
+    }, context_instance=RequestContext(request))
+
 
 def about(request, template_name="about.html"):
 

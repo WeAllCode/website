@@ -229,7 +229,8 @@ a {
         margin: 40px 0 0;
     }
 
-    .page-homepage &, .page-donate & {
+    .page-homepage &,
+    .page-donate & {
         margin: 0;
     }
 }
@@ -265,6 +266,9 @@ a {
 
 // Donate
 @import "_donate";
+
+// Sponsor
+@import "_sponsorship";
 
 // Login (page-auth)
 @import "_login";
@@ -353,6 +357,27 @@ a.icon-action {
     &:hover {
         @include sprite("icon-donation-hover", "global");
         display: block;
+    }
+}
+
+.ad-space-ad {
+
+    a {
+        display: block;
+        height: 300px;
+        line-height: 300px;
+        width: 100%;
+        color: #999;
+        font-size: 26px;
+        border: 1px dashed #999;
+        text-decoration: none;
+        text-align: center;
+        position: relative;
+
+        &:hover {
+            background: #eee;
+            color: #666;
+        }
     }
 }
 
@@ -633,11 +658,10 @@ a.icon-action {
 
 }
 
-// class-detail
+// Class Detail
 @import "_class-detail";
 
 // Mentors
 @import "_mentors";
-
 
 @import 'admin';
