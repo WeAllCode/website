@@ -229,10 +229,15 @@
                 </ul>
             </div>
             <div class="sidebar-right-section center-block">
+                <p class="text-muted">Class sponsored by:</p>
                 <div class="ad-space">
+                    {% if session.sponsored_by %}
+                    <a href="{{ session.sponsored_by.url }}"><img src="{{ session.sponsored_by.logo.url }}"></a>
+                    {% else %}
                     <div class="ad-space-ad">
-                        <a href="#">Sponsor this class</a>
+                        <a href="/sponsorships">Sponsor this class</a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

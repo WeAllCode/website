@@ -180,6 +180,30 @@ class Location(models.Model):
     def __unicode__(self):
         return self.name
 
+SponsorshipLevels = (
+    ('platinum', 'platinum'),
+    ('gold', 'gold'),
+    ('silver', 'silver'),
+)
+
+class Sponsor(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    contact_email = models.EmailField()
+    level = models.CharField(max_length=255, choices=SponsorshipLevels)
+    logo = models.ImageField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _("sponsor")
+        verbose_name_plural = _("sponsors")
+
+    def __unicode__(self):
+        return self.name + ' (' + self.level + ')'
+
+
 def session_default_start_time():
     now = timezone.now()
     start = now.replace(hour=10, minute=0, second=0, microsecond=0)
@@ -212,6 +236,7 @@ class Session(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
     bg_image = models.ImageField(blank=True, null=True)
+    sponsored_by = models.ForeignKey(Sponsor, blank=True, null=True)
     mentors_week_reminder_sent = models.BooleanField(default=False)
     mentors_day_reminder_sent = models.BooleanField(default=False)
 
@@ -291,6 +316,7 @@ class Meeting(models.Model):
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     image_url = models.CharField(max_length=255, blank=True, null=True)
+    sponsored_by = models.ForeignKey(Sponsor, blank=True, null=True)
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -393,24 +419,3 @@ class Donation(models.Model):
 
     def __unicode__(self):
         return self.email + ' | $' + str(self.amount)
-
-SponsorshipLevels = (
-    ('platinum', 'platinum'),
-    ('gold', 'gold'),
-    ('silver', 'silver'),
-)
-
-class Sponsor(models.Model):
-    name = models.CharField(max_length=255)
-    contact_email = models.EmailField()
-    level = models.CharField(max_length=255, choices=SponsorshipLevels)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
-
-    class Meta:
-        verbose_name = _("sponsor")
-        verbose_name_plural = _("sponsors")
-
-    def __unicode__(self):
-        return self.name + '(' + self.level + ')'

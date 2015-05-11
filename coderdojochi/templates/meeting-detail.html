@@ -105,6 +105,19 @@
                     <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;size=281x281&amp;sensor=false&amp;zoom=15"></a>
                 </div>
             </div>
+
+            <div class="sidebar-right-section center-block">
+                <p class="text-muted">Class sponsored by:</p>
+                <div class="ad-space">
+                    {% if meeting.sponsored_by %}
+                    <a href="{{ session.sponsored_by.url }}"><img src="{{ session.sponsored_by.logo.url }}"></a>
+                    {% else %}
+                    <div class="ad-space-ad">
+                        <a href="/sponsorships">Sponsor this meeting</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 

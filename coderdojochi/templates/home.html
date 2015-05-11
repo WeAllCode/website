@@ -71,12 +71,26 @@
             </a>
         </div>
     </div>
-    <div class="row ad-space">
-        <div class="col-sm-6 ad-space-ad">
-            <a href="#">Your logo here</a>
-        </div>
-        <div class="col-sm-6 ad-space-ad">
-            <a href="#">Your logo here</a>
+    <div class="ad-space">
+        <h2 class="text-center text-muted">Sponsored by:</h2>
+        <div class="row">
+            {% for sponsor in platinum_sponsors %}
+            <div class="col-sm-6">
+                <a href="{{ sponsor.url }}"><img src="{{ sponsor.logo.url }}"></a>
+            </div>
+            {% endfor %}
+
+            {% if platinum_sponsors|length < 2 %}
+            <div class="col-sm-6 ad-space-ad ad-space-ad-large">
+                <a href="/sponsorship">Your logo here</a>
+            </div>
+            {% endif %}
+
+            {% if not platinum_sponsors|length %}
+            <div class="col-sm-6 ad-space-ad ad-space-ad-large">
+                <a href="/sponsorship">Your logo here</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

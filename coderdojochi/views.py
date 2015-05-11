@@ -131,8 +131,11 @@ def home(request, template_name="home.html"):
 
         cache.set('upcoming_public_classes', upcoming_classes, 600)
 
+    platinum_sponsors = Sponsor.objects.filter(active=True, level="platinum")
+
     return render_to_response(template_name, {
-        'upcoming_classes': upcoming_classes
+        'upcoming_classes': upcoming_classes,
+        'platinum_sponsors': platinum_sponsors
     }, context_instance=RequestContext(request))
 
 @login_required
@@ -979,7 +982,11 @@ def sponsors(request, template_name="sponsors.html"):
     sponsors = Sponsor.objects.filter(active=True)
 
     return render_to_response(template_name, {
-        'sponsors': sponsors
+        'sponsors': {
+            'platinum': sponsors.filter(level='platinum'),
+            'gold': sponsors.filter(level='gold'),
+            'silver': sponsors.filter(level='silver')
+        }
     }, context_instance=RequestContext(request))
 
 def contact(request, template_name="contact.html"):

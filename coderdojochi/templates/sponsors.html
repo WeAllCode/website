@@ -10,39 +10,86 @@
 <div class="container text-center">
     <h2>{% trans "Platinum Sponsors" %}</h2>
     <div class="row ad-space">
-        <div class="col-sm-6 ad-space-ad">
-            <a href="#">Your logo here</a>
+
+        {% for sponsor in sponsors.platinum %}
+        <div class="col-sm-6">
+            <a href="{{ sponsor.url }}"><img src="{{ sponsor.logo.url }}"></a>
         </div>
-        <div class="col-sm-6 ad-space-ad">
-            <a href="#">Your logo here</a>
+        {% endfor %}
+
+        {% if sponsors.platinum|length < 2 %}
+        <div class="col-sm-6 ad-space-ad ad-space-ad-large">
+            <a href="/sponsorships">Your logo here</a>
         </div>
+        {% endif %}
+
+        {% if not sponsors.platinum|length %}
+        <div class="col-sm-6 ad-space-ad ad-space-ad-large">
+            <a href="/sponsorships">Your logo here</a>
+        </div>
+        {% endif %}
     </div>
     <h2>{% trans "Gold Sponsors" %}</h2>
     <div class="row ad-space">
-        <div class="col-sm-4 ad-space-ad">
-            <a href="#">Your logo here</a>
+
+        {% for sponsor in sponsors.gold %}
+        <div class="col-sm-4">
+            <a href="{{ sponsor.url }}"><img src="{{ sponsor.logo.url }}"></a>
         </div>
+        {% endfor %}
+
+        {% if sponsors.gold|length < 3 %}
         <div class="col-sm-4 ad-space-ad">
-            <a href="#">Your logo here</a>
+            <a href="/sponsorships">Your logo here</a>
         </div>
+        {% endif %}
+
+        {% if sponsors.gold|length < 2 %}
         <div class="col-sm-4 ad-space-ad">
-            <a href="#">Your logo here</a>
+            <a href="/sponsorships">Your logo here</a>
         </div>
+        {% endif %}
+
+        {% if not sponsors.gold|length %}
+        <div class="col-sm-4 ad-space-ad">
+            <a href="/sponsorships">Your logo here</a>
+        </div>
+        {% endif %}
+
+
     </div>
     <h2>{% trans "Silver Sponsors" %}</h2>
     <div class="row ad-space">
-        <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
-            <a href="#">Your logo here</a>
+
+        {% for sponsor in sponsors.silver %}
+        <div class="col-xs-6 col-sm-3">
+            <a href="{{ sponsor.url }}"><img src="{{ sponsor.logo.url }}"></a>
         </div>
+        {% endfor %}
+
+        {% if sponsors.gold|length < 4 %}
         <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
-            <a href="#">Your logo here</a>
+            <a href="/sponsorships">Your logo here</a>
         </div>
+        {% endif %}
+
+        {% if sponsors.gold|length < 3 %}
         <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
-            <a href="#">Your logo here</a>
+            <a href="/sponsorships">Your logo here</a>
         </div>
+        {% endif %}
+
+        {% if sponsors.gold|length < 2 %}
         <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
-            <a href="#">Your logo here</a>
+            <a href="/sponsorships">Your logo here</a>
         </div>
+        {% endif %}
+
+        {% if not sponsors.gold|length %}
+        <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
+            <a href="/sponsorships">Your logo here</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

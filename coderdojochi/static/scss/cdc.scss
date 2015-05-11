@@ -357,13 +357,17 @@ a.icon-action {
     }
 }
 
+.ad-space img {
+    max-width: 100%;
+}
+
 .ad-space-ad {
 
     a {
         display: block;
-        height: 300px;
-        line-height: 300px;
         width: 100%;
+        height: 220px;
+        line-height: 220px;
         color: #999;
         font-size: 20px;
         border: 1px dashed #999;
@@ -381,6 +385,13 @@ a.icon-action {
         a {
             height: 150px;
             line-height: 150px;
+        }
+    }
+
+    &.ad-space-ad-large {
+        a {
+            height: 300px;
+            line-height: 300px;
         }
     }
 }
