@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation, Sponsor
 
 User = get_user_model()
 
@@ -129,3 +129,4 @@ admin.site.register(EquipmentType, EquipmentTypeAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Donation, DonationAdmin)
 admin.site.register(Location, LocationAdmin)
+admin.site.register(Sponsor)

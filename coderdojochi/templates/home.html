@@ -24,7 +24,7 @@
     <div class="container">
         <h1>{% trans "Our Mission" %}</h1>
         <p>CoderDojoChi is a volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17. Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors.</p>
-        <p>All classes are <strong>100% free of charge</strong> thanks to your generous <a title="Donate now" href="{% url 'donate' %}">donations</a>.</p>
+        <p>All classes are <strong>100% free of charge</strong> thanks to <a href="{% url 'sponsors' %}">our sponsors</a> and your generous <a title="Donate now" href="{% url 'donate' %}">donations</a>.</p>
     </div>
 </div>
 
@@ -59,16 +59,24 @@
         <div class="homepage-volunteer half">
             <a class="icon-action" href="{% url 'volunteer' %}">
                 <span class="icon-volunteer fa fa-fw fa-group"></span>
+                <h1>Volunteer</h1>
+                <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
             </a>
-            <h1>Volunteer</h1>
-            <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
         </div>
         <div class="homepage-donate half">
             <a class="icon-action" href="{% url 'donate' %}">
                 <span class="icon-donation fa fa-fw"></span>
+                <h1>Donate</h1>
+                <p>Funding goes 100% towards equipment and food for youth, attendees, and mentors.</p>
             </a>
-            <h1>Donate</h1>
-            <p>Funding goes 100% towards equipment and food for youth, attendees, and mentors.</p>
+        </div>
+    </div>
+    <div class="row ad-space">
+        <div class="col-sm-6 ad-space-ad">
+            <a href="#">Your logo here</a>
+        </div>
+        <div class="col-sm-6 ad-space-ad">
+            <a href="#">Your logo here</a>
         </div>
     </div>
 </div>

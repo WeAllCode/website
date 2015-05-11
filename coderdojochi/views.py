@@ -14,7 +14,7 @@ from django.core.cache import cache
 from django.views.decorators.csrf import csrf_exempt
 from django import forms
 
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation, Sponsor
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 from calendar import HTMLCalendar
@@ -971,6 +971,15 @@ def about(request, template_name="about.html"):
     return render_to_response(template_name, {
         'mentor_count': mentor_count,
         'students_served': students_served
+    }, context_instance=RequestContext(request))
+
+
+def sponsors(request, template_name="sponsors.html"):
+
+    sponsors = Sponsor.objects.filter(active=True)
+
+    return render_to_response(template_name, {
+        'sponsors': sponsors
     }, context_instance=RequestContext(request))
 
 def contact(request, template_name="contact.html"):

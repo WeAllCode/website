@@ -393,3 +393,24 @@ class Donation(models.Model):
 
     def __unicode__(self):
         return self.email + ' | $' + str(self.amount)
+
+SponsorshipLevels = (
+    ('platinum', 'platinum'),
+    ('gold', 'gold'),
+    ('silver', 'silver'),
+)
+
+class Sponsor(models.Model):
+    name = models.CharField(max_length=255)
+    contact_email = models.EmailField()
+    level = models.CharField(max_length=255, choices=SponsorshipLevels)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _("sponsor")
+        verbose_name_plural = _("sponsors")
+
+    def __unicode__(self):
+        return self.name + '(' + self.level + ')'

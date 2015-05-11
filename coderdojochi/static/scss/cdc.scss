@@ -229,7 +229,8 @@ a {
         margin: 40px 0 0;
     }
 
-    .page-homepage &, .page-donate & {
+    .page-homepage &,
+    .page-donate & {
         margin: 0;
     }
 }
@@ -353,6 +354,34 @@ a.icon-action {
     &:hover {
         @include sprite("icon-donation-hover", "global");
         display: block;
+    }
+}
+
+.ad-space-ad {
+
+    a {
+        display: block;
+        height: 300px;
+        line-height: 300px;
+        width: 100%;
+        color: #999;
+        font-size: 20px;
+        border: 1px dashed #999;
+        text-decoration: none;
+        text-align: center;
+        position: relative;
+
+        &:hover {
+            background: #eee;
+            color: #666;
+        }
+    }
+
+    &.ad-space-ad-small {
+        a {
+            height: 150px;
+            line-height: 150px;
+        }
     }
 }
 
@@ -633,11 +662,10 @@ a.icon-action {
 
 }
 
-// class-detail
+// Class Detail
 @import "_class-detail";
 
 // Mentors
 @import "_mentors";
-
 
 @import 'admin';
