@@ -19,8 +19,12 @@ Roles = (
 )
 
 class CDCUser(AbstractUser):
+
+    email_username = models.CharField(max_length=255, unique=True)
     role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
+
+    USERNAME_FIELD = 'email_username'
 
     def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
         """
@@ -32,6 +36,7 @@ class CDCUser(AbstractUser):
         email = self.normalize_email(email)
         user = self.model(
             username=username,
+            email_username=email,
             email=email,
             first_name=extra_fields[ 'first_name' ],
             last_name=extra_fields[ 'last_name' ],
