@@ -21,13 +21,13 @@ Roles = (
 class CDCUserManager(BaseUserManager):
     def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
         now = timezone.now()
+
         if not email:
             raise ValueError('Users must have an email address')
-        email = self.normalize_email(email)
+
         user = self.model(
+            username=username,
             email=CDCUserManager.normalize_email(email),
-            first_name=extra_fields[ 'first_name' ],
-            last_name=extra_fields[ 'last_name' ],
             is_staff=is_staff,
             is_active=True,
             is_superuser=is_superuser,
