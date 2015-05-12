@@ -43,6 +43,8 @@ npm prune
 npm install
 
 if [[ "$1" == "local" ]]; then
+    python manage.py makemigrations
+    python manage.py migrate
     python manage.py syncdb
 else
     ./node_modules/gulp/bin/gulp.js build

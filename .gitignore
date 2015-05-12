@@ -11,6 +11,9 @@ coderdojochi/static/css/*.css.map
 coderdojochi/static/js/*.min.js
 coderdojochi/static/js/*.min.map
 coderdojochi/static/images/sprites/**/*
+coderdojochi/static/*.jpg
+coderdojochi/static/*.png
+coderdojochi/static/*.gif
 
 # ------------------------------
 # Grunt/Bower
