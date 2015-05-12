@@ -37,6 +37,7 @@ class CDCUserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save(using=self._db)
+
         return user
 
     def create_user(self, username, email=None, password=None, **extra_fields):
