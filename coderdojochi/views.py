@@ -568,7 +568,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
     }, context_instance=RequestContext(request))
 
 def session_ics(request, year, month, day, slug, session_id):
-    
+
     session_obj = get_object_or_404(Session, id=session_id)
 
     cal = Calendar()
@@ -592,7 +592,7 @@ def session_ics(request, year, month, day, slug, session_id):
         event.add('dtend', arrow.get(session_obj.mentor_end_date).naive)
         event.add('dtstamp', mentor_start_date_arrow.datetime)
 
-    organizer = vCalAddress('MAILTO:' + session_obj.teacher.user.email)
+    organizer = vCalAddress('MAILTO:info@coderdojochi.org')
 
     organizer.params['cn'] = vText(session_obj.teacher.first_name  + ' ' + session_obj.teacher.last_name)
     organizer.params['role'] = vText('TEACHER')
@@ -719,7 +719,7 @@ def meeting_announce(request, meeting_id):
     return HttpResponseRedirect(reverse('cdc_admin'))
 
 def meeting_ics(request, year, month, day, meeting_id):
-    
+
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
     cal = Calendar()
@@ -736,10 +736,10 @@ def meeting_ics(request, year, month, day, meeting_id):
     event.add('dtend', arrow.get(meeting_obj.end_date).naive)
     event.add('dtstamp', start_date_arrow.datetime)
 
-    organizer = vCalAddress('MAILTO:ali@coderdojochi.org')
+    organizer = vCalAddress('MAILTO:info@coderdojochi.org')
 
-    organizer.params['cn'] = vText('Ali Karbassi')
-    organizer.params['role'] = vText('FOUNDER')
+    organizer.params['cn'] = vText('CoderDojoChi')
+    organizer.params['role'] = vText('Organization')
     event['organizer'] = organizer
     event['location'] = vText(meeting_obj.location.name + ' ' + meeting_obj.location.address + ' ' + meeting_obj.location.address2 + ' ' + meeting_obj.location.city + ', ' + meeting_obj.location.state + ' ' + meeting_obj.location.zip)
     event['uid'] = 'MEETING00' + str(meeting_obj.id) + '@coderdojochi.org'
