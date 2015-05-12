@@ -58,7 +58,7 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
         in use.
 
         """
-        existing = User.objects.filter(email_username__iexact=self.cleaned_data['email'])
+        existing = User.objects.filter(email__iexact=self.cleaned_data['email'])
         if existing.exists():
             raise forms.ValidationError(_("A user with that email already exists."))
         else:
@@ -91,7 +91,7 @@ class RegisterView(RegistrationView):
 
         user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
 
-        new_user = authenticate(email_username=email, password=password)
+        new_user = authenticate(username=email, password=password)
         login(request, new_user)
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,
