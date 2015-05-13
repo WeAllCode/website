@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
     url(r'^contact/', 'coderdojochi.views.contact', name='contact'),
 
+    url(r'^sponsorship/', 'coderdojochi.views.sponsorship', name='sponsorship'),
+
     url(r'^register/$', RegisterView.as_view(), name='register'),
     url(r'^accounts/register/$', RegisterView.as_view(), name='register'),
     url(r'^register/enroll/$', RegisterView.as_view(enroll=True), name='register_enroll'),
