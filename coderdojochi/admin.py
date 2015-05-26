@@ -52,7 +52,7 @@ class CourseAdmin(admin.ModelAdmin):
     view_on_site = False
 
 class SessionAdmin(admin.ModelAdmin):
-    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'public', 'announced_date',)
+    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'active', 'public', 'announced_date',)
     list_filter = ('public', 'location',)
     ordering = ('start_date',)
     list_per_page = 100
