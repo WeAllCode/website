@@ -168,15 +168,6 @@ class Course(models.Model):
     def __unicode__(self):
         return self.code + ' | ' + self.title
 
-def session_default_start_time():
-    now = timezone.now()
-    start = now.replace(hour=10, minute=0, second=0, microsecond=0)
-    return start if start > now else start + timedelta(days=1)
-
-def session_default_end_time():
-    now = timezone.now()
-    start = now.replace(hour=13, minute=0, second=0, microsecond=0)
-    return start if start > now else start + timedelta(days=1)
 
 class Location(models.Model):
     name = models.CharField(max_length=255)
@@ -189,6 +180,16 @@ class Location(models.Model):
     def __unicode__(self):
         return self.name
 
+def session_default_start_time():
+    now = timezone.now()
+    start = now.replace(hour=10, minute=0, second=0, microsecond=0)
+    return start if start > now else start + timedelta(days=1)
+
+def session_default_end_time():
+    now = timezone.now()
+    start = now.replace(hour=13, minute=0, second=0, microsecond=0)
+    return start if start > now else start + timedelta(days=1)
+
 class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField(default=session_default_start_time())
@@ -197,6 +198,7 @@ class Session(models.Model):
     mentor_end_date = models.DateTimeField(default=session_default_end_time() + timedelta(hours=1))
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
+    mentor_capacity = models.IntegerField(blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, related_name="session_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
@@ -209,6 +211,7 @@ class Session(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
+    bg_image = models.ImageField(blank=True, null=True)
     mentors_week_reminder_sent = models.BooleanField(default=False)
     mentors_day_reminder_sent = models.BooleanField(default=False)
 
@@ -221,6 +224,9 @@ class Session(models.Model):
 
     def get_signup_url(self):
         return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
+
+    def get_ics_url(self):
+        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/calendar/'
 
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
@@ -248,7 +254,11 @@ class Session(models.Model):
         return Order.objects.filter(session=self).exclude(check_in=None).values('student')
 
     def get_mentor_capacity(self):
-        return self.capacity / 2
+        if self.mentor_capacity:
+            return self.mentor_capacity
+        else:
+            return self.capacity / 2
+
 
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
@@ -284,6 +294,7 @@ class Meeting(models.Model):
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     image_url = models.CharField(max_length=255, blank=True, null=True)
+    bg_image = models.ImageField(blank=True, null=True)
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -297,6 +308,9 @@ class Meeting(models.Model):
 
     def get_signup_url(self):
         return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/sign-up/'
+
+    def get_ics_url(self):
+        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/calendar/'
 
     def __unicode__(self):
         return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")

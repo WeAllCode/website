@@ -1,39 +1,42 @@
-coderdojochi
-============
+# CoderDojoChi eco-system
 
-Django Application
+An open-sourced custom Django application for CoderDojoChi.
 
-To run locally follow these steps...
+## First Time
 
-```bash
-git clone git@github.com:CoderDojoChi/coderdojochi.git
-cd coderdojochi
-pip install virtualenvwrapper
-add virtualenv wrapper to your zsh plugins -- list plugins=(virtualenvwrapper) in ~/.zshrc
-mkvirtualenv dojo-env --no-site-packages
-workon dojo-env
-pip install -r requirements.txt
-pip uninstall south
-python manage.py syncdb
-```
+1. Install python, pip, and [nodejs](https://nodejs.org/).
 
-Follow prompts to set up admin account
+2. Fork project.
 
-You will need node.js installed for the following steps (http://nodejs.org/)
+3. Clone forked project.
+```git clone git@github.com:USERNAME/coderdojochi.git```
 
-```bash
-npm install
-gulp
-```
+4. Go into cloned directory.
+```cd coderdojochi```
 
-Navigate to http://localhost:8000  (http://localhost:3000 to auto update the browser on css/js changes)
+5. Install virtualenvwrapper.
+   ```pip install virtualenvwrapper```
+
+6. Create virtual environment.
+   ```mkvirtualenv coderdojochi --no-site-packages```
+
+7. Install npm packages.
+   ```npm install``
+
+8. Run ```npm start```.
+
+9. Follow prompts to set up admin account.
+
+10. Navigate to http://localhost:3000
 
 Great success!
 
-Each time you start working fresh you'll need to activate virtualenv and start the django server (via gulp)...
+## Every other time
+
+Each time you start working fresh you'll need to activate virtualenv and start the django server (via ```npm start```)...
 
 ```bash
-workon dojo-env
-cd ~/Sites/coderdojochi
-gulp
+cd PROJECT_ROOT_FOLDER
+workon coderdojochi
+npm start
 ```
