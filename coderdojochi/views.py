@@ -410,11 +410,10 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
         spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
 
     # only allow mentors to view non-public sessions
-    if not session_obj.public:
-        if not request.user.is_authenticated() or is_guardian:
-            messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
-            return HttpResponseRedirect(reverse('sessions'))
-
+    # if not session_obj.public:
+    #     if not request.user.is_authenticated() or is_guardian:
+    #         messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
+    #         return HttpResponseRedirect(reverse('sessions'))
 
     return render_to_response(template_name,{
         'session': session_obj,
@@ -556,10 +555,10 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         return HttpResponseRedirect(session_obj.get_absolute_url())
 
     # only allow mentors to view non-public sessions
-    if not session_obj.public:
-        if not request.user.is_authenticated() or guardian:
-            messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
-            return HttpResponseRedirect(reverse('sessions'))
+    # if not session_obj.public:
+    #     if not request.user.is_authenticated() or guardian:
+    #         messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
+    #         return HttpResponseRedirect(reverse('sessions'))
 
     return render_to_response(template_name,{
         'session': session_obj,
