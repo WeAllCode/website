@@ -5,6 +5,7 @@ dealer==2.0.4
 django-appconf==1.0.1
 django-avatar==2.0
 django-bootstrap3==4.7.0
+django_cron==0.3.6
 django-html5==1.0.0
 django-loginas==0.1.5
 django-paypal==0.2
@@ -12,9 +13,11 @@ django-paypal==0.2
 django-social-auth==0.7.28
 djrill==1.2.0
 httplib2==0.9
+icalendar==3.9.0
 oauth2==1.5.211
 psycopg2==2.5.1
 python-dateutil==2.4.0
+python-memcached==1.54
 python-openid==2.2.5
 pytz==2014.4
 requests==2.5.0

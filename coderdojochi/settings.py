@@ -54,7 +54,6 @@ INSTALLED_APPS = (
     'djrill',
     'loginas',
     'paypal.standard.ipn',
-    #'django_cron',
 
     #coderdojochi
     'coderdojochi',
@@ -68,6 +67,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'dealer.contrib.django.Middleware',
+    'social_auth.middleware.SocialAuthExceptionMiddleware',
 )
 
 CRON_CLASSES = [
@@ -119,7 +119,7 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
 

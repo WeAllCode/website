@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "$1" == "staging" ]]; then
 
@@ -20,7 +20,7 @@ elif [[ "$1" == "local" ]]; then
 
 else
 
-    echo "Wrong deployment variable. deploy.sh [local|staging|production]"
+    echo "Wrong deployment variable. deploy.sh (local|staging|production)"
     exit
 
 fi
@@ -35,10 +35,16 @@ if [[ $(pip list | grep 'South') ]]; then
     pip uninstall -q -y South
 fi
 
+if [[ "$1" == "local" && $(pip list | grep 'django_cron') ]]; then
+    pip uninstall -q -y django_cron
+fi
+
 npm prune
 npm install
 
 if [[ "$1" == "local" ]]; then
+    python manage.py makemigrations
+    python manage.py migrate
     python manage.py syncdb
 else
     ./node_modules/gulp/bin/gulp.js build
