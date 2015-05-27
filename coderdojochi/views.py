@@ -925,10 +925,22 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_approve_avatar_url())
 
-    mentor.public = True
-    mentor.save()
-
-    return HttpResponse('Mentor avatar approved :) This mentor account is now public.')
+    if mentor.has_attended_intro_meeting:
+        mentor.public = True
+        mentor.save()
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            mentor.first_name + " " + mentor.last_name + "'s avatar approved and their account is now public."
+        )
+        return HttpResponseRedirect(reverse('mentors') + str(mentor.id));
+    else:
+        messages.add_message(
+            request,
+            messages.WARNING,
+            mentor.first_name + " " + mentor.last_name + "'s avatar approved but they have yet to attend an introductory meeting."
+        )
+        return HttpResponseRedirect(reverse('mentors'));
 
 @login_required
 def mentor_reject_avatar(request, mentor_id=False):
@@ -951,8 +963,13 @@ def mentor_reject_avatar(request, mentor_id=False):
     msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="' + settings.SITE_URL + '/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>', 'text/html')
     msg.send()
 
-    return HttpResponse('Mentor avatar rejected :/ This mentor account is no longer public. An email notice has been sent to the mentor.')
+    messages.add_message(
+        request,
+        messages.WARNING,
+        mentor.first_name + " " + mentor.last_name + "'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor."
+    )
 
+    return HttpResponseRedirect(reverse('mentors'));
 
 @login_required
 def student_detail(request, student_id=False, template_name="student-detail.html"):
