@@ -29,7 +29,6 @@ IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']
 
-
 SITE_URL = 'http://localhost:8000'
 
 # Application definition
@@ -47,7 +46,7 @@ INSTALLED_APPS = (
 
     #vendor
     'registration',
-    'social_auth',
+    'social.apps.django_app.default',
     'avatar',
     'bootstrap3',
     'html5',
@@ -87,23 +86,16 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     # coderdojochi
     'coderdojochi.context_processors.main_config_processor',
+
+    #vendor
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
 )
 
-AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.google.GoogleOAuth2Backend',
-    'django.contrib.auth.backends.ModelBackend',
-)
 
 ROOT_URLCONF = 'coderdojochi.urls'
 
 WSGI_APPLICATION = 'coderdojochi.wsgi.application'
-
-AUTH_USER_MODEL = 'coderdojochi.CDCUser'
-
-LOGIN_URL = '/accounts/login/'
-LOGOUT_URL = '/accounts/logout/'
-LOGIN_REDIRECT_URL = '/dojo/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -162,10 +154,36 @@ STATICFILES_DIRS = (
     os.path.join(PACKAGE_ROOT, 'static'),
 )
 
-# Registration
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+
+LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/accounts/logout/'
+LOGIN_REDIRECT_URL = '/dojo/'
+LOGIN_ERROR_URL = '/accounts/login/'
 
 ACCOUNT_ACTIVATION_DAYS = 7
-LOGIN_ERROR_URL = '/accounts/login/'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '294736693640-ejq5vqa2qpiciimnnn5v749aq4gppeic.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '_APcXgCWQjFULQq-ftNHK4_C'
+
+SOCIAL_AUTH_FACEBOOK_KEY = '1454178301519376'
+SOCIAL_AUTH_FACEBOOK_SECRET = '36edff0d6d4a9686647f76f2d0f511ed'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+
+SOCIAL_AUTH_LOGIN_URL = LOGIN_URL
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
+SOCIAL_AUTH_LOGIN_ERROR_URL = LOGIN_ERROR_URL
+
+SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
 # Gravatar
 
@@ -177,17 +195,6 @@ AVATAR_DEFAULT_URL = 'http://www.gravatar.com/avatar/?s=350&d=mm'
 PAYPAL_RECEIVER_EMAIL = 'info@coderdojochi.org'
 PAYPAL_BUSINESS_ID = 'CXD22M5GNXDE4'
 PAYPAL_TEST = False
-
-# Social Auth
-
-GOOGLE_OAUTH2_CLIENT_ID = '294736693640-inucj2ptaap06iggukfurmqihblavbt8.apps.googleusercontent.com'
-GOOGLE_OAUTH2_CLIENT_SECRET = 'rgdutyo5mqCN7yOIMxET9hHv'
-GOOGLE_DISPLAY_NAME = 'CoderDojoChi'
-FACEBOOK_APP_ID = '1454178301519376'
-FACEBOOK_API_SECRET = '36edff0d6d4a9686647f76f2d0f511ed'
-SOCIAL_AUTH_USER_MODEL = 'coderdojochi.CDCUser'
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
-SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
 
 # search for environment specific settings to override settings.py
