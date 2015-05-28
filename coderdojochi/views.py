@@ -54,14 +54,13 @@ class CDCRegistrationForm(registration_forms.RegistrationForm):
                                 widget=forms.HiddenInput,
                                 error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
 
-
     def clean_email(self):
         """
         Validate that the username is alphanumeric and is not already
         in use.
 
         """
-        existing = User.objects.filter(email__iexact=self.cleaned_data['email'])
+        existing = User.objects.filter(username__iexact=self.cleaned_data['email'])
         if existing.exists():
             raise forms.ValidationError(_("A user with that email already exists."))
         else:
@@ -90,11 +89,11 @@ class RegisterView(RegistrationView):
     def register(self, request, **cleaned_data):
 
         email, password, first_name, last_name = cleaned_data['email'], cleaned_data['password1'], cleaned_data['first_name'].strip(), cleaned_data['last_name'].strip()
-        username = email[:30]
+        username = email
 
         user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
 
-        new_user = authenticate(username=email, password=password)
+        new_user = authenticate(username=username, password=password)
         login(request, new_user)
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,

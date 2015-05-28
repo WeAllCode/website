@@ -64,7 +64,7 @@ urlpatterns = patterns('',
     url(r'^login/$', auth_views.login, {'template_name': 'registration/login.html'}),
     url(r'^login/user/(?P<user_id>.+)/$', 'loginas.views.user_login', name='loginas-user-login'),
     url(r'^accounts/', include('registration.backends.default.urls')),
-    url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'', include('social_auth.urls')),
     url(r'^dj-admin/', include(admin.site.urls)),
     url(r'^avatar/', include('avatar.urls')),
 )
