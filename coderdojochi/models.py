@@ -134,9 +134,9 @@ class Student(models.Model):
         return today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
 
     def get_clean_gender(self):
-        if self.gender.lower() in ['male', 'm', 'boy']:
+        if self.gender.lower() in ['male', 'm', 'boy', 'nino', 'masculino']:
             return 'male'
-        elif self.gender.lower() in ['female', 'f', 'girl']:
+        elif self.gender.lower() in ['female', 'f', 'girl', 'femail', 'femal', 'femenino']:
             return 'female'
         else:
             return 'other'
