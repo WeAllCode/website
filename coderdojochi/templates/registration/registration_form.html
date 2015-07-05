@@ -17,9 +17,9 @@
                 <a class="btn signup-google" href="{% url 'social:begin' "google-oauth2" %}">{% trans "Sign up with Google" %}</a>
             </p>
         </div>
-        <div class="half">
+        <!-- <div class="half">
             <p><a class="btn login-facebook" href="{% url 'social:begin' "facebook" %}">{% trans "Sign up with Facebook" %}</a></p>
-        </div>
+        </div> -->
     </div>
     <div class="row">
         <form method="post" class="form {% if not form.errors %}hide{% endif %}" action="{% url 'register' %}{% if 'next' in request.GET %}?next={{ request.GET.next }}{% endif %}{% if 'enroll' in request.GET %}/enroll/{% endif %}">
