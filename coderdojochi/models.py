@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from django.core.validators import RegexValidator
 
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 
 from django.utils.translation import ugettext as _
 from django.utils import formats, timezone
@@ -18,16 +18,23 @@ Roles = (
     ('guardian', 'guardian'),
 )
 
-class CDCUserManager(BaseUserManager):
+class CDCUser(AbstractUser):
+    role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
+    admin_notes = models.TextField(blank=True, null=True)
+
     def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
+        """
+        Creates and saves a User with the given username, email and password.
+        """
         now = timezone.now()
-
-        if not email:
-            raise ValueError('Users must have an email address')
-
+        if not username:
+            raise ValueError('The given username must be set')
+        email = self.normalize_email(email)
         user = self.model(
             username=username,
-            email=CDCUserManager.normalize_email(email),
+            email=email,
+            first_name=extra_fields[ 'first_name' ],
+            last_name=extra_fields[ 'last_name' ],
             is_staff=is_staff,
             is_active=True,
             is_superuser=is_superuser,
@@ -37,24 +44,15 @@ class CDCUserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_user(self, username, email=None, password=None, **extra_fields):
-        return self._create_user(username, email, password, False, False, **extra_fields)
+        return self._create_user(username, email, password, False, False,
+                                 **extra_fields)
 
     def create_superuser(self, username, email, password, **extra_fields):
-        return self._create_user(username, email, password, True, True, **extra_fields)
-
-
-class CDCUser(AbstractUser):
-
-    role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
-    admin_notes = models.TextField(blank=True, null=True)
-
-    objects = CDCUserManager()
-
-    USERNAME_FIELD = 'email'
+        return self._create_user(username, email, password, True, True,
+                                 **extra_fields)
 
     def get_absolute_url(self):
         return settings.SITE_URL + '/dojo'
@@ -207,8 +205,8 @@ class Session(models.Model):
     waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
     waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
-    active = models.BooleanField(default=False)
-    public = models.BooleanField(default=False)
+    active = models.BooleanField(default=False, help_text="Session is active.")
+    public = models.BooleanField(default=False, help_text="Session is a public session.")
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -226,6 +224,9 @@ class Session(models.Model):
 
     def get_signup_url(self):
         return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
+
+    def get_ics_url(self):
+        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/calendar/'
 
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
@@ -293,6 +294,7 @@ class Meeting(models.Model):
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     image_url = models.CharField(max_length=255, blank=True, null=True)
+    bg_image = models.ImageField(blank=True, null=True)
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -306,6 +308,9 @@ class Meeting(models.Model):
 
     def get_signup_url(self):
         return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/sign-up/'
+
+    def get_ics_url(self):
+        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/calendar/'
 
     def __unicode__(self):
         return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
