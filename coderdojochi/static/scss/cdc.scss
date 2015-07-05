@@ -191,17 +191,17 @@ a {
     border-radius: 0;
 }
 
-.signup-email {
-    @include sprite("signup-email", "global");
-    @extend .ir;
-    border-radius: 0;
-}
+// .signup-email {
+//     @include sprite("signup-email", "global");
+//     @extend .ir;
+//     border-radius: 0;
+// }
 
-.login-email {
-    @include sprite("login-email", "global");
-    @extend .ir;
-    border-radius: 0;
-}
+// .login-email {
+//     @include sprite("login-email", "global");
+//     @extend .ir;
+//     border-radius: 0;
+// }
 
 .btn-cdc {
     @include button();

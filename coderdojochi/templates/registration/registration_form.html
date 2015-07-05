@@ -15,11 +15,10 @@
         <div class="half">
             <p>
                 <a class="btn signup-google" href="{% url 'social:begin' "google-oauth2" %}">{% trans "Sign up with Google" %}</a>
-                <a class="btn login-facebook" href="{% url 'social:begin' "facebook" %}"><i class="fa fa-facebook-square"></i></a>
             </p>
         </div>
         <div class="half">
-            <p><span class="btn signup-email">{% trans "Sign up with Email" %}</span></p>
+            <p><a class="btn login-facebook" href="{% url 'social:begin' "facebook" %}">{% trans "Sign up with Facebook" %}</a></p>
         </div>
     </div>
     <div class="row">
@@ -29,6 +28,8 @@
             <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Register' %}" />
         </form>
     </div>
+    <p class="text-muted">or</p>
+    <p><a href="#" class="signup-email" role="button">{% trans "Sign up with email" %}</button></p>
     <p><a href="{% url 'auth_login' %}">{% trans "I already have an account" %}</a></p>
 </div>
 {% endblock %}
