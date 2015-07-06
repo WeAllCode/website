@@ -59,5 +59,6 @@ else
     python2.7 manage.py collectstatic --noinput
 
     echo " -- Restarting server"
-    ../apache2/bin/restart
+    ../apache2/bin/stop
+    ../apache2/bin/start
 fi
