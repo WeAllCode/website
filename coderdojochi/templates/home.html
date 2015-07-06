@@ -41,10 +41,21 @@
                     </div>
                     <div class="description">
                         <h4 class="title"><a href="{{ session.get_absolute_url }}">{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</a></h4>
-                        <p>{{ session.course.description|safe|truncatechars:180 }}</p>
+                        <p>{{ session.course.description|safe|truncatechars:180 }} <a href="{{ session.get_absolute_url }}">Learn more</a></p>
                     </div>
                     <div class="actions">
-                        <p><a href="{{ session.get_absolute_url }}" class="btn-cdc">Learn more</a></p>
+                        {% if user.role == 'mentor' %}
+                            {{ spots_remaining }}
+
+                            <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Volunteer</a>
+                        {% else %}
+                            {% if session.get_current_students.all.count < session.capacity %}
+                                <a href="{{ session.get_absolute_url }}" class="btn-cdc">Learn more</a>
+                            {% else %}
+                                <a href="{{ session.get_absolute_url }}" class="btn-cdc">Join Waitlist</a>
+                                {# <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button> #}
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

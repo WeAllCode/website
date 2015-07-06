@@ -170,10 +170,10 @@
                                     <input type="hidden" name="account_id" value="{{ account.id }}">
                                     {% if account in session.waitlist_mentors.all %}
                                         <input type="hidden" name="remove" value="true">
-                                        <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from waitlist</button>
+                                        <button class="btn-cdc btn-cdc-lg btn-block btn-cdc-danger">Remove from waitlist</button>
                                     {% else %}
                                         <input type="hidden" name="remove" value="false">
-                                        <button class="btn-cdc btn-cdc-sm">Add me to waitlist</button>
+                                        <button class="btn-cdc btn-cdc-lg btn-block">Join waitlist</button>
                                     {% endif %}
                                 </form>
                             {% endif %}
