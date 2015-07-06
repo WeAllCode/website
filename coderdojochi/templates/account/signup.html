@@ -1,0 +1,37 @@
+{% extends "account/_base.html" %}
+{% load i18n bootstrap3 socialaccount %}
+
+{% block title_placeholder %}Login{% endblock %}
+
+{% block body_class %}page-login{% endblock %}
+
+{% block content %}
+<div class="container min-height">
+    <div class="row">
+        <h1>{% trans "Register" %}</h1>
+        <h2>{% trans "Create an account to sign up for free classes and stay in touch." %}</h2>
+    </div>
+    <div class="row">
+        <div class="half">
+            <p><a class="btn signup-google" href="/accounts/google/login">{% trans "Sign up with Google" %}</a></p>
+        </div>
+        <div class="half">
+            <p><span class="btn signup-email">{% trans "Sign up with Email" %}</span></p>
+        </div>
+    </div>
+    <div class="row">
+        <form method="post" class="form {% if not form.errors %}hide{% endif %}" action="{% url 'account_signup' %}{% if 'next' in request.GET %}?next={{ request.GET.next }}{% endif %}{% if 'enroll' in request.GET %}/enroll/{% endif %}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Register' %}" />
+        </form>
+    </div>
+    <p class="text-muted">or</p>
+    <p><a href="{% provider_login_url "facebook" method="js_sdk" %}">Sign up with Facebook</a></p>
+    <p><a href="{% url 'account_login' %}">{% trans "I already have an account" %}</a></p>
+</div>
+{% providers_media_js %}
+{% endblock %}

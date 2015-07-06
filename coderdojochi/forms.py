@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.forms import Form, ModelForm, FileField, ValidationError
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
@@ -7,7 +8,6 @@ from coderdojochi.models import Mentor, Guardian, Student
 import html5.forms.widgets as html5_widgets
 
 class CDCForm(Form):
-
     # strip leading or trailing whitespace
     def _clean_fields(self):
         for name, field in self.fields.items():
@@ -32,7 +32,6 @@ class CDCForm(Form):
                 self.add_error(name, e)
 
 class CDCModelForm(ModelForm):
-
     # strip leading or trailing whitespace
     def _clean_fields(self):
         for name, field in self.fields.items():
@@ -57,9 +56,20 @@ class CDCModelForm(ModelForm):
                 self.add_error(name, e)
 
 
+class SignupForm(forms.Form):
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+
+    class Meta:
+        model = get_user_model() # use this function for swapping user model
+
+    def save(self, user):
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.save()
+
 
 class MentorForm(CDCModelForm):
-
     bio = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Short Bio','class': 'form-control', 'rows': 5}), label='Short Bio')
 
     class Meta:
@@ -67,7 +77,6 @@ class MentorForm(CDCModelForm):
         fields = ('bio',)
 
 class GuardianForm(CDCModelForm):
-
     phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Phone Number','class': 'form-control'}), label='Phone Number')
     zip = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Zip Code','class': 'form-control'}), label='Zip Code')
 
@@ -76,7 +85,6 @@ class GuardianForm(CDCModelForm):
         fields = ('phone','zip',)
 
 class StudentForm(CDCModelForm):
-
     first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Jane','class': 'form-control'}), label='First Name')
     last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Doe','class': 'form-control'}), label='Last Name')
     gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '','class': 'form-control'}), label='Gender')
@@ -91,7 +99,6 @@ class StudentForm(CDCModelForm):
         exclude = ('guardian', 'created_at', 'updated_at', 'active')
 
 class ContactForm(CDCForm):
-
     name = forms.CharField(max_length=100, label='Your name')
     email = forms.EmailField(max_length=200, label='Your email address')
     body = forms.CharField(widget=forms.Textarea, label='Your message')
