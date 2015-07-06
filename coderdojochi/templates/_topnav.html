@@ -21,9 +21,9 @@
                 {% if user.is_staff %}
                 <li><a href="{% url 'cdc_admin' %}">Admin</a></li>
                 {% endif %}
-                <li><a href="{% url 'auth_logout' %}?next={{ request.path }}">Logout</a></li>
+                <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
-                <li{% if '/accounts/login/' in request.path or '/register/' in request.path %} class="active"{% endif %}><a href="{% url 'auth_login' %}">My Dojo</a></li>
+                <li{% if '/accounts/login/' in request.path or '/register/' in request.path %} class="active"{% endif %}><a href="{% url 'account_login' %}">My Dojo</a></li>
                 {% endif %}
             </ul>
         </div>
