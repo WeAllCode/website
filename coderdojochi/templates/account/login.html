@@ -1,5 +1,5 @@
 {% extends "account/_base.html" %}
-{% load i18n bootstrap3 %}
+{% load i18n bootstrap3 socialaccount %}
 
 {% block title_placeholder %}Login{% endblock %}
 
@@ -11,7 +11,12 @@
         <h1>Login</h1>
         <h2>{% trans "Not yet a member" %}? <a href="{% url 'account_signup' %}">{% trans "Register now" %}</a>!</h2>
     </div>
-    <p><a class="btn login-google" href="/accounts/google/login">{% trans "Sign in with Google" %}</a></p>
+    <div class="half">
+        <p><a class="btn login-google" href="/accounts/google/login">{% trans "Sign in with Google" %}</a></p>
+    </div>
+    <div class="half">
+        <p><a href="{% provider_login_url "facebook" method="js_sdk" %}" class="btn login-facebook">Sign in with Facebook</a></p>
+    </div>
     <p class="text-muted">or</p>
     <div class="row">
         <form method="post" action="." class="form">
@@ -27,6 +32,7 @@
 
 
 {% block extra_script %}
+{% providers_media_js %}
 <script>
     $(function() {
         $('#id_username').focus();

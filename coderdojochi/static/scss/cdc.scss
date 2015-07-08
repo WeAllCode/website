@@ -179,6 +179,30 @@ a {
     }
 }
 
+.signup-twitter {
+    @include sprite("signup-twitter", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
+.login-twitter {
+    @include sprite("login-twitter", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
+.signup-facebook {
+    @include sprite("signup-facebook", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
+.login-facebook {
+    @include sprite("login-facebook", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
 .signup-google {
     @include sprite("signup-google", "global");
     @extend .ir;
@@ -187,18 +211,6 @@ a {
 
 .login-google {
     @include sprite("login-google", "global");
-    @extend .ir;
-    border-radius: 0;
-}
-
-.signup-email {
-    @include sprite("signup-email", "global");
-    @extend .ir;
-    border-radius: 0;
-}
-
-.login-email {
-    @include sprite("login-email", "global");
     @extend .ir;
     border-radius: 0;
 }
