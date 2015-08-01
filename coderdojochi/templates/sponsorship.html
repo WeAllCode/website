@@ -1,0 +1,162 @@
+{% extends "_base.html" %}
+
+{% load i18n cache %}
+
+{% block title %}CoderDojoChi Sponsorship{% endblock %}
+
+{% block body_class %}page-sponsorship{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <h1>{% trans "Sponsoring CoderDojoChi" %}</h1>
+    <p class="lead">The following sponsorship opportunities are available to show your organization's support and help us continue our mission. In addition to financial contributions, we are always in need of new exciting spaces to work and collaborate in.  <a href="{% url 'contact' %}">Let us know</a> how you can help.</p>
+</div>
+<div class="container">
+    <h2 class="text-center sponsorship-title">Annual Sponsorship Levels</h2>
+    <p class="text-center"><small class="text-muted"><strong>Note:</strong> Annual sponsorships are valid for one year from time of purchase.</small></p>
+    <div class="row levels">
+        <div class="col-sm-6 platinum">
+            <div class="level">
+                <h3 class="level-title">Platinum <span class="level-price">$5000</span></h3>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">Largest logo on website <a href="#">sponsors page</a>.</div>
+                <div class="list-group-item">Largest logo attached to in-class projection backdrop (shown before and after class).</div>
+                <div class="list-group-item">Logo on coderdojochi.org <a href="{% url 'home' %}">homepage</a> footer (no larger than 200px × 200px).</div>
+                <div class="list-group-item">Logo included in footer of all marketing emails (no larger than 200px × 200px).</div>
+                <div class="list-group-item">Logo included on all paper class handouts to students as part of the header (no
+larger than 1.5" × 1.5").</div>
+                <div class="list-group-item">5 job postings to all CoderDojoChi mentors (via our email distribution list).</div>
+                <div class="list-group-item">Only two platinum sponsorships available.</div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="gold">
+                <div class="level">
+                    <h3 class="level-title">Gold <span class="level-price">$3000</span></h3>
+                </div>
+                <div class="list-group">
+                    <div class="list-group-item">Larger logo on website <a href="#">sponsors page</a>.</div>
+                    <div class="list-group-item">Larger logo attached to in-class projection backdrop.</div>
+                    <div class="list-group-item">3 job postings to all CoderDojoChi mentors (via our email distribution list).</div>
+                </div>
+            </div>
+
+            <div class="silver">
+                <div class="level">
+                    <h3 class="level-title">Silver <span class="level-price">$2000</span></h3>
+                </div>
+                <div class="list-group">
+                    <div class="list-group-item">Logo on website <a href="#">sponsors page</a>.</div>
+                    <div class="list-group-item">Logo attached to in-class projection backdrop.</div>
+                    <div class="list-group-item">1 job posting to all CoderDojoChi mentors (via our email distribution list).</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center sponsorship-title">Other ways to help...</h2>
+    <div class="row levels">
+        <div class="col-sm-6">
+            <div class="level">
+                <h3 class="level-title">Sponsor a Class <span class="level-price">$400</span></h3>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">Logo on the website <a href="#">class detail page</a>.</div>
+                <div class="list-group-item">Logo features on in-class projection backdrop as "Featured Sponsor".</div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="level">
+                <h3 class="level-title">Job Posting <span class="level-price">$500</span></h3>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item">One job posting to all CoderDojoChi mentors.</div>
+                <div class="list-group-item">Our email distribution list contains over 500 professionals working in various fields.</div>
+            </div>
+        </div>
+    </div>
+
+    <p class="lead text-center"><a href="{% url 'contact' %}">Contact us</a> to become a sponsor now.</a></p>
+</div>
+
+<div class="chart-feature">
+    <div class="container">
+        <h2 class="text-center">Where will donations go in 2015?</h2>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="chart-title">Resources</h3>
+                <div id="budget_chart"></div>
+            </div>
+            <div class="col-sm-6">
+                <h3 class="chart-title">Costs per class</h3>
+                <div id="recurring_budget_chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+
+<script src="https://www.google.com/jsapi"></script>
+<script>
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+function drawChart() {
+
+    var budget_data = google.visualization.arrayToDataTable([
+        ['Expense', 'Cost'],
+        ['30 new laptops', {v: 10500, f: '$10,500'}],
+        ['Wiring and storage', {v: 550, f: '$550'}]
+    ]);
+
+    var recurring_data = google.visualization.arrayToDataTable([
+        ['Expense', 'Cost'],
+        ['USB drives', {v: 100, f: '$100'}],
+        ['Printing', {v: 5, f: '$5'}],
+        ['Snacks/Water', {v: 30, f: '$30'}],
+        ['Coffee/Donuts', {v: 40, f: '$40'}],
+        ['Lunch', {v: 150, f: '$150'}]
+    ]);
+
+    var budgetChartEl = document.getElementById('budget_chart');
+    var recurringBudgetChartEl = document.getElementById('recurring_budget_chart');
+
+    // Set chart options
+    var options = {
+        legend: 'none',
+        pieSliceText: 'label',
+        pieSliceTextStyle: {
+            fontSize: 14
+        },
+        tooltip: {
+            text: 'value'
+        },
+        pieStartAngle: 100,
+        backgroundColor: '#87c448',
+        width: budgetChartEl.offsetWidth,
+        height: budgetChartEl.offsetWidth,
+        chartArea: {
+            top:30,
+            width: '100%',
+            height: '100%'
+        },
+        // slices: {
+        //     1: { offset: 0.5 },
+        //     2: { offset: 0.5 },
+        //     3: { offset: 0.5 },
+        // }
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    var budget_chart = new google.visualization.PieChart(budgetChartEl);
+    var recurring_budget_chart = new google.visualization.PieChart(recurringBudgetChartEl);
+
+    budget_chart.draw(budget_data, options);
+    recurring_budget_chart.draw(recurring_data, options);
+}
+</script>
+{% endblock %}
