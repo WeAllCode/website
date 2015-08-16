@@ -4,8 +4,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
-from coderdojochi.views import RegisterView
-
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -19,10 +17,6 @@ urlpatterns = patterns('',
     url(r'^privacy/$','coderdojochi.views.privacy',name='privacy'),
     url(r'^volunteer/$', 'coderdojochi.views.volunteer', name='volunteer'),
     url(r'^contact/', 'coderdojochi.views.contact', name='contact'),
-
-    url(r'^register/$', RegisterView.as_view(), name='register'),
-    url(r'^accounts/register/$', RegisterView.as_view(), name='register'),
-    url(r'^register/enroll/$', RegisterView.as_view(enroll=True), name='register_enroll'),
 
     url(r'^mentors/(?P<mentor_id>[\d]+)/reject-avatar/$', 'coderdojochi.views.mentor_reject_avatar', name='mentor_reject_avatar'),
     url(r'^mentors/(?P<mentor_id>[\d]+)/approve-avatar/$', 'coderdojochi.views.mentor_approve_avatar', name='mentor_approve_avatar'),
@@ -53,18 +47,8 @@ urlpatterns = patterns('',
     url(r'^welcome/$', 'coderdojochi.views.welcome', name='welcome'),
     url(r'^dojo/$', 'coderdojochi.views.dojo', name='dojo'),
 
-    #override the default urls
-    url(r'^password/change/$', auth_views.password_change, name='password_change'),
-    url(r'^password/change/done/$', auth_views.password_change_done, name='password_change_done'),
-    url(r'^password/reset/$', auth_views.password_reset, name='password_reset'),
-    url(r'^password/reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
-    url(r'^password/reset/complete/$', auth_views.password_reset_complete, name='password_reset_complete'),
-    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
-
-    url(r'^login/$', auth_views.login, {'template_name': 'registration/login.html'}),
     url(r'^login/user/(?P<user_id>.+)/$', 'loginas.views.user_login', name='loginas-user-login'),
-    url(r'^accounts/', include('registration.backends.default.urls')),
-    url(r'', include('social_auth.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^dj-admin/', include(admin.site.urls)),
     url(r'^avatar/', include('avatar.urls')),
 )
