@@ -39,78 +39,7 @@ import arrow, os, pytz, tempfile
 # this will assign User to our custom CDCUser
 User = get_user_model()
 
-from registration.backends.simple.views import RegistrationView
-from registration import forms as registration_forms
-from registration import signals
-
 import calendar
-
-
-class CDCRegistrationForm(registration_forms.RegistrationForm):
-
-    username = forms.RegexField(initial='set-to-email',
-                                regex=r'^[\w.@+-]+$',
-                                max_length=30,
-                                widget=forms.HiddenInput,
-                                error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
-
-    def clean_email(self):
-        """
-        Validate that the username is alphanumeric and is not already
-        in use.
-
-        """
-        existing = User.objects.filter(username__iexact=self.cleaned_data['email'])
-        if existing.exists():
-            raise forms.ValidationError(_("A user with that email already exists."))
-        else:
-            return self.cleaned_data['email']
-
-    def clean(self):
-        """
-        Verifiy that the values entered into the two password fields
-        match. Note that an error here will end up in
-        ``non_field_errors()`` because it doesn't apply to a single
-        field.
-
-        """
-        if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
-            if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-                raise forms.ValidationError(_("The two password fields didn't match."))
-
-        return self.cleaned_data
-
-
-class RegisterView(RegistrationView):
-
-    enroll = False
-    form_class = CDCRegistrationForm
-
-    def register(self, request, **cleaned_data):
-
-        email, password, first_name, last_name = cleaned_data['email'], cleaned_data['password1'], cleaned_data['first_name'].strip(), cleaned_data['last_name'].strip()
-        username = email
-
-        user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
-
-        new_user = authenticate(username=username, password=password)
-        login(request, new_user)
-        signals.user_registered.send(sender=self.__class__,
-                                     user=new_user,
-                                     request=request)
-        return new_user
-
-    def get_success_url(self, request, user):
-
-        url = user.get_absolute_url()
-
-        if 'next' in request.GET:
-            url += '?next=' + request.GET['next']
-
-            if self.enroll:
-                url += '&enroll=True'
-
-        return (url, (), {})
 
 def add_months(sourcedate, months):
     month = sourcedate.month - 1 + months
@@ -923,7 +852,7 @@ def mentor_approve_avatar(request, mentor_id=False):
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_approve_avatar_url())
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_approve_avatar_url())
 
     if mentor.has_attended_intro_meeting:
         mentor.public = True
@@ -949,7 +878,7 @@ def mentor_reject_avatar(request, mentor_id=False):
 
     if not request.user.is_staff:
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect(reverse('auth_login') + '?next=' + mentor.get_reject_avatar_url())
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_reject_avatar_url())
 
     mentor.public = False
     mentor.save()
