@@ -29,7 +29,6 @@ IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']
 
-
 SITE_URL = 'http://localhost:8000'
 SITE_ID = 1
 
