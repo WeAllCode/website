@@ -33,7 +33,7 @@
             <p><i class="fa fa-calendar"></i> <a href="{{ meeting.get_ics_url }}">Add to your calendar</a></p>
 
             <h3>Where</h3>
-            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }}<br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
+            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }}<br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
 
             {% if meeting.additional_info %}
             <h3>Additional Info</h3>
@@ -103,7 +103,7 @@
 
             <div class="sidebar-right-section center-block">
                 <div class="map">
-                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img src="http://maps.google.com/maps/api/staticmap?markers=location:{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;size=281x281&amp;sensor=false&amp;zoom=15"></a>
+                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.address }}, {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img src="//maps.google.com/maps/api/staticmap?size=281x281&amp;sensor=false&amp;zoom=15&amp;markers={{ meeting.location.address }}, {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.address }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"></a>
                 </div>
             </div>
         </div>

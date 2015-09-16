@@ -16,7 +16,7 @@
         <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc-sm btn-cdc-inverse">Nevermind</a>
     </form>
     <br>
-    <a target="_blank" class="map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img width="100%" src="http://maps.google.com/maps/api/staticmap?markers=location:{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=550x550&amp;sensor=false"></a>
-    <p class="text-center"><a target="_blank" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">Open in Google Maps</a></p>
+    <a target="_blank" class="map" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img width="100%" src="http://maps.google.com/maps/api/staticmap?size=550x550&amp;sensor=false&amp;markers={{ session.location.address }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.address }},{{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"></a>
+    <p class="text-center"><a target="_blank" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">Open in Google Maps</a></p>
 </div>
 {% endblock %}
