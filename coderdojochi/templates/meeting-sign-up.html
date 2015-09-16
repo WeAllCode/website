@@ -16,7 +16,7 @@
         <a href="{{ meeting.get_absolute_url }}" class="btn-cdc btn-cdc-sm btn-cdc-inverse">Nevermind</a>
     </form>
     <br>
-    <a target="_blank" class="map" href="//www.google.com/maps/preview?q={{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img width="100%" src="//maps.google.com/maps/api/staticmap?markers=location:{{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;size=550x550&amp;sensor=false"></a>
-    <p class="text-center"><a target="_blank" href="//www.google.com/maps/preview?q={{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">Open in Google Maps</a></p>
+    <a target="_blank" class="map" href="//www.google.com/maps/preview?q={{ meeting.location.address }}, {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img width="100%" src="//maps.google.com/maps/api/staticmap?size=550x550&amp;sensor=false&amp;markers={{ meeting.location.address }}, {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.address }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"></a>
+    <p class="text-center"><a target="_blank" href="//www.google.com/maps/preview?q={{ meeting.location.address }}, {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">Open in Google Maps</a></p>
 </div>
 {% endblock %}
