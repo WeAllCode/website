@@ -37,7 +37,7 @@
                         <p>{{ session.course.description|safe|truncatechars:180 }} <a href="{{ session.get_absolute_url }}">Learn more</a></p>
                     </div>
                     <div class="actions">
-                        {% if user.is_authenticated and not is_guardian %}
+                        {% if user.is_authenticated and user.role == 'mentor' %}
                             <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Volunteer</a>
                         {% else %}
                             {% if session.get_current_students.all.count < session.capacity %}
