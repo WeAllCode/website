@@ -96,7 +96,7 @@
                             <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                         {% endif %}
                     {% else %}
-                    <p><a href="{% url 'auth_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'register' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
+                    <p><a href="{% url 'account_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'account_signup' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
                     {% endif %}
                 {% endif %}
             </div>
