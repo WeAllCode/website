@@ -1,0 +1,11 @@
+{% extends "socialaccount/_base.html" %}
+
+{% load i18n %}
+
+{% block title_placeholder %}{% trans "Social Network Login Failure" %}{% endblock %}
+
+{% block content_placeholder %}
+    <h1>{% trans "Social Network Login Failure" %}</h1>
+    <p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
+</form>
+{% endblock %}

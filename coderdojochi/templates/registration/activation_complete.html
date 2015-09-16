@@ -1,7 +1,0 @@
-{% extends "registration/_base.html" %}
-{% load i18n %}
-{% block body_class %}auth{% endblock %}
-{% block content_placeholder %}
-<br><br>
-<div class="alert alert-success">{% trans "Your account is now activated." %} <a href="{% url 'auth_login' %}">Log in now</a>.</div>
-{% endblock %}
