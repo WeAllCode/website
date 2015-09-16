@@ -21,7 +21,7 @@ An open-sourced custom Django application for CoderDojoChi.
    ```mkvirtualenv coderdojochi --no-site-packages```
 
 7. Install npm packages.
-   ```npm install``
+   ```npm install```
 
 8. Run ```npm start```.
 
