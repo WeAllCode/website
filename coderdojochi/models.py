@@ -89,7 +89,7 @@ class Student(models.Model):
 
     def is_registered_for_session(self, session):
         try:
-            order = Order.objects.get(student=self, session=session)
+            order = Order.objects.get(student=self, session=session, active=True)
             is_registered = True
         except:
             is_registered = False
