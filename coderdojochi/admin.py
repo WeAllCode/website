@@ -72,8 +72,8 @@ class SessionAdmin(admin.ModelAdmin):
     get_current_orders_count.short_description = "Students"
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('guardian', 'student', 'session', 'ip', 'check_in', 'alternate_guardian', 'affiliate', 'order_number', 'created_at', 'updated_at', 'week_reminder_sent', 'day_reminder_sent',)
-    list_filter = ('check_in', 'session',)
+    list_display = ('guardian', 'student', 'session', 'ip', 'check_in', 'alternate_guardian', 'active', 'week_reminder_sent', 'day_reminder_sent', 'created_at', 'updated_at',)
+    list_filter = ('active', 'check_in', 'session',)
     ordering = ('created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
