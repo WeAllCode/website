@@ -43,6 +43,7 @@ class SendReminders(CronJobBase):
                 'class_location_zip': order.session.location.zip,
                 'class_additional_info': order.session.additional_info,
                 'class_url': order.session.get_absolute_url(),
+                'class_ics_url': order.session.get_ics_url(),
             })
             order.week_reminder_sent = True
             order.save()
@@ -66,7 +67,8 @@ class SendReminders(CronJobBase):
                 'class_location_zip': order.session.location.zip,
                 'class_additional_info': order.session.additional_info,
                 'class_url': order.session.get_absolute_url(),
-            })
+                'class_ics_url': order.session.get_ics_url(),
+            }),
             order.day_reminder_sent = True
             order.save()
 
@@ -88,6 +90,7 @@ class SendReminders(CronJobBase):
                     'class_location_zip': session.location.zip,
                     'class_additional_info': session.additional_info,
                     'class_url': session.get_absolute_url(),
+                    'class_ics_url': session.get_ics_url(),
                 })
             session.mentors_week_reminder_sent = True
             session.save()
@@ -110,6 +113,7 @@ class SendReminders(CronJobBase):
                     'class_location_zip': session.location.zip,
                     'class_additional_info': session.additional_info,
                     'class_url': session.get_absolute_url(),
+                    'class_ics_url': session.get_ics_url(),
                 })
             session.mentors_day_reminder_sent = True
             session.save()
