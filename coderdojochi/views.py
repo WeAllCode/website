@@ -261,7 +261,6 @@ def session_detail_enroll(request, year, month, day, slug, session_id, template_
 def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html", enroll=False):
     session_obj = get_object_or_404(Session, id=session_id)
     mentor_signed_up = False
-    is_guardian = False
     account = False
     students = False
 
@@ -324,7 +323,6 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
             account = guardian
-            is_guardian = True
             students = guardian.get_students() if guardian.get_students().count() else False
             spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
 
@@ -340,14 +338,13 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
     # only allow mentors to view non-public sessions
     # if not session_obj.public:
-    #     if not request.user.is_authenticated() or is_guardian:
+    #     if not request.user.is_authenticated() or request.user.role == 'guardian':
     #         messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
     #         return HttpResponseRedirect(reverse('sessions'))
 
     return render_to_response(template_name,{
         'session': session_obj,
         'mentor_signed_up': mentor_signed_up,
-        'is_guardian': is_guardian,
         'students': students,
         'account': account,
         'upcoming_classes': upcoming_classes,
@@ -403,8 +400,9 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 session_obj.mentors.add(mentor)
         else:
             if user_signed_up:
-                order = get_object_or_404(Order, student=student, session=session_obj)
-                order.delete()
+                order = get_object_or_404(Order, student=student, session=session_obj, active=True)
+                order.active = False
+                order.save()
                 undo = True
             else:
                 if not settings.DEBUG:
@@ -412,7 +410,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 else:
                     ip = request.META['REMOTE_ADDR']
 
-                order, created = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
+                order = Order.objects.create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
                 # we dont want guardians getting 7 day reminder email if they sign up within 9 days
                 if session_obj.start_date < timezone.now() + timedelta(days=9):
