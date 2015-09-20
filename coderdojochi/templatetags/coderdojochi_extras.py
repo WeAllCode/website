@@ -17,7 +17,7 @@ def student_session_order_count(student, session):
 @register.simple_tag
 def student_register_link(student, session):
 
-    orders = Order.objects.filter(student=student, session=session)
+    orders = Order.objects.filter(student=student, session=session, active=True)
 
     if orders.count():
         button_modifier = ' btn-cdc-danger'
