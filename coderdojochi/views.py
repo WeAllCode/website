@@ -400,8 +400,9 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 session_obj.mentors.add(mentor)
         else:
             if user_signed_up:
-                order = get_object_or_404(Order, student=student, session=session_obj)
-                order.delete()
+                order = get_object_or_404(Order, student=student, session=session_obj, active=True)
+                order.active = False
+                order.save()
                 undo = True
             else:
                 if not settings.DEBUG:
@@ -409,7 +410,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 else:
                     ip = request.META['REMOTE_ADDR']
 
-                order, created = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj, ip=ip)
+                order = Order.objects.create(guardian=guardian, student=student, session=session_obj, ip=ip)
 
                 # we dont want guardians getting 7 day reminder email if they sign up within 9 days
                 if session_obj.start_date < timezone.now() + timedelta(days=9):
