@@ -68,7 +68,7 @@ class SendReminders(CronJobBase):
                 'class_additional_info': order.session.additional_info,
                 'class_url': order.session.get_absolute_url(),
                 'class_ics_url': order.session.get_ics_url(),
-            }),
+            })
             order.day_reminder_sent = True
             order.save()
 
