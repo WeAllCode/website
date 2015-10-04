@@ -96,6 +96,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'allauth.socialaccount.context_processors.socialaccount',
 )
 
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_ROOT, 'coderdojochi/templates/'),
+)
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail
