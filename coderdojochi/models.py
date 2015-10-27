@@ -89,7 +89,7 @@ class Student(models.Model):
 
     def is_registered_for_session(self, session):
         try:
-            order = Order.objects.get(student=self, session=session, active=True)
+            order = Order.objects.get(active=True, student=self, session=session)
             is_registered = True
         except:
             is_registered = False
@@ -199,27 +199,27 @@ class Session(models.Model):
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
             if checked_in:
-                orders = Order.objects.filter(session=self).exclude(check_in=None).order_by('student__last_name')
+                orders = Order.objects.filter(active=True, session=self).exclude(check_in=None).order_by('student__last_name')
             else:
-                orders = Order.objects.filter(session=self).filter(check_in=None).order_by('student__last_name')
+                orders = Order.objects.filter(active=True, session=self, check_in=None).order_by('student__last_name')
         else:
-            orders = Order.objects.filter(session=self).order_by('check_in', 'student__last_name')
+            orders = Order.objects.filter(active=True, session=self).order_by('check_in', 'student__last_name')
 
         return orders
 
     def get_current_students(self, checked_in=None):
         if checked_in != None:
             if checked_in:
-                orders = Order.objects.filter(session=self).exclude(check_in=None).values('student')
+                orders = Order.objects.filter(active=True, session=self).exclude(check_in=None).values('student')
             else:
-                orders = Order.objects.filter(session=self).filter(check_in=None).values('student')
+                orders = Order.objects.filter(active=True, session=self, check_in=None).values('student')
         else:
-            orders = Order.objects.filter(session=self).values('student')
+            orders = Order.objects.filter(active=True, session=self).values('student')
 
         return orders
 
     def get_checked_in_students(self):
-        return Order.objects.filter(session=self).exclude(check_in=None).values('student')
+        return Order.objects.filter(active=True, session=self).exclude(check_in=None).values('student')
 
     def get_mentor_capacity(self):
         if self.mentor_capacity:
