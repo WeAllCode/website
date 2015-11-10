@@ -42,21 +42,21 @@ npm start
 ```
 
 
-## Example steps for branching and creating a pull request
+## Branching and creating pull requests
 
-`git fetch upstream` - pull latest from remote
+`git fetch upstream` - pull latest from upstream remote
 
 `git checkout develop` - checks out your local develop branch
 
-`git merge upstream/develop` - merges in the latest develop from remote to your local
+`git merge upstream/develop` - merges in the latest develop branch from upstream remote to your local repo
 
-`git checkout -b feature/some-feature-name` - creates your new local feature branch
+`git checkout -b feature/some-feature-name` - creates a new local feature branch (or `bug/some-bug-name`)
 
-`git status` - check changed files locally (edited)
+`git status` - review local changes
 
-`git add …` — stage changed files locally
+`git add …` — stage changed files locally for commit
 
-`git commit -m 'some commit message'` - commit locally
+`git commit -m 'some commit message'` - commit locally, please include a detailed message
 
 `git push` - push to your fork on github
 
