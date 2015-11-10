@@ -40,3 +40,26 @@ cd PROJECT_ROOT_FOLDER
 workon coderdojochi
 npm start
 ```
+
+
+## Example steps for branching and creating a pull request
+
+`git fetch upstream` - pull latest from remote
+
+`git checkout develop` - checks out your local develop branch
+
+`git merge upstream/develop` - merges in the latest develop from remote to your local
+
+`git checkout -b feature/some-feature-name` - creates your new local feature branch
+
+`git status` - check changed files locally (edited)
+
+`git add …` — stage changed files locally
+
+`git commit -m 'some commit message'` - commit locally
+
+`git push` - push to your fork on github
+
+To open the pull request, it is recommended to navigate your browser to github.com:USERNAME/coderdojochi.  From their Github should prompt you to open a pull request from your latest committed branch.  The pull request should open against the develop branch of our main repo's :develop branch.
+
+Please include a logical title and detailed description including any information an admin would need to accept the pull request.
