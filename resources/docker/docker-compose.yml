@@ -1,0 +1,5 @@
+app:
+  build: ../..
+  dockerfile: resources/docker/Dockerfile
+  volumes:
+    - ../..:/usr/src/app

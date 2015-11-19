@@ -4,8 +4,8 @@
     "private": true,
     "description": "coderdojochi.org development dependencies",
     "scripts": {
-        "prestart": "./deploy.sh local",
-        "start": "gulp"
+        "start": "gulp --gulpfile ./resources/js/gulpfile.js",
+        "docker": "./resources/scripts/serve"
     },
     "authors": {
         "Brett Kellgren": "brett@coderdojochi.org",
@@ -40,5 +40,3 @@
         "watchify": "2.3.0"
     }
 }
-
-
