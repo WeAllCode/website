@@ -49,9 +49,12 @@ npm prune
 npm install
 
 if [[ "$1" == "local" ]]; then
+    echo " -- Creating database"
     python manage.py makemigrations
     python manage.py migrate
     python manage.py syncdb
+    echo " -- Loading sample data"
+    python manage.py loaddata fixtures/*.json
 else
     ./node_modules/gulp/bin/gulp.js build
     python2.7 manage.py makemigrations
