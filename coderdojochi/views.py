@@ -1059,7 +1059,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
     if 'all_upcoming_sessions' not in request.GET:
         upcoming_sessions = upcoming_sessions[:3]
 
-    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
+    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
     past_sessions_count = past_sessions.count()
 
     if 'all_past_sessions' not in request.GET:
@@ -1073,7 +1073,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
     if 'all_upcoming_meetings' not in request.GET:
         upcoming_meetings = upcoming_meetings[:3]
 
-    past_meetings = meetings.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
+    past_meetings = meetings.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
     past_meetings_count = past_meetings.count()
 
     if 'all_past_meetings' not in request.GET:

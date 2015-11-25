@@ -54,7 +54,7 @@ class CourseAdmin(admin.ModelAdmin):
 class SessionAdmin(admin.ModelAdmin):
     list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'active', 'public', 'announced_date',)
     list_filter = ('public', 'location',)
-    ordering = ('start_date',)
+    ordering = ('-start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
@@ -85,7 +85,7 @@ class MeetingTypeAdmin(admin.ModelAdmin):
 class MeetingAdmin(admin.ModelAdmin):
     list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'get_mentor_count', 'public', 'announced_date', 'created_at',)
     list_filter = ('public',)
-    ordering = ('start_date',)
+    ordering = ('-start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
