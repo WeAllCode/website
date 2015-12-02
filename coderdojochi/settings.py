@@ -118,6 +118,8 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+CONTACT_EMAIL = 'info@coderdojochi.org'
+
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
