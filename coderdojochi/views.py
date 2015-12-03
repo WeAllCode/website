@@ -1021,7 +1021,7 @@ def contact(request, template_name="contact.html"):
                     subject='CoderDojoChi | Contact Form Submission',
                     body='Contact Form Submission from ' + request.POST['name'] + ' (' + request.POST['email'] + '). ' + request.POST['body'],
                     from_email=request.POST['email'],
-                    to=[v for k,v in settings.ADMINS]
+                    to=[settings.CONTACT_EMAIL]
                 )
 
                 msg.attach_alternative('<p>Contact Form Submission from ' + request.POST['name'] + ' (<a href="mailto:' + request.POST['email'] + '">' + request.POST['email'] + '</a>).</p><p>' + request.POST['body'] + '</p><p><small>You can reply to this email.</small></p>', 'text/html')
