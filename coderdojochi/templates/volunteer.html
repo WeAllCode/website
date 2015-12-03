@@ -29,7 +29,7 @@
 
         <div class="row mentors">
             {% for mentor in mentors %}
-                {% if mentor.public == True %}
+                {% if mentor.public == True and mentor.user|has_avatar %}
             <div class="col-xs-12 col-sm-4 col-md-3">
                 <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
                     {% avatar mentor.user 175 %}
