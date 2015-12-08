@@ -506,7 +506,7 @@ def session_ics(request, year, month, day, slug, session_id):
 
     start_date_arrow = arrow.get(session_obj.start_date)
 
-    event.add('summary', session_obj.course.code + ' - ' + session_obj.course.title)
+    event.add('summary', 'CoderDojoChi:  ' + session_obj.course.code + ' - ' + session_obj.course.title)
     event.add('dtstart', start_date_arrow.naive)
     event.add('dtend', arrow.get(session_obj.end_date).naive)
     event.add('dtstamp', start_date_arrow.datetime)
