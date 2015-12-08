@@ -518,8 +518,8 @@ def session_ics(request, year, month, day, slug, session_id):
         event.add('dtend', arrow.get(session_obj.mentor_end_date).naive)
         event.add('dtstamp', mentor_start_date_arrow.datetime)
 
+    event['location'] = vText(session_obj.location.name + ', ' + session_obj.location.address + ', ' + session_obj.location.address2 + ', ' + session_obj.location.city + ', ' + session_obj.location.state + ', ' + session_obj.location.zip)
 
-    event['location'] = vText(session_obj.location.name + ' ' + session_obj.location.address + ' ' + session_obj.location.address2 + ' ' + session_obj.location.city + ', ' + session_obj.location.state + ' ' + session_obj.location.zip)
     event.add('priority', 5)
 
     cal.add_component(event)
