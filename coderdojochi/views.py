@@ -518,13 +518,8 @@ def session_ics(request, year, month, day, slug, session_id):
         event.add('dtend', arrow.get(session_obj.mentor_end_date).naive)
         event.add('dtstamp', mentor_start_date_arrow.datetime)
 
-    organizer = vCalAddress('MAILTO:info@coderdojochi.org')
 
-    organizer.params['cn'] = vText(session_obj.teacher.first_name  + ' ' + session_obj.teacher.last_name)
-    organizer.params['role'] = vText('TEACHER')
-    event['organizer'] = organizer
     event['location'] = vText(session_obj.location.name + ' ' + session_obj.location.address + ' ' + session_obj.location.address2 + ' ' + session_obj.location.city + ', ' + session_obj.location.state + ' ' + session_obj.location.zip)
-    event['uid'] = 'CLASS00' + str(session_obj.id) + '@coderdojochi.org'
     event.add('priority', 5)
 
     cal.add_component(event)
