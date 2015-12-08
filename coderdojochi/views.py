@@ -520,6 +520,8 @@ def session_ics(request, year, month, day, slug, session_id):
 
     event['location'] = vText(session_obj.location.name + ', ' + session_obj.location.address + ', ' + session_obj.location.address2 + ', ' + session_obj.location.city + ', ' + session_obj.location.state + ', ' + session_obj.location.zip)
 
+    # A value of 5 is the normal or "MEDIUM" priority.
+    # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
     event.add('priority', 5)
 
     cal.add_component(event)
