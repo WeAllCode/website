@@ -110,7 +110,7 @@
                     <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                 {% else %}
                     {% if user.is_authenticated %}
-                        {% if is_guardian %}
+                        {% if user.role == 'guardian' %}
                             {% if students %}
                                 {% if spots_remaining > 0 %}
                                     <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
@@ -188,7 +188,7 @@
                         {% if spots_remaining > 0 %}
                         <span class="text-large">{{ spots_remaining }}</span> spots currently open
                         {% else %}
-                            {% if is_guardian %}
+                            {% if user.role == 'guardian' %}
                                 <span class="text-large">{{ session.waitlist_students.count }}</span> currently on waitlist
                             {% else %}
                                 <span class="text-large">{{ session.waitlist_mentors.count }}</span> currently on waitlist

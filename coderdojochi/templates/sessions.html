@@ -37,11 +37,16 @@
                         <p>{{ session.course.description|safe|truncatechars:180 }} <a href="{{ session.get_absolute_url }}">Learn more</a></p>
                     </div>
                     <div class="actions">
-                        {% if session.get_current_students.all.count < session.capacity %}
-                        <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Learn more</a>
+                        {% if user.is_authenticated and user.role == 'mentor' %}
+                            <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Volunteer</a>
                         {% else %}
-                        <button class="btn-cdc btn-cdc disabled" disabled>Class is full</button>
+                            {% if session.get_current_students.all.count < session.capacity %}
+                                <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Learn more</a>
+                            {% else %}
+                                <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Join Waitlist</a>
+                            {% endif %}
                         {% endif %}
+
                     </div>
                 </div>
             </div>
