@@ -13,10 +13,10 @@ gulp.task('sass', function() {
     return gulp.src(config.sass + '/*.scss')
         .pipe(gulpif(global.isWatching, sourcemaps.init()))
         .pipe(sass())
-        .pipe(gulpif(global.isWatching, sourcemaps.write()))
         .pipe(autoprefixer({
             browsers: ['Firefox > 25', 'last 4 versions', '> 3%', 'ie 8']
         }))
+        .pipe(gulpif(global.isWatching, sourcemaps.write()))
         .on('error', handleErrors)
         .pipe(gulp.dest(config.css))
         .pipe(gulpif(global.isWatching, browserSync.reload({stream: true})));
