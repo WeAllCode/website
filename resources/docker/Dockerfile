@@ -36,6 +36,5 @@ RUN python manage.py migrate
 
 COPY fixtures $DIR_BUILD/fixtures
 RUN python manage.py loaddata $DIR_BUILD/fixtures/*.json
-# RUN python manage.py syncdb
 
 CMD $DIR_BUILD/node_modules/.bin/gulp --gulpfile $DIR_BUILD/gulpfile.js
