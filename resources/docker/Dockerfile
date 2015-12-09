@@ -1,6 +1,6 @@
 FROM python:2.7
 
-MAINTAINER Coder Dojo Chicago
+MAINTAINER CoderDojoChi
 
 RUN apt-get update
 RUN apt-get upgrade -y
@@ -30,5 +30,12 @@ COPY ./resources/js/build $DIR_BUILD/
 COPY ./resources/js/build/gulpfile.js $DIR_BUILD/
 
 COPY coderdojochi $DIR_SRC/coderdojochi
+
+RUN python manage.py makemigrations
+RUN python manage.py migrate
+
+COPY fixtures $DIR_BUILD/fixtures
+RUN python manage.py loaddata $DIR_BUILD/fixtures/*.json
+# RUN python manage.py syncdb
 
 CMD $DIR_BUILD/node_modules/.bin/gulp --gulpfile $DIR_BUILD/gulpfile.js
