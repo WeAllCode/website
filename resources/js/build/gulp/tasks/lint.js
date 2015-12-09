@@ -1,15 +1,15 @@
 'use strict';
 
-var gulp = require('gulp'),
-    config = require('../config.json'),
-    jshint = require('gulp-jshint'),
-    handleErrors = require('../utils/handle-errors');
+var gulp = require('gulp');
+var config = require('../config.json');
+var jshint = require('gulp-jshint');
+var handleErrors = require('../utils/handle-errors');
 
 gulp.task('lint', function() {
     return gulp.src([
-            config.js + '/*.js',
-            '!' + config.js + '/vendor/*.js',
-            '!' + config.js + '/*.min.js'
+            config.js.src + '/*.js',
+            '!' + config.js.src + '/vendor/*.js',
+            '!' + config.js.src + '/*.min.js'
         ])
         .pipe(jshint('.jshintrc'))
         .pipe(jshint.reporter('jshint-stylish'))
