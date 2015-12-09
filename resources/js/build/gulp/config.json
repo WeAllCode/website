@@ -4,7 +4,7 @@
       "dest": "/build/static/images/sprites"
     },
     "css": {
-      "src": "/src/coderdojochi/static/scss",
+      "src": "/src/coderdojochi/static/css",
       "dest": "/build/static/css"
     },
     "sass": {
