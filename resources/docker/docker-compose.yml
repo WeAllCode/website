@@ -4,4 +4,5 @@ app:
   ports:
     - "8080:8080"
   volumes:
+    - ../js/build/gulp:/build/gulp
     - ../..:/usr/src/app

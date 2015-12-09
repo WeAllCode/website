@@ -8,10 +8,10 @@
 
 'use strict';
 
-var gulp = require('gulp'),
-    config = require('../config.json'),
-    shell = require('gulp-shell');
+var gulp = require('gulp');
+var config = require('../config.json');
+var shell = require('gulp-shell');
 
 gulp.task('imagemin', shell.task([
-    'imageoptim -d ' + config.img + ' -a -j -q'
+    'imageoptim -d ' + config.img.dest + ' -a -j -q'
 ]));
