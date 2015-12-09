@@ -22,38 +22,6 @@ class CDCUser(AbstractUser):
     role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
 
-    def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
-        """
-        Creates and saves a User with the given username, email and password.
-        """
-        now = timezone.now()
-        if not username:
-            raise ValueError('The given username must be set')
-        email = self.normalize_email(email)
-        user = self.model(
-            username=username,
-            email=email,
-            first_name=extra_fields[ 'first_name' ],
-            last_name=extra_fields[ 'last_name' ],
-            is_staff=is_staff,
-            is_active=True,
-            is_superuser=is_superuser,
-            last_login=now,
-            date_joined=now,
-            **extra_fields
-        )
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        return self._create_user(username, email, password, False, False,
-                                 **extra_fields)
-
-    def create_superuser(self, username, email, password, **extra_fields):
-        return self._create_user(username, email, password, True, True,
-                                 **extra_fields)
-
     def get_absolute_url(self):
         return settings.SITE_URL + '/dojo'
 
@@ -121,7 +89,7 @@ class Student(models.Model):
 
     def is_registered_for_session(self, session):
         try:
-            order = Order.objects.get(student=self, session=session)
+            order = Order.objects.get(active=True, student=self, session=session)
             is_registered = True
         except:
             is_registered = False
@@ -134,9 +102,9 @@ class Student(models.Model):
         return today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
 
     def get_clean_gender(self):
-        if self.gender.lower() in ['male', 'm', 'boy']:
+        if self.gender.lower() in ['male', 'm', 'boy', 'nino', 'masculino']:
             return 'male'
-        elif self.gender.lower() in ['female', 'f', 'girl']:
+        elif self.gender.lower() in ['female', 'f', 'girl', 'femail', 'femal', 'femenino']:
             return 'female'
         else:
             return 'other'
@@ -168,15 +136,6 @@ class Course(models.Model):
     def __unicode__(self):
         return self.code + ' | ' + self.title
 
-def session_default_start_time():
-    now = timezone.now()
-    start = now.replace(hour=10, minute=0, second=0, microsecond=0)
-    return start if start > now else start + timedelta(days=1)
-
-def session_default_end_time():
-    now = timezone.now()
-    start = now.replace(hour=13, minute=0, second=0, microsecond=0)
-    return start if start > now else start + timedelta(days=1)
 
 class Location(models.Model):
     name = models.CharField(max_length=255)
@@ -189,6 +148,16 @@ class Location(models.Model):
     def __unicode__(self):
         return self.name
 
+def session_default_start_time():
+    now = timezone.now()
+    start = now.replace(hour=10, minute=0, second=0, microsecond=0)
+    return start if start > now else start + timedelta(days=1)
+
+def session_default_end_time():
+    now = timezone.now()
+    start = now.replace(hour=13, minute=0, second=0, microsecond=0)
+    return start if start > now else start + timedelta(days=1)
+
 class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField(default=session_default_start_time())
@@ -197,18 +166,20 @@ class Session(models.Model):
     mentor_end_date = models.DateTimeField(default=session_default_end_time() + timedelta(hours=1))
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
+    mentor_capacity = models.IntegerField(blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, related_name="session_teacher")
     mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
     waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
     waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
-    active = models.BooleanField(default=False)
-    public = models.BooleanField(default=False)
+    active = models.BooleanField(default=False, help_text="Session is active.")
+    public = models.BooleanField(default=False, help_text="Session is a public session.")
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
+    bg_image = models.ImageField(blank=True, null=True)
     mentors_week_reminder_sent = models.BooleanField(default=False)
     mentors_day_reminder_sent = models.BooleanField(default=False)
 
@@ -222,33 +193,40 @@ class Session(models.Model):
     def get_signup_url(self):
         return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
 
+    def get_ics_url(self):
+        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/calendar/'
+
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
             if checked_in:
-                orders = Order.objects.filter(session=self).exclude(check_in=None).order_by('student__last_name')
+                orders = Order.objects.filter(active=True, session=self).exclude(check_in=None).order_by('student__last_name')
             else:
-                orders = Order.objects.filter(session=self).filter(check_in=None).order_by('student__last_name')
+                orders = Order.objects.filter(active=True, session=self, check_in=None).order_by('student__last_name')
         else:
-            orders = Order.objects.filter(session=self).order_by('check_in', 'student__last_name')
+            orders = Order.objects.filter(active=True, session=self).order_by('check_in', 'student__last_name')
 
         return orders
 
     def get_current_students(self, checked_in=None):
         if checked_in != None:
             if checked_in:
-                orders = Order.objects.filter(session=self).exclude(check_in=None).values('student')
+                orders = Order.objects.filter(active=True, session=self).exclude(check_in=None).values('student')
             else:
-                orders = Order.objects.filter(session=self).filter(check_in=None).values('student')
+                orders = Order.objects.filter(active=True, session=self, check_in=None).values('student')
         else:
-            orders = Order.objects.filter(session=self).values('student')
+            orders = Order.objects.filter(active=True, session=self).values('student')
 
         return orders
 
     def get_checked_in_students(self):
-        return Order.objects.filter(session=self).exclude(check_in=None).values('student')
+        return Order.objects.filter(active=True, session=self).exclude(check_in=None).values('student')
 
     def get_mentor_capacity(self):
-        return self.capacity / 2
+        if self.mentor_capacity:
+            return self.mentor_capacity
+        else:
+            return self.capacity / 2
+
 
     def __unicode__(self):
         return self.course.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
@@ -284,6 +262,7 @@ class Meeting(models.Model):
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     image_url = models.CharField(max_length=255, blank=True, null=True)
+    bg_image = models.ImageField(blank=True, null=True)
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -297,6 +276,9 @@ class Meeting(models.Model):
 
     def get_signup_url(self):
         return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/sign-up/'
+
+    def get_ics_url(self):
+        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/calendar/'
 
     def __unicode__(self):
         return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")

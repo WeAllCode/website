@@ -22,7 +22,7 @@ class MentorAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user',)
+    search_fields = ('first_name', 'last_name', 'user__username',)
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
@@ -33,7 +33,7 @@ class GuardianAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user',)
+    search_fields = ('first_name', 'last_name', 'user__username',)
     view_on_site = False
 
 class StudentAdmin(admin.ModelAdmin):
@@ -52,9 +52,9 @@ class CourseAdmin(admin.ModelAdmin):
     view_on_site = False
 
 class SessionAdmin(admin.ModelAdmin):
-    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'public', 'announced_date',)
+    list_display = ('course', 'start_date', 'end_date', 'location', 'capacity', 'get_current_orders_count', 'get_mentor_count', 'active', 'public', 'announced_date',)
     list_filter = ('public', 'location',)
-    ordering = ('start_date',)
+    ordering = ('-start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
@@ -72,8 +72,8 @@ class SessionAdmin(admin.ModelAdmin):
     get_current_orders_count.short_description = "Students"
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('guardian', 'student', 'session', 'ip', 'check_in', 'alternate_guardian', 'affiliate', 'order_number', 'created_at', 'updated_at', 'week_reminder_sent', 'day_reminder_sent',)
-    list_filter = ('check_in', 'session',)
+    list_display = ('guardian', 'student', 'session', 'ip', 'check_in', 'alternate_guardian', 'active', 'week_reminder_sent', 'day_reminder_sent', 'created_at', 'updated_at',)
+    list_filter = ('active', 'check_in', 'session',)
     ordering = ('created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -85,7 +85,7 @@ class MeetingTypeAdmin(admin.ModelAdmin):
 class MeetingAdmin(admin.ModelAdmin):
     list_display = ('meeting_type', 'start_date', 'end_date', 'location', 'get_mentor_count', 'public', 'announced_date', 'created_at',)
     list_filter = ('public',)
-    ordering = ('start_date',)
+    ordering = ('-start_date',)
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
