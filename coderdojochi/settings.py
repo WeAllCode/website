@@ -181,6 +181,8 @@ SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
 AVATAR_GRAVATAR_BACKUP = False
 AVATAR_DEFAULT_URL = 'http://www.gravatar.com/avatar/?s=350&d=mm'
+# Should be 2MB, current recommended
+AVATAR_MAX_SIZE = 2*1024*1024
 
 # Paypal
 
