@@ -2,11 +2,12 @@ FROM python:2.7
 
 MAINTAINER CoderDojoChi
 
-RUN apt-get update
-RUN apt-get upgrade -y
-
 RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
 RUN apt-get install -y nodejs
+
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get autoremove -y
 
 ENV DIR_BUILD /build
 ENV DIR_SRC /src
