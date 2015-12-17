@@ -1,0 +1,5 @@
+#!/bin/sh -e
+#
+# Get IP address
+
+docker-machine ip coderdojochi-dev
