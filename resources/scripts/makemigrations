@@ -2,4 +2,5 @@
 #
 # Create new migration scripts (dropped into your repo via magic of shared folders)
 
+eval "$(docker-machine env coderdojochi-dev)"
 docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py makemigrations $@
