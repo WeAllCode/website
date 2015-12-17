@@ -32,10 +32,6 @@ COPY ./resources/js/build/gulpfile.js $DIR_BUILD/
 
 COPY coderdojochi $DIR_SRC/coderdojochi
 
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-
-COPY fixtures $DIR_BUILD/fixtures
-RUN python manage.py loaddata $DIR_BUILD/fixtures/*.json
+COPY fixtures /fixtures
 
 CMD $DIR_BUILD/node_modules/.bin/gulp --gulpfile $DIR_BUILD/gulpfile.js

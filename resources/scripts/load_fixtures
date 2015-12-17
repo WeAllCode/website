@@ -1,0 +1,7 @@
+#!/bin/sh -e
+#
+# Load fixtures
+
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py loaddata /fixtures/coderdojochi.json
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py loaddata /fixtures/sites.json
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py loaddata /fixtures/socialaccount.json
