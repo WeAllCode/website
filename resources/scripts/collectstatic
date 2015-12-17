@@ -1,0 +1,6 @@
+#!/bin/sh -e
+#
+# Collect Static
+
+eval "$(docker-machine env coderdojochi-dev)"
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py collectstatic --noinput $@
