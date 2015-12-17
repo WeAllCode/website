@@ -13,6 +13,7 @@ gulp.task('default', function(cb) {
 
     runSequence(
         'clean',
+        'collectstatic',
         'copy',
         [
             'sprites',
