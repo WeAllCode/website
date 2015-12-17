@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -73,10 +74,6 @@ MIDDLEWARE_CLASSES = (
     'dealer.contrib.django.Middleware',
 )
 
-CRON_CLASSES = [
-    'coderdojochi.cron.SendReminders',
-]
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
@@ -118,17 +115,18 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-CONTACT_EMAIL = 'info@coderdojochi.org'
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get("POSTGRES_HOST"),
+        'PORT': os.environ.get("POSTGRES_PORT"),
     }
 }
+
+CONTACT_EMAIL = 'info@coderdojochi.org'
 
 CACHES = {
     'default': {
@@ -196,20 +194,3 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
 SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapter'
-
-# search for environment specific settings to override settings.py
-
-try:
-    from local_settings import *
-except ImportError:
-    pass
-
-try:
-    from test_settings import *
-except ImportError:
-    pass
-
-try:
-    from production_settings import *
-except ImportError:
-    pass

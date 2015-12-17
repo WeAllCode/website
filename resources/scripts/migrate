@@ -1,0 +1,5 @@
+#!/bin/sh -e
+#
+# Launch Django Shell
+
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py migrate $@
