@@ -86,7 +86,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'dealer.contrib.django.context_processor',
 
     # coderdojochi
-    'coderdojochi.context_processors.main_config_processor',
+    # 'coderdojochi.context_processors.main_config_processor',
 
     # `allauth`
     'allauth.account.context_processors.account',
