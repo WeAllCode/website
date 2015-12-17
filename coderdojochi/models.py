@@ -23,7 +23,7 @@ class CDCUser(AbstractUser):
     admin_notes = models.TextField(blank=True, null=True)
 
     def get_absolute_url(self):
-        return settings.SITE_URL + '/dojo'
+        return '/dojo'
 
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
@@ -37,13 +37,13 @@ class Mentor(models.Model):
     public = models.BooleanField(default=False)
 
     def get_approve_avatar_url(self):
-        return settings.SITE_URL + '/mentors/' + str(self.id) + '/approve-avatar/'
+        return '/mentors/' + str(self.id) + '/approve-avatar/'
 
     def get_reject_avatar_url(self):
-        return settings.SITE_URL + '/mentors/' + str(self.id) + '/reject-avatar/'
+        return '/mentors/' + str(self.id) + '/reject-avatar/'
 
     def get_absolute_url(self):
-        return settings.SITE_URL + '/mentors/' + str(self.id) + '/'
+        return '/mentors/' + str(self.id) + '/'
 
     class Meta:
         verbose_name = _("mentors")
@@ -188,13 +188,13 @@ class Session(models.Model):
         verbose_name_plural = _("sessions")
 
     def get_absolute_url(self):
-        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
+        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
 
     def get_signup_url(self):
-        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
+        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/sign-up/'
 
     def get_ics_url(self):
-        return settings.SITE_URL + '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/calendar/'
+        return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id) + '/calendar/'
 
     def get_current_orders(self, checked_in=None):
         if checked_in != None:
@@ -272,13 +272,13 @@ class Meeting(models.Model):
         verbose_name_plural = _("meetings")
 
     def get_absolute_url(self):
-        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id)
+        return '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id)
 
     def get_signup_url(self):
-        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/sign-up/'
+        return '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/sign-up/'
 
     def get_ics_url(self):
-        return settings.SITE_URL + '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/calendar/'
+        return '/meeting/' + str(self.start_date.year) + '/' + str(self.start_date.month) + '/' + str(self.start_date.day) + '/'  + str(self.id) + '/calendar/'
 
     def __unicode__(self):
         return self.meeting_type.title + ' | ' + formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
