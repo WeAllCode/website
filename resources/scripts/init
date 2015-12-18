@@ -1,0 +1,17 @@
+#!/bin/sh -e
+# Summary: create the docker machine
+
+if [[ ! $(docker-machine ls | grep coderdojochi-dev) ]]; then
+    docker-machine create \
+      --driver virtualbox \
+      --virtualbox-memory 4096 \
+      --virtualbox-disk-size 40000 \
+      coderdojochi-dev
+else
+    docker_instance=$(docker-machine ls | grep coderdojochi-dev)
+    if [[ "$docker_instance" == *"Stopped"* ]]; then
+        docker-machine start coderdojochi-dev
+    elif [[ "$docker_instance" == *"Running"* ]]; then
+        eval "$(docker-machine env coderdojochi-dev)"
+    fi
+fi
