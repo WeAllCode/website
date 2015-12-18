@@ -2,5 +2,7 @@
 #
 # Load up bash
 
-eval "$(docker-machine env coderdojochi-dev)"
+
+./resources/scripts/docker-machine-start
+
 docker-compose -f ./resources/docker/docker-compose.yml run app bash
