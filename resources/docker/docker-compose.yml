@@ -1,0 +1,36 @@
+data:
+  image: busybox
+  volumes:
+    - /var/lib/postgresql/data
+
+db:
+  image: postgres:9.4
+  env_file:
+    - .env
+  volumes_from:
+    - data
+
+app:
+  build: ../..
+  dockerfile: resources/docker/Dockerfile
+  env_file:
+    - .env
+  expose:
+    - "8080"
+  volumes:
+    - /build/static
+    - ../js/build/gulp:/build/gulp
+    - ../..:/usr/src/app
+  links:
+    - db
+
+nginx:
+  image: nginx
+  ports:
+    - "80:80"
+  links:
+    - app
+  volumes:
+    - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+  volumes_from:
+    - app
