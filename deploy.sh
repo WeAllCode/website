@@ -4,15 +4,15 @@ if [[ "$1" == "staging" ]]; then
 
     echo " -- Deploying to staging..."
     cd /home/coderdojo/webapps/coderdojochi_staging/coderdojochi
-    git checkout develop
-    git pull origin develop
+    git checkout -q develop
+    git pull -q origin develop
 
 elif [[ "$1" == "production" ]]; then
 
     echo " -- Deploying to production..."
     cd /home/coderdojo/webapps/coderdojochi/coderdojochi
-    git checkout master
-    git pull origin master
+    git checkout -q master
+    git pull -q origin master
 
 elif [[ "$1" == "local" ]]; then
 
