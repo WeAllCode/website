@@ -46,7 +46,7 @@ fi
 
 echo " -- Installing node packages"
 npm prune
-npm install
+npm install --loglevel silent
 
 if [[ "$1" == "local" ]]; then
     echo " -- Creating database"
@@ -56,7 +56,7 @@ if [[ "$1" == "local" ]]; then
     echo " -- Loading sample data"
     python manage.py loaddata fixtures/*.json
 else
-    ./node_modules/gulp/bin/gulp.js build
+    ./node_modules/gulp/bin/gulp.js build --silent
     python2.7 manage.py makemigrations
     python2.7 manage.py migrate
     python2.7 manage.py collectstatic --noinput
