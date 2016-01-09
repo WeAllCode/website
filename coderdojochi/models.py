@@ -382,3 +382,6 @@ class Donation(models.Model):
 class RaceStudentRelationship(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     race_ethnicity = models.ForeignKey(RaceEthnicity, on_delete=models.CASCADE)
+
+    class Meta:
+        auto_created = True
