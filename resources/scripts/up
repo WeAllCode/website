@@ -4,8 +4,8 @@
 
 $(dirname $0)/init
 $(dirname $0)/build
-$(dirname $0)/manage migrate
-$(dirname $0)/manage loaddata \
+$(dirname $0)/setup-manage migrate
+$(dirname $0)/setup-manage loaddata \
     /fixtures/coderdojochi.json \
     /fixtures/sites.json \
     /fixtures/socialaccount.json
