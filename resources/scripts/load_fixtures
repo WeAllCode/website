@@ -14,4 +14,5 @@ fi
 docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py loaddata \
     /fixtures/coderdojochi.json \
     /fixtures/sites.json \
+    /fixtures/raceethnicity.json \
     /fixtures/socialaccount.json
