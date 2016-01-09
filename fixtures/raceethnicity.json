@@ -1,0 +1,56 @@
+[{
+  "fields": {
+    "race_ethnicity": "American Indian/Alaska Native",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 1
+},
+{
+  "fields": {
+    "race_ethnicity": "Asian",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 2
+},
+{
+  "fields": {
+    "race_ethnicity": "Arab",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 3
+},
+{
+  "fields": {
+    "race_ethnicity": "Black/African American",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 4
+},
+{
+  "fields": {
+    "race_ethnicity": "Hispanic/Latino",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 5
+},
+{
+  "fields": {
+    "race_ethnicity": "Pacific Islander",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 6
+},
+{
+  "fields": {
+    "race_ethnicity": "White",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 7
+}]

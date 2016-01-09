@@ -25,6 +25,13 @@ class CDCUser(AbstractUser):
     def get_absolute_url(self):
         return '/dojo'
 
+class RaceEthnicity(models.Model):
+    race_ethnicity = models.CharField(max_length=255)
+    visible = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.race_ethnicity
+
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
     first_name = models.CharField(max_length=255, blank=True, null=True)
@@ -79,6 +86,9 @@ class Student(models.Model):
     last_name = models.CharField(max_length=255)
     birthday = models.DateTimeField()
     gender = models.CharField(max_length=255)
+    race_ethnicity = models.ManyToManyField(RaceEthnicity, through='RaceStudentRelationship')
+    school_name = models.CharField(max_length=255, null=True)
+    school_type = models.CharField(max_length=255, null=True)
     medical_conditions = models.TextField(blank=True, null=True)
     medications = models.TextField(blank=True, null=True)
     photo_release = models.BooleanField('Photo Consent', help_text="I hereby give permission to CoderDojoChi to use the student's image and/or likeness in promotional materials.", default=False)
@@ -96,10 +106,10 @@ class Student(models.Model):
 
         return is_registered
 
-    def get_age(self):
-        today = timezone.now()
+    def get_age(self, the_date=timezone.now()):
+        #today = timezone.now()
         birthday = self.birthday
-        return today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+        return the_date.year - birthday.year - ((the_date.month, the_date.day) < (birthday.month, birthday.day))
 
     def get_clean_gender(self):
         if self.gender.lower() in ['male', 'm', 'boy', 'nino', 'masculino']:
@@ -368,3 +378,7 @@ class Donation(models.Model):
 
     def __unicode__(self):
         return self.email + ' | $' + str(self.amount)
+
+class RaceStudentRelationship(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    race_ethnicity = models.ForeignKey(RaceEthnicity, on_delete=models.CASCADE)

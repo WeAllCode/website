@@ -3,9 +3,17 @@ from django.contrib.auth import get_user_model
 from django.forms import Form, ModelForm, FileField, ValidationError
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from coderdojochi.models import Mentor, Guardian, Student
+from coderdojochi.models import Mentor, Guardian, Student, RaceEthnicity
 
 import html5.forms.widgets as html5_widgets
+
+race_choices = RaceEthnicity.objects.filter(visible=True).values_list("id", "race_ethnicity")
+school_type_choices = (
+("Public", "Public"),
+("Charter", "Charter"),
+("Private", "Private"),
+("Homeschool", "Homeschool")
+)
 
 class CDCForm(Form):
     # strip leading or trailing whitespace
@@ -88,6 +96,9 @@ class StudentForm(CDCModelForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Jane','class': 'form-control'}), label='First Name')
     last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Doe','class': 'form-control'}), label='Last Name')
     gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '','class': 'form-control'}), label='Gender')
+    school_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='School Name', required=False)
+    school_type = forms.MultipleChoiceField(widget=forms.RadioSelect, choices=school_type_choices, required=False)
+    race_ethnicity = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=race_choices, required=False)
     birthday = forms.CharField(widget=html5_widgets.DateInput(attrs={'class': 'form-control'}))
     medications = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'List any medications currently being taken.','class': 'form-control hidden', 'rows': 5}), label=format_html(u"{0} {1}", "Medications", mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>')), required=False)
     medical_conditions = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'List any medical conditions.','class': 'form-control hidden', 'rows': 5}), label=format_html(u"{0} {1}", "Medical Conditions", mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>')), required=False)
@@ -103,4 +114,3 @@ class ContactForm(CDCForm):
     email = forms.EmailField(max_length=200, label='Your email address')
     body = forms.CharField(widget=forms.Textarea, label='Your message')
     human = forms.CharField(max_length=100, label=False, required=False)
-
