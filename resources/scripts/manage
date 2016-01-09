@@ -11,4 +11,4 @@ elif [[ "$docker_instance" == *"Running"* ]]; then
     eval "$(docker-machine env coderdojochi-dev)"
 fi
 
-docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py makemigrations $@
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py $@
