@@ -86,7 +86,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=255)
     birthday = models.DateTimeField()
     gender = models.CharField(max_length=255)
-    race_ethnicity = models.ManyToManyField(RaceEthnicity, through='RaceStudentRelationship')
+    race_ethnicity = models.ManyToManyField(RaceEthnicity, null=True)
     school_name = models.CharField(max_length=255, null=True)
     school_type = models.CharField(max_length=255, null=True)
     medical_conditions = models.TextField(blank=True, null=True)
@@ -378,10 +378,3 @@ class Donation(models.Model):
 
     def __unicode__(self):
         return self.email + ' | $' + str(self.amount)
-
-class RaceStudentRelationship(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    race_ethnicity = models.ForeignKey(RaceEthnicity, on_delete=models.CASCADE)
-
-    class Meta:
-        auto_created = True
