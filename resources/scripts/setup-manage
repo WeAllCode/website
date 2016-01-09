@@ -1,0 +1,14 @@
+#!/bin/bash -e
+#
+# Create new migration scripts (dropped into your repo via magic of shared folders)
+
+docker_instance=$(docker-machine ls | grep coderdojochi-dev)
+if [[ "$docker_instance" == *"Stopped"* ]]; then
+    docker-machine start coderdojochi-dev
+elif [[ "$docker_instance" == *"Saved"* ]]; then
+    docker-machine start coderdojochi-dev
+elif [[ "$docker_instance" == *"Running"* ]]; then
+    eval "$(docker-machine env coderdojochi-dev)"
+fi
+
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py $@
