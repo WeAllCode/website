@@ -4,8 +4,8 @@
 
 $(dirname $0)/init
 $(dirname $0)/build
-$(dirname $0)/makemigrations
-$(dirname $0)/migrate
+$(dirname $0)/manage makemigrations
+$(dirname $0)/manage migrate
 $(dirname $0)/load_fixtures
 $(dirname $0)/ip
 $(dirname $0)/serve
