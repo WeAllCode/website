@@ -8,6 +8,7 @@ $(dirname $0)/setup-manage migrate
 $(dirname $0)/setup-manage loaddata \
     /fixtures/coderdojochi.json \
     /fixtures/sites.json \
+    /fixtures/raceethnicity \
     /fixtures/socialaccount.json
 $(dirname $0)/ip
 $(dirname $0)/serve
