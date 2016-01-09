@@ -1,0 +1,16 @@
+#!/bin/sh -e
+#
+# Summary: builds and serves docker image
+echo "DOCKER-MACHINE-START"
+docker_instance=$(docker-machine ls | grep coderdojochi-dev)
+
+if [[ "$docker_instance" == *"Stopped"* ]]
+then
+    echo "STOPPED"
+    docker-machine start coderdojochi-dev
+
+elif [[ "$docker_instance" == *"Running"* ]]
+then
+    echo "RUNNING"
+    eval "$(docker-machine env coderdojochi-dev)"
+fi

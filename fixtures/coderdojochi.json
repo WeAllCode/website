@@ -1,1 +1,120 @@
-[{"fields": {"username": "john", "first_name": "John", "last_name": "Doe", "is_active": true, "is_superuser": false, "is_staff": false, "last_login": "2015-09-30T22:30:21.876", "groups": [], "user_permissions": [], "role": "mentor", "password": "pbkdf2_sha256$15000$jog3YGXnu0Zf$1DuT0Lqcd9wspgN89BRjtFy3HxiVe2KghY1aO6uK07I=", "admin_notes": null, "email": "jdoe@gmail.com", "date_joined": "2015-09-30T22:30:20.741"}, "model": "coderdojochi.cdcuser", "pk": 342}, {"fields": {"bio": "Hi, my name is John!", "first_name": "John", "last_name": "Doe", "created_at": "2015-09-30T22:30:24.594", "updated_at": "2015-09-30T22:31:07.952", "user": 342, "has_attended_intro_meeting": true, "active": true, "public": true}, "model": "coderdojochi.mentor", "pk": 104}, {"fields": {"code": "HTML 101", "description": "<p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>\r\n\r\n<p>By the end of the session, students will understand how the language HTML, CSS, and Javascript work together to build the web. Students will develop an understanding of how HTML is used to define the structure of web pages. In keeping with CoderDojoChi's philosophy of learning-by-doing, students will use their knowledge to hack together their own \"Choose Your Own Adventure\" game.</p>", "title": "Choose Your Own Adventure", "created_at": "2015-02-03T21:53:49.878", "updated_at": "2015-02-03T21:53:49.878", "slug": "choose-your-own-adventure"}, "model": "coderdojochi.course", "pk": 1}, {"fields": {"city": "Chicago", "name": "SapientNitro Office", "zip": "60603", "address2": "12th Floor", "state": "Illinois", "address": "30 West Monroe St"}, "model": "coderdojochi.location", "pk": 1}, {"fields": {"mentor_end_date": "2015-03-28T14:00:00", "updated_at": "2015-09-30T22:31:58.007", "course": 1, "mentors_day_reminder_sent": true, "additional_info": "", "waitlist_students": [], "mentors_week_reminder_sent": true, "capacity": 20, "announced_date": null, "location": 1, "waitlist_mentors": [], "public": true, "mentor_capacity": null, "end_date": "2016-03-28T13:00:00", "external_enrollment_url": "", "bg_image": "", "mentor_start_date": "2015-03-28T09:00:00", "active": true, "teacher": 104, "created_at": "2015-02-03T21:54:58.202", "mentors": [104], "start_date": "2016-03-28T10:00:00", "image_url": "classes/0002.jpg"}, "model": "coderdojochi.session", "pk": 2}, {"fields": {"code": "", "description": "<p>This will be an introduction meeting. We will be going over our progress, our future, and how you can help!</p>\r\n\r\n<p>Please bring something you want to write on.</p>\r\n\r\n<p>Do you like kids? Do you like helping kids learn? CoderDojo is the best of both: a free computer club for kids interested in learning how to code.</p>\r\n\r\n<p>Everybody is welcome! No technical skills necessary.</p>\r\n\r\n<p>If you are interested in helping out, please sign up and tell your friends! We are so excited for so many passionate people!</p>", "title": "Introductory Meeting", "created_at": "2015-02-04T00:03:14.343", "updated_at": "2015-02-04T00:32:31.975", "slug": "introductory-meeting"}, "model": "coderdojochi.meetingtype", "pk": 1}, {"fields": {"meeting_type": 1, "end_date": "2016-02-12T19:00:00", "updated_at": "2015-09-30T22:29:33.129", "created_at": "2015-02-04T00:03:52.714", "external_enrollment_url": "", "start_date": "2016-02-12T18:00:00", "announced_date": "2015-02-04T00:33:09", "public": true, "bg_image": "", "image_url": "", "location": 1, "active": true, "mentors": [], "additional_info": ""}, "model": "coderdojochi.meeting", "pk": 1}, {"fields": {"name": "Laptop"}, "model": "coderdojochi.equipmenttype", "pk": 1}]
+[{
+  "fields": {
+    "username": "john",
+    "first_name": "John",
+    "last_name": "Doe",
+    "is_active": true,
+    "is_superuser": true,
+    "is_staff": true,
+    "last_login": "2015-09-30T22:30:21.876",
+    "groups": [],
+    "user_permissions": [],
+    "role": "mentor",
+    "password": "pbkdf2_sha256$15000$jog3YGXnu0Zf$1DuT0Lqcd9wspgN89BRjtFy3HxiVe2KghY1aO6uK07I=",
+    "admin_notes": null,
+    "email": "jdoe@gmail.com",
+    "date_joined": "2015-09-30T22:30:20.741"
+  },
+  "model": "coderdojochi.cdcuser",
+  "pk": 342
+}, {
+  "fields": {
+    "bio": "Hi, my name is John!",
+    "first_name": "John",
+    "last_name": "Doe",
+    "created_at": "2015-09-30T22:30:24.594",
+    "updated_at": "2015-09-30T22:31:07.952",
+    "user": 342,
+    "has_attended_intro_meeting": true,
+    "active": true,
+    "public": true
+  },
+  "model": "coderdojochi.mentor",
+  "pk": 104
+}, {
+  "fields": {
+    "code": "HTML 101",
+    "description": "<p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>\r\n\r\n<p>By the end of the session, students will understand how the language HTML, CSS, and Javascript work together to build the web. Students will develop an understanding of how HTML is used to define the structure of web pages. In keeping with CoderDojoChi's philosophy of learning-by-doing, students will use their knowledge to hack together their own \"Choose Your Own Adventure\" game.</p>",
+    "title": "Choose Your Own Adventure",
+    "created_at": "2015-02-03T21:53:49.878",
+    "updated_at": "2015-02-03T21:53:49.878",
+    "slug": "choose-your-own-adventure"
+  },
+  "model": "coderdojochi.course",
+  "pk": 1
+}, {
+  "fields": {
+    "city": "Chicago",
+    "name": "SapientNitro Office",
+    "zip": "60603",
+    "address2": "12th Floor",
+    "state": "Illinois",
+    "address": "30 West Monroe St"
+  },
+  "model": "coderdojochi.location",
+  "pk": 1
+}, {
+  "fields": {
+    "mentor_end_date": "2015-03-28T14:00:00",
+    "updated_at": "2015-09-30T22:31:58.007",
+    "course": 1,
+    "mentors_day_reminder_sent": true,
+    "additional_info": "",
+    "waitlist_students": [],
+    "mentors_week_reminder_sent": true,
+    "capacity": 20,
+    "announced_date": null,
+    "location": 1,
+    "waitlist_mentors": [],
+    "public": true,
+    "mentor_capacity": null,
+    "end_date": "2016-03-28T13:00:00",
+    "external_enrollment_url": "",
+    "bg_image": "",
+    "mentor_start_date": "2015-03-28T09:00:00",
+    "active": true,
+    "teacher": 104,
+    "created_at": "2015-02-03T21:54:58.202",
+    "mentors": [104],
+    "start_date": "2016-03-28T10:00:00",
+    "image_url": "classes/0002.jpg"
+  },
+  "model": "coderdojochi.session",
+  "pk": 2
+}, {
+  "fields": {
+    "code": "",
+    "description": "<p>This will be an introduction meeting. We will be going over our progress, our future, and how you can help!</p>\r\n\r\n<p>Please bring something you want to write on.</p>\r\n\r\n<p>Do you like kids? Do you like helping kids learn? CoderDojo is the best of both: a free computer club for kids interested in learning how to code.</p>\r\n\r\n<p>Everybody is welcome! No technical skills necessary.</p>\r\n\r\n<p>If you are interested in helping out, please sign up and tell your friends! We are so excited for so many passionate people!</p>",
+    "title": "Introductory Meeting",
+    "created_at": "2015-02-04T00:03:14.343",
+    "updated_at": "2015-02-04T00:32:31.975",
+    "slug": "introductory-meeting"
+  },
+  "model": "coderdojochi.meetingtype",
+  "pk": 1
+}, {
+  "fields": {
+    "meeting_type": 1,
+    "end_date": "2016-02-12T19:00:00",
+    "updated_at": "2015-09-30T22:29:33.129",
+    "created_at": "2015-02-04T00:03:52.714",
+    "external_enrollment_url": "",
+    "start_date": "2016-02-12T18:00:00",
+    "announced_date": "2015-02-04T00:33:09",
+    "public": true,
+    "bg_image": "",
+    "image_url": "",
+    "location": 1,
+    "active": true,
+    "mentors": [],
+    "additional_info": ""
+  },
+  "model": "coderdojochi.meeting",
+  "pk": 1
+}, {
+  "fields": {
+    "name": "Laptop"
+  },
+  "model": "coderdojochi.equipmenttype",
+  "pk": 1
+}]
