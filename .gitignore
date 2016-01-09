@@ -43,7 +43,12 @@ production_settings.py
 *.egg
 *.egg-info
 dist
-build
+
+
+# build
+
+
+
 eggs
 parts
 bin
@@ -76,6 +81,6 @@ nosetests.xml
 *.sqlite3
 coderdojochi/migrations
 test_settings.py
-.env
+
 local_settings.py
 /media

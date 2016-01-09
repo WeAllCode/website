@@ -1,0 +1,9 @@
+#!/bin/sh -e
+#
+# Load fixtures
+
+eval "$(docker-machine env coderdojochi-dev)"
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py loaddata \
+  /fixtures/coderdojochi.json \
+  /fixtures/sites.json \
+  /fixtures/socialaccount.json

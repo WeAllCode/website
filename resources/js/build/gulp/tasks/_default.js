@@ -4,8 +4,8 @@
 
 'use strict';
 
-var gulp = require('gulp'),
-    runSequence = require('run-sequence');
+var gulp = require('gulp');
+var runSequence = require('run-sequence');
 
 // desktop js and all scss/images/etc
 gulp.task('default', function(cb) {
@@ -13,6 +13,7 @@ gulp.task('default', function(cb) {
 
     runSequence(
         'clean',
+        'copy',
         [
             'sprites',
             'sass'

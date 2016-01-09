@@ -1,0 +1,5 @@
+#!/bin/sh -e
+# Summary: builds and serves docker image
+
+eval "$(docker-machine env coderdojochi-dev)"
+docker-compose -f ./resources/docker/docker-compose.yml up
