@@ -305,6 +305,29 @@ class Order(models.Model):
     def __unicode__(self):
         return self.student.first_name + ' ' + self.student.last_name + ' | ' + self.session.course.title
 
+class MentorOrder(models.Model):
+    guardian = models.ForeignKey(Guardian)
+    session = models.ForeignKey(Session)
+    student = models.ForeignKey(Student)
+    active = models.BooleanField(default=True)
+    ip = models.CharField(max_length=255, blank=True, null=True)
+    check_in = models.DateTimeField(blank=True, null=True)
+    alternate_guardian = models.CharField(max_length=255, blank=True, null=True)
+    affiliate = models.CharField(max_length=255, blank=True, null=True)
+    order_number = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    week_reminder_sent = models.BooleanField(default=False)
+    day_reminder_sent = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _("mentor order")
+        verbose_name_plural = _("mentor orders")
+
+    def __unicode__(self):
+        return self.student.first_name + ' ' + self.student.last_name + ' | ' + self.session.course.title
+
+
 class EquipmentType(models.Model):
     name = models.CharField(max_length=255,blank=False,null=False)
 

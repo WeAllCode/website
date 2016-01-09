@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, MentorOrder, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation
 
 User = get_user_model()
 
@@ -79,6 +79,14 @@ class OrderAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     view_on_site = False
 
+class MentorOrderAdmin(admin.ModelAdmin):
+    list_display = ('guardian', 'student', 'session', 'ip', 'check_in', 'alternate_guardian', 'active', 'week_reminder_sent', 'day_reminder_sent', 'created_at', 'updated_at',)
+    list_filter = ('active', 'check_in', 'session',)
+    ordering = ('created_at',)
+    list_per_page = 100
+    date_hierarchy = 'created_at'
+    view_on_site = False
+
 class MeetingTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
@@ -123,6 +131,7 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(MentorOrder, MentorOrderAdmin)
 admin.site.register(MeetingType, MeetingTypeAdmin)
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(EquipmentType, EquipmentTypeAdmin)
