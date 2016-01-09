@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 #
 # Load up bash
 
@@ -11,4 +11,4 @@ elif [[ "$docker_instance" == *"Running"* ]]; then
     eval "$(docker-machine env coderdojochi-dev)"
 fi
 
-docker-compose -f ./resources/docker/docker-compose.yml run app bash
+docker exec -it docker_app_1 bash
