@@ -20,7 +20,7 @@ app:
   volumes:
     - /build/static
     - ../js/build/gulp:/build/gulp
-    - ../..:/usr/src/app
+    - ../../coderdojochi:/src/coderdojochi
   links:
     - db
 

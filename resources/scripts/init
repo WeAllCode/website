@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 # Summary: create the docker machine
 
 if [[ ! $(docker-machine ls | grep coderdojochi-dev) ]]; then

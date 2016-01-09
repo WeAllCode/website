@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 # Summary: builds and serves docker image
 
 docker_instance=$(docker-machine ls | grep coderdojochi-dev)
