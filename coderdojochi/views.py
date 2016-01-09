@@ -920,12 +920,7 @@ def student_detail(request, student_id=False, template_name="student-detail.html
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
-            # emptying form race val so not attempting to save
-            form.race_ethnicity = None
             form.save()
-            # have to create objects in through table
-            for race in request.POST.getlist("race_ethnicity"):
-                race_rel = RaceStudentRelationship.objects.create(student = form, race_ethnicity=int(race))
             messages.add_message(request, messages.SUCCESS, 'Student Updated.')
             return HttpResponseRedirect(reverse('dojo'))
 
