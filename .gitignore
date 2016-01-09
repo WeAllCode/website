@@ -79,7 +79,6 @@ nosetests.xml
 # Django Development
 
 *.sqlite3
-coderdojochi/migrations
 test_settings.py
 
 local_settings.py
