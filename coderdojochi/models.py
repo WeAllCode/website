@@ -32,6 +32,10 @@ class RaceEthnicity(models.Model):
     def __unicode__(self):
         return self.race_ethnicity
 
+    class Meta:
+        verbose_name = _("race ethnicity")
+        verbose_name_plural = _("race ethnicities")
+
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
     first_name = models.CharField(max_length=255, blank=True, null=True)
