@@ -1,8 +1,8 @@
 [{
   "fields": {
-    "username": "john",
-    "first_name": "John",
-    "last_name": "Doe",
+    "username": "admin",
+    "first_name": "Admin",
+    "last_name": "Userman",
     "is_active": true,
     "is_superuser": true,
     "is_staff": true,
@@ -10,18 +10,18 @@
     "groups": [],
     "user_permissions": [],
     "role": "mentor",
-    "password": "pbkdf2_sha256$15000$jog3YGXnu0Zf$1DuT0Lqcd9wspgN89BRjtFy3HxiVe2KghY1aO6uK07I=",
+    "password": "pbkdf2_sha256$15000$IVpLp8gTNcNN$3xxgwhgjWXmSncwFGMIvh8mBoBnSPg2AT7P0I0UPXRY=",
     "admin_notes": null,
-    "email": "jdoe@gmail.com",
+    "email": "admin@coderdojochi.org",
     "date_joined": "2015-09-30T22:30:20.741"
   },
   "model": "coderdojochi.cdcuser",
   "pk": 342
 }, {
   "fields": {
-    "bio": "Hi, my name is John!",
-    "first_name": "John",
-    "last_name": "Doe",
+    "bio": "Hi, my name is Admin!",
+    "first_name": "Admin",
+    "last_name": "Userman",
     "created_at": "2015-09-30T22:30:24.594",
     "updated_at": "2015-09-30T22:31:07.952",
     "user": 342,
