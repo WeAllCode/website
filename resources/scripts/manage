@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 #
 # Create new migration scripts (dropped into your repo via magic of shared folders)
 
@@ -11,4 +11,4 @@ elif [[ "$docker_instance" == *"Running"* ]]; then
     eval "$(docker-machine env coderdojochi-dev)"
 fi
 
-docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py makemigrations $@
+docker-compose -f ./resources/docker/docker-compose.yml run app python manage.py $@
