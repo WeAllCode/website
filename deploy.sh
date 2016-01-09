@@ -4,15 +4,15 @@ if [[ "$1" == "staging" ]]; then
 
     echo " -- Deploying to staging..."
     cd /home/coderdojo/webapps/coderdojochi_staging/coderdojochi
-    git checkout develop
-    git pull origin develop
+    git checkout -q develop
+    git pull -q origin develop
 
 elif [[ "$1" == "production" ]]; then
 
     echo " -- Deploying to production..."
     cd /home/coderdojo/webapps/coderdojochi/coderdojochi
-    git checkout master
-    git pull origin master
+    git checkout -q master
+    git pull -q origin master
 
 elif [[ "$1" == "local" ]]; then
 
@@ -46,7 +46,7 @@ fi
 
 echo " -- Installing node packages"
 npm prune
-npm install
+npm install --loglevel silent
 
 if [[ "$1" == "local" ]]; then
     echo " -- Creating database"
@@ -56,7 +56,7 @@ if [[ "$1" == "local" ]]; then
     echo " -- Loading sample data"
     python manage.py loaddata fixtures/*.json
 else
-    ./node_modules/gulp/bin/gulp.js build
+    ./node_modules/gulp/bin/gulp.js build --silent
     python2.7 manage.py makemigrations
     python2.7 manage.py migrate
     python2.7 manage.py collectstatic --noinput
