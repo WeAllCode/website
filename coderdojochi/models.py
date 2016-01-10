@@ -110,10 +110,10 @@ class Student(models.Model):
 
         return is_registered
 
-    def get_age(self, the_date=timezone.now()):
-        #today = timezone.now()
+    def get_age(self):
+        today = timezone.now()
         birthday = self.birthday
-        return the_date.year - birthday.year - ((the_date.month, the_date.day) < (birthday.month, birthday.day))
+        return today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
 
     def get_clean_gender(self):
         if self.gender.lower() in ['male', 'm', 'boy', 'nino', 'masculino']:
