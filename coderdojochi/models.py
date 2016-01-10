@@ -316,6 +316,11 @@ class Order(models.Model):
         verbose_name = _("order")
         verbose_name_plural = _("orders")
 
+    def get_student_age(self):
+        birthday = self.student.birthday
+        session_date = self.session.start_date
+        return session_date.year - birthday.year - ((session_date.month, session_date.day) < (birthday.month, birthday.day))
+
     def __unicode__(self):
         return self.student.first_name + ' ' + self.student.last_name + ' | ' + self.session.course.title
 
