@@ -7,7 +7,6 @@ from coderdojochi.models import Mentor, Guardian, Student, RaceEthnicity
 
 import html5.forms.widgets as html5_widgets
 
-race_choices = RaceEthnicity.objects.filter(visible=True).values_list("id", "race_ethnicity")
 school_type_choices = (
 ("Public", "Public"),
 ("Charter", "Charter"),
