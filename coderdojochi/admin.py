@@ -39,6 +39,7 @@ class GuardianAdmin(admin.ModelAdmin):
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'gender', 'guardian', 'created_at', 'updated_at', 'active',)
     list_filter = ('gender',)
+    filter_horizontal = ('race_ethnicity',)
     ordering = ('guardian',)
     list_per_page = 100
     date_hierarchy = 'created_at'
