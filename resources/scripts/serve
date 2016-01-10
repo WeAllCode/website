@@ -10,4 +10,4 @@ elif [[ "$docker_instance" == *"Running"* ]]; then
     eval "$(docker-machine env coderdojochi-dev)"
 fi
 
-docker-compose -f ./resources/docker/docker-compose.yml up
+docker-compose -f ./resources/docker/docker-compose.yml up $@
