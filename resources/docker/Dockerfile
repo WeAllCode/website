@@ -19,7 +19,6 @@ WORKDIR $DIR_SRC
 
 COPY requirements.txt $DIR_SRC/
 RUN pip install -r requirements.txt
-RUN pip uninstall -q -y South
 
 COPY package.json $DIR_BUILD/
 RUN npm install --prefix $DIR_BUILD
