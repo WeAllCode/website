@@ -8,10 +8,10 @@ from coderdojochi.models import Mentor, Guardian, Student, RaceEthnicity
 import html5.forms.widgets as html5_widgets
 
 school_type_choices = (
-("Public", "Public"),
-("Charter", "Charter"),
-("Private", "Private"),
-("Homeschool", "Homeschool")
+    ("Public", "Public"),
+    ("Charter", "Charter"),
+    ("Private", "Private"),
+    ("Homeschool", "Homeschool")
 )
 
 class CDCForm(Form):
