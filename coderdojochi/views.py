@@ -1113,7 +1113,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     if current_orders_checked_in:
         student_ages = []
         for order in current_orders_checked_in:
-            student_ages.append(order.student.get_age())
+            student_ages.append(order.get_student_age())
         average_age = reduce(lambda x, y: x + y, student_ages) / len(student_ages)
     else:
         average_age = False
@@ -1148,7 +1148,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
-    ages = sorted(list(e.student.get_age() for e in session_obj.get_current_orders()))
+    ages = sorted(list(e.get_student_age() for e in session_obj.get_current_orders()))
     age_count = list(Counter(ages).iteritems())
     age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
 
