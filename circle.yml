@@ -8,9 +8,11 @@ dependencies:
   override:
     - docker info
     - docker build -t kand/$CIRCLE_PROJECT_REPONAME:latest -f ./resources/docker/Dockerfile .
+
 test:
   override:
     - echo True
+
 deployment:
   hub:
     branch: feature/docker-circleci
