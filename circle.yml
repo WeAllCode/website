@@ -4,7 +4,7 @@ machine:
   services:
     - docker
   post:
-    - curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_linux-amd64 >/usr/local/bin/docker-machine && chmod +x /usr/local/bin/docker-machine && docker-machine version
+    - curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_linux-amd64 > ~/docker-machine && chmod +x ~/docker-machine && docker-machine version
 
 dependencies:
   override:
@@ -21,6 +21,7 @@ deployment:
     commands:
       - docker login -p $DOCKER_PASSWORD -u $DOCKER_USERNAME -e $DOCKER_EMAIL
       - docker push kand/$CIRCLE_PROJECT_REPONAME:latest
+      - docker-machine
       - docker-compose -f ./resources/docker/docker-compose.prod.yml kill
       - docker-compose -f ./resources/docker/docker-compose.prod.yml rm
       - docker-compose -f ./resources/docker/docker-compose.prod.yml up -d
