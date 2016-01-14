@@ -1,0 +1,21 @@
+machine:
+  python:
+    version: 2.7.3
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - pip install awscli
+  override:
+    - docker info
+    - docker build -t kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH ./resources/docker/Dockerfile
+test:
+  override:
+    - echo True
+deployment:
+  hub:
+    branch: feature/docker-circleci
+    commands:
+      - docker login -p $DOCKER_PASSWORD -u $DOCKER_USERNAME -e $DOCKER_EMAIL
+      - docker push kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
