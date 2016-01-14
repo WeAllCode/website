@@ -21,4 +21,4 @@ deployment:
       - docker push kand/$CIRCLE_PROJECT_REPONAME:latest
       - docker-compose -f ./resources/docker/docker-compose.prod.yml kill
       - docker-compose -f ./resources/docker/docker-compose.prod.yml rm
-      - docker-compose -f ./resources/docker/docker-compose.prod.yml up
+      - docker-compose -f ./resources/docker/docker-compose.prod.yml up -d
