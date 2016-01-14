@@ -7,7 +7,7 @@ machine:
 dependencies:
   override:
     - docker info
-    - docker build -t kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH ./resources/docker/
+    - docker build -t kand/$CIRCLE_PROJECT_REPONAME:latest ./resources/docker/
 test:
   override:
     - echo True
@@ -16,4 +16,4 @@ deployment:
     branch: feature/docker-circleci
     commands:
       - docker login -p $DOCKER_PASSWORD -u $DOCKER_USERNAME -e $DOCKER_EMAIL
-      - docker push kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH
+      - docker push kand/$CIRCLE_PROJECT_REPONAME:latest
