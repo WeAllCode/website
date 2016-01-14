@@ -43,7 +43,12 @@ production_settings.py
 *.egg
 *.egg-info
 dist
-build
+
+
+# build
+
+
+
 eggs
 parts
 bin
@@ -74,8 +79,7 @@ nosetests.xml
 # Django Development
 
 *.sqlite3
-coderdojochi/migrations
 test_settings.py
-.env
+
 local_settings.py
 /media
