@@ -5,11 +5,9 @@ machine:
     - docker
 
 dependencies:
-  pre:
-    - pip install awscli
   override:
     - docker info
-    - docker build -t kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH ./resources/docker/Dockerfile
+    - docker build -t kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_BRANCH ./resources/docker/
 test:
   override:
     - echo True
