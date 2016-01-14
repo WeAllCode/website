@@ -19,3 +19,6 @@ deployment:
     commands:
       - docker login -p $DOCKER_PASSWORD -u $DOCKER_USERNAME -e $DOCKER_EMAIL
       - docker push kand/$CIRCLE_PROJECT_REPONAME:latest
+      - docker-compose -f ./resources/docker/docker-compose.prod.yml kill
+      - docker-compose -f ./resources/docker/docker-compose.prod.yml rm
+      - docker-compose -f ./resources/docker/docker-compose.prod.yml up
