@@ -10,4 +10,4 @@ $(dirname $0)/setup-manage loaddata \
     /fixtures/sites.json \
     /fixtures/socialaccount.json
 $(dirname $0)/ip
-$(dirname $0)/serve
+$(dirname $0)/serve $@
