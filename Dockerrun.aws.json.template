@@ -13,7 +13,7 @@
   }],
   "containerDefinitions": [{
     "name": "django-app",
-    "image": "kand/coderdojochi:<TAG>",
+    "image": "kand/<REPO>:<TAG>",
     "environment": [],
     "essential": true,
     "memory": 128,
