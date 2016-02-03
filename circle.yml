@@ -7,6 +7,7 @@ machine:
 dependencies:
   pre:
     - pip install awscli
+    - pip install awsebcli
     - docker build -t kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 -f ./resources/docker/Dockerfile .
 
 test:
@@ -18,5 +19,4 @@ deployment:
     branch: feature/docker-circleci
     commands:
       - docker login -p $DOCKER_PASSWORD -u $DOCKER_USERNAME -e $DOCKER_EMAIL
-      - docker push kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-      - ./deploy-docker.sh $CIRCLE_SHA1
+      - ./deploy-docker.sh $CIRCLE_SHA1 coderdojochi
