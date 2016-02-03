@@ -3,12 +3,10 @@ machine:
     version: 2.7.3
   services:
     - docker
-  post:
-    - curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_linux-amd64 > ~/bin/docker-machine && chmod +x ~/bin/docker-machine && docker-machine version
 
 dependencies:
-  override:
-    - docker info
+  pre:
+    - pip install awscli
     - docker build -t kand/$CIRCLE_PROJECT_REPONAME:latest -f ./resources/docker/Dockerfile .
 
 test:
@@ -16,12 +14,9 @@ test:
     - echo True
 
 deployment:
-  hub:
+  elasticbeanstalk:
     branch: feature/docker-circleci
     commands:
       - docker login -p $DOCKER_PASSWORD -u $DOCKER_USERNAME -e $DOCKER_EMAIL
-      - docker push kand/$CIRCLE_PROJECT_REPONAME:latest
-      - docker-machine
-      - docker-compose -f ./resources/docker/docker-compose.prod.yml kill
-      - docker-compose -f ./resources/docker/docker-compose.prod.yml rm
-      - docker-compose -f ./resources/docker/docker-compose.prod.yml up -d
+      - docker push kand/$CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+      - ./deploy-docker.sh $CIRCLE_SHA1
