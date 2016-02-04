@@ -13,7 +13,7 @@
   }],
   "containerDefinitions": [{
     "name": "django-app",
-    "image": "kand/<REPO>:<TAG>",
+    "image": "<IMAGE_USER>/<IMAGE_REPO>:<IMAGE_VERSION>",
     "environment": [],
     "essential": true,
     "memory": 128,

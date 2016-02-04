@@ -88,3 +88,9 @@ local_settings.py
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+#############################
+# docker deployment and aws #
+#############################
+.elasticbeanstalk
+.tmp-deploy
