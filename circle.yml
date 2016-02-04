@@ -18,5 +18,5 @@ deployment:
   elasticbeanstalk:
     branch: feature/docker-circleci
     commands:
-      - docker login -p $DOCKER_PASSWORD -u $DOCKER_USERNAME -e $DOCKER_EMAIL
-      - ./deploy-docker.sh $CIRCLE_SHA1 coderdojochi
+      - echo "Work in progress."
+      # - ./deploy-docker.sh $CIRCLE_SHA1 coderdojochi
