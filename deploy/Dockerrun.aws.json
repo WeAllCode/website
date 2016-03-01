@@ -27,10 +27,6 @@
         "app"
       ],
       "mountPoints": [
-        {
-          "sourceVolume": "awseb-logs-nginx-proxy",
-          "containerPath": "/var/log/nginx"
-        }
       ]
     }
   ]
