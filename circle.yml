@@ -9,12 +9,12 @@ dependencies:
     - pip install awsebcli
 
 test:
-  pre:
-    - "npm install -g grunt-cli"
-    - "npm install"
-    - "gulp build"
-  # override:
-  #   - echo True
+  # pre:
+  #   - "npm install -g grunt-cli"
+  #   - "npm install"
+  #   - "gulp build"
+  override:
+    - echo True
 
 deployment:
   elasticbeanstalk:
@@ -23,6 +23,8 @@ deployment:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
       - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
       - docker push "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
+      - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" ./coderdojochi/static
+      - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
       - sed -i'' -e "s;%USER%;$DOCKER_USER;g" ./.deploy/Dockerrun.aws.json
       - sed -i'' -e "s;%REPO%;$DOCKER_REPO;g" ./.deploy/Dockerrun.aws.json
       - sed -i'' -e "s;%BUILD_NUM%;$CIRCLE_BUILD_NUM;g" ./.deploy/Dockerrun.aws.json
