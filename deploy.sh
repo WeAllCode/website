@@ -2,7 +2,7 @@
 
 python manage.py collectstatic --noinput
 
-while ! timeout 1 bash -c "echo > /dev/tcp/$DB_PORT_5432_TCP_ADDR/$DB_PORT_5432_TCP_PORT"; do sleep 5; done
+while ! timeout 1 bash -c "echo > /dev/tcp/$DB_PORT_5432_TCP_ADDR/$DB_PORT_5432_TCP_PORT"; do sleep 10; done
 
 python manage.py migrate
 python manage.py loaddata \
