@@ -1,12 +1,13 @@
 machine:
   python:
-    version: 2.7.3
+    version: 2.7.11
   services:
     - docker
 
 dependencies:
   pre:
     - pip install --upgrade setuptools
+    - pip uninstall awsebcli
     - pip install awsebcli
 
 test:
