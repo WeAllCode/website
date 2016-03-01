@@ -6,8 +6,7 @@ machine:
 
 dependencies:
   pre:
-    - pip install --upgrade setuptools
-    - pip uninstall awsebcli
+    # - pip install --upgrade setuptools
     - pip install awsebcli
 
 test:
