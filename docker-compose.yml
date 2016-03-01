@@ -1,0 +1,22 @@
+db:
+  image: postgres:9.4
+  env_file:
+    - .env
+
+app:
+  build: .
+  env_file:
+    - .env
+  expose:
+    - "8080"
+  volumes:
+    - ./coderdojochi:/src/coderdojochi
+  links:
+    - db
+
+nginx:
+  build: resources/
+  ports:
+    - "80:80"
+  links:
+    - app
