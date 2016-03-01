@@ -2,18 +2,7 @@
 
 python manage.py collectstatic --noinput
 
-wait_for_port_open() {
- tries=0
- until [ $tries -ge 20 ]
- do
-   nc $1 -z $2 && break
-   echo "Retrying to connect to $1:$2"
-   tries=$[$tries+1]
-   sleep 2
- done
-}
-
-wait_for_port_open "$DB_PORT_5432_TCP_ADDR" "$DB_PORT_5432_TCP_PORT"
+while ! timeout 1 bash -c "echo > /dev/tcp/$DB_PORT_5432_TCP_ADDR/$DB_PORT_5432_TCP_PORT"; do sleep 5; done
 
 python manage.py migrate
 python manage.py loaddata \
