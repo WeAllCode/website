@@ -12,7 +12,7 @@ gulp.task('build', function(cb) {
 
     runSequence(
         'clean',
-        'collectstatic',
+        // 'collectstatic',
         'copy',
         'sprites',
         [

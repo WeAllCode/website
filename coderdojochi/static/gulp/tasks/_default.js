@@ -13,7 +13,7 @@ gulp.task('default', function(cb) {
 
     runSequence(
         'clean',
-        'collectstatic',
+        // 'collectstatic',
         'copy',
         [
             'sprites',
@@ -21,6 +21,6 @@ gulp.task('default', function(cb) {
         ],
         'watch',
         'browser-sync',
-        'django',
+        // 'django',
         cb);
 });

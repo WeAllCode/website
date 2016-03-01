@@ -15,7 +15,7 @@ app:
     - db
 
 nginx:
-  build: resources/
+  build: coderdojochi/static/
   ports:
     - "80:80"
   links:
