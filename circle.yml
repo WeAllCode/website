@@ -9,10 +9,6 @@ dependencies:
     - pip install awsebcli
 
 test:
-  # pre:
-  #   - "npm install -g grunt-cli"
-  #   - "npm install"
-  #   - "gulp build"
   override:
     - echo True
 
