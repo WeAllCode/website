@@ -35,5 +35,5 @@ deployment:
       - cd ./deploy && sed -i'' -e "s;%POSTGRES_PASSWORD%;$POSTGRES_PASSWORD;g" ./.ebextensions/environment.config
 
       - cd ./deploy && eb init -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" -r us-east-1 $DOCKER_REPO
-      - cd ./deploy && ( eb list | grep -iv "$DOCKER_REPO$" && eb create -c $DOCKER_REPO -db -db.engine postgres -db.i db.t2.micro -db.user $POSTGRES_USER -db.pass $POSTGRES_PASSWORD -db.size 5 -i t2.micro -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" --timeout 10 -d --single $DOCKER_REPO ) || true
+      - cd ./deploy && ( eb list | grep -iv "$DOCKER_REPO$" && eb create -c $DOCKER_REPO -db -db.engine postgres -db.i db.t2.micro -db.user $POSTGRES_USER -db.pass $POSTGRES_PASSWORD -db.size 5 -i t2.micro -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" --timeout 30 -d --single $DOCKER_REPO ) || true
       - cd ./deploy && eb deploy -l $CIRCLE_BUILD_NUM $DOCKER_REPO
