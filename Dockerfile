@@ -3,11 +3,10 @@ FROM python:2.7
 MAINTAINER CoderDojoChi
 
 RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
-RUN apt-get install -y nodejs
-
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get autoremove -y
+RUN apt-get update \
+  && apt-get upgrade -y \
+  && apt-get autoremove -y \
+  && apt-get install -y nodejs netcat
 
 ENV DIR_BUILD /build
 ENV DIR_SRC /src
@@ -33,4 +32,9 @@ COPY coderdojochi $DIR_SRC/coderdojochi
 
 COPY fixtures /fixtures
 
-CMD $DIR_BUILD/node_modules/.bin/gulp --gulpfile $DIR_BUILD/gulpfile.js
+RUN $DIR_BUILD/node_modules/.bin/gulp --gulpfile $DIR_BUILD/gulpfile.js build
+
+COPY ./deploy/gunicorn.conf.py $DIR_BUILD/gunicorn.conf.py
+COPY ./deploy.sh $DIR_BUILD/deploy.sh
+
+CMD $DIR_BUILD/deploy.sh

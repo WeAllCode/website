@@ -1,68 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [[ "$1" == "staging" ]]; then
+python manage.py collectstatic --noinput
 
-    echo " -- Deploying to staging..."
-    cd /home/coderdojo/webapps/coderdojochi_staging/coderdojochi
-    git checkout -q develop
-    git pull -q origin develop
+wait_for_port_open() {
+ tries=0
+ until [ $tries -ge 20 ]
+ do
+   nc $1 -z $2 && break
+   echo "Retrying to connect to $1:$2"
+   tries=$[$tries+1]
+   sleep 2
+ done
+}
 
-elif [[ "$1" == "production" ]]; then
+wait_for_port_open "$DB_PORT_5432_TCP_ADDR" "$DB_PORT_5432_TCP_PORT"
 
-    echo " -- Deploying to production..."
-    cd /home/coderdojo/webapps/coderdojochi/coderdojochi
-    git checkout -q master
-    git pull -q origin master
+python manage.py migrate
+python manage.py loaddata \
+    /fixtures/coderdojochi.json \
+    /fixtures/sites.json \
+    /fixtures/socialaccount.json
 
-elif [[ "$1" == "local" ]]; then
-
-    echo " -- Starting local..."
-
-else
-
-    echo "Wrong deployment variable. deploy.sh (local|staging|production)"
-    exit
-
-fi
-
-if [[ "$1" != "local" ]]; then
-    echo " -- Activating environment"
-    source ../bin/activate
-fi
-
-echo " -- Installing Django packages"
-pip install -q -r requirements.txt --exists-action=s
-
-if [[ $(pip list | grep 'South') ]]; then
-    echo " -- Uninstall South"
-    pip uninstall -q -y South
-fi
-
-if [[ "$1" == "local" && $(pip list | grep 'django_cron') ]]; then
-    echo " -- Uninstall django_cron"
-    pip uninstall -q -y django_cron
-fi
-
-
-echo " -- Installing node packages"
-npm prune
-npm install --loglevel silent
-
-if [[ "$1" == "local" ]]; then
-    echo " -- Creating database"
-    python manage.py makemigrations
-    python manage.py migrate
-    python manage.py syncdb
-    echo " -- Loading sample data"
-    python manage.py loaddata fixtures/*.json
-else
-    ./node_modules/gulp/bin/gulp.js build --silent
-    python2.7 manage.py makemigrations
-    python2.7 manage.py migrate
-    python2.7 manage.py collectstatic --noinput
-
-    echo " -- Restarting server"
-    ../apache2/bin/stop
-    sleep 2
-    ../apache2/bin/start
-fi
+gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi
