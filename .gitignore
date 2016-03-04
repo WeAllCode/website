@@ -77,7 +77,7 @@ nosetests.xml
 .pydevproject
 
 # Django Development
-
+*.bak
 *.sqlite3
 test_settings.py
 
