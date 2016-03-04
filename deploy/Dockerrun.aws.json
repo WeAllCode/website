@@ -1,5 +1,6 @@
 {
   "AWSEBDockerrunVersion": 2,
+  "family": "build_env",
   "volumes": [
   ],
   "containerDefinitions": [
