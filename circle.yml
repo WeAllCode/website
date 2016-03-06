@@ -6,7 +6,6 @@ machine:
 
 dependencies:
   pre:
-    - pip install --upgrade pip
     - pip install awsebcli
 
 test:
@@ -19,15 +18,15 @@ deployment:
     commands:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
-      # - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
-      # - docker push "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
+      - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
+      - docker push "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
 
-      # - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" ./coderdojochi/static
-      # - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
+      - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" ./coderdojochi/static
+      - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
 
       - sed -i'' -e "s;%USER%;$DOCKER_USER;g" ./deploy/Dockerrun.aws.json
       - sed -i'' -e "s;%REPO%;$DOCKER_REPO;g" ./deploy/Dockerrun.aws.json
-      - sed -i'' -e "s;%BUILD_NUM%;41;g" ./deploy/Dockerrun.aws.json
+      - sed -i'' -e "s;%BUILD_NUM%;$CIRCLE_BUILD_NUM;g" ./deploy/Dockerrun.aws.json
 
       - cd ./deploy && sed -i'' -e "s;%POSTGRES_HOST%;$POSTGRES_HOST;g" ./.ebextensions/environment.config
       - cd ./deploy && sed -i'' -e "s;%POSTGRES_PORT%;$POSTGRES_PORT;g" ./.ebextensions/environment.config
@@ -36,5 +35,5 @@ deployment:
       - cd ./deploy && sed -i'' -e "s;%POSTGRES_PASSWORD%;$POSTGRES_PASSWORD;g" ./.ebextensions/environment.config
 
       - cd ./deploy && eb init -v -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" -r us-east-1 $DOCKER_REPO
-      - cd ./deploy && eb create -db -db.engine postgres -db.i db.t2.micro -db.user $POSTGRES_USER -db.pass $POSTGRES_PASSWORD -db.size 5 -i t2.micro -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" --timeout 30 -d --single production
-      - cd ./deploy && eb deploy -v -l 41 production
+      - cd ./deploy && eb create -i t2.micro -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" --timeout 30 -d --single production
+      - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM production
