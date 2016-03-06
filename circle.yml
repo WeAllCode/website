@@ -1,13 +1,11 @@
 machine:
   python:
-    version: 2.7.6
+    version: 2.7.11
   services:
     - docker
 
 dependencies:
   pre:
-    - pip uninstall requests
-    - pip install requests==2.6.2
     - pip install awsebcli==3.7.3
 
 test:
