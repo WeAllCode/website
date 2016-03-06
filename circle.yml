@@ -1,12 +1,12 @@
 machine:
   python:
-    version: 2.7.11
+    version: 2.7.6
   services:
     - docker
 
 dependencies:
   pre:
-    - pip install awsebcli
+    - pip install awsebcli==3.7.3
 
 test:
   override:
