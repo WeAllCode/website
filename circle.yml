@@ -1,8 +1,8 @@
 machine:
-  python:
-    version: pypy-2.5.0
   services:
     - docker
+  python:
+    version: 3.5.0
 
 dependencies:
   pre:
