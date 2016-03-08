@@ -5,8 +5,6 @@ MAINTAINER CoderDojoChi
 RUN apt-get update \
   && apt-get install -y memcached python-memcache
 
-RUN update-rc.d -f memcached enable
-
 ENV DIR_BUILD /build
 ENV DIR_SRC /src
 
