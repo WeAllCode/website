@@ -1,23 +1,16 @@
 {
   "AWSEBDockerrunVersion": 2,
   "family": "build_env",
-  "volumes": [
-  ],
   "containerDefinitions": [
     {
       "name": "app",
-      "image": "%USER%/%REPO%:%BUILD_NUM%",
-      "environment": [],
-      "essential": true,
-      "memory": 128,
-      "mountPoints": [
-      ]
+      "image": "<USER>/<REPO>:<BUILD_NUM>",
+      "memory": 512
     },
     {
       "name": "nginx",
-      "image": "%USER%/%REPO%-static:%BUILD_NUM%",
-      "essential": true,
-      "memory": 128,
+      "image": "<USER>/<REPO>-static:<BUILD_NUM>",
+      "memory": 256,
       "portMappings": [
         {
           "hostPort": 80,
@@ -26,8 +19,6 @@
       ],
       "links": [
         "app"
-      ],
-      "mountPoints": [
       ]
     }
   ]
