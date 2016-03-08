@@ -10,4 +10,6 @@ python manage.py loaddata \
     /fixtures/sites.json \
     /fixtures/socialaccount.json
 
-gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi
+# gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi
+
+python manage.py runserver 80
