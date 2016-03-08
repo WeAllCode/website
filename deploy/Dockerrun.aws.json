@@ -5,12 +5,12 @@
     {
       "name": "app",
       "image": "<USER>/<REPO>:<BUILD_NUM>",
-      "memory": 512
+      "memory": 1024
     },
     {
       "name": "nginx",
       "image": "<USER>/<REPO>-static:<BUILD_NUM>",
-      "memory": 256,
+      "memory": 1024,
       "portMappings": [
         {
           "hostPort": 80,

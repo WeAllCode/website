@@ -2,6 +2,9 @@ FROM python:2.7
 
 MAINTAINER CoderDojoChi
 
+RUN apt-get update \
+  && apt-get install -y memcached python-memcache
+
 ENV DIR_BUILD /build
 ENV DIR_SRC /src
 
