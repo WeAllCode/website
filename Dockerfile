@@ -5,6 +5,8 @@ MAINTAINER CoderDojoChi
 RUN apt-get update \
   && apt-get install -y memcached python-memcache
 
+RUN update-rc.d -f memcached enable
+
 ENV DIR_BUILD /build
 ENV DIR_SRC /src
 
@@ -21,5 +23,7 @@ COPY coderdojochi $DIR_SRC/coderdojochi
 COPY fixtures /fixtures
 COPY ./deploy/gunicorn.conf.py $DIR_BUILD/gunicorn.conf.py
 COPY ./deploy.sh $DIR_BUILD/deploy.sh
+
+COPY deploy/memcached.conf /etc/memcached.conf
 
 CMD $DIR_BUILD/deploy.sh
