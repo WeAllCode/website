@@ -13,4 +13,4 @@ python manage.py loaddata \
     /fixtures/socialaccount.json
 
 # gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi
-uwsgi -s /tmp/uwsgi.sock -w coderdojochi:coderdojochi --chown-socket=www-data:www-data --enable-threads
+uwsgi -s /tmp/uwsgi.sock --chdir $DIR_SRC/ --wsgi-file coderdojochi/wsgi.py  --chown-socket=www-data:www-data --master --processes 4 --threads 2
