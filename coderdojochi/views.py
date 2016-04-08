@@ -681,8 +681,11 @@ def volunteer(request, template_name="volunteer.html"):
 
     mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
+    upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
+
     return render_to_response(template_name, {
-        'mentors': mentors
+        'mentors': mentors,
+        'upcoming_meetings': upcoming_meetings
     }, context_instance=RequestContext(request))
 
 def faqs(request, template_name="faqs.html"):
