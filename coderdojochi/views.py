@@ -679,21 +679,10 @@ def meeting_ics(request, year, month, day, meeting_id):
 
 def volunteer(request, template_name="volunteer.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
-    else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
-
-    if cache.get('upcoming_public_meetings'):
-        upcoming_meetings = cache.get('upcoming_public_meetings')
-    else:
-        upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
-        cache.set('upcoming_public_meetings', upcoming_meetings, 600)
+    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
     return render_to_response(template_name, {
-        'mentors': mentors,
-        'upcoming_meetings': upcoming_meetings
+        'mentors': mentors
     }, context_instance=RequestContext(request))
 
 def faqs(request, template_name="faqs.html"):
