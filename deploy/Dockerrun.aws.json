@@ -5,7 +5,7 @@
     {
       "name": "app",
       "image": "<USER>/<REPO>:<BUILD_NUM>",
-      "memory": 1024
+      "memory": 4096
     },
     {
       "name": "nginx",
