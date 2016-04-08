@@ -13,5 +13,4 @@ python manage.py loaddata \
     /fixtures/socialaccount.json
 
 # gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi
-uwsgi -s /tmp/uwsgi.sock -w coderdojochi:coderdojochi --chown-socket=www-data:www-data --enable-threads & \
-    nginx -g 'daemon off;'
+uwsgi -s /tmp/uwsgi.sock -w coderdojochi:coderdojochi --chown-socket=www-data:www-data --enable-threads
