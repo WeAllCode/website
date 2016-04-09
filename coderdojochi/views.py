@@ -51,17 +51,12 @@ def add_months(sourcedate, months):
 
 def home(request, template_name="home.html"):
 
-    if cache.get('upcoming_public_classes'):
-        upcoming_classes = cache.get('upcoming_public_classes')
-    else:
         upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
         if not request.user.is_authenticated() or not request.user.role == 'mentor':
             upcoming_classes = upcoming_classes.filter(public=True)
 
         upcoming_classes = upcoming_classes[:3]
-
-        cache.set('upcoming_public_classes', upcoming_classes, 600)
 
     return render_to_response(template_name, {
         'upcoming_classes': upcoming_classes
@@ -232,15 +227,10 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     prev_date = add_months(calendar_date,-1)
     next_date = add_months(calendar_date,1)
 
-    if cache.get('public_sessions'):
-        all_sessions = cache.get('public_sessions')
-    else:
         all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
         if not request.user.is_authenticated() or not request.user.role == 'mentor':
             all_sessions = all_sessions.filter(public=True)
-
-        cache.set('public_sessions', all_sessions, 600)
 
     sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
     cal = SessionsCalendar(sessions).formatmonth(year, month)
@@ -810,11 +800,7 @@ class SessionsCalendar(HTMLCalendar):
 
 def mentors(request, template_name="mentors.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
-    else:
         mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
 
     return render_to_response(template_name, {
         'mentors': mentors
@@ -972,17 +958,8 @@ def donate_return(request):
 
 def about(request, template_name="about.html"):
 
-    if cache.get('mentor_count'):
-        mentor_count = cache.get('mentor_count')
-    else:
         mentor_count = Mentor.objects.filter(active=True).count()
-        cache.set('mentor_count', mentor_count, 600)
-
-    if cache.get('students_served'):
-        students_served = cache.get('students_served')
-    else:
         students_served = Order.objects.exclude(check_in=None).count()
-        cache.set('students_served', students_served, 600)
 
     mentor_count = students_served if students_served > 30 else 30
     students_served = students_served if students_served > 600 else 600
