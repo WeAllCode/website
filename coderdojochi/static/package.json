@@ -3,11 +3,6 @@
     "version": "0.0.3",
     "private": true,
     "description": "coderdojochi.org development dependencies",
-    "scripts": {
-        "prestart": "./deploy.sh local",
-        "start": "gulp --gulpfile ./resources/js/gulpfile.js",
-        "docker": "./resources/scripts/serve"
-    },
     "author": "Ali Karbassi <ali@coderdojochi.org> (http://karbassi.com/)",
     "contributors": [
         "Brett Kellgren <brett@coderdojochi.org>",
