@@ -15,13 +15,16 @@ app:
     - "8080"
   volumes:
     - ./coderdojochi:/src/coderdojochi
+    - /build/static/admin/
   links:
     - db
 
 nginx:
   restart: always
   build: coderdojochi/static/
+  links:
+    - app
   ports:
     - "80:80"
-  links:
+  volumes_from:
     - app
