@@ -1,26 +1,26 @@
 {
     "sprites": {
-      "src": "/build/sprites",
+      "src": "/src/sprites",
       "dest": "/build/static/images/sprites"
     },
     "css": {
-      "src": "/build/css",
+      "src": "/src/css",
       "dest": "/build/static/css"
     },
     "sass": {
-      "src": "/build/scss",
+      "src": "/src/scss",
       "dest": "/build/static/css"
     },
     "js": {
-      "src": "/build/js",
+      "src": "/src/js",
       "dest": "/build/static/js"
     },
     "img": {
-      "src": "/build/images",
+      "src": "/src/images",
       "dest": "/build/static/images"
     },
     "favico": {
-      "src": "/build/favicon.ico",
+      "src": "/src/favicon.ico",
       "dest": "/build/static/"
     }
 }

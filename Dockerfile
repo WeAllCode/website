@@ -18,10 +18,10 @@ RUN pip install -r requirements.txt
 
 COPY manage.py $DIR_SRC/
 COPY coderdojochi $DIR_SRC/coderdojochi
-COPY fixtures /fixtures
-COPY ./deploy/gunicorn.conf.py $DIR_BUILD/gunicorn.conf.py
-COPY ./deploy.sh $DIR_BUILD/deploy.sh
+COPY fixtures $DIR_SRC/fixtures
 
+COPY deploy/gunicorn.conf.py $DIR_BUILD/gunicorn.conf.py
 COPY deploy/memcached.conf /etc/memcached.conf
+COPY deploy.sh $DIR_BUILD/deploy.sh
 
 CMD $DIR_BUILD/deploy.sh
