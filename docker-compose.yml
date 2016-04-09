@@ -1,9 +1,11 @@
 db:
+  restart: always
   image: postgres:9.4
   env_file:
     - .env
 
 app:
+  restart: always
   build: .
   env_file:
     - .env
@@ -15,6 +17,7 @@ app:
     - db
 
 nginx:
+  restart: always
   build: coderdojochi/static/
   ports:
     - "80:80"
