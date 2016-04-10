@@ -958,11 +958,8 @@ def donate_return(request):
 
 def about(request, template_name="about.html"):
 
-    mentor_count = Mentor.objects.filter(active=True).count()
+    mentor_count = Mentor.objects.filter(active=True, public=True).count()
     students_served = Order.objects.exclude(check_in=None).count()
-
-    mentor_count = students_served if students_served > 30 else 30
-    students_served = students_served if students_served > 600 else 600
 
     return render_to_response(template_name, {
         'mentor_count': mentor_count,
