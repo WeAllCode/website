@@ -16,6 +16,7 @@ app:
   volumes:
     - ./coderdojochi:/src/coderdojochi
     - /build/static/admin/
+    - /build/static/debug_toolbar/
   links:
     - db
 
