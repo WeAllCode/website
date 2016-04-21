@@ -22,6 +22,6 @@ COPY fixtures $DIR_SRC/fixtures
 
 COPY deploy/gunicorn.conf.py $DIR_BUILD/gunicorn.conf.py
 COPY deploy/memcached.conf /etc/memcached.conf
-COPY deploy.sh $DIR_BUILD/deploy.sh
+COPY deploy.sh $DIR_SRC/deploy.sh
 
-CMD $DIR_BUILD/deploy.sh
+CMD $DIR_SRC/deploy.sh

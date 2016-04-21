@@ -12,7 +12,7 @@
     "role": "mentor",
     "password": "pbkdf2_sha256$15000$IVpLp8gTNcNN$3xxgwhgjWXmSncwFGMIvh8mBoBnSPg2AT7P0I0UPXRY=",
     "admin_notes": null,
-    "email": "admin@coderdojochi.org",
+    "email": "ali@coderdojochi.org",
     "date_joined": "2015-09-30T22:30:20.741"
   },
   "model": "coderdojochi.cdcuser",
