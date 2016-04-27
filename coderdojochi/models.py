@@ -22,6 +22,11 @@ class CDCUser(AbstractUser):
     role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.last_login = timezone.now()
+        super(CDCUser, self).save(*args, **kwargs)
+
     def get_absolute_url(self):
         return '/dojo'
 
