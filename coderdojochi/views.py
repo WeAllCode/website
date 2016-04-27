@@ -706,7 +706,7 @@ def dojo(request, template_name="dojo.html"):
 
 
             if request.method == 'POST':
-                form = MentorForm(request.POST, instance=account)
+                form = MentorForm(request.POST, request.FILES, instance=account)
                 if form.is_valid():
                     form.save()
                     messages.add_message(request, messages.SUCCESS, 'Profile information saved.')

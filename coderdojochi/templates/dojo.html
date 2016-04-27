@@ -168,15 +168,16 @@
     <div class="dojo-profile">
         <div class="well well-sm">
             {% if user.role == 'mentor' %}
-            <img src="{% avatar_url user 400 %}" class="avatar">
-            <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
+                {% if account.avatar %}
+                <img src="{{ account.avatar.url }}" class="avatar">
+                {% endif %}
             {% endif %}
-            
+
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
 
             {% if form %}
-            <form action="" method="post">
+            <form enctype="multipart/form-data" action="" method="post">
                 {% csrf_token %}
                 {% bootstrap_form form %}
                 <button class="submit btn-cdc btn-cdc-inverse">Save</button>
