@@ -143,6 +143,13 @@ CACHES = {
     }
 }
 
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
