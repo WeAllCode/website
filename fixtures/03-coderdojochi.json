@@ -25,8 +25,9 @@
     "created_at": "2017-09-30T22:30:24.594",
     "updated_at": "2017-09-30T22:31:07.952",
     "user": 342,
-    "has_attended_intro_meeting": true,
+    "background_check": true,
     "active": true,
+    "avatar_approved": false,
     "public": true
   },
   "model": "coderdojochi.mentor",

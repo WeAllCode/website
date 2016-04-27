@@ -463,6 +463,37 @@ a.icon-action {
     }
 }
 
+.avatar {
+    position: relative;
+}
+
+.avatar input,
+.avatar-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.avatar:hover .avatar-overlay {
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    text-align: center;
+    opacity: 1;
+}
+
+.avatar-overlay:before {
+    content: 'Change Avatar';
+    position: absolute;
+    left: 0;
+    top: 45%;
+    right: 0;
+    margin: auto;
+}
+
 // classes
 .upcoming-sessions {
 

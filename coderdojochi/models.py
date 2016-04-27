@@ -40,9 +40,14 @@ class Mentor(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    has_attended_intro_meeting = models.BooleanField(default=False)
+    background_check = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
     avatar = models.ImageField(upload_to=generate_filename, blank=True, null=True)
+    avatar_approved = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _("mentors")
+        verbose_name_plural = _("mentors")
 
     def get_approve_avatar_url(self):
         return '/mentors/' + str(self.id) + '/approve-avatar/'
@@ -53,9 +58,19 @@ class Mentor(models.Model):
     def get_absolute_url(self):
         return '/mentors/' + str(self.id) + '/'
 
-    class Meta:
-        verbose_name = _("mentors")
-        verbose_name_plural = _("mentors")
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = Mentor.objects.get(pk=self.pk)
+            if orig.avatar != self.avatar:
+                self.avatar_approved = False
+                self.public = False
+
+        if self.background_check and self.avatar_approved:
+            self.public = True
+        else:
+            self.public = False
+
+        super(Mentor, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.user.username

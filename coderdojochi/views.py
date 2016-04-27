@@ -357,7 +357,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         mentor = get_object_or_404(Mentor, user=request.user)
 
-        if not mentor.has_attended_intro_meeting:
+        if not mentor.background_check:
             messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a mentor meeting. Please RSVP below.')
             return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
 
@@ -827,8 +827,8 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_approve_avatar_url())
 
-    if mentor.has_attended_intro_meeting:
-        mentor.public = True
+    if mentor.background_check:
+        mentor.avatar_approved = False
         mentor.save()
         messages.add_message(
             request,
@@ -853,7 +853,7 @@ def mentor_reject_avatar(request, mentor_id=False):
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_reject_avatar_url())
 
-    mentor.public = False
+    mentor.avatar_approved = False
     mentor.save()
 
     msg = EmailMultiAlternatives(
