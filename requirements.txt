@@ -4,7 +4,6 @@ dealer==2.0.5
 Django==1.9.5
 django-allauth==0.25.2
 django-appconf==1.0.1
-django-avatar==3.0.0
 django-bootstrap3==7.0.1
 django-cleanup==0.4.2
 django-common-helpers==0.8.0

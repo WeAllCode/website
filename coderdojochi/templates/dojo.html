@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% load avatar_tags bootstrap3 humanize coderdojochi_extras %}
+{% load bootstrap3 humanize coderdojochi_extras %}
 
 {% block title %}My Dojo{% endblock %}
 
@@ -167,22 +167,26 @@
     </div>
     <div class="dojo-profile">
         <div class="well well-sm">
-            {% if user.role == 'mentor' %}
-                {% if account.avatar %}
-                <img src="{{ account.avatar.url }}" class="avatar">
+            <form id="profile_form" enctype="multipart/form-data" action="" method="post">
+                {% if user.role == 'mentor' %}
+                    <div class="avatar">
+                        <img src="{% if account.avatar %}{{ account.avatar.url }}{% else %}http://gravatar.com/avatar/?s=283&d=mm{% endif %}" class="avatar" height="" width="283" height="283">
+                        <div class="avatar-overlay"></div>
+                        <input id="id_avatar" name="avatar" title="" type="file" onchange="document.getElementById('profile_form').submit();">
+                    </div>
+                    {% if not account.avatar_approved %}
+                        <div class="alert alert-warning text-center">Avatar Pending Approval</div>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
 
-            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
-            <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
+                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
 
-            {% if form %}
-            <form enctype="multipart/form-data" action="" method="post">
                 {% csrf_token %}
-                {% bootstrap_form form %}
+                {% bootstrap_field form.bio %}
+
                 <button class="submit btn-cdc btn-cdc-inverse">Save</button>
             </form>
-            {% endif %}
         </div>
     </div>
 </div>

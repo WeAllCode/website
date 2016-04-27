@@ -1,6 +1,5 @@
 {% extends "_base.html" %}
 {% load i18n %}
-{% load avatar_tags %}
 {% load cache %}
 
 {% block title %}Volunteer{% endblock %}
@@ -27,18 +26,16 @@
         <h1>Meet Our Volunteers <a href="{% url 'account_signup' %}" class="btn-cdc">Join us now!</a></h1>
 
 
-        {% cache 3600 volunteer_mentors %}
         <div class="row mentors">
             {% for mentor in mentors %}
             <div class="col-xs-12 col-sm-4 col-md-3">
                 <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                    {% avatar mentor.user 175 %}
+                    <img src="{% if mentor.avatar %}{{ mentor.avatar.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
                     <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
                 </a>
             </div>
             {% endfor %}
         </div>
-        {% endcache %}
 
         {% endif %}
     </div>

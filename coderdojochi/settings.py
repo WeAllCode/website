@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
-    'avatar',
     'bootstrap3',
     'html5',
     'django_cleanup',
@@ -184,13 +183,6 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 
 SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
-
-# Gravatar
-
-AVATAR_GRAVATAR_BACKUP = False
-AVATAR_DEFAULT_URL = 'http://www.gravatar.com/avatar/?s=350&d=mm'
-# Should be 2MB, current recommended
-AVATAR_MAX_SIZE = 2*1024*1024
 
 # AWS S3
 AWS_HEADERS = {
