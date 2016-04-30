@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n avatar_tags bootstrap3 staticfiles %}
+{% load i18n bootstrap3 staticfiles %}
 
 {% block title %}{{ class.title }} Sign Up{% endblock %}
 
@@ -58,30 +58,4 @@
     </div>
     {% endif %}
 </div>
-{% endblock %}
-
-
-
-{% block extra_script %}
-<script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
-<script src="{% static "js/vendor/picker.js" %}"></script>
-<script src="{% static "js/vendor/picker.date.js" %}"></script>
-<!--[if lt IE 9]>
-    <script src="{% static 'js/vendor/picker.legacy.js' %}"></script>
-<![endif]-->
-<script>
-    $(function() {
-        $('#id_phone').mask('(999) 999-9999');
-        $('#id_zip').mask('99999');
-        $('input[type=date]').pickadate({
-            format: 'yyyy-mm-dd',
-            today: false,
-            clear: false,
-            selectMonths: true,
-            selectYears: 17,
-            min: -(17*365),
-            max: -(5*365)
-        });
-    });
-</script>
 {% endblock %}

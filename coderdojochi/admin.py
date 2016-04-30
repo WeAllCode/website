@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation, RaceEthnicity
 
 User = get_user_model()
 
@@ -17,8 +17,8 @@ class UserAdmin(admin.ModelAdmin):
     change_form_template = 'loginas/change_form.html'
 
 class MentorAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'user', 'has_attended_intro_meeting', 'public', 'created_at', 'updated_at',)
-    list_filter = ('public', 'has_attended_intro_meeting',)
+    list_display = ('first_name', 'last_name', 'user', 'background_check', 'public', 'created_at', 'updated_at',)
+    list_filter = ('public', 'background_check',)
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -39,6 +39,7 @@ class GuardianAdmin(admin.ModelAdmin):
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'gender', 'guardian', 'created_at', 'updated_at', 'active',)
     list_filter = ('gender',)
+    filter_horizontal = ('race_ethnicity',)
     ordering = ('guardian',)
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -129,3 +130,4 @@ admin.site.register(EquipmentType, EquipmentTypeAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Donation, DonationAdmin)
 admin.site.register(Location, LocationAdmin)
+admin.site.register(RaceEthnicity)
