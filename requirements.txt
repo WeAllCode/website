@@ -4,14 +4,15 @@ dealer==2.0.5
 Django==1.9.5
 django-allauth==0.25.2
 django-appconf==1.0.1
-django-avatar==3.0.0
 django-bootstrap3==7.0.1
+django-cleanup==0.4.2
 django-common-helpers==0.8.0
 django-cron==0.4.6
 django-debug-toolbar==1.4
 django-html5==1.0.0
 django-loginas==0.1.9
 django-paypal==0.3.2
+django-stdimage==2.3.2
 django-storages==1.4.1
 djrill==2.0
 gunicorn==19.4.5

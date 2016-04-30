@@ -357,7 +357,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         mentor = get_object_or_404(Mentor, user=request.user)
 
-        if not mentor.has_attended_intro_meeting:
+        if not mentor.background_check:
             messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a mentor meeting. Please RSVP below.')
             return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
 
@@ -735,16 +735,13 @@ def dojo(request, template_name="dojo.html"):
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-
             mentor_sessions = Session.objects.filter(mentors=mentor)
             upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
             past_sessions = mentor_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
-
             upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
 
-
             if request.method == 'POST':
-                form = MentorForm(request.POST, instance=account)
+                form = MentorForm(request.POST, request.FILES, instance=account)
                 if form.is_valid():
                     form.save()
                     messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
@@ -865,8 +862,8 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_approve_avatar_url())
 
-    if mentor.has_attended_intro_meeting:
-        mentor.public = True
+    if mentor.background_check:
+        mentor.avatar_approved = False
         mentor.save()
         messages.add_message(
             request,
@@ -891,7 +888,7 @@ def mentor_reject_avatar(request, mentor_id=False):
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_reject_avatar_url())
 
-    mentor.public = False
+    mentor.avatar_approved = False
     mentor.save()
 
     msg = EmailMultiAlternatives(

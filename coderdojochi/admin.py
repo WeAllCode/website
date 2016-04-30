@@ -17,8 +17,8 @@ class UserAdmin(admin.ModelAdmin):
     change_form_template = 'loginas/change_form.html'
 
 class MentorAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'user', 'has_attended_intro_meeting', 'public', 'created_at', 'updated_at',)
-    list_filter = ('public', 'has_attended_intro_meeting',)
+    list_display = ('first_name', 'last_name', 'user', 'background_check', 'public', 'created_at', 'updated_at',)
+    list_filter = ('public', 'background_check',)
     ordering = ('-created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
