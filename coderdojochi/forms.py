@@ -90,7 +90,13 @@ class MentorForm(CDCModelForm):
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
                     u'Please use an image that is '
-                     '%s x %s px or smaller.' % (max_width, max_height))
+                     '%s x %spx or smaller.' % (max_width, max_height))
+
+            min_width = min_height = 500
+            if w < min_width or h < min_height:
+                raise forms.ValidationError(
+                    u'Please use an image that is '
+                     '%s x %spx or larger.' % (min_width, min_height))
 
             #validate content type
             main, sub = avatar.content_type.split('/')

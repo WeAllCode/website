@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 
@@ -15,15 +15,12 @@ from paypal.standard.ipn.signals import valid_ipn_received
 import arrow
 
 
-@receiver(pre_save, sender=Mentor, dispatch_uid="update_avatar_approved_status")
+@receiver(post_save, sender=Mentor, dispatch_uid="update_avatar_approved_status")
 def avatar_updated_handler(sender, instance, **kwargs):
     try:
         original_mentor = Mentor.objects.get(pk=instance.pk)
     except ObjectDoesNotExist:
         return
-
-    print 'THIS'
-    print instance.avatar
 
     if not instance.avatar or instance.avatar == original_mentor.avatar:
         return
