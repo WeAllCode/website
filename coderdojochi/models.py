@@ -28,6 +28,17 @@ class CDCUser(AbstractUser):
     def get_absolute_url(self):
         return '/dojo'
 
+class RaceEthnicity(models.Model):
+    race_ethnicity = models.CharField(max_length=255)
+    visible = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.race_ethnicity
+
+    class Meta:
+        verbose_name = _("race ethnicity")
+        verbose_name_plural = _("race ethnicities")
+
 def generate_filename(instance, filename):
     # file will be uploaded to MEDIA_ROOT/avatar/<username>
     filename, file_extension = os.path.splitext(filename)
@@ -105,6 +116,9 @@ class Student(models.Model):
     last_name = models.CharField(max_length=255)
     birthday = models.DateTimeField()
     gender = models.CharField(max_length=255)
+    race_ethnicity = models.ManyToManyField(RaceEthnicity, blank=True)
+    school_name = models.CharField(max_length=255, null=True)
+    school_type = models.CharField(max_length=255, null=True)
     medical_conditions = models.TextField(blank=True, null=True)
     medications = models.TextField(blank=True, null=True)
     photo_release = models.BooleanField('Photo Consent', help_text="I hereby give permission to CoderDojoChi to use the student's image and/or likeness in promotional materials.", default=False)
@@ -318,6 +332,11 @@ class Order(models.Model):
     class Meta:
         verbose_name = _("order")
         verbose_name_plural = _("orders")
+
+    def get_student_age(self):
+        birthday = self.student.birthday
+        session_date = self.session.start_date
+        return session_date.year - birthday.year - ((session_date.month, session_date.day) < (birthday.month, birthday.day))
 
     def __unicode__(self):
         return self.student.first_name + ' ' + self.student.last_name + ' | ' + self.session.course.title
