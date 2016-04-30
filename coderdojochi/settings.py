@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -23,7 +24,7 @@ SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = DEBUG
+# TEMPLATE_DEBUG = DEBUG
 
 IS_PRODUCTION = not DEBUG
 
@@ -34,7 +35,7 @@ SITE_ID = 1
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
 
     # django contrib
     'django.contrib.admin',
@@ -52,56 +53,60 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
-    'avatar',
     'bootstrap3',
-    'html5',
+    'django_cleanup',
     'djrill',
+    'html5',
     'loginas',
     'paypal.standard.ipn',
+    'stdimage',
+    'storages',
 
     #coderdojochi
     'coderdojochi',
-)
+]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'dealer.contrib.django.Middleware',
-)
-
-CRON_CLASSES = [
-    'coderdojochi.cron.SendReminders',
 ]
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.request',
-    'dealer.contrib.django.context_processor',
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(PROJECT_ROOT, 'coderdojochi/templates/'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'debug': DEBUG,
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.csrf',
+                'django.template.context_processors.request',
+                'django.contrib.messages.context_processors.messages',
 
-    # coderdojochi
-    'coderdojochi.context_processors.main_config_processor',
-
-    # `allauth`
-    'allauth.account.context_processors.account',
-    'allauth.socialaccount.context_processors.socialaccount',
-)
-
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_ROOT, 'coderdojochi/templates/'),
-)
+            ],
+        },
+    },
+]
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 )
@@ -118,23 +123,33 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-CONTACT_EMAIL = 'info@coderdojochi.org'
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get("POSTGRES_HOST"),
+        'PORT': os.environ.get("POSTGRES_PORT"),
     }
 }
+
+CONTACT_EMAIL = 'info@coderdojochi.org'
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        # 'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
     }
 }
+
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -148,41 +163,53 @@ USE_I18N = True
 USE_L10N = True
 
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: '/var/www/example.com/media/'
-MEDIA_ROOT = os.path.join(PACKAGE_ROOT, 'media')
+# URL prefix for static files.
+# Example: 'http://example.com/static/', 'http://static.example.com/'
+STATIC_URL = '/static/'
+STATIC_ROOT = '/build/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    os.path.join(os.path.dirname(__file__), 'static'),
+)
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: 'http://example.com/media/', 'http://media.example.com/'
 MEDIA_URL = '/media/'
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' 'static/' subdirectories and in STATICFILES_DIRS.
-# Example: '/var/www/example.com/static/'
-MEDIA_ROOT = os.path.join(PACKAGE_ROOT, 'static')
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: '/var/www/example.com/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
-# URL prefix for static files.
-# Example: 'http://example.com/static/', 'http://static.example.com/'
-STATIC_URL = '/static/'
-
-# Additional locations of static files
-STATICFILES_DIRS = (
-    # Put strings here, like '/home/html/static' or 'C:/www/django/static'.
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PACKAGE_ROOT, 'static'),
-)
 
 SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
-# Gravatar
+# AWS S3
+AWS_HEADERS = {
+    'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+    'Cache-Control': 'max-age=94608000',
+}
 
-AVATAR_GRAVATAR_BACKUP = False
-AVATAR_DEFAULT_URL = 'http://www.gravatar.com/avatar/?s=350&d=mm'
-# Should be 2MB, current recommended
-AVATAR_MAX_SIZE = 2*1024*1024
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+if not DEBUG:
+    # Tell django-storages that when coming up with the URL for an item in S3 storage, keep
+    # it simple - just use this domain plus the path. (If this isn't set, things get complicated).
+    # This controls how the `static` template tag from `staticfiles` gets expanded, if you're using it.
+    # We also use it in the next setting.
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+    # STATICFILES_LOCATION = 'static'
+    # STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    # STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+    DEFAULT_FILE_STORAGE = 'coderdojochi.custom_storages.MediaStorage'
+
 
 # Paypal
 
@@ -199,19 +226,23 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
 SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapter'
 
-# search for environment specific settings to override settings.py
 
-try:
-    from local_settings import *
-except ImportError:
-    pass
+if DEBUG:
 
-try:
-    from test_settings import *
-except ImportError:
-    pass
+    def custom_show_toolbar(request):
+        return True
 
-try:
-    from production_settings import *
-except ImportError:
-    pass
+    MIDDLEWARE_CLASSES += (
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+
+    INSTALLED_APPS += (
+        'debug_toolbar',
+    )
+
+    DEBUG_TOOLBAR_CONFIG = {
+        'INTERCEPT_REDIRECTS': True,
+        'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
+        'TAG': 'div',
+        'ENABLE_STACKTRACES': True,
+    }

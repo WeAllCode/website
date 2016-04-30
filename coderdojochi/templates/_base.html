@@ -1,4 +1,4 @@
-{% load staticfiles i18n cache %}<!DOCTYPE html>
+{% load staticfiles i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
         <title>{% block title %}CoderDojoChi - Welcome!{% endblock %}</title>
@@ -78,6 +78,9 @@
         <script>if (!window.jQuery) {document.write('<script src="{% static 'libs/jquery/jquery-1.11.2.min.js' %}"><\/script>');}</script>
 
         <script src="{% static "js/vendor/cdc.bootstrap.min.js" %}"></script>
+        <script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
+        <script src="{% static "js/vendor/picker.js" %}"></script>
+        <script src="{% static "js/vendor/picker.date.js" %}"></script>
 
         {% if IS_PRODUCTION %}
         <script src="{% static "js/cdc.min.js" %}"></script>
