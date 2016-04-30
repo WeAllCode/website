@@ -92,7 +92,7 @@ class MentorForm(CDCModelForm):
                     u'Please use an image that is '
                      '%s x %spx or smaller.' % (max_width, max_height))
 
-            min_width = min_height = 500
+            min_width = min_height = 250
             if w < min_width or h < min_height:
                 raise forms.ValidationError(
                     u'Please use an image that is '
