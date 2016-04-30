@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timedelta
 from django_cleanup.signals import cleanup_pre_delete, cleanup_post_delete
+from stdimage.models import StdImageField
 
 from django.conf import settings
 from django.db import models
@@ -42,7 +43,9 @@ class Mentor(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     background_check = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
-    avatar = models.ImageField(upload_to=generate_filename, blank=True, null=True)
+    avatar = StdImageField(upload_to=generate_filename, blank=True, variations={
+        'thumbnail': {"width": 500, "height": 500, "crop": True}
+    })
     avatar_approved = models.BooleanField(default=False)
 
     class Meta:

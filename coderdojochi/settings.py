@@ -54,11 +54,12 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'bootstrap3',
-    'html5',
     'django_cleanup',
     'djrill',
+    'html5',
     'loginas',
     'paypal.standard.ipn',
+    'stdimage',
     'storages',
 
     #coderdojochi
