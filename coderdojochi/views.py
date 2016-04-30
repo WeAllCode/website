@@ -27,7 +27,7 @@ from collections import Counter
 import operator
 
 from django.utils import timezone
-from django.utils.html import conditional_escape as esc
+from django.utils.html import conditional_escape as esc, strip_tags
 from django.utils.safestring import mark_safe
 
 from django.utils.translation import ugettext_lazy as _
@@ -51,17 +51,12 @@ def add_months(sourcedate, months):
 
 def home(request, template_name="home.html"):
 
-    if cache.get('upcoming_public_classes'):
-        upcoming_classes = cache.get('upcoming_public_classes')
-    else:
-        upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
-        if not request.user.is_authenticated() or not request.user.role == 'mentor':
-            upcoming_classes = upcoming_classes.filter(public=True)
+    if not request.user.is_authenticated() or not request.user.role == 'mentor':
+        upcoming_classes = upcoming_classes.filter(public=True)
 
-        upcoming_classes = upcoming_classes[:3]
-
-        cache.set('upcoming_public_classes', upcoming_classes, 600)
+    upcoming_classes = upcoming_classes[:3]
 
     return render_to_response(template_name, {
         'upcoming_classes': upcoming_classes
@@ -232,15 +227,10 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     prev_date = add_months(calendar_date,-1)
     next_date = add_months(calendar_date,1)
 
-    if cache.get('public_sessions'):
-        all_sessions = cache.get('public_sessions')
-    else:
-        all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
-        if not request.user.is_authenticated() or not request.user.role == 'mentor':
-            all_sessions = all_sessions.filter(public=True)
-
-        cache.set('public_sessions', all_sessions, 600)
+    if not request.user.is_authenticated() or not request.user.role == 'mentor':
+        all_sessions = all_sessions.filter(public=True)
 
     sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
     cal = SessionsCalendar(sessions).formatmonth(year, month)
@@ -367,7 +357,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         mentor = get_object_or_404(Mentor, user=request.user)
 
-        if not mentor.has_attended_intro_meeting:
+        if not mentor.background_check:
             messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a mentor meeting. Please RSVP below.')
             return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
 
@@ -493,45 +483,62 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         'student': student,
     }, context_instance=RequestContext(request))
 
+
 def session_ics(request, year, month, day, slug, session_id):
 
     session_obj = get_object_or_404(Session, id=session_id)
 
     cal = Calendar()
 
-    cal.add('prodid', '-//CoderDojoChi//coderdojochi.org//')
-    cal.add('version', '2.0')
+    cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
+    cal['version'] = '2.0'
 
     event = Event()
 
-    start_date_arrow = arrow.get(session_obj.start_date)
+    start_date_arrow = '{}Z'.format(arrow.get(session_obj.start_date).format('YYYYMMDDTHHmmss'))
+    end_date_arrow = '{}Z'.format(arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss'))
 
-    event.add('summary', session_obj.course.code + ' - ' + session_obj.course.title)
-    event.add('dtstart', start_date_arrow.naive)
-    event.add('dtend', arrow.get(session_obj.end_date).naive)
-    event.add('dtstamp', start_date_arrow.datetime)
+    event['uid'] = 'CLASS{:04}@coderdojochi.org'.format(session_obj.id)
+    event['summary'] = 'CoderDojoChi: {} - {}'.format(session_obj.course.code, session_obj.course.title)
+    event['dtstart'] = start_date_arrow
+    event['dtend'] = end_date_arrow
+    event['dtstamp'] = start_date_arrow
 
     if request.user.is_authenticated() and request.user.role == 'mentor':
 
-        mentor_start_date_arrow = arrow.get(session_obj.mentor_start_date)
-        event.add('dtstart', mentor_start_date_arrow.naive)
-        event.add('dtend', arrow.get(session_obj.mentor_end_date).naive)
-        event.add('dtstamp', mentor_start_date_arrow.datetime)
+        mentor_start_date_arrow = '{}Z'.format(arrow.get(session_obj.mentor_start_date).format('YYYYMMDDTHHmmss'))
+        mentor_end_date_arrow = '{}Z'.format(arrow.get(session_obj.mentor_end_date).format('YYYYMMDDTHHmmss'))
 
-    organizer = vCalAddress('MAILTO:info@coderdojochi.org')
+        event['dtstart'] = mentor_start_date_arrow
+        event['dtend'] = mentor_end_date_arrow
+        event['dtstamp'] = mentor_start_date_arrow
 
-    organizer.params['cn'] = vText(session_obj.teacher.first_name  + ' ' + session_obj.teacher.last_name)
-    organizer.params['role'] = vText('TEACHER')
-    event['organizer'] = organizer
-    event['location'] = vText(session_obj.location.name + ' ' + session_obj.location.address + ' ' + session_obj.location.address2 + ' ' + session_obj.location.city + ', ' + session_obj.location.state + ' ' + session_obj.location.zip)
-    event['uid'] = 'CLASS00' + str(session_obj.id) + '@coderdojochi.org'
-    event.add('priority', 5)
+    location = '{}, {}, {}, {}, {} {}'.format(session_obj.location.name,
+                                              session_obj.location.address,
+                                              session_obj.location.address2,
+                                              session_obj.location.city,
+                                              session_obj.location.state,
+                                              session_obj.location.zip
+                                              )
+
+    event['location'] = vText(location)
+
+    event['url'] = session_obj.get_absolute_url
+    event['description'] = strip_tags(session_obj.course.description)
+
+    # A value of 5 is the normal or "MEDIUM" priority.
+    # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
+    event['priority'] = 5
 
     cal.add_component(event)
 
-    response = HttpResponse(cal.to_ical().replace('\r\n', '\n').strip(), content_type="text/calendar")
-    response['Filename'] = session_obj.course.slug + '-' + arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mm') + '.ics'
-    response['Content-Disposition'] = 'attachment; filename=coderdojochi-' + arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mma') + '.ics'
+    event_slug = 'coderdojochi-class-{}'.format(arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mma'))
+
+    # Return the ICS formatted calendar
+    response = HttpResponse(cal.to_ical(),
+                            content_type='text/calendar',
+                            charset='utf-8')
+    response['Content-Disposition'] = 'attachment;filename={}.ics'.format(event_slug)
 
     return response
 
@@ -650,49 +657,59 @@ def meeting_ics(request, year, month, day, meeting_id):
 
     cal = Calendar()
 
-    cal.add('prodid', '-//CoderDojoChi//coderdojochi.org//')
-    cal.add('version', '2.0')
+    cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
+    cal['version'] = '2.0'
 
     event = Event()
 
-    start_date_arrow = arrow.get(meeting_obj.start_date)
+    start_date_arrow = '{}Z'.format(arrow.get(meeting_obj.start_date).format('YYYYMMDDTHHmmss'))
+    end_date_arrow = '{}Z'.format(arrow.get(meeting_obj.end_date).format('YYYYMMDDTHHmmss'))
 
-    event.add('summary', meeting_obj.meeting_type.code + ' - ' + meeting_obj.meeting_type.title)
-    event.add('dtstart', start_date_arrow.naive)
-    event.add('dtend', arrow.get(meeting_obj.end_date).naive)
-    event.add('dtstamp', start_date_arrow.datetime)
+    event['uid'] = 'MEETING{:04}@coderdojochi.org'.format(meeting_obj.id)
 
-    organizer = vCalAddress('MAILTO:info@coderdojochi.org')
+    event_name = '{} - '.format(meeting_obj.meeting_type.code) if meeting_obj.meeting_type.code else ''
+    event_name += meeting_obj.meeting_type.title
 
-    organizer.params['cn'] = vText('CoderDojoChi')
-    organizer.params['role'] = vText('Organization')
-    event['organizer'] = organizer
-    event['location'] = vText(meeting_obj.location.name + ' ' + meeting_obj.location.address + ' ' + meeting_obj.location.address2 + ' ' + meeting_obj.location.city + ', ' + meeting_obj.location.state + ' ' + meeting_obj.location.zip)
-    event['uid'] = 'MEETING00' + str(meeting_obj.id) + '@coderdojochi.org'
-    event.add('priority', 5)
+    event['summary'] = 'CoderDojoChi: {}'.format(event_name)
+    event['dtstart'] = start_date_arrow
+    event['dtend'] = end_date_arrow
+    event['dtstamp'] = start_date_arrow
+
+    location = '{}, {}, {}, {}, {} {}'.format(meeting_obj.location.name,
+                                              meeting_obj.location.address,
+                                              meeting_obj.location.address2,
+                                              meeting_obj.location.city,
+                                              meeting_obj.location.state,
+                                              meeting_obj.location.zip
+                                              )
+
+    event['location'] = vText(location)
+
+    event['url'] = meeting_obj.get_absolute_url
+    event['description'] = strip_tags(meeting_obj.meeting_type.description)
+
+    # A value of 5 is the normal or "MEDIUM" priority.
+    # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
+    event['priority'] = 5
 
     cal.add_component(event)
 
-    response = HttpResponse(cal.to_ical().replace('\r\n', '\n').strip(), content_type="text/calendar")
-    response['Filename'] = meeting_obj.meeting_type.slug + '-' + arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mm') + '.ics'
-    response['Content-Disposition'] = 'attachment; filename=coderdojochi-' + arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mma') + '.ics'
+    event_slug = 'coderdojochi-meeting-{}'.format(arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mma'))
+
+    # Return the ICS formatted calendar
+    response = HttpResponse(cal.to_ical(),
+                            content_type='text/calendar',
+                            charset='utf-8')
+    response['Content-Disposition'] = 'attachment;filename={}.ics'.format(event_slug)
 
     return response
 
 
 def volunteer(request, template_name="volunteer.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
-    else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
+    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
-    if cache.get('upcoming_public_meetings'):
-        upcoming_meetings = cache.get('upcoming_public_meetings')
-    else:
-        upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
-        cache.set('upcoming_public_meetings', upcoming_meetings, 600)
+    upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
 
     return render_to_response(template_name, {
         'mentors': mentors,
@@ -718,16 +735,13 @@ def dojo(request, template_name="dojo.html"):
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-
             mentor_sessions = Session.objects.filter(mentors=mentor)
             upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
             past_sessions = mentor_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
-
             upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
 
-
             if request.method == 'POST':
-                form = MentorForm(request.POST, instance=account)
+                form = MentorForm(request.POST, request.FILES, instance=account)
                 if form.is_valid():
                     form.save()
                     messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
@@ -821,11 +835,7 @@ class SessionsCalendar(HTMLCalendar):
 
 def mentors(request, template_name="mentors.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
-    else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
+    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
     return render_to_response(template_name, {
         'mentors': mentors
@@ -852,8 +862,8 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_approve_avatar_url())
 
-    if mentor.has_attended_intro_meeting:
-        mentor.public = True
+    if mentor.background_check:
+        mentor.avatar_approved = False
         mentor.save()
         messages.add_message(
             request,
@@ -878,7 +888,7 @@ def mentor_reject_avatar(request, mentor_id=False):
         messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
         return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_reject_avatar_url())
 
-    mentor.public = False
+    mentor.avatar_approved = False
     mentor.save()
 
     msg = EmailMultiAlternatives(
@@ -983,20 +993,8 @@ def donate_return(request):
 
 def about(request, template_name="about.html"):
 
-    if cache.get('mentor_count'):
-        mentor_count = cache.get('mentor_count')
-    else:
-        mentor_count = Mentor.objects.filter(active=True).count()
-        cache.set('mentor_count', mentor_count, 600)
-
-    if cache.get('students_served'):
-        students_served = cache.get('students_served')
-    else:
-        students_served = Order.objects.exclude(check_in=None).count()
-        cache.set('students_served', students_served, 600)
-
-    mentor_count = students_served if students_served > 30 else 30
-    students_served = students_served if students_served > 600 else 600
+    mentor_count = Mentor.objects.filter(active=True, public=True).count()
+    students_served = Order.objects.exclude(check_in=None).count()
 
     return render_to_response(template_name, {
         'mentor_count': mentor_count,
@@ -1021,7 +1019,7 @@ def contact(request, template_name="contact.html"):
                     subject='CoderDojoChi | Contact Form Submission',
                     body='Contact Form Submission from ' + request.POST['name'] + ' (' + request.POST['email'] + '). ' + request.POST['body'],
                     from_email=request.POST['email'],
-                    to=[v for k,v in settings.ADMINS]
+                    to=[settings.CONTACT_EMAIL]
                 )
 
                 msg.attach_alternative('<p>Contact Form Submission from ' + request.POST['name'] + ' (<a href="mailto:' + request.POST['email'] + '">' + request.POST['email'] + '</a>).</p><p>' + request.POST['body'] + '</p><p><small>You can reply to this email.</small></p>', 'text/html')
@@ -1059,7 +1057,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
     if 'all_upcoming_sessions' not in request.GET:
         upcoming_sessions = upcoming_sessions[:3]
 
-    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
+    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
     past_sessions_count = past_sessions.count()
 
     if 'all_past_sessions' not in request.GET:
@@ -1073,7 +1071,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
     if 'all_upcoming_meetings' not in request.GET:
         upcoming_meetings = upcoming_meetings[:3]
 
-    past_meetings = meetings.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
+    past_meetings = meetings.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
     past_meetings_count = past_meetings.count()
 
     if 'all_past_meetings' not in request.GET:
@@ -1106,17 +1104,24 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     students_checked_in = current_orders_checked_in.values('student')
 
     if students_checked_in:
-        attendance_percentage = session_obj.get_current_students().count() /  current_orders_checked_in.count() * 100
+        attendance_percentage = round((float(current_orders_checked_in.count()) / float(session_obj.get_current_students().count())) * 100)
     else:
         attendance_percentage = False
 
     # Genders
+    gender_count = list(Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems())
+    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+
+    # Ages
+    ages = sorted(list(e.student.get_age() for e in session_obj.get_current_orders()))
+    age_count = list(Counter(ages).iteritems())
+    age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
 
     # Average Age
     if current_orders_checked_in:
         student_ages = []
         for order in current_orders_checked_in:
-            student_ages.append(order.student.get_age())
+            student_ages.append(order.get_student_age())
         average_age = reduce(lambda x, y: x + y, student_ages) / len(student_ages)
     else:
         average_age = False
@@ -1125,7 +1130,9 @@ def session_stats(request, session_id, template_name="session-stats.html"):
         'session': session_obj,
         'students_checked_in': students_checked_in,
         'attendance_percentage': attendance_percentage,
-        'average_age': average_age
+        'average_age': average_age,
+        'age_count': age_count,
+        'gender_count': gender_count
     }, context_instance=RequestContext(request))
 
 @login_required
@@ -1151,7 +1158,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
-    ages = sorted(list(e.student.get_age() for e in session_obj.get_current_orders()))
+    ages = sorted(list(e.get_student_age() for e in session_obj.get_current_orders()))
     age_count = list(Counter(ages).iteritems())
     age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
 

@@ -1,8 +1,26 @@
 {
-    "dev": "./coderdojochi/static/",
-    "css": "./coderdojochi/static/css",
-    "sass": "./coderdojochi/static/scss",
-    "js": "./coderdojochi/static/js",
-    "img": "./coderdojochi/static/images",
-    "sprites": "sprites"
+    "sprites": {
+      "src": "/src/coderdojochi/static/sprites",
+      "dest": "/build/static/images/sprites"
+    },
+    "css": {
+      "src": "/src/coderdojochi/static/css",
+      "dest": "/build/static/css"
+    },
+    "sass": {
+      "src": "/src/coderdojochi/static/scss",
+      "dest": "/build/static/css"
+    },
+    "js": {
+      "src": "/src/coderdojochi/static/js",
+      "dest": "/build/static/js"
+    },
+    "img": {
+      "src": "/src/coderdojochi/static/images",
+      "dest": "/build/static/images"
+    },
+    "favico": {
+      "src": "/src/coderdojochi/static/favicon.ico",
+      "dest": "/build/static/"
+    }
 }
