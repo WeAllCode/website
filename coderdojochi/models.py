@@ -95,7 +95,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=255)
     birthday = models.DateTimeField()
     gender = models.CharField(max_length=255)
-    race_ethnicity = models.ManyToManyField(RaceEthnicity, null=True)
+    race_ethnicity = models.ManyToManyField(RaceEthnicity, blank=True)
     school_name = models.CharField(max_length=255, null=True)
     school_type = models.CharField(max_length=255, null=True)
     medical_conditions = models.TextField(blank=True, null=True)

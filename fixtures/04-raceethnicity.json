@@ -53,4 +53,12 @@
   },
   "model": "coderdojochi.raceethnicity",
   "pk": 7
+},
+{
+  "fields": {
+    "race_ethnicity": "Not Listed",
+    "visible": true
+  },
+  "model": "coderdojochi.raceethnicity",
+  "pk": 8
 }]
