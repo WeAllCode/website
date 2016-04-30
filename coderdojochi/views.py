@@ -1104,26 +1104,31 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     students_checked_in = current_orders_checked_in.values('student')
 
     if students_checked_in:
-        attendance_percentage = session_obj.get_current_students().count() /  current_orders_checked_in.count() * 100
+        attendance_percentage = round((float(current_orders_checked_in.count()) / float(session_obj.get_current_students().count())) * 100)
     else:
         attendance_percentage = False
 
     # Genders
+    gender_count = list(Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems())
+    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+
+    # Ages
+    ages = sorted(list(e.student.get_age() for e in session_obj.get_current_orders()))
+    age_count = list(Counter(ages).iteritems())
+    age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
 
     # Average Age
-    if current_orders_checked_in:
-        student_ages = []
-        for order in current_orders_checked_in:
-            student_ages.append(order.student.get_age())
-        average_age = reduce(lambda x, y: x + y, student_ages) / len(student_ages)
-    else:
-        average_age = False
+    average_age = 0
+    if session_obj.get_current_orders():
+        average_age = int(round(sum(ages) / float(len(ages))))
 
     return render_to_response(template_name,{
         'session': session_obj,
         'students_checked_in': students_checked_in,
         'attendance_percentage': attendance_percentage,
-        'average_age': average_age
+        'average_age': average_age,
+        'age_count': age_count,
+        'gender_count': gender_count
     }, context_instance=RequestContext(request))
 
 @login_required
