@@ -22,6 +22,11 @@ class CDCUser(AbstractUser):
     role = models.CharField(choices=Roles, max_length=10, blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.last_login = timezone.now()
+        super(CDCUser, self).save(*args, **kwargs)
+
     def get_absolute_url(self):
         return '/dojo'
 
@@ -183,9 +188,9 @@ class Session(models.Model):
     mentor_capacity = models.IntegerField(blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, related_name="session_teacher")
-    mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_mentors")
-    waitlist_mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="session_waitlist_mentors")
-    waitlist_students = models.ManyToManyField(Student, blank=True, null=True, related_name="session_waitlist_students")
+    mentors = models.ManyToManyField(Mentor, blank=True, related_name="session_mentors")
+    waitlist_mentors = models.ManyToManyField(Mentor, blank=True, related_name="session_waitlist_mentors")
+    waitlist_students = models.ManyToManyField(Student, blank=True, related_name="session_waitlist_students")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     active = models.BooleanField(default=False, help_text="Session is active.")
     public = models.BooleanField(default=False, help_text="Session is a public session.")
@@ -271,7 +276,7 @@ class Meeting(models.Model):
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.ForeignKey(Location)
-    mentors = models.ManyToManyField(Mentor, blank=True, null=True, related_name="meeting_mentors")
+    mentors = models.ManyToManyField(Mentor, blank=True, related_name="meeting_mentors")
     external_enrollment_url = models.CharField(max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.")
     public = models.BooleanField(default=False)
     active = models.BooleanField(default=False)

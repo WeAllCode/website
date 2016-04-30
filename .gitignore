@@ -77,9 +77,20 @@ nosetests.xml
 .pydevproject
 
 # Django Development
-
+*.bak
 *.sqlite3
 test_settings.py
 
 local_settings.py
 /media
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+#############################
+# docker deployment and aws #
+#############################
+.elasticbeanstalk
+.tmp-deploy
