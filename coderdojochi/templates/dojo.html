@@ -168,6 +168,8 @@
     <div class="dojo-profile">
         <div class="well well-sm">
             <form id="profile_form" enctype="multipart/form-data" action="" method="post">
+                {% csrf_token %}
+
                 {% if user.role == 'mentor' %}
                     <div class="avatar">
                         <img src="{% if account.avatar.thumbnail %}{{ account.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=283&d=mm{% endif %}" class="avatar" height="" width="283" height="283">
@@ -177,15 +179,22 @@
                     {% if account.avatar and not account.avatar_approved %}
                         <div class="alert alert-warning text-center">Avatar Pending Approval</div>
                     {% endif %}
-                {% endif %}
 
                 {{ form.avatar.errors }}
+
+                {% endif %}
 
                 <h2>{{ user.first_name }} {{ user.last_name }}</h2>
                 <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
 
-                {% csrf_token %}
+                {% if user.role == 'mentor' %}
                 {% bootstrap_field form.bio %}
+                {% endif %}
+
+                {% if user.role == 'guardian' %}
+                {% bootstrap_field form.phone %}
+                {% bootstrap_field form.zip %}
+                {% endif %}
 
                 <button class="submit btn-cdc btn-cdc-inverse">Save</button>
             </form>
