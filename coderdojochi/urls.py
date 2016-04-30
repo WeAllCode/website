@@ -57,7 +57,6 @@ urlpatterns = [
     url(r'^login/user/(?P<user_id>.+)/$', loginas_views.user_login, name='loginas-user-login'),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^dj-admin/', include(admin.site.urls)),
-    url(r'^avatar/', include('avatar.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

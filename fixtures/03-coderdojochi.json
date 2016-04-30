@@ -1,6 +1,6 @@
 [{
   "fields": {
-    "username": "admin",
+    "username": "admin@admin.com",
     "first_name": "Admin",
     "last_name": "Userman",
     "is_active": true,
@@ -12,7 +12,7 @@
     "role": "mentor",
     "password": "pbkdf2_sha256$15000$IVpLp8gTNcNN$3xxgwhgjWXmSncwFGMIvh8mBoBnSPg2AT7P0I0UPXRY=",
     "admin_notes": null,
-    "email": "ali@coderdojochi.org",
+    "email": "admin@admin.com",
     "date_joined": "2017-09-30T22:30:20.741"
   },
   "model": "coderdojochi.cdcuser",
@@ -25,8 +25,9 @@
     "created_at": "2017-09-30T22:30:24.594",
     "updated_at": "2017-09-30T22:31:07.952",
     "user": 342,
-    "has_attended_intro_meeting": true,
+    "background_check": true,
     "active": true,
+    "avatar_approved": false,
     "public": true
   },
   "model": "coderdojochi.mentor",

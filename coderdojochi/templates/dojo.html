@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% load avatar_tags bootstrap3 humanize coderdojochi_extras %}
+{% load bootstrap3 humanize coderdojochi_extras %}
 
 {% block title %}My Dojo{% endblock %}
 
@@ -167,21 +167,28 @@
     </div>
     <div class="dojo-profile">
         <div class="well well-sm">
-            {% if user.role == 'mentor' %}
-            <img src="{% avatar_url user 400 %}" class="avatar">
-            <a class="btn btn-block btn-default btn-xs text-center" href="#" onclick="return CDC.global.openPopUp('{% url 'avatar_change' %}')">Edit Avatar</a>
-            {% endif %}
-            
-            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
-            <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
+            <form id="profile_form" enctype="multipart/form-data" action="" method="post">
+                {% if user.role == 'mentor' %}
+                    <div class="avatar">
+                        <img src="{% if account.avatar.thumbnail %}{{ account.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=283&d=mm{% endif %}" class="avatar" height="" width="283" height="283">
+                        <span class="change-overlay" data-trigger="hover" data-placement="top" data-html="true" data-toggle="popover" title="Avatar Requirements" data-content="Min size: <strong>250 x 250px</strong><br>Max size: <strong>1000 x 1000px</strong><br>Max file size: <strong>2 MB</strong><br>Formats: <strong>.jpeg, .png, .gif</strong>">Change</a>
+                        <input id="id_avatar" name="avatar" title="" type="file" onchange="document.getElementById('profile_form').submit();">
+                    </div>
+                    {% if account.avatar and not account.avatar_approved %}
+                        <div class="alert alert-warning text-center">Avatar Pending Approval</div>
+                    {% endif %}
+                {% endif %}
 
-            {% if form %}
-            <form action="" method="post">
+                {{ form.avatar.errors }}
+
+                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+                <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
+
                 {% csrf_token %}
-                {% bootstrap_form form %}
+                {% bootstrap_field form.bio %}
+
                 <button class="submit btn-cdc btn-cdc-inverse">Save</button>
             </form>
-            {% endif %}
         </div>
     </div>
 </div>

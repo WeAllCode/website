@@ -1,16 +1,14 @@
-from django.conf import settings
-
-from django.db import models
-
+import os
 from datetime import datetime, timedelta
+from django_cleanup.signals import cleanup_pre_delete, cleanup_post_delete
+from stdimage.models import StdImageField
 
+from django.conf import settings
+from django.db import models
 from django.core.validators import RegexValidator
-
 from django.contrib.auth.models import AbstractUser
-
 from django.utils.translation import ugettext as _
 from django.utils import formats, timezone
-
 from django.template.defaultfilters import slugify
 
 Roles = (
@@ -30,6 +28,11 @@ class CDCUser(AbstractUser):
     def get_absolute_url(self):
         return '/dojo'
 
+def generate_filename(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/avatar/<username>
+    filename, file_extension = os.path.splitext(filename)
+    return 'avatar/{}{}'.format(instance.user.username, file_extension.lower())
+
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
     first_name = models.CharField(max_length=255, blank=True, null=True)
@@ -38,8 +41,16 @@ class Mentor(models.Model):
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    has_attended_intro_meeting = models.BooleanField(default=False)
+    background_check = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
+    avatar = StdImageField(upload_to=generate_filename, blank=True, variations={
+        'thumbnail': {"width": 500, "height": 500, "crop": True}
+    })
+    avatar_approved = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _("mentors")
+        verbose_name_plural = _("mentors")
 
     def get_approve_avatar_url(self):
         return '/mentors/' + str(self.id) + '/approve-avatar/'
@@ -50,9 +61,19 @@ class Mentor(models.Model):
     def get_absolute_url(self):
         return '/mentors/' + str(self.id) + '/'
 
-    class Meta:
-        verbose_name = _("mentors")
-        verbose_name_plural = _("mentors")
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = Mentor.objects.get(pk=self.pk)
+            if orig.avatar != self.avatar:
+                self.avatar_approved = False
+                self.public = False
+
+        if self.background_check and self.avatar_approved:
+            self.public = True
+        else:
+            self.public = False
+
+        super(Mentor, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.user.username
@@ -153,22 +174,13 @@ class Location(models.Model):
     def __unicode__(self):
         return self.name
 
-def session_default_start_time():
-    now = timezone.now()
-    start = now.replace(hour=10, minute=0, second=0, microsecond=0)
-    return start if start > now else start + timedelta(days=1)
-
-def session_default_end_time():
-    now = timezone.now()
-    start = now.replace(hour=13, minute=0, second=0, microsecond=0)
-    return start if start > now else start + timedelta(days=1)
 
 class Session(models.Model):
     course = models.ForeignKey(Course)
-    start_date = models.DateTimeField(default=session_default_start_time())
-    end_date = models.DateTimeField(default=session_default_end_time())
-    mentor_start_date = models.DateTimeField(default=session_default_start_time() - timedelta(hours=1))
-    mentor_end_date = models.DateTimeField(default=session_default_end_time() + timedelta(hours=1))
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    mentor_start_date = models.DateTimeField()
+    mentor_end_date = models.DateTimeField()
     location = models.ForeignKey(Location)
     capacity = models.IntegerField(default=20)
     mentor_capacity = models.IntegerField(blank=True, null=True)
