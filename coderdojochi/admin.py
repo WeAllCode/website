@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, EquipmentType, Equipment, MeetingType, Meeting, Location, Donation, RaceEthnicity
 
 User = get_user_model()
 
@@ -39,6 +39,7 @@ class GuardianAdmin(admin.ModelAdmin):
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'gender', 'guardian', 'created_at', 'updated_at', 'active',)
     list_filter = ('gender',)
+    filter_horizontal = ('race_ethnicity',)
     ordering = ('guardian',)
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -129,3 +130,4 @@ admin.site.register(EquipmentType, EquipmentTypeAdmin)
 admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Donation, DonationAdmin)
 admin.site.register(Location, LocationAdmin)
+admin.site.register(RaceEthnicity)
