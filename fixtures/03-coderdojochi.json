@@ -1,6 +1,6 @@
 [{
   "fields": {
-    "username": "admin",
+    "username": "admin@admin.com",
     "first_name": "Admin",
     "last_name": "Userman",
     "is_active": true,
