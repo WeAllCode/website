@@ -9,6 +9,51 @@
 {% block topnav %}{% endblock %}
 
 {% block content %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var gender_data = google.visualization.arrayToDataTable([
+      ['Gender', 'Students'],
+      {% for key, value in gender_count %}
+      ['{{ key.title }}', {{ value }}],
+      {% endfor %}
+    ]);
+
+    var gender_options = {
+      legend: {
+        position: 'bottom',
+      },
+      // pieSliceText: 'label',
+      // title: 'Genders of Registered Students',
+      // pieStartAngle: 100,
+    };
+
+    var gender_chart = new google.visualization.PieChart(document.getElementById('gender_chart'));
+    gender_chart.draw(gender_data, gender_options);
+
+    var age_data = google.visualization.arrayToDataTable([
+      ['Age', 'Students'],
+      {% for key, value in age_count %}
+      ['{{ key }}', {{ value }}],
+      {% endfor %}
+    ]);
+
+    var age_options = {
+      legend: {
+        position: 'bottom',
+      },
+      // pieSliceText: 'label',
+      // title: 'Genders of Registered Students',
+      // pieStartAngle: 100,
+    };
+
+    var age_chart = new google.visualization.PieChart(document.getElementById('age_chart'));
+    age_chart.draw(age_data, age_options);
+  }
+</script>
+
 <div class="container">
     <ol class="breadcrumb">
         <li><a href="{% url 'cdc_admin' %}">CoderDojoChi Admin</a></li>
@@ -17,7 +62,8 @@
     </ol>
     {% if session.get_current_orders.count %}
     <div class="row">
-        <div class="col-md-6">
+
+        <div class="col-md-12">
             <div class="col-xs-12 panel panel-default">
                 <h3>Attendance:</h3>
                 <h2>{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
@@ -26,25 +72,22 @@
                         {{ attendance_percentage }}%
                     </div>
                 </div>
+
             </div>
         </div>
-
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <div class="col-xs-12 panel panel-default">
-                <h3>Average Age:</h3>
-                <h2>{{ average_age }}</h2>
+                <h3>Average Age: <b>{{ average_age }}</b></h3>
+                <div id="age_chart" style="height: 400px;"></div>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="col-xs-12 panel panel-default">
                 <h3>Genders:</h3>
-                <h2>Male</h2>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
-                        {{ attendance_percentage }}%
-                    </div>
-                </div>
+                <div id="gender_chart" style="height: 400px;"></div>
             </div>
         </div>
     </div>

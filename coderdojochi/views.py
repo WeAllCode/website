@@ -51,17 +51,12 @@ def add_months(sourcedate, months):
 
 def home(request, template_name="home.html"):
 
-    if cache.get('upcoming_public_classes'):
-        upcoming_classes = cache.get('upcoming_public_classes')
-    else:
-        upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
-        if not request.user.is_authenticated() or not request.user.role == 'mentor':
-            upcoming_classes = upcoming_classes.filter(public=True)
+    if not request.user.is_authenticated() or not request.user.role == 'mentor':
+        upcoming_classes = upcoming_classes.filter(public=True)
 
-        upcoming_classes = upcoming_classes[:3]
-
-        cache.set('upcoming_public_classes', upcoming_classes, 600)
+    upcoming_classes = upcoming_classes[:3]
 
     return render_to_response(template_name, {
         'upcoming_classes': upcoming_classes
@@ -232,15 +227,10 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     prev_date = add_months(calendar_date,-1)
     next_date = add_months(calendar_date,1)
 
-    if cache.get('public_sessions'):
-        all_sessions = cache.get('public_sessions')
-    else:
-        all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
 
-        if not request.user.is_authenticated() or not request.user.role == 'mentor':
-            all_sessions = all_sessions.filter(public=True)
-
-        cache.set('public_sessions', all_sessions, 600)
+    if not request.user.is_authenticated() or not request.user.role == 'mentor':
+        all_sessions = all_sessions.filter(public=True)
 
     sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
     cal = SessionsCalendar(sessions).formatmonth(year, month)
@@ -679,17 +669,9 @@ def meeting_ics(request, year, month, day, meeting_id):
 
 def volunteer(request, template_name="volunteer.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
-    else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
+    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
-    if cache.get('upcoming_public_meetings'):
-        upcoming_meetings = cache.get('upcoming_public_meetings')
-    else:
-        upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
-        cache.set('upcoming_public_meetings', upcoming_meetings, 600)
+    upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
 
     return render_to_response(template_name, {
         'mentors': mentors,
@@ -818,11 +800,7 @@ class SessionsCalendar(HTMLCalendar):
 
 def mentors(request, template_name="mentors.html"):
 
-    if cache.get('public_mentors'):
-        mentors = cache.get('public_mentors')
-    else:
-        mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
-        cache.set('public_mentors', mentors, 600)
+    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
     return render_to_response(template_name, {
         'mentors': mentors
@@ -980,20 +958,8 @@ def donate_return(request):
 
 def about(request, template_name="about.html"):
 
-    if cache.get('mentor_count'):
-        mentor_count = cache.get('mentor_count')
-    else:
-        mentor_count = Mentor.objects.filter(active=True).count()
-        cache.set('mentor_count', mentor_count, 600)
-
-    if cache.get('students_served'):
-        students_served = cache.get('students_served')
-    else:
-        students_served = Order.objects.exclude(check_in=None).count()
-        cache.set('students_served', students_served, 600)
-
-    mentor_count = students_served if students_served > 30 else 30
-    students_served = students_served if students_served > 600 else 600
+    mentor_count = Mentor.objects.filter(active=True, public=True).count()
+    students_served = Order.objects.exclude(check_in=None).count()
 
     return render_to_response(template_name, {
         'mentor_count': mentor_count,
@@ -1103,26 +1069,31 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     students_checked_in = current_orders_checked_in.values('student')
 
     if students_checked_in:
-        attendance_percentage = session_obj.get_current_students().count() /  current_orders_checked_in.count() * 100
+        attendance_percentage = round((float(current_orders_checked_in.count()) / float(session_obj.get_current_students().count())) * 100)
     else:
         attendance_percentage = False
 
     # Genders
+    gender_count = list(Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems())
+    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+
+    # Ages
+    ages = sorted(list(e.student.get_age() for e in session_obj.get_current_orders()))
+    age_count = list(Counter(ages).iteritems())
+    age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
 
     # Average Age
-    if current_orders_checked_in:
-        student_ages = []
-        for order in current_orders_checked_in:
-            student_ages.append(order.student.get_age())
-        average_age = reduce(lambda x, y: x + y, student_ages) / len(student_ages)
-    else:
-        average_age = False
+    average_age = 0
+    if session_obj.get_current_orders():
+        average_age = int(round(sum(ages) / float(len(ages))))
 
     return render_to_response(template_name,{
         'session': session_obj,
         'students_checked_in': students_checked_in,
         'attendance_percentage': attendance_percentage,
-        'average_age': average_age
+        'average_age': average_age,
+        'age_count': age_count,
+        'gender_count': gender_count
     }, context_instance=RequestContext(request))
 
 @login_required

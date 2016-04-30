@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load staticfiles i18n coderdojochi_extras cache %}
+{% load staticfiles i18n coderdojochi_extras %}
 
 {% block body_class %}page-homepage{% endblock %}
 
@@ -30,7 +30,6 @@
     </div>
 </div>
 
-{% cache 600 homepage_lower_content %}
 <div class="homepage-cta">
     <div class="container">
         <div class="row">
@@ -51,8 +50,6 @@
         </div>
     </div>
 </div>
-{% endcache %}
-
 
 {% if upcoming_classes %}
 <div class="upcoming-sessions">
@@ -78,8 +75,6 @@
 </div>
 
 {% endif %}
-
-
 
 {% endblock %}
 
