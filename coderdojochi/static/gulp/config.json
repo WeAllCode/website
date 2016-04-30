@@ -1,0 +1,26 @@
+{
+    "sprites": {
+      "src": "/src/sprites",
+      "dest": "/build/static/images/sprites"
+    },
+    "css": {
+      "src": "/src/css",
+      "dest": "/build/static/css"
+    },
+    "sass": {
+      "src": "/src/scss",
+      "dest": "/build/static/css"
+    },
+    "js": {
+      "src": "/src/js",
+      "dest": "/build/static/js"
+    },
+    "img": {
+      "src": "/src/images",
+      "dest": "/build/static/images"
+    },
+    "favico": {
+      "src": "/src/favicon.ico",
+      "dest": "/build/static/"
+    }
+}
