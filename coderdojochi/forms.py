@@ -1,3 +1,5 @@
+from PIL import Image, ImageOps
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
@@ -88,7 +90,7 @@ class MentorForm(CDCModelForm):
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
                     u'Please use an image that is '
-                     '%s x %s pixels or smaller.' % (max_width, max_height))
+                     '%s x %s px or smaller.' % (max_width, max_height))
 
             #validate content type
             main, sub = avatar.content_type.split('/')

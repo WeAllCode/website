@@ -22,7 +22,10 @@ def avatar_updated_handler(sender, instance, **kwargs):
     except ObjectDoesNotExist:
         return
 
-    if instance.avatar == original_mentor.avatar:
+    print 'THIS'
+    print instance.avatar
+
+    if not instance.avatar or instance.avatar == original_mentor.avatar:
         return
 
     instance.avatar_approved = False

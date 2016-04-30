@@ -697,13 +697,10 @@ def dojo(request, template_name="dojo.html"):
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-
             mentor_sessions = Session.objects.filter(mentors=mentor)
             upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
             past_sessions = mentor_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
-
             upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
-
 
             if request.method == 'POST':
                 form = MentorForm(request.POST, request.FILES, instance=account)
