@@ -51,6 +51,8 @@ urlpatterns = [
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in-mentors/$', coderdojochi_views.session_check_in_mentors, name='check_in_mentors'),
     url(r'^admin/', coderdojochi_views.cdc_admin, name='cdc_admin'),
 
+    url(r'^admin/dashboard/$', coderdojochi_views.dashboard, name='dashboard'),
+
     url(r'^welcome/$', coderdojochi_views.welcome, name='welcome'),
     url(r'^dojo/$', coderdojochi_views.dojo, name='dojo'),
 

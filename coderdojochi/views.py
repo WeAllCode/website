@@ -1228,6 +1228,46 @@ def session_announce(request, session_id):
 
     return HttpResponseRedirect(reverse('cdc_admin'))
 
+@login_required
+def dashboard(request, template_name="admin-dashboard.html"):
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('sessions'))
+
+    sessions = Session.objects.all()
+    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
+    past_sessions_count = past_sessions.count()
+
+    past_orders = [s for sub in [session.get_current_orders() for session in past_sessions] for s in sub]
+    checked_in_past_orders = [s for sub in [c.get_current_orders(checked_in=True) for c in past_sessions] for s in sub]
+
+    if checked_in_past_orders:
+        attendance_percentage = round((float(len(checked_in_past_orders)) / float(len(total_past_orders))) * 100)
+    else:
+        attendance_percentage = 0
+
+    # Genders
+    gender_count = list(Counter(e.student.get_clean_gender() for e in checked_in_past_orders).iteritems())
+    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+
+    # Ages
+    ages = sorted(list(e.student.get_age() for e in checked_in_past_orders))
+    age_count = list(Counter(ages).iteritems())
+    age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
+
+    # Average Age
+    average_age = 0
+    average_age = int(round(sum(ages) / float(len(ages))))
+
+    return render_to_response(template_name,{
+        'past_sessions': past_sessions,
+        'gender_count': gender_count,
+        'age_count': age_count,
+        'average_age': average_age,
+        'total_orders': len(past_orders),
+        'total_checked_in_orders': len(checked_in_past_orders),
+        'attendance_percentage': attendance_percentage
+    }, context_instance=RequestContext(request))
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 
