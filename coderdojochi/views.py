@@ -1280,10 +1280,9 @@ def dashboard(request, template_name="admin-dashboard.html"):
 
     sessions = Session.objects.all()
     past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
-    past_sessions_count = past_sessions.count()
 
-    total_past_orders = [s for sub in [session.get_current_orders() for session in past_sessions] for s in sub]
-    checked_in_past_orders = [s for sub in [c.get_current_orders(checked_in=True) for c in past_sessions] for s in sub]
+    total_past_orders = Order.objects.filter(active=True)
+    checked_in_past_orders = Order.objects.filter(active=True).exclude(check_in=None)
 
     if checked_in_past_orders:
         attendance_percentage = round((float(len(checked_in_past_orders)) / float(len(total_past_orders))) * 100)
