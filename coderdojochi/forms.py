@@ -1,11 +1,21 @@
+from PIL import Image, ImageOps
+
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.files.images import get_image_dimensions
 from django.forms import Form, ModelForm, FileField, ValidationError
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-from coderdojochi.models import Mentor, Guardian, Student
+from coderdojochi.models import Mentor, Guardian, Student, RaceEthnicity
 
 import html5.forms.widgets as html5_widgets
+
+school_type_choices = (
+    ("Public", "Public"),
+    ("Charter", "Charter"),
+    ("Private", "Private"),
+    ("Homeschool", "Homeschool")
+)
 
 class CDCForm(Form):
     # strip leading or trailing whitespace
@@ -74,7 +84,46 @@ class MentorForm(CDCModelForm):
 
     class Meta:
         model = Mentor
-        fields = ('bio',)
+        fields = ('bio', 'avatar')
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data['avatar']
+
+        try:
+            w, h = get_image_dimensions(avatar)
+
+            #validate dimensions
+            max_width = max_height = 1000
+            if w > max_width or h > max_height:
+                raise forms.ValidationError(
+                    u'Please use an image that is '
+                     '%s x %spx or smaller.' % (max_width, max_height))
+
+            min_width = min_height = 250
+            if w < min_width or h < min_height:
+                raise forms.ValidationError(
+                    u'Please use an image that is '
+                     '%s x %spx or larger.' % (min_width, min_height))
+
+            #validate content type
+            main, sub = avatar.content_type.split('/')
+            if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
+                raise forms.ValidationError(u'Please use a JPEG, '
+                    'GIF or PNG image.')
+
+            #validate file size
+            if len(avatar) > (2000 * 1024):
+                raise forms.ValidationError(
+                    u'Avatar file size may not exceed 2MB.')
+
+        except AttributeError:
+            """
+            Handles case when we are updating the user profile
+            and do not supply a new avatar
+            """
+            pass
+
+        return avatar
 
 class GuardianForm(CDCModelForm):
     phone = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Phone Number','class': 'form-control'}), label='Phone Number')
@@ -88,6 +137,9 @@ class StudentForm(CDCModelForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Jane','class': 'form-control'}), label='First Name')
     last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Doe','class': 'form-control'}), label='Last Name')
     gender = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '','class': 'form-control'}), label='Gender')
+    school_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label='School Name', required=False)
+    school_type = forms.ChoiceField(widget=forms.RadioSelect, choices=school_type_choices, required=False)
+    race_ethnicity = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=RaceEthnicity.objects.filter(visible=True), required=False)
     birthday = forms.CharField(widget=html5_widgets.DateInput(attrs={'class': 'form-control'}))
     medications = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'List any medications currently being taken.','class': 'form-control hidden', 'rows': 5}), label=format_html(u"{0} {1}", "Medications", mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>')), required=False)
     medical_conditions = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'List any medical conditions.','class': 'form-control hidden', 'rows': 5}), label=format_html(u"{0} {1}", "Medical Conditions", mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>')), required=False)
@@ -103,4 +155,3 @@ class ContactForm(CDCForm):
     email = forms.EmailField(max_length=200, label='Your email address')
     body = forms.CharField(widget=forms.Textarea, label='Your message')
     human = forms.CharField(max_length=100, label=False, required=False)
-

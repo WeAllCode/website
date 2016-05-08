@@ -9,4 +9,4 @@ while ! timeout 1 bash -c "echo > /dev/tcp/$POSTGRES_HOST/$POSTGRES_PORT"; do sl
 python manage.py migrate
 python manage.py loaddata fixtures/*.json
 
-gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi
+gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi --reload
