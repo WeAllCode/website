@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n avatar_tags coderdojochi_extras %}
+{% load i18n coderdojochi_extras %}
 
 {% block body_class %}page-cdc-admin{% endblock %}
 
@@ -100,7 +100,7 @@
                     <span class="subtitle">{{ session.start_date|time }}&ndash;{{ session.end_date|time }}</span>
                 </td>
                 <td class="name">
-                    <span class="title"><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></span>
+                    <span class="title"><a href="{% url 'check_in' session.id %}">{{ session.course.title }}</a></span>
                     <span class="subtitle">@ {{ session.location.name }}</span>
                 </td>
                 <td class="text-right">

@@ -1282,7 +1282,7 @@ def dashboard(request, template_name="admin-dashboard.html"):
     past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
     past_sessions_count = past_sessions.count()
 
-    past_orders = [s for sub in [session.get_current_orders() for session in past_sessions] for s in sub]
+    total_past_orders = [s for sub in [session.get_current_orders() for session in past_sessions] for s in sub]
     checked_in_past_orders = [s for sub in [c.get_current_orders(checked_in=True) for c in past_sessions] for s in sub]
 
     if checked_in_past_orders:
@@ -1308,7 +1308,7 @@ def dashboard(request, template_name="admin-dashboard.html"):
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
-        'total_orders': len(past_orders),
+        'total_past_orders': len(total_past_orders),
         'total_checked_in_orders': len(checked_in_past_orders),
         'attendance_percentage': attendance_percentage
     }, context_instance=RequestContext(request))

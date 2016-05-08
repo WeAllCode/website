@@ -49,7 +49,7 @@ urlpatterns = [
     url(r'^admin/class/(?P<session_id>[\d]+)/stats/$', coderdojochi_views.session_stats, name='stats'),
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in/$', coderdojochi_views.session_check_in, name='check_in'),
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in-mentors/$', coderdojochi_views.session_check_in_mentors, name='check_in_mentors'),
-    url(r'^admin/', coderdojochi_views.cdc_admin, name='cdc_admin'),
+    url(r'^admin/$', coderdojochi_views.cdc_admin, name='cdc_admin'),
 
     url(r'^admin/dashboard/$', coderdojochi_views.dashboard, name='dashboard'),
 
