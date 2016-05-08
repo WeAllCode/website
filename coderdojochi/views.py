@@ -1300,7 +1300,6 @@ def dashboard(request, template_name="admin-dashboard.html"):
     age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
 
     # Average Age
-    average_age = 0
     average_age = int(round(sum(ages) / float(len(ages))))
 
     return render_to_response(template_name,{
