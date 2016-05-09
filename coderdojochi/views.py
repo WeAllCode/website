@@ -1274,20 +1274,12 @@ def dashboard(request, template_name="admin-dashboard.html"):
         messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
-<<<<<<< HEAD
-    sessions = Session.objects.all()
-    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
-
-    total_past_orders = Order.objects.filter(active=True)
-    checked_in_past_orders = Order.objects.filter(active=True).exclude(check_in=None)
-=======
     orders = Order.objects.select_related()
 
     past_sessions = Session.objects.select_related().filter(active=True, end_date__lte=timezone.now()).annotate(
         num_orders=Count('order'),
         num_attended=Count(Case(When(order__check_in__isnull=False, then=1)))
     ).order_by('-start_date')
->>>>>>> upstream/pjsier-feature/dashboard
 
     total_past_orders = orders.filter(active=True)
     total_past_orders_count = total_past_orders.count()
