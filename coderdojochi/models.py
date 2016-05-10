@@ -218,6 +218,12 @@ class Session(models.Model):
         verbose_name = _("session")
         verbose_name_plural = _("sessions")
 
+    def save(self, *args, **kwargs):
+        if self.mentor_capacity == None:
+            self.mentor_capacity = self.capacity / 2
+        super(Session, self).save(*args, **kwargs)
+
+
     def get_absolute_url(self):
         return '/class/' + self.start_date.strftime("%Y/%m/%d") + '/'  + self.course.slug + '/' + str(self.id)
 
