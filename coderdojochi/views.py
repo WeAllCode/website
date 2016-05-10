@@ -1,36 +1,34 @@
-from django.conf import settings
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext, Context
-from django.template.loader import get_template
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from django.core.mail import EmailMessage, EmailMultiAlternatives, send_mail
-from django.core.urlresolvers import reverse
-from django.contrib import messages, auth
-from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
-from django.views.decorators.csrf import csrf_exempt
-from django import forms
-
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
-from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
-
-from calendar import HTMLCalendar
-
-from icalendar import Calendar, Event, vCalAddress, vText
-
 from datetime import date, timedelta
 from itertools import groupby
 from collections import Counter
 import operator
 
+from django import forms
+from django.conf import settings
+from django.contrib import messages, auth
+from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
+from django.core.mail import EmailMessage, EmailMultiAlternatives, send_mail
+from django.core.urlresolvers import reverse
+from django.db.models import Avg, Count, Case, When
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext, Context
+from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.html import conditional_escape as esc, strip_tags
 from django.utils.safestring import mark_safe
-
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt
+
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
+from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
+
+from calendar import HTMLCalendar
+import calendar
+
+from icalendar import Calendar, Event, vCalAddress, vText
 
 from paypal.standard.forms import PayPalPaymentsForm
 
@@ -38,8 +36,6 @@ import arrow, os, pytz, tempfile
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
-
-import calendar
 
 def add_months(sourcedate, months):
     month = sourcedate.month - 1 + months
@@ -1272,6 +1268,44 @@ def session_announce(request, session_id):
 
     return HttpResponseRedirect(reverse('cdc_admin'))
 
+@login_required
+def dashboard(request, template_name="admin-dashboard.html"):
+    if not request.user.is_staff:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('sessions'))
+
+    orders = Order.objects.select_related()
+
+    past_sessions = Session.objects.select_related().filter(active=True, end_date__lte=timezone.now()).annotate(
+        num_orders=Count('order'),
+        num_attended=Count(Case(When(order__check_in__isnull=False, then=1)))
+    ).order_by('-start_date')
+
+    total_past_orders = orders.filter(active=True)
+    total_past_orders_count = total_past_orders.count()
+    total_checked_in_orders = orders.filter(active=True, check_in__isnull=False)
+    total_checked_in_orders_count = total_checked_in_orders.count()
+
+    # Genders
+    gender_count = list(Counter(e.student.get_clean_gender() for e in total_checked_in_orders).iteritems())
+    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+
+    # Ages
+    ages = sorted(list(e.student.get_age() for e in total_checked_in_orders))
+    age_count = list(Counter(ages).iteritems())
+    age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
+
+    # Average Age
+    average_age = int(round(sum(ages) / float(len(ages))))
+
+    return render_to_response(template_name,{
+        'past_sessions': past_sessions,
+        'gender_count': gender_count,
+        'age_count': age_count,
+        'average_age': average_age,
+        'total_past_orders_count': total_past_orders_count,
+        'total_checked_in_orders_count': total_checked_in_orders_count,
+    }, context_instance=RequestContext(request))
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 
