@@ -34,6 +34,6 @@ deployment:
       - cd ./deploy && sed -i'' -e "s;<POSTGRES_USER>;$POSTGRES_USER;g" ./.ebextensions/environment.config
       - cd ./deploy && sed -i'' -e "s;<POSTGRES_PASSWORD>;$POSTGRES_PASSWORD;g" ./.ebextensions/environment.config
 
-      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" -r us-east-1 $DOCKER_REPO
-      # - cd ./deploy && eb create -i m4.large -p "64bit Amazon Linux 2015.09 v2.0.8 running Multi-container Docker 1.9.1 (Generic)" --timeout 20 -d --single production
+      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.03 v2.1.0 running Multi-container Docker 1.9.1 (Generic)" -r us-east-1 $DOCKER_REPO
+      # - cd ./deploy && eb create -i m4.large -p "64bit Amazon Linux 2016.03 v2.1.0 running Multi-container Docker 1.9.1 (Generic)" --timeout 20 -d --single production
       - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM production

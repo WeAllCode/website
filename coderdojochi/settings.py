@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from coderdojochi.util import str_to_bool
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -22,10 +23,7 @@ PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# TEMPLATE_DEBUG = DEBUG
-
+DEBUG = str_to_bool(os.environ.get('DEBUG')) or False
 IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']
