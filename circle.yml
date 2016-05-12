@@ -41,6 +41,7 @@ deployment:
 
     branch: develop
     commands:
+      - sed -i'' -e "s;DEBUG=False;DEBUG=True;g" ./.env
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
       - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
