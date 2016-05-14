@@ -17,14 +17,13 @@ services:
       - "8080"
     volumes:
       - ./coderdojochi:/src/coderdojochi
-      - /build/static/admin/
-      - /build/static/debug_toolbar/
+      - /build/static/
     links:
       - db
 
   nginx:
     restart: always
-    build: coderdojochi/static/
+    build: nginx/
     links:
       - app
     ports:
