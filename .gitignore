@@ -94,3 +94,5 @@ local_settings.py
 #############################
 .elasticbeanstalk
 .tmp-deploy
+
+*.sql
