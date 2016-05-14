@@ -12,15 +12,9 @@ gulp.task('default', function(cb) {
     global.isWatching = true;
 
     runSequence(
-        'clean',
-        'collectstatic',
-        'copy',
         [
             'sprites',
             'sass'
         ],
-        'watch',
-        'browser-sync',
-        'django',
         cb);
 });
