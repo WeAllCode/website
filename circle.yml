@@ -15,7 +15,7 @@ test:
     - echo True
 
 deployment:
-  elasticbeanstalk:
+  production:
     branch: master
     commands:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
@@ -39,6 +39,7 @@ deployment:
       - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.03 v2.1.0 running Multi-container Docker 1.9.1 (Generic)" -r us-east-1 $DOCKER_REPO
       - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM production
 
+  staging:
     branch: develop
     commands:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
