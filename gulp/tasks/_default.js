@@ -12,8 +12,6 @@ gulp.task('default', function(cb) {
     global.isWatching = true;
 
     runSequence(
-        'clean',
-        'copy',
         [
             'sprites',
             'sass'
