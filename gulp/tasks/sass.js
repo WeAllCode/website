@@ -6,7 +6,6 @@ var gulpif = require('gulp-if');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
-var browserSync = require('browser-sync');
 var handleErrors = require('../utils/handle-errors');
 
 gulp.task('sass', function() {
@@ -20,5 +19,4 @@ gulp.task('sass', function() {
         .pipe(gulpif(global.isWatching, sourcemaps.write()))
         .on('error', handleErrors)
         .pipe(gulp.dest(config.sass.dest))
-        .pipe(gulpif(global.isWatching, browserSync.reload({stream: true})));
 });
