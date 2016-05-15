@@ -74,6 +74,17 @@ CDC.global = (function($, document, window, undefined) {
             .on('click', '.login-email, .signup-email', displayRegistrationEmailForm)
             .on('click', '.global-messages .global-messages-close', closeGlobalMessages);
 
+        $('#id_phone').mask('(999) 999-9999');
+        $('#id_zip').mask('99999');
+        $('input[type=date]').pickadate({
+            format: 'yyyy-mm-dd',
+            today: false,
+            clear: false,
+            selectMonths: true,
+            selectYears: 17,
+            min: -(17*365),
+            max: -(5*365)
+        });
     }
 
     function openPopUp(url, height, width) {

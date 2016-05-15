@@ -1,0 +1,32 @@
+version: '2'
+services:
+  db:
+    restart: always
+    image: postgres:9.4
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+
+  app:
+    restart: always
+    build: .
+    env_file:
+      - .env
+    expose:
+      - "8080"
+    volumes:
+      - ./coderdojochi:/src/coderdojochi
+      - /build/static/
+    links:
+      - db
+
+  nginx:
+    restart: always
+    build: nginx/
+    links:
+      - app
+    ports:
+      - "80:80"
+    volumes_from:
+      - app
