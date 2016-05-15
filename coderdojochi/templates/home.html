@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load staticfiles i18n coderdojochi_extras cache %}
+{% load staticfiles i18n coderdojochi_extras %}
 
 {% block body_class %}page-homepage{% endblock %}
 
@@ -13,7 +13,7 @@
             <div class="carousel-inner" role="listbox">
                 <div class="item active">
                     <div class="flex-video widescreen" style="margin: 0 auto;text-align:center;">
-                        <iframe id="homepage-video" src="//www.youtube.com/embed/GB9nU_gsxTI?rel=0&amp;controls=1&amp;showinfo=0&amp;autohide=1&amp;modestbranding=1" frameborder="0" allowfullscreen></iframe>
+                        <iframe id="homepage-video" src="//www.youtube.com/embed/IAVyEnIdxBM?rel=0&amp;controls=1&amp;showinfo=0&amp;autohide=1&amp;modestbranding=1" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -22,12 +22,34 @@
 </div>
 <div class="homepage-about text-center">
     <div class="container">
-        <h1>{% trans "Our Mission" %}</h1>
-        <p>CoderDojoChi is a volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17. Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors.</p>
-        <p>All classes are <strong>100% free of charge</strong> thanks to your generous <a title="Donate now" href="{% url 'donate' %}">donations</a>.</p>
+        <div class="row">
+            <h1>{% trans "Our Mission" %}</h1>
+            <p>CoderDojoChi is a volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17. Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors.</p>
+            <p>All classes are <strong>100% free of charge</strong> thanks to your generous <a title="Donate now" href="{% url 'donate' %}">donations</a>.</p>
+        </div>
     </div>
 </div>
 
+<div class="homepage-cta">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 homepage-volunteer">
+                <a class="icon-action" href="{% url 'volunteer' %}">
+                    <span class="icon-volunteer fa fa-fw fa-group"></span>
+                </a>
+                <h1><a href="{% url 'volunteer' %}">Volunteer</a></h1>
+                <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
+            </div>
+            <div class="col-md-6 homepage-donate">
+                <a class="icon-action" href="{% url 'donate' %}">
+                    <span class="icon-donation fa fa-fw"></span>
+                </a>
+                <h1><a href="{% url 'donate' %}">Donate</a></h1>
+                <p>Funding goes 100% towards equipment and food for youth, attendees, and mentors.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% if upcoming_classes %}
 <div class="upcoming-sessions">
@@ -44,35 +66,15 @@
                         <p>{{ session.course.description|safe|truncatechars:180 }}</p>
                     </div>
                     <div class="actions">
-                        <p><a href="{{ session.get_absolute_url }}" class="btn-cdc">Learn more.</a></p>
+                        <p><a href="{{ session.get_absolute_url }}" class="btn-cdc">Learn more</a></p>
                     </div>
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
-{% endif %}
 
-{% cache 600 homepage_lower_content %}
-<div class="container">
-    <div class="row block-cta">
-        <div class="homepage-volunteer half">
-            <a class="icon-action" href="{% url 'volunteer' %}">
-                <span class="icon-volunteer fa fa-fw fa-group"></span>
-            </a>
-            <h1>Volunteer</h1>
-            <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
-        </div>
-        <div class="homepage-donate half">
-            <a class="icon-action" href="{% url 'donate' %}">
-                <span class="icon-donation fa fa-fw"></span>
-            </a>
-            <h1>Donate</h1>
-            <p>Funding goes 100% towards equipment and food for youth, attendees, and mentors.</p>
-        </div>
-    </div>
-</div>
-{% endcache %}
+{% endif %}
 
 {% endblock %}
 

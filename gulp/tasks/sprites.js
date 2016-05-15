@@ -1,17 +1,15 @@
 'use strict';
 
-var gulp = require('gulp'),
-    config = require('../config.json'),
-    spritesmith = require('gulp.spritesmith');
+var gulp = require('gulp');
+var config = require('../config.json');
+var spritesmith = require('gulp.spritesmith');
 
-var spriteSrc = config.dev + config.sprites,
-    spriteDest = config.img + '/' + config.sprites,
-    sassDest = config.sass + '/' + config.sprites,
-    tmpl = spriteSrc + '/spritesmith.template.mustache',
-    padding = 5;
+var sassDest = config.sass.src + '/sprites';
+var tmpl = config.sprites.src + '/spritesmith.template.mustache';
+var padding = 5;
 
 gulp.task('sprites', function() {
-    var retinaGlobal = gulp.src(spriteSrc + '/global-2x/*.png')
+    var retinaGlobal = gulp.src(config.sprites.src + '/global-2x/*.png')
             .pipe(spritesmith({
                 imgName: 'sprite-global@2x.png',
                 cssName: '_sprites-global-2x.scss',
@@ -21,7 +19,7 @@ gulp.task('sprites', function() {
                 },
                 padding: padding
             })),
-        regularGlobal = gulp.src(spriteSrc + '/global-1x/*.png')
+        regularGlobal = gulp.src(config.sprites.src + '/global-1x/*.png')
             .pipe(spritesmith({
                 imgName: 'sprite-global.png',
                 cssName: '_sprites-global.scss',
@@ -33,9 +31,9 @@ gulp.task('sprites', function() {
             }));
 
     // generate global sprites and sass
-    retinaGlobal.img.pipe(gulp.dest(spriteDest));
+    retinaGlobal.img.pipe(gulp.dest(config.sprites.dest));
     retinaGlobal.css.pipe(gulp.dest(sassDest));
-    regularGlobal.img.pipe(gulp.dest(spriteDest));
+    regularGlobal.img.pipe(gulp.dest(config.sprites.dest));
     regularGlobal.css.pipe(gulp.dest(sassDest));
 
 });

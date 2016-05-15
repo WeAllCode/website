@@ -179,6 +179,30 @@ a {
     }
 }
 
+.signup-twitter {
+    @include sprite("signup-twitter", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
+.login-twitter {
+    @include sprite("login-twitter", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
+.signup-facebook {
+    @include sprite("signup-facebook", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
+.login-facebook {
+    @include sprite("login-facebook", "global");
+    @extend .ir;
+    border-radius: 0;
+}
+
 .signup-google {
     @include sprite("signup-google", "global");
     @extend .ir;
@@ -187,18 +211,6 @@ a {
 
 .login-google {
     @include sprite("login-google", "global");
-    @extend .ir;
-    border-radius: 0;
-}
-
-.signup-email {
-    @include sprite("signup-email", "global");
-    @extend .ir;
-    border-radius: 0;
-}
-
-.login-email {
-    @include sprite("login-email", "global");
     @extend .ir;
     border-radius: 0;
 }
@@ -453,6 +465,35 @@ a.icon-action {
         @include span(last 8);
         margin-bottom: 0;
     }
+}
+
+.avatar {
+    position: relative;
+    background: #fff;
+}
+
+.avatar input,
+.change-overlay {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100px;
+    height: 40px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.change-overlay {
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    text-align: center;
+    opacity: 1;
+    line-height: 40px;
+    opacity: 1;
+}
+.change-overlay:hover {
+    background: rgba(0,0,0,0.9);
+    height: 41px;
 }
 
 // classes

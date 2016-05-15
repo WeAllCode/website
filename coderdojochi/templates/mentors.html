@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% load avatar_tags humanize %}
+{% load humanize %}
 
 {% block title %}My Dojo{% endblock %}
 
@@ -9,14 +9,14 @@
 
 <div class="container">
 
-    <h1>Meet Our Mentors <a href="{% url 'register' %}" class="btn-cdc">Join us now!</a></h1>
+    <h1>Meet Our Mentors <a href="{% url 'account_signup' %}" class="btn-cdc">Join us now!</a></h1>
 
     <div class="row mentors">
         {% for mentor in mentors %}
             {% if mentor.public == True %}
         <div class="col-xs-12 col-sm-4 col-md-3">
             <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                {% avatar mentor.user 175 %}
+                <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
                 <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
             </a>
         </div>

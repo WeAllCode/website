@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n avatar_tags %}
+{% load i18n %}
 
 {% block title %}{{ session.course.title }} Sign Up{% endblock %}
 
@@ -8,15 +8,48 @@
 
 {% block content %}
 <div class="container registration min-height">
-    <h1 class="light">
-    {% if user_signed_up %}{% ifequal user.role 'mentor' %}You{% else %}<strong>{{ student.first_name }} {{ student.last_name }}</strong> {% endifequal %} can no longer make it{% else %}{% ifequal user.role 'mentor' %}Sign up{% else %}Enroll <strong>{{ student.first_name }} {{ student.last_name }}</strong> {% endifequal %}{% endif %} {% ifequal user.role 'mentor' %}to mentor for{% else %}in{% endifequal %} the class <strong>"{{ session.course.title }}"</strong> on <strong>{{ session.start_date|date }}</strong> from <strong>{% if user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %}</strong> to <strong>{% if user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</strong>?</h1>
-    <form class="form" method="POST" action="">
-        {% csrf_token %}
-        <button class="btn-cdc btn-cdc-{% if user_signed_up %}danger{% else %}success{% endif %} btn-cdc-lg">{% if user_signed_up %}Yes, cancel{% else %}Yes, I'm excited!{% endif %}</button>
-        <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc-sm btn-cdc-inverse">Nevermind</a>
-    </form>
-    <br>
-    <a target="_blank" class="map" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img width="100%" src="http://maps.google.com/maps/api/staticmap?markers=location:{{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;size=550x550&amp;sensor=false"></a>
-    <p class="text-center"><a target="_blank" href="//www.google.com/maps/preview?q={{ session.location.name }} {{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">Open in Google Maps</a></p>
+    {% if user_signed_up %}
+
+        {% if user.role == 'guardian' %}
+
+            <h1 class="light"><strong>{{ student.first_name }} {{ student.last_name }}</strong> can no longer make it to the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
+
+        {% else %}
+
+            <h1 class="light">I can no longer volunteer for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.mentor_start_date|date }}</strong> from <strong>{{ session.mentor_start_date|time }}</strong> to <strong>{{ session.mentor_end_date|time }}</strong>.</h1>
+
+        {% endif %}
+
+        <form class="form" method="POST" action="">
+            {% csrf_token %}
+            <button class="btn-cdc btn-cdc-danger btn-cdc-lg">Yes, cancel</button>
+            <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc-lg btn-cdc-inverse">Nevermind</a>
+        </form>
+
+    {% else %}
+
+        {% if user.role == 'guardian' %}
+
+            <h1 class="light">Enroll <strong>{{ student.first_name }} {{ student.last_name }}</strong> for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
+
+        {% else %}
+
+            <h1 class="light">Sign up to mentor for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.mentor_start_date|date }}</strong> from <strong>{{ session.mentor_start_date|time }}</strong> to <strong>{{ session.mentor_end_date|time }}</strong>.</h1>
+
+        {% endif %}
+
+        <form class="form" method="POST" action="">
+            {% csrf_token %}
+            <button class="btn-cdc btn-cdc-success btn-cdc-lg">Yes, I'm excited!</button>
+            <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc-lg btn-cdc-inverse">Nevermind</a>
+        </form>
+
+    {% endif %}
+
+    <div class="row">
+        <a target="_blank" class="map" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img width="100%" src="http://maps.google.com/maps/api/staticmap?size=550x550&amp;sensor=false&amp;markers={{ session.location.address }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.address }},{{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"></a>
+    </div>
+
+    <p class="text-center"><a target="_blank" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">Open in Google Maps</a></p>
 </div>
 {% endblock %}
