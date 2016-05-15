@@ -463,6 +463,35 @@ a.icon-action {
     }
 }
 
+.avatar {
+    position: relative;
+    background: #fff;
+}
+
+.avatar input,
+.change-overlay {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100px;
+    height: 40px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.change-overlay {
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    text-align: center;
+    opacity: 1;
+    line-height: 40px;
+    opacity: 1;
+}
+.change-overlay:hover {
+    background: rgba(0,0,0,0.9);
+    height: 41px;
+}
+
 // classes
 .upcoming-sessions {
 

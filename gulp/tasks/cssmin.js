@@ -1,17 +1,14 @@
 'use strict';
 
-var gulp = require('gulp'),
-    config = require('../config.json'),
-    minifyCSS = require('gulp-minify-css'),
-    rename = require('gulp-rename'),
-    handleErrors = require('../utils/handle-errors');
+var gulp = require('gulp');
+var config = require('../config.json');
+var cssnano = require('gulp-cssnano');
+var rename = require('gulp-rename');
+var handleErrors = require('../utils/handle-errors');
 
 gulp.task('cssmin', function() {
-    return gulp.src(config.css + '/cdc.css')
+    return gulp.src(config.css.dest + '/cdc.css')
         .pipe(rename('cdc.min.css'))
-        .pipe(minifyCSS({
-            keepSpecialComments: 0
-        }))
-        .on('error', handleErrors)
-        .pipe(gulp.dest(config.css));
+        .pipe(cssnano())
+        .pipe(gulp.dest(config.css.dest));
 });
