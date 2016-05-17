@@ -1014,7 +1014,8 @@ def contact(request, template_name="contact.html"):
                 msg = EmailMultiAlternatives(
                     subject='CoderDojoChi | Contact Form Submission',
                     body='Contact Form Submission from ' + request.POST['name'] + ' (' + request.POST['email'] + '). ' + request.POST['body'],
-                    from_email=request.POST['email'],
+                    from_email=settings.DEFAULT_FROM_EMAIL
+                    reply_to=request.POST['email'],
                     to=[settings.CONTACT_EMAIL]
                 )
 
@@ -1316,8 +1317,8 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 
-    msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
-                       to=[email])
+    msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL, to=[email])
+
     if bcc:
         msg.bcc = bcc
 
