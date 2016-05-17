@@ -1013,13 +1013,13 @@ def contact(request, template_name="contact.html"):
 
                 msg = EmailMultiAlternatives(
                     subject='CoderDojoChi | Contact Form Submission',
-                    body='Contact Form Submission from ' + request.POST['name'] + ' (' + request.POST['email'] + '). ' + request.POST['body'],
+                    body='Contact Form Submission from {} ({}). {}'.format(request.POST['name'], request.POST['email'], request.POST['body']),
                     from_email=settings.DEFAULT_FROM_EMAIL
                     reply_to=request.POST['email'],
                     to=[settings.CONTACT_EMAIL]
                 )
 
-                msg.attach_alternative('<p>Contact Form Submission from ' + request.POST['name'] + ' (<a href="mailto:' + request.POST['email'] + '">' + request.POST['email'] + '</a>).</p><p>' + request.POST['body'] + '</p><p><small>You can reply to this email.</small></p>', 'text/html')
+                msg.attach_alternative('<p>Contact Form Submission from {} (<a href="mailto:{}">{}</a>).</p><p>{}</p><p><small>You can reply to this email.</small></p>'.format(request.POST['name'], request.POST['email'], request.POST['email'], request.POST['body']), 'text/html')
 
                 msg.send()
 
