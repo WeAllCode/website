@@ -132,6 +132,7 @@ DATABASES = {
     }
 }
 
+DEFAULT_FROM_EMAIL = 'info@coderdojochi.org'
 CONTACT_EMAIL = 'info@coderdojochi.org'
 
 CACHES = {
