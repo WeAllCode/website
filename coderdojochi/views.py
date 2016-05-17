@@ -1013,12 +1013,13 @@ def contact(request, template_name="contact.html"):
 
                 msg = EmailMultiAlternatives(
                     subject='CoderDojoChi | Contact Form Submission',
-                    body='Contact Form Submission from ' + request.POST['name'] + ' (' + request.POST['email'] + '). ' + request.POST['body'],
-                    from_email=request.POST['email'],
+                    body='Contact Form Submission from {} ({}). {}'.format(request.POST['name'], request.POST['email'], request.POST['body']),
+                    from_email=settings.DEFAULT_FROM_EMAIL
+                    reply_to=request.POST['email'],
                     to=[settings.CONTACT_EMAIL]
                 )
 
-                msg.attach_alternative('<p>Contact Form Submission from ' + request.POST['name'] + ' (<a href="mailto:' + request.POST['email'] + '">' + request.POST['email'] + '</a>).</p><p>' + request.POST['body'] + '</p><p><small>You can reply to this email.</small></p>', 'text/html')
+                msg.attach_alternative('<p>Contact Form Submission from {} (<a href="mailto:{}">{}</a>).</p><p>{}</p><p><small>You can reply to this email.</small></p>'.format(request.POST['name'], request.POST['email'], request.POST['email'], request.POST['body']), 'text/html')
 
                 msg.send()
 
@@ -1316,8 +1317,8 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 
-    msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
-                       to=[email])
+    msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL, to=[email])
+
     if bcc:
         msg.bcc = bcc
 
