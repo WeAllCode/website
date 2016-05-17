@@ -80,7 +80,7 @@ class SignupForm(forms.Form):
 
 
 class MentorForm(CDCModelForm):
-    bio = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Short Bio','class': 'form-control', 'rows': 5}), label='Short Bio')
+    bio = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Short Bio','class': 'form-control', 'rows': 5}), label='Short Bio', required=False)
 
     class Meta:
         model = Mentor
