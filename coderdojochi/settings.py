@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    #vendor
+    # vendor
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'stdimage',
     'storages',
 
-    #coderdojochi
+    # coderdojochi
     'coderdojochi',
 ]
 
@@ -132,6 +132,7 @@ DATABASES = {
     }
 }
 
+DEFAULT_FROM_EMAIL = 'info@coderdojochi.org'
 CONTACT_EMAIL = 'info@coderdojochi.org'
 
 CACHES = {
@@ -196,7 +197,7 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     # Tell django-storages that when coming up with the URL for an item in S3 storage, keep
     # it simple - just use this domain plus the path. (If this isn't set, things get complicated).
-    # This controls how the `static` template tag from `staticfiles` gets expanded, if you're using it.
+    # This controls how the `static` template tag from `staticfiles` gets expanded if used.
     # We also use it in the next setting.
     AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
 
