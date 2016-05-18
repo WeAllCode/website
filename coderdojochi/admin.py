@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
                                  Equipment, MeetingType, Meeting, Location, Donation,
-                                 RaceEthnicity)
+                                 RaceEthnicity, MentorOrder, MeetingOrder)
 
 User = get_user_model()
 
@@ -104,13 +104,13 @@ class SessionAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
-    filter_horizontal = ('mentors', 'waitlist_mentors', 'waitlist_students', )
+    filter_horizontal = ('waitlist_mentors', 'waitlist_students', )
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return obj.mentors.count()
+        return MentorOrder.objects.filter(session__id=obj.id).count()
     get_mentor_count.short_description = 'Mentors'
 
     def get_current_orders_count(self, obj):
@@ -133,6 +133,44 @@ class OrderAdmin(admin.ModelAdmin):
         'updated_at'
     )
     list_filter = ('active', 'check_in', 'session',)
+    ordering = ('created_at',)
+    list_per_page = 100
+    date_hierarchy = 'created_at'
+    view_on_site = False
+
+
+class MentorOrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'mentor',
+        'session',
+        'ip',
+        'check_in',
+        'active',
+        'week_reminder_sent',
+        'day_reminder_sent',
+        'created_at',
+        'updated_at'
+    )
+    list_filter = ('active', 'check_in', 'session',)
+    ordering = ('created_at',)
+    list_per_page = 100
+    date_hierarchy = 'created_at'
+    view_on_site = False
+
+
+class MeetingOrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'mentor',
+        'meeting',
+        'ip',
+        'check_in',
+        'active',
+        'week_reminder_sent',
+        'day_reminder_sent',
+        'created_at',
+        'updated_at'
+    )
+    list_filter = ('active', 'check_in', 'meeting',)
     ordering = ('created_at',)
     list_per_page = 100
     date_hierarchy = 'created_at'
@@ -165,7 +203,7 @@ class MeetingAdmin(admin.ModelAdmin):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return obj.mentors.count()
+        return MeetingOrder.objects.filter(session__id=obj.id).count()
     get_mentor_count.short_description = 'Mentors'
 
 
@@ -206,6 +244,8 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(MentorOrder, MentorOrderAdmin)
+admin.site.register(MeetingOrder, MeetingOrderAdmin)
 admin.site.register(MeetingType, MeetingTypeAdmin)
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(EquipmentType, EquipmentTypeAdmin)
