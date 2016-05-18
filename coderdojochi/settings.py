@@ -23,7 +23,7 @@ PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str_to_bool(os.environ.get('DEBUG')) or False
+DEBUG = str_to_bool(os.environ.get('DEBUG')) or True
 IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']

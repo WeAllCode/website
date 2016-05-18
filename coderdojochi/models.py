@@ -213,7 +213,6 @@ class Session(models.Model):
     mentor_capacity = models.IntegerField(blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, related_name="session_teacher")
-    mentors = models.ManyToManyField(Mentor, blank=True, related_name="session_mentors")
     waitlist_mentors = models.ManyToManyField(
         Mentor,
         blank=True,
@@ -288,6 +287,27 @@ class Session(models.Model):
                 active=True,
                 session=self
             ).order_by('check_in', 'student__last_name')
+
+        return orders
+
+    def get_current_mentor_orders(self, checked_in=None):
+        if checked_in is not None:
+            if checked_in:
+                orders = MentorOrder.objects.filter(
+                    active=True,
+                    session=self
+                ).exclude(check_in=None).order_by('mentor__last_name')
+            else:
+                orders = MentorOrder.objects.filter(
+                    active=True,
+                    session=self,
+                    check_in=None
+                ).order_by('mentor__last_name')
+        else:
+            orders = MentorOrder.objects.filter(
+                active=True,
+                session=self
+            ).order_by('check_in', 'mentor__last_name')
 
         return orders
 
@@ -430,6 +450,56 @@ class Order(models.Model):
             self.student.first_name,
             self.student.last_name,
             self.session.course.title
+        )
+
+
+class MentorOrder(models.Model):
+    mentor = models.ForeignKey(Mentor)
+    session = models.ForeignKey(Session)
+    active = models.BooleanField(default=True)
+    ip = models.CharField(max_length=255, blank=True, null=True)
+    check_in = models.DateTimeField(blank=True, null=True)
+    affiliate = models.CharField(max_length=255, blank=True, null=True)
+    order_number = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    week_reminder_sent = models.BooleanField(default=False)
+    day_reminder_sent = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _("mentor order")
+        verbose_name_plural = _("mentor orders")
+
+    def __unicode__(self):
+        return '{} {} | {}'.format(
+            self.mentor.first_name,
+            self.mentor.last_name,
+            self.session.course.title
+        )
+
+
+class MeetingOrder(models.Model):
+    mentor = models.ForeignKey(Mentor)
+    meeting = models.ForeignKey(Meeting)
+    active = models.BooleanField(default=True)
+    ip = models.CharField(max_length=255, blank=True, null=True)
+    check_in = models.DateTimeField(blank=True, null=True)
+    affiliate = models.CharField(max_length=255, blank=True, null=True)
+    order_number = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    week_reminder_sent = models.BooleanField(default=False)
+    day_reminder_sent = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _("meeting order")
+        verbose_name_plural = _("meeting orders")
+
+    def __unicode__(self):
+        return '{} {} | {}'.format(
+            self.mentor.first_name,
+            self.mentor.last_name,
+            self.meeting.meeting_type.title
         )
 
 

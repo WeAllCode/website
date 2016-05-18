@@ -15,7 +15,56 @@
         <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
         <li class="active">Class Check-in Mentors</li>
     </ol>
-    <div class="alert alert-warning">Coming Soon :)</div>
+    {% if session.get_current_mentor_orders.count %}
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="col-xs-12 panel panel-default">
+                <h3>Attendance:</h3>
+                <h2>{{ mentors_checked_in.count }} of {{ session.get_current_mentor_orders.count }}</h2>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
+                        {{ attendance_percentage }}%
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-striped">
+                {% if session.get_current_mentor_orders %}
+                    <thead>
+                        <tr>
+                            <th>Mentor Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in session.get_current_mentor_orders %}
+                        <tr{% if order.check_in %} class="success"{% endif %}>
+                            <form method="post" action=".">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                <td>{{ order.mentor.last_name }}, {{ order.mentor.first_name }}</td>
+                                {% if order.check_in %}
+                                <td><button class="btn-link">Undo</button></td>
+                                {% else %}
+                                <td><button class="btn-cdc btn-cdc-sm">Check In</button></td>
+                                {% endif %}
+                            </form>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                {% else %}
+                    <p>No mentors registered.</p>
+                {% endif %}
+            </table>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

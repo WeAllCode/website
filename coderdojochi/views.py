@@ -20,7 +20,8 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 
-from coderdojochi.models import Mentor, Guardian, Student, Session, Order, Meeting, Donation
+from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
+                                 Meeting, Donation)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -451,44 +452,50 @@ def session_sign_up(
     undo = False
 
     if request.method == 'POST':
-
-        if request.user.role == 'mentor':
-            if user_signed_up:
-                session_obj.mentors.remove(mentor)
-                undo = True
+        if user_signed_up:
+            if request.user.role == 'mentor':
+                order = get_object_or_404(
+                    MentorOrder,
+                    mentor=mentor,
+                    session=session_obj,
+                    active=True
+                )
             else:
-                session_obj.mentors.add(mentor)
-        else:
-            if user_signed_up:
                 order = get_object_or_404(Order, student=student, session=session_obj, active=True)
-                order.active = False
-                order.save()
-                undo = True
-            else:
-                if not settings.DEBUG:
-                    ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
-                else:
-                    ip = request.META['REMOTE_ADDR']
 
+            order.active = False
+            order.save()
+            undo = True
+        else:
+            if not settings.DEBUG:
+                ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
+            else:
+                ip = request.META['REMOTE_ADDR']
+
+            if request.user.role == 'mentor':
                 order = Order.objects.create(
                     guardian=guardian,
                     student=student,
                     session=session_obj,
                     ip=ip
                 )
+            else:
+                order = MentorOrder.objects.create(
+                    mentor=mentor,
+                    session=session_obj,
+                    ip=ip
+                )
 
-                # we dont want guardians getting 7 day reminder email if they sign up within 9 days
-                if session_obj.start_date < timezone.now() + timedelta(days=9):
-                    order.week_reminder_sent = True
+            # we dont want guardians getting 7 day reminder email if they sign up within 9 days
+            if session_obj.start_date < timezone.now() + timedelta(days=9):
+                order.week_reminder_sent = True
 
-                # or 24 hours notice if signed up within 48 hours
-                if session_obj.start_date < timezone.now() + timedelta(days=2):
-                    order.week_reminder_sent = True
-                    order.day_reminder_sent = True
+            # or 24 hours notice if signed up within 48 hours
+            if session_obj.start_date < timezone.now() + timedelta(days=2):
+                order.week_reminder_sent = True
+                order.day_reminder_sent = True
 
-                order.save()
-
-        session_obj.save()
+            order.save()
 
         if undo:
             messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
@@ -562,16 +569,6 @@ def session_sign_up(
                 )
 
         return HttpResponseRedirect(session_obj.get_absolute_url())
-
-    # only allow mentors to view non-public sessions
-    # if not session_obj.public:
-    #   if not request.user.is_authenticated() or guardian:
-    #       messages.add_message(
-    #           request,
-    #           messages.ERROR,
-    #           'Sorry, the class you requested is not available at this time.'
-    #       )
-    #       return HttpResponseRedirect(reverse('sessions'))
 
     return render_to_response(template_name, {
         'session': session_obj,
@@ -1428,14 +1425,26 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
+    current_mentor_orders = session_obj.get_current_mentor_orders()
+    current_mentor_orders_checked_in = session_obj.get_current_mentor_orders(checked_in=True)
+    mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
+
+    if len(current_mentor_orders_checked_in):
+        attendance_percentage = round(
+            (float(current_mentor_orders_checked_in) /
+             float(current_mentor_orders)) * 100
+        )
+    else:
+        attendance_percentage = 0
 
     return render_to_response(template_name, {
         'session': session_obj,
+        'attendance_percentage': attendance_percentage,
+        'mentors_checked_in': mentors_checked_in
     }, context_instance=RequestContext(request))
 
 
 def session_announce(request, session_id):
-
     if not request.user.is_staff:
         messages.add_message(
             request,
