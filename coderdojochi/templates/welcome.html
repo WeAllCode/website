@@ -35,7 +35,7 @@
         <hr>
         <h3 class="text-muted">Please complete all fields below</h3>
         {% endif %}
-        <form action="{% if next %}?next={{ next }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" method="post">
+        <form action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
             <button class="submit btn-cdc btn-cdc-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
@@ -50,7 +50,7 @@
             <input type="hidden" name="role" value="parent">
             <button class="btn btn-success">Parent/Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
         </form>
-        <form method="post" action="{% if next %}?next={{ next }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" class="role">
+        <form method="post" action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="mentor">
             <button class="btn btn-success">Volunteer <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
