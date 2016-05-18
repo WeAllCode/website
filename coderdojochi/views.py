@@ -1,53 +1,46 @@
-from datetime import date, timedelta
-from itertools import groupby
-from collections import Counter
-import operator
-
-from django import forms
-from django.conf import settings
-from django.contrib import messages, auth
-from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
-from django.core.mail import EmailMessage, EmailMultiAlternatives, send_mail
-from django.core.urlresolvers import reverse
-from django.db.models import Avg, Count, Case, When
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext, Context
-from django.template.loader import get_template
-from django.utils import timezone
-from django.utils.html import conditional_escape as esc, strip_tags
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.csrf import csrf_exempt
-
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation
-from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
-
-from calendar import HTMLCalendar
+import arrow
 import calendar
-
-from icalendar import Calendar, Event, vCalAddress, vText
-
+from collections import Counter
+from datetime import date, timedelta
+from icalendar import Calendar, Event, vText
+import operator
 from paypal.standard.forms import PayPalPaymentsForm
 
-import arrow, os, pytz, tempfile
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.urlresolvers import reverse
+from django.db.models import Count, Case, When
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+from django.utils import timezone
+from django.utils.html import strip_tags
+from django.views.decorators.csrf import csrf_exempt
+
+from coderdojochi.models import Mentor, Guardian, Student, Session, Order, Meeting, Donation
+from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
+
 
 def add_months(sourcedate, months):
     month = sourcedate.month - 1 + months
     year = sourcedate.year + month / 12
     month = month % 12 + 1
-    day = min(sourcedate.day,calendar.monthrange(year,month)[1])
+    day = min(sourcedate.day, calendar.monthrange(year, month)[1])
 
-    return date(year,month,day)
+    return date(year, month, day)
+
 
 def home(request, template_name="home.html"):
-
-    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_classes = Session.objects.filter(
+        active=True,
+        end_date__gte=timezone.now()
+    ).order_by('start_date')
 
     if not request.user.is_authenticated() or not request.user.role == 'mentor':
         upcoming_classes = upcoming_classes.filter(public=True)
@@ -58,9 +51,9 @@ def home(request, template_name="home.html"):
         'upcoming_classes': upcoming_classes
     }, context_instance=RequestContext(request))
 
+
 @login_required
 def welcome(request, template_name="welcome.html"):
-
     keepGoing = True
 
     user = request.user
@@ -70,11 +63,10 @@ def welcome(request, template_name="welcome.html"):
     form = False
     role = user.role if user.role else False
 
-
-    next = False
+    next_url = False
 
     if 'next' in request.GET:
-        next = request.GET['next']
+        next_url = request.GET['next']
 
     if request.method == 'POST':
 
@@ -96,11 +88,13 @@ def welcome(request, template_name="welcome.html"):
                         keepGoing = False
 
                     if keepGoing:
-                        if next:
+                        if next_url:
                             if 'enroll' in request.GET:
-                                return HttpResponseRedirect(next + '?enroll=True&student=' + str(new_student.id))
+                                return HttpResponseRedirect(
+                                    next_url + '?enroll=True&student=' + str(new_student.id)
+                                )
                             else:
-                                return HttpResponseRedirect(next)
+                                return HttpResponseRedirect(next_url)
                         else:
                             return HttpResponseRedirect(reverse('welcome'))
 
@@ -109,11 +103,11 @@ def welcome(request, template_name="welcome.html"):
                     form.save()
                     messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
 
-                    if next:
+                    if next_url:
                         if 'enroll' in request.GET:
-                            return HttpResponseRedirect(next + '?enroll=True')
+                            return HttpResponseRedirect(next_url + '?enroll=True')
                         else:
-                            return HttpResponseRedirect(next)
+                            return HttpResponseRedirect(next_url)
                     else:
                         return HttpResponseRedirect(reverse('dojo'))
                 else:
@@ -136,22 +130,23 @@ def welcome(request, template_name="welcome.html"):
 
             user.save()
 
-
             merge_vars = {
                 'user': request.user.username,
                 'first_name': request.user.first_name,
                 'last_name': request.user.last_name
             }
 
-            if next:
-                next = '?next=' + next
+            if next_url:
+                next_url = '?next=' + next_url
             else:
-                next = ''
+                next_url = ''
 
             if role == 'mentor':
-
                 # check for next upcoming meeting
-                next_meeting = Meeting.objects.filter(active=True, public=True).order_by('start_date').first()
+                next_meeting = Meeting.objects.filter(
+                    active=True,
+                    public=True
+                ).order_by('start_date').first()
 
                 if next_meeting:
                     merge_vars['next_intro_meeting_url'] = next_meeting.get_absolute_url()
@@ -159,9 +154,8 @@ def welcome(request, template_name="welcome.html"):
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-mentor', merge_vars)
 
-                return HttpResponseRedirect(next)
+                return HttpResponseRedirect(next_url)
             else:
-
                 # check for next upcoming class
                 next_class = Session.objects.filter(active=True).order_by('start_date').first()
 
@@ -171,7 +165,7 @@ def welcome(request, template_name="welcome.html"):
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-guardian', merge_vars)
 
-                return HttpResponseRedirect(reverse('welcome') + next)
+                return HttpResponseRedirect(reverse('welcome') + next_url)
 
     if role and keepGoing:
         if role == 'mentor':
@@ -190,8 +184,8 @@ def welcome(request, template_name="welcome.html"):
 
     if account and account.first_name and keepGoing:
         if role == 'mentor':
-            if next:
-                return HttpResponseRedirect(next)
+            if next_url:
+                return HttpResponseRedirect(next_url)
             else:
                 return HttpResponseRedirect(reverse('dojo'))
         else:
@@ -199,9 +193,9 @@ def welcome(request, template_name="welcome.html"):
 
     if keepGoing:
         if 'next' in request.GET:
-            next = request.GET['next']
+            next_url = request.GET['next']
         else:
-            next = False
+            next_url = False
 
     return render_to_response(template_name, {
         'role': role,
@@ -209,42 +203,64 @@ def welcome(request, template_name="welcome.html"):
         'form': form,
         'add_student': add_student,
         'students': students,
-        'next': next
+        'next_url': next_url
     }, context_instance=RequestContext(request))
 
-def sessions(request, year=False, month=False, template_name="sessions.html"):
 
+def sessions(request, year=False, month=False, template_name="sessions.html"):
     now = timezone.now()
 
     year = int(year) if year else now.year
     month = int(month) if month else now.month
 
     calendar_date = date(day=1, month=month, year=year)
-    prev_date = add_months(calendar_date,-1)
-    next_date = add_months(calendar_date,1)
+    prev_date = add_months(calendar_date, -1)
+    next_date = add_months(calendar_date, 1)
 
-    all_sessions = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    all_sessions = Session.objects.filter(
+        active=True,
+        end_date__gte=timezone.now()
+    ).order_by('start_date')
 
     if not request.user.is_authenticated() or not request.user.role == 'mentor':
         all_sessions = all_sessions.filter(public=True)
 
-    sessions = all_sessions.filter(start_date__year=year, start_date__month=month).order_by('start_date')
-    cal = SessionsCalendar(sessions).formatmonth(year, month)
+    sessions = all_sessions.filter(
+        start_date__year=year,
+        start_date__month=month
+    ).order_by('start_date')
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'all_sessions': all_sessions,
         'sessions': sessions,
-        'calendar': mark_safe(cal),
         'calendar_date': calendar_date,
         'prev_date': prev_date,
         'next_date': next_date
     }, context_instance=RequestContext(request))
 
 
-def session_detail_enroll(request, year, month, day, slug, session_id, template_name="session-detail.html"):
+def session_detail_enroll(
+    request,
+    year,
+    month,
+    day,
+    slug,
+    session_id,
+    template_name="session-detail.html"
+):
     return session_detail(request, year, month, day, slug, session_id, template_name, enroll=True)
 
-def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html", enroll=False):
+
+def session_detail(
+    request,
+    year,
+    month,
+    day,
+    slug,
+    session_id,
+    template_name="session-detail.html",
+    enroll=False
+):
     session_obj = get_object_or_404(Session, id=session_id)
     mentor_signed_up = False
     account = False
@@ -259,36 +275,58 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
                 if request.POST['remove'] == 'true':
                     session_obj.waitlist_students.remove(student)
                     session_obj.save()
-                    messages.add_message(request, messages.SUCCESS, 'You have been removed from the waitlist. Thanks for letting us know.')
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        'You have been removed from the waitlist. Thanks for letting us know.'
+                    )
                 else:
                     session_obj.waitlist_students.add(student)
                     session_obj.save()
-                    messages.add_message(request, messages.SUCCESS, 'Added to waitlist successfully.')
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        'Added to waitlist successfully.'
+                    )
             else:
                 mentor = Mentor.objects.get(id=int(request.POST['account_id']))
 
                 if request.POST['remove'] == 'true':
                     session_obj.waitlist_mentors.remove(mentor)
                     session_obj.save()
-                    messages.add_message(request, messages.SUCCESS, 'You have been removed from the waitlist. Thanks for letting us know.')
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        'You have been removed from the waitlist. Thanks for letting us know.'
+                    )
                 else:
                     session_obj.waitlist_mentors.add(mentor)
                     session_obj.save()
-                    messages.add_message(request, messages.SUCCESS, 'Added to waitlist successfully.')
+                    messages.add_message(
+                        request,
+                        messages.SUCCESS,
+                        'Added to waitlist successfully.'
+                    )
         else:
             messages.add_message(request, messages.ERROR, 'Invalid request, please try again.')
 
         return HttpResponseRedirect(session_obj.get_absolute_url())
 
-    upcoming_classes = Session.objects.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_classes = Session.objects.filter(
+        active=True,
+        end_date__gte=timezone.now()
+    ).order_by('start_date')
 
     if not request.user.is_authenticated() or not request.user.role == 'mentor':
         upcoming_classes = upcoming_classes.filter(public=True)
 
     if request.user.is_authenticated():
-
         if not request.user.role:
-            messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
+            messages.add_message(
+                request,
+                messages.WARNING,
+                'Please select one of the following options to continue.'
+            )
 
             url = reverse('welcome') + '?next=' + session_obj.get_absolute_url()
 
@@ -305,19 +343,25 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
             if enroll or 'enroll' in request.GET:
                 return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/')
-
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
             account = guardian
             students = guardian.get_students() if guardian.get_students().count() else False
-            spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
+            spots_remaining = session_obj.capacity - session_obj.get_current_students().count()
 
             if enroll or 'enroll' in request.GET:
                 if not students:
-                    return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url() + '&enroll=True')
+                    return HttpResponseRedirect(
+                        '{}?next={}&enroll=True'.format(
+                            reverse('welcome'),
+                            session_obj.get_absolute_url()
+                        )
+                    )
                 else:
                     if 'student' in request.GET:
-                        return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/' + request.GET['student'])
+                        return HttpResponseRedirect(
+                            session_obj.get_absolute_url() + '/sign-up/' + request.GET['student']
+                        )
 
     else:
         spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
@@ -325,10 +369,14 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
     # only allow mentors to view non-public sessions
     # if not session_obj.public:
     #     if not request.user.is_authenticated() or request.user.role == 'guardian':
-    #         messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
+    #         messages.add_message(
+    #           request,
+    #           messages.ERROR,
+    #           'Sorry, the class you requested is not available at this time.'
+    #          )
     #         return HttpResponseRedirect(reverse('sessions'))
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'session': session_obj,
         'mentor_signed_up': mentor_signed_up,
         'students': students,
@@ -339,14 +387,26 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
 
 @login_required
-def session_sign_up(request, year, month, day, slug, session_id, student_id=False, template_name="session-sign-up.html"):
-
+def session_sign_up(
+    request,
+    year,
+    month,
+    day,
+    slug,
+    session_id,
+    student_id=False,
+    template_name="session-sign-up.html"
+):
     session_obj = get_object_or_404(Session, id=session_id)
     student = False
     guardian = False
 
     if not request.user.role:
-        messages.add_message(request, messages.WARNING, 'Please select one of the following options to continue.')
+        messages.add_message(
+            request,
+            messages.WARNING,
+            'Please select one of the following options to continue.'
+        )
         return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
 
     if request.user.role == 'mentor':
@@ -354,16 +414,25 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         mentor = get_object_or_404(Mentor, user=request.user)
 
         if not mentor.background_check:
-            messages.add_message(request, messages.WARNING, 'You cannot sign up for a class until after attending a mentor meeting. Please RSVP below.')
+            messages.add_message(
+                request,
+                messages.WARNING,
+                'You cannot sign up for a class until after attending a mentor meeting. '
+                'Please RSVP below.'
+            )
             return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
 
         user_signed_up = True if mentor in session_obj.mentors.all() else False
 
         if not user_signed_up:
             if session_obj.get_mentor_capacity() <= session_obj.mentors.all().count():
-                messages.add_message(request, messages.ERROR, 'Sorry this class is at mentor capacity.  Please check back soon and/or join us for another upcoming class!')
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    'Sorry this class is at mentor capacity.  '
+                    'Please check back soon and/or join us for another upcoming class!'
+                )
                 return HttpResponseRedirect(session_obj.get_absolute_url())
-
     else:
         student = get_object_or_404(Student, id=student_id)
         guardian = get_object_or_404(Guardian, user=request.user)
@@ -371,7 +440,12 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         if not user_signed_up:
             if session_obj.capacity <= session_obj.get_current_students().all().count():
-                messages.add_message(request, messages.ERROR, 'Sorry this class has sold out. Please sign up for the wait list and/or check back later.')
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    'Sorry this class has sold out. '
+                    'Please sign up for the wait list and/or check back later.'
+                )
                 return HttpResponseRedirect(session_obj.get_absolute_url())
 
     undo = False
@@ -396,7 +470,12 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 else:
                     ip = request.META['REMOTE_ADDR']
 
-                order = Order.objects.create(guardian=guardian, student=student, session=session_obj, ip=ip)
+                order = Order.objects.create(
+                    guardian=guardian,
+                    student=student,
+                    session=session_obj,
+                    ip=ip
+                )
 
                 # we dont want guardians getting 7 day reminder email if they sign up within 9 days
                 if session_obj.start_date < timezone.now() + timedelta(days=9):
@@ -416,64 +495,85 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
 
-
             if request.user.role == 'mentor':
-
-                sendSystemEmail(request, 'Upcoming class confirmation', 'coderdojochi-class-confirm-mentor', {
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'class_code': session_obj.course.code,
-                    'class_title': session_obj.course.title,
-                    'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
-                    'class_end_date': arrow.get(session_obj.mentor_end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session_obj.mentor_end_date).format('h:mma'),
-                    'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
-                    'class_location_city': session_obj.location.city,
-                    'class_location_state': session_obj.location.state,
-                    'class_location_zip': session_obj.location.zip,
-                    'class_additional_info': session_obj.additional_info,
-                    'class_url': session_obj.get_absolute_url(),
-                    'class_ics_url': session_obj.get_ics_url()
-                })
+                sendSystemEmail(
+                    request,
+                    'Upcoming class confirmation',
+                    'coderdojochi-class-confirm-mentor',
+                    {
+                        'first_name': request.user.first_name,
+                        'last_name': request.user.last_name,
+                        'class_code': session_obj.course.code,
+                        'class_title': session_obj.course.title,
+                        'class_description': session_obj.course.description,
+                        'class_start_date': arrow.get(
+                            session_obj.mentor_start_date
+                        ).format('dddd, MMMM D, YYYY'),
+                        'class_start_time': arrow.get(
+                            session_obj.mentor_start_date
+                        ).format('h:mma'),
+                        'class_end_date': arrow.get(
+                            session_obj.mentor_end_date
+                        ).format('dddd, MMMM D, YYYY'),
+                        'class_end_time': arrow.get(session_obj.mentor_end_date).format('h:mma'),
+                        'class_location_name': session_obj.location.name,
+                        'class_location_address': session_obj.location.address,
+                        'class_location_address2': session_obj.location.address2,
+                        'class_location_city': session_obj.location.city,
+                        'class_location_state': session_obj.location.state,
+                        'class_location_zip': session_obj.location.zip,
+                        'class_additional_info': session_obj.additional_info,
+                        'class_url': session_obj.get_absolute_url(),
+                        'class_ics_url': session_obj.get_ics_url()
+                    }
+                )
 
             else:
-
-                sendSystemEmail(request, 'Upcoming class confirmation', 'coderdojochi-class-confirm-guardian', {
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'student_first_name': student.first_name,
-                    'student_last_name': student.last_name,
-                    'class_code': session_obj.course.code,
-                    'class_title': session_obj.course.title,
-                    'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
-                    'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
-                    'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
-                    'class_location_city': session_obj.location.city,
-                    'class_location_state': session_obj.location.state,
-                    'class_location_zip': session_obj.location.zip,
-                    'class_additional_info': session_obj.additional_info,
-                    'class_url': session_obj.get_absolute_url(),
-                    'class_ics_url': session_obj.get_ics_url()
-                })
+                sendSystemEmail(
+                    request,
+                    'Upcoming class confirmation',
+                    'coderdojochi-class-confirm-guardian',
+                    {
+                        'first_name': request.user.first_name,
+                        'last_name': request.user.last_name,
+                        'student_first_name': student.first_name,
+                        'student_last_name': student.last_name,
+                        'class_code': session_obj.course.code,
+                        'class_title': session_obj.course.title,
+                        'class_description': session_obj.course.description,
+                        'class_start_date': arrow.get(
+                            session_obj.start_date
+                        ).format('dddd, MMMM D, YYYY'),
+                        'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
+                        'class_end_date': arrow.get(
+                            session_obj.end_date
+                        ).format('dddd, MMMM D, YYYY'),
+                        'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
+                        'class_location_name': session_obj.location.name,
+                        'class_location_address': session_obj.location.address,
+                        'class_location_address2': session_obj.location.address2,
+                        'class_location_city': session_obj.location.city,
+                        'class_location_state': session_obj.location.state,
+                        'class_location_zip': session_obj.location.zip,
+                        'class_additional_info': session_obj.additional_info,
+                        'class_url': session_obj.get_absolute_url(),
+                        'class_ics_url': session_obj.get_ics_url()
+                    }
+                )
 
         return HttpResponseRedirect(session_obj.get_absolute_url())
 
     # only allow mentors to view non-public sessions
     # if not session_obj.public:
-    #     if not request.user.is_authenticated() or guardian:
-    #         messages.add_message(request, messages.ERROR, 'Sorry, the class you requested is not available at this time.')
-    #         return HttpResponseRedirect(reverse('sessions'))
+    #   if not request.user.is_authenticated() or guardian:
+    #       messages.add_message(
+    #           request,
+    #           messages.ERROR,
+    #           'Sorry, the class you requested is not available at this time.'
+    #       )
+    #       return HttpResponseRedirect(reverse('sessions'))
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'session': session_obj,
         'user_signed_up': user_signed_up,
         'student': student,
@@ -495,15 +595,22 @@ def session_ics(request, year, month, day, slug, session_id):
     end_date_arrow = '{}Z'.format(arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss'))
 
     event['uid'] = 'CLASS{:04}@coderdojochi.org'.format(session_obj.id)
-    event['summary'] = 'CoderDojoChi: {} - {}'.format(session_obj.course.code, session_obj.course.title)
+    event['summary'] = 'CoderDojoChi: {} - {}'.format(
+        session_obj.course.code,
+        session_obj.course.title
+    )
     event['dtstart'] = start_date_arrow
     event['dtend'] = end_date_arrow
     event['dtstamp'] = start_date_arrow
 
     if request.user.is_authenticated() and request.user.role == 'mentor':
 
-        mentor_start_date_arrow = '{}Z'.format(arrow.get(session_obj.mentor_start_date).format('YYYYMMDDTHHmmss'))
-        mentor_end_date_arrow = '{}Z'.format(arrow.get(session_obj.mentor_end_date).format('YYYYMMDDTHHmmss'))
+        mentor_start_date_arrow = '{}Z'.format(
+            arrow.get(session_obj.mentor_start_date).format('YYYYMMDDTHHmmss')
+        )
+        mentor_end_date_arrow = '{}Z'.format(
+            arrow.get(session_obj.mentor_end_date).format('YYYYMMDDTHHmmss')
+        )
 
         event['dtstart'] = mentor_start_date_arrow
         event['dtend'] = mentor_end_date_arrow
@@ -528,7 +635,9 @@ def session_ics(request, year, month, day, slug, session_id):
 
     cal.add_component(event)
 
-    event_slug = 'coderdojochi-class-{}'.format(arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mma'))
+    event_slug = 'coderdojochi-class-{}'.format(
+        arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mma')
+    )
 
     # Return the ICS formatted calendar
     response = HttpResponse(cal.to_ical(),
@@ -541,21 +650,28 @@ def session_ics(request, year, month, day, slug, session_id):
 
 def meeting_detail(request, year, month, day, meeting_id, template_name="meeting-detail.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-
     mentor_signed_up = False
 
     if request.user.is_authenticated():
         mentor = get_object_or_404(Mentor, user=request.user)
         mentor_signed_up = True if mentor in meeting_obj.mentors.all() else False
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'meeting': meeting_obj,
         'mentor_signed_up': mentor_signed_up,
     }, context_instance=RequestContext(request))
 
 
 @login_required
-def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, template_name="meeting-sign-up.html"):
+def meeting_sign_up(
+    request,
+    year,
+    month,
+    day,
+    meeting_id,
+    student_id=False,
+    template_name="meeting-sign-up.html"
+):
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
@@ -579,38 +695,57 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
         else:
             messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
 
-            sendSystemEmail(request, 'Upcoming mentor meeting confirmation', 'coderdojochi-meeting-confirm-mentor', {
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name,
-                'meeting_title': meeting_obj.meeting_type.title,
-                'meeting_description': meeting_obj.meeting_type.description,
-                'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
-                'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
-                'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
-                'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
-                'meeting_location_name': meeting_obj.location.name,
-                'meeting_location_address': meeting_obj.location.address,
-                'meeting_location_address2': meeting_obj.location.address2,
-                'meeting_location_city': meeting_obj.location.city,
-                'meeting_location_state': meeting_obj.location.state,
-                'meeting_location_zip': meeting_obj.location.zip,
-                'meeting_additional_info': meeting_obj.additional_info,
-                'meeting_url': meeting_obj.get_absolute_url(),
-                'meeting_ics_url': meeting_obj.get_ics_url()
-            })
+            sendSystemEmail(
+                request,
+                'Upcoming mentor meeting confirmation',
+                'coderdojochi-meeting-confirm-mentor',
+                {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'meeting_title': meeting_obj.meeting_type.title,
+                    'meeting_description': meeting_obj.meeting_type.description,
+                    'meeting_start_date': arrow.get(
+                        meeting_obj.start_date
+                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
+                    'meeting_end_date': arrow.get(
+                        meeting_obj.end_date
+                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
+                    'meeting_location_name': meeting_obj.location.name,
+                    'meeting_location_address': meeting_obj.location.address,
+                    'meeting_location_address2': meeting_obj.location.address2,
+                    'meeting_location_city': meeting_obj.location.city,
+                    'meeting_location_state': meeting_obj.location.state,
+                    'meeting_location_zip': meeting_obj.location.zip,
+                    'meeting_additional_info': meeting_obj.additional_info,
+                    'meeting_url': meeting_obj.get_absolute_url(),
+                    'meeting_ics_url': meeting_obj.get_ics_url()
+                }
+            )
 
-        return HttpResponseRedirect(reverse('meeting_detail', args=(meeting_obj.start_date.year, meeting_obj.start_date.month, meeting_obj.start_date.day, meeting_obj.id)))
+        return HttpResponseRedirect(
+            reverse('meeting_detail', args=(
+                meeting_obj.start_date.year,
+                meeting_obj.start_date.month,
+                meeting_obj.start_date.day,
+                meeting_obj.id
+            ))
+        )
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'meeting': meeting_obj,
         'user_signed_up': user_signed_up
     }, context_instance=RequestContext(request))
 
 
 def meeting_announce(request, meeting_id):
-
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permission to access this page.'
+        )
         return HttpResponseRedirect(reverse('home'))
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
@@ -618,25 +753,35 @@ def meeting_announce(request, meeting_id):
     if not meeting_obj.announced_date:
 
         for mentor in Mentor.objects.filter(active=True):
-            sendSystemEmail(request, 'Upcoming mentor meeting', 'coderdojochi-meeting-announcement-mentor', {
-                'first_name': mentor.user.first_name,
-                'last_name': mentor.user.last_name,
-                'meeting_title': meeting_obj.meeting_type.title,
-                'meeting_description': meeting_obj.meeting_type.description,
-                'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
-                'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
-                'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
-                'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
-                'meeting_location_name': meeting_obj.location.name,
-                'meeting_location_address': meeting_obj.location.address,
-                'meeting_location_address2': meeting_obj.location.address2,
-                'meeting_location_city': meeting_obj.location.city,
-                'meeting_location_state': meeting_obj.location.state,
-                'meeting_location_zip': meeting_obj.location.zip,
-                'meeting_additional_info': meeting_obj.additional_info,
-                'meeting_url': meeting_obj.get_absolute_url(),
-                'meeting_ics_url': meeting_obj.get_ics_url()
-            }, mentor.user.email)
+            sendSystemEmail(
+                request,
+                'Upcoming mentor meeting',
+                'coderdojochi-meeting-announcement-mentor',
+                {
+                    'first_name': mentor.user.first_name,
+                    'last_name': mentor.user.last_name,
+                    'meeting_title': meeting_obj.meeting_type.title,
+                    'meeting_description': meeting_obj.meeting_type.description,
+                    'meeting_start_date': arrow.get(
+                        meeting_obj.start_date
+                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
+                    'meeting_end_date': arrow.get(
+                        meeting_obj.end_date
+                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
+                    'meeting_location_name': meeting_obj.location.name,
+                    'meeting_location_address': meeting_obj.location.address,
+                    'meeting_location_address2': meeting_obj.location.address2,
+                    'meeting_location_city': meeting_obj.location.city,
+                    'meeting_location_state': meeting_obj.location.state,
+                    'meeting_location_zip': meeting_obj.location.zip,
+                    'meeting_additional_info': meeting_obj.additional_info,
+                    'meeting_url': meeting_obj.get_absolute_url(),
+                    'meeting_ics_url': meeting_obj.get_ics_url()
+                },
+                mentor.user.email
+            )
 
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
@@ -647,8 +792,8 @@ def meeting_announce(request, meeting_id):
 
     return HttpResponseRedirect(reverse('cdc_admin'))
 
-def meeting_ics(request, year, month, day, meeting_id):
 
+def meeting_ics(request, year, month, day, meeting_id):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
     cal = Calendar()
@@ -663,7 +808,10 @@ def meeting_ics(request, year, month, day, meeting_id):
 
     event['uid'] = 'MEETING{:04}@coderdojochi.org'.format(meeting_obj.id)
 
-    event_name = '{} - '.format(meeting_obj.meeting_type.code) if meeting_obj.meeting_type.code else ''
+    event_name = '{} - '.format(
+        meeting_obj.meeting_type.code
+    ) if meeting_obj.meeting_type.code else ''
+
     event_name += meeting_obj.meeting_type.title
 
     event['summary'] = 'CoderDojoChi: {}'.format(event_name)
@@ -680,7 +828,6 @@ def meeting_ics(request, year, month, day, meeting_id):
                                               )
 
     event['location'] = vText(location)
-
     event['url'] = meeting_obj.get_absolute_url
     event['description'] = strip_tags(meeting_obj.meeting_type.description)
 
@@ -689,36 +836,41 @@ def meeting_ics(request, year, month, day, meeting_id):
     event['priority'] = 5
 
     cal.add_component(event)
-
-    event_slug = 'coderdojochi-meeting-{}'.format(arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mma'))
+    event_slug = 'coderdojochi-meeting-{}'.format(
+        arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mma')
+    )
 
     # Return the ICS formatted calendar
     response = HttpResponse(cal.to_ical(),
                             content_type='text/calendar',
                             charset='utf-8')
     response['Content-Disposition'] = 'attachment;filename={}.ics'.format(event_slug)
-
     return response
 
 
 def volunteer(request, template_name="volunteer.html"):
-
-    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
-
-    upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')[:3]
+    mentors = Mentor.objects.filter(
+        active=True,
+        public=True
+    ).order_by('user__date_joined')
+    upcoming_meetings = Meeting.objects.filter(
+        active=True,
+        public=True,
+        end_date__gte=timezone.now()
+    ).order_by('start_date')[:3]
 
     return render_to_response(template_name, {
         'mentors': mentors,
         'upcoming_meetings': upcoming_meetings
     }, context_instance=RequestContext(request))
 
-def faqs(request, template_name="faqs.html"):
 
-    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+def faqs(request, template_name="faqs.html"):
+    return render_to_response(template_name, {}, context_instance=RequestContext(request))
+
 
 @login_required
 def dojo(request, template_name="dojo.html"):
-
     highlight = request.GET['highlight'] if 'highlight' in request.GET else False
 
     context = {
@@ -732,9 +884,19 @@ def dojo(request, template_name="dojo.html"):
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
             mentor_sessions = Session.objects.filter(mentors=mentor)
-            upcoming_sessions = mentor_sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
-            past_sessions = mentor_sessions.filter(active=True, end_date__lte=timezone.now()).order_by('start_date')
-            upcoming_meetings = Meeting.objects.filter(active=True, public=True, end_date__gte=timezone.now()).order_by('start_date')
+            upcoming_sessions = mentor_sessions.filter(
+                active=True,
+                end_date__gte=timezone.now()
+            ).order_by('start_date')
+            past_sessions = mentor_sessions.filter(
+                active=True,
+                end_date__lte=timezone.now()
+            ).order_by('start_date')
+            upcoming_meetings = Meeting.objects.filter(
+                active=True,
+                public=True,
+                end_date__gte=timezone.now()
+            ).order_by('start_date')
 
             if request.method == 'POST':
                 form = MentorForm(request.POST, request.FILES, instance=account)
@@ -743,7 +905,11 @@ def dojo(request, template_name="dojo.html"):
                     messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
                     return HttpResponseRedirect(reverse('dojo'))
                 else:
-                    messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
+                    messages.add_message(
+                        request,
+                        messages.ERROR,
+                        'There was an error. Please try again.'
+                    )
             else:
                 form = MentorForm(instance=account)
 
@@ -754,11 +920,16 @@ def dojo(request, template_name="dojo.html"):
         if request.user.role == 'guardian':
             guardian = get_object_or_404(Guardian, user=request.user)
             account = guardian
-
             students = Student.objects.filter(guardian=guardian)
             student_orders = Order.objects.filter(student__in=students)
-            upcoming_orders = student_orders.filter(active=True, session__end_date__gte=timezone.now()).order_by('session__start_date')
-            past_orders = student_orders.filter(active=True, session__end_date__lte=timezone.now()).order_by('session__start_date')
+            upcoming_orders = student_orders.filter(
+                active=True,
+                session__end_date__gte=timezone.now()
+            ).order_by('session__start_date')
+            past_orders = student_orders.filter(
+                active=True,
+                session__end_date__lte=timezone.now()
+            ).order_by('session__start_date')
 
             if request.method == 'POST':
                 form = GuardianForm(request.POST, instance=account)
@@ -767,7 +938,11 @@ def dojo(request, template_name="dojo.html"):
                     messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
                     return HttpResponseRedirect(reverse('dojo'))
                 else:
-                    messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
+                    messages.add_message(
+                        request,
+                        messages.ERROR,
+                        'There was an error. Please try again.'
+                    )
             else:
                 form = GuardianForm(instance=account)
 
@@ -775,67 +950,29 @@ def dojo(request, template_name="dojo.html"):
             context['upcoming_orders'] = upcoming_orders
             context['past_orders'] = past_orders
 
-
         context['account'] = account
         context['form'] = form
-
     else:
         if 'next' in request.GET:
             return HttpResponseRedirect(reverse('welcome') + '?next=' + request.GET['next'])
         else:
-            messages.add_message(request, messages.WARNING, 'Tell us a little about yourself before going on to your dojo')
+            messages.add_message(
+                request,
+                messages.WARNING,
+                'Tell us a little about yourself before going on to your dojo'
+            )
             return HttpResponseRedirect(reverse('welcome'))
-
 
     return render_to_response(template_name, context, context_instance=RequestContext(request))
 
 
-class SessionsCalendar(HTMLCalendar):
-
-    def __init__(self, sessions):
-        super(SessionsCalendar, self).__init__()
-        self.sessions = self.group_by_day(sessions)
-
-    def formatday(self, day, weekday):
-        if day != 0:
-            cssclass = self.cssclasses[weekday]
-            if date.today() == date(self.year, self.month, day):
-                cssclass += ' today'
-            if day in self.sessions:
-                cssclass += ' filled'
-                body = []
-                for cdc_session in self.sessions[day]:
-                    remaining_spots = cdc_session.capacity - cdc_session.get_current_students().all().count()
-                    dayclass = 'unavailable' if not remaining_spots else 'available'
-                    body.append('<a class="' + dayclass + '" href="%s">' % cdc_session.get_absolute_url())
-                    if cdc_session.course.code:
-                        body.append(esc(cdc_session.course.code) + ': ')
-                    body.append(esc(cdc_session.course.title))
-                    body.append('</a>')
-                return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
-            return self.day_cell(cssclass, day)
-        return self.day_cell('noday', '&nbsp;')
-
-    def formatmonth(self, year, month):
-        self.year, self.month = year, month
-        return super(SessionsCalendar, self).formatmonth(year, month)
-
-    def group_by_day(self, sessions):
-        field = lambda cdc_session: cdc_session.start_date.day
-        return dict(
-            [(day, list(items)) for day, items in groupby(sessions, field)]
-        )
-
-    def day_cell(self, cssclass, body):
-        return '<td class="%s">%s</td>' % (cssclass, body)
-
 def mentors(request, template_name="mentors.html"):
-
     mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
     return render_to_response(template_name, {
         'mentors': mentors
     }, context_instance=RequestContext(request))
+
 
 def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
@@ -843,20 +980,26 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
     if not mentor.public:
         messages.add_message(request, messages.ERROR, 'Invalid mentor ID :(')
-        return HttpResponseRedirect(reverse('mentors'));
+        return HttpResponseRedirect(reverse('mentors'))
 
     return render_to_response(template_name, {
         'mentor': mentor
     }, context_instance=RequestContext(request))
 
+
 @login_required
 def mentor_approve_avatar(request, mentor_id=False):
-
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_approve_avatar_url())
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permissions to moderate content.'
+        )
+        return HttpResponseRedirect(
+            reverse('account_login') + '?next=' + mentor.get_approve_avatar_url()
+        )
 
     if mentor.background_check:
         mentor.avatar_approved = False
@@ -864,49 +1007,66 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.add_message(
             request,
             messages.SUCCESS,
-            mentor.first_name + " " + mentor.last_name + "'s avatar approved and their account is now public."
+            '{}{}\'s avatar approved and their account is now public.'.format(
+                mentor.first_name,
+                mentor.last_name
+            )
         )
-        return HttpResponseRedirect(reverse('mentors') + str(mentor.id));
+        return HttpResponseRedirect(reverse('mentors') + str(mentor.id))
     else:
         messages.add_message(
             request,
             messages.WARNING,
-            mentor.first_name + " " + mentor.last_name + "'s avatar approved but they have yet to attend an introductory meeting."
+            '{}{}\'s avatar approved but they have yet to attend an introductory meeting.'.format(
+                mentor.first_name,
+                mentor.last_name
+            )
         )
-        return HttpResponseRedirect(reverse('mentors'));
+        return HttpResponseRedirect(reverse('mentors'))
+
 
 @login_required
 def mentor_reject_avatar(request, mentor_id=False):
-
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permissions to moderate content.')
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + mentor.get_reject_avatar_url())
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permissions to moderate content.'
+        )
+        return HttpResponseRedirect(
+            reverse('account_login') + '?next=' + mentor.get_reject_avatar_url()
+        )
 
     mentor.avatar_approved = False
     mentor.save()
 
     msg = EmailMultiAlternatives(
         subject='CoderDojoChi | Avatar Rejected',
-        body='Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance. ' + settings.SITE_URL + '/dojo/',
+        body='Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance. {}/dojo/'.format(settings.SITE_URL),
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[mentor.user.email]
     )
-    msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="' + settings.SITE_URL + '/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>', 'text/html')
+    msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="{}/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>'.format(
+        settings.SITE_URL
+    ), 'text/html')
     msg.send()
 
     messages.add_message(
         request,
         messages.WARNING,
-        mentor.first_name + " " + mentor.last_name + "'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor."
+        '{} {}\'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor.'.format(
+            mentor.first_name,
+            mentor.last_name
+        )
     )
 
-    return HttpResponseRedirect(reverse('mentors'));
+    return HttpResponseRedirect(reverse('mentors'))
+
 
 @login_required
 def student_detail(request, student_id=False, template_name="student-detail.html"):
-
     access = True
 
     if request.user.role == 'guardian' and student_id:
@@ -920,11 +1080,13 @@ def student_detail(request, student_id=False, template_name="student-detail.html
     else:
         access = False
 
-
     if not access:
         return HttpResponseRedirect(reverse('dojo'))
-        messages.add_message(request, messages.ERROR, 'You do not have permissions to edit this student.')
-
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permissions to edit this student.'
+        )
 
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
@@ -937,16 +1099,21 @@ def student_detail(request, student_id=False, template_name="student-detail.html
         'form': form
     }, context_instance=RequestContext(request))
 
-def donate(request, template_name="donate.html"):
 
+def donate(request, template_name="donate.html"):
     if request.method == 'POST':
 
         # if new donation form submit
-        if 'first_name' in request.POST and 'last_name' in request.POST and 'email' in request.POST and 'amount' in request.POST:
-            donation = Donation(first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], amount=request.POST['amount'])
-            donation.save()
-
-            return HttpResponse(donation.id)
+        if ('first_name' in request.POST and 'last_name' in request.POST and
+           'email' in request.POST and 'amount' in request.POST):
+                donation = Donation(
+                    first_name=request.POST['first_name'],
+                    last_name=request.POST['last_name'],
+                    email=request.POST['email'],
+                    amount=request.POST['amount']
+                )
+                donation.save()
+                return HttpResponse(donation.id)
         else:
             return HttpResponse('fail')
 
@@ -977,18 +1144,30 @@ def donate(request, template_name="donate.html"):
         'form': form
     }, context_instance=RequestContext(request))
 
+
 @csrf_exempt
 def donate_cancel(request):
-    messages.add_message(request, messages.ERROR, 'Looks like you cancelled the donation process. Please feel free to <a href="/contact">contact us</a> if you need any help.')
+    messages.add_message(
+        request,
+        messages.ERROR,
+        'Looks like you cancelled the donation process. '
+        'Please feel free to <a href="/contact">contact us</a> if you need any help.'
+    )
     return HttpResponseRedirect(reverse('donate'))
+
 
 @csrf_exempt
 def donate_return(request):
-    messages.add_message(request, messages.SUCCESS, 'Your donation is being processed.  You should receive a confirmation email shortly. Thanks again!')
+    messages.add_message(
+        request,
+        messages.SUCCESS,
+        'Your donation is being processed. '
+        'You should receive a confirmation email shortly. Thanks again!'
+    )
     return HttpResponseRedirect(reverse('donate'))
 
-def about(request, template_name="about.html"):
 
+def about(request, template_name="about.html"):
     mentor_count = Mentor.objects.filter(active=True, public=True).count()
     students_served = Order.objects.exclude(check_in=None).count()
 
@@ -997,33 +1176,47 @@ def about(request, template_name="about.html"):
         'students_served': students_served
     }, context_instance=RequestContext(request))
 
-def contact(request, template_name="contact.html"):
 
+def contact(request, template_name="contact.html"):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         human = True
 
         if form.is_valid():
-
             if request.POST['human']:
                 messages.add_message(request, messages.ERROR, 'Bad robot.')
                 human = False
 
             if human:
-
                 msg = EmailMultiAlternatives(
                     subject='CoderDojoChi | Contact Form Submission',
-                    body='Contact Form Submission from {} ({}). {}'.format(request.POST['name'], request.POST['email'], request.POST['body']),
-                    from_email=settings.DEFAULT_FROM_EMAIL
+                    body='Contact Form Submission from {} ({}). {}'.format(
+                        request.POST['name'],
+                        request.POST['email'],
+                        request.POST['body']
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
                     reply_to=request.POST['email'],
                     to=[settings.CONTACT_EMAIL]
                 )
 
-                msg.attach_alternative('<p>Contact Form Submission from {} (<a href="mailto:{}">{}</a>).</p><p>{}</p><p><small>You can reply to this email.</small></p>'.format(request.POST['name'], request.POST['email'], request.POST['email'], request.POST['body']), 'text/html')
+                msg.attach_alternative(
+                    '<p>Contact Form Submission from {} (<a href="mailto:{}">{}</a>).</p><p>{}</p><p><small>You can reply to this email.</small></p>'.format(
+                        request.POST['name'],
+                        request.POST['email'],
+                        request.POST['email'],
+                        request.POST['body']
+                    ),
+                    'text/html'
+                )
 
                 msg.send()
 
-                messages.add_message(request, messages.SUCCESS, 'Thank you for contacting us! We will respond as soon as possible.')
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    'Thank you for contacting us! We will respond as soon as possible.'
+                )
 
             form = ContactForm()
         else:
@@ -1035,26 +1228,36 @@ def contact(request, template_name="contact.html"):
         'form': form
     }, context_instance=RequestContext(request))
 
-def privacy(request, template_name="privacy.html"):
 
-    return render_to_response(template_name,{}, context_instance=RequestContext(request))
+def privacy(request, template_name="privacy.html"):
+    return render_to_response(template_name, {}, context_instance=RequestContext(request))
+
 
 @login_required
 def cdc_admin(request, template_name="cdc-admin.html"):
-
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permission to access this page.'
+        )
         return HttpResponseRedirect(reverse('sessions'))
 
     sessions = Session.objects.all()
 
-    upcoming_sessions = sessions.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_sessions = sessions.filter(
+        active=True,
+        end_date__gte=timezone.now()
+    ).order_by('start_date')
     upcoming_sessions_count = upcoming_sessions.count()
 
     if 'all_upcoming_sessions' not in request.GET:
         upcoming_sessions = upcoming_sessions[:3]
 
-    past_sessions = sessions.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
+    past_sessions = sessions.filter(
+        active=True,
+        end_date__lte=timezone.now()
+    ).order_by('-start_date')
     past_sessions_count = past_sessions.count()
 
     if 'all_past_sessions' not in request.GET:
@@ -1062,20 +1265,25 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 
     meetings = Meeting.objects.all()
 
-    upcoming_meetings = meetings.filter(active=True, end_date__gte=timezone.now()).order_by('start_date')
+    upcoming_meetings = meetings.filter(
+        active=True,
+        end_date__gte=timezone.now()
+    ).order_by('start_date')
     upcoming_meetings_count = upcoming_meetings.count()
 
     if 'all_upcoming_meetings' not in request.GET:
         upcoming_meetings = upcoming_meetings[:3]
 
-    past_meetings = meetings.filter(active=True, end_date__lte=timezone.now()).order_by('-start_date')
+    past_meetings = meetings.filter(
+        active=True,
+        end_date__lte=timezone.now()
+    ).order_by('-start_date')
     past_meetings_count = past_meetings.count()
 
     if 'all_past_meetings' not in request.GET:
         past_meetings = past_meetings[:3]
 
-
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'upcoming_sessions': upcoming_sessions,
         'upcoming_sessions_count': upcoming_sessions_count,
         'past_sessions': past_sessions,
@@ -1091,7 +1299,11 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 def session_stats(request, session_id, template_name="session-stats.html"):
 
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permission to access this page.'
+        )
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
@@ -1101,12 +1313,17 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     students_checked_in = current_orders_checked_in.values('student')
 
     if students_checked_in:
-        attendance_percentage = round((float(current_orders_checked_in.count()) / float(session_obj.get_current_students().count())) * 100)
+        attendance_percentage = round(
+            (float(current_orders_checked_in.count()) /
+             float(session_obj.get_current_students().count())) * 100
+        )
     else:
         attendance_percentage = False
 
     # Genders
-    gender_count = list(Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems())
+    gender_count = list(
+        Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems()
+    )
     gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
@@ -1123,7 +1340,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     else:
         average_age = False
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'session': session_obj,
         'students_checked_in': students_checked_in,
         'attendance_percentage': attendance_percentage,
@@ -1132,11 +1349,15 @@ def session_stats(request, session_id, template_name="session-stats.html"):
         'gender_count': gender_count
     }, context_instance=RequestContext(request))
 
+
 @login_required
 def session_check_in(request, session_id, template_name="session-check-in.html"):
-
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permission to access this page.'
+        )
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
@@ -1146,12 +1367,17 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     students_checked_in = current_orders_checked_in.values('student')
 
     if students_checked_in:
-        attendance_percentage = round((float(current_orders_checked_in.count()) / float(session_obj.get_current_students().count())) * 100)
+        attendance_percentage = round(
+            (float(current_orders_checked_in.count()) /
+             float(session_obj.get_current_students().count())) * 100
+        )
     else:
         attendance_percentage = 0
 
     # Genders
-    gender_count = list(Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems())
+    gender_count = list(
+        Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems()
+    )
     gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
@@ -1165,9 +1391,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         average_age = int(round(sum(ages) / float(len(ages))))
 
     if request.method == 'POST':
-
         if 'order_id' in request.POST:
-
             order = get_object_or_404(Order, id=request.POST['order_id'])
 
             if order.check_in:
@@ -1175,14 +1399,15 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
             else:
                 order.check_in = timezone.now()
 
-            if order.guardian.first_name + ' ' + order.guardian.last_name != request.POST['order_alternate_guardian']:
+            if (order.guardian.first_name + ' ' + order.guardian.last_name !=
+               request.POST['order_alternate_guardian']):
                 order.alternate_guardian = request.POST['order_alternate_guardian']
 
             order.save()
         else:
             messages.add_message(request, messages.ERROR, 'Invalid Order')
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'session': session_obj,
         'gender_count': gender_count,
         'age_count': age_count,
@@ -1191,16 +1416,20 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         'attendance_percentage': attendance_percentage,
     }, context_instance=RequestContext(request))
 
+
 @login_required
 def session_check_in_mentors(request, session_id, template_name="session-check-in-mentors.html"):
-
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permission to access this page.'
+        )
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'session': session_obj,
     }, context_instance=RequestContext(request))
 
@@ -1208,7 +1437,11 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 def session_announce(request, session_id):
 
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permission to access this page.'
+        )
         return HttpResponseRedirect(reverse('home'))
 
     session_obj = get_object_or_404(Session, id=session_id)
@@ -1223,7 +1456,9 @@ def session_announce(request, session_id):
                 'class_code': session_obj.course.code,
                 'class_title': session_obj.course.title,
                 'class_description': session_obj.course.description,
-                'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
+                'class_start_date': arrow.get(
+                    session_obj.mentor_start_date
+                ).format('dddd, MMMM D, YYYY'),
                 'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
                 'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
                 'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
@@ -1239,26 +1474,34 @@ def session_announce(request, session_id):
             }, mentor.user.email)
 
         for guardian in Guardian.objects.filter(active=True):
-            sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-guardian', {
-                'first_name': guardian.user.first_name,
-                'last_name': guardian.user.last_name,
-                'class_code': session_obj.course.code,
-                'class_title': session_obj.course.title,
-                'class_description': session_obj.course.description,
-                'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
-                'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
-                'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
-                'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
-                'class_location_name': session_obj.location.name,
-                'class_location_address': session_obj.location.address,
-                'class_location_address2': session_obj.location.address2,
-                'class_location_city': session_obj.location.city,
-                'class_location_state': session_obj.location.state,
-                'class_location_zip': session_obj.location.zip,
-                'class_additional_info': session_obj.additional_info,
-                'class_url': session_obj.get_absolute_url(),
-                'class_ics_url': session_obj.get_ics_url()
-            }, guardian.user.email)
+            sendSystemEmail(
+                request,
+                'Upcoming class',
+                'coderdojochi-class-announcement-guardian',
+                {
+                    'first_name': guardian.user.first_name,
+                    'last_name': guardian.user.last_name,
+                    'class_code': session_obj.course.code,
+                    'class_title': session_obj.course.title,
+                    'class_description': session_obj.course.description,
+                    'class_start_date': arrow.get(
+                        session_obj.start_date
+                    ).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
+                    'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
+                    'class_location_name': session_obj.location.name,
+                    'class_location_address': session_obj.location.address,
+                    'class_location_address2': session_obj.location.address2,
+                    'class_location_city': session_obj.location.city,
+                    'class_location_state': session_obj.location.state,
+                    'class_location_zip': session_obj.location.zip,
+                    'class_additional_info': session_obj.additional_info,
+                    'class_url': session_obj.get_absolute_url(),
+                    'class_ics_url': session_obj.get_ics_url()
+                },
+                guardian.user.email
+            )
 
         session_obj.announced_date = timezone.now()
         session_obj.save()
@@ -1269,15 +1512,23 @@ def session_announce(request, session_id):
 
     return HttpResponseRedirect(reverse('cdc_admin'))
 
+
 @login_required
 def dashboard(request, template_name="admin-dashboard.html"):
     if not request.user.is_staff:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to access this page.')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            'You do not have permission to access this page.'
+        )
         return HttpResponseRedirect(reverse('sessions'))
 
     orders = Order.objects.select_related()
 
-    past_sessions = Session.objects.select_related().filter(active=True, end_date__lte=timezone.now()).annotate(
+    past_sessions = Session.objects.select_related().filter(
+        active=True,
+        end_date__lte=timezone.now()
+    ).annotate(
         num_orders=Count('order'),
         num_attended=Count(Case(When(order__check_in__isnull=False, then=1)))
     ).order_by('-start_date')
@@ -1288,7 +1539,9 @@ def dashboard(request, template_name="admin-dashboard.html"):
     total_checked_in_orders_count = total_checked_in_orders.count()
 
     # Genders
-    gender_count = list(Counter(e.student.get_clean_gender() for e in total_checked_in_orders).iteritems())
+    gender_count = list(
+        Counter(e.student.get_clean_gender() for e in total_checked_in_orders).iteritems()
+    )
     gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
@@ -1299,7 +1552,7 @@ def dashboard(request, template_name="admin-dashboard.html"):
     # Average Age
     average_age = int(round(sum(ages) / float(len(ages))))
 
-    return render_to_response(template_name,{
+    return render_to_response(template_name, {
         'past_sessions': past_sessions,
         'gender_count': gender_count,
         'age_count': age_count,
@@ -1308,8 +1561,8 @@ def dashboard(request, template_name="admin-dashboard.html"):
         'total_checked_in_orders_count': total_checked_in_orders_count,
     }, context_instance=RequestContext(request))
 
-def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 
+def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
     if not email:
         email = request.user.email
 
@@ -1333,6 +1586,7 @@ def handler404(request):
     response = render_to_response('404.html', {}, context_instance=RequestContext(request))
     response.status_code = 404
     return response
+
 
 def handler500(request):
     response = render_to_response('500.html', {}, context_instance=RequestContext(request))
