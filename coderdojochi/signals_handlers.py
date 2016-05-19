@@ -18,11 +18,11 @@ import arrow
 @receiver(post_save, sender=Mentor, dispatch_uid="update_avatar_approved_status")
 def avatar_updated_handler(sender, instance, **kwargs):
     try:
-        original_mentor = Mentor.objects.get(pk=instance.pk)
+        original_mentor = Mentor.objects.get(id=instance.id)
     except ObjectDoesNotExist:
         return
 
-    if not instance.avatar or instance.avatar == original_mentor.avatar:
+    if not instance.avatar:
         return
 
     instance.avatar_approved = False
