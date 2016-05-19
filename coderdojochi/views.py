@@ -345,16 +345,6 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
     else:
         spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
 
-    # only allow mentors to view non-public sessions
-    # if not session_obj.public:
-    #     if not request.user.is_authenticated() or request.user.role == 'guardian':
-    #         messages.add_message(
-    #           request,
-    #           messages.ERROR,
-    #           'Sorry, the class you requested is not available at this time.'
-    #          )
-    #         return HttpResponseRedirect(reverse('sessions'))
-
     return render_to_response(template_name, {
         'session': session_obj,
         'mentor_signed_up': mentor_signed_up,
@@ -528,16 +518,6 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 )
 
         return HttpResponseRedirect(session_obj.get_absolute_url())
-
-    # only allow mentors to view non-public sessions
-    # if not session_obj.public:
-    #   if not request.user.is_authenticated() or guardian:
-    #       messages.add_message(
-    #           request,
-    #           messages.ERROR,
-    #           'Sorry, the class you requested is not available at this time.'
-    #       )
-    #       return HttpResponseRedirect(reverse('sessions'))
 
     return render_to_response(template_name, {
         'session': session_obj,
@@ -1570,15 +1550,3 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
     msg.inline_css = True
     msg.use_template_subject = True
     msg.send()
-
-
-def handler404(request):
-    response = render_to_response('404.html', {}, context_instance=RequestContext(request))
-    response.status_code = 404
-    return response
-
-
-def handler500(request):
-    response = render_to_response('500.html', {}, context_instance=RequestContext(request))
-    response.status_code = 500
-    return response
