@@ -21,7 +21,7 @@ from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, Donation)
+                                 Meeting, MeetingOrder, Donation)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -210,10 +210,8 @@ def welcome(request, template_name="welcome.html"):
 
 def sessions(request, year=False, month=False, template_name="sessions.html"):
     now = timezone.now()
-
     year = int(year) if year else now.year
     month = int(month) if month else now.month
-
     calendar_date = date(day=1, month=month, year=year)
     prev_date = add_months(calendar_date, -1)
     next_date = add_months(calendar_date, 1)
@@ -266,6 +264,7 @@ def session_detail(
     mentor_signed_up = False
     account = False
     students = False
+    active_mentors = Mentor.objects.filter(id__in=MentorOrder.objects.filter(session=session_obj, active=True).values('mentor__id'))
 
     if request.method == 'POST':
         if 'waitlist' in request.POST:
@@ -339,8 +338,9 @@ def session_detail(
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-            mentor_signed_up = True if mentor in session_obj.mentors.all() else False
-            spots_remaining = session_obj.get_mentor_capacity() - session_obj.mentors.all().count()
+            session_orders = MentorOrder.objects.filter(session=session_obj, active=True)
+            mentor_signed_up = True if session_orders.filter(mentor=account).count() else False
+            spots_remaining = session_obj.get_mentor_capacity() - session_orders.count()
 
             if enroll or 'enroll' in request.GET:
                 return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/')
@@ -365,7 +365,7 @@ def session_detail(
                         )
 
     else:
-        spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
+        spots_remaining = session_obj.capacity - session_obj.get_current_students().count()
 
     # only allow mentors to view non-public sessions
     # if not session_obj.public:
@@ -379,6 +379,7 @@ def session_detail(
 
     return render_to_response(template_name, {
         'session': session_obj,
+        'active_mentors': active_mentors,
         'mentor_signed_up': mentor_signed_up,
         'students': students,
         'account': account,
@@ -423,10 +424,11 @@ def session_sign_up(
             )
             return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
 
-        user_signed_up = True if mentor in session_obj.mentors.all() else False
+        session_orders = MentorOrder.objects.filter(session=session_obj, active=True)
+        user_signed_up = True if session_orders.filter(mentor=mentor).count() else False
 
         if not user_signed_up:
-            if session_obj.get_mentor_capacity() <= session_obj.mentors.all().count():
+            if session_obj.get_mentor_capacity() <= session_orders.count():
                 messages.add_message(
                     request,
                     messages.ERROR,
@@ -440,7 +442,7 @@ def session_sign_up(
         user_signed_up = True if student.is_registered_for_session(session_obj) else False
 
         if not user_signed_up:
-            if session_obj.capacity <= session_obj.get_current_students().all().count():
+            if session_obj.capacity <= session_obj.get_current_students().count():
                 messages.add_message(
                     request,
                     messages.ERROR,
@@ -454,12 +456,7 @@ def session_sign_up(
     if request.method == 'POST':
         if user_signed_up:
             if request.user.role == 'mentor':
-                order = get_object_or_404(
-                    MentorOrder,
-                    mentor=mentor,
-                    session=session_obj,
-                    active=True
-                )
+                order = get_object_or_404(MentorOrder, mentor=mentor, session=session_obj)
             else:
                 order = get_object_or_404(Order, student=student, session=session_obj, active=True)
 
@@ -473,18 +470,22 @@ def session_sign_up(
                 ip = request.META['REMOTE_ADDR']
 
             if request.user.role == 'mentor':
-                order = Order.objects.create(
+                order, created = MentorOrder.objects.get_or_create(
+                    mentor=mentor,
+                    session=session_obj
+                )
+                order.ip = ip
+                order.active = True
+                order.save()
+            else:
+                order, created = Order.objects.get_or_create(
                     guardian=guardian,
                     student=student,
-                    session=session_obj,
-                    ip=ip
+                    session=session_obj
                 )
-            else:
-                order = MentorOrder.objects.create(
-                    mentor=mentor,
-                    session=session_obj,
-                    ip=ip
-                )
+                order.ip = ip
+                order.active = True
+                order.save()
 
             # we dont want guardians getting 7 day reminder email if they sign up within 9 days
             if session_obj.start_date < timezone.now() + timedelta(days=9):
@@ -645,16 +646,21 @@ def session_ics(request, year, month, day, slug, session_id):
     return response
 
 
-def meeting_detail(request, year, month, day, meeting_id, template_name="meeting-detail.html"):
+def meeting_detail(request, year, month, day, slug, meeting_id, template_name="meeting-detail.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
     mentor_signed_up = False
+    active_meeting_orders = None
 
     if request.user.is_authenticated():
         mentor = get_object_or_404(Mentor, user=request.user)
-        mentor_signed_up = True if mentor in meeting_obj.mentors.all() else False
+
+        active_meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, active=True)
+        mentor_meeting_order = active_meeting_orders.filter(mentor=mentor)
+        mentor_signed_up = True if mentor_meeting_order.count() else False
 
     return render_to_response(template_name, {
         'meeting': meeting_obj,
+        'active_meeting_orders': active_meeting_orders,
         'mentor_signed_up': mentor_signed_up,
     }, context_instance=RequestContext(request))
 
@@ -665,28 +671,38 @@ def meeting_sign_up(
     year,
     month,
     day,
+    slug,
     meeting_id,
     student_id=False,
     template_name="meeting-sign-up.html"
 ):
-
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-
     mentor = get_object_or_404(Mentor, user=request.user)
-    user_signed_up = True if mentor in meeting_obj.mentors.all() else False
-
+    meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, active=True)
+    user_meeting_order = meeting_orders.filter(mentor=mentor)
+    user_signed_up = True if user_meeting_order.count() else False
     undo = False
 
     if request.method == 'POST':
 
         if user_signed_up:
-            meeting_obj.mentors.remove(mentor)
+            meeting_order = get_object_or_404(MeetingOrder, meeting=meeting_obj, mentor=mentor)
+            meeting_order.active = False
+            meeting_order.save()
             undo = True
         else:
-            meeting_obj.mentors.add(mentor)
+            if not settings.DEBUG:
+                ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
+            else:
+                ip = request.META['REMOTE_ADDR']
 
-        meeting_obj.save()
-
+            meeting_order, created = MeetingOrder.objects.get_or_create(
+                mentor=mentor,
+                meeting=meeting_obj
+            )
+            meeting_order.ip = ip
+            meeting_order.active = True
+            meeting_order.save()
         if undo:
             messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
         else:
@@ -726,6 +742,7 @@ def meeting_sign_up(
                 meeting_obj.start_date.year,
                 meeting_obj.start_date.month,
                 meeting_obj.start_date.day,
+                meeting_obj.meeting_type.slug,
                 meeting_obj.id
             ))
         )
@@ -790,7 +807,7 @@ def meeting_announce(request, meeting_id):
     return HttpResponseRedirect(reverse('cdc_admin'))
 
 
-def meeting_ics(request, year, month, day, meeting_id):
+def meeting_ics(request, year, month, day, slug, meeting_id):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
     cal = Calendar()
@@ -880,7 +897,8 @@ def dojo(request, template_name="dojo.html"):
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-            mentor_sessions = Session.objects.filter(mentors=mentor)
+            mentor_sessions = Session.objects.filter(id__in=MentorOrder.objects.filter(mentor=mentor).values('session__id'))
+
             upcoming_sessions = mentor_sessions.filter(
                 active=True,
                 end_date__gte=timezone.now()

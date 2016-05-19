@@ -76,7 +76,6 @@
     "active": true,
     "teacher": 104,
     "created_at": "2017-02-03T21:54:58.202",
-    "mentors": [104],
     "start_date": "2017-03-28T10:00:00",
     "image_url": "classes/0002.jpg"
   },
@@ -107,7 +106,6 @@
     "image_url": "",
     "location": 1,
     "active": true,
-    "mentors": [],
     "additional_info": ""
   },
   "model": "coderdojochi.meeting",
