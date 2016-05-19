@@ -153,7 +153,7 @@
                             <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
                             <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
                             <td>
-                                <a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-{% if account in meeting.mentors.all %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.mentors.all %}Can't make it{% else %}RSVP{% endif%}</a>
+                                <a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-{% if account in meeting.get_current_mentors %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.get_current_mentors %}Can't make it{% else %}RSVP{% endif%}</a>
                             </td>
                         </tr>
                     {% endfor %}

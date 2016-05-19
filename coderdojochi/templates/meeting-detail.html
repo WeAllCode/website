@@ -40,18 +40,18 @@
             <p>{{ meeting.additional_info|safe }}</p>
             {% endif %}
 
-            {% if meeting.mentors.all %}
+            {% if meeting.get_current_mentors.count %}
             <h2 class="subtitle">Attending</h2>
 
             <div class="row mentors">
-                {% for mentor in meeting.mentors.all %}
+                {% for mentor in meeting.get_current_mentors %}
                     {% if mentor.public == True %}
-                <div class="col-xs-12 col-sm-4 col-md-4">
-                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                        <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
-                        <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
-                    </a>
-                </div>
+                        <div class="col-xs-12 col-sm-4 col-md-4">
+                            <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                                <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
+                                <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
+                            </a>
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -63,7 +63,7 @@
             <ul class="center-block well well-sm list-group list-unstyled">
                 {% if meeting.active %}
                     <!-- Todo -->
-                    <li class="list-group-item">Mentors: <b>{{ meeting.mentors.count }}</b></li>
+                    <li class="list-group-item">Attending: <b>{{ active_meeting_orders.count }}</b></li>
 
                         {% if meeting.announced_date %}
                             <li class="text-muted list-group-item">Announced: <b>{{ meeting.announced_date|date }}</b></li>

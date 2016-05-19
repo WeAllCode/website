@@ -374,7 +374,6 @@ class Meeting(models.Model):
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     location = models.ForeignKey(Location)
-    mentors = models.ManyToManyField(Mentor, blank=True, related_name="meeting_mentors")
     external_enrollment_url = models.CharField(
         max_length=255,
         blank=True,
@@ -418,6 +417,33 @@ class Meeting(models.Model):
         return self.meeting_type.title + ' | ' + formats.date_format(
             self.start_date, "SHORT_DATETIME_FORMAT"
         )
+
+    def get_current_meeting_orders(self, checked_in=None):
+        if checked_in is not None:
+            if checked_in:
+                meeting_orders = MeetingOrder.objects.filter(
+                    active=True,
+                    meeting=self
+                ).exclude(check_in=None).order_by('mentor__last_name')
+            else:
+                meeting_orders = MeetingOrder.objects.filter(
+                    active=True,
+                    meeting=self,
+                    check_in=None
+                ).order_by('mentor__last_name')
+        else:
+            meeting_orders = MeetingOrder.objects.filter(
+                active=True,
+                meeting=self
+            ).order_by('check_in', 'mentor__last_name')
+
+        return meeting_orders
+
+    def get_current_mentors(self):
+        mentors = Mentor.objects.filter(
+            id__in=MeetingOrder.objects.filter(active=True, meeting=self).values('mentor__id')
+        )
+        return mentors
 
 
 class Order(models.Model):

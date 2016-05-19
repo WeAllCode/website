@@ -197,7 +197,6 @@ class MeetingAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
-    filter_horizontal = ('mentors',)
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()

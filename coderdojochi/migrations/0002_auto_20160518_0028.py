@@ -58,6 +58,10 @@ class Migration(migrations.Migration):
             model_name='session',
             name='mentors',
         ),
+        migrations.RemoveField(
+            model_name='meeting',
+            name='mentors',
+        ),
         migrations.AddField(
             model_name='mentororder',
             name='session',
