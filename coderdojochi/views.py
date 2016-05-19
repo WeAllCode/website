@@ -72,7 +72,8 @@ def welcome(request, template_name="welcome.html"):
 
         if role:
             if role == 'mentor':
-                form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
+                form = MentorForm(
+                    request.POST, instance=get_object_or_404(Mentor, user=user))
             else:
                 account = get_object_or_404(Guardian, user=user)
                 if not account.phone or not account.zip:
@@ -90,9 +91,7 @@ def welcome(request, template_name="welcome.html"):
                     if keepGoing:
                         if next_url:
                             if 'enroll' in request.GET:
-                                return HttpResponseRedirect(
-                                    next_url + '?enroll=True&student=' + str(new_student.id)
-                                )
+                                return HttpResponseRedirect('{}?enroll=True&student={}'.format(next_url, new_student.id))
                             else:
                                 return HttpResponseRedirect(next_url)
                         else:
@@ -105,7 +104,7 @@ def welcome(request, template_name="welcome.html"):
 
                     if next_url:
                         if 'enroll' in request.GET:
-                            return HttpResponseRedirect(next_url + '?enroll=True')
+                            return HttpResponseRedirect('{}?enroll=True'.format(next_url))
                         else:
                             return HttpResponseRedirect(next_url)
                     else:
@@ -136,10 +135,7 @@ def welcome(request, template_name="welcome.html"):
                 'last_name': request.user.last_name
             }
 
-            if next_url:
-                next_url = '?next=' + next_url
-            else:
-                next_url = ''
+            next_url = '?next={}'.format(next_url) if next_url else ''
 
             if role == 'mentor':
                 # check for next upcoming meeting
@@ -192,10 +188,7 @@ def welcome(request, template_name="welcome.html"):
             students = account.get_students() if account.get_students().count() else False
 
     if keepGoing:
-        if 'next' in request.GET:
-            next_url = request.GET['next']
-        else:
-            next_url = False
+        next_url = request.GET['next'] if 'next' in request.GET else False
 
     return render_to_response(template_name, {
         'role': role,
@@ -239,28 +232,11 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     }, context_instance=RequestContext(request))
 
 
-def session_detail_enroll(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    session_id,
-    template_name="session-detail.html"
-):
+def session_detail_enroll(request, year, month, day, slug, session_id, template_name="session-detail.html"):
     return session_detail(request, year, month, day, slug, session_id, template_name, enroll=True)
 
 
-def session_detail(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    session_id,
-    template_name="session-detail.html",
-    enroll=False
-):
+def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html", enroll=False):
     session_obj = get_object_or_404(Session, id=session_id)
     mentor_signed_up = False
     account = False
@@ -328,7 +304,7 @@ def session_detail(
                 'Please select one of the following options to continue.'
             )
 
-            url = reverse('welcome') + '?next=' + session_obj.get_absolute_url()
+            url = '{}?next={}'.format(reverse('welcome'), session_obj.get_absolute_url())
 
             if 'enroll' in request.GET:
                 url += '&enroll=True'
@@ -360,7 +336,10 @@ def session_detail(
                 else:
                     if 'student' in request.GET:
                         return HttpResponseRedirect(
-                            session_obj.get_absolute_url() + '/sign-up/' + request.GET['student']
+                            '{}/sign-up/{}'.format(
+                                session_obj.get_absolute_url(),
+                                request.GET['student']
+                            )
                         )
 
     else:
@@ -387,16 +366,7 @@ def session_detail(
 
 
 @login_required
-def session_sign_up(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    session_id,
-    student_id=False,
-    template_name="session-sign-up.html"
-):
+def session_sign_up(request, year, month, day, slug, session_id, student_id=False, template_name="session-sign-up.html"):
     session_obj = get_object_or_404(Session, id=session_id)
     student = False
     guardian = False
@@ -407,7 +377,7 @@ def session_sign_up(
             messages.WARNING,
             'Please select one of the following options to continue.'
         )
-        return HttpResponseRedirect(reverse('welcome') + '?next=' + session_obj.get_absolute_url())
+        return HttpResponseRedirect('{}?next={}'.format(reverse('welcome'), session_obj.get_absolute_url()))
 
     if request.user.role == 'mentor':
 
@@ -420,33 +390,31 @@ def session_sign_up(
                 'You cannot sign up for a class until after attending a mentor meeting. '
                 'Please RSVP below.'
             )
-            return HttpResponseRedirect(reverse('dojo') + '?highlight=meetings')
+            return HttpResponseRedirect('{}?highlight=meetings'.format(reverse('dojo')))
 
         user_signed_up = True if mentor in session_obj.mentors.all() else False
 
-        if not user_signed_up:
-            if session_obj.get_mentor_capacity() <= session_obj.mentors.all().count():
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    'Sorry this class is at mentor capacity.  '
-                    'Please check back soon and/or join us for another upcoming class!'
-                )
-                return HttpResponseRedirect(session_obj.get_absolute_url())
+        if not user_signed_up and session_obj.get_mentor_capacity() <= session_obj.mentors.all().count():
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Sorry this class is at mentor capacity.  '
+                'Please check back soon and/or join us for another upcoming class!'
+            )
+            return HttpResponseRedirect(session_obj.get_absolute_url())
     else:
         student = get_object_or_404(Student, id=student_id)
         guardian = get_object_or_404(Guardian, user=request.user)
         user_signed_up = True if student.is_registered_for_session(session_obj) else False
 
-        if not user_signed_up:
-            if session_obj.capacity <= session_obj.get_current_students().all().count():
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    'Sorry this class has sold out. '
-                    'Please sign up for the wait list and/or check back later.'
-                )
-                return HttpResponseRedirect(session_obj.get_absolute_url())
+        if not user_signed_up and session_obj.capacity <= session_obj.get_current_students().all().count():
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Sorry this class has sold out. '
+                'Please sign up for the wait list and/or check back later.'
+            )
+            return HttpResponseRedirect(session_obj.get_absolute_url())
 
     undo = False
 
@@ -491,9 +459,17 @@ def session_sign_up(
         session_obj.save()
 
         if undo:
-            messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Thanks for letting us know!'
+            )
         else:
-            messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Success! See you there!'
+            )
 
             if request.user.role == 'mentor':
                 sendSystemEmail(
@@ -506,15 +482,9 @@ def session_sign_up(
                         'class_code': session_obj.course.code,
                         'class_title': session_obj.course.title,
                         'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(
-                            session_obj.mentor_start_date
-                        ).format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(
-                            session_obj.mentor_start_date
-                        ).format('h:mma'),
-                        'class_end_date': arrow.get(
-                            session_obj.mentor_end_date
-                        ).format('dddd, MMMM D, YYYY'),
+                        'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
+                        'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
+                        'class_end_date': arrow.get(session_obj.mentor_end_date).format('dddd, MMMM D, YYYY'),
                         'class_end_time': arrow.get(session_obj.mentor_end_date).format('h:mma'),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
@@ -541,13 +511,9 @@ def session_sign_up(
                         'class_code': session_obj.course.code,
                         'class_title': session_obj.course.title,
                         'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(
-                            session_obj.start_date
-                        ).format('dddd, MMMM D, YYYY'),
+                        'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
                         'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
-                        'class_end_date': arrow.get(
-                            session_obj.end_date
-                        ).format('dddd, MMMM D, YYYY'),
+                        'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
                         'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
@@ -591,8 +557,12 @@ def session_ics(request, year, month, day, slug, session_id):
 
     event = Event()
 
-    start_date_arrow = '{}Z'.format(arrow.get(session_obj.start_date).format('YYYYMMDDTHHmmss'))
-    end_date_arrow = '{}Z'.format(arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss'))
+    start_date_arrow = '{}Z'.format(
+        arrow.get(session_obj.start_date).format('YYYYMMDDTHHmmss')
+    )
+    end_date_arrow = '{}Z'.format(
+        arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss')
+    )
 
     event['uid'] = 'CLASS{:04}@coderdojochi.org'.format(session_obj.id)
     event['summary'] = 'CoderDojoChi: {} - {}'.format(
@@ -663,15 +633,7 @@ def meeting_detail(request, year, month, day, meeting_id, template_name="meeting
 
 
 @login_required
-def meeting_sign_up(
-    request,
-    year,
-    month,
-    day,
-    meeting_id,
-    student_id=False,
-    template_name="meeting-sign-up.html"
-):
+def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, template_name="meeting-sign-up.html"):
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
@@ -691,9 +653,18 @@ def meeting_sign_up(
         meeting_obj.save()
 
         if undo:
-            messages.add_message(request, messages.SUCCESS, 'Thanks for letting us know!')
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Thanks for letting us know!'
+            )
+
         else:
-            messages.add_message(request, messages.SUCCESS, 'Success! See you there!')
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Success! See you there!'
+            )
 
             sendSystemEmail(
                 request,
@@ -704,13 +675,9 @@ def meeting_sign_up(
                     'last_name': request.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
                     'meeting_description': meeting_obj.meeting_type.description,
-                    'meeting_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
                     'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
-                    'meeting_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
                     'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
@@ -762,13 +729,9 @@ def meeting_announce(request, meeting_id):
                     'last_name': mentor.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
                     'meeting_description': meeting_obj.meeting_type.description,
-                    'meeting_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
                     'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
-                    'meeting_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
                     'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
@@ -788,7 +751,11 @@ def meeting_announce(request, meeting_id):
 
         messages.add_message(request, messages.SUCCESS, 'Meeting announced!')
     else:
-        messages.add_message(request, messages.WARNING, 'Meeting already announced.')
+        messages.add_message(
+            request,
+            messages.WARNING,
+            'Meeting already announced.'
+        )
 
     return HttpResponseRedirect(reverse('cdc_admin'))
 
@@ -803,14 +770,17 @@ def meeting_ics(request, year, month, day, meeting_id):
 
     event = Event()
 
-    start_date_arrow = '{}Z'.format(arrow.get(meeting_obj.start_date).format('YYYYMMDDTHHmmss'))
-    end_date_arrow = '{}Z'.format(arrow.get(meeting_obj.end_date).format('YYYYMMDDTHHmmss'))
+    start_date_arrow = '{}Z'.format(
+        arrow.get(meeting_obj.start_date).format('YYYYMMDDTHHmmss')
+    )
+
+    end_date_arrow = '{}Z'.format(
+        arrow.get(meeting_obj.end_date).format('YYYYMMDDTHHmmss')
+    )
 
     event['uid'] = 'MEETING{:04}@coderdojochi.org'.format(meeting_obj.id)
 
-    event_name = '{} - '.format(
-        meeting_obj.meeting_type.code
-    ) if meeting_obj.meeting_type.code else ''
+    event_name = '{} - '.format(meeting_obj.meeting_type.code) if meeting_obj.meeting_type.code else ''
 
     event_name += meeting_obj.meeting_type.title
 
@@ -853,6 +823,7 @@ def volunteer(request, template_name="volunteer.html"):
         active=True,
         public=True
     ).order_by('user__date_joined')
+
     upcoming_meetings = Meeting.objects.filter(
         active=True,
         public=True,
@@ -954,7 +925,7 @@ def dojo(request, template_name="dojo.html"):
         context['form'] = form
     else:
         if 'next' in request.GET:
-            return HttpResponseRedirect(reverse('welcome') + '?next=' + request.GET['next'])
+            return HttpResponseRedirect('{}?next={}'.format(reverse('welcome'), request.GET['next']))
         else:
             messages.add_message(
                 request,
@@ -967,7 +938,8 @@ def dojo(request, template_name="dojo.html"):
 
 
 def mentors(request, template_name="mentors.html"):
-    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
+    mentors = Mentor.objects.filter(
+        active=True, public=True).order_by('user__date_joined')
 
     return render_to_response(template_name, {
         'mentors': mentors
@@ -997,8 +969,12 @@ def mentor_approve_avatar(request, mentor_id=False):
             messages.ERROR,
             'You do not have permissions to moderate content.'
         )
+
         return HttpResponseRedirect(
-            reverse('account_login') + '?next=' + mentor.get_approve_avatar_url()
+            '{}?next={}'.format(
+                reverse('account_login'),
+                mentor.get_approve_avatar_url()
+            )
         )
 
     if mentor.background_check:
@@ -1036,7 +1012,10 @@ def mentor_reject_avatar(request, mentor_id=False):
             'You do not have permissions to moderate content.'
         )
         return HttpResponseRedirect(
-            reverse('account_login') + '?next=' + mentor.get_reject_avatar_url()
+            '{}?next={}'.format(
+                reverse('account_login'),
+                mentor.get_reject_avatar_url()
+            )
         )
 
     mentor.avatar_approved = False
@@ -1044,11 +1023,12 @@ def mentor_reject_avatar(request, mentor_id=False):
 
     msg = EmailMultiAlternatives(
         subject='CoderDojoChi | Avatar Rejected',
-        body='Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance. {}/dojo/'.format(settings.SITE_URL),
+        body='Unfortunately your recent avatar image was rejected. Please upload a new image as soon as you get a chance. {}/dojo/'.format(
+            settings.SITE_URL),
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[mentor.user.email]
     )
-    msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected.  Please upload a new image as soon as you get a chance.</p><p><a href="{}/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>'.format(
+    msg.attach_alternative('<p>Unfortunately your recent avatar image was rejected. Please upload a new image as soon as you get a chance.</p><p><a href="{}/dojo/">Click here to upload a new avatar now.</a></p><p>Thank you!<br>The CoderDojoChi Team</p>'.format(
         settings.SITE_URL
     ), 'text/html')
     msg.send()
@@ -1105,15 +1085,15 @@ def donate(request, template_name="donate.html"):
 
         # if new donation form submit
         if ('first_name' in request.POST and 'last_name' in request.POST and
-           'email' in request.POST and 'amount' in request.POST):
-                donation = Donation(
-                    first_name=request.POST['first_name'],
-                    last_name=request.POST['last_name'],
-                    email=request.POST['email'],
-                    amount=request.POST['amount']
-                )
-                donation.save()
-                return HttpResponse(donation.id)
+                'email' in request.POST and 'amount' in request.POST):
+            donation = Donation(
+                first_name=request.POST['first_name'],
+                last_name=request.POST['last_name'],
+                email=request.POST['email'],
+                amount=request.POST['amount']
+            )
+            donation.save()
+            return HttpResponse(donation.id)
         else:
             return HttpResponse('fail')
 
@@ -1131,9 +1111,9 @@ def donate(request, template_name="donate.html"):
         'address_override': '1',
         'first_name': '',
         'last_name': '',
-        'notify_url': settings.SITE_URL + reverse('paypal-ipn'),
-        'return_url': settings.SITE_URL + '/donate/return',
-        'cancel_return': settings.SITE_URL + '/donate/cancel',
+        'notify_url': '{}{}'.format(settings.SITE_URL, reverse('paypal-ipn')),
+        'return_url':  '{}/donate/return'.format(settings.SITE_URL),
+        'cancel_return': '{}/donate/cancel'.format(settings.SITE_URL),
         'bn': 'PP-DonationsBF:btn_donateCC_LG.gif:NonHosted'
     }
 
@@ -1322,9 +1302,12 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 
     # Genders
     gender_count = list(
-        Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems()
+        Counter(
+            e.student.get_clean_gender() for e in session_obj.get_current_orders()
+        ).iteritems()
     )
-    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+    gender_count = sorted(dict(gender_count).items(),
+                          key=operator.itemgetter(1))
 
     # Ages
     ages = sorted(list(e.student.get_age() for e in session_obj.get_current_orders()))
@@ -1368,17 +1351,22 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
     if students_checked_in:
         attendance_percentage = round(
-            (float(current_orders_checked_in.count()) /
-             float(session_obj.get_current_students().count())) * 100
+            (
+                float(current_orders_checked_in.count()) /
+                float(session_obj.get_current_students().count())
+            ) * 100
         )
     else:
         attendance_percentage = 0
 
     # Genders
     gender_count = list(
-        Counter(e.student.get_clean_gender() for e in session_obj.get_current_orders()).iteritems()
+        Counter(
+            e.student.get_clean_gender() for e in session_obj.get_current_orders()
+        ).iteritems()
     )
-    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+    gender_count = sorted(dict(gender_count).items(),
+                          key=operator.itemgetter(1))
 
     # Ages
     ages = sorted(list(e.get_student_age() for e in session_obj.get_current_orders()))
@@ -1386,9 +1374,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     age_count = sorted(dict(age_count).items(), key=operator.itemgetter(1))
 
     # Average Age
-    average_age = 0
-    if session_obj.get_current_orders():
-        average_age = int(round(sum(ages) / float(len(ages))))
+    average_age = int(round(sum(ages) / float(len(ages)))) if session_obj.get_current_orders() else 0
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1400,7 +1386,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
                 order.check_in = timezone.now()
 
             if (order.guardian.first_name + ' ' + order.guardian.last_name !=
-               request.POST['order_alternate_guardian']):
+                    request.POST['order_alternate_guardian']):
                 order.alternate_guardian = request.POST['order_alternate_guardian']
 
             order.save()
@@ -1456,9 +1442,7 @@ def session_announce(request, session_id):
                 'class_code': session_obj.course.code,
                 'class_title': session_obj.course.title,
                 'class_description': session_obj.course.description,
-                'class_start_date': arrow.get(
-                    session_obj.mentor_start_date
-                ).format('dddd, MMMM D, YYYY'),
+                'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
                 'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
                 'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
                 'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
@@ -1484,9 +1468,7 @@ def session_announce(request, session_id):
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(
-                        session_obj.start_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
                     'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
                     'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
                     'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
@@ -1535,14 +1517,18 @@ def dashboard(request, template_name="admin-dashboard.html"):
 
     total_past_orders = orders.filter(active=True)
     total_past_orders_count = total_past_orders.count()
-    total_checked_in_orders = orders.filter(active=True, check_in__isnull=False)
+    total_checked_in_orders = orders.filter(
+        active=True, check_in__isnull=False)
     total_checked_in_orders_count = total_checked_in_orders.count()
 
     # Genders
     gender_count = list(
-        Counter(e.student.get_clean_gender() for e in total_checked_in_orders).iteritems()
+        Counter(
+            e.student.get_clean_gender() for e in total_checked_in_orders
+        ).iteritems()
     )
-    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+    gender_count = sorted(dict(gender_count).items(),
+                          key=operator.itemgetter(1))
 
     # Ages
     ages = sorted(list(e.student.get_age() for e in total_checked_in_orders))
@@ -1570,7 +1556,11 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 
-    msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL, to=[email])
+    msg = EmailMessage(
+        subject=subject,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[email]
+    )
 
     if bcc:
         msg.bcc = bcc
