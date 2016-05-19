@@ -14,7 +14,7 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from django.utils import timezone
 from django.utils.html import strip_tags
@@ -47,9 +47,9 @@ def home(request, template_name="home.html"):
 
     upcoming_classes = upcoming_classes[:3]
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'upcoming_classes': upcoming_classes
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -190,14 +190,14 @@ def welcome(request, template_name="welcome.html"):
     if keepGoing:
         next_url = request.GET['next'] if 'next' in request.GET else False
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'role': role,
         'account': account,
         'form': form,
         'add_student': add_student,
         'students': students,
         'next_url': next_url
-    }, context_instance=RequestContext(request))
+    })
 
 
 def sessions(request, year=False, month=False, template_name="sessions.html"):
@@ -223,13 +223,13 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         start_date__month=month
     ).order_by('start_date')
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'all_sessions': all_sessions,
         'sessions': sessions,
         'calendar_date': calendar_date,
         'prev_date': prev_date,
         'next_date': next_date
-    }, context_instance=RequestContext(request))
+    })
 
 
 def session_detail_enroll(request, year, month, day, slug, session_id, template_name="session-detail.html"):
@@ -345,14 +345,14 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
     else:
         spots_remaining = session_obj.capacity - session_obj.get_current_students().all().count()
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'session': session_obj,
         'mentor_signed_up': mentor_signed_up,
         'students': students,
         'account': account,
         'upcoming_classes': upcoming_classes,
         'spots_remaining': spots_remaining
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -519,11 +519,11 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         return HttpResponseRedirect(session_obj.get_absolute_url())
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'session': session_obj,
         'user_signed_up': user_signed_up,
         'student': student,
-    }, context_instance=RequestContext(request))
+    })
 
 
 def session_ics(request, year, month, day, slug, session_id):
@@ -606,10 +606,10 @@ def meeting_detail(request, year, month, day, meeting_id, template_name="meeting
         mentor = get_object_or_404(Mentor, user=request.user)
         mentor_signed_up = True if mentor in meeting_obj.mentors.all() else False
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'meeting': meeting_obj,
         'mentor_signed_up': mentor_signed_up,
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -680,10 +680,10 @@ def meeting_sign_up(request, year, month, day, meeting_id, student_id=False, tem
             ))
         )
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'meeting': meeting_obj,
         'user_signed_up': user_signed_up
-    }, context_instance=RequestContext(request))
+    })
 
 
 def meeting_announce(request, meeting_id):
@@ -810,14 +810,14 @@ def volunteer(request, template_name="volunteer.html"):
         end_date__gte=timezone.now()
     ).order_by('start_date')[:3]
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'mentors': mentors,
         'upcoming_meetings': upcoming_meetings
-    }, context_instance=RequestContext(request))
+    })
 
 
 def faqs(request, template_name="faqs.html"):
-    return render_to_response(template_name, {}, context_instance=RequestContext(request))
+    return render(request, template_name)
 
 
 @login_required
@@ -914,16 +914,16 @@ def dojo(request, template_name="dojo.html"):
             )
             return HttpResponseRedirect(reverse('welcome'))
 
-    return render_to_response(template_name, context, context_instance=RequestContext(request))
+    return render(request, template_name, context)
 
 
 def mentors(request, template_name="mentors.html"):
     mentors = Mentor.objects.filter(
         active=True, public=True).order_by('user__date_joined')
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'mentors': mentors
-    }, context_instance=RequestContext(request))
+    })
 
 
 def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
@@ -934,9 +934,9 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
         messages.add_message(request, messages.ERROR, 'Invalid mentor ID :(')
         return HttpResponseRedirect(reverse('mentors'))
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'mentor': mentor
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -1055,9 +1055,9 @@ def student_detail(request, student_id=False, template_name="student-detail.html
             messages.add_message(request, messages.SUCCESS, 'Student Updated.')
             return HttpResponseRedirect(reverse('dojo'))
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'form': form
-    }, context_instance=RequestContext(request))
+    })
 
 
 def donate(request, template_name="donate.html"):
@@ -1099,10 +1099,10 @@ def donate(request, template_name="donate.html"):
 
     form = PayPalPaymentsForm(initial=paypal_dict)
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'site_url': settings.SITE_URL,
         'form': form
-    }, context_instance=RequestContext(request))
+    })
 
 
 @csrf_exempt
@@ -1131,10 +1131,10 @@ def about(request, template_name="about.html"):
     mentor_count = Mentor.objects.filter(active=True, public=True).count()
     students_served = Order.objects.exclude(check_in=None).count()
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'mentor_count': mentor_count,
         'students_served': students_served
-    }, context_instance=RequestContext(request))
+    })
 
 
 def contact(request, template_name="contact.html"):
@@ -1184,13 +1184,13 @@ def contact(request, template_name="contact.html"):
     else:
         form = ContactForm()
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'form': form
-    }, context_instance=RequestContext(request))
+    })
 
 
 def privacy(request, template_name="privacy.html"):
-    return render_to_response(template_name, {}, context_instance=RequestContext(request))
+    return render(request, template_name)
 
 
 @login_required
@@ -1243,7 +1243,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
     if 'all_past_meetings' not in request.GET:
         past_meetings = past_meetings[:3]
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'upcoming_sessions': upcoming_sessions,
         'upcoming_sessions_count': upcoming_sessions_count,
         'past_sessions': past_sessions,
@@ -1252,7 +1252,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
         'upcoming_meetings_count': upcoming_meetings_count,
         'past_meetings': past_meetings,
         'past_meetings_count': past_meetings_count
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -1303,14 +1303,14 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     else:
         average_age = False
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'session': session_obj,
         'students_checked_in': students_checked_in,
         'attendance_percentage': attendance_percentage,
         'average_age': average_age,
         'age_count': age_count,
         'gender_count': gender_count
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -1373,14 +1373,14 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         else:
             messages.add_message(request, messages.ERROR, 'Invalid Order')
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'session': session_obj,
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
         'students_checked_in': students_checked_in,
         'attendance_percentage': attendance_percentage,
-    }, context_instance=RequestContext(request))
+    })
 
 
 @login_required
@@ -1395,9 +1395,9 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 
     session_obj = get_object_or_404(Session, id=session_id)
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'session': session_obj,
-    }, context_instance=RequestContext(request))
+    })
 
 
 def session_announce(request, session_id):
@@ -1518,14 +1518,14 @@ def dashboard(request, template_name="admin-dashboard.html"):
     # Average Age
     average_age = int(round(sum(ages) / float(len(ages))))
 
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         'past_sessions': past_sessions,
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
         'total_past_orders_count': total_past_orders_count,
         'total_checked_in_orders_count': total_checked_in_orders_count,
-    }, context_instance=RequestContext(request))
+    })
 
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
