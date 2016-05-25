@@ -1425,6 +1425,18 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
     current_mentor_orders_checked_in = session_obj.get_current_mentor_orders(checked_in=True)
     mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
 
+    if request.method == 'POST':
+        if 'order_id' in request.POST:
+            order = get_object_or_404(MentorOrder, id=request.POST['order_id'])
+
+            if order.check_in:
+                order.check_in = None
+            else:
+                order.check_in = timezone.now()
+
+            order.save()
+        else:
+            messages.add_message(request, messages.ERROR, 'Invalid Order')
 
     return render(request, template_name, {
         'session': session_obj,
