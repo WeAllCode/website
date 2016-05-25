@@ -1425,17 +1425,9 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
     current_mentor_orders_checked_in = session_obj.get_current_mentor_orders(checked_in=True)
     mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
 
-    if len(current_mentor_orders_checked_in):
-        attendance_percentage = round(
-            (float(current_mentor_orders_checked_in) /
-             float(current_mentor_orders)) * 100
-        )
-    else:
-        attendance_percentage = 0
 
     return render(request, template_name, {
         'session': session_obj,
-        'attendance_percentage': attendance_percentage,
         'mentors_checked_in': mentors_checked_in
     })
 
