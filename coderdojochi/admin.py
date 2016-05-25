@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
                                  Equipment, MeetingType, Meeting, Location, Donation,
@@ -140,6 +142,13 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class MentorOrderAdmin(admin.ModelAdmin):
+    # def session(obj):
+    #     url = reverse('admin:coderdojochi_session_change', args=(obj.session.id,))
+    #     return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.session))
+    # session.short_description = 'Session'
+    # raw_id_fields = ('session',)
+    # readonly_fields = (session, 'session',)
+
     list_display = (
         'mentor',
         'session',
@@ -149,10 +158,36 @@ class MentorOrderAdmin(admin.ModelAdmin):
         'week_reminder_sent',
         'day_reminder_sent',
         'created_at',
-        'updated_at'
+        'updated_at',
     )
-    list_filter = ('active', 'check_in', 'session',)
-    ordering = ('created_at',)
+
+    list_display_links = (
+        'mentor',
+    )
+
+    list_filter = (
+        'active',
+        'check_in',
+        'session',
+        'mentor',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
+    search_fields = (
+        'mentor__first_name',
+        'mentor__last_name',
+    )
+
+    readonly_fields = (
+        # 'mentor',
+        # 'session',
+        'ip',
+        # 'check_in',
+    )
+
     list_per_page = 100
     date_hierarchy = 'created_at'
     view_on_site = False
