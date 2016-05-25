@@ -64,13 +64,13 @@ class Mentor(models.Model):
         verbose_name_plural = _("mentors")
 
     def get_approve_avatar_url(self):
-        return '/mentors/' + str(self.id) + '/approve-avatar/'
+        return '/mentors/{}/approve-avatar/'.format(self.id)
 
     def get_reject_avatar_url(self):
-        return '/mentors/' + str(self.id) + '/reject-avatar/'
+        return '/mentors/{}/reject-avatar/'.format(self.id)
 
     def get_absolute_url(self):
-        return '/mentors/' + str(self.id) + '/'
+        return '/mentors/{}/'.format(self.id)
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
@@ -167,7 +167,7 @@ class Student(models.Model):
         verbose_name_plural = _("students")
 
     def __unicode__(self):
-        return self.last_name + ', ' + self.first_name
+        return '{}, {}'.format(self.last_name, self.first_name)
 
 
 class Course(models.Model):
@@ -187,7 +187,7 @@ class Course(models.Model):
         super(Course, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return self.code + ' | ' + self.title
+        return '{} | {}'.format(self.code, self.title)
 
 
 class Location(models.Model):
@@ -246,6 +246,7 @@ class Session(models.Model):
     def save(self, *args, **kwargs):
         if self.mentor_capacity is None:
             self.mentor_capacity = self.capacity / 2
+
         super(Session, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -342,9 +343,9 @@ class Session(models.Model):
             return self.capacity / 2
 
     def __unicode__(self):
-        return self.course.title + ' | ' + formats.date_format(
-            self.start_date,
-            'SHORT_DATETIME_FORMAT'
+        return '{} | {}'.format(
+            self.course.title,
+            formats.date_format(self.start_date, 'SHORT_DATETIME_FORMAT')
         )
 
 
@@ -365,7 +366,7 @@ class MeetingType(models.Model):
         super(MeetingType, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return self.code + ' | ' + self.title
+        return '{} | {}'.format(self.code, self.title)
 
 
 class Meeting(models.Model):
@@ -414,8 +415,9 @@ class Meeting(models.Model):
         )
 
     def __unicode__(self):
-        return self.meeting_type.title + ' | ' + formats.date_format(
-            self.start_date, "SHORT_DATETIME_FORMAT"
+        return '{} | {}'.format(
+            self.meeting_type.title,
+            formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
         )
 
     def get_current_meeting_orders(self, checked_in=None):
@@ -580,7 +582,7 @@ class EmailContent(models.Model):
         verbose_name_plural = _("email content")
 
     def __unicode__(self):
-        return self.nickname + ' | ' + self.subject
+        return '{} | {}'.format(self.nickname, self.subject)
 
 
 class Donation(models.Model):
@@ -598,4 +600,4 @@ class Donation(models.Model):
         verbose_name_plural = _("donations")
 
     def __unicode__(self):
-        return self.email + ' | $' + str(self.amount)
+        return '{} | ${}'.format(self.email, self.amount)
