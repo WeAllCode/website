@@ -378,7 +378,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             messages.add_message(
                 request,
                 messages.WARNING,
-                'You cannot sign up for a class until after attending a mentor meeting. '
+                'You cannot sign up for a class until you fill out the background search form. '
                 'Please RSVP below.'
             )
             return HttpResponseRedirect('{}?highlight=meetings'.format(reverse('dojo')))
