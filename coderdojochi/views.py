@@ -624,16 +624,7 @@ def meeting_detail(request, year, month, day, slug, meeting_id, template_name="m
 
 
 @login_required
-def meeting_sign_up(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    meeting_id,
-    student_id=False,
-    template_name="meeting-sign-up.html"
-):
+def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=False, template_name="meeting-sign-up.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
     mentor = get_object_or_404(Mentor, user=request.user)
     meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, active=True)
