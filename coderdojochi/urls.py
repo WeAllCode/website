@@ -61,9 +61,9 @@ urlpatterns = [
         name='session_announce'
     ),
 
-    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)/sign-up/$', coderdojochi_views.meeting_sign_up, name='meeting_sign_up'),
-    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)/calendar/$', coderdojochi_views.meeting_ics, name='meeting_ics'),
-    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<meeting_id>[\d]+)$', coderdojochi_views.meeting_detail, name='meeting_detail'),
+    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/sign-up/$', coderdojochi_views.meeting_sign_up, name='meeting_sign_up'),
+    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/calendar/$', coderdojochi_views.meeting_ics, name='meeting_ics'),
+    url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)$', coderdojochi_views.meeting_detail, name='meeting_detail'),
     url(
         r'^meeting/(?P<meeting_id>[\d]+)/announce/$',
         coderdojochi_views.meeting_announce,

@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
 
-from coderdojochi.models import Order, Session
+from coderdojochi.models import Session, Mentor, Order, MentorOrder
 
 
 class SendReminders(CronJobBase):
@@ -108,7 +108,10 @@ class SendReminders(CronJobBase):
             order.save()
 
         for session in sessions_within_a_week:
-            for mentor in session.mentors.all():
+            session_mentors = Mentor.objects.filter(
+                id__in=MentorOrder.objects.filter(session=session).values('mentor__id')
+            )
+            for mentor in session_mentors:
                 sendSystemEmail(
                     mentor.user,
                     'Upcoming class reminder',
@@ -140,7 +143,10 @@ class SendReminders(CronJobBase):
             session.save()
 
         for session in sessions_within_a_day:
-            for mentor in session.mentors.all():
+            session_mentors = Mentor.objects.filter(
+                id__in=MentorOrder.objects.filter(session=session).values('mentor__id')
+            )
+            for mentor in session_mentors:
                 sendSystemEmail(
                     mentor.user,
                     'Upcoming class reminder',
