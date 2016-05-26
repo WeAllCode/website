@@ -38,13 +38,13 @@
                     </div>
                     <div class="actions">
                         {% if user.is_authenticated and user.role == 'mentor' %}
-                            {% if session.mentor_capacity and session.mentors.count >= session.mentor_capacity %}
+                            {% if session.mentor_capacity and session.get_current_mentor_orders.count >= session.mentor_capacity %}
                                 <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Join Waitlist</a>
                             {% else %}
                                 <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Volunteer</a>
                             {% endif %}
                         {% else %}
-                            {% if session.get_current_students.all.count < session.capacity %}
+                            {% if session.get_current_students.count < session.capacity %}
                                 <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Learn more</a>
                             {% else %}
                                 <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Join Waitlist</a>
