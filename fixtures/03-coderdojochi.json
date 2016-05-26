@@ -68,7 +68,6 @@
     "mentor_capacity": null,
     "public": true,
     "teacher": 1,
-    "mentors": [1],
     "start_date": "2020-01-01T10:00:00",
     "end_date": "2020-01-01T13:00:00",
     "mentor_end_date": "2020-01-01T14:00:00",
@@ -107,7 +106,6 @@
     "image_url": "",
     "location": 1,
     "active": true,
-    "mentors": [],
     "additional_info": ""
   },
   "model": "coderdojochi.meeting",

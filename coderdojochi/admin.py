@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.contrib import admin
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
                                  Equipment, MeetingType, Meeting, Location, Donation,
-                                 RaceEthnicity)
+                                 RaceEthnicity, MentorOrder, MeetingOrder)
 
 User = get_user_model()
 
@@ -104,13 +106,13 @@ class SessionAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
-    filter_horizontal = ('mentors', 'waitlist_mentors', 'waitlist_students', )
+    filter_horizontal = ('waitlist_mentors', 'waitlist_students', )
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return obj.mentors.count()
+        return MentorOrder.objects.filter(session__id=obj.id).count()
     get_mentor_count.short_description = 'Mentors'
 
     def get_current_orders_count(self, obj):
@@ -139,6 +141,77 @@ class OrderAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+class MentorOrderAdmin(admin.ModelAdmin):
+    # def session(obj):
+    #     url = reverse('admin:coderdojochi_session_change', args=(obj.session.id,))
+    #     return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.session))
+    # session.short_description = 'Session'
+    # raw_id_fields = ('session',)
+    # readonly_fields = (session, 'session',)
+
+    list_display = (
+        'mentor',
+        'session',
+        'ip',
+        'check_in',
+        'active',
+        'week_reminder_sent',
+        'day_reminder_sent',
+        'created_at',
+        'updated_at',
+    )
+
+    list_display_links = (
+        'mentor',
+    )
+
+    list_filter = (
+        'active',
+        'check_in',
+        'session',
+        'mentor',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
+    search_fields = (
+        'mentor__first_name',
+        'mentor__last_name',
+    )
+
+    readonly_fields = (
+        # 'mentor',
+        # 'session',
+        'ip',
+        # 'check_in',
+    )
+
+    list_per_page = 100
+    date_hierarchy = 'created_at'
+    view_on_site = False
+
+
+class MeetingOrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'mentor',
+        'meeting',
+        'ip',
+        'check_in',
+        'active',
+        'week_reminder_sent',
+        'day_reminder_sent',
+        'created_at',
+        'updated_at'
+    )
+    list_filter = ('active', 'check_in', 'meeting',)
+    ordering = ('created_at',)
+    list_per_page = 100
+    date_hierarchy = 'created_at'
+    view_on_site = False
+
+
 class MeetingTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
@@ -159,13 +232,12 @@ class MeetingAdmin(admin.ModelAdmin):
     list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
-    filter_horizontal = ('mentors',)
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return obj.mentors.count()
+        return MeetingOrder.objects.filter(meeting__id=obj.id).count()
     get_mentor_count.short_description = 'Mentors'
 
 
@@ -206,6 +278,8 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(MentorOrder, MentorOrderAdmin)
+admin.site.register(MeetingOrder, MeetingOrderAdmin)
 admin.site.register(MeetingType, MeetingTypeAdmin)
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(EquipmentType, EquipmentTypeAdmin)
