@@ -410,8 +410,6 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 )
                 return HttpResponseRedirect(session_obj.get_absolute_url())
 
-    undo = False
-
     if request.method == 'POST':
         if user_signed_up:
             if request.user.role == 'mentor':
@@ -421,7 +419,13 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
             order.active = False
             order.save()
-            undo = True
+
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Thanks for letting us know!'
+            )
+
         else:
             if not settings.DEBUG:
                 ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
@@ -457,13 +461,6 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
             order.save()
 
-        if undo:
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                'Thanks for letting us know!'
-            )
-        else:
             messages.add_message(
                 request,
                 messages.SUCCESS,
@@ -642,7 +639,6 @@ def meeting_sign_up(
     meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, active=True)
     user_meeting_order = meeting_orders.filter(mentor=mentor)
     user_signed_up = True if user_meeting_order.count() else False
-    undo = False
 
     if request.method == 'POST':
 
@@ -650,7 +646,13 @@ def meeting_sign_up(
             meeting_order = get_object_or_404(MeetingOrder, meeting=meeting_obj, mentor=mentor)
             meeting_order.active = False
             meeting_order.save()
-            undo = True
+
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                'Thanks for letting us know!'
+            )
+
         else:
             if not settings.DEBUG:
                 ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
@@ -664,14 +666,7 @@ def meeting_sign_up(
             meeting_order.ip = ip
             meeting_order.active = True
             meeting_order.save()
-        if undo:
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                'Thanks for letting us know!'
-            )
 
-        else:
             messages.add_message(
                 request,
                 messages.SUCCESS,
