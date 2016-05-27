@@ -62,8 +62,9 @@ class CDCModelForm(ModelForm):
                     else:
                         value = field.clean(value)
                 self.cleaned_data[name] = value
-                if hasattr(self, 'clean_%s' % name):
-                    value = getattr(self, 'clean_%s' % name)()
+
+                if hasattr(self, u'clean_{}'.format(name)):
+                    value = getattr(self, u'clean_{}'.format(name))()
                     self.cleaned_data[name] = value
             except ValidationError as e:
                 self.add_error(name, e)
