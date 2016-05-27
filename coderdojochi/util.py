@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 def str_to_bool(s):
     if s == 'True':
         return True

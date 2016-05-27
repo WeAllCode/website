@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import html5.forms.widgets as html5_widgets
 
 from django import forms
@@ -25,6 +27,7 @@ class CDCForm(Form):
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
             value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
+
             try:
                 if isinstance(field, FileField):
                     initial = self.initial.get(name, field.initial)
@@ -34,10 +37,13 @@ class CDCForm(Form):
                         value = field.clean(value.strip())
                     else:
                         value = field.clean(value)
+
                 self.cleaned_data[name] = value
-                if hasattr(self, 'clean_%s' % name):
-                    value = getattr(self, 'clean_%s' % name)()
+
+                if hasattr(self, u'clean_{}'.format(name)):
+                    value = getattr(self, u'clean_{}'.format(name))()
                     self.cleaned_data[name] = value
+
             except ValidationError as e:
                 self.add_error(name, e)
 
@@ -50,6 +56,7 @@ class CDCModelForm(ModelForm):
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
             value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
+
             try:
                 if isinstance(field, FileField):
                     initial = self.initial.get(name, field.initial)
@@ -59,10 +66,13 @@ class CDCModelForm(ModelForm):
                         value = field.clean(value.strip())
                     else:
                         value = field.clean(value)
+
                 self.cleaned_data[name] = value
-                if hasattr(self, 'clean_%s' % name):
-                    value = getattr(self, 'clean_%s' % name)()
+
+                if hasattr(self, u'clean_{}'.format(name)):
+                    value = getattr(self, u'clean_{}'.format(name))()
                     self.cleaned_data[name] = value
+
             except ValidationError as e:
                 self.add_error(name, e)
 
@@ -83,7 +93,11 @@ class SignupForm(forms.Form):
 class MentorForm(CDCModelForm):
     bio = forms.CharField(
         widget=forms.Textarea(
-            attrs={'placeholder': 'Short Bio', 'class': 'form-control', 'rows': 5}
+            attrs={
+                'placeholder': 'Short Bio',
+                'class': 'form-control',
+                'rows': 5
+            }
         ),
         label='Short Bio',
         required=False
@@ -103,14 +117,20 @@ class MentorForm(CDCModelForm):
             max_width = max_height = 1000
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
-                    u'Please use an image that is '
-                    '%s x %spx or smaller.' % (max_width, max_height))
+                    u'Please use an image that is {} x {}px or smaller.'.format(
+                        max_width,
+                        max_height
+                    )
+                )
 
             min_width = min_height = 250
             if w < min_width or h < min_height:
                 raise forms.ValidationError(
-                    u'Please use an image that is '
-                    '%s x %spx or larger.' % (min_width, min_height))
+                    u'Please use an image that is {} x {}px or larger.'.format(
+                        min_width,
+                        min_height
+                    )
+                )
 
             # validate content type
             main, sub = avatar.content_type.split('/')
@@ -135,11 +155,21 @@ class MentorForm(CDCModelForm):
 
 class GuardianForm(CDCModelForm):
     phone = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}),
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Phone Number',
+                'class': 'form-control'
+            }
+        ),
         label='Phone Number'
     )
     zip = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Zip Code', 'class': 'form-control'}),
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Zip Code',
+                'class': 'form-control'
+            }
+        ),
         label='Zip Code'
     )
 
@@ -150,32 +180,65 @@ class GuardianForm(CDCModelForm):
 
 class StudentForm(CDCModelForm):
     first_name = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Jane', 'class': 'form-control'}),
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Jane',
+                'class': 'form-control'
+            }
+        ),
         label='First Name'
     )
+
     last_name = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Doe', 'class': 'form-control'}),
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Doe',
+                'class': 'form-control'
+            }
+        ),
         label='Last Name'
     )
+
     gender = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': '', 'class': 'form-control'}), label='Gender')
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Gender'
+    )
+
     school_name = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        ),
         label='School Name',
         required=False
     )
+
     school_type = forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices=SCHOOL_TYPE_CHOICES,
+        choices = SCHOOL_TYPE_CHOICES,
         required=False
     )
+
     race_ethnicity = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset=RaceEthnicity.objects.filter(visible=True),
+        queryset = RaceEthnicity.objects.filter(visible=True),
         required=False
     )
+
     birthday = forms.CharField(
-        widget=html5_widgets.DateInput(attrs={'class': 'form-control'}))
+        widget=html5_widgets.DateInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
     medications = forms.CharField(
         widget=forms.Textarea(
             attrs={
@@ -191,6 +254,7 @@ class StudentForm(CDCModelForm):
         ),
         required=False
     )
+
     medical_conditions = forms.CharField(
         widget=forms.Textarea(
             attrs={
@@ -206,15 +270,23 @@ class StudentForm(CDCModelForm):
         ),
         required=False
     )
+
     photo_release = forms.BooleanField(
-        widget=forms.CheckboxInput(attrs={'required': 'required'}),
-        label='I hereby give permission to CoderDojoChi to use the student\'s '
-              'image and/or likeness in promotional materials.'
+        widget=forms.CheckboxInput(
+            attrs={
+                'required': 'required'
+            }
+        ),
+        label='I hereby give permission to CoderDojoChi to use the student\'s image and/or likeness in promotional materials.'
     )
+
     consent = forms.BooleanField(
-        widget=forms.CheckboxInput(attrs={'required': 'required'}),
-        label='I hereby give consent for the student '
-              'signed up above to participate in CoderDojoChi.'
+        widget=forms.CheckboxInput(
+            attrs={
+                'required': 'required'
+            }
+        ),
+        label='I hereby give consent for the student signed up above to participate in CoderDojoChi.'
     )
 
     class Meta:

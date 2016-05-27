@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from coderdojochi.models import CDCUser
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 

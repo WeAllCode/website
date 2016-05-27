@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import arrow
 import datetime
 
@@ -185,8 +187,11 @@ def sendSystemEmail(user, subject, template_name, merge_vars):
     merge_vars['current_year'] = timezone.now().year
     merge_vars['company'] = 'CoderDojoChi'
 
-    msg = EmailMessage(subject=subject, from_email=settings.DEFAULT_FROM_EMAIL,
-                       to=[user.email])
+    msg = EmailMessage(
+        subject=subject,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[user.email]
+    )
 
     msg.template_name = template_name
     msg.global_merge_vars = merge_vars
