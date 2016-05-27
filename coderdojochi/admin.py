@@ -18,46 +18,110 @@ class UserAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'role',
+        'date_joined',
+        # 'last_login',
         'is_staff',
         'is_superuser',
-        'last_login',
-        'date_joined'
     )
-    list_filter = ('role', 'is_staff',)
-    ordering = ('-date_joined',)
+
+    list_filter = (
+        'role',
+        'is_staff',
+        'date_joined',
+    )
+
+    ordering = (
+        '-date_joined',
+    )
+
     date_hierarchy = 'date_joined'
-    search_fields = ('first_name', 'last_name', 'email',)
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'email',
+    )
+
     view_on_site = False
-    filter_horizontal = ('groups', 'user_permissions', )
+
+    filter_horizontal = (
+        'groups',
+        'user_permissions',
+    )
+
+    readonly_fields = (
+        'password',
+        'last_login',
+    )
 
     change_form_template = 'loginas/change_form.html'
 
 
 class MentorAdmin(admin.ModelAdmin):
+
     list_display = (
         'first_name',
         'last_name',
         'user',
-        'background_check',
-        'public',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'active',
+        'public',
+        'background_check',
+        'avatar_approved',
     )
-    list_filter = ('public', 'background_check',)
-    ordering = ('-created_at',)
+
+    list_filter = (
+        'active',
+        'public',
+        'background_check',
+        'avatar_approved',
+    )
+
+    ordering = (
+        '-created_at',
+    )
+
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user__username',)
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'user__username',
+        'user__email'
+    )
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
 
 class GuardianAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'user', 'phone', 'zip', 'created_at', 'updated_at',)
-    list_filter = ('zip',)
-    ordering = ('-created_at',)
+    list_display = (
+        'first_name',
+        'last_name',
+        'user',
+        'phone',
+        'zip',
+        'created_at',
+        'updated_at',
+    )
+
+    list_filter = (
+        'zip',
+    )
+
+    ordering = (
+        '-created_at',
+    )
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'user__username',
+    )
+
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user__username',)
+
     view_on_site = False
 
 
@@ -71,17 +135,41 @@ class StudentAdmin(admin.ModelAdmin):
         'updated_at',
         'active'
     )
-    list_filter = ('gender',)
-    filter_horizontal = ('race_ethnicity',)
-    ordering = ('guardian',)
+
+    list_filter = (
+        'gender',
+    )
+
+    filter_horizontal = (
+        'race_ethnicity',
+    )
+
+    ordering = (
+        'guardian',
+    )
+
     date_hierarchy = 'created_at'
+
     view_on_site = False
 
 
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('code', 'title', 'slug', 'created_at', 'updated_at',)
-    list_filter = ('code',)
-    ordering = ('created_at',)
+    list_display = (
+        'code',
+        'title',
+        'slug',
+        'created_at',
+        'updated_at',
+    )
+
+    list_filter = (
+        'code',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
     view_on_site = False
 
 
@@ -98,11 +186,25 @@ class SessionAdmin(admin.ModelAdmin):
         'public',
         'announced_date'
     )
-    list_filter = ('public', 'location',)
-    ordering = ('-start_date',)
+
+    list_filter = (
+        'public',
+        'course__title',
+        'location',
+    )
+
+    ordering = (
+        '-start_date',
+    )
+
+    filter_horizontal = (
+        'waitlist_mentors',
+        'waitlist_students',
+    )
+
     date_hierarchy = 'start_date'
+
     view_on_site = False
-    filter_horizontal = ('waitlist_mentors', 'waitlist_students', )
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
@@ -118,21 +220,33 @@ class SessionAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        'guardian',
+        # 'id',
         'student',
-        'session',
-        'ip',
-        'check_in',
+        'guardian',
         'alternate_guardian',
+        'session',
+        # 'ip',
+        'check_in',
+        'created_at',
+        'updated_at',
         'active',
         'week_reminder_sent',
         'day_reminder_sent',
-        'created_at',
-        'updated_at'
     )
-    list_filter = ('active', 'check_in', 'session',)
-    ordering = ('created_at',)
+
+    list_filter = (
+        'active',
+        'check_in',
+        'student',
+        'session',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
     date_hierarchy = 'created_at'
+
     view_on_site = False
 
 
@@ -163,8 +277,8 @@ class MentorOrderAdmin(admin.ModelAdmin):
     list_filter = (
         'active',
         'check_in',
-        'session',
-        'mentor',
+        # 'session',
+        # 'mentor',
     )
 
     ordering = (
@@ -199,13 +313,31 @@ class MeetingOrderAdmin(admin.ModelAdmin):
         'created_at',
         'updated_at'
     )
-    list_filter = ('active', 'check_in', 'meeting',)
-    ordering = ('created_at',)
+
+    list_filter = (
+        'active',
+        'check_in',
+        'meeting__meeting_type',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
     date_hierarchy = 'created_at'
+
     view_on_site = False
 
 
 class MeetingTypeAdmin(admin.ModelAdmin):
+    list_display = (
+        'code',
+        'title',
+        'slug',
+    )
+    list_display_links = (
+        'title',
+    )
     view_on_site = False
 
 
@@ -220,8 +352,18 @@ class MeetingAdmin(admin.ModelAdmin):
         'announced_date',
         'created_at'
     )
-    list_filter = ('public',)
-    ordering = ('-start_date',)
+
+    list_filter = (
+        'active',
+        'public',
+        'location',
+        'meeting_type__title',
+    )
+
+    ordering = (
+        '-start_date',
+    )
+
     date_hierarchy = 'start_date'
     view_on_site = False
 
@@ -250,11 +392,20 @@ class DonationAdmin(admin.ModelAdmin):
         'verified',
         'receipt_sent',
         'created_at',
-        'updated_at'
+        'updated_at',
     )
-    list_filter = ('amount', 'receipt_sent',)
-    ordering = ('-created_at',)
+
+    list_filter = (
+        'amount',
+        'receipt_sent',
+    )
+
+    ordering = (
+        '-created_at',
+    )
+
     date_hierarchy = 'created_at'
+
     view_on_site = False
 
 
