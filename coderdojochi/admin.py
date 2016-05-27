@@ -25,7 +25,6 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_filter = ('role', 'is_staff',)
     ordering = ('-date_joined',)
-    list_per_page = 100
     date_hierarchy = 'date_joined'
     search_fields = ('first_name', 'last_name', 'email',)
     view_on_site = False
@@ -46,7 +45,6 @@ class MentorAdmin(admin.ModelAdmin):
     )
     list_filter = ('public', 'background_check',)
     ordering = ('-created_at',)
-    list_per_page = 100
     date_hierarchy = 'created_at'
     search_fields = ('first_name', 'last_name', 'user__username',)
 
@@ -58,7 +56,6 @@ class GuardianAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'user', 'phone', 'zip', 'created_at', 'updated_at',)
     list_filter = ('zip',)
     ordering = ('-created_at',)
-    list_per_page = 100
     date_hierarchy = 'created_at'
     search_fields = ('first_name', 'last_name', 'user__username',)
     view_on_site = False
@@ -77,7 +74,6 @@ class StudentAdmin(admin.ModelAdmin):
     list_filter = ('gender',)
     filter_horizontal = ('race_ethnicity',)
     ordering = ('guardian',)
-    list_per_page = 100
     date_hierarchy = 'created_at'
     view_on_site = False
 
@@ -86,7 +82,6 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ('code', 'title', 'slug', 'created_at', 'updated_at',)
     list_filter = ('code',)
     ordering = ('created_at',)
-    list_per_page = 100
     view_on_site = False
 
 
@@ -105,7 +100,6 @@ class SessionAdmin(admin.ModelAdmin):
     )
     list_filter = ('public', 'location',)
     ordering = ('-start_date',)
-    list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
     filter_horizontal = ('waitlist_mentors', 'waitlist_students', )
@@ -138,7 +132,6 @@ class OrderAdmin(admin.ModelAdmin):
     )
     list_filter = ('active', 'check_in', 'session',)
     ordering = ('created_at',)
-    list_per_page = 100
     date_hierarchy = 'created_at'
     view_on_site = False
 
@@ -190,7 +183,6 @@ class MentorOrderAdmin(admin.ModelAdmin):
         # 'check_in',
     )
 
-    list_per_page = 100
     date_hierarchy = 'created_at'
     view_on_site = False
 
@@ -209,7 +201,6 @@ class MeetingOrderAdmin(admin.ModelAdmin):
     )
     list_filter = ('active', 'check_in', 'meeting',)
     ordering = ('created_at',)
-    list_per_page = 100
     date_hierarchy = 'created_at'
     view_on_site = False
 
@@ -231,7 +222,6 @@ class MeetingAdmin(admin.ModelAdmin):
     )
     list_filter = ('public',)
     ordering = ('-start_date',)
-    list_per_page = 100
     date_hierarchy = 'start_date'
     view_on_site = False
 
@@ -264,7 +254,6 @@ class DonationAdmin(admin.ModelAdmin):
     )
     list_filter = ('amount', 'receipt_sent',)
     ordering = ('-created_at',)
-    list_per_page = 100
     date_hierarchy = 'created_at'
     view_on_site = False
 
