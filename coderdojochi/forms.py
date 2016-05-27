@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import html5.forms.widgets as html5_widgets
 
 from django import forms
