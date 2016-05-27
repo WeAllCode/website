@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 from stdimage.models import StdImageField
 
@@ -41,7 +43,7 @@ class RaceEthnicity(models.Model):
 def generate_filename(instance, filename):
     # file will be uploaded to MEDIA_ROOT/avatar/<username>
     filename, file_extension = os.path.splitext(filename)
-    return 'avatar/{}{}'.format(instance.user.username, file_extension.lower())
+    return u'avatar/{}{}'.format(instance.user.username, file_extension.lower())
 
 
 class Mentor(models.Model):
@@ -64,13 +66,13 @@ class Mentor(models.Model):
         verbose_name_plural = _("mentors")
 
     def get_approve_avatar_url(self):
-        return '/mentors/{}/approve-avatar/'.format(self.id)
+        return u'/mentors/{}/approve-avatar/'.format(self.id)
 
     def get_reject_avatar_url(self):
-        return '/mentors/{}/reject-avatar/'.format(self.id)
+        return u'/mentors/{}/reject-avatar/'.format(self.id)
 
     def get_absolute_url(self):
-        return '/mentors/{}/'.format(self.id)
+        return u'/mentors/{}/'.format(self.id)
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
@@ -109,7 +111,7 @@ class Guardian(models.Model):
         verbose_name_plural = _("guardians")
 
     def __unicode__(self):
-        return self.user.username
+        return u'{} {}'.format(self.first_name, self.last_name)
 
 
 class Student(models.Model):
@@ -167,7 +169,7 @@ class Student(models.Model):
         verbose_name_plural = _("students")
 
     def __unicode__(self):
-        return '{}, {}'.format(self.last_name, self.first_name)
+        return u'{} {}'.format(self.first_name, self.last_name)
 
 
 class Course(models.Model):
@@ -187,7 +189,7 @@ class Course(models.Model):
         super(Course, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return '{} | {}'.format(self.code, self.title)
+        return u'{} | {}'.format(self.code, self.title)
 
 
 class Location(models.Model):
@@ -250,21 +252,21 @@ class Session(models.Model):
         super(Session, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return '/class/{}/{}/{}'.format(
+        return u'/class/{}/{}/{}'.format(
             self.start_date.strftime("%Y/%m/%d"),
             self.course.slug,
             self.id
         )
 
     def get_signup_url(self):
-        return '/class/{}/{}/{}/sign-up/'.format(
+        return u'/class/{}/{}/{}/sign-up/'.format(
             self.start_date.strftime("%Y/%m/%d"),
             self.course.slug,
             self.id
         )
 
     def get_ics_url(self):
-        return '/class/{}/{}/{}/calendar/'.format(
+        return u'/class/{}/{}/{}/calendar/'.format(
             self.start_date.strftime("%Y/%m/%d"),
             self.course.slug,
             self.id
@@ -343,7 +345,7 @@ class Session(models.Model):
             return self.capacity / 2
 
     def __unicode__(self):
-        return '{} | {}'.format(
+        return u'{} | {}'.format(
             self.course.title,
             formats.date_format(self.start_date, 'SHORT_DATETIME_FORMAT')
         )
@@ -366,7 +368,7 @@ class MeetingType(models.Model):
         super(MeetingType, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return '{} | {}'.format(self.code, self.title)
+        return u'{} | {}'.format(self.code, self.title)
 
 
 class Meeting(models.Model):
@@ -394,28 +396,28 @@ class Meeting(models.Model):
         verbose_name_plural = _("meetings")
 
     def get_absolute_url(self):
-        return '/meeting/{}/{}/{}'.format(
+        return u'/meeting/{}/{}/{}'.format(
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
             self.id
         )
 
     def get_signup_url(self):
-        return '/meeting/{}/{}/{}/sign-up'.format(
+        return u'/meeting/{}/{}/{}/sign-up'.format(
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
             self.id
         )
 
     def get_ics_url(self):
-        return '/meeting/{}/{}/{}/calendar'.format(
+        return u'/meeting/{}/{}/{}/calendar'.format(
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
             self.id
         )
 
     def __unicode__(self):
-        return '{} | {}'.format(
+        return u'{} | {}'.format(
             self.meeting_type.title,
             formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
         )
@@ -474,7 +476,7 @@ class Order(models.Model):
         return delta - ((session_date.month, session_date.day) < (birthday.month, birthday.day))
 
     def __unicode__(self):
-        return '{} {} | {}'.format(
+        return u'{} {} | {}'.format(
             self.student.first_name,
             self.student.last_name,
             self.session.course.title
@@ -499,7 +501,7 @@ class MentorOrder(models.Model):
         verbose_name_plural = _("mentor orders")
 
     def __unicode__(self):
-        return '{} {} | {}'.format(
+        return u'{} {} | {}'.format(
             self.mentor.first_name,
             self.mentor.last_name,
             self.session.course.title
@@ -524,7 +526,7 @@ class MeetingOrder(models.Model):
         verbose_name_plural = _("meeting orders")
 
     def __unicode__(self):
-        return '{} {} | {}'.format(
+        return u'{} {} | {}'.format(
             self.mentor.first_name,
             self.mentor.last_name,
             self.meeting.meeting_type.title
@@ -561,7 +563,7 @@ class Equipment(models.Model):
         verbose_name_plural = _("equiptment")
 
     def __unicode__(self):
-        return '{} | {} {} | {}'.format(
+        return u'{} | {} {} | {}'.format(
             self.equipment_type.name,
             self.make,
             self.model,
@@ -582,7 +584,7 @@ class EmailContent(models.Model):
         verbose_name_plural = _("email content")
 
     def __unicode__(self):
-        return '{} | {}'.format(self.nickname, self.subject)
+        return u'{} | {}'.format(self.nickname, self.subject)
 
 
 class Donation(models.Model):
@@ -600,4 +602,4 @@ class Donation(models.Model):
         verbose_name_plural = _("donations")
 
     def __unicode__(self):
-        return '{} | ${}'.format(self.email, self.amount)
+        return u'{} | ${}'.format(self.email, self.amount)
