@@ -26,6 +26,7 @@ SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str_to_bool(os.environ.get('DEBUG')) or False
+DEBUG_EMAIL = str_to_bool(os.environ.get('DEBUG_EMAIL')) or False
 IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']
@@ -233,7 +234,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = MANDRILL_API_KEY
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-if DEBUG:
+if DEBUG and DEBUG_EMAIL:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 if DEBUG:
