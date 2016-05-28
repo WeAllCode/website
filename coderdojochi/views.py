@@ -1447,26 +1447,34 @@ def session_announce(request, session_id):
 
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
-            sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-mentor', {
-                'first_name': mentor.user.first_name,
-                'last_name': mentor.user.last_name,
-                'class_code': session_obj.course.code,
-                'class_title': session_obj.course.title,
-                'class_description': session_obj.course.description,
-                'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
-                'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
-                'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
-                'class_location_name': session_obj.location.name,
-                'class_location_address': session_obj.location.address,
-                'class_location_address2': session_obj.location.address2,
-                'class_location_city': session_obj.location.city,
-                'class_location_state': session_obj.location.state,
-                'class_location_zip': session_obj.location.zip,
-                'class_additional_info': session_obj.additional_info,
-                'class_url': session_obj.get_absolute_url(),
-                'class_ics_url': session_obj.get_ics_url()
-            }, mentor.user.email)
+
+            sendSystemEmail(
+                request,
+                'Upcoming class',
+                'coderdojochi-class-announcement-mentor',
+                {
+                    'first_name': mentor.user.first_name,
+                    'last_name': mentor.user.last_name,
+                    'class_code': session_obj.course.code,
+                    'class_title': session_obj.course.title,
+                    'class_description': session_obj.course.description,
+                    'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
+                    'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
+                    'class_location_name': session_obj.location.name,
+                    'class_location_address': session_obj.location.address,
+                    'class_location_address2': session_obj.location.address2,
+                    'class_location_city': session_obj.location.city,
+                    'class_location_state': session_obj.location.state,
+                    'class_location_zip': session_obj.location.zip,
+                    'class_additional_info': session_obj.additional_info,
+                    'class_url': session_obj.get_absolute_url(),
+                    'class_ics_url': session_obj.get_ics_url()
+                },
+                mentor.user.email
+            )
+
 
         for guardian in Guardian.objects.filter(active=True):
             sendSystemEmail(
