@@ -4,7 +4,7 @@ import arrow
 import datetime
 
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import get_connection
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
 
@@ -43,6 +43,13 @@ class SendReminders(CronJobBase):
             start_date__lte=timezone.now() + datetime.timedelta(days=1),
             start_date__gte=timezone.now() - datetime.timedelta(days=2)
         )
+
+        # uses SMTP server specified in settings.py
+        connection = get_connection()
+
+        # If you don't open the connection manually, Django will automatically open,
+        # then tear down the connection in msg.send()
+        connection.open()
 
         for order in orders_within_a_week:
             sendSystemEmail(
@@ -192,3 +199,5 @@ class SendReminders(CronJobBase):
             session.mentors_day_reminder_sent = True
             session.save()
 
+        # Cleanup
+        connection.close()

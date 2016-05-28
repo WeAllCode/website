@@ -13,7 +13,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import get_connection, EmailMessage, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
@@ -721,6 +721,13 @@ def meeting_announce(request, meeting_id):
 
     if not meeting_obj.announced_date:
 
+        # uses SMTP server specified in settings.py
+        connection = get_connection()
+
+        # If you don't open the connection manually, Django will automatically open,
+        # then tear down the connection in msg.send()
+        connection.open()
+
         for mentor in Mentor.objects.filter(active=True):
             sendSystemEmail(
                 request,
@@ -747,6 +754,9 @@ def meeting_announce(request, meeting_id):
                 },
                 mentor.user.email
             )
+
+        # Cleanup
+        connection.close()
 
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
@@ -1446,6 +1456,13 @@ def session_announce(request, session_id):
 
     if not session_obj.announced_date:
 
+        # uses SMTP server specified in settings.py
+        connection = get_connection()
+
+        # If you don't open the connection manually, Django will automatically open,
+        # then tear down the connection in msg.send()
+        connection.open()
+
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
 
@@ -1504,6 +1521,9 @@ def session_announce(request, session_id):
                 },
                 guardian.user.email
             )
+
+        # Cleanup
+        connection.close()
 
         session_obj.announced_date = timezone.now()
         session_obj.save()
