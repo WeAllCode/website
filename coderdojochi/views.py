@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import arrow
 import calendar
 from collections import Counter
@@ -12,7 +13,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import get_connection, EmailMessage, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
@@ -23,7 +24,7 @@ from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation)
+                                 Meeting, MeetingOrder, Donation, CDCUser)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -720,6 +721,13 @@ def meeting_announce(request, meeting_id):
 
     if not meeting_obj.announced_date:
 
+        # uses SMTP server specified in settings.py
+        connection = get_connection()
+
+        # If you don't open the connection manually, Django will automatically open,
+        # then tear down the connection in msg.send()
+        connection.open()
+
         for mentor in Mentor.objects.filter(active=True):
             sendSystemEmail(
                 request,
@@ -746,6 +754,9 @@ def meeting_announce(request, meeting_id):
                 },
                 mentor.user.email
             )
+
+        # Cleanup
+        connection.close()
 
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
@@ -1445,28 +1456,43 @@ def session_announce(request, session_id):
 
     if not session_obj.announced_date:
 
+        # uses SMTP server specified in settings.py
+        connection = get_connection()
+
+        # If you don't open the connection manually, Django will automatically open,
+        # then tear down the connection in msg.send()
+        connection.open()
+
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
-            sendSystemEmail(request, 'Upcoming class', 'coderdojochi-class-announcement-mentor', {
-                'first_name': mentor.user.first_name,
-                'last_name': mentor.user.last_name,
-                'class_code': session_obj.course.code,
-                'class_title': session_obj.course.title,
-                'class_description': session_obj.course.description,
-                'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
-                'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
-                'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
-                'class_location_name': session_obj.location.name,
-                'class_location_address': session_obj.location.address,
-                'class_location_address2': session_obj.location.address2,
-                'class_location_city': session_obj.location.city,
-                'class_location_state': session_obj.location.state,
-                'class_location_zip': session_obj.location.zip,
-                'class_additional_info': session_obj.additional_info,
-                'class_url': session_obj.get_absolute_url(),
-                'class_ics_url': session_obj.get_ics_url()
-            }, mentor.user.email)
+
+            sendSystemEmail(
+                request,
+                'Upcoming class',
+                'coderdojochi-class-announcement-mentor',
+                {
+                    'first_name': mentor.user.first_name,
+                    'last_name': mentor.user.last_name,
+                    'class_code': session_obj.course.code,
+                    'class_title': session_obj.course.title,
+                    'class_description': session_obj.course.description,
+                    'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
+                    'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
+                    'class_location_name': session_obj.location.name,
+                    'class_location_address': session_obj.location.address,
+                    'class_location_address2': session_obj.location.address2,
+                    'class_location_city': session_obj.location.city,
+                    'class_location_state': session_obj.location.state,
+                    'class_location_zip': session_obj.location.zip,
+                    'class_additional_info': session_obj.additional_info,
+                    'class_url': session_obj.get_absolute_url(),
+                    'class_ics_url': session_obj.get_ics_url()
+                },
+                mentor.user.email
+            )
+
 
         for guardian in Guardian.objects.filter(active=True):
             sendSystemEmail(
@@ -1495,6 +1521,9 @@ def session_announce(request, session_id):
                 },
                 guardian.user.email
             )
+
+        # Cleanup
+        connection.close()
 
         session_obj.announced_date = timezone.now()
         session_obj.save()
@@ -1557,24 +1586,56 @@ def dashboard(request, template_name="admin-dashboard.html"):
 
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
-    if not email:
+
+    if not email and request:
         email = request.user.email
+
+    user = CDCUser.objects.filter(email=email).first()
+
+    if not user.is_active:
+        # print >>sys.stderr, u'Not active user. {}'.format(user.email)
+        return
 
     merge_vars['current_year'] = timezone.now().year
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 
-    msg = EmailMessage(
-        subject=subject,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[email]
-    )
+    try:
+        msg = EmailMessage(
+            subject=subject,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[email]
+        )
 
-    if bcc:
-        msg.bcc = bcc
+        if bcc:
+            msg.bcc = bcc
 
-    msg.template_name = template_name
-    msg.global_merge_vars = merge_vars
-    msg.inline_css = True
-    msg.use_template_subject = True
-    msg.send()
+        msg.template_name = template_name
+        msg.global_merge_vars = merge_vars
+        msg.inline_css = True
+        msg.use_template_subject = True
+        # msg.async = True
+
+        # print >>sys.stderr, 'Sending \'{}\' to {}'.format(subject, email)
+
+        msg.send()
+
+    except Exception, e:
+
+        response = msg.mandrill_response[0]
+        # print >>sys.stderr, u'{}'.format(msg)
+
+        reject_reasons = [
+            'hard-bounce',
+            'soft-bounce',
+            'spam',
+            'unsub',
+        ]
+
+        if response['status'] == u'rejected' and response['reject_reason'] in reject_reasons:
+            # print >>sys.stderr, u'user: {}, {}'.format(user.email, timezone.now())
+            user.is_active = False
+            user.admin_notes = u'User \'{}\' when checked on {}'.format(response['reject_reason'], timezone.now())
+            user.save()
+        else:
+            raise e
