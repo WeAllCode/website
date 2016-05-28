@@ -8,7 +8,8 @@ from django.core.mail import EmailMessage
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
 
-from coderdojochi.models import Session, Mentor, Order, MentorOrder
+from coderdojochi.models import Mentor, MentorOrder, Order, Session
+from coderdojochi.views import sendSystemEmail
 
 
 class SendReminders(CronJobBase):
@@ -45,10 +46,12 @@ class SendReminders(CronJobBase):
 
         for order in orders_within_a_week:
             sendSystemEmail(
-                order.guardian.user,
+                False,
                 'Upcoming class reminder',
                 'coderdojochi-class-reminder-guardian',
                 {
+                    'first_name': order.guardian.user.first_name,
+                    'last_name': order.guardian.user.last_name,
                     'student_first_name': order.student.first_name,
                     'student_last_name': order.student.last_name,
                     'class_code': order.session.course.code,
@@ -71,17 +74,20 @@ class SendReminders(CronJobBase):
                     'class_additional_info': order.session.additional_info,
                     'class_url': order.session.get_absolute_url(),
                     'class_ics_url': order.session.get_ics_url()
-                }
+                },
+                order.guardian.user.email
             )
             order.week_reminder_sent = True
             order.save()
 
         for order in orders_within_a_day:
             sendSystemEmail(
-                order.guardian.user,
+                False,
                 'Upcoming class reminder',
                 'coderdojochi-class-reminder-guardian-24-hour',
                 {
+                    'first_name': order.guardian.user.first_name,
+                    'last_name': order.guardian.user.last_name,
                     'student_first_name': order.student.first_name,
                     'student_last_name': order.student.last_name,
                     'class_code': order.session.course.code,
@@ -104,7 +110,8 @@ class SendReminders(CronJobBase):
                     'class_additional_info': order.session.additional_info,
                     'class_url': order.session.get_absolute_url(),
                     'class_ics_url': order.session.get_ics_url()
-                }
+                },
+                order.guardian.user.email
             )
             order.day_reminder_sent = True
             order.save()
@@ -115,10 +122,12 @@ class SendReminders(CronJobBase):
             )
             for mentor in session_mentors:
                 sendSystemEmail(
-                    mentor.user,
+                    False,
                     'Upcoming class reminder',
                     'coderdojochi-class-reminder-mentor',
                     {
+                        'first_name': mentor.user.first_name,
+                        'last_name': mentor.user.last_name,
                         'class_code': session.course.code,
                         'class_title': session.course.title,
                         'class_description': session.course.description,
@@ -139,7 +148,8 @@ class SendReminders(CronJobBase):
                         'class_additional_info': session.additional_info,
                         'class_url': session.get_absolute_url(),
                         'class_ics_url': session.get_ics_url()
-                    }
+                    },
+                    mentor.user.email
                 )
             session.mentors_week_reminder_sent = True
             session.save()
@@ -150,10 +160,12 @@ class SendReminders(CronJobBase):
             )
             for mentor in session_mentors:
                 sendSystemEmail(
-                    mentor.user,
+                    False,
                     'Upcoming class reminder',
                     'coderdojochi-class-reminder-mentor-24-hour',
                     {
+                        'first_name': mentor.user.first_name,
+                        'last_name': mentor.user.last_name,
                         'class_code': session.course.code,
                         'class_title': session.course.title,
                         'class_description': session.course.description,
@@ -174,27 +186,9 @@ class SendReminders(CronJobBase):
                         'class_additional_info': session.additional_info,
                         'class_url': session.get_absolute_url(),
                         'class_ics_url': session.get_ics_url(),
-                    }
+                    },
+                    mentor.user.email
                 )
             session.mentors_day_reminder_sent = True
             session.save()
 
-
-def sendSystemEmail(user, subject, template_name, merge_vars):
-    merge_vars['first_name'] = user.first_name
-    merge_vars['last_name'] = user.last_name
-    merge_vars['site_url'] = settings.SITE_URL
-    merge_vars['current_year'] = timezone.now().year
-    merge_vars['company'] = 'CoderDojoChi'
-
-    msg = EmailMessage(
-        subject=subject,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[user.email]
-    )
-
-    msg.template_name = template_name
-    msg.global_merge_vars = merge_vars
-    msg.inline_css = True
-    msg.use_template_subject = True
-    msg.send()
