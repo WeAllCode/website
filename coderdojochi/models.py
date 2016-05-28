@@ -3,11 +3,12 @@
 import os
 from stdimage.models import StdImageField
 
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import ugettext as _
-from django.utils import formats, timezone
+from django.db import models
 from django.template.defaultfilters import slugify
+from django.utils import formats, timezone
+from django.utils.translation import ugettext as _
 
 ROLE_CHOICES = (
     ('mentor', 'mentor'),
@@ -25,25 +26,30 @@ class CDCUser(AbstractUser):
         super(CDCUser, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return '/dojo'
+        return '{}/dojo'.format(
+            settings.SITE_URL
+        )
 
 
 class RaceEthnicity(models.Model):
     race_ethnicity = models.CharField(max_length=255)
     visible = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return self.race_ethnicity
-
     class Meta:
         verbose_name = _("race ethnicity")
         verbose_name_plural = _("race ethnicities")
+
+    def __unicode__(self):
+        return self.race_ethnicity
 
 
 def generate_filename(instance, filename):
     # file will be uploaded to MEDIA_ROOT/avatar/<username>
     filename, file_extension = os.path.splitext(filename)
-    return u'avatar/{}{}'.format(instance.user.username, file_extension.lower())
+    return u'avatar/{}{}'.format(
+        instance.user.username,
+        file_extension.lower()
+    )
 
 
 class Mentor(models.Model):
@@ -65,14 +71,26 @@ class Mentor(models.Model):
         verbose_name = _("mentors")
         verbose_name_plural = _("mentors")
 
+    def __unicode__(self):
+        return self.user.username
+
     def get_approve_avatar_url(self):
-        return u'/mentors/{}/approve-avatar/'.format(self.id)
+        return u'{}/mentors/{}/approve-avatar/'.format(
+            settings.SITE_URL,
+            self.id
+        )
 
     def get_reject_avatar_url(self):
-        return u'/mentors/{}/reject-avatar/'.format(self.id)
+        return u'{}/mentors/{}/reject-avatar/'.format(
+            settings.SITE_URL,
+            self.id
+        )
 
     def get_absolute_url(self):
-        return u'/mentors/{}/'.format(self.id)
+        return u'{}/mentors/{}/'.format(
+            settings.SITE_URL,
+            self.id
+        )
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
@@ -88,9 +106,6 @@ class Mentor(models.Model):
 
         super(Mentor, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return self.user.username
-
 
 class Guardian(models.Model):
     user = models.ForeignKey(CDCUser)
@@ -102,16 +117,16 @@ class Guardian(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def get_students(self):
-        students = Student.objects.filter(guardian=self)
-        return students
-
     class Meta:
         verbose_name = _("guardian")
         verbose_name_plural = _("guardians")
 
     def __unicode__(self):
         return u'{} {}'.format(self.first_name, self.last_name)
+
+    def get_students(self):
+        students = Student.objects.filter(guardian=self)
+        return students
 
 
 class Student(models.Model):
@@ -141,6 +156,13 @@ class Student(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name = _("student")
+        verbose_name_plural = _("students")
+
+    def __unicode__(self):
+        return u'{} {}'.format(self.first_name, self.last_name)
+
     def is_registered_for_session(self, session):
         try:
             Order.objects.get(active=True, student=self, session=session)
@@ -164,13 +186,6 @@ class Student(models.Model):
         else:
             return 'other'
 
-    class Meta:
-        verbose_name = _("student")
-        verbose_name_plural = _("students")
-
-    def __unicode__(self):
-        return u'{} {}'.format(self.first_name, self.last_name)
-
 
 class Course(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
@@ -184,12 +199,12 @@ class Course(models.Model):
         verbose_name = _("course")
         verbose_name_plural = _("courses")
 
+    def __unicode__(self):
+        return u'{} | {}'.format(self.code, self.title)
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(Course, self).save(*args, **kwargs)
-
-    def __unicode__(self):
-        return u'{} | {}'.format(self.code, self.title)
 
 
 class Location(models.Model):
@@ -245,6 +260,12 @@ class Session(models.Model):
         verbose_name = _("session")
         verbose_name_plural = _("sessions")
 
+    def __unicode__(self):
+        return u'{} | {}'.format(
+            self.course.title,
+            formats.date_format(self.start_date, 'SHORT_DATETIME_FORMAT')
+        )
+
     def save(self, *args, **kwargs):
         if self.mentor_capacity is None:
             self.mentor_capacity = self.capacity / 2
@@ -252,21 +273,24 @@ class Session(models.Model):
         super(Session, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return u'/class/{}/{}/{}'.format(
+        return u'{}/class/{}/{}/{}'.format(
+            settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.course.slug,
             self.id
         )
 
     def get_signup_url(self):
-        return u'/class/{}/{}/{}/sign-up/'.format(
+        return u'{}/class/{}/{}/{}/sign-up/'.format(
+            settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.course.slug,
             self.id
         )
 
     def get_ics_url(self):
-        return u'/class/{}/{}/{}/calendar/'.format(
+        return u'{}/class/{}/{}/{}/calendar/'.format(
+            settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.course.slug,
             self.id
@@ -344,12 +368,6 @@ class Session(models.Model):
         else:
             return self.capacity / 2
 
-    def __unicode__(self):
-        return u'{} | {}'.format(
-            self.course.title,
-            formats.date_format(self.start_date, 'SHORT_DATETIME_FORMAT')
-        )
-
 
 class MeetingType(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
@@ -363,12 +381,12 @@ class MeetingType(models.Model):
         verbose_name = _("meeting type")
         verbose_name_plural = _("meeting types")
 
+    def __unicode__(self):
+        return u'{} | {}'.format(self.code, self.title)
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(MeetingType, self).save(*args, **kwargs)
-
-    def __unicode__(self):
-        return u'{} | {}'.format(self.code, self.title)
 
 
 class Meeting(models.Model):
@@ -395,31 +413,34 @@ class Meeting(models.Model):
         verbose_name = _("meeting")
         verbose_name_plural = _("meetings")
 
+    def __unicode__(self):
+        return u'{} | {}'.format(
+            self.meeting_type.title,
+            formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
+        )
+
     def get_absolute_url(self):
-        return u'/meeting/{}/{}/{}'.format(
+        return u'{}/meeting/{}/{}/{}'.format(
+            settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
             self.id
         )
 
     def get_signup_url(self):
-        return u'/meeting/{}/{}/{}/sign-up'.format(
+        return u'{}/meeting/{}/{}/{}/sign-up'.format(
+            settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
             self.id
         )
 
     def get_ics_url(self):
-        return u'/meeting/{}/{}/{}/calendar'.format(
+        return u'{}/meeting/{}/{}/{}/calendar'.format(
+            settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
             self.id
-        )
-
-    def __unicode__(self):
-        return u'{} | {}'.format(
-            self.meeting_type.title,
-            formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
         )
 
     def get_current_meeting_orders(self, checked_in=None):
@@ -444,10 +465,9 @@ class Meeting(models.Model):
         return meeting_orders
 
     def get_current_mentors(self):
-        mentors = Mentor.objects.filter(
+        return Mentor.objects.filter(
             id__in=MeetingOrder.objects.filter(active=True, meeting=self).values('mentor__id')
         )
-        return mentors
 
 
 class Order(models.Model):
@@ -469,18 +489,18 @@ class Order(models.Model):
         verbose_name = _("order")
         verbose_name_plural = _("orders")
 
-    def get_student_age(self):
-        birthday = self.student.birthday
-        session_date = self.session.start_date
-        delta = session_date.year - birthday.year
-        return delta - ((session_date.month, session_date.day) < (birthday.month, birthday.day))
-
     def __unicode__(self):
         return u'{} {} | {}'.format(
             self.student.first_name,
             self.student.last_name,
             self.session.course.title
         )
+
+    def get_student_age(self):
+        birthday = self.student.birthday
+        session_date = self.session.start_date
+        delta = session_date.year - birthday.year
+        return delta - ((session_date.month, session_date.day) < (birthday.month, birthday.day))
 
 
 class MentorOrder(models.Model):

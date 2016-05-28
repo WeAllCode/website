@@ -20,12 +20,14 @@ class UserAdmin(admin.ModelAdmin):
         'role',
         'date_joined',
         # 'last_login',
+        'is_active',
         'is_staff',
         'is_superuser',
     )
 
     list_filter = (
         'role',
+        'is_active',
         'is_staff',
         'date_joined',
     )
