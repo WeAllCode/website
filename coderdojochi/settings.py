@@ -26,11 +26,12 @@ SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str_to_bool(os.environ.get('DEBUG')) or False
+DEBUG_EMAIL = str_to_bool(os.environ.get('DEBUG_EMAIL')) or False
 IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']
 
-SITE_URL = 'http://localhost:8000'
+SITE_URL = os.environ.get('SITE_URL') or 'http://coderdojochi.local'
 SITE_ID = 1
 
 # Application definition
@@ -121,8 +122,6 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 # LOGOUT_URL = '/accounts/logout/'
 # LOGIN_REDIRECT_URL = '/dojo/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -133,9 +132,6 @@ DATABASES = {
         'PORT': os.environ.get('POSTGRES_PORT'),
     }
 }
-
-DEFAULT_FROM_EMAIL = 'info@coderdojochi.org'
-CONTACT_EMAIL = 'info@coderdojochi.org'
 
 CACHES = {
     'default': {
@@ -227,6 +223,19 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
 SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapter'
 
+# Email
+EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
+MANDRILL_API_KEY = os.environ.get('MANDRILL_API_KEY')
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = MANDRILL_API_KEY
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+if DEBUG and DEBUG_EMAIL:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 if DEBUG:
 
