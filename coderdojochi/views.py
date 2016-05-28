@@ -1593,7 +1593,8 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
     user = CDCUser.objects.filter(email=email).first()
 
     if not user.is_active:
-        # print >>sys.stderr, u'Not active user. {}'.format(user.email)
+        if DEBUG:
+            print >>sys.stderr, u'Not active user. {}'.format(user.email)
         return
 
     merge_vars['current_year'] = timezone.now().year
@@ -1616,14 +1617,17 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
         msg.use_template_subject = True
         # msg.async = True
 
-        # print >>sys.stderr, 'Sending \'{}\' to {}'.format(subject, email)
+        if DEBUG:
+            print >>sys.stderr, 'Sending \'{}\' to {}'.format(subject, email)
 
         msg.send()
 
     except Exception, e:
 
+        if DEBUG:
+            print >>sys.stderr, u'{}'.format(msg)
+
         response = msg.mandrill_response[0]
-        # print >>sys.stderr, u'{}'.format(msg)
 
         reject_reasons = [
             'hard-bounce',
@@ -1633,9 +1637,14 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
         ]
 
         if response['status'] == u'rejected' and response['reject_reason'] in reject_reasons:
-            # print >>sys.stderr, u'user: {}, {}'.format(user.email, timezone.now())
+            if DEBUG:
+                print >>sys.stderr, u'user: {}, {}'.format(user.email, response['reject_reason'])
+
             user.is_active = False
             user.admin_notes = u'User \'{}\' when checked on {}'.format(response['reject_reason'], timezone.now())
             user.save()
         else:
+            if DEBUG:
+                print >>sys.stderr, u'user: {}, {}'.format(user.email, response['reject_reason'])
+
             raise e
