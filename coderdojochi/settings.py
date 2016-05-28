@@ -31,7 +31,7 @@ IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']
 
-SITE_URL = 'http://localhost:8000'
+SITE_URL = os.environ.get('SITE_URL') or 'http://coderdojochi.local'
 SITE_ID = 1
 
 # Application definition
