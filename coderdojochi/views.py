@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import arrow
 import calendar
 from collections import Counter
@@ -23,7 +24,7 @@ from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation)
+                                 Meeting, MeetingOrder, Donation, CDCUser)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -1565,24 +1566,56 @@ def dashboard(request, template_name="admin-dashboard.html"):
 
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
-    if not email:
+
+    if not email and request:
         email = request.user.email
+
+    user = CDCUser.objects.filter(email=email).first()
+
+    if not user.is_active:
+        # print >>sys.stderr, u'Not active user. {}'.format(user.email)
+        return
 
     merge_vars['current_year'] = timezone.now().year
     merge_vars['company'] = 'CoderDojoChi'
     merge_vars['site_url'] = settings.SITE_URL
 
-    msg = EmailMessage(
-        subject=subject,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[email]
-    )
+    try:
+        msg = EmailMessage(
+            subject=subject,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[email]
+        )
 
-    if bcc:
-        msg.bcc = bcc
+        if bcc:
+            msg.bcc = bcc
 
-    msg.template_name = template_name
-    msg.global_merge_vars = merge_vars
-    msg.inline_css = True
-    msg.use_template_subject = True
-    msg.send()
+        msg.template_name = template_name
+        msg.global_merge_vars = merge_vars
+        msg.inline_css = True
+        msg.use_template_subject = True
+        # msg.async = True
+
+        # print >>sys.stderr, 'Sending \'{}\' to {}'.format(subject, email)
+
+        msg.send()
+
+    except Exception, e:
+
+        response = msg.mandrill_response[0]
+        # print >>sys.stderr, u'{}'.format(msg)
+
+        reject_reasons = [
+            'hard-bounce',
+            'soft-bounce',
+            'spam',
+            'unsub',
+        ]
+
+        if response['status'] == u'rejected' and response['reject_reason'] in reject_reasons:
+            # print >>sys.stderr, u'user: {}, {}'.format(user.email, timezone.now())
+            user.is_active = False
+            user.admin_notes = u'User \'{}\' when checked on {}'.format(response['reject_reason'], timezone.now())
+            user.save()
+        else:
+            raise e
