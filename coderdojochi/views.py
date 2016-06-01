@@ -833,7 +833,9 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 def volunteer(request, template_name="volunteer.html"):
     mentors = Mentor.objects.filter(
         active=True,
-        public=True
+        public=True,
+        background_check=True,
+        avatar_approved=True,
     ).order_by('user__date_joined')
 
     upcoming_meetings = Meeting.objects.filter(
@@ -951,7 +953,14 @@ def dojo(request, template_name="dojo.html"):
 
 
 def mentors(request, template_name="mentors.html"):
-    mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
+    mentors = Mentor.objects.filter(
+        active=True,
+        public=True,
+        background_check=True,
+        avatar_approved=True,
+    ).order_by('user__date_joined')
+
+    # mentors = Mentor.objects.filter(active=True, public=True).order_by('user__date_joined')
 
     return render(request, template_name, {
         'mentors': mentors
@@ -1005,7 +1014,7 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.add_message(
             request,
             messages.WARNING,
-            u'{}{}\'s avatar approved but they have yet to attend an introductory meeting.'.format(
+            u'{}{}\'s avatar approved but they have yet to fill out the \'background search\' form.'.format(
                 mentor.first_name,
                 mentor.last_name
             )
