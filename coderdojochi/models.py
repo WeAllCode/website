@@ -97,12 +97,6 @@ class Mentor(models.Model):
             orig = Mentor.objects.get(pk=self.pk)
             if orig.avatar != self.avatar:
                 self.avatar_approved = False
-                self.public = False
-
-        if self.background_check and self.avatar_approved:
-            self.public = True
-        else:
-            self.public = False
 
         super(Mentor, self).save(*args, **kwargs)
 
