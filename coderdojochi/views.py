@@ -363,8 +363,9 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         if not mentor.background_check:
             messages.warning(
                 request,
-                'You cannot sign up for a class until you fill out the background search form. '
-                'Please RSVP below.'
+                u'You cannot sign up for a class until you <a href="{}" target="_blank">fill out the background search form</a>.'.format(
+                    'https://app.verifiedvolunteers.com/promoorder/6a34f727-3728-4f1a-b80b-7eb3265a3b93'
+                )
             )
             return HttpResponseRedirect(reverse('dojo'))
 
