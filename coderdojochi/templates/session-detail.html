@@ -86,7 +86,7 @@
 
         <div class="col-sm-4 class-detail-sidebar-right">
             {% if user.is_staff %}
-            <ul class="center-block well well-sm list-group list-unstyled">
+            <ul class="center-block well well-sm well-admin list-group list-unstyled">
                 {% if session.active %}
                     <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
                     <li class="list-group-item">Mentors: <b>{{ session.get_current_mentor_orders.count }} / {{ session.get_mentor_capacity }}</b></li>
