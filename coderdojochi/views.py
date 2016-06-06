@@ -572,16 +572,16 @@ def session_ics(request, year, month, day, slug, session_id):
         event['dtstamp'] = mentor_start_date
 
     location = u'{}, {}, {}, {}, {} {}'.format(session_obj.location.name,
-                                              session_obj.location.address,
-                                              session_obj.location.address2,
-                                              session_obj.location.city,
-                                              session_obj.location.state,
-                                              session_obj.location.zip
+                                               session_obj.location.address,
+                                               session_obj.location.address2,
+                                               session_obj.location.city,
+                                               session_obj.location.state,
+                                               session_obj.location.zip
                                               )
 
     event['location'] = vText(location)
 
-    event['url'] = session_obj.get_absolute_url
+    event['url'] = session_obj.get_absolute_url()
     event['description'] = strip_tags(session_obj.course.description)
 
     # A value of 5 is the normal or "MEDIUM" priority.
@@ -801,7 +801,7 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
                                               )
 
     event['location'] = vText(location)
-    event['url'] = meeting_obj.get_absolute_url
+    event['url'] = meeting_obj.get_absolute_url()
     event['description'] = strip_tags(meeting_obj.meeting_type.description)
 
     # A value of 5 is the normal or "MEDIUM" priority.
