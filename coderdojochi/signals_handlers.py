@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import ObjectDoesNotExist
@@ -29,11 +31,19 @@ def avatar_updated_handler(sender, instance, **kwargs):
 
     msg = EmailMultiAlternatives(
         subject='Mentor Avatar Changed',
-        body='Mentor with email ' + instance.user.email + ' changed their avatar image.  Please approve (' + instance.get_approve_avatar_url() + ') or reject (' + instance.get_reject_avatar_url() + ').',
+        body=u'Mentor with email {} changed their avatar image.  Please approve ({}) or reject ({}).'.format(instance.user.email, instance.get_approve_avatar_url(), instance.get_reject_avatar_url()),
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[v for k,v in settings.ADMINS]
     )
-    msg.attach_alternative('<h1>Is this avatar okay?</h1><img src="' + instance.avatar.thumbnail.url + '"><h2><a href="' + instance.get_approve_avatar_url() + '">Approve</a></h2><h2><a href="' + instance.get_reject_avatar_url() + '">Reject</a></h2>', 'text/html')
+
+    msg.attach_alternative(
+        u'<h1>Is this avatar okay?</h1><img src="{}"><h2><a href="{}">Approve</a></h2><h2><a href="{}">Reject</a></h2>'.format(
+            instance.avatar.thumbnail.url,
+            instance.get_approve_avatar_url(),
+            instance.get_reject_avatar_url()
+        ),
+        'text/html'
+    )
 
     msg.send()
 
@@ -46,14 +56,21 @@ def donate_callback(sender, **kwargs):
         donation.verified = True
 
         if not donation.receipt_sent:
-            sendSystemEmail(False, 'Thank you!', 'coderdojochi-donation-receipt', {
-                'first_name': donation.first_name,
-                'last_name': donation.last_name,
-                'email': donation.email,
-                'amount': '$' + str(donation.amount),
-                'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY h:ss a'),
-                'transaction_id': donation.id
-            }, donation.email, [v for k,v in settings.ADMINS])
+            sendSystemEmail(
+                False,
+                'Thank you!',
+                'coderdojochi-donation-receipt',
+                {
+                    'first_name': donation.first_name,
+                    'last_name': donation.last_name,
+                    'email': donation.email,
+                    'amount': u'${}'.format(donation.amount),
+                    'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY h:ss a'),
+                    'transaction_id': donation.id
+                },
+                donation.email,
+                [v for k,v in settings.ADMINS]
+            )
 
             donation.receipt_sent = True
 

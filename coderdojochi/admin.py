@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth import get_user_model
 from django.contrib import admin
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
                                  Equipment, MeetingType, Meeting, Location, Donation,
-                                 RaceEthnicity)
+                                 RaceEthnicity, MentorOrder, MeetingOrder)
 
 User = get_user_model()
 
@@ -14,49 +18,112 @@ class UserAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'role',
+        'date_joined',
+        # 'last_login',
+        'is_active',
         'is_staff',
         'is_superuser',
-        'last_login',
-        'date_joined'
     )
-    list_filter = ('role', 'is_staff',)
-    ordering = ('-date_joined',)
-    list_per_page = 100
+
+    list_filter = (
+        'role',
+        'is_active',
+        'is_staff',
+        'date_joined',
+    )
+
+    ordering = (
+        '-date_joined',
+    )
+
     date_hierarchy = 'date_joined'
-    search_fields = ('first_name', 'last_name', 'email',)
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'email',
+    )
+
     view_on_site = False
-    filter_horizontal = ('groups', 'user_permissions', )
+
+    filter_horizontal = (
+        'groups',
+        'user_permissions',
+    )
+
+    readonly_fields = (
+        'password',
+        'last_login',
+    )
 
     change_form_template = 'loginas/change_form.html'
 
 
 class MentorAdmin(admin.ModelAdmin):
+
     list_display = (
         'first_name',
         'last_name',
         'user',
-        'background_check',
-        'public',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'active',
+        'public',
+        'background_check',
+        'avatar_approved',
     )
-    list_filter = ('public', 'background_check',)
-    ordering = ('-created_at',)
-    list_per_page = 100
+
+    list_filter = (
+        'active',
+        'public',
+        'background_check',
+        'avatar_approved',
+    )
+
+    ordering = (
+        '-created_at',
+    )
+
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user__username',)
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'user__username',
+        'user__email'
+    )
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
 
 class GuardianAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'user', 'phone', 'zip', 'created_at', 'updated_at',)
-    list_filter = ('zip',)
-    ordering = ('-created_at',)
-    list_per_page = 100
+    list_display = (
+        'first_name',
+        'last_name',
+        'user',
+        'phone',
+        'zip',
+        'created_at',
+        'updated_at',
+    )
+
+    list_filter = (
+        'zip',
+    )
+
+    ordering = (
+        '-created_at',
+    )
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'user__username',
+    )
+
     date_hierarchy = 'created_at'
-    search_fields = ('first_name', 'last_name', 'user__username',)
+
     view_on_site = False
 
 
@@ -70,19 +137,41 @@ class StudentAdmin(admin.ModelAdmin):
         'updated_at',
         'active'
     )
-    list_filter = ('gender',)
-    filter_horizontal = ('race_ethnicity',)
-    ordering = ('guardian',)
-    list_per_page = 100
+
+    list_filter = (
+        'gender',
+    )
+
+    filter_horizontal = (
+        'race_ethnicity',
+    )
+
+    ordering = (
+        'guardian',
+    )
+
     date_hierarchy = 'created_at'
+
     view_on_site = False
 
 
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('code', 'title', 'slug', 'created_at', 'updated_at',)
-    list_filter = ('code',)
-    ordering = ('created_at',)
-    list_per_page = 100
+    list_display = (
+        'code',
+        'title',
+        'slug',
+        'created_at',
+        'updated_at',
+    )
+
+    list_filter = (
+        'code',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
     view_on_site = False
 
 
@@ -99,18 +188,31 @@ class SessionAdmin(admin.ModelAdmin):
         'public',
         'announced_date'
     )
-    list_filter = ('public', 'location',)
-    ordering = ('-start_date',)
-    list_per_page = 100
+
+    list_filter = (
+        'public',
+        'course__title',
+        'location',
+    )
+
+    ordering = (
+        '-start_date',
+    )
+
+    filter_horizontal = (
+        'waitlist_mentors',
+        'waitlist_students',
+    )
+
     date_hierarchy = 'start_date'
+
     view_on_site = False
-    filter_horizontal = ('mentors', 'waitlist_mentors', 'waitlist_students', )
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return obj.mentors.count()
+        return MentorOrder.objects.filter(session__id=obj.id).count()
     get_mentor_count.short_description = 'Mentors'
 
     def get_current_orders_count(self, obj):
@@ -120,26 +222,124 @@ class SessionAdmin(admin.ModelAdmin):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        'guardian',
+        # 'id',
         'student',
+        'guardian',
+        'alternate_guardian',
+        'session',
+        # 'ip',
+        'check_in',
+        'created_at',
+        'updated_at',
+        'active',
+        'week_reminder_sent',
+        'day_reminder_sent',
+    )
+
+    list_filter = (
+        'active',
+        'check_in',
+        'student',
+        'session',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
+    date_hierarchy = 'created_at'
+
+    view_on_site = False
+
+
+class MentorOrderAdmin(admin.ModelAdmin):
+    # def session(obj):
+    #     url = reverse('admin:coderdojochi_session_change', args=(obj.session.id,))
+    #     return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.session))
+    # session.short_description = 'Session'
+    # raw_id_fields = ('session',)
+    # readonly_fields = (session, 'session',)
+
+    list_display = (
+        'mentor',
         'session',
         'ip',
         'check_in',
-        'alternate_guardian',
+        'active',
+        'week_reminder_sent',
+        'day_reminder_sent',
+        'created_at',
+        'updated_at',
+    )
+
+    list_display_links = (
+        'mentor',
+    )
+
+    list_filter = (
+        'active',
+        'check_in',
+        # 'session',
+        # 'mentor',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
+    search_fields = (
+        'mentor__first_name',
+        'mentor__last_name',
+    )
+
+    readonly_fields = (
+        # 'mentor',
+        # 'session',
+        'ip',
+        # 'check_in',
+    )
+
+    date_hierarchy = 'created_at'
+    view_on_site = False
+
+
+class MeetingOrderAdmin(admin.ModelAdmin):
+    list_display = (
+        'mentor',
+        'meeting',
+        'ip',
+        'check_in',
         'active',
         'week_reminder_sent',
         'day_reminder_sent',
         'created_at',
         'updated_at'
     )
-    list_filter = ('active', 'check_in', 'session',)
-    ordering = ('created_at',)
-    list_per_page = 100
+
+    list_filter = (
+        'active',
+        'check_in',
+        'meeting__meeting_type',
+    )
+
+    ordering = (
+        'created_at',
+    )
+
     date_hierarchy = 'created_at'
+
     view_on_site = False
 
 
 class MeetingTypeAdmin(admin.ModelAdmin):
+    list_display = (
+        'code',
+        'title',
+        'slug',
+    )
+    list_display_links = (
+        'title',
+    )
     view_on_site = False
 
 
@@ -154,18 +354,26 @@ class MeetingAdmin(admin.ModelAdmin):
         'announced_date',
         'created_at'
     )
-    list_filter = ('public',)
-    ordering = ('-start_date',)
-    list_per_page = 100
+
+    list_filter = (
+        'active',
+        'public',
+        'location',
+        'meeting_type__title',
+    )
+
+    ordering = (
+        '-start_date',
+    )
+
     date_hierarchy = 'start_date'
     view_on_site = False
-    filter_horizontal = ('mentors',)
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return obj.mentors.count()
+        return MeetingOrder.objects.filter(meeting__id=obj.id).count()
     get_mentor_count.short_description = 'Mentors'
 
 
@@ -186,12 +394,20 @@ class DonationAdmin(admin.ModelAdmin):
         'verified',
         'receipt_sent',
         'created_at',
-        'updated_at'
+        'updated_at',
     )
-    list_filter = ('amount', 'receipt_sent',)
-    ordering = ('-created_at',)
-    list_per_page = 100
+
+    list_filter = (
+        'amount',
+        'receipt_sent',
+    )
+
+    ordering = (
+        '-created_at',
+    )
+
     date_hierarchy = 'created_at'
+
     view_on_site = False
 
 
@@ -206,6 +422,8 @@ admin.site.register(Student, StudentAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(MentorOrder, MentorOrderAdmin)
+admin.site.register(MeetingOrder, MeetingOrderAdmin)
 admin.site.register(MeetingType, MeetingTypeAdmin)
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(EquipmentType, EquipmentTypeAdmin)

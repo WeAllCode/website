@@ -1,7 +1,7 @@
 [
 {
   "model": "coderdojochi.cdcuser",
-  "pk": 343,
+  "pk": 2,
   "fields": {
     "password": "password",
     "last_login": "2016-05-08T13:03:59.105",
@@ -23,7 +23,7 @@
   "model": "coderdojochi.guardian",
   "pk": 1,
   "fields": {
-    "user": 343,
+    "user": 2,
     "first_name": "Test",
     "last_name": "Guardian",
     "active": true,
@@ -141,7 +141,7 @@
     "capacity": 20,
     "mentor_capacity": null,
     "additional_info": "",
-    "teacher": 104,
+    "teacher": 1,
     "external_enrollment_url": "",
     "active": true,
     "public": true,
@@ -152,7 +152,6 @@
     "bg_image": "",
     "mentors_week_reminder_sent": false,
     "mentors_day_reminder_sent": false,
-    "mentors": [],
     "waitlist_mentors": [],
     "waitlist_students": []
   }
