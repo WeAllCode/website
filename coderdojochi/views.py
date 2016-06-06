@@ -23,6 +23,7 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 
+from coderdojochi.util import local_to_utc
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
                                  Meeting, MeetingOrder, Donation, CDCUser)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
@@ -547,34 +548,28 @@ def session_ics(request, year, month, day, slug, session_id):
 
     event = Event()
 
-    start_date_arrow = u'{}Z'.format(
-        arrow.get(session_obj.start_date).format('YYYYMMDDTHHmmss')
-    )
-    end_date_arrow = u'{}Z'.format(
-        arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss')
-    )
+    start_date = local_to_utc(session_obj.start_date).format('YYYYMMDDTHHmmss')
+    end_date = local_to_utc(session_obj.end_date).format('YYYYMMDDTHHmmss')
 
     event['uid'] = u'CLASS{:04}@coderdojochi.org'.format(session_obj.id)
     event['summary'] = u'CoderDojoChi: {} - {}'.format(
         session_obj.course.code,
         session_obj.course.title
     )
-    event['dtstart'] = start_date_arrow
-    event['dtend'] = end_date_arrow
-    event['dtstamp'] = start_date_arrow
+    event['dtstart'] = '{}Z'.format(start_date)
+    event['dtend'] = '{}Z'.format(end_date)
+    event['dtstamp'] = start_date
 
     if request.user.is_authenticated() and request.user.role == 'mentor':
 
-        mentor_start_date_arrow = u'{}Z'.format(
-            arrow.get(session_obj.mentor_start_date).format('YYYYMMDDTHHmmss')
-        )
-        mentor_end_date_arrow = u'{}Z'.format(
-            arrow.get(session_obj.mentor_end_date).format('YYYYMMDDTHHmmss')
-        )
+        mentor_start_date = local_to_utc(session_obj.mentor_start_date).format('YYYYMMDDTHHmmss')
 
-        event['dtstart'] = mentor_start_date_arrow
-        event['dtend'] = mentor_end_date_arrow
-        event['dtstamp'] = mentor_start_date_arrow
+        mentor_end_date = local_to_utc(session_obj.mentor_end_date).format('YYYYMMDDTHHmmss')
+
+
+        event['dtstart'] = '{}Z'.format(mentor_start_date)
+        event['dtend'] = '{}Z'.format(mentor_end_date)
+        event['dtstamp'] = mentor_start_date
 
     location = u'{}, {}, {}, {}, {} {}'.format(session_obj.location.name,
                                               session_obj.location.address,
@@ -783,13 +778,8 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 
     event = Event()
 
-    start_date_arrow = u'{}Z'.format(
-        arrow.get(meeting_obj.start_date).format('YYYYMMDDTHHmmss')
-    )
-
-    end_date_arrow = u'{}Z'.format(
-        arrow.get(meeting_obj.end_date).format('YYYYMMDDTHHmmss')
-    )
+    start_date = local_to_utc(meeting_obj.start_date).format('YYYYMMDDTHHmmss')
+    end_date = local_to_utc(meeting_obj.end_date).format('YYYYMMDDTHHmmss')
 
     event['uid'] = u'MEETING{:04}@coderdojochi.org'.format(meeting_obj.id)
 
@@ -798,9 +788,9 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     event_name += meeting_obj.meeting_type.title
 
     event['summary'] = u'CoderDojoChi: {}'.format(event_name)
-    event['dtstart'] = start_date_arrow
-    event['dtend'] = end_date_arrow
-    event['dtstamp'] = start_date_arrow
+    event['dtstart'] = '{}Z'.format(start_date)
+    event['dtend'] = '{}Z'.format(end_date)
+    event['dtstamp'] = start_date
 
     location = u'{}, {}, {}, {}, {} {}'.format(meeting_obj.location.name,
                                               meeting_obj.location.address,
