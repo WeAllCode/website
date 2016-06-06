@@ -543,6 +543,7 @@ def session_ics(request, year, month, day, slug, session_id):
 
     cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
     cal['version'] = '2.0'
+    cal['calscale'] = 'GREGORIAN'
 
     event = Event()
 
