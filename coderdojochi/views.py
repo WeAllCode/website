@@ -88,7 +88,7 @@ def welcome(request, template_name="welcome.html"):
                         new_student = form.save(commit=False)
                         new_student.guardian = account
                         new_student.save()
-                        messages.add_message(request, messages.SUCCESS, 'Student Registered.')
+                        messages.success(request, 'Student Registered.')
                     else:
                         keepGoing = False
 
@@ -104,7 +104,7 @@ def welcome(request, template_name="welcome.html"):
             if keepGoing:
                 if form.is_valid():
                     form.save()
-                    messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
+                    messages.success(request, 'Profile information saved.')
 
                     if next_url:
                         if 'enroll' in request.GET:
@@ -254,40 +254,30 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
                 if request.POST['remove'] == 'true':
                     session_obj.waitlist_students.remove(student)
                     session_obj.save()
-                    messages.add_message(
+                    messages.success(
                         request,
-                        messages.SUCCESS,
                         'You have been removed from the waitlist. Thanks for letting us know.'
                     )
                 else:
                     session_obj.waitlist_students.add(student)
                     session_obj.save()
-                    messages.add_message(
-                        request,
-                        messages.SUCCESS,
-                        'Added to waitlist successfully.'
-                    )
+                    messages.success(request, 'Added to waitlist successfully.')
             else:
                 mentor = Mentor.objects.get(id=int(request.POST['account_id']))
 
                 if request.POST['remove'] == 'true':
                     session_obj.waitlist_mentors.remove(mentor)
                     session_obj.save()
-                    messages.add_message(
+                    messages.success(
                         request,
-                        messages.SUCCESS,
                         'You have been removed from the waitlist. Thanks for letting us know.'
                     )
                 else:
                     session_obj.waitlist_mentors.add(mentor)
                     session_obj.save()
-                    messages.add_message(
-                        request,
-                        messages.SUCCESS,
-                        'Added to waitlist successfully.'
-                    )
+                    messages.success(request, 'Added to waitlist successfully.')
         else:
-            messages.add_message(request, messages.ERROR, 'Invalid request, please try again.')
+            messages.error(request, 'Invalid request, please try again.')
 
         return HttpResponseRedirect(session_obj.get_absolute_url())
 
@@ -301,11 +291,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
     if request.user.is_authenticated():
         if not request.user.role:
-            messages.add_message(
-                request,
-                messages.WARNING,
-                'Please select one of the following options to continue.'
-            )
+            messages.warning(request, 'Please select one of the following options to continue.')
 
             url = u'{}?next={}'.format(reverse('welcome'), session_obj.get_absolute_url())
 
@@ -367,11 +353,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
     guardian = False
 
     if not request.user.role:
-        messages.add_message(
-            request,
-            messages.WARNING,
-            'Please select one of the following options to continue.'
-        )
+        messages.warning(request, 'Please select one of the following options to continue.')
         return HttpResponseRedirect(u'{}?next={}'.format(reverse('welcome'), session_obj.get_absolute_url()))
 
     if request.user.role == 'mentor':
@@ -379,24 +361,22 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         mentor = get_object_or_404(Mentor, user=request.user)
 
         if not mentor.background_check:
-            messages.add_message(
+            messages.warning(
                 request,
-                messages.WARNING,
-                'You cannot sign up for a class until you fill out the background search form. '
-                'Please RSVP below.'
+                u'You cannot sign up for a class until you <a href="{}" target="_blank">fill out the background search form</a>.'.format(
+                    'https://app.verifiedvolunteers.com/promoorder/6a34f727-3728-4f1a-b80b-7eb3265a3b93'
+                )
             )
-            return HttpResponseRedirect(u'{}?highlight=meetings'.format(reverse('dojo')))
+            return HttpResponseRedirect(reverse('dojo'))
 
         session_orders = MentorOrder.objects.filter(session=session_obj, active=True)
         user_signed_up = True if session_orders.filter(mentor=mentor).count() else False
 
         if not user_signed_up:
             if session_obj.get_mentor_capacity() <= session_orders.count():
-                messages.add_message(
+                messages.error(
                     request,
-                    messages.ERROR,
-                    'Sorry this class is at mentor capacity. '
-                    'Please check back soon and/or join us for another upcoming class!'
+                    'Sorry this class is at mentor capacity. Please check back soon and/or join us for another upcoming class!'
                 )
                 return HttpResponseRedirect(session_obj.get_absolute_url())
     else:
@@ -406,11 +386,9 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
         if not user_signed_up:
             if session_obj.capacity <= session_obj.get_current_students().count():
-                messages.add_message(
+                messages.error(
                     request,
-                    messages.ERROR,
-                    'Sorry this class has sold out. '
-                    'Please sign up for the wait list and/or check back later.'
+                    'Sorry this class has sold out. Please sign up for the wait list and/or check back later.'
                 )
                 return HttpResponseRedirect(session_obj.get_absolute_url())
 
@@ -424,11 +402,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             order.active = False
             order.save()
 
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                'Thanks for letting us know!'
-            )
+            messages.success(request, 'Thanks for letting us know!')
 
         else:
             if not settings.DEBUG:
@@ -465,11 +439,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
             order.save()
 
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                'Success! See you there!'
-            )
+            messages.success(request, 'Success! See you there!')
 
             if request.user.role == 'mentor':
                 sendSystemEmail(
@@ -637,11 +607,7 @@ def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=Fals
             meeting_order.active = False
             meeting_order.save()
 
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                'Thanks for letting us know!'
-            )
+            messages.success(request, 'Thanks for letting us know!')
 
         else:
             if not settings.DEBUG:
@@ -657,11 +623,7 @@ def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=Fals
             meeting_order.active = True
             meeting_order.save()
 
-            messages.add_message(
-                request,
-                messages.SUCCESS,
-                'Success! See you there!'
-            )
+            messages.success(request, 'Success! See you there!')
 
             sendSystemEmail(
                 request,
@@ -706,11 +668,7 @@ def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=Fals
 
 def meeting_announce(request, meeting_id):
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permission to access this page.'
-        )
+        messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('home'))
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
@@ -757,13 +715,9 @@ def meeting_announce(request, meeting_id):
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
 
-        messages.add_message(request, messages.SUCCESS, 'Meeting announced!')
+        messages.success(request, 'Meeting announced!')
     else:
-        messages.add_message(
-            request,
-            messages.WARNING,
-            'Meeting already announced.'
-        )
+        messages.warning(request, 'Meeting already announced.')
 
     return HttpResponseRedirect(reverse('cdc_admin'))
 
@@ -879,14 +833,10 @@ def dojo(request, template_name="dojo.html"):
                 form = MentorForm(request.POST, request.FILES, instance=account)
                 if form.is_valid():
                     form.save()
-                    messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
+                    messages.success(request, 'Profile information saved.')
                     return HttpResponseRedirect(reverse('dojo'))
                 else:
-                    messages.add_message(
-                        request,
-                        messages.ERROR,
-                        'There was an error. Please try again.'
-                    )
+                    messages.error(request, 'There was an error. Please try again.')
             else:
                 form = MentorForm(instance=account)
 
@@ -912,14 +862,10 @@ def dojo(request, template_name="dojo.html"):
                 form = GuardianForm(request.POST, instance=account)
                 if form.is_valid():
                     form.save()
-                    messages.add_message(request, messages.SUCCESS, 'Profile information saved.')
+                    messages.success(request, 'Profile information saved.')
                     return HttpResponseRedirect(reverse('dojo'))
                 else:
-                    messages.add_message(
-                        request,
-                        messages.ERROR,
-                        'There was an error. Please try again.'
-                    )
+                    messages.error(request, 'There was an error. Please try again.')
             else:
                 form = GuardianForm(instance=account)
 
@@ -933,10 +879,9 @@ def dojo(request, template_name="dojo.html"):
         if 'next' in request.GET:
             return HttpResponseRedirect(u'{}?next={}'.format(reverse('welcome'), request.GET['next']))
         else:
-            messages.add_message(
+            messages.warning(
                 request,
-                messages.WARNING,
-                'Tell us a little about yourself before going on to your dojo'
+                'Tell us a little about yourself before going on to your dojo.'
             )
             return HttpResponseRedirect(reverse('welcome'))
 
@@ -963,7 +908,7 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
     if not mentor.public:
-        messages.add_message(request, messages.ERROR, 'Invalid mentor ID :(')
+        messages.error(request, 'Invalid mentor ID.')
         return HttpResponseRedirect(reverse('mentors'))
 
     return render(request, template_name, {
@@ -976,11 +921,7 @@ def mentor_approve_avatar(request, mentor_id=False):
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permissions to moderate content.'
-        )
+        messages.error(request, 'You do not have permissions to moderate content.')
 
         return HttpResponseRedirect(
             u'{}?next={}'.format(
@@ -992,9 +933,8 @@ def mentor_approve_avatar(request, mentor_id=False):
     if mentor.background_check:
         mentor.avatar_approved = False
         mentor.save()
-        messages.add_message(
+        messages.success(
             request,
-            messages.SUCCESS,
             u'{}{}\'s avatar approved and their account is now public.'.format(
                 mentor.first_name,
                 mentor.last_name
@@ -1002,9 +942,8 @@ def mentor_approve_avatar(request, mentor_id=False):
         )
         return HttpResponseRedirect(u'{}{}'.format(reverse('mentors'), mentor.id))
     else:
-        messages.add_message(
+        messages.warning(
             request,
-            messages.WARNING,
             u'{}{}\'s avatar approved but they have yet to fill out the \'background search\' form.'.format(
                 mentor.first_name,
                 mentor.last_name
@@ -1018,11 +957,8 @@ def mentor_reject_avatar(request, mentor_id=False):
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permissions to moderate content.'
-        )
+        messages.error(request, 'You do not have permissions to moderate content.')
+
         return HttpResponseRedirect(
             u'{}?next={}'.format(
                 reverse('account_login'),
@@ -1045,9 +981,8 @@ def mentor_reject_avatar(request, mentor_id=False):
     ), 'text/html')
     msg.send()
 
-    messages.add_message(
+    messages.warning(
         request,
-        messages.WARNING,
         u'{} {}\'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor.'.format(
             mentor.first_name,
             mentor.last_name
@@ -1074,17 +1009,13 @@ def student_detail(request, student_id=False, template_name="student-detail.html
 
     if not access:
         return HttpResponseRedirect(reverse('dojo'))
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permissions to edit this student.'
-        )
+        messages.error(request, 'You do not have permissions to edit this student.')
 
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
-            messages.add_message(request, messages.SUCCESS, 'Student Updated.')
+            messages.success(request, 'Student Updated.')
             return HttpResponseRedirect(reverse('dojo'))
 
     return render(request, template_name, {
@@ -1138,20 +1069,20 @@ def donate(request, template_name="donate.html"):
 
 @csrf_exempt
 def donate_cancel(request):
-    messages.add_message(
+    messages.error(
         request,
-        messages.ERROR,
-        'Looks like you cancelled the donation process. '
-        'Please feel free to <a href="/contact">contact us</a> if you need any help.'
+        u'Looks like you cancelled the donation process. '
+        'Please feel free to <a href="/{}">contact us</a> if you need any help.'.format(
+            reverse('contact')
+        )
     )
     return HttpResponseRedirect(reverse('donate'))
 
 
 @csrf_exempt
 def donate_return(request):
-    messages.add_message(
+    messages.success(
         request,
-        messages.SUCCESS,
         'Your donation is being processed. '
         'You should receive a confirmation email shortly. Thanks again!'
     )
@@ -1175,7 +1106,7 @@ def contact(request, template_name="contact.html"):
 
         if form.is_valid():
             if request.POST['human']:
-                messages.add_message(request, messages.ERROR, 'Bad robot.')
+                messages.error(request, 'Bad robot.')
                 human = False
 
             if human:
@@ -1203,15 +1134,14 @@ def contact(request, template_name="contact.html"):
 
                 msg.send()
 
-                messages.add_message(
+                messages.success(
                     request,
-                    messages.SUCCESS,
                     'Thank you for contacting us! We will respond as soon as possible.'
                 )
 
             form = ContactForm()
         else:
-            messages.add_message(request, messages.ERROR, 'There was an error. Please try again.')
+            messages.error(request, 'There was an error. Please try again.')
     else:
         form = ContactForm()
 
@@ -1227,11 +1157,7 @@ def privacy(request, template_name="privacy.html"):
 @login_required
 def cdc_admin(request, template_name="cdc-admin.html"):
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permission to access this page.'
-        )
+        messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
     sessions = Session.objects.all()
@@ -1290,11 +1216,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 def session_stats(request, session_id, template_name="session-stats.html"):
 
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permission to access this page.'
-        )
+        messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
@@ -1344,11 +1266,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 @login_required
 def session_check_in(request, session_id, template_name="session-check-in.html"):
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permission to access this page.'
-        )
+        messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
@@ -1397,7 +1315,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
             order.save()
         else:
-            messages.add_message(request, messages.ERROR, 'Invalid Order')
+            messages.error(request, 'Invalid Order')
 
     return render(request, template_name, {
         'session': session_obj,
@@ -1412,11 +1330,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 @login_required
 def session_check_in_mentors(request, session_id, template_name="session-check-in-mentors.html"):
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permission to access this page.'
-        )
+        messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
@@ -1435,7 +1349,7 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 
             order.save()
         else:
-            messages.add_message(request, messages.ERROR, 'Invalid Order')
+            messages.error(request, 'Invalid Order')
 
     return render(request, template_name, {
         'session': session_obj,
@@ -1445,11 +1359,7 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 
 def session_announce(request, session_id):
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permission to access this page.'
-        )
+        messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('home'))
 
     session_obj = get_object_or_404(Session, id=session_id)
@@ -1528,9 +1438,9 @@ def session_announce(request, session_id):
         session_obj.announced_date = timezone.now()
         session_obj.save()
 
-        messages.add_message(request, messages.SUCCESS, 'Session announced!')
+        messages.success(request, 'Session announced!')
     else:
-        messages.add_message(request, messages.WARNING, 'Session already announced.')
+        messages.warning(request, 'Session already announced.')
 
     return HttpResponseRedirect(reverse('cdc_admin'))
 
@@ -1538,11 +1448,7 @@ def session_announce(request, session_id):
 @login_required
 def dashboard(request, template_name="admin-dashboard.html"):
     if not request.user.is_staff:
-        messages.add_message(
-            request,
-            messages.ERROR,
-            'You do not have permission to access this page.'
-        )
+        messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
     orders = Order.objects.select_related()
