@@ -47,6 +47,21 @@
             {% endif %}
         {% endif %}
 
+        {% if user.role == 'mentor' %}
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+                <h4>Account Progress</h4>
+                <ol>
+                    <li>Enter full name. {% if mentor.first_name and mentor.last_name %}<span class="label label-success">Completed</span>{% endif %}</li>
+                    <li>Fill out bio. {% if mentor.bio|length > 0 %}<span class="label label-success">Completed</span>{% endif %}</li>
+                    <li>Upload profile picture. {% if mentor.avatar_approved %}<span class="label label-success">Completed</span>{% endif %}</li>
+                    <li>Complete background check. {% if mentor.background_check %}<span class="label label-success">Completed</span>{% endif %}</li>
+                    <li>Attend a class.</li>
+                </ol>
+            </div>
+        {% endif %}
+
         <h2>Your Classes</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
@@ -133,7 +148,7 @@
                 {% endif %}
             </div>
         </div>
-        <br>
+
         {% if user.role == 'mentor' %}
             <hr>
             <div class="upcoming-meetings{% if highlight == 'meetings' %} alert alert-warning{% endif %}">

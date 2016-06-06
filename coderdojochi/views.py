@@ -840,6 +840,7 @@ def dojo(request, template_name="dojo.html"):
             else:
                 form = MentorForm(instance=account)
 
+            context['mentor'] = mentor
             context['upcoming_sessions'] = upcoming_sessions
             context['upcoming_meetings'] = upcoming_meetings
             context['past_sessions'] = past_sessions
