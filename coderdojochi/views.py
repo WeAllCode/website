@@ -809,11 +809,10 @@ def dojo(request, template_name="dojo.html"):
     }
 
     if request.user.role:
-
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-            mentor_sessions = Session.objects.filter(id__in=MentorOrder.objects.filter(mentor=mentor).values('session__id'))
+            mentor_sessions = Session.objects.filter(id__in=MentorOrder.objects.filter(mentor=mentor, active=True).values('session__id'))
 
             upcoming_sessions = mentor_sessions.filter(
                 active=True,
