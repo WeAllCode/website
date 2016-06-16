@@ -814,6 +814,7 @@ def dojo(request, template_name="dojo.html"):
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
             mentor_sessions = Session.objects.filter(id__in=MentorOrder.objects.filter(mentor=mentor).values('session__id'))
+            sessions_attended_count = MentorOrder.objects.filter(mentor=mentor, active=True, check_in__isnull=False).count()
 
             upcoming_sessions = mentor_sessions.filter(
                 active=True,
@@ -841,6 +842,7 @@ def dojo(request, template_name="dojo.html"):
                 form = MentorForm(instance=account)
 
             context['mentor'] = mentor
+            context['sessions_attended_count'] = sessions_attended_count
             context['upcoming_sessions'] = upcoming_sessions
             context['upcoming_meetings'] = upcoming_meetings
             context['past_sessions'] = past_sessions
