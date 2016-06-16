@@ -20,11 +20,11 @@ import arrow
 @receiver(post_save, sender=Mentor, dispatch_uid="update_avatar_approved_status")
 def avatar_updated_handler(sender, instance, **kwargs):
     try:
-        original_mentor = Mentor.objects.get(pk=instance.pk)
+        original_mentor = Mentor.objects.get(id=instance.id)
     except ObjectDoesNotExist:
         return
 
-    if not instance.avatar or instance.avatar == original_mentor.avatar:
+    if not instance.avatar:
         return
 
     instance.avatar_approved = False
@@ -33,7 +33,7 @@ def avatar_updated_handler(sender, instance, **kwargs):
         subject='Mentor Avatar Changed',
         body=u'Mentor with email {} changed their avatar image.  Please approve ({}) or reject ({}).'.format(instance.user.email, instance.get_approve_avatar_url(), instance.get_reject_avatar_url()),
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[v for k,v in settings.ADMINS]
+        to=[settings.CONTACT_EMAIL]
     )
 
     msg.attach_alternative(
