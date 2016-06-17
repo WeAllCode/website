@@ -1118,7 +1118,7 @@ def contact(request, template_name="contact.html"):
                         request.POST['body']
                     ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    reply_to=request.POST['email'],
+                    reply_to=[request.POST['email']],
                     to=[settings.CONTACT_EMAIL]
                 )
 
