@@ -1,0 +1,11 @@
+.dojo-progress {
+  .progress-complete {
+    color: #333;
+    text-decoration: line-through;
+  }
+
+  .progress-incomplete {
+    color: #4f9652;
+    font-weight: bold;
+  }
+}
