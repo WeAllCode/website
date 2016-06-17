@@ -230,7 +230,8 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         'sessions': sessions,
         'calendar_date': calendar_date,
         'prev_date': prev_date,
-        'next_date': next_date
+        'next_date': next_date,
+        'settings': settings
     })
 
 
