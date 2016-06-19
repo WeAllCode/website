@@ -47,6 +47,19 @@
             {% endif %}
         {% endif %}
 
+        {% if user.role == 'mentor' %}
+            <div class="dojo-progress">
+                <h4>Account Progress</h4>
+                <ol>
+                    <li class="{% if mentor.first_name and mentor.last_name %} progress-complete {% else %} progress-incomplete {% endif %}">Enter full name.</li>
+                    <li class="{% if mentor.bio|length > 0 %}progress-complete{% else %}progress-incomplete{% endif %}">Fill out bio.</li>
+                    <li class="{% if mentor.avatar_approved %}progress-complete{% else %}progress-incomplete{% endif %}">Upload profile picture.</li>
+                    <li class="{% if mentor.background_check %}progress-complete{% else %}progress-incomplete{% endif %}">Complete background check.</li>
+                    <li class="{% if sessions_attended_count > 0 %}progress-complete{% else %}progress-incomplete{% endif %}">Attend a class.</li>
+                </ol>
+            </div>
+        {% endif %}
+
         <h2>Your Classes</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
@@ -133,7 +146,7 @@
                 {% endif %}
             </div>
         </div>
-        <br>
+
         {% if user.role == 'mentor' %}
             <hr>
             <div class="upcoming-meetings{% if highlight == 'meetings' %} alert alert-warning{% endif %}">
