@@ -930,9 +930,10 @@ def mentor_approve_avatar(request, mentor_id=False):
             )
         )
 
+    mentor.avatar_approved = True
+    mentor.save()
+
     if mentor.background_check:
-        mentor.avatar_approved = False
-        mentor.save()
         messages.success(
             request,
             u'{}{}\'s avatar approved and their account is now public.'.format(
@@ -942,7 +943,7 @@ def mentor_approve_avatar(request, mentor_id=False):
         )
         return HttpResponseRedirect(u'{}{}'.format(reverse('mentors'), mentor.id))
     else:
-        messages.warning(
+        messages.success(
             request,
             u'{}{}\'s avatar approved but they have yet to fill out the \'background search\' form.'.format(
                 mentor.first_name,
