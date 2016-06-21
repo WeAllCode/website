@@ -19,7 +19,7 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'role',
         'date_joined',
-        # 'last_login',
+        'last_login',
         'is_active',
         'is_staff',
         'is_superuser',
@@ -190,6 +190,7 @@ class SessionAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
+        'active',
         'public',
         'course__title',
         'location',
@@ -319,6 +320,7 @@ class MeetingOrderAdmin(admin.ModelAdmin):
 
     list_filter = (
         'active',
+        'meeting',
         'check_in',
         'meeting__meeting_type',
     )
