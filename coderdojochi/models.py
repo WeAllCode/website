@@ -573,8 +573,8 @@ class Equipment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("equiptment")
-        verbose_name_plural = _("equiptment")
+        verbose_name = _("equipment")
+        verbose_name_plural = _("equipment")
 
     def __unicode__(self):
         return u'{} | {} {} | {}'.format(
