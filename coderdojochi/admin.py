@@ -240,6 +240,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = (
         'active',
         'check_in',
+        # 'guardian',
         'student',
         'session',
     )
@@ -279,9 +280,9 @@ class MentorOrderAdmin(admin.ModelAdmin):
 
     list_filter = (
         'active',
-        'session',
         'check_in',
-        'mentor',
+        'session',
+        # 'mentor',
     )
 
     ordering = (
@@ -294,8 +295,8 @@ class MentorOrderAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
-        # 'mentor',
-        # 'session',
+        'mentor',
+        'session',
         'ip',
         # 'check_in',
     )
@@ -400,8 +401,10 @@ class DonationAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
-        'amount',
+        'verified',
         'receipt_sent',
+        'amount',
+        'created_at',
     )
 
     ordering = (
