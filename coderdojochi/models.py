@@ -437,26 +437,26 @@ class Meeting(models.Model):
             self.id
         )
 
-    def get_current_meeting_orders(self, checked_in=None):
+    def get_current_orders(self, checked_in=None):
         if checked_in is not None:
             if checked_in:
-                meeting_orders = MeetingOrder.objects.filter(
+                orders = MeetingOrder.objects.filter(
                     active=True,
                     meeting=self
                 ).exclude(check_in=None).order_by('mentor__last_name')
             else:
-                meeting_orders = MeetingOrder.objects.filter(
+                orders = MeetingOrder.objects.filter(
                     active=True,
                     meeting=self,
                     check_in=None
                 ).order_by('mentor__last_name')
         else:
-            meeting_orders = MeetingOrder.objects.filter(
+            orders = MeetingOrder.objects.filter(
                 active=True,
                 meeting=self
             ).order_by('check_in', 'mentor__last_name')
 
-        return meeting_orders
+        return orders
 
     def get_current_mentors(self):
         return Mentor.objects.filter(
