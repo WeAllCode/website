@@ -51,6 +51,7 @@ urlpatterns = [
     url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/calendar/$', coderdojochi_views.meeting_ics, name='meeting_ics'),
     url(r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)$', coderdojochi_views.meeting_detail, name='meeting_detail'),
     url(r'^meeting/(?P<meeting_id>[\d]+)/announce/$', coderdojochi_views.meeting_announce, name='meeting_announce'),
+    url(r'^admin/class/(?P<meeting_id>[\d]+)/meeting-check-in/$', coderdojochi_views.meeting_check_in, name='meeting_check_in'),
 
     url(r'^admin/class/(?P<session_id>[\d]+)/stats/$', coderdojochi_views.session_stats, name='stats'),
     url(r'^admin/class/(?P<session_id>[\d]+)/check-in/$', coderdojochi_views.session_check_in, name='check_in'),
