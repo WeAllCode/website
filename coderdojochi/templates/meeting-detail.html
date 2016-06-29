@@ -60,10 +60,10 @@
 
         <div class="col-sm-4 class-detail-sidebar-right">
             {% if user.is_staff %}
-            <ul class="center-block well well-sm list-group list-unstyled">
-                {% if meeting.active %}
-                    <!-- Todo -->
-                    <li class="list-group-item">Attending: <b>{{ active_meeting_orders.count }}</b></li>
+                <ul class="center-block well well-sm list-group list-unstyled">
+                    {% if meeting.active %}
+                        <!-- Todo -->
+                        <li class="list-group-item">Attending: <b>{{ active_meeting_orders.count }}</b></li>
 
                         {% if meeting.announced_date %}
                             <li class="text-muted list-group-item">Announced: <b>{{ meeting.announced_date|date }}</b></li>
@@ -71,17 +71,14 @@
                             <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Meeting?" data-content="<a class='btn btn-danger' href='{% url 'meeting_announce' meeting.id %}'>Announce</a>" data-html="true">Announce</a></li>
                         {% endif %}
 
+                        <li class="list-group-item"><a href="{% url 'meeting_check_in' meeting.id %}">Check-in Meeting</a></li>
+                    {% endif %}
+
                     <!-- Todo -->
-                    <li class="list-group-item"><a href="#">Check-in Meeting</a></li>
-                    {% else %}
-                {% endif %}
+                    {# <li class="list-group-item"><a href="#" disabled>Meeting Stats</a></li> #}
 
-                <!-- Todo -->
-                <li class="list-group-item"><a href="#">Meeting Stats</a></li>
-
-                <!-- Todo -->
-                <li class="list-group-item"><a href="/dj-admin/coderdojochi/meeting/{{ session.id }}">Edit Meeting</a></li>
-            </ul>
+                    <li class="list-group-item"><a href="/dj-admin/coderdojochi/meeting/{{ session.id }}">Edit Meeting</a></li>
+                </ul>
             {% endif %}
 
             <div class="sidebar-right-section center-block">
