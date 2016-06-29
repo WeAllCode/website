@@ -187,6 +187,9 @@
                 <h2>{{ user.first_name }} {{ user.last_name }}</h2>
                 <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
 
+                {% bootstrap_field form.first_name %}
+                {% bootstrap_field form.last_name %}
+
                 {% if user.role == 'mentor' %}
                 {% bootstrap_field form.bio %}
                 {% endif %}
