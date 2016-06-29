@@ -18,7 +18,6 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.template import RequestContext
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
@@ -74,7 +73,6 @@ def welcome(request, template_name="welcome.html"):
         next_url = request.GET['next']
 
     if request.method == 'POST':
-
         if role:
             if role == 'mentor':
                 form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
@@ -139,7 +137,7 @@ def welcome(request, template_name="welcome.html"):
                 'last_name': request.user.last_name
             }
 
-            next_url = u'?next={}'.format(next_url) if next_url else ''
+            next_url = u'?next={}'.format(next_url) if next_url else reverse('dojo')
 
             if role == 'mentor':
                 # check for next upcoming meeting
