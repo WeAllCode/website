@@ -54,7 +54,7 @@
 {% if upcoming_classes %}
 <div class="upcoming-sessions">
     {% for session in upcoming_classes %}
-        <div class="upcoming-session" style="background-image: url({% if session.bg_image %}{{ session.bg_image.url }}{% else %}{{ settings.STATIC_URL }}images/{{ session.image_url }}{% endif %});">
+        <div class="upcoming-session" style="background-image: url({% if session.bg_image %}{{ session.bg_image.url }}{% else %}{{ STATIC_URL }}images/{{ session.image_url }}{% endif %});">
             <div class="session-shim">
                 <div class="container">
                     <div class="date">
