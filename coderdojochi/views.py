@@ -229,7 +229,6 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         'calendar_date': calendar_date,
         'prev_date': prev_date,
         'next_date': next_date,
-        'settings': settings
     })
 
 
@@ -1061,7 +1060,6 @@ def donate(request, template_name="donate.html"):
     form = PayPalPaymentsForm(initial=paypal_dict)
 
     return render(request, template_name, {
-        'site_url': settings.SITE_URL,
         'form': form
     })
 
