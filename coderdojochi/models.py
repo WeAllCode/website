@@ -313,18 +313,18 @@ class Session(models.Model):
                 orders = MentorOrder.objects.filter(
                     active=True,
                     session=self
-                ).exclude(check_in=None).order_by('mentor__last_name')
+                ).exclude(check_in=None).order_by('mentor__user__last_name')
             else:
                 orders = MentorOrder.objects.filter(
                     active=True,
                     session=self,
                     check_in=None
-                ).order_by('mentor__last_name')
+                ).order_by('mentor__user__last_name')
         else:
             orders = MentorOrder.objects.filter(
                 active=True,
                 session=self
-            ).order_by('check_in', 'mentor__last_name')
+            ).order_by('check_in', 'mentor__user__last_name')
 
         return orders
 
@@ -439,18 +439,18 @@ class Meeting(models.Model):
                 orders = MeetingOrder.objects.filter(
                     active=True,
                     meeting=self
-                ).exclude(check_in=None).order_by('mentor__last_name')
+                ).exclude(check_in=None).order_by('mentor__user__last_name')
             else:
                 orders = MeetingOrder.objects.filter(
                     active=True,
                     meeting=self,
                     check_in=None
-                ).order_by('mentor__last_name')
+                ).order_by('mentor__user__last_name')
         else:
             orders = MeetingOrder.objects.filter(
                 active=True,
                 meeting=self
-            ).order_by('check_in', 'mentor__last_name')
+            ).order_by('check_in', 'mentor__user__last_name')
 
         return orders
 

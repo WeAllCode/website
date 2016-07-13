@@ -1331,7 +1331,7 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
-    current_mentor_orders_checked_in = session_obj.get_current_meeting_orders(checked_in=True)
+    current_mentor_orders_checked_in = session_obj.get_current_mentor_orders(checked_in=True)
     mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
 
     if request.method == 'POST':
