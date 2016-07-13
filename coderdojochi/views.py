@@ -779,7 +779,9 @@ def volunteer(request, template_name="volunteer.html"):
         public=True,
         background_check=True,
         avatar_approved=True,
-    ).order_by('user__date_joined')
+    ).annotate(
+        session_count=Count('mentororder')
+    ).order_by('-user__role', '-session_count')
 
     upcoming_meetings = Meeting.objects.filter(
         active=True,
