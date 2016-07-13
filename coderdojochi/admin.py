@@ -286,8 +286,8 @@ class MentorOrderAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        'mentor__first_name',
-        'mentor__last_name',
+        'mentor__user__first_name',
+        'mentor__user__last_name',
     )
 
     readonly_fields = (
