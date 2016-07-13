@@ -54,8 +54,6 @@ def generate_filename(instance, filename):
 
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
-    first_name = models.CharField(max_length=255, blank=True, null=True)
-    last_name = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -72,7 +70,7 @@ class Mentor(models.Model):
         verbose_name_plural = _("mentors")
 
     def __unicode__(self):
-        return self.user.username
+        return u'{} {}'.format(self.user.first_name, self.user.last_name)
 
     def get_approve_avatar_url(self):
         return u'{}/mentors/{}/approve-avatar/'.format(
@@ -103,8 +101,6 @@ class Mentor(models.Model):
 
 class Guardian(models.Model):
     user = models.ForeignKey(CDCUser)
-    first_name = models.CharField(max_length=255, blank=True, null=True)
-    last_name = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField(default=True)
     phone = models.CharField(max_length=50, blank=True)
     zip = models.CharField(max_length=20, blank=True, null=True)
@@ -116,7 +112,7 @@ class Guardian(models.Model):
         verbose_name_plural = _("guardians")
 
     def __unicode__(self):
-        return u'{} {}'.format(self.first_name, self.last_name)
+        return u'{} {}'.format(self.user.first_name, self.user.last_name)
 
     def get_students(self):
         students = Student.objects.filter(guardian=self)
@@ -516,8 +512,8 @@ class MentorOrder(models.Model):
 
     def __unicode__(self):
         return u'{} {} | {}'.format(
-            self.mentor.first_name,
-            self.mentor.last_name,
+            self.mentor.user.first_name,
+            self.mentor.user.last_name,
             self.session.course.title
         )
 
@@ -541,8 +537,8 @@ class MeetingOrder(models.Model):
 
     def __unicode__(self):
         return u'{} {} | {}'.format(
-            self.mentor.first_name,
-            self.mentor.last_name,
+            self.mentor.user.first_name,
+            self.mentor.user.last_name,
             self.meeting.meeting_type.title
         )
 
