@@ -62,8 +62,6 @@ class UserAdmin(admin.ModelAdmin):
 class MentorAdmin(admin.ModelAdmin):
 
     list_display = (
-        'first_name',
-        'last_name',
         'user',
         'created_at',
         'updated_at',
@@ -87,8 +85,8 @@ class MentorAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
 
     search_fields = (
-        'first_name',
-        'last_name',
+        'user__first_name',
+        'user__last_name',
         'user__username',
         'user__email'
     )
@@ -99,8 +97,6 @@ class MentorAdmin(admin.ModelAdmin):
 
 class GuardianAdmin(admin.ModelAdmin):
     list_display = (
-        'first_name',
-        'last_name',
         'user',
         'phone',
         'zip',
@@ -117,8 +113,8 @@ class GuardianAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        'first_name',
-        'last_name',
+        'user__first_name',
+        'user__last_name',
         'user__username',
     )
 

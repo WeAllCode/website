@@ -7,7 +7,7 @@
 
 {% block content %}
 <br>
-{% if not account.first_name %}
+{% if not account.user.first_name %}
 <div class="container">
     <div class="alert alert-warning"><i class="fa fa-warning"></i> Please complete your profile information below. <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>
 </div>
