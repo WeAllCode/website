@@ -63,6 +63,8 @@ class MentorAdmin(admin.ModelAdmin):
 
     list_display = (
         'user',
+        'get_first_name',
+        'get_last_name',
         'created_at',
         'updated_at',
         'active',
@@ -94,12 +96,25 @@ class MentorAdmin(admin.ModelAdmin):
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    get_first_name.short_description = 'First Name'
+    get_first_name.admin_order_field = 'user__first_name'
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    get_last_name.short_description = 'First Name'
+    get_last_name.admin_order_field = 'user__last_name'
+
 
 class GuardianAdmin(admin.ModelAdmin):
     list_display = (
         'user',
+        'get_first_name',
+        'get_last_name',
         'phone',
         'zip',
+        'get_student_count',
         'created_at',
         'updated_at',
     )
@@ -122,6 +137,19 @@ class GuardianAdmin(admin.ModelAdmin):
 
     view_on_site = False
 
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    get_first_name.short_description = 'First Name'
+    get_first_name.admin_order_field = 'user__first_name'
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    get_last_name.short_description = 'First Name'
+    get_last_name.admin_order_field = 'user__last_name'
+
+    def get_student_count(self, obj):
+        return Student.objects.filter(guardian__id=obj.id).count()
+    get_student_count.short_description = 'Students'
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = (
@@ -325,6 +353,11 @@ class MeetingOrderAdmin(admin.ModelAdmin):
         'created_at',
     )
 
+    search_fields = (
+        'mentor__user__first_name',
+        'mentor__user__last_name',
+    )
+
     date_hierarchy = 'created_at'
 
     view_on_site = False
@@ -381,6 +414,37 @@ class EquipmentTypeAdmin(admin.ModelAdmin):
 
 
 class EquipmentAdmin(admin.ModelAdmin):
+    list_display = (
+        'asset_tag',
+        'equipment_type',
+        'make',
+        'model',
+        'location',
+        'aquisition_date',
+        'condition',
+        'created_at',
+        'updated_at',
+    )
+
+    list_filter = (
+        'condition',
+        'equipment_type',
+        'make',
+        'model',
+        'location',
+    )
+
+    ordering = (
+        'asset_tag',
+    )
+
+    search_fields = (
+        'make',
+        'model',
+        'location',
+        'asset_tag',
+    )
+
     view_on_site = False
 
 
@@ -405,6 +469,12 @@ class DonationAdmin(admin.ModelAdmin):
 
     ordering = (
         '-created_at',
+    )
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'email',
     )
 
     date_hierarchy = 'created_at'
