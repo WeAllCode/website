@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% load humanize %}
 
-{% block title %}{{ mentor.first_name }} {{ mentor.last_name }}{% endblock %}
+{% block title %}{{ mentor.user.first_name }} {{ mentor.user.last_name }}{% endblock %}
 
 {% block body_class %}page-mentor-detail{% endblock %}
 
@@ -10,14 +10,14 @@
 <div class="container">
     <ol class="breadcrumb">
         <li><a href="{% url 'mentors' %}">All Mentors</a></li>
-        <li class="active">{{ mentor.first_name }} {{ mentor.last_name }}</li>
+        <li class="active">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</li>
     </ol>
 </div>
 
 
 <div class="container">
     <div class="dojo-content">
-        <h1>{{ mentor.first_name }} {{ mentor.last_name }}</h1>
+        <h1>{{ mentor.user.first_name }} {{ mentor.user.last_name }}</h1>
         <p>{{ mentor.bio }}</p>
     </div>
     <div class="dojo-profile">

@@ -117,15 +117,15 @@ def welcome(request, template_name="welcome.html"):
             if request.POST.get('role') == 'mentor':
                 role = 'mentor'
                 mentor, created = Mentor.objects.get_or_create(user=user)
-                mentor.first_name = user.first_name
-                mentor.last_name = user.last_name
+                mentor.user.first_name = user.first_name
+                mentor.user.last_name = user.last_name
                 mentor.save()
                 user.role = role
             else:
                 role = 'guardian'
                 guardian, created = Guardian.objects.get_or_create(user=user)
-                guardian.first_name = user.first_name
-                guardian.last_name = user.last_name
+                guardian.user.first_name = user.first_name
+                guardian.user.last_name = user.last_name
                 guardian.save()
                 user.role = role
 
@@ -180,7 +180,7 @@ def welcome(request, template_name="welcome.html"):
                 add_student = True
                 form = StudentForm(initial={'guardian': guardian.pk})
 
-    if account and account.first_name and keepGoing:
+    if account and account.user.first_name and keepGoing:
         if role == 'mentor':
             if next_url:
                 return HttpResponseRedirect(next_url)
@@ -934,8 +934,8 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.success(
             request,
             u'{}{}\'s avatar approved and their account is now public.'.format(
-                mentor.first_name,
-                mentor.last_name
+                mentor.user.first_name,
+                mentor.user.last_name
             )
         )
         return HttpResponseRedirect(u'{}{}'.format(reverse('mentors'), mentor.id))
@@ -943,8 +943,8 @@ def mentor_approve_avatar(request, mentor_id=False):
         messages.success(
             request,
             u'{}{}\'s avatar approved but they have yet to fill out the \'background search\' form.'.format(
-                mentor.first_name,
-                mentor.last_name
+                mentor.user.first_name,
+                mentor.user.last_name
             )
         )
         return HttpResponseRedirect(reverse('mentors'))
@@ -982,8 +982,8 @@ def mentor_reject_avatar(request, mentor_id=False):
     messages.warning(
         request,
         u'{} {}\'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor.'.format(
-            mentor.first_name,
-            mentor.last_name
+            mentor.user.first_name,
+            mentor.user.last_name
         )
     )
 
@@ -1306,7 +1306,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
             else:
                 order.check_in = timezone.now()
 
-            if (order.guardian.first_name + ' ' + order.guardian.last_name !=
+            if (order.guardian.user.first_name + ' ' + order.guardian.user.last_name !=
                     request.POST['order_alternate_guardian']):
                 order.alternate_guardian = request.POST['order_alternate_guardian']
 

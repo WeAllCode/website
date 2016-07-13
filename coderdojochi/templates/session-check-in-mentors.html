@@ -48,7 +48,7 @@
                             <form method="post" action=".">
                                 {% csrf_token %}
                                 <input type="hidden" name="order_id" value="{{ order.id }}">
-                                <td>{{ order.mentor.last_name }}, {{ order.mentor.first_name }}</td>
+                                <td>{{ order.mentor.user.last_name }}, {{ order.mentor.user.first_name }}</td>
                                 {% if order.check_in %}
                                 <td><button class="btn-link">Undo</button></td>
                                 {% else %}
