@@ -1108,24 +1108,17 @@ def contact(request, template_name="contact.html"):
 
             if human:
                 msg = EmailMultiAlternatives(
-                    subject='CoderDojoChi | Contact Form Submission',
-                    body=u'Contact Form Submission from {} ({}). {}'.format(
-                        request.POST['name'],
-                        request.POST['email'],
-                        request.POST['body']
-                    ),
+                    subject=u'{} | CoderDojoChi Contact Form'.format(request.POST['name']),
+                    body=request.POST['body'],
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    reply_to=[request.POST['email']],
+                    reply_to=[
+                        u'{}<{}>'.format(request.POST['name'], request.POST['email'])
+                    ],
                     to=[settings.CONTACT_EMAIL]
                 )
 
                 msg.attach_alternative(
-                    u'<p>Contact Form Submission from {} (<a href="mailto:{}">{}</a>).</p><p>{}</p><p><small>You can reply to this email.</small></p>'.format(
-                        request.POST['name'],
-                        request.POST['email'],
-                        request.POST['email'],
-                        request.POST['body']
-                    ),
+                    request.POST['body'].replace("\r\n", "<br />").replace("\n", "<br />"),
                     'text/html'
                 )
 
