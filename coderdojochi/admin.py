@@ -174,6 +174,13 @@ class StudentAdmin(admin.ModelAdmin):
         'guardian',
     )
 
+    search_fields = (
+        'first_name',
+        'last_name',
+        'guardian__user__first_name',
+        'guardian__user__last_name',
+    )
+
     date_hierarchy = 'created_at'
 
     view_on_site = False
