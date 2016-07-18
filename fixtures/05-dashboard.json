@@ -24,8 +24,6 @@
   "pk": 1,
   "fields": {
     "user": 2,
-    "first_name": "Test",
-    "last_name": "Guardian",
     "active": true,
     "phone": "2489141315",
     "zip": "60650",
