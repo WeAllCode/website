@@ -1110,7 +1110,7 @@ def contact(request, template_name="contact.html"):
                 msg = EmailMultiAlternatives(
                     subject=u'{} | CoderDojoChi Contact Form'.format(request.POST['name']),
                     body=request.POST['body'],
-                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    from_email=u'CoderDojoChi<{}>'.format(settings.DEFAULT_FROM_EMAIL),
                     reply_to=[
                         u'{}<{}>'.format(request.POST['name'], request.POST['email'])
                     ],
