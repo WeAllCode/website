@@ -59,6 +59,8 @@ urlpatterns = [
 
     url(r'^admin/$', coderdojochi_views.cdc_admin, name='cdc_admin'),
 
+    url(r'^admin/checksystem/$', coderdojochi_views.check_system, name='check_system'),
+
     url(r'^admin/dashboard/$', coderdojochi_views.dashboard, name='dashboard'),
 
     url(r'^welcome/$', coderdojochi_views.welcome, name='welcome'),
