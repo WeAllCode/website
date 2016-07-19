@@ -557,14 +557,17 @@ EquiptmentConditions = (
 
 
 class Equipment(models.Model):
+    uuid = models.CharField(max_length=255, verbose_name="UUID", default='000-000-000-000', null=False)
     equipment_type = models.ForeignKey(EquipmentType)
     make = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
-    location = models.ForeignKey(Location)
     asset_tag = models.CharField(max_length=255)
-    aquisition_date = models.DateTimeField(blank=False, null=False)
+    aquisition_date = models.DateTimeField(blank=True, null=True)
     condition = models.CharField(max_length=255, choices=EquiptmentConditions)
     notes = models.TextField(blank=True, null=True)
+    last_system_update_check_in = models.DateTimeField(blank=True,null=True)
+    last_system_update = models.DateTimeField(blank=True,null=True)
+    force_update_on_next_boot = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
