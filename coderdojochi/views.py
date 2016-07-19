@@ -24,7 +24,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.util import local_to_utc
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation, CDCUser)
+                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType, Equipment)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -1508,6 +1508,45 @@ def dashboard(request, template_name="admin-dashboard.html"):
         'total_checked_in_orders_count': total_checked_in_orders_count,
     })
 
+
+@csrf_exempt
+# the "service" that computers run to self update
+def check_system(request):
+    # set up variables
+    runUpdate = True;
+    responseString = ""
+    cmdString = 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/update.sh)"'
+    halfday = timedelta(hours=12)
+    #halfday = timedelta(seconds=15)
+
+    if Session.objects.filter(active=True, start_date__lte=timezone.now(), mentor_end_date__gte=timezone.now()).count():
+        runUpdate = False;
+
+    # uuid is posted from the computer using a bash script (see https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/etc/init.d/coderdojochi-phonehome
+    uuid = request.POST.get('uuid');
+
+    if uuid:
+        equipmentType = EquipmentType.objects.get(name="Laptop")
+        if equipmentType:
+            equipment, created = Equipment.objects.get_or_create(
+                uuid=uuid,
+                defaults={'equipment_type': equipmentType}
+            )
+            # check for blank values of last_system_update.  If blank, assume we need to run it
+            if not equipment.last_system_update:
+                equipment.force_update_on_next_boot = True
+
+            # do we need to update?
+            if runUpdate and (equipment.force_update_on_next_boot or (timezone.now() - equipment.last_system_update > halfday)):
+                responseString = cmdString
+                equipment.last_system_update = timezone.now()
+                equipment.force_update_on_next_boot = False
+
+            # update the last_system_update_check_in to now
+            equipment.last_system_update_check_in = timezone.now()
+            equipment.save()
+
+    return HttpResponse(responseString)
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 
