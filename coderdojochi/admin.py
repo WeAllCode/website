@@ -422,11 +422,11 @@ class EquipmentTypeAdmin(admin.ModelAdmin):
 
 class EquipmentAdmin(admin.ModelAdmin):
     list_display = (
+        'uuid',
         'asset_tag',
         'equipment_type',
         'make',
         'model',
-        'location',
         'aquisition_date',
         'condition',
         'created_at',
@@ -438,7 +438,6 @@ class EquipmentAdmin(admin.ModelAdmin):
         'equipment_type',
         'make',
         'model',
-        'location',
     )
 
     ordering = (
