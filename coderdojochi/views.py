@@ -1536,12 +1536,12 @@ def check_system(request):
             if not equipment.last_system_update:
                 equipment.force_update_on_next_boot = True
 
-            # do we need to update? 
+            # do we need to update?
             if runUpdate and (equipment.force_update_on_next_boot or (timezone.now() - equipment.last_system_update > halfday)):
                 responseString = cmdString
                 equipment.last_system_update = timezone.now()
                 equipment.force_update_on_next_boot = False
-    
+
             # update the last_system_update_check_in to now
             equipment.last_system_update_check_in = timezone.now()
             equipment.save()
