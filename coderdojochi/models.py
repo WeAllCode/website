@@ -565,9 +565,9 @@ class Equipment(models.Model):
     aquisition_date = models.DateTimeField(blank=True, null=True)
     condition = models.CharField(max_length=255, choices=EquiptmentConditions)
     notes = models.TextField(blank=True, null=True)
-    last_system_update_check_in = models.DateTimeField(blank=True,null=True)
-    last_system_update = models.DateTimeField(blank=True,null=True)
-    force_update_on_next_boot = models.BooleanField(default=False)
+    last_system_update_check_in = models.DateTimeField(blank=True,null=True, verbose_name="Last Check In")
+    last_system_update = models.DateTimeField(blank=True,null=True, verbose_name="Last Update")
+    force_update_on_next_boot = models.BooleanField(default=False, verbose_name="Force Update")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
