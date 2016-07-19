@@ -422,15 +422,15 @@ class EquipmentTypeAdmin(admin.ModelAdmin):
 
 class EquipmentAdmin(admin.ModelAdmin):
     list_display = (
+        'uuid',
         'asset_tag',
         'equipment_type',
         'make',
         'model',
-        'location',
-        'aquisition_date',
         'condition',
-        'created_at',
-        'updated_at',
+        'last_system_update_check_in',
+        'last_system_update',
+        'force_update_on_next_boot',
     )
 
     list_filter = (
@@ -438,18 +438,22 @@ class EquipmentAdmin(admin.ModelAdmin):
         'equipment_type',
         'make',
         'model',
-        'location',
     )
 
     ordering = (
-        'asset_tag',
+        'uuid',
     )
 
     search_fields = (
+        'uuid',
         'make',
         'model',
-        'location',
         'asset_tag',
+    )
+
+    readonly_fields = (
+        'last_system_update_check_in',
+        'last_system_update',
     )
 
     view_on_site = False
