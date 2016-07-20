@@ -1259,36 +1259,43 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
-    session_obj = get_object_or_404(Session, id=session_id)
+    session = get_object_or_404(Session, id=session_id)
 
-    current_orders_checked_in = session_obj.get_current_orders(checked_in=True)
+    orders = Order.objects.select_related().filter(session_id=session_id).annotate(
+        num_attended=Count(Case(When(student__order__check_in__isnull=False, then=1))),
+        num_missed=Count(Case(When(student__order__check_in__isnull=True, then=1)))
+    ).order_by('student__first_name')
 
-    students_checked_in = current_orders_checked_in.values('student')
+    checked_in_orders = orders.filter(check_in__isnull=False)
 
-    if students_checked_in:
+    if checked_in_orders:
         attendance_percentage = round(
             (
-                float(current_orders_checked_in.count()) /
-                float(session_obj.get_current_students().count())
+                float(checked_in_orders.count()) /
+                float(orders.count())
             ) * 100
         )
     else:
         attendance_percentage = 0
 
     # Genders
-    gender_count = list(
-        Counter(
-            e.student.get_clean_gender() for e in session_obj.get_current_orders()
-        ).iteritems()
+    gender_count = sorted(
+        dict(
+            list(
+                Counter(
+                    e.student.get_clean_gender() for e in orders
+                ).iteritems()
+            )
+        ).items(),
+        key=operator.itemgetter(1)
     )
-    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
-    ages = sorted(list(e.get_student_age() for e in session_obj.get_current_orders()))
+    ages = sorted(list(e.get_student_age() for e in orders))
     age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1))
 
     # Average Age
-    average_age = int(round(sum(ages) / float(len(ages)))) if session_obj.get_current_orders() else 0
+    average_age = int(round(sum(ages) / float(len(ages)))) if orders else 0
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1308,11 +1315,12 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
             messages.error(request, 'Invalid Order')
 
     return render(request, template_name, {
-        'session': session_obj,
+        'session': session,
+        'orders': orders,
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
-        'students_checked_in': students_checked_in,
+        'students_checked_in': checked_in_orders,
         'attendance_percentage': attendance_percentage,
     })
 

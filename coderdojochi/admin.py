@@ -9,6 +9,8 @@ from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Ord
                                  Equipment, MeetingType, Meeting, Location, Donation,
                                  RaceEthnicity, MentorOrder, MeetingOrder)
 
+from django.db.models import Count, Case, When
+
 User = get_user_model()
 
 
@@ -109,11 +111,11 @@ class MentorAdmin(admin.ModelAdmin):
 
 class GuardianAdmin(admin.ModelAdmin):
     list_display = (
-        'user',
+        # 'user',
         'get_first_name',
         'get_last_name',
-        'phone',
-        'zip',
+        # 'phone',
+        # 'zip',
         'get_student_count',
         'created_at',
         'updated_at',
@@ -137,6 +139,11 @@ class GuardianAdmin(admin.ModelAdmin):
 
     view_on_site = False
 
+    def get_queryset(self, request):
+        qs = super(GuardianAdmin, self).get_queryset(request)
+        qs = qs.annotate(Count('student'))
+        return qs
+
     def get_first_name(self, obj):
         return obj.user.first_name
     get_first_name.short_description = 'First Name'
@@ -144,12 +151,14 @@ class GuardianAdmin(admin.ModelAdmin):
 
     def get_last_name(self, obj):
         return obj.user.last_name
-    get_last_name.short_description = 'First Name'
+    get_last_name.short_description = 'Last Name'
     get_last_name.admin_order_field = 'user__last_name'
 
     def get_student_count(self, obj):
-        return Student.objects.filter(guardian__id=obj.id).count()
-    get_student_count.short_description = 'Students'
+        return obj.student__count
+    get_student_count.short_description = '# of Students'
+    get_student_count.admin_order_field = 'student__count'
+
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = (
