@@ -24,7 +24,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.util import local_to_utc
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation, CDCUser)
+                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType, Equipment)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -1259,36 +1259,43 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
-    session_obj = get_object_or_404(Session, id=session_id)
+    session = get_object_or_404(Session, id=session_id)
 
-    current_orders_checked_in = session_obj.get_current_orders(checked_in=True)
+    orders = Order.objects.select_related().filter(session_id=session_id).annotate(
+        num_attended=Count(Case(When(student__order__check_in__isnull=False, then=1))),
+        num_missed=Count(Case(When(student__order__check_in__isnull=True, then=1)))
+    ).order_by('student__first_name')
 
-    students_checked_in = current_orders_checked_in.values('student')
+    checked_in_orders = orders.filter(check_in__isnull=False)
 
-    if students_checked_in:
+    if checked_in_orders:
         attendance_percentage = round(
             (
-                float(current_orders_checked_in.count()) /
-                float(session_obj.get_current_students().count())
+                float(checked_in_orders.count()) /
+                float(orders.count())
             ) * 100
         )
     else:
         attendance_percentage = 0
 
     # Genders
-    gender_count = list(
-        Counter(
-            e.student.get_clean_gender() for e in session_obj.get_current_orders()
-        ).iteritems()
+    gender_count = sorted(
+        dict(
+            list(
+                Counter(
+                    e.student.get_clean_gender() for e in orders
+                ).iteritems()
+            )
+        ).items(),
+        key=operator.itemgetter(1)
     )
-    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
-    ages = sorted(list(e.get_student_age() for e in session_obj.get_current_orders()))
+    ages = sorted(list(e.get_student_age() for e in orders))
     age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1))
 
     # Average Age
-    average_age = int(round(sum(ages) / float(len(ages)))) if session_obj.get_current_orders() else 0
+    average_age = int(round(sum(ages) / float(len(ages)))) if orders else 0
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1308,11 +1315,12 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
             messages.error(request, 'Invalid Order')
 
     return render(request, template_name, {
-        'session': session_obj,
+        'session': session,
+        'orders': orders,
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
-        'students_checked_in': students_checked_in,
+        'students_checked_in': checked_in_orders,
         'attendance_percentage': attendance_percentage,
     })
 
@@ -1508,6 +1516,45 @@ def dashboard(request, template_name="admin-dashboard.html"):
         'total_checked_in_orders_count': total_checked_in_orders_count,
     })
 
+
+@csrf_exempt
+# the "service" that computers run to self update
+def check_system(request):
+    # set up variables
+    runUpdate = True;
+    responseString = ""
+    cmdString = 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/update.sh)"'
+    halfday = timedelta(hours=12)
+    #halfday = timedelta(seconds=15)
+
+    if Session.objects.filter(active=True, start_date__lte=timezone.now(), mentor_end_date__gte=timezone.now()).count():
+        runUpdate = False;
+
+    # uuid is posted from the computer using a bash script (see https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/etc/init.d/coderdojochi-phonehome
+    uuid = request.POST.get('uuid');
+
+    if uuid:
+        equipmentType = EquipmentType.objects.get(name="Laptop")
+        if equipmentType:
+            equipment, created = Equipment.objects.get_or_create(
+                uuid=uuid,
+                defaults={'equipment_type': equipmentType}
+            )
+            # check for blank values of last_system_update.  If blank, assume we need to run it
+            if not equipment.last_system_update:
+                equipment.force_update_on_next_boot = True
+
+            # do we need to update?
+            if runUpdate and (equipment.force_update_on_next_boot or (timezone.now() - equipment.last_system_update > halfday)):
+                responseString = cmdString
+                equipment.last_system_update = timezone.now()
+                equipment.force_update_on_next_boot = False
+
+            # update the last_system_update_check_in to now
+            equipment.last_system_update_check_in = timezone.now()
+            equipment.save()
+
+    return HttpResponse(responseString)
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 
