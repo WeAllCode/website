@@ -54,8 +54,6 @@ def generate_filename(instance, filename):
 
 class Mentor(models.Model):
     user = models.ForeignKey(CDCUser)
-    first_name = models.CharField(max_length=255, blank=True, null=True)
-    last_name = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -72,7 +70,7 @@ class Mentor(models.Model):
         verbose_name_plural = _("mentors")
 
     def __unicode__(self):
-        return self.user.username
+        return u'{} {}'.format(self.user.first_name, self.user.last_name)
 
     def get_approve_avatar_url(self):
         return u'{}/mentors/{}/approve-avatar/'.format(
@@ -103,8 +101,6 @@ class Mentor(models.Model):
 
 class Guardian(models.Model):
     user = models.ForeignKey(CDCUser)
-    first_name = models.CharField(max_length=255, blank=True, null=True)
-    last_name = models.CharField(max_length=255, blank=True, null=True)
     active = models.BooleanField(default=True)
     phone = models.CharField(max_length=50, blank=True)
     zip = models.CharField(max_length=20, blank=True, null=True)
@@ -116,7 +112,7 @@ class Guardian(models.Model):
         verbose_name_plural = _("guardians")
 
     def __unicode__(self):
-        return u'{} {}'.format(self.first_name, self.last_name)
+        return u'{} {}'.format(self.user.first_name, self.user.last_name)
 
     def get_students(self):
         students = Student.objects.filter(guardian=self)
@@ -317,18 +313,18 @@ class Session(models.Model):
                 orders = MentorOrder.objects.filter(
                     active=True,
                     session=self
-                ).exclude(check_in=None).order_by('mentor__last_name')
+                ).exclude(check_in=None).order_by('mentor__user__last_name')
             else:
                 orders = MentorOrder.objects.filter(
                     active=True,
                     session=self,
                     check_in=None
-                ).order_by('mentor__last_name')
+                ).order_by('mentor__user__last_name')
         else:
             orders = MentorOrder.objects.filter(
                 active=True,
                 session=self
-            ).order_by('check_in', 'mentor__last_name')
+            ).order_by('check_in', 'mentor__user__last_name')
 
         return orders
 
@@ -437,26 +433,26 @@ class Meeting(models.Model):
             self.id
         )
 
-    def get_current_meeting_orders(self, checked_in=None):
+    def get_current_orders(self, checked_in=None):
         if checked_in is not None:
             if checked_in:
-                meeting_orders = MeetingOrder.objects.filter(
+                orders = MeetingOrder.objects.filter(
                     active=True,
                     meeting=self
-                ).exclude(check_in=None).order_by('mentor__last_name')
+                ).exclude(check_in=None).order_by('mentor__user__last_name')
             else:
-                meeting_orders = MeetingOrder.objects.filter(
+                orders = MeetingOrder.objects.filter(
                     active=True,
                     meeting=self,
                     check_in=None
-                ).order_by('mentor__last_name')
+                ).order_by('mentor__user__last_name')
         else:
-            meeting_orders = MeetingOrder.objects.filter(
+            orders = MeetingOrder.objects.filter(
                 active=True,
                 meeting=self
-            ).order_by('check_in', 'mentor__last_name')
+            ).order_by('check_in', 'mentor__user__last_name')
 
-        return meeting_orders
+        return orders
 
     def get_current_mentors(self):
         return Mentor.objects.filter(
@@ -516,8 +512,8 @@ class MentorOrder(models.Model):
 
     def __unicode__(self):
         return u'{} {} | {}'.format(
-            self.mentor.first_name,
-            self.mentor.last_name,
+            self.mentor.user.first_name,
+            self.mentor.user.last_name,
             self.session.course.title
         )
 
@@ -541,8 +537,8 @@ class MeetingOrder(models.Model):
 
     def __unicode__(self):
         return u'{} {} | {}'.format(
-            self.mentor.first_name,
-            self.mentor.last_name,
+            self.mentor.user.first_name,
+            self.mentor.user.last_name,
             self.meeting.meeting_type.title
         )
 
@@ -561,20 +557,23 @@ EquiptmentConditions = (
 
 
 class Equipment(models.Model):
+    uuid = models.CharField(max_length=255, verbose_name="UUID", default='000-000-000-000', null=False)
     equipment_type = models.ForeignKey(EquipmentType)
     make = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
-    location = models.ForeignKey(Location)
     asset_tag = models.CharField(max_length=255)
-    aquisition_date = models.DateTimeField(blank=False, null=False)
+    aquisition_date = models.DateTimeField(blank=True, null=True)
     condition = models.CharField(max_length=255, choices=EquiptmentConditions)
     notes = models.TextField(blank=True, null=True)
+    last_system_update_check_in = models.DateTimeField(blank=True,null=True, verbose_name="Last Check In")
+    last_system_update = models.DateTimeField(blank=True,null=True, verbose_name="Last Update")
+    force_update_on_next_boot = models.BooleanField(default=False, verbose_name="Force Update")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = _("equiptment")
-        verbose_name_plural = _("equiptment")
+        verbose_name = _("equipment")
+        verbose_name_plural = _("equipment")
 
     def __unicode__(self):
         return u'{} | {} {} | {}'.format(

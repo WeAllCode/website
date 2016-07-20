@@ -18,14 +18,13 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.template import RequestContext
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.util import local_to_utc
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation, CDCUser)
+                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType, Equipment)
 from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -74,7 +73,6 @@ def welcome(request, template_name="welcome.html"):
         next_url = request.GET['next']
 
     if request.method == 'POST':
-
         if role:
             if role == 'mentor':
                 form = MentorForm(request.POST, instance=get_object_or_404(Mentor, user=user))
@@ -119,15 +117,15 @@ def welcome(request, template_name="welcome.html"):
             if request.POST.get('role') == 'mentor':
                 role = 'mentor'
                 mentor, created = Mentor.objects.get_or_create(user=user)
-                mentor.first_name = user.first_name
-                mentor.last_name = user.last_name
+                mentor.user.first_name = user.first_name
+                mentor.user.last_name = user.last_name
                 mentor.save()
                 user.role = role
             else:
                 role = 'guardian'
                 guardian, created = Guardian.objects.get_or_create(user=user)
-                guardian.first_name = user.first_name
-                guardian.last_name = user.last_name
+                guardian.user.first_name = user.first_name
+                guardian.user.last_name = user.last_name
                 guardian.save()
                 user.role = role
 
@@ -139,7 +137,7 @@ def welcome(request, template_name="welcome.html"):
                 'last_name': request.user.last_name
             }
 
-            next_url = u'?next={}'.format(next_url) if next_url else ''
+            next_url = u'?next={}'.format(next_url) if next_url else reverse('dojo')
 
             if role == 'mentor':
                 # check for next upcoming meeting
@@ -182,7 +180,7 @@ def welcome(request, template_name="welcome.html"):
                 add_student = True
                 form = StudentForm(initial={'guardian': guardian.pk})
 
-    if account and account.first_name and keepGoing:
+    if account and account.user.first_name and keepGoing:
         if role == 'mentor':
             if next_url:
                 return HttpResponseRedirect(next_url)
@@ -230,7 +228,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         'sessions': sessions,
         'calendar_date': calendar_date,
         'prev_date': prev_date,
-        'next_date': next_date
+        'next_date': next_date,
     })
 
 
@@ -809,11 +807,10 @@ def dojo(request, template_name="dojo.html"):
     }
 
     if request.user.role:
-
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-            mentor_sessions = Session.objects.filter(id__in=MentorOrder.objects.filter(mentor=mentor).values('session__id'))
+            mentor_sessions = Session.objects.filter(id__in=MentorOrder.objects.filter(mentor=mentor, active=True).values('session__id'))
 
             upcoming_sessions = mentor_sessions.filter(
                 active=True,
@@ -930,23 +927,24 @@ def mentor_approve_avatar(request, mentor_id=False):
             )
         )
 
+    mentor.avatar_approved = True
+    mentor.save()
+
     if mentor.background_check:
-        mentor.avatar_approved = False
-        mentor.save()
         messages.success(
             request,
             u'{}{}\'s avatar approved and their account is now public.'.format(
-                mentor.first_name,
-                mentor.last_name
+                mentor.user.first_name,
+                mentor.user.last_name
             )
         )
         return HttpResponseRedirect(u'{}{}'.format(reverse('mentors'), mentor.id))
     else:
-        messages.warning(
+        messages.success(
             request,
             u'{}{}\'s avatar approved but they have yet to fill out the \'background search\' form.'.format(
-                mentor.first_name,
-                mentor.last_name
+                mentor.user.first_name,
+                mentor.user.last_name
             )
         )
         return HttpResponseRedirect(reverse('mentors'))
@@ -984,8 +982,8 @@ def mentor_reject_avatar(request, mentor_id=False):
     messages.warning(
         request,
         u'{} {}\'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor.'.format(
-            mentor.first_name,
-            mentor.last_name
+            mentor.user.first_name,
+            mentor.user.last_name
         )
     )
 
@@ -1062,7 +1060,6 @@ def donate(request, template_name="donate.html"):
     form = PayPalPaymentsForm(initial=paypal_dict)
 
     return render(request, template_name, {
-        'site_url': settings.SITE_URL,
         'form': form
     })
 
@@ -1116,24 +1113,17 @@ def contact(request, template_name="contact.html"):
 
             if human:
                 msg = EmailMultiAlternatives(
-                    subject='CoderDojoChi | Contact Form Submission',
-                    body=u'Contact Form Submission from {} ({}). {}'.format(
-                        request.POST['name'],
-                        request.POST['email'],
-                        request.POST['body']
-                    ),
+                    subject=u'{} | CoderDojoChi Contact Form'.format(request.POST['name']),
+                    body=request.POST['body'],
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    reply_to=request.POST['email'],
+                    reply_to=[
+                        u'{}<{}>'.format(request.POST['name'], request.POST['email'])
+                    ],
                     to=[settings.CONTACT_EMAIL]
                 )
 
                 msg.attach_alternative(
-                    u'<p>Contact Form Submission from {} (<a href="mailto:{}">{}</a>).</p><p>{}</p><p><small>You can reply to this email.</small></p>'.format(
-                        request.POST['name'],
-                        request.POST['email'],
-                        request.POST['email'],
-                        request.POST['body']
-                    ),
+                    request.POST['body'].replace("\r\n", "<br />").replace("\n", "<br />"),
                     'text/html'
                 )
 
@@ -1274,36 +1264,43 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
-    session_obj = get_object_or_404(Session, id=session_id)
+    session = get_object_or_404(Session, id=session_id)
 
-    current_orders_checked_in = session_obj.get_current_orders(checked_in=True)
+    orders = Order.objects.select_related().filter(session_id=session_id).annotate(
+        num_attended=Count(Case(When(student__order__check_in__isnull=False, then=1))),
+        num_missed=Count(Case(When(student__order__check_in__isnull=True, then=1)))
+    ).order_by('student__first_name')
 
-    students_checked_in = current_orders_checked_in.values('student')
+    checked_in_orders = orders.filter(check_in__isnull=False)
 
-    if students_checked_in:
+    if checked_in_orders:
         attendance_percentage = round(
             (
-                float(current_orders_checked_in.count()) /
-                float(session_obj.get_current_students().count())
+                float(checked_in_orders.count()) /
+                float(orders.count())
             ) * 100
         )
     else:
         attendance_percentage = 0
 
     # Genders
-    gender_count = list(
-        Counter(
-            e.student.get_clean_gender() for e in session_obj.get_current_orders()
-        ).iteritems()
+    gender_count = sorted(
+        dict(
+            list(
+                Counter(
+                    e.student.get_clean_gender() for e in orders
+                ).iteritems()
+            )
+        ).items(),
+        key=operator.itemgetter(1)
     )
-    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
 
     # Ages
-    ages = sorted(list(e.get_student_age() for e in session_obj.get_current_orders()))
+    ages = sorted(list(e.get_student_age() for e in orders))
     age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1))
 
     # Average Age
-    average_age = int(round(sum(ages) / float(len(ages)))) if session_obj.get_current_orders() else 0
+    average_age = int(round(sum(ages) / float(len(ages)))) if orders else 0
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1314,7 +1311,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
             else:
                 order.check_in = timezone.now()
 
-            if (order.guardian.first_name + ' ' + order.guardian.last_name !=
+            if (order.guardian.user.first_name + ' ' + order.guardian.user.last_name !=
                     request.POST['order_alternate_guardian']):
                 order.alternate_guardian = request.POST['order_alternate_guardian']
 
@@ -1323,11 +1320,12 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
             messages.error(request, 'Invalid Order')
 
     return render(request, template_name, {
-        'session': session_obj,
+        'session': session,
+        'orders': orders,
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
-        'students_checked_in': students_checked_in,
+        'students_checked_in': checked_in_orders,
         'attendance_percentage': attendance_percentage,
     })
 
@@ -1339,7 +1337,6 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
         return HttpResponseRedirect(reverse('sessions'))
 
     session_obj = get_object_or_404(Session, id=session_id)
-    current_mentor_orders = session_obj.get_current_mentor_orders()
     current_mentor_orders_checked_in = session_obj.get_current_mentor_orders(checked_in=True)
     mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
 
@@ -1358,6 +1355,35 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 
     return render(request, template_name, {
         'session': session_obj,
+        'mentors_checked_in': mentors_checked_in
+    })
+
+
+@login_required
+def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html"):
+    if not request.user.is_staff:
+        messages.error(request, 'You do not have permission to access this page.')
+        return HttpResponseRedirect(reverse('dojo'))
+
+    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
+    current_mentor_orders_checked_in = meeting_obj.get_current_orders(checked_in=True)
+    mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
+
+    if request.method == 'POST':
+        if 'order_id' in request.POST:
+            order = get_object_or_404(MeetingOrder, id=request.POST['order_id'])
+
+            if order.check_in:
+                order.check_in = None
+            else:
+                order.check_in = timezone.now()
+
+            order.save()
+        else:
+            messages.error(request, 'Invalid Order')
+
+    return render(request, template_name, {
+        'meeting': meeting_obj,
         'mentors_checked_in': mentors_checked_in
     })
 
@@ -1495,6 +1521,45 @@ def dashboard(request, template_name="admin-dashboard.html"):
         'total_checked_in_orders_count': total_checked_in_orders_count,
     })
 
+
+@csrf_exempt
+# the "service" that computers run to self update
+def check_system(request):
+    # set up variables
+    runUpdate = True;
+    responseString = ""
+    cmdString = 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/update.sh)"'
+    halfday = timedelta(hours=12)
+    #halfday = timedelta(seconds=15)
+
+    if Session.objects.filter(active=True, start_date__lte=timezone.now(), mentor_end_date__gte=timezone.now()).count():
+        runUpdate = False;
+
+    # uuid is posted from the computer using a bash script (see https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/etc/init.d/coderdojochi-phonehome
+    uuid = request.POST.get('uuid');
+
+    if uuid:
+        equipmentType = EquipmentType.objects.get(name="Laptop")
+        if equipmentType:
+            equipment, created = Equipment.objects.get_or_create(
+                uuid=uuid,
+                defaults={'equipment_type': equipmentType}
+            )
+            # check for blank values of last_system_update.  If blank, assume we need to run it
+            if not equipment.last_system_update:
+                equipment.force_update_on_next_boot = True
+
+            # do we need to update?
+            if runUpdate and (equipment.force_update_on_next_boot or (timezone.now() - equipment.last_system_update > halfday)):
+                responseString = cmdString
+                equipment.last_system_update = timezone.now()
+                equipment.force_update_on_next_boot = False
+
+            # update the last_system_update_check_in to now
+            equipment.last_system_update_check_in = timezone.now()
+            equipment.save()
+
+    return HttpResponse(responseString)
 
 def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 

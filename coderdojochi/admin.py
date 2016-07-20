@@ -9,6 +9,8 @@ from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Ord
                                  Equipment, MeetingType, Meeting, Location, Donation,
                                  RaceEthnicity, MentorOrder, MeetingOrder)
 
+from django.db.models import Count, Case, When
+
 User = get_user_model()
 
 
@@ -19,7 +21,7 @@ class UserAdmin(admin.ModelAdmin):
         'last_name',
         'role',
         'date_joined',
-        # 'last_login',
+        'last_login',
         'is_active',
         'is_staff',
         'is_superuser',
@@ -62,9 +64,9 @@ class UserAdmin(admin.ModelAdmin):
 class MentorAdmin(admin.ModelAdmin):
 
     list_display = (
-        'first_name',
-        'last_name',
         'user',
+        'get_first_name',
+        'get_last_name',
         'created_at',
         'updated_at',
         'active',
@@ -87,8 +89,8 @@ class MentorAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
 
     search_fields = (
-        'first_name',
-        'last_name',
+        'user__first_name',
+        'user__last_name',
         'user__username',
         'user__email'
     )
@@ -96,14 +98,25 @@ class MentorAdmin(admin.ModelAdmin):
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    get_first_name.short_description = 'First Name'
+    get_first_name.admin_order_field = 'user__first_name'
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    get_last_name.short_description = 'First Name'
+    get_last_name.admin_order_field = 'user__last_name'
+
 
 class GuardianAdmin(admin.ModelAdmin):
     list_display = (
-        'first_name',
-        'last_name',
-        'user',
-        'phone',
-        'zip',
+        # 'user',
+        'get_first_name',
+        'get_last_name',
+        # 'phone',
+        # 'zip',
+        'get_student_count',
         'created_at',
         'updated_at',
     )
@@ -117,14 +130,34 @@ class GuardianAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        'first_name',
-        'last_name',
+        'user__first_name',
+        'user__last_name',
         'user__username',
     )
 
     date_hierarchy = 'created_at'
 
     view_on_site = False
+
+    def get_queryset(self, request):
+        qs = super(GuardianAdmin, self).get_queryset(request)
+        qs = qs.annotate(Count('student'))
+        return qs
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    get_first_name.short_description = 'First Name'
+    get_first_name.admin_order_field = 'user__first_name'
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    get_last_name.short_description = 'Last Name'
+    get_last_name.admin_order_field = 'user__last_name'
+
+    def get_student_count(self, obj):
+        return obj.student__count
+    get_student_count.short_description = '# of Students'
+    get_student_count.admin_order_field = 'student__count'
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -148,6 +181,13 @@ class StudentAdmin(admin.ModelAdmin):
 
     ordering = (
         'guardian',
+    )
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'guardian__user__first_name',
+        'guardian__user__last_name',
     )
 
     date_hierarchy = 'created_at'
@@ -190,6 +230,7 @@ class SessionAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
+        'active',
         'public',
         'course__title',
         'location',
@@ -239,6 +280,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = (
         'active',
         'check_in',
+        # 'guardian',
         'student',
         'session',
     )
@@ -279,7 +321,7 @@ class MentorOrderAdmin(admin.ModelAdmin):
     list_filter = (
         'active',
         'check_in',
-        # 'session',
+        'session',
         # 'mentor',
     )
 
@@ -288,13 +330,13 @@ class MentorOrderAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
-        'mentor__first_name',
-        'mentor__last_name',
+        'mentor__user__first_name',
+        'mentor__user__last_name',
     )
 
     readonly_fields = (
-        # 'mentor',
-        # 'session',
+        'mentor',
+        'session',
         'ip',
         # 'check_in',
     )
@@ -318,12 +360,18 @@ class MeetingOrderAdmin(admin.ModelAdmin):
 
     list_filter = (
         'active',
+        'meeting',
         'check_in',
         'meeting__meeting_type',
     )
 
     ordering = (
         'created_at',
+    )
+
+    search_fields = (
+        'mentor__user__first_name',
+        'mentor__user__last_name',
     )
 
     date_hierarchy = 'created_at'
@@ -382,6 +430,41 @@ class EquipmentTypeAdmin(admin.ModelAdmin):
 
 
 class EquipmentAdmin(admin.ModelAdmin):
+    list_display = (
+        'uuid',
+        'asset_tag',
+        'equipment_type',
+        'make',
+        'model',
+        'condition',
+        'last_system_update_check_in',
+        'last_system_update',
+        'force_update_on_next_boot',
+    )
+
+    list_filter = (
+        'condition',
+        'equipment_type',
+        'make',
+        'model',
+    )
+
+    ordering = (
+        'uuid',
+    )
+
+    search_fields = (
+        'uuid',
+        'make',
+        'model',
+        'asset_tag',
+    )
+
+    readonly_fields = (
+        'last_system_update_check_in',
+        'last_system_update',
+    )
+
     view_on_site = False
 
 
@@ -398,12 +481,20 @@ class DonationAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
-        'amount',
+        'verified',
         'receipt_sent',
+        'amount',
+        'created_at',
     )
 
     ordering = (
         '-created_at',
+    )
+
+    search_fields = (
+        'first_name',
+        'last_name',
+        'email',
     )
 
     date_hierarchy = 'created_at'
