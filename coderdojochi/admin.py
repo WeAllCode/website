@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth import get_user_model
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.db.models import Count, Case, When
+from django.template.defaultfilters import pluralize
 from django.utils.safestring import mark_safe
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
                                  Equipment, MeetingType, Meeting, Location, Donation,
                                  RaceEthnicity, MentorOrder, MeetingOrder)
-
-from django.db.models import Count, Case, When
 
 User = get_user_model()
 
@@ -158,6 +158,8 @@ class GuardianAdmin(admin.ModelAdmin):
         return obj.student__count
     get_student_count.short_description = '# of Students'
     get_student_count.admin_order_field = 'student__count'
+
+
 
 
 class StudentAdmin(admin.ModelAdmin):
