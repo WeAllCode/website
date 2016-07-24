@@ -14,6 +14,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import get_connection, EmailMessage, EmailMultiAlternatives
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
@@ -1264,7 +1265,10 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     orders = Order.objects.select_related().filter(session_id=session_id).annotate(
         num_attended=Count(Case(When(student__order__check_in__isnull=False, then=1))),
         num_missed=Count(Case(When(student__order__check_in__isnull=True, then=1)))
-    ).order_by('student__first_name')
+    )
+
+    active_orders = orders.filter(active=True).order_by('student__first_name');
+    inactive_orders = orders.filter(active=False).order_by('-updated_at');
 
     checked_in_orders = orders.filter(check_in__isnull=False)
 
@@ -1272,7 +1276,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         attendance_percentage = round(
             (
                 float(checked_in_orders.count()) /
-                float(orders.count())
+                float(active_orders.count())
             ) * 100
         )
     else:
@@ -1283,7 +1287,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         dict(
             list(
                 Counter(
-                    e.student.get_clean_gender() for e in orders
+                    e.student.get_clean_gender() for e in active_orders
                 ).iteritems()
             )
         ).items(),
@@ -1291,11 +1295,16 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     )
 
     # Ages
-    ages = sorted(list(e.get_student_age() for e in orders))
-    age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1))
+    ages = sorted(list(e.get_student_age() for e in active_orders))
+    age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(0))
+    # age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1), reverse=True)
 
     # Average Age
     average_age = int(round(sum(ages) / float(len(ages)))) if orders else 0
+
+    # Active Session
+    active_session = True if timezone.now() < session.end_date else False
+
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1316,7 +1325,9 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
     return render(request, template_name, {
         'session': session,
-        'orders': orders,
+        'active_session': active_session,
+        'active_orders': active_orders,
+        'inactive_orders': inactive_orders,
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
