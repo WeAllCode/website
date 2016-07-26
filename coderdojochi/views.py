@@ -138,8 +138,6 @@ def welcome(request, template_name="welcome.html"):
                 'last_name': request.user.last_name
             }
 
-            next_url = u'?next={}'.format(next_url) if next_url else reverse('dojo')
-
             if role == 'mentor':
                 # check for next upcoming meeting
                 next_meeting = Meeting.objects.filter(
@@ -153,6 +151,8 @@ def welcome(request, template_name="welcome.html"):
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-mentor', merge_vars)
 
+                next_url = u'?next={}'.format(next_url) if next_url else reverse('dojo')
+
                 return HttpResponseRedirect(next_url)
             else:
                 # check for next upcoming class
@@ -164,7 +164,9 @@ def welcome(request, template_name="welcome.html"):
 
                 sendSystemEmail(request, 'Welcome!', 'coderdojochi-welcome-guardian', merge_vars)
 
-                return HttpResponseRedirect(reverse('welcome') + next_url)
+                next_url = u'?next={}'.format(next_url) if next_url else reverse('welcome')
+
+                return HttpResponseRedirect(next_url)
 
     if role and keepGoing:
         if role == 'mentor':
