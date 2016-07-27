@@ -19,3 +19,7 @@
 1. `docker-machine start coderdojochi`
 1. `eval "$(docker-machine env coderdojochi)"`
 1. `docker-compose up`
+
+### Misc commands
+1. Run Django management commands like so... `docker-compose run app python manage.py <command>`
+1. Rebuild docker container (when all else fails)... `docker kill $(docker ps -q); docker-compose rm —all -f; docker-compose build && docker-compose up`

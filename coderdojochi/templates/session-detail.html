@@ -59,9 +59,9 @@
                         <a href="{% url 'mentor_detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
                     </div>
                     <div class="info">
-                        <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
+                        <h3 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
                         <p>{{ session.teacher.bio|truncatechars:120 }}</p>
-                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.first_name }}.</a></p>
+                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                 <div class="col-xs-12 col-sm-4 col-md-4">
                     <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
                         <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" height="175" width="175">
-                        <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
+                        <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
                     </a>
                 </div>
                     {% endif %}

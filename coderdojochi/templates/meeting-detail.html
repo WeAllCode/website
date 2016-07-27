@@ -49,7 +49,7 @@
                         <div class="col-xs-12 col-sm-4 col-md-4">
                             <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
                                 <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
-                                <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
+                                <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
                             </a>
                         </div>
                     {% endif %}
