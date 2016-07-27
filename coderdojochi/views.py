@@ -26,7 +26,7 @@ from django.views.decorators.csrf import csrf_exempt
 from coderdojochi.util import local_to_utc
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
                                  Meeting, MeetingOrder, Donation, CDCUser, EquipmentType, Equipment)
-from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
+from coderdojochi.forms import CDCModelForm, MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -833,14 +833,18 @@ def dojo(request, template_name="dojo.html"):
 
             if request.method == 'POST':
                 form = MentorForm(request.POST, request.FILES, instance=account)
-                if form.is_valid():
+                user_form = CDCModelForm(request.POST, request.FILES, instance=account.user)
+
+                if form.is_valid() and user_form.is_valid():
                     form.save()
+                    user_form.save()
                     messages.success(request, 'Profile information saved.')
                     return HttpResponseRedirect(reverse('dojo'))
                 else:
                     messages.error(request, 'There was an error. Please try again.')
             else:
                 form = MentorForm(instance=account)
+                user_form = CDCModelForm(instance=account.user)
 
             context['upcoming_sessions'] = upcoming_sessions
             context['upcoming_meetings'] = upcoming_meetings
@@ -862,14 +866,17 @@ def dojo(request, template_name="dojo.html"):
 
             if request.method == 'POST':
                 form = GuardianForm(request.POST, instance=account)
-                if form.is_valid():
+                user_form = CDCModelForm(request.POST, instance=account.user)
+                if form.is_valid() and user_form.is_valid():
                     form.save()
+                    user_form.save()
                     messages.success(request, 'Profile information saved.')
                     return HttpResponseRedirect(reverse('dojo'))
                 else:
                     messages.error(request, 'There was an error. Please try again.')
             else:
                 form = GuardianForm(instance=account)
+                user_form = CDCModelForm(instance=account.user)
 
             context['students'] = students
             context['upcoming_orders'] = upcoming_orders
@@ -877,6 +884,7 @@ def dojo(request, template_name="dojo.html"):
 
         context['account'] = account
         context['form'] = form
+        context['user_form'] = user_form
     else:
         if 'next' in request.GET:
             return HttpResponseRedirect(u'{}?next={}'.format(reverse('welcome'), request.GET['next']))
