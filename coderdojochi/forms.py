@@ -105,7 +105,7 @@ class MentorForm(CDCModelForm):
 
     class Meta:
         model = Mentor
-        fields = ('bio', 'avatar')
+        fields = ('first_name', 'last_name', 'bio', 'avatar')
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
@@ -175,7 +175,7 @@ class GuardianForm(CDCModelForm):
 
     class Meta:
         model = Guardian
-        fields = ('phone', 'zip')
+        fields = ('first_name', 'last_name', 'phone', 'zip')
 
 
 class StudentForm(CDCModelForm):
