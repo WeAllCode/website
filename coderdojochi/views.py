@@ -1262,15 +1262,43 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
+
+    if request.method == 'POST':
+        if 'order_id' in request.POST:
+            order = get_object_or_404(Order, id=request.POST['order_id'])
+
+            if order.check_in:
+                order.check_in = None
+            else:
+                order.check_in = timezone.now()
+
+            if (u'{} {}'.format(order.guardian.user.first_name, order.guardian.user.last_name) != request.POST['order_alternate_guardian']):
+                order.alternate_guardian = request.POST['order_alternate_guardian']
+
+            order.save()
+        else:
+            messages.error(request, 'Invalid Order')
+
+    # Get current session
     session = get_object_or_404(Session, id=session_id)
 
+    # Active Session
+    active_session = True if timezone.now() < session.end_date else False
+
+    # get the orders
     orders = Order.objects.select_related().filter(session_id=session_id).annotate(
         num_attended=Count(Case(When(student__order__check_in__isnull=False, then=1))),
         num_missed=Count(Case(When(student__order__check_in__isnull=True, then=1)))
     )
 
-    active_orders = orders.filter(active=True).order_by('student__first_name');
+    if active_session:
+        active_orders = orders.filter(active=True).order_by('student__first_name')
+    else:
+        active_orders = orders.filter(active=True, check_in__isnull=False).order_by('student__first_name')
+
     inactive_orders = orders.filter(active=False).order_by('-updated_at');
+
+    no_show_orders = orders.filter(active=True, check_in__isnull=True)
 
     checked_in_orders = orders.filter(check_in__isnull=False)
 
@@ -1304,32 +1332,12 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     # Average Age
     average_age = int(round(sum(ages) / float(len(ages)))) if orders else 0
 
-    # Active Session
-    active_session = True if timezone.now() < session.end_date else False
-
-
-    if request.method == 'POST':
-        if 'order_id' in request.POST:
-            order = get_object_or_404(Order, id=request.POST['order_id'])
-
-            if order.check_in:
-                order.check_in = None
-            else:
-                order.check_in = timezone.now()
-
-            if (order.guardian.user.first_name + ' ' + order.guardian.user.last_name !=
-                    request.POST['order_alternate_guardian']):
-                order.alternate_guardian = request.POST['order_alternate_guardian']
-
-            order.save()
-        else:
-            messages.error(request, 'Invalid Order')
-
     return render(request, template_name, {
         'session': session,
         'active_session': active_session,
         'active_orders': active_orders,
         'inactive_orders': inactive_orders,
+        'no_show_orders': no_show_orders,
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
