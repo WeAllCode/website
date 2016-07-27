@@ -108,6 +108,12 @@
     </div>
     {% endif %}
 
+    {% if active_orders.count %}
+    {% if active_session %}
+    <h2>Attending Students <span class="badge">{{ active_orders.count }}</span></h2>
+    {% else %}
+    <h2>Attended Students <span class="badge">{{ active_orders.count }}</span></h2>
+    {% endif %}
     <div class="row">
         <div class="col-sm-12">
             {% if active_orders.count %}
@@ -162,8 +168,44 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
+
+    {% if active_session != True %}
+    <h2>No Shows <span class="badge">{{ no_show_orders.count }}</span></h2>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Student Name</th>
+                        <th>Guardian</th>
+                        <th>Cancelled Date</th>
+                        <th><abbr title="Number Attended"># A</abbr></th>
+                        <th><abbr title="Number Missed"># M</abbr></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in no_show_orders %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                          <strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}
+                        </td>
+                        <td>{{ order.guardian.user.first_name }} {{ order.guardian.user.last_name }}</td>
+                        <td>{{ order.updated_at }}</td>
+                        <td>{{ order.num_attended }}</td>
+                        <td{% if order.num_missed >= 3 %} class="danger"{% endif %}>{{ order.num_missed }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
 
     {% if inactive_orders.count %}
+    <h2>Cancelled Tickets <span class="badge">{{ inactive_orders.count }}</span></h2>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-striped">
