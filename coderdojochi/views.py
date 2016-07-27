@@ -777,7 +777,7 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 
 
 def volunteer(request, template_name="volunteer.html"):
-    mentors = Mentor.objects.filter(
+    mentors = Mentor.objects.select_related('user').filter(
         active=True,
         public=True,
         background_check=True,
