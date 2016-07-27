@@ -73,9 +73,7 @@
     "updated_at": "2013-01-01T00:00:00.000",
     "created_at": "2013-01-01T00:00:00.000",
     "mentors_day_reminder_sent": true,
-    "mentors_week_reminder_sent": true,
-    "waitlist_mentors": [],
-    "waitlist_students": []
+    "mentors_week_reminder_sent": true
   },
   "model": "coderdojochi.session",
   "pk": 1

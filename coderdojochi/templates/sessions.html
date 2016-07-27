@@ -44,7 +44,7 @@
                                 <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Volunteer</a>
                             {% endif %}
                         {% else %}
-                            {% if session.get_current_students.count < session.capacity %}
+                            {% if session.get_current_student_orders.count < session.capacity %}
                                 <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Learn more</a>
                             {% else %}
                                 <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Join Waitlist</a>

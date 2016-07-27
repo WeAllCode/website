@@ -2,7 +2,7 @@ from django import template
 from django.template import Template
 from django.core.urlresolvers import reverse
 
-from coderdojochi.models import Order
+from coderdojochi.models import Order, MentorOrder
 
 register = template.Library()
 
@@ -11,9 +11,22 @@ def subtract(value, arg):
     return value - arg
 
 @register.assignment_tag(takes_context=False)
-def student_session_order_count(student, session):
-    orders_count = Order.objects.filter(student=student, session=session).count()
-    return orders_count
+def student_session_order(student, session):
+    order = None
+    orders = Order.objects.filter(student=student, session=session, active=True)
+    if orders.count():
+        order = orders.first()
+
+    return order
+
+@register.assignment_tag(takes_context=False)
+def mentor_session_order(mentor, session):
+    order = None
+    orders = MentorOrder.objects.filter(mentor=mentor, session=session, active=True)
+    if orders.count():
+        order = orders.first()
+
+    return order
 
 @register.simple_tag(takes_context=True)
 def student_register_link(context, student, session):

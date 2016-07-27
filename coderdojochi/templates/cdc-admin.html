@@ -93,7 +93,7 @@
                     <td class="text-right">
                         <span class="title">
                         {% if not session.external_enrollment_url %}
-                            <a href="{% url 'check_in' session.id %}">{{ session.get_checked_in_students.count }} / {{ session.get_current_students.count }}</a>
+                            <a href="{% url 'check_in' session.id %}">{{ session.get_checked_in_students.count }} / {{ session.get_current_student_orders.count }}</a>
                         {% else %}
                             N/A
                         {% endif %}

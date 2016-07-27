@@ -119,19 +119,18 @@
                                         <tr>
                                             <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
                                             <td class="text-right">
-                                                {% student_session_order_count student=student session=session as student_is_enrolled %}
-                                                {% if spots_remaining > 0 or student_is_enrolled %}
+                                                {% student_session_order student=student session=session as student_order %}
+                                                {% if spots_remaining > 0 or student_order and not student_order.waitlisted or student_order.waitlist_offer_sent_at %}
                                                     {% student_register_link student session %}
                                                 {% else %}
                                                     <form action="" method="post">
                                                         {% csrf_token %}
                                                         <input type="hidden" name="waitlist" value="student">
                                                         <input type="hidden" name="account_id" value="{{ student.id }}">
-                                                        {% if student in session.waitlist_students.all %}
-                                                            <input type="hidden" name="remove" value="true">
+                                                        {% if student_order.waitlisted %}
+                                                            <input type="hidden" name="order_id" value="(( student_order.id }}">
                                                             <button class="btn-cdc btn-cdc-danger btn-cdc-sm">Remove from Waitlist</button>
                                                         {% else %}
-                                                            <input type="hidden" name="remove" value="false">
                                                             <button class="btn-cdc btn-cdc-inverse btn-cdc-sm">Add to Waitlist</button>
                                                         {% endif %}
                                                     </form>
@@ -146,7 +145,8 @@
                             <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll</a></p>
                             {% endif %}
                         {% else %}
-                            {% if spots_remaining %}
+                            {% mentor_session_order mentor=account session=session as mentor_order %}
+                            {% if spots_remaining > 0 or mentor_order.waitlist_offer_sent_at %}
                                 {% if mentor_signed_up %}
                                     <p>You are signed up to mentor this class.</p>
                                     <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
@@ -154,7 +154,7 @@
                                     <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
                                 {% endif %}
                             {% else %}
-                                {% if account in session.waitlist_mentors.all %}
+                                {% if mentor_order.waitlisted %}
                                     <p>You are currently on the waitlist for this class. We will contact you ASAP if a spot becomes available.</p>
                                 {% else %}
                                     <p>There are currently no available mentor spots for this class.</p>
@@ -164,11 +164,10 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="waitlist" value="mentor">
                                     <input type="hidden" name="account_id" value="{{ account.id }}">
-                                    {% if account in session.waitlist_mentors.all %}
-                                        <input type="hidden" name="remove" value="true">
+                                    {% if mentor_order.waitlisted %}
+                                        <input type="hidden" name="order_id" value="{{ mentor_order.id }}">
                                         <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from waitlist</button>
                                     {% else %}
-                                        <input type="hidden" name="remove" value="false">
                                         <button class="btn-cdc btn-cdc-sm">Add me to waitlist</button>
                                     {% endif %}
                                 </form>
@@ -185,9 +184,9 @@
                         <span class="text-large">{{ spots_remaining }}</span> spots currently open
                         {% else %}
                             {% if user.role == 'guardian' %}
-                                <span class="text-large">{{ session.waitlist_students.count }}</span> currently on waitlist
+                                <span class="text-large">{{ session.get_student_waitlist_count }}</span> currently on waitlist
                             {% else %}
-                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> currently on waitlist
+                                <span class="text-large">{{ session.get_mentor_waitlist_count }}</span> currently on waitlist
                             {% endif %}
                         {% endif %}
                     </p>
