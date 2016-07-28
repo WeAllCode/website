@@ -6,6 +6,10 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.template.defaultfilters import pluralize
 from django.utils.safestring import mark_safe
+from import_export.admin import ImportMixin
+from import_export.formats.base_formats import CSV
+from import_export.resources import ModelResource
+from import_export.fields import Field
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
                                  Equipment, MeetingType, Meeting, Location, Donation,
@@ -14,7 +18,16 @@ from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Ord
 User = get_user_model()
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserImportResource(ModelResource):
+    guardian_email = Field(column_name='guardian_email')
+
+    class Meta:
+        model = get_user_model()
+        import_id_fields = ('email',)
+        fields = ('email', 'first_name', 'last_name', 'role')
+
+
+class UserAdmin(ImportMixin, admin.ModelAdmin):
     list_display = (
         'email',
         'first_name',
@@ -59,6 +72,10 @@ class UserAdmin(admin.ModelAdmin):
     )
 
     change_form_template = 'loginas/change_form.html'
+
+    # Import settings
+    formats = (CSV,)
+    resource_class = UserImportResource
 
 
 class MentorAdmin(admin.ModelAdmin):
