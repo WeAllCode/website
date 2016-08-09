@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'stdimage',
     'storages',
+    'import_export',
 
     # coderdojochi
     'coderdojochi',

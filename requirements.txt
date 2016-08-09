@@ -31,3 +31,4 @@ requests==2.9.1
 six==1.10.0
 sqlparse==0.1.19
 virtualenv==15.0.1
+django-import-export==0.4.5

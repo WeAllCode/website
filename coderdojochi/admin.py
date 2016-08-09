@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -6,6 +7,10 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.template.defaultfilters import pluralize
 from django.utils.safestring import mark_safe
+from import_export.admin import ImportMixin
+from import_export.formats.base_formats import CSV
+from import_export.resources import ModelResource
+from import_export.fields import Field
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
                                  Equipment, MeetingType, Meeting, Location, Donation,
@@ -109,7 +114,41 @@ class MentorAdmin(admin.ModelAdmin):
     get_last_name.admin_order_field = 'user__last_name'
 
 
-class GuardianAdmin(admin.ModelAdmin):
+class GuardianImportResource(ModelResource):
+    first_name = Field(attribute='first_name', column_name='first_name')
+    last_name = Field(attribute='last_name', column_name='last_name')
+    email = Field(attribute='email', column_name='email')
+    phone = Field(attribute='phone', column_name='phone')
+    zip = Field(attribute='zip', column_name='zip')
+
+    def get_or_init_instance(self, instance_loader, row):
+        return Guardian(user=User()), True
+
+    def import_obj(self, obj, data, dry_run):
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+        zip = data.get('zip')
+        phone = data.get('phone')
+        user = User(first_name=first_name, last_name=last_name, email=email,
+                    role='guardian', username=email)
+
+        obj.user = user
+        obj.active = False
+        obj.zip = zip
+        obj.phone = phone
+        if not dry_run:
+            user.save()
+            obj.user = user
+            obj.save()
+
+    class Meta:
+        model = Guardian
+        import_id_fields = ('phone',)
+        fields = ('phone', 'zip')
+
+
+class GuardianAdmin(ImportMixin, admin.ModelAdmin):
     list_display = (
         # 'user',
         'get_first_name',
@@ -139,6 +178,10 @@ class GuardianAdmin(admin.ModelAdmin):
 
     view_on_site = False
 
+    # Import settings
+    formats = (CSV,)
+    resource_class = GuardianImportResource
+
     def get_queryset(self, request):
         qs = super(GuardianAdmin, self).get_queryset(request)
         qs = qs.annotate(Count('student'))
@@ -160,9 +203,56 @@ class GuardianAdmin(admin.ModelAdmin):
     get_student_count.admin_order_field = 'student__count'
 
 
+class StudentImportResource(ModelResource):
+    first_name = Field(attribute='first_name', column_name='first_name')
+    last_name = Field(attribute='last_name', column_name='last_name')
+    guardian_email = Field(attribute='guardian_email', column_name='guardian_email')
+    birthday = Field(attribute='birthday', column_name='birthday')
+    gender = Field(attribute='gender', column_name='gender')
+    school_name = Field(attribute='school_name', column_name='school_name')
+    school_type = Field(attribute='school_type', column_name='school_type')
+    photo_release = Field(attribute='photo_release', column_name='photo_release')
+    consent = Field(attribute='consent', column_name='consent')
+
+    def get_or_init_instance(self, instance_loader, row):
+        return Student(), True
+
+    def import_obj(self, obj, data, dry_run):
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        guardian_email = data.get('guardian_email')
+        birthday = data.get('birthday','')
+        gender = data.get('gender','')
+        school_name = data.get('school_name','')
+        school_type = data.get('school_type','')
+        photo_release = data.get('photo_release', '').lower()
+        consent = data.get('consent','').lower()
+
+        try:
+            guardian = Guardian.objects.get(user__email=guardian_email)
+        except Guardian.DoesNotExist:
+            raise ImportError('guardian with email %s not found' % guardian_email)
+
+        obj.guardian = guardian
+        obj.first_name = first_name
+        obj.last_name = last_name
+        obj.birthday = datetime.strptime(birthday, '%m/%d/%Y')
+        obj.gender = gender
+        obj.school_name = school_name
+        obj.school_type = school_type
+        obj.photo_release = photo_release == '1' or photo_release == 'yes' or photo_release == \
+                                                                              'true'
+        obj.consent = consent == '1' or consent == 'yes' or consent == 'true'
+        obj.active = False
+        if not dry_run:
+            obj.save()
+
+    class Meta:
+        model = Student
+        fields = ()
 
 
-class StudentAdmin(admin.ModelAdmin):
+class StudentAdmin(ImportMixin, admin.ModelAdmin):
     list_display = (
         'first_name',
         'last_name',
@@ -195,6 +285,10 @@ class StudentAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
 
     view_on_site = False
+
+    # Import settings
+    formats = (CSV,)
+    resource_class = StudentImportResource
 
 
 class CourseAdmin(admin.ModelAdmin):
