@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import html5.forms.widgets as html5_widgets
 
 from django import forms
@@ -62,6 +63,9 @@ class CDCModelForm(ModelForm):
                     value = field.clean(value, initial)
                 else:
                     if isinstance(value, basestring):
+                        # regex normalizes carriage return and cuts them to two at most
+                        value = re.sub(r'\r\n', '\n', value)
+                        value = re.sub(r'\n{3,}', '\n\n', value)
                         value = field.clean(value.strip())
                     else:
                         value = field.clean(value)
