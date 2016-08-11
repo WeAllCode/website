@@ -16,6 +16,8 @@ from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Ord
                                  Equipment, MeetingType, Meeting, Location, Donation,
                                  RaceEthnicity, MentorOrder, MeetingOrder)
 
+from coderdojochi.util import str_to_bool
+
 User = get_user_model()
 
 
@@ -122,7 +124,15 @@ class GuardianImportResource(ModelResource):
     zip = Field(attribute='zip', column_name='zip')
 
     def get_or_init_instance(self, instance_loader, row):
-        return Guardian(user=User()), True
+        """
+        Either fetches an already existing instance or initializes a new one.
+        """
+        try:
+            instance = User.objects.get(email=row['email'])
+        except User.DoesNotExist as e:
+            return Guardian(user=User()), True
+        else:
+            return (Guardian.objects.get(user=instance), False)
 
     def import_obj(self, obj, data, dry_run):
         first_name = data.get('first_name')
@@ -130,8 +140,11 @@ class GuardianImportResource(ModelResource):
         email = data.get('email')
         zip = data.get('zip')
         phone = data.get('phone')
-        user = User(first_name=first_name, last_name=last_name, email=email,
-                    role='guardian', username=email)
+        if obj.pk:
+            user = obj.user
+        else:
+            user = User(first_name=first_name, last_name=last_name, email=email,
+                        role='guardian', username=email)
 
         obj.user = user
         obj.active = False
@@ -214,41 +227,30 @@ class StudentImportResource(ModelResource):
     photo_release = Field(attribute='photo_release', column_name='photo_release')
     consent = Field(attribute='consent', column_name='consent')
 
-    def get_or_init_instance(self, instance_loader, row):
-        return Student(), True
-
     def import_obj(self, obj, data, dry_run):
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
         guardian_email = data.get('guardian_email')
-        birthday = data.get('birthday','')
-        gender = data.get('gender','')
-        school_name = data.get('school_name','')
-        school_type = data.get('school_type','')
-        photo_release = data.get('photo_release', '').lower()
-        consent = data.get('consent','').lower()
+
+        obj.first_name = data.get('first_name')
+        obj.last_name = data.get('last_name')
+        obj.birthday = datetime.strptime(data.get('birthday', ''), '%m/%d/%Y')
+        obj.gender = data.get('gender', '')
+        obj.school_name = data.get('school_name', '')
+        obj.school_type = data.get('school_type', '')
+        obj.photo_release = str_to_bool(data.get('photo_release', ''))
+        obj.consent = str_to_bool(data.get('consent', ''))
+        obj.active = True
 
         try:
-            guardian = Guardian.objects.get(user__email=guardian_email)
+            obj.guardian = Guardian.objects.get(user__email=guardian_email)
         except Guardian.DoesNotExist:
             raise ImportError('guardian with email %s not found' % guardian_email)
 
-        obj.guardian = guardian
-        obj.first_name = first_name
-        obj.last_name = last_name
-        obj.birthday = datetime.strptime(birthday, '%m/%d/%Y')
-        obj.gender = gender
-        obj.school_name = school_name
-        obj.school_type = school_type
-        obj.photo_release = photo_release == '1' or photo_release == 'yes' or photo_release == \
-                                                                              'true'
-        obj.consent = consent == '1' or consent == 'yes' or consent == 'true'
-        obj.active = False
         if not dry_run:
             obj.save()
 
     class Meta:
         model = Student
+        import_id_fields = ('first_name', 'last_name')
         fields = ()
 
 
