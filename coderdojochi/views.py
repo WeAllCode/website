@@ -1304,16 +1304,6 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
     checked_in_orders = orders.filter(active=True, check_in__isnull=False)
 
-    if checked_in_orders:
-        attendance_percentage = round(
-            (
-                float(checked_in_orders.count()) /
-                float(active_orders.count())
-            ) * 100
-        )
-    else:
-        attendance_percentage = 0
-
     # Genders
     gender_count = sorted(
         dict(
@@ -1344,7 +1334,6 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         'age_count': age_count,
         'average_age': average_age,
         'checked_in_orders': checked_in_orders,
-        'attendance_percentage': attendance_percentage,
     })
 
 
@@ -1353,6 +1342,19 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
+
+    if request.method == 'POST':
+        if 'order_id' in request.POST:
+            order = get_object_or_404(MentorOrder, id=request.POST['order_id'])
+
+            if order.check_in:
+                order.check_in = None
+            else:
+                order.check_in = timezone.now()
+
+            order.save()
+        else:
+            messages.error(request, 'Invalid Order')
 
     session = get_object_or_404(Session, id=session_id)
 
@@ -1373,37 +1375,12 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 
     checked_in_orders = orders.filter(active=True, check_in__isnull=False)
 
-    if checked_in_orders:
-        attendance_percentage = round(
-            (
-                float(checked_in_orders.count()) /
-                float(active_orders.count())
-            ) * 100
-        )
-    else:
-        attendance_percentage = 0
-
-
-    if request.method == 'POST':
-        if 'order_id' in request.POST:
-            order = get_object_or_404(MentorOrder, id=request.POST['order_id'])
-
-            if order.check_in:
-                order.check_in = None
-            else:
-                order.check_in = timezone.now()
-
-            order.save()
-        else:
-            messages.error(request, 'Invalid Order')
-
     return render(request, template_name, {
         'session': session,
         'active_session': active_session,
         'active_orders': active_orders,
         'inactive_orders': inactive_orders,
         'no_show_orders': no_show_orders,
-        'attendance_percentage': attendance_percentage,
         'checked_in_orders': checked_in_orders,
     })
 

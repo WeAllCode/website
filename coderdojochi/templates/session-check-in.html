@@ -98,8 +98,8 @@
                 <h3>Attendance:</h3>
                 <h2>{{ checked_in_orders.count }} of {{ active_orders.count }}</h2>
                 <div class="progress">
-                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
-                        {{ attendance_percentage }}%
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{% widthratio checked_in_orders.count active_orders.count 100 %}" aria-valuemin="0" aria-valuemax="100" style="width: {% widthratio checked_in_orders.count active_orders.count 100 %}%">
+                        {% widthratio checked_in_orders.count active_orders.count 100 %}%
                     </div>
                 </div>
 
