@@ -1310,17 +1310,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
     no_show_orders = orders.filter(active=True, check_in__isnull=True)
 
-    checked_in_orders = orders.filter(check_in__isnull=False)
-
-    if checked_in_orders:
-        attendance_percentage = round(
-            (
-                float(checked_in_orders.count()) /
-                float(active_orders.count())
-            ) * 100
-        )
-    else:
-        attendance_percentage = 0
+    checked_in_orders = orders.filter(active=True, check_in__isnull=False)
 
     # Genders
     gender_count = sorted(
@@ -1351,8 +1341,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
         'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
-        'students_checked_in': checked_in_orders,
-        'attendance_percentage': attendance_percentage,
+        'checked_in_orders': checked_in_orders,
     })
 
 
@@ -1361,10 +1350,6 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
-
-    session_obj = get_object_or_404(Session, id=session_id)
-    current_mentor_orders_checked_in = session_obj.get_current_mentor_orders(checked_in=True)
-    mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1379,9 +1364,32 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
         else:
             messages.error(request, 'Invalid Order')
 
+    session = get_object_or_404(Session, id=session_id)
+
+    # Active Session
+    active_session = True if timezone.now() < session.end_date else False
+
+    # get the orders
+    orders = MentorOrder.objects.select_related().filter(session_id=session_id)
+
+    if active_session:
+        active_orders = orders.filter(active=True).order_by('mentor__user__first_name')
+    else:
+        active_orders = orders.filter(active=True, check_in__isnull=False).order_by('mentor__user__first_name')
+
+    inactive_orders = orders.filter(active=False).order_by('-updated_at');
+
+    no_show_orders = orders.filter(active=True, check_in__isnull=True)
+
+    checked_in_orders = orders.filter(active=True, check_in__isnull=False)
+
     return render(request, template_name, {
-        'session': session_obj,
-        'mentors_checked_in': mentors_checked_in
+        'session': session,
+        'active_session': active_session,
+        'active_orders': active_orders,
+        'inactive_orders': inactive_orders,
+        'no_show_orders': no_show_orders,
+        'checked_in_orders': checked_in_orders,
     })
 
 
