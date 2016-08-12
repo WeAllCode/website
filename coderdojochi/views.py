@@ -1098,6 +1098,11 @@ def donate_return(request):
     )
     return HttpResponseRedirect(reverse('donate'))
 
+def sponsorship(request, template_name="sponsorship.html"):
+
+    return render_to_response(template_name, {
+    }, context_instance=RequestContext(request))
+
 
 def about(request, template_name="about.html"):
     mentor_count = Mentor.objects.filter(active=True, public=True).count()
