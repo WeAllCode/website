@@ -20,8 +20,6 @@
 }, {
   "fields": {
     "bio": "Hi, my name is Admin!",
-    "first_name": "Admin",
-    "last_name": "Userman",
     "created_at": "2013-01-01T00:00:00.000",
     "updated_at": "2013-01-01T00:00:00.000",
     "user": 1,
