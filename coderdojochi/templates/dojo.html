@@ -7,7 +7,7 @@
 
 {% block content %}
 <br>
-{% if not account.first_name %}
+{% if not account.user.first_name %}
 <div class="container">
     <div class="alert alert-warning"><i class="fa fa-warning"></i> Please complete your profile information below. <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>
 </div>
@@ -199,8 +199,10 @@
 
                 {% endif %}
 
-                <h2>{{ user.first_name }} {{ user.last_name }}</h2>
                 <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
+
+                {% bootstrap_field user_form.first_name %}
+                {% bootstrap_field user_form.last_name %}
 
                 {% if user.role == 'mentor' %}
                 {% bootstrap_field form.bio %}
