@@ -21,6 +21,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.utils.html import strip_tags
+from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.util import local_to_utc
@@ -1216,6 +1217,7 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 
 
 @login_required
+@never_cache
 def session_stats(request, session_id, template_name="session-stats.html"):
 
     if not request.user.is_staff:
@@ -1267,6 +1269,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 
 
 @login_required
+@never_cache
 def session_check_in(request, session_id, template_name="session-check-in.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
@@ -1346,6 +1349,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 
 
 @login_required
+@never_cache
 def session_check_in_mentors(request, session_id, template_name="session-check-in-mentors.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
@@ -1394,6 +1398,7 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 
 
 @login_required
+@never_cache
 def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
@@ -1422,6 +1427,7 @@ def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html")
     })
 
 
+@never_cache
 def session_announce(request, session_id):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
