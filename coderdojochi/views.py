@@ -3,10 +3,10 @@
 import sys
 import arrow
 import calendar
+import operator
 from collections import Counter
 from datetime import date, timedelta
 from icalendar import Calendar, Event, vText
-import operator
 from paypal.standard.forms import PayPalPaymentsForm
 
 from django.conf import settings
