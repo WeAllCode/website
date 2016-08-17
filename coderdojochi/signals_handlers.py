@@ -27,25 +27,26 @@ def avatar_updated_handler(sender, instance, **kwargs):
     if not instance.avatar:
         return
 
-    instance.avatar_approved = False
+    if original_mentor.avatar != instance.avatar:
+        instance.avatar_approved = False
 
-    msg = EmailMultiAlternatives(
-        subject='Mentor Avatar Changed',
-        body=u'Mentor with email {} changed their avatar image.  Please approve ({}) or reject ({}).'.format(instance.user.email, instance.get_approve_avatar_url(), instance.get_reject_avatar_url()),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.CONTACT_EMAIL]
-    )
+        msg = EmailMultiAlternatives(
+            subject='Mentor Avatar Changed',
+            body=u'Mentor with email {} changed their avatar image.  Please approve ({}) or reject ({}).'.format(instance.user.email, instance.get_approve_avatar_url(), instance.get_reject_avatar_url()),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[settings.CONTACT_EMAIL]
+        )
 
-    msg.attach_alternative(
-        u'<h1>Is this avatar okay?</h1><img src="{}"><h2><a href="{}">Approve</a></h2><h2><a href="{}">Reject</a></h2>'.format(
-            instance.avatar.thumbnail.url,
-            instance.get_approve_avatar_url(),
-            instance.get_reject_avatar_url()
-        ),
-        'text/html'
-    )
+        msg.attach_alternative(
+            u'<h1>Is this avatar okay?</h1><img src="{}"><h2><a href="{}">Approve</a></h2><h2><a href="{}">Reject</a></h2>'.format(
+                instance.avatar.thumbnail.url,
+                instance.get_approve_avatar_url(),
+                instance.get_reject_avatar_url()
+            ),
+            'text/html'
+        )
 
-    msg.send()
+        msg.send()
 
 
 def donate_callback(sender, **kwargs):
