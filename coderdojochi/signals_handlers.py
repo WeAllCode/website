@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 
+import os
+import arrow
+
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.signals import post_save
+from django.core.mail import EmailMultiAlternatives
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from email.MIMEImage import MIMEImage
 
 from coderdojochi.models import Mentor, Donation
 
@@ -14,11 +19,10 @@ from coderdojochi.views import sendSystemEmail
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
 
-import arrow
 
-
-@receiver(post_save, sender=Mentor, dispatch_uid="update_avatar_approved_status")
+@receiver(pre_save, sender=Mentor)
 def avatar_updated_handler(sender, instance, **kwargs):
+
     try:
         original_mentor = Mentor.objects.get(id=instance.id)
     except ObjectDoesNotExist:
@@ -28,23 +32,36 @@ def avatar_updated_handler(sender, instance, **kwargs):
         return
 
     if original_mentor.avatar != instance.avatar:
+
         instance.avatar_approved = False
 
+        context = {
+            'first_name': instance.user.first_name,
+            'last_name':instance.user.last_name,
+            'image': 'avatar',
+            'approve_url': instance.get_approve_avatar_url(),
+            'reject_url': instance.get_reject_avatar_url(),
+        }
+
+        subject = u"{} {} | Mentor Avatar Changed".format(instance.user.first_name, instance.user.last_name)
+        html_content = render_to_string("mentor-avatar-changed.html", context)
+        text_content = render_to_string("mentor-avatar-changed.txt", context)
         msg = EmailMultiAlternatives(
-            subject='Mentor Avatar Changed',
-            body=u'Mentor with email {} changed their avatar image.  Please approve ({}) or reject ({}).'.format(instance.user.email, instance.get_approve_avatar_url(), instance.get_reject_avatar_url()),
+            subject=subject,
+            body=text_content,
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[settings.CONTACT_EMAIL]
         )
 
-        msg.attach_alternative(
-            u'<h1>Is this avatar okay?</h1><img src="{}"><h2><a href="{}">Approve</a></h2><h2><a href="{}">Reject</a></h2>'.format(
-                instance.avatar.thumbnail.url,
-                instance.get_approve_avatar_url(),
-                instance.get_reject_avatar_url()
-            ),
-            'text/html'
-        )
+        msg.attach_alternative(html_content, "text/html")
+
+        msg.mixed_subtype = 'related'
+
+        img = MIMEImage(instance.avatar.read())
+        img.add_header('Content-Id', 'avatar')
+        img.add_header("Content-Disposition", "inline", filename="avatar")
+
+        msg.attach(img)
 
         msg.send()
 
