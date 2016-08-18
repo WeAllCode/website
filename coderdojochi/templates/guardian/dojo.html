@@ -7,60 +7,44 @@
 
 {% block content %}
 <br>
-{% if not account.user.first_name %}
+{% if not guardian.user.first_name %}
 <div class="container">
     <div class="alert alert-warning"><i class="fa fa-warning"></i> Please complete your profile information below. <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>
 </div>
 {% endif %}
 <div class="container">
     <div class="dojo-content">
-        {% if user.role == 'guardian' %}
-            <h2>Students</h2>
-            {% if students %}
-                <table class="students table table-striped ">
-                    <thead>
-                        <tr class="text-muted">
-                            <th>Name</th>
-                            <th>Age</th>
-                            <th>Medical Conditions</th>
-                            <th>Medications</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for student in students %}
-                        <tr>
-                            <td>{{ student.first_name }} {{ student.last_name }}</td>
-                            <td>{{ student.get_age }}</td>
-                            <td>{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
-                            <td>{% if student.medications %}Yes{% else %}No{% endif %}</td>
-                            <td>
-                                <a href="{% url 'student_detail' student.id %}" class="btn-cdc btn-cdc-sm">Edit Info</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                <p><a href="{% url 'welcome' %}?next={% url 'dojo' %}">Add another student</a></p>
-            {% else %}
-            <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
-            {% endif %}
+        <h2>Students</h2>
+        {% if students %}
+            <table class="students table table-striped ">
+                <thead>
+                    <tr class="text-muted">
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Medical Conditions</th>
+                        <th>Medications</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        <td>{{ student.get_age }}</td>
+                        <td>{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
+                        <td>{% if student.medications %}Yes{% else %}No{% endif %}</td>
+                        <td>
+                            <a href="{% url 'student_detail' student.id %}" class="btn-cdc btn-cdc-sm">Edit Info</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <p><a href="{% url 'welcome' %}?next={% url 'dojo' %}">Add another student</a></p>
+        {% else %}
+        <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
         {% endif %}
 
-        {% if user.role == 'mentor' %}
-            <div class="alert alert-info alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-                <h4>Account Progress</h4>
-                <ol>
-                    <li>Enter full name. {% if mentor.first_name and mentor.last_name %}<span class="label label-success">Completed</span>{% endif %}</li>
-                    <li>Fill out bio. {% if mentor.bio|length > 0 %}<span class="label label-success">Completed</span>{% endif %}</li>
-                    <li>Upload profile picture. {% if mentor.avatar_approved %}<span class="label label-success">Completed</span>{% endif %}</li>
-                    <li>Complete background check. {% if mentor.background_check %}<span class="label label-success">Completed</span>{% endif %}</li>
-                    <li>Attend a class.</li>
-                </ol>
-            </div>
-        {% endif %}
 
         <h2>Your Classes</h2>
         <ul class="nav nav-tabs">
@@ -70,40 +54,26 @@
 
         <div class="tab-content">
             <div class="tab-pane active" id="upcoming">
-                {% if upcoming_sessions or upcoming_orders %}
+                {% if  upcoming_orders %}
                 <br>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Class</th>
                             <th>Date</th>
-                            {% if user.role == 'guardian' %}
                             <th>Student</th>
-                            {% endif %}
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% if user.role == 'guardian' %}
-                        {% for order in upcoming_orders %}
-                            <tr>
-                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
-                                <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
-                                <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
-                                <td>{% student_register_link order.student order.session %}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        {% for session in upcoming_sessions %}
-                            <tr>
-                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}({{ session.course.code }}) {% endif %}{{ session.course.title }}</a></td>
-                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.mentor_start_date|time }}</span></td>
-                                <td>
-                                    <a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
+                    {% for order in upcoming_orders %}
+                        <tr>
+                            <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
+                            <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
+                            <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
+                            <td>{% student_register_link order.student order.session %}</td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
                 {% else %}
@@ -112,34 +82,23 @@
                 {% endif %}
             </div>
             <div class="tab-pane" id="past">
-                {% if past_sessions or past_orders %}
+                {% if past_orders %}
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Class</th>
                             <th>Date</th>
-                            {% if user.role == 'guardian' %}
                             <th>Student</th>
-                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
-                    {% if user.role == 'guardian' %}
-                        {% for order in past_orders %}
-                            <tr>
-                                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
-                                <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
-                                <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        {% for session in past_sessions %}
-                            <tr>
-                                <td><a href="{{ session.get_absolute_url }}">{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}</a></td>
-                                <td>{{ session.start_date|date }} <span class="text-muted">@ {{ session.mentor_start_date|time }}</span></td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
+                    {% for order in past_orders %}
+                        <tr>
+                            <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
+                            <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
+                            <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
                 {% else %}
@@ -148,72 +107,23 @@
                 {% endif %}
             </div>
         </div>
-
-        {% if user.role == 'mentor' %}
-            <hr>
-            <div class="upcoming-meetings{% if highlight == 'meetings' %} alert alert-warning{% endif %}">
-                <h2>Upcoming Mentor Meetings</h2>
-                {% if upcoming_meetings %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Meeting</th>
-                            <th>Date</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for meeting in upcoming_meetings %}
-                        <tr>
-                            <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
-                            <td>{{ meeting.start_date|date }} <span class="text-muted">@ {{ meeting.start_date|time }}</span></td>
-                            <td>
-                                <a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-{% if account in meeting.get_current_mentors %}danger{% else %}success{% endif %} btn-cdc-sm">{% if account in meeting.get_current_mentors %}Can't make it{% else %}RSVP{% endif%}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="text-muted">No upcoming mentor meetings at this time. Please check back soon.</p>
-                {% endif %}
-            </div>
-        {% endif %}
     </div>
+
     <div class="dojo-profile">
         <div class="well well-sm">
             <form id="profile_form" enctype="multipart/form-data" action="" method="post">
                 {% csrf_token %}
 
-                {% if user.role == 'mentor' %}
-                    <div class="avatar">
-                        <img src="{% if account.avatar.thumbnail %}{{ account.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=283&d=mm{% endif %}" class="avatar" height="" width="283" height="283">
-                        <span class="change-overlay" data-trigger="hover" data-placement="top" data-html="true" data-toggle="popover" title="Avatar Requirements" data-content="Min size: <strong>250 x 250px</strong><br>Max size: <strong>1000 x 1000px</strong><br>Max file size: <strong>2 MB</strong><br>Formats: <strong>.jpeg, .png, .gif</strong>">Change</a>
-                        <input id="id_avatar" name="avatar" title="" type="file" onchange="document.getElementById('profile_form').submit();">
-                    </div>
-                    {% if account.avatar and not account.avatar_approved %}
-                        <div class="alert alert-warning text-center">Avatar Pending Approval</div>
-                    {% endif %}
-
-                {{ form.avatar.errors }}
-
-                {% endif %}
-
-                <h3>Joined: {{ account.user.date_joined|naturalday|capfirst }}</h3>
+                <h3>Joined: {{ guardian.user.date_joined|naturalday|capfirst }}</h3>
 
                 {% bootstrap_field user_form.first_name %}
                 {% bootstrap_field user_form.last_name %}
-
-                {% if user.role == 'mentor' %}
-                {% bootstrap_field form.bio %}
-                {% endif %}
-
-                {% if user.role == 'guardian' %}
                 {% bootstrap_field form.phone %}
                 {% bootstrap_field form.zip %}
-                {% endif %}
 
+                {% buttons %}
                 <button class="submit btn-cdc btn-cdc-inverse">Save</button>
+                {% endbuttons %}
             </form>
         </div>
     </div>
