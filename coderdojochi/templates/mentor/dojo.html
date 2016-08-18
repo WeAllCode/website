@@ -15,11 +15,11 @@
 
         <ul>
             {% if not mentor.user.first_name or not mentor.user.last_name %}
-            <li>Enter full name.</li>
+            <li><a href="#id_first_name">Enter full name</a>.</li>
             {% endif %}
 
             {% if not mentor.bio %}
-            <li>Fill out bio.</li>
+            <li><a href="#id_bio">Write a little about yourself.</a></li>
             {% endif %}
 
             {% if not mentor.avatar %}
