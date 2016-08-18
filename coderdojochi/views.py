@@ -836,8 +836,8 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
     }
 
     mentor = get_object_or_404(Mentor, user=request.user)
-    orders = MentorOrder.objects.select_related().filter(mentor=mentor)
 
+    orders = MentorOrder.objects.select_related().filter(active=True, mentor=mentor)
     upcoming_sessions = orders.filter(
         active=True,
         session__end_date__gte=timezone.now()
@@ -862,13 +862,9 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
 
     context['account_complete'] =  False
 
-    if (
-            mentor.user.first_name
-            and mentor.user.last_name
-            and mentor.avatar
-            and mentor.background_check
-            and past_sessions.count() > 0
-        ):
+    if (mentor.user.first_name and mentor.user.last_name and
+        mentor.avatar and mentor.background_check and
+        past_sessions.count() > 0):
         context['account_complete'] =  True
 
 
