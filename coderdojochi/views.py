@@ -905,7 +905,6 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
     }
 
     guardian = get_object_or_404(Guardian, user=request.user)
-    account = guardian
     students = Student.objects.filter(guardian=guardian)
     student_orders = Order.objects.filter(student__in=students)
     upcoming_orders = student_orders.filter(
@@ -918,8 +917,8 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
     ).order_by('session__start_date')
 
     if request.method == 'POST':
-        form = GuardianForm(request.POST, instance=account)
-        user_form = CDCModelForm(request.POST, instance=account.user)
+        form = GuardianForm(request.POST, instance=guardian)
+        user_form = CDCModelForm(request.POST, instance=guardian.user)
         if form.is_valid() and user_form.is_valid():
             form.save()
             user_form.save()
@@ -928,13 +927,13 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
         else:
             messages.error(request, 'There was an error. Please try again.')
     else:
-        form = GuardianForm(instance=account)
-        user_form = CDCModelForm(instance=account.user)
+        form = GuardianForm(instance=guardian)
+        user_form = CDCModelForm(instance=guardian.user)
 
     context['students'] = students
     context['upcoming_orders'] = upcoming_orders
     context['past_orders'] = past_orders
-    context['account'] = account
+    context['guardian'] = guardian
     context['form'] = form
     context['user_form'] = user_form
 
