@@ -5,7 +5,7 @@ MAINTAINER CoderDojoChi
 RUN apt-get update \
   && apt-get install -y curl memcached python-memcache
 
-RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
 ENV DIR_BUILD /build
