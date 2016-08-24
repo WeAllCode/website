@@ -86,6 +86,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(PROJECT_ROOT, 'coderdojochi/templates/'),
+            os.path.join(PROJECT_ROOT, 'coderdojochi/emailtemplates/'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
