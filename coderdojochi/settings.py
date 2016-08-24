@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 
     # coderdojochi
     'coderdojochi',
+    'django_nose',
 ]
 
 MIDDLEWARE_CLASSES = [
