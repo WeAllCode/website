@@ -386,6 +386,17 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         guardian = get_object_or_404(Guardian, user=request.user)
         user_signed_up = True if student.is_registered_for_session(session_obj) else False
 
+        # is there a gender limitation?
+        if session_obj.gender_limitation and student.get_clean_gender() not in [
+            session_obj.gender_limitation,
+            'other'
+        ]:
+            messages.error(
+                request,
+                'Sorry, this class is limited to {}s this time around.'.format(session_obj.gender_limitation)
+            )
+            return HttpResponseRedirect(session_obj.get_absolute_url())
+
         if not user_signed_up:
             if session_obj.capacity <= session_obj.get_current_students().count():
                 messages.error(
