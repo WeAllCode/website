@@ -209,6 +209,12 @@ class Location(models.Model):
         return self.name
 
 
+GENDER_LIMITATION_CHOICES = (
+    ('male', 'Male'),
+    ('female', 'Female'),
+)
+
+
 class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField()
@@ -245,6 +251,12 @@ class Session(models.Model):
     bg_image = models.ImageField(blank=True, null=True)
     mentors_week_reminder_sent = models.BooleanField(default=False)
     mentors_day_reminder_sent = models.BooleanField(default=False)
+    gender_limitation = models.CharField(
+        max_length=255,
+        choices=GENDER_LIMITATION_CHOICES,
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = _("session")
