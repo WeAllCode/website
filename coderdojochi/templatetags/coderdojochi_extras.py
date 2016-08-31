@@ -49,10 +49,10 @@ def student_register_link(context, student, session):
         button_tag = 'span'
         button_href = ''' data-trigger="hover" data-placement="top" data-toggle="popover"
                       title="" data-content="Sorry, this class is limited to {}s this time
-                      around." data-original-title="No {} allowed!"
+                      around." data-original-title="{}-only event."
                       '''.format(
                           session.gender_limitation,
-                          'boys' if session.gender_limitation == 'female' else 'girls'
+                          'Girls' if session.gender_limitation == 'female' else 'Boys'
                       )
 
     form = '<{0} {1} class="btn-cdc btn-cdc-sm {2}" {3}>{4}</{0}>'.format(
