@@ -37,7 +37,7 @@ def create_waitlist_orders_from_old_waitlists(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('coderdojochi', '0005_auto_20160726_2010'),
+        ('coderdojochi', '0006_waitlist_updates'),
     ]
 
     operations = [

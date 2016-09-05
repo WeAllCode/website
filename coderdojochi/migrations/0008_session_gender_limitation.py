@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('coderdojochi', '0005_auto_20160817_2313'),
+        ('coderdojochi', '0007_waitlist_cleanup'),
     ]
 
     operations = [

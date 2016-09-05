@@ -226,18 +226,6 @@ class Session(models.Model):
     mentor_capacity = models.IntegerField(blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
     teacher = models.ForeignKey(Mentor, related_name="session_teacher")
-    # TODO: REMOVE THESE
-    waitlist_mentors = models.ManyToManyField(
-        Mentor,
-        blank=True,
-        related_name="session_waitlist_mentors"
-    )
-    waitlist_students = models.ManyToManyField(
-        Student,
-        blank=True,
-        related_name="session_waitlist_students"
-    )
-    # END TODO
     external_enrollment_url = models.CharField(
         max_length=255,
         blank=True,
