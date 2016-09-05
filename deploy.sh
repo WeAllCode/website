@@ -13,4 +13,4 @@ if [[ "$DEBUG" = "True" ]]; then
     python manage.py loaddata fixtures/*.json
 fi
 
-gunicorn --config $DIR_BUILD/gunicorn.conf.py coderdojochi.wsgi --reload
+gunicorn --config $DIR_BUILD/gunicorn.conf.py --log-config $DIR_BUILD/logging.conf coderdojochi.wsgi --reload

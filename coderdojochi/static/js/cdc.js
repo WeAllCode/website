@@ -50,9 +50,11 @@ CDC.global = (function($, document, window, undefined) {
         // display any global messages
 
         setTimeout(function() {
-            $('.global-messages:first').animate({
-                top: 0
-            }, 250);
+            $('.global-messages:first')
+                .animate({
+                    top: 0
+                }, 250)
+                .css('zIndex', 1033);
         }, 500);
 
         // Scroll listener

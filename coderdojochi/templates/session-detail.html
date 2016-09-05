@@ -34,7 +34,8 @@
             <h2 class="title light space-above">Class Information</h2>
 
             <h3>Who</h3>
-            <p>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
+            {% if session.gender_limitation %}<p><strong>This class is limited to {{ session.gender_limitation }}s only.</strong></p>{% endif %}
+            <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s{% else %}Anyone{% endif %} between 7 and 17 of age. No computer skills required.</p>
 
             <h3>When</h3>
             <p>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
@@ -179,17 +180,6 @@
                         {% endif %}
                         <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="btn-cdc btn-cdc-lg btn-block">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
                     {% endif %}
-                    <p>
-                        {% if spots_remaining > 0 %}
-                        <span class="text-large">{{ spots_remaining }}</span> spots currently open
-                        {% else %}
-                            {% if user.role == 'guardian' %}
-                                <span class="text-large">{{ session.get_student_waitlist_count }}</span> currently on waitlist
-                            {% else %}
-                                <span class="text-large">{{ session.get_mentor_waitlist_count }}</span> currently on waitlist
-                            {% endif %}
-                        {% endif %}
-                    </p>
                 {% endif %}
             </div>
             <div class="sidebar-right-section center-block">

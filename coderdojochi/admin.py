@@ -337,8 +337,8 @@ class MentorOrderAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
-        'mentor',
-        'session',
+        # 'mentor',
+        # 'session',
         'ip',
         # 'check_in',
     )

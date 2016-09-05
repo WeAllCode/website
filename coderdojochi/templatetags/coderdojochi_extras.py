@@ -30,17 +30,13 @@ def mentor_session_order(mentor, session):
 
 @register.simple_tag(takes_context=True)
 def student_register_link(context, student, session):
-
     orders = Order.objects.filter(student=student, session=session, active=True)
 
-    if orders.count():
-        button_modifier = 'btn-cdc-danger'
-        button_msg = 'Can\'t make it'
-    else:
-        button_modifier = ''
-        button_msg = 'Enroll'
-
-    form = '<a href="{}" class="btn-cdc btn-cdc-sm {}">{}</a>'.format(
+    button_tag = 'a'
+    button_modifier = ''
+    button_additional_attributes = ''
+    button_msg = 'Enroll'
+    button_href = 'href={}'.format(
         reverse(
             'session_sign_up',
             args=(
@@ -51,10 +47,34 @@ def student_register_link(context, student, session):
                 session.id,
                 student.id
             )
-        ),
-        button_modifier,
-        button_msg
         )
+    )
+
+    if orders.count():
+        button_modifier = 'btn-cdc-danger'
+        button_msg = 'Can\'t make it'
+    elif session.gender_limitation and student.get_clean_gender() not in  [
+        session.gender_limitation,
+        'other'
+    ]:
+        button_modifier = 'btn-default'
+        button_additional_attributes = 'disabled'
+        button_tag = 'span'
+        button_href = ''' data-trigger="hover" data-placement="top" data-toggle="popover"
+                      title="" data-content="Sorry, this class is limited to {}s this time
+                      around." data-original-title="{}-only event."
+                      '''.format(
+                          session.gender_limitation,
+                          'Girls' if session.gender_limitation == 'female' else 'Boys'
+                      )
+
+    form = '<{0} {1} class="btn-cdc btn-cdc-sm {2}" {3}>{4}</{0}>'.format(
+        button_tag,
+        button_href,
+        button_modifier,
+        button_additional_attributes,
+        button_msg
+    )
 
     return Template(form).render(context)
 
