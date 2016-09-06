@@ -476,11 +476,73 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
             if next_waitlist_order:
                 if request.user.role == 'mentor':
-                    pass
                     # TODO: Send offer email to next_waitlist_order.mentor
+                    # nwmo = next_waitlist_order
+                    # sendSystemEmail(
+                    #     False,
+                    #     'You are next on the waitlist! Enroll now!',
+                    #     'coderdojochi-waitlist-offer-mentor',
+                    #     {
+                    #         'first_name': nwmo.mentor.user.first_name,
+                    #         'last_name': nwmo.mentor.user.last_name,
+                    #         'class_code': nwmo.session.course.code,
+                    #         'class_title': nwmo.session.course.title,
+                    #         'class_description': nwmo.session.course.description,
+                    #         'class_start_date': arrow.get(
+                    #             nwmo.session.mentor_start_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_start_time': arrow.get(nwmo.session.mentor_start_date).format('h:mma'),
+                    #         'class_end_date': arrow.get(
+                    #             nwmo.session.mentor_end_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_end_time': arrow.get(nwmo.session.mentor_end_date).format('h:mma'),
+                    #         'class_location_name': nwmo.session.location.name,
+                    #         'class_location_address': nwmo.session.location.address,
+                    #         'class_location_address2': nwmo.session.location.address2,
+                    #         'class_location_city': nwmo.session.location.city,
+                    #         'class_location_state': nwmo.session.location.state,
+                    #         'class_location_zip': nwmo.session.location.zip,
+                    #         'class_additional_info': nwmo.session.additional_info,
+                    #         'class_url': nwmo.session.get_absolute_url(),
+                    #         'class_ics_url': nwmo.session.get_ics_url()
+                    #     },
+                    #     nwmo.mentor.user.email
+                    # )
                 else:
-                    pass
                     # TODO: Send offer email to next_waitlist_order.guardian
+                    # nwo = next_waitlist_order
+                    # sendSystemEmail(
+                    #     False,
+                    #     'You are next on the waitlist! Enroll now!',
+                    #     'coderdojochi-waitlist-offer-guardian',
+                    #     {
+                    #         'first_name': nwo.guardian.user.first_name,
+                    #         'last_name': nwo.guardian.user.last_name,
+                    #         'student_first_name': nwo.student.first_name,
+                    #         'student_last_name': nwo.student.last_name,
+                    #         'class_code': nwo.session.course.code,
+                    #         'class_title': nwo.session.course.title,
+                    #         'class_description': nwo.session.course.description,
+                    #         'class_start_date': arrow.get(
+                    #             nwo.session.start_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_start_time': arrow.get(nwo.session.start_date).format('h:mma'),
+                    #         'class_end_date': arrow.get(
+                    #             nwo.session.end_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_end_time': arrow.get(nwo.session.end_date).format('h:mma'),
+                    #         'class_location_name': nwo.session.location.name,
+                    #         'class_location_address': nwo.session.location.address,
+                    #         'class_location_address2': nwo.session.location.address2,
+                    #         'class_location_city': nwo.session.location.city,
+                    #         'class_location_state': nwo.session.location.state,
+                    #         'class_location_zip': nwo.session.location.zip,
+                    #         'class_additional_info': nwo.session.additional_info,
+                    #         'class_url': nwo.session.get_absolute_url(),
+                    #         'class_ics_url': nwo.session.get_ics_url()
+                    #     },
+                    #     nwo.guardian.user.email
+                    # )
 
                 next_waitlist_order.waitlist_offer_sent_at = timezone.now()
                 next_waitlist_order.save()
