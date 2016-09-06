@@ -461,21 +461,29 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
             messages.success(request, 'Thanks for letting us know!')
 
-            # Notify next on waitlist
-            waitlist_order = False
-
             if request.user.role == 'mentor':
-                waitlist_orders = MentorOrder.objects.filter(active=True, waitlisted=True).order_by('waitlisted_at')
+                next_waitlist_order = MentorOrder.objects.filter(
+                    active=True,
+                    waitlisted=True,
+                    session=session_obj
+                ).order_by('waitlisted_at').first()
             else:
-                waitlist_orders = Order.objects.filter(active=True, waitlisted=True).order_by('waitlisted_at')
+                next_waitlist_order = Order.objects.filter(
+                    active=True,
+                    waitlisted=True,
+                    session=session_obj
+                ).order_by('waitlisted_at').first()
 
-            if waitlist_orders.count():
-                waitlist_order = waitlist_orders.first()
+            if next_waitlist_order:
+                if request.user.role == 'mentor':
+                    pass
+                    # TODO: Send offer email to next_waitlist_order.mentor
+                else:
+                    pass
+                    # TODO: Send offer email to next_waitlist_order.guardian
 
-            if waitlist_order:
-                waitlist_order.waitlist_offer_sent_at = timezone.now()
-                # TODO: Send email to latest on waitlist offering opportunity to sign up for session with link to session detail page
-
+                next_waitlist_order.waitlist_offer_sent_at = timezone.now()
+                next_waitlist_order.save()
         else:
             if not settings.DEBUG:
                 ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
@@ -524,10 +532,18 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                         'class_code': session_obj.course.code,
                         'class_title': session_obj.course.title,
                         'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
-                        'class_end_date': arrow.get(session_obj.mentor_end_date).format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(session_obj.mentor_end_date).format('h:mma'),
+                        'class_start_date': arrow.get(session_obj.mentor_start_date).format(
+                            'dddd, MMMM D, YYYY'
+                        ),
+                        'class_start_time': arrow.get(session_obj.mentor_start_date).format(
+                            'h:mma'
+                        ),
+                        'class_end_date': arrow.get(session_obj.mentor_end_date).format(
+                            'dddd, MMMM D, YYYY'
+                        ),
+                        'class_end_time': arrow.get(session_obj.mentor_end_date).format(
+                            'h:mma'
+                        ),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
                         'class_location_address2': session_obj.location.address2,
@@ -553,10 +569,18 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                         'class_code': session_obj.course.code,
                         'class_title': session_obj.course.title,
                         'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
-                        'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
+                        'class_start_date': arrow.get(session_obj.start_date).format(
+                            'dddd, MMMM D, YYYY'
+                        ),
+                        'class_start_time': arrow.get(session_obj.start_date).format(
+                            'h:mma'
+                        ),
+                        'class_end_date': arrow.get(session_obj.end_date).format(
+                            'dddd, MMMM D, YYYY'
+                        ),
+                        'class_end_time': arrow.get(session_obj.end_date).format(
+                            'h:mma'
+                        ),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
                         'class_location_address2': session_obj.location.address2,
@@ -608,18 +632,17 @@ def session_ics(request, year, month, day, slug, session_id):
 
         mentor_end_date = local_to_utc(session_obj.mentor_end_date).format('YYYYMMDDTHHmmss')
 
-
         event['dtstart'] = '{}Z'.format(mentor_start_date)
         event['dtend'] = '{}Z'.format(mentor_end_date)
         event['dtstamp'] = mentor_start_date
 
     location = u'{}, {}, {}, {}, {} {}'.format(session_obj.location.name,
-                                               session_obj.location.address,
-                                               session_obj.location.address2,
-                                               session_obj.location.city,
-                                               session_obj.location.state,
-                                               session_obj.location.zip
-                                              )
+        session_obj.location.address,
+        session_obj.location.address2,
+        session_obj.location.city,
+        session_obj.location.state,
+        session_obj.location.zip
+    )
 
     event['location'] = vText(location)
 
@@ -645,7 +668,8 @@ def session_ics(request, year, month, day, slug, session_id):
     return response
 
 
-def meeting_detail(request, year, month, day, slug, meeting_id, template_name="meeting-detail.html"):
+def meeting_detail(request, year, month, day, slug, meeting_id,
+                   template_name="meeting-detail.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
     mentor_signed_up = False
     active_meeting_orders = None
@@ -665,7 +689,8 @@ def meeting_detail(request, year, month, day, slug, meeting_id, template_name="m
 
 
 @login_required
-def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=False, template_name="meeting-sign-up.html"):
+def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=False,
+                    template_name="meeting-sign-up.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
     mentor = get_object_or_404(Mentor, user=request.user)
     meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, active=True)
@@ -706,10 +731,18 @@ def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=Fals
                     'last_name': request.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
                     'meeting_description': meeting_obj.meeting_type.description,
-                    'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
-                    'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
-                    'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
-                    'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
+                    'meeting_start_date': arrow.get(meeting_obj.start_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'meeting_start_time': arrow.get(meeting_obj.start_date).format(
+                        'h:mma'
+                    ),
+                    'meeting_end_date': arrow.get(meeting_obj.end_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'meeting_end_time': arrow.get(meeting_obj.end_date).format(
+                        'h:mma'
+                    ),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
                     'meeting_location_address2': meeting_obj.location.address2,
@@ -764,10 +797,18 @@ def meeting_announce(request, meeting_id):
                     'last_name': mentor.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
                     'meeting_description': meeting_obj.meeting_type.description,
-                    'meeting_start_date': arrow.get(meeting_obj.start_date).format('dddd, MMMM D, YYYY'),
-                    'meeting_start_time': arrow.get(meeting_obj.start_date).format('h:mma'),
-                    'meeting_end_date': arrow.get(meeting_obj.end_date).format('dddd, MMMM D, YYYY'),
-                    'meeting_end_time': arrow.get(meeting_obj.end_date).format('h:mma'),
+                    'meeting_start_date': arrow.get(meeting_obj.start_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'meeting_start_time': arrow.get(meeting_obj.start_date).format(
+                        'h:mma'
+                    ),
+                    'meeting_end_date': arrow.get(meeting_obj.end_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'meeting_end_time': arrow.get(meeting_obj.end_date).format(
+                        'h:mma'
+                    ),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
                     'meeting_location_address2': meeting_obj.location.address2,
@@ -809,7 +850,9 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 
     event['uid'] = u'MEETING{:04}@coderdojochi.org'.format(meeting_obj.id)
 
-    event_name = u'{} - '.format(meeting_obj.meeting_type.code) if meeting_obj.meeting_type.code else ''
+    event_name = u'{} - '.format(
+        meeting_obj.meeting_type.code
+    ) if meeting_obj.meeting_type.code else ''
 
     event_name += meeting_obj.meeting_type.title
 
@@ -819,12 +862,12 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     event['dtstamp'] = start_date
 
     location = u'{}, {}, {}, {}, {} {}'.format(meeting_obj.location.name,
-                                              meeting_obj.location.address,
-                                              meeting_obj.location.address2,
-                                              meeting_obj.location.city,
-                                              meeting_obj.location.state,
-                                              meeting_obj.location.zip
-                                              )
+        meeting_obj.location.address,
+        meeting_obj.location.address2,
+        meeting_obj.location.city,
+        meeting_obj.location.state,
+        meeting_obj.location.zip
+    )
 
     event['location'] = vText(location)
     event['url'] = meeting_obj.get_absolute_url()
@@ -877,7 +920,9 @@ def faqs(request, template_name="faqs.html"):
 def dojo(request):
     if not request.user.role:
         if 'next' in request.GET:
-            return HttpResponseRedirect(u'{}?next={}'.format(reverse('welcome'), request.GET['next']))
+            return HttpResponseRedirect(u'{}?next={}'.format(
+                reverse('welcome'), request.GET['next'])
+            )
         else:
             messages.warning(
                 request,
@@ -1149,7 +1194,8 @@ def donate(request, template_name="donate.html"):
     if request.method == 'POST':
 
         # if new donation form submit
-        if ('first_name' in request.POST and 'last_name' in request.POST and 'email' in request.POST and 'amount' in request.POST):
+        if ('first_name' in request.POST and 'last_name' in request.POST and
+           'email' in request.POST and 'amount' in request.POST):
             donation = Donation(
                 first_name=request.POST['first_name'],
                 last_name=request.POST['last_name'],
@@ -1176,7 +1222,7 @@ def donate(request, template_name="donate.html"):
         'first_name': '',
         'last_name': '',
         'notify_url': u'{}{}'.format(settings.SITE_URL, reverse('paypal-ipn')),
-        'return_url':  u'{}/donate/return'.format(settings.SITE_URL),
+        'return_url': u'{}/donate/return'.format(settings.SITE_URL),
         'cancel_return': u'{}/donate/cancel'.format(settings.SITE_URL),
         'bn': 'PP-DonationsBF:btn_donateCC_LG.gif:NonHosted'
     }
@@ -1423,7 +1469,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     else:
         active_orders = orders.filter(active=True, check_in__isnull=False).order_by('student__first_name')
 
-    inactive_orders = orders.filter(active=False).order_by('-updated_at');
+    inactive_orders = orders.filter(active=False).order_by('-updated_at')
 
     no_show_orders = orders.filter(active=True, check_in__isnull=True)
 
@@ -1495,7 +1541,7 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
     else:
         active_orders = orders.filter(active=True, check_in__isnull=False).order_by('mentor__user__first_name')
 
-    inactive_orders = orders.filter(active=False).order_by('-updated_at');
+    inactive_orders = orders.filter(active=False).order_by('-updated_at')
 
     no_show_orders = orders.filter(active=True, check_in__isnull=True)
 
@@ -1560,7 +1606,6 @@ def session_announce(request, session_id):
 
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
-
             sendSystemEmail(
                 request,
                 'Upcoming class',
@@ -1571,10 +1616,18 @@ def session_announce(request, session_id):
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(session_obj.mentor_start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session_obj.mentor_start_date).format('h:mma'),
-                    'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
+                    'class_start_date': arrow.get(session_obj.mentor_start_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'class_start_time': arrow.get(session_obj.mentor_start_date).format(
+                        'h:mma'
+                    ),
+                    'class_end_date': arrow.get(session_obj.end_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'class_end_time': arrow.get(session_obj.end_date).format(
+                        'h:mma'
+                    ),
                     'class_location_name': session_obj.location.name,
                     'class_location_address': session_obj.location.address,
                     'class_location_address2': session_obj.location.address2,
@@ -1588,7 +1641,6 @@ def session_announce(request, session_id):
                 mentor.user.email
             )
 
-
         for guardian in Guardian.objects.filter(active=True):
             sendSystemEmail(
                 request,
@@ -1600,10 +1652,18 @@ def session_announce(request, session_id):
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(session_obj.start_date).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session_obj.start_date).format('h:mma'),
-                    'class_end_date': arrow.get(session_obj.end_date).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session_obj.end_date).format('h:mma'),
+                    'class_start_date': arrow.get(session_obj.start_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'class_start_time': arrow.get(session_obj.start_date).format(
+                        'h:mma'
+                    ),
+                    'class_end_date': arrow.get(session_obj.end_date).format(
+                        'dddd, MMMM D, YYYY'
+                    ),
+                    'class_end_time': arrow.get(session_obj.end_date).format(
+                        'h:mma'
+                    ),
                     'class_location_name': session_obj.location.name,
                     'class_location_address': session_obj.location.address,
                     'class_location_address2': session_obj.location.address2,
@@ -1680,17 +1740,17 @@ def dashboard(request, template_name="admin-dashboard.html"):
 # the "service" that computers run to self update
 def check_system(request):
     # set up variables
-    runUpdate = True;
+    runUpdate = True
     responseString = ""
     cmdString = 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/update.sh)"'
     halfday = timedelta(hours=12)
     #halfday = timedelta(seconds=15)
 
     if Session.objects.filter(active=True, start_date__lte=timezone.now(), mentor_end_date__gte=timezone.now()).count():
-        runUpdate = False;
+        runUpdate = False
 
     # uuid is posted from the computer using a bash script (see https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/etc/init.d/coderdojochi-phonehome
-    uuid = request.POST.get('uuid');
+    uuid = request.POST.get('uuid')
 
     if uuid:
         equipmentType = EquipmentType.objects.get(name="Laptop")
