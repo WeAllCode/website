@@ -49,21 +49,6 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
-.mobile-hidden {
-    display: none;
-}
-
-@include breakpoint($phone-and-up) {
-    .mobile-hidden {
-        display: block;
-    }
-
-    th.mobile-hidden,
-    td.mobile-hidden {
-        display: table-cell;
-    }
-}
-
 .shim {
     position: fixed;
     left: 0;

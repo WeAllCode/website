@@ -20,9 +20,9 @@
                 <thead>
                     <tr class="text-muted">
                         <th>Name</th>
-                        <th class="mobile-hidden">Age</th>
-                        <th class="mobile-hidden">Medical Conditions</th>
-                        <th class="mobile-hidden">Medications</th>
+                        <th class="hidden-xs">Age</th>
+                        <th class="hidden-xs">Medical Conditions</th>
+                        <th class="hidden-xs">Medications</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -30,9 +30,9 @@
                 {% for student in students %}
                     <tr>
                         <td>{{ student.first_name }} {{ student.last_name }}</td>
-                        <td class="mobile-hidden">{{ student.get_age }}</td>
-                        <td class="mobile-hidden">{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
-                        <td class="mobile-hidden">{% if student.medications %}Yes{% else %}No{% endif %}</td>
+                        <td class="hidden-xs">{{ student.get_age }}</td>
+                        <td class="hidden-xs">{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
+                        <td class="hidden-xs">{% if student.medications %}Yes{% else %}No{% endif %}</td>
                         <td>
                             <a href="{% url 'student_detail' student.id %}" class="btn-cdc btn-cdc-sm">Edit Info</a>
                         </td>
@@ -58,7 +58,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="mobile-hidden">Class</th>
+                            <th class="hidden-xs">Class</th>
                             <th>Date</th>
                             <th>Student</th>
                             <th></th>
@@ -67,7 +67,7 @@
                     <tbody>
                     {% for order in upcoming_orders %}
                         <tr>
-                            <td class="mobile-hidden"><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
+                            <td class="hidden-xs"><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
                             <td><a href="{{ order.session.get_absolute_url }}">{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></a></td>
                             <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
                             <td>{% student_register_link order.student order.session %}</td>
