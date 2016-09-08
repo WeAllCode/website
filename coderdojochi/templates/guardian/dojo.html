@@ -16,13 +16,13 @@
     <div class="dojo-content">
         <h2>Students</h2>
         {% if students %}
-            <table class="students table table-striped ">
+            <table class="students table table-striped">
                 <thead>
                     <tr class="text-muted">
                         <th>Name</th>
-                        <th>Age</th>
-                        <th>Medical Conditions</th>
-                        <th>Medications</th>
+                        <th class="hidden-xs">Age</th>
+                        <th class="hidden-xs">Medical Conditions</th>
+                        <th class="hidden-xs">Medications</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -30,9 +30,9 @@
                 {% for student in students %}
                     <tr>
                         <td>{{ student.first_name }} {{ student.last_name }}</td>
-                        <td>{{ student.get_age }}</td>
-                        <td>{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
-                        <td>{% if student.medications %}Yes{% else %}No{% endif %}</td>
+                        <td class="hidden-xs">{{ student.get_age }}</td>
+                        <td class="hidden-xs">{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
+                        <td class="hidden-xs">{% if student.medications %}Yes{% else %}No{% endif %}</td>
                         <td>
                             <a href="{% url 'student_detail' student.id %}" class="btn-cdc btn-cdc-sm">Edit Info</a>
                         </td>
@@ -45,7 +45,6 @@
         <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
         {% endif %}
 
-
         <h2>Your Classes</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
@@ -54,12 +53,12 @@
 
         <div class="tab-content">
             <div class="tab-pane active" id="upcoming">
-                {% if  upcoming_orders %}
+                {% if upcoming_orders %}
                 <br>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Class</th>
+                            <th class="hidden-xs">Class</th>
                             <th>Date</th>
                             <th>Student</th>
                             <th></th>
@@ -68,8 +67,8 @@
                     <tbody>
                     {% for order in upcoming_orders %}
                         <tr>
-                            <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
-                            <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
+                            <td class="hidden-xs"><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
+                            <td><a href="{{ order.session.get_absolute_url }}">{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></a></td>
                             <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
                             <td>{% student_register_link order.student order.session %}</td>
                         </tr>
@@ -78,7 +77,8 @@
                 </table>
                 {% else %}
                 <br>
-                <p class="text-muted">You have no upcoming classes. <a href="{% url 'sessions' %}">Find one now!</a></p>
+                <p class="text-muted">You have no upcoming classes.</p>
+                <a href="{% url 'sessions' %}">Find one now!</a>
                 {% endif %}
             </div>
             <div class="tab-pane" id="past">
