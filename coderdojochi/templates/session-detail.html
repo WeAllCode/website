@@ -27,82 +27,22 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-8 class-detail-content">
-
-            <p>{{ session.course.description|safe }}</p>
-
-            <h2 class="title light space-above">Class Information</h2>
-
-            <h3>Who</h3>
-            <p>Free to attend! Anyone between 7 and 17 of age. No computer skills required.</p>
-
-            <h3>When</h3>
-            <p>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
-            <p><i class="fa fa-calendar"></i> <a href="{{ session.get_ics_url }}">Add to your calendar</a></p>
-
-            <h3>Where</h3>
-            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
-
-            <h3>FAQs</h3>
-            <p><a href="{% url 'faqs' %}">Read more here.</a></p>
-
-            {% if session.additional_info %}
-            <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
-            {% endif %}
-
-            {% if session.teacher %}
-            <h2 class="subtitle space-above">About the teacher</h2>
-
-            <div class="teachers">
-                <div class="teacher">
-                    <div class="image">
-                        <a href="{% url 'mentor_detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
-                    </div>
-                    <div class="info">
-                        <h3 class="subtitle">{{ session.teacher.first_name }} {{ session.teacher.last_name }}</h4>
-                        <p>{{ session.teacher.bio|truncatechars:120 }}</p>
-                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.first_name }}.</a></p>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if active_mentors %}
-            <h2 class="subtitle">Meet the mentors</h2>
-            <div class="row mentors">
-                {% for mentor in active_mentors %}
-                    {% if mentor.public == True %}
-                <div class="col-xs-12 col-sm-4 col-md-4">
-                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                        <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" height="175" width="175">
-                        <span class="caption text-center">{{ mentor.first_name }} {{ mentor.last_name }}</span>
-                    </a>
-                </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="col-sm-4 class-detail-sidebar-right">
+        <div class="col-sm-4 col-sm-push-8 class-detail-sidebar-right">
             {% if user.is_staff %}
-            <ul class="center-block well well-sm well-admin list-group list-unstyled">
-                {% if session.active %}
-                    <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
-                    <li class="list-group-item">Mentors: <b>{{ session.get_current_mentor_orders.count }} / {{ session.get_mentor_capacity }}</b></li>
-
+                <ul class="center-block well well-sm well-admin list-group list-unstyled">
+                    {% if session.active %}
+                        <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
+                        <li class="list-group-item">Mentors: <b>{{ session.get_current_mentor_orders.count }} / {{ session.get_mentor_capacity }}</b></li>
                         {% if session.announced_date %}
                             <li class="text-muted list-group-item">Announced: <b>{{ session.announced_date|date }}</b></li>
                         {% else %}
                             <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce' session.id %}'>Announce</a>" data-html="true">Announce</a></li>
                         {% endif %}
-
-                    <li class="list-group-item"><a href="{% url 'check_in' session.id %}">Check-in Class</a></li>
-                    {% else %}
-                {% endif %}
-                <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>
-                <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
-            </ul>
+                        <li class="list-group-item"><a href="{% url 'check_in' session.id %}">Check-in Class</a></li>
+                    {% endif %}
+                    <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>
+                    <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
+                </ul>
             {% endif %}
             <div class="sidebar-right-section center-block">
                 {% if session.external_enrollment_url %}
@@ -183,17 +123,6 @@
                         {% endif %}
                         <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="btn-cdc btn-cdc-lg btn-block">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
                     {% endif %}
-                    <p>
-                        {% if spots_remaining > 0 %}
-                        <span class="text-large">{{ spots_remaining }}</span> spots currently open
-                        {% else %}
-                            {% if user.role == 'guardian' %}
-                                <span class="text-large">{{ session.waitlist_students.count }}</span> currently on waitlist
-                            {% else %}
-                                <span class="text-large">{{ session.waitlist_mentors.count }}</span> currently on waitlist
-                            {% endif %}
-                        {% endif %}
-                    </p>
                 {% endif %}
             </div>
             <div class="sidebar-right-section center-block">
@@ -228,6 +157,62 @@
                     <li><span class='st_email_hcount' displayText='Email'></span></li> -->
                 </ul>
             </div>
+        </div>
+        <div class="col-sm-8 col-sm-pull-4 class-detail-content">
+            <p>{{ session.course.description|safe }}</p>
+
+            <h2 class="title light space-above">Class Information</h2>
+
+            <h3>Who</h3>
+            {% if session.gender_limitation %}<p><strong>This class is limited to {{ session.gender_limitation }}s only.</strong></p>{% endif %}
+            <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s{% else %}Anyone{% endif %} between 7 and 17 of age. No computer skills required.</p>
+
+            <h3>When</h3>
+            <p>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
+            <p><i class="fa fa-calendar"></i> <a href="{{ session.get_ics_url }}">Add to your calendar</a></p>
+
+            <h3>Where</h3>
+            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+
+            <h3>FAQs</h3>
+            <p><a href="{% url 'faqs' %}">Read more here.</a></p>
+
+            {% if session.additional_info %}
+            <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
+            {% endif %}
+
+            {% if session.teacher %}
+            <h2 class="subtitle space-above">About the teacher</h2>
+
+            <div class="teachers">
+                <div class="teacher">
+                    <div class="image">
+                        <a href="{% url 'mentor_detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
+                    </div>
+                    <div class="info">
+                        <h3 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
+                        <p>{{ session.teacher.bio|truncatechars:120 }}</p>
+                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if active_mentors %}
+            <h2 class="subtitle">Meet the mentors</h2>
+            <div class="row mentors">
+                {% for mentor in active_mentors %}
+                    {% if mentor.public == True %}
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                        <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" height="175" width="175">
+                        <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
+                    </a>
+                </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
     </div>
 

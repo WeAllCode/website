@@ -1,5 +1,4 @@
 @mixin button() {
-
     background: $cdc-color;
     border: 2px solid #fff;
     color: #fff;
@@ -33,6 +32,12 @@
             color: #666;
             background: #eee;
         }
+
+        &:hover {
+            border-color: #eee;
+            background: #eee;
+            color: #333;
+        }
     }
 
     &:not([disabled]):hover {
@@ -42,7 +47,7 @@
     }
 
     &.btn-cdc-inverse {
-        
+
         border-color: $cdc-color;
         color: $cdc-color;
         background: #fff;

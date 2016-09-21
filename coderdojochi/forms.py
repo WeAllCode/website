@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import html5.forms.widgets as html5_widgets
 
 from django import forms
@@ -9,7 +10,7 @@ from django.forms import Form, ModelForm, FileField, ValidationError
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from coderdojochi.models import Mentor, Guardian, Student, RaceEthnicity
+from coderdojochi.models import CDCUser, Mentor, Guardian, Student, RaceEthnicity
 
 SCHOOL_TYPE_CHOICES = (
     ("Public", "Public"),
@@ -47,7 +48,6 @@ class CDCForm(Form):
             except ValidationError as e:
                 self.add_error(name, e)
 
-
 class CDCModelForm(ModelForm):
     # strip leading or trailing whitespace
     def _clean_fields(self):
@@ -63,6 +63,9 @@ class CDCModelForm(ModelForm):
                     value = field.clean(value, initial)
                 else:
                     if isinstance(value, basestring):
+                        # regex normalizes carriage return and cuts them to two at most
+                        value = re.sub(r'\r\n', '\n', value)
+                        value = re.sub(r'\n{3,}', '\n\n', value)
                         value = field.clean(value.strip())
                     else:
                         value = field.clean(value)
@@ -75,6 +78,10 @@ class CDCModelForm(ModelForm):
 
             except ValidationError as e:
                 self.add_error(name, e)
+
+    class Meta:
+        model = CDCUser
+        fields = ('first_name', 'last_name')
 
 
 class SignupForm(forms.Form):
@@ -109,6 +116,9 @@ class MentorForm(CDCModelForm):
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
+
+        if avatar is None:
+            return avatar
 
         try:
             w, h = get_image_dimensions(avatar)

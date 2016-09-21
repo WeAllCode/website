@@ -27,7 +27,6 @@ SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str_to_bool(os.environ.get('DEBUG')) or False
 DEBUG_EMAIL = str_to_bool(os.environ.get('DEBUG_EMAIL')) or False
-IS_PRODUCTION = not DEBUG
 
 ALLOWED_HOSTS = ['*']
 
@@ -65,6 +64,7 @@ INSTALLED_APPS = [
 
     # coderdojochi
     'coderdojochi',
+    'django_nose',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -86,6 +86,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(PROJECT_ROOT, 'coderdojochi/templates/'),
+            os.path.join(PROJECT_ROOT, 'coderdojochi/emailtemplates/'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
