@@ -1,0 +1,46 @@
+{% extends "_base.html" %}
+{% load i18n %}
+{% load cache %}
+
+{% block title %}Meetings{% endblock %}
+
+{% block body_class %}page-meetings{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="col-md-12">
+        <h1>{% trans "Meetings" %}</h1>
+
+        <p>Here are a list of upcoming meetings. Meetings provide an opportunity for volunteers to collaborate on coding projects, as well as prepare for upcoming Coder Dojo classes.</p>
+
+        <p>We look forward to seeing you soon!</p>
+        
+    </div>
+</div>
+
+{% if upcoming_meetings %}
+<div class="upcoming-sessions">
+    {% for meeting in upcoming_meetings %}
+        <div class="upcoming-session" style="background-image: url({% if meeting.bg_image %}{{ meeting.bg_image.url }}{% else %}/static/images/{{ meeting.image_url }}{% endif %});">
+            <div class="session-shim">
+                <div class="container">
+                    <div class="date">
+                        {{ meeting.start_date|date:'F' }}
+                        <span class="day">{{ meeting.start_date|date:'d' }}</span>
+                    </div>
+                    <div class="description">
+                        <h4 class="title"><a href="{{ meeting.get_absolute_url }}">{% if meeting.meeting_type.code %}{{ meeting.meeting_type.code }}: {% endif%}{{ meeting.meeting_type.title }}</a></h4>
+                        <p>{{ meeting.meeting_type.description|safe|truncatechars:180 }}</p>
+                    </div>
+                    <div class="actions">
+                        <p><a href="{{ meeting.get_absolute_url }}" class="btn-cdc">Learn more.</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
