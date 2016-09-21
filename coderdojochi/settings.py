@@ -252,7 +252,6 @@ if DEBUG:
     )
 
     DEBUG_TOOLBAR_CONFIG = {
-        'INTERCEPT_REDIRECTS': True,
         'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
         'TAG': 'div',
         'ENABLE_STACKTRACES': True,
