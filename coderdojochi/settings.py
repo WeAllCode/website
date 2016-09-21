@@ -190,15 +190,15 @@ AWS_HEADERS = {
     'Cache-Control': 'max-age=94608000',
 }
 
-AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
 
     AWS_S3_CALLING_FORMAT = 'boto.s3.connection.OrdinaryCallingFormat'
 
-    AWS_STATIC_BUCKET_NAME = os.environ.get("AWS_STATIC_BUCKET_NAME")
-    AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+    AWS_STATIC_BUCKET_NAME = os.environ.get('AWS_STATIC_BUCKET_NAME')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 
     STATICFILES_STORAGE = 'coderdojochi.custom_storages.S3StaticStorage'
     DEFAULT_FILE_STORAGE = 'coderdojochi.custom_storages.S3MediaStorage'
