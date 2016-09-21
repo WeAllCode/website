@@ -7,7 +7,7 @@
 1. `brew tap caskroom/cask`
 1. `brew cask install virtualbox`
 1. `brew install hub docker docker-machine docker-compose`
-1. `git fork coderdojochi/coderdojochi`
+1. `hub fork coderdojochi/coderdojochi`
 1. `cd coderdojochi`
 1. `docker-machine create --driver virtualbox coderdojochi` (takes 1 minute)
 1. `docker-machine start coderdojochi`
