@@ -397,6 +397,13 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             )
             return HttpResponseRedirect(session_obj.get_absolute_url())
 
+        if not student.fits_age_limitation(session_obj.min_age_limitation, session_obj.max_age_limitation):
+            messages.error(
+                request,
+                'Sorry, this class is limited to students between ages {} and {}.'.format(session_obj.min_age_limitation, session_obj.max_age_limitation)
+            )
+            return HttpResponseRedirect(session_obj.get_absolute_url())
+
         if not user_signed_up:
             if session_obj.capacity <= session_obj.get_current_students().count():
                 messages.error(

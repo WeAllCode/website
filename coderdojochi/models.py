@@ -5,6 +5,7 @@ from stdimage.models import StdImageField
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import formats, timezone
@@ -176,6 +177,14 @@ class Student(models.Model):
         else:
             return 'other'
 
+    def fits_age_limitation(self, min_age, max_age):
+        if min_age and max_age:
+            if self.get_age() < min_age or self.get_age() > max_age:
+                return False
+            else:
+                return True
+        else:
+            return True
 
 class Course(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
@@ -256,6 +265,16 @@ class Session(models.Model):
         choices=GENDER_LIMITATION_CHOICES,
         blank=True,
         null=True
+    )
+    min_age_limitation = models.IntegerField(
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+    max_age_limitation = models.IntegerField(
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
 
     class Meta:
@@ -369,7 +388,6 @@ class Session(models.Model):
             return self.mentor_capacity
         else:
             return self.capacity / 2
-
 
 class MeetingType(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
