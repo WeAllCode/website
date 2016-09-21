@@ -1755,9 +1755,10 @@ class PasswordSessionView(TemplateView):
     def post(self, request, *args, **kwargs):
         session_id = kwargs.get('session_id')
         session_obj = get_object_or_404(Session, id=session_id)
-        if not request.POST.get('password'):
+        password_input = request.POST.get('password')
+        if not password_input:
             return self.render_to_response({'error': 'Must enter a password.'})
-        if session_obj.password != request.POST.get('password'):
+        if session_obj.password != password_input:
             return self.render_to_response({'error': 'Invalid password.'})
 
         authed_partner_sessions = request.session.get('authed_partner_sessions') or set()
