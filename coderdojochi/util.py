@@ -30,7 +30,7 @@ def email(subject, template_name, context, recipients, preheader, send=True):
 
     context['subject'] = subject
     context['current_year'] = timezone.now().year
-    context['company'] = settings.SITE_NAME
+    context['company_name'] = settings.SITE_NAME
     context['site_url'] = settings.SITE_URL
 
     if preheader:

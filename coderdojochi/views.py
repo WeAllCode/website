@@ -437,7 +437,9 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         ]:
             messages.error(
                 request,
-                'Sorry, this class is limited to {}s this time around.'.format(session_obj.gender_limitation)
+                'Sorry, this class is limited to {}s this time around.'.format(
+                    session_obj.gender_limitation
+                )
             )
             return HttpResponseRedirect(session_obj.get_absolute_url())
 
@@ -445,7 +447,8 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
             if session_obj.capacity <= session_obj.get_current_student_orders().count():
                 messages.error(
                     request,
-                    'Sorry this class has sold out. Please sign up for the wait list and/or check back later.'
+                    'Sorry this class has sold out.'
+                    'Please sign up for the wait list and/or check back later.'
                 )
                 return HttpResponseRedirect(session_obj.get_absolute_url())
 
@@ -478,9 +481,9 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 if request.user.role == 'mentor':
                     nwmo = next_waitlist_order
                     email(
-                        'Mentor Waitlist Offer Subject',
-                        'mentor-waitlist-offer',
-                        {
+                        subject='Mentor Waitlist Offer Subject',
+                        template_name='mentor-waitlist-offer',
+                        context={
                             'first_name': nwmo.mentor.user.first_name,
                             'last_name': nwmo.mentor.user.last_name,
                             'class_code': nwmo.session.course.code,
@@ -508,14 +511,15 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                             'class_url': nwmo.session.get_absolute_url(),
                             'class_ics_url': nwmo.session.get_ics_url()
                         },
-                        [nwmo.mentor.user.email]
+                        recipients=[nwmo.mentor.user.email],
+                        preheader='You are next on the waitlist!'
                     )
                 else:
                     nwo = next_waitlist_order
                     email(
-                        'Guardian Waitlist Offer Subject',
-                        'guardian-waitlist-offer',
-                        {
+                        subject='Guardian Waitlist Offer Subject',
+                        template_name='guardian-waitlist-offer',
+                        context={
                             'first_name': nwo.guardian.user.first_name,
                             'last_name': nwo.guardian.user.last_name,
                             'student_first_name': nwo.student.first_name,
@@ -541,7 +545,8 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                             'class_url': nwo.session.get_absolute_url(),
                             'class_ics_url': nwo.session.get_ics_url()
                         },
-                        [nwmo.guardian.user.email]
+                        recipients=[nwmo.guardian.user.email],
+                        preheader='You are next on the waitlist!'
                     )
 
                 next_waitlist_order.waitlist_offer_sent_at = timezone.now()

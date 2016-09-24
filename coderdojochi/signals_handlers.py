@@ -32,20 +32,20 @@ def avatar_updated_handler(sender, instance, **kwargs):
         instance.avatar_approved = False
 
         msg = email(
-            '{} {} | Mentor Avatar Changed'.format(
+            subject='{} {} | Mentor Avatar Changed'.format(
                 instance.user.first_name,
                 instance.user.last_name
             ),
-            'mentor-avatar-changed',
-            {
+            template_name='mentor-avatar-changed',
+            context={
                 'first_name': instance.user.first_name,
                 'last_name': instance.user.last_name,
                 'image': 'avatar',
                 'approve_url': instance.get_approve_avatar_url(),
                 'reject_url': instance.get_reject_avatar_url(),
             },
-            [settings.CONTACT_EMAIL],
-            'Mentor Avatar Changed',
+            recipients=[settings.CONTACT_EMAIL],
+            preheader='Mentor Avatar Changed',
             send=False
         )
 
