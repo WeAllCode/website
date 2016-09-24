@@ -198,8 +198,8 @@
             </div>
             {% endif %}
 
+            <h2 class="subtitle">Meet the mentors</h2>   
             {% if active_mentors %}
-            <h2 class="subtitle">Meet the mentors</h2>
             <div class="row mentors">
                 {% for mentor in active_mentors %}
                     {% if mentor.public == True %}
@@ -213,6 +213,21 @@
                 {% endfor %}
             </div>
             {% endif %}
+            {% if session.teacher %}
+            <div class="teachers">
+                <div class="teacher">
+                    <div class="image">
+                        <a href="{% url 'mentor_detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
+                    </div>
+                    <div class="info">
+                        <h3 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
+                        <p>{{ session.teacher.bio|truncatechars:120 }}</p>
+                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
+                    </div>
+                </div>
+            </div>
+            {% endif %} 
+
         </div>
     </div>
 
