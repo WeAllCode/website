@@ -177,15 +177,21 @@ class Student(models.Model):
         else:
             return 'other'
 
-    def fits_age_limitation(self, min_age, max_age):
-        if min_age and max_age:
-            return True if self.get_age() < min_age or self.get_age() > max_age else False
-        else:
-            return True
+    # returns True if the student age is between min_age and max_age
+    def is_within_age_range(self, min_age, max_age):
+        age = self.get_age()
 
-    def fits_gender_limitation(self, limitation):
+        if age >= min_age and age <= max_age:
+            return True
+        else:
+            return False
+
+    def is_within_gender_limitation(self, limitation):
         if limitation:
-            return True if self.get_clean_gender() in [limitation, 'other'] else False
+            if self.get_clean_gender() in [limitation.lower(), 'other']:
+                return True
+            else:
+                return False
         else:
             return True
 
@@ -271,13 +277,11 @@ class Session(models.Model):
         null=True
     )
     min_age_limitation = models.IntegerField(
-        blank=True,
-        null=True,
+        default=7,
         validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
     max_age_limitation = models.IntegerField(
-        blank=True,
-        null=True,
+        default=17,
         validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
 

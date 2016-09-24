@@ -387,14 +387,14 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
         user_signed_up = True if student.is_registered_for_session(session_obj) else False
 
         # are there session limitations?
-        if not student.fits_gender_limitation(session_obj.gender_limitation):
+        if not student.is_within_gender_limitation(session_obj.gender_limitation):
             messages.error(
             request,
             'Sorry, this class is limited to {}s this time around.'.format(session_obj.gender_limitation)
             )
             return HttpResponseRedirect(session_obj.get_absolute_url())
 
-        if not student.fits_age_limitation(session_obj.min_age_limitation, session_obj.max_age_limitation):
+        if not student.is_within_age_range(session_obj.min_age_limitation, session_obj.max_age_limitation):
             messages.error(
                 request,
                 'Sorry, this class is limited to students between ages {} and {}.'.format(session_obj.min_age_limitation, session_obj.max_age_limitation)
