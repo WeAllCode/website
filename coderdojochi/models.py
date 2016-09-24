@@ -154,11 +154,11 @@ class Student(models.Model):
         return u'{} {}'.format(self.first_name, self.last_name)
 
     def is_registered_for_session(self, session):
-        try:
-            Order.objects.get(active=True, student=self, session=session)
+        is_registered = False
+        if Order.objects.filter(active=True, student=self, session=session).exclude(
+            waitlisted=True
+        ).exists():
             is_registered = True
-        except:
-            is_registered = False
 
         return is_registered
 

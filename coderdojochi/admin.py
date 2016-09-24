@@ -423,7 +423,10 @@ class MeetingAdmin(admin.ModelAdmin):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return MeetingOrder.objects.filter(meeting__id=obj.id, active=True).count()
+        return MeetingOrder.objects.filter(
+            meeting__id=obj.id,
+            active=True
+        ).exclude(waitlisted=True).count()
     get_mentor_count.short_description = 'Mentors'
 
 

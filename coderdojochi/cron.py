@@ -152,13 +152,13 @@ class SendReminders(CronJobBase):
             week_reminder_sent=False,
             session__start_date__lte=timezone.now() + datetime.timedelta(days=7),
             session__start_date__gte=timezone.now() + datetime.timedelta(days=1)
-        )
+        ).exclude(waitlisted=True)
         orders_within_a_day = Order.objects.filter(
             active=True,
             day_reminder_sent=False,
             session__start_date__lte=timezone.now() + datetime.timedelta(days=1),
             session__start_date__gte=timezone.now() - datetime.timedelta(days=2)
-        )
+        ).exclude(waitlisted=True)
         sessions_within_a_week = Session.objects.filter(
             active=True,
             mentors_week_reminder_sent=False,

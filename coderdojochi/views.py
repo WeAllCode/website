@@ -545,10 +545,11 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                             'class_url': nwo.session.get_absolute_url(),
                             'class_ics_url': nwo.session.get_ics_url()
                         },
-                        recipients=[nwmo.guardian.user.email],
+                        recipients=[nwo.guardian.user.email],
                         preheader='You are next on the waitlist!'
                     )
 
+                next_waitlist_order.active = True
                 next_waitlist_order.waitlist_offer_sent_at = timezone.now()
                 next_waitlist_order.save()
         else:
@@ -564,6 +565,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 )
                 order.ip = ip
                 order.active = True
+                order.waitlisted = False
                 order.save()
             else:
                 order, created = Order.objects.get_or_create(
@@ -573,6 +575,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 )
                 order.ip = ip
                 order.active = True
+                order.waitlisted = False
                 order.save()
 
             # we dont want guardians getting 7 day reminder email if they sign up within 9 days
@@ -761,7 +764,10 @@ def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=Fals
                     template_name="meeting-sign-up.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
     mentor = get_object_or_404(Mentor, user=request.user)
-    meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, active=True)
+    meeting_orders = MeetingOrder.objects.filter(
+        meeting=meeting_obj,
+        active=True
+    )
     user_meeting_order = meeting_orders.filter(mentor=mentor)
     user_signed_up = True if user_meeting_order.count() else False
 
@@ -1018,7 +1024,9 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
 
     mentor = get_object_or_404(Mentor, user=request.user)
 
-    orders = MentorOrder.objects.select_related().filter(active=True, mentor=mentor)
+    orders = MentorOrder.objects.select_related().filter(active=True, mentor=mentor).exclude(
+        waitlisted=True
+    )
     upcoming_sessions = orders.filter(
         active=True,
         session__end_date__gte=timezone.now()
@@ -1090,11 +1098,11 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
     upcoming_orders = student_orders.filter(
         active=True,
         session__end_date__gte=timezone.now()
-    ).order_by('session__start_date')
+    ).exclude(waitlisted=True).order_by('session__start_date')
     past_orders = student_orders.filter(
         active=True,
         session__end_date__lte=timezone.now()
-    ).order_by('session__start_date')
+    ).exclude(waitlisted=True).order_by('session__start_date')
 
     if request.method == 'POST':
         form = GuardianForm(request.POST, instance=guardian)

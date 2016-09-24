@@ -30,7 +30,13 @@ def mentor_session_order(mentor, session):
 
 @register.simple_tag(takes_context=True)
 def student_register_link(context, student, session):
-    orders = Order.objects.filter(student=student, session=session, active=True)
+    orders = Order.objects.filter(
+        student=student,
+        session=session,
+        active=True
+    ).exclude(
+        waitlisted=True
+    )
 
     button_tag = 'a'
     button_modifier = ''

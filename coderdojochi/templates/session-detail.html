@@ -71,7 +71,7 @@
                                                         <input type="hidden" name="waitlist" value="student">
                                                         <input type="hidden" name="account_id" value="{{ student.id }}">
                                                         {% if student_order.waitlisted %}
-                                                            <input type="hidden" name="order_id" value="(( student_order.id }}">
+                                                            <input type="hidden" name="order_id" value="{{ student_order.id }}">
                                                             <button class="btn-cdc btn-cdc-danger btn-cdc-sm">Remove from Waitlist</button>
                                                         {% else %}
                                                             <button class="btn-cdc btn-cdc-inverse btn-cdc-sm">Add to Waitlist</button>
