@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os
 import arrow
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -37,13 +36,16 @@ def avatar_updated_handler(sender, instance, **kwargs):
 
         context = {
             'first_name': instance.user.first_name,
-            'last_name':instance.user.last_name,
+            'last_name': instance.user.last_name,
             'image': 'avatar',
             'approve_url': instance.get_approve_avatar_url(),
             'reject_url': instance.get_reject_avatar_url(),
         }
 
-        subject = u"{} {} | Mentor Avatar Changed".format(instance.user.first_name, instance.user.last_name)
+        subject = u"{} {} | Mentor Avatar Changed".format(
+            instance.user.first_name,
+            instance.user.last_name
+        )
         html_content = render_to_string("mentor-avatar-changed.html", context)
         text_content = render_to_string("mentor-avatar-changed.txt", context)
         msg = EmailMultiAlternatives(
@@ -83,11 +85,13 @@ def donate_callback(sender, **kwargs):
                     'last_name': donation.last_name,
                     'email': donation.email,
                     'amount': u'${}'.format(donation.amount),
-                    'transaction_date': arrow.get(donation.created_at).format('MMMM D, YYYY h:ss a'),
+                    'transaction_date': arrow.get(donation.created_at).format(
+                        'MMMM D, YYYY h:ss a'
+                    ),
                     'transaction_id': donation.id
                 },
                 donation.email,
-                [v for k,v in settings.ADMINS]
+                [v for k, v in settings.ADMINS]
             )
 
             donation.receipt_sent = True
@@ -96,4 +100,3 @@ def donate_callback(sender, **kwargs):
 
 
 valid_ipn_received.connect(donate_callback)
-
