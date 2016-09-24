@@ -49,13 +49,13 @@ def avatar_updated_handler(sender, instance, **kwargs):
             send=False
         )
 
-        # msg.mixed_subtype = 'related'
+        msg.mixed_subtype = 'related'
 
-        # img = MIMEImage(instance.avatar.read())
-        # img.add_header('Content-Id', 'avatar')
-        # img.add_header("Content-Disposition", "inline", filename="avatar")
+        img = MIMEImage(instance.avatar.read())
+        img.add_header('Content-Id', 'avatar')
+        img.add_header("Content-Disposition", "inline", filename="avatar")
 
-        # msg.attach(img)
+        msg.attach(img)
 
         msg.send()
 
