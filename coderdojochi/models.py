@@ -179,12 +179,16 @@ class Student(models.Model):
 
     def fits_age_limitation(self, min_age, max_age):
         if min_age and max_age:
-            if self.get_age() < min_age or self.get_age() > max_age:
-                return False
-            else:
-                return True
+            return True if self.get_age() < min_age or self.get_age() > max_age else False
         else:
             return True
+
+    def fits_gender_limitation(self, limitation):
+        if limitation:
+            return True if self.get_clean_gender() in [limitation, 'other'] else False
+        else:
+            return True
+
 
 class Course(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
