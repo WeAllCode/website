@@ -871,8 +871,6 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
         session__end_date__lte=timezone.now()
     ).order_by('session__start_date')
 
-    print >>sys.stderr, past_sessions.count()
-
     meeting_orders = MeetingOrder.objects.select_related().filter(mentor=mentor)
 
     upcoming_meetings = meeting_orders.filter(
