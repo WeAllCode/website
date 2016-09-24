@@ -61,7 +61,7 @@ class Mentor(models.Model):
     background_check = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
     avatar = StdImageField(upload_to=generate_filename, blank=True, variations={
-        'thumbnail': {"width": 500, "height": 500, "crop": True}
+        'thumbnail': {'width': 500, 'height': 500, 'crop': True}
     })
     avatar_approved = models.BooleanField(default=False)
 
