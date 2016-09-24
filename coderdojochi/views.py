@@ -589,6 +589,17 @@ def session_ics(request, year, month, day, slug, session_id):
 
     return response
 
+def meetings(request, template_name="meetings.html"):
+
+    upcoming_meetings = Meeting.objects.filter(
+        active=True,
+        public=True,
+        end_date__gte=timezone.now()
+    ).order_by('start_date')[:3]
+
+    return render(request, template_name, {
+        'upcoming_meetings': upcoming_meetings
+    })
 
 def meeting_detail(request, year, month, day, slug, meeting_id, template_name="meeting-detail.html"):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
@@ -863,8 +874,6 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
         active=True,
         session__end_date__lte=timezone.now()
     ).order_by('session__start_date')
-
-    print >>sys.stderr, past_sessions.count()
 
     meeting_orders = MeetingOrder.objects.select_related().filter(mentor=mentor)
 
