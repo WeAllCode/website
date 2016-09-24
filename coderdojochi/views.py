@@ -14,7 +14,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import get_connection, EmailMessage, EmailMultiAlternatives
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
@@ -24,9 +23,10 @@ from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
-from coderdojochi.util import local_to_utc
+from coderdojochi.util import local_to_utc, email
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType, Equipment)
+                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType,
+                                 Equipment)
 from coderdojochi.forms import CDCModelForm, MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
@@ -476,73 +476,73 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
 
             if next_waitlist_order:
                 if request.user.role == 'mentor':
-                    # TODO: Send offer email to next_waitlist_order.mentor
-                    # nwmo = next_waitlist_order
-                    # sendSystemEmail(
-                    #     False,
-                    #     'You are next on the waitlist! Enroll now!',
-                    #     'coderdojochi-waitlist-offer-mentor',
-                    #     {
-                    #         'first_name': nwmo.mentor.user.first_name,
-                    #         'last_name': nwmo.mentor.user.last_name,
-                    #         'class_code': nwmo.session.course.code,
-                    #         'class_title': nwmo.session.course.title,
-                    #         'class_description': nwmo.session.course.description,
-                    #         'class_start_date': arrow.get(
-                    #             nwmo.session.mentor_start_date
-                    #         ).format('dddd, MMMM D, YYYY'),
-                    #         'class_start_time': arrow.get(nwmo.session.mentor_start_date).format('h:mma'),
-                    #         'class_end_date': arrow.get(
-                    #             nwmo.session.mentor_end_date
-                    #         ).format('dddd, MMMM D, YYYY'),
-                    #         'class_end_time': arrow.get(nwmo.session.mentor_end_date).format('h:mma'),
-                    #         'class_location_name': nwmo.session.location.name,
-                    #         'class_location_address': nwmo.session.location.address,
-                    #         'class_location_address2': nwmo.session.location.address2,
-                    #         'class_location_city': nwmo.session.location.city,
-                    #         'class_location_state': nwmo.session.location.state,
-                    #         'class_location_zip': nwmo.session.location.zip,
-                    #         'class_additional_info': nwmo.session.additional_info,
-                    #         'class_url': nwmo.session.get_absolute_url(),
-                    #         'class_ics_url': nwmo.session.get_ics_url()
-                    #     },
-                    #     nwmo.mentor.user.email
-                    # )
+                    nwmo = next_waitlist_order
+                    email(
+                        'Mentor Waitlist Offer Subject',
+                        'mentor-waitlist-offer',
+                        {
+                            'first_name': nwmo.mentor.user.first_name,
+                            'last_name': nwmo.mentor.user.last_name,
+                            'class_code': nwmo.session.course.code,
+                            'class_title': nwmo.session.course.title,
+                            'class_description': nwmo.session.course.description,
+                            'class_start_date': arrow.get(
+                                nwmo.session.mentor_start_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_start_time': arrow.get(
+                                nwmo.session.mentor_start_date
+                            ).format('h:mma'),
+                            'class_end_date': arrow.get(
+                                nwmo.session.mentor_end_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_end_time': arrow.get(
+                                nwmo.session.mentor_end_date
+                            ).format('h:mma'),
+                            'class_location_name': nwmo.session.location.name,
+                            'class_location_address': nwmo.session.location.address,
+                            'class_location_address2': nwmo.session.location.address2,
+                            'class_location_city': nwmo.session.location.city,
+                            'class_location_state': nwmo.session.location.state,
+                            'class_location_zip': nwmo.session.location.zip,
+                            'class_additional_info': nwmo.session.additional_info,
+                            'class_url': nwmo.session.get_absolute_url(),
+                            'class_ics_url': nwmo.session.get_ics_url()
+                        },
+                        [nwmo.mentor.user.email]
+                    )
                 else:
-                    # TODO: Send offer email to next_waitlist_order.guardian
-                    # nwo = next_waitlist_order
-                    # sendSystemEmail(
-                    #     False,
-                    #     'You are next on the waitlist! Enroll now!',
-                    #     'coderdojochi-waitlist-offer-guardian',
-                    #     {
-                    #         'first_name': nwo.guardian.user.first_name,
-                    #         'last_name': nwo.guardian.user.last_name,
-                    #         'student_first_name': nwo.student.first_name,
-                    #         'student_last_name': nwo.student.last_name,
-                    #         'class_code': nwo.session.course.code,
-                    #         'class_title': nwo.session.course.title,
-                    #         'class_description': nwo.session.course.description,
-                    #         'class_start_date': arrow.get(
-                    #             nwo.session.start_date
-                    #         ).format('dddd, MMMM D, YYYY'),
-                    #         'class_start_time': arrow.get(nwo.session.start_date).format('h:mma'),
-                    #         'class_end_date': arrow.get(
-                    #             nwo.session.end_date
-                    #         ).format('dddd, MMMM D, YYYY'),
-                    #         'class_end_time': arrow.get(nwo.session.end_date).format('h:mma'),
-                    #         'class_location_name': nwo.session.location.name,
-                    #         'class_location_address': nwo.session.location.address,
-                    #         'class_location_address2': nwo.session.location.address2,
-                    #         'class_location_city': nwo.session.location.city,
-                    #         'class_location_state': nwo.session.location.state,
-                    #         'class_location_zip': nwo.session.location.zip,
-                    #         'class_additional_info': nwo.session.additional_info,
-                    #         'class_url': nwo.session.get_absolute_url(),
-                    #         'class_ics_url': nwo.session.get_ics_url()
-                    #     },
-                    #     nwo.guardian.user.email
-                    # )
+                    nwo = next_waitlist_order
+                    email(
+                        'Guardian Waitlist Offer Subject',
+                        'guardian-waitlist-offer',
+                        {
+                            'first_name': nwo.guardian.user.first_name,
+                            'last_name': nwo.guardian.user.last_name,
+                            'student_first_name': nwo.student.first_name,
+                            'student_last_name': nwo.student.last_name,
+                            'class_code': nwo.session.course.code,
+                            'class_title': nwo.session.course.title,
+                            'class_description': nwo.session.course.description,
+                            'class_start_date': arrow.get(
+                                nwo.session.start_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_start_time': arrow.get(nwo.session.start_date).format('h:mma'),
+                            'class_end_date': arrow.get(
+                                nwo.session.end_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_end_time': arrow.get(nwo.session.end_date).format('h:mma'),
+                            'class_location_name': nwo.session.location.name,
+                            'class_location_address': nwo.session.location.address,
+                            'class_location_address2': nwo.session.location.address2,
+                            'class_location_city': nwo.session.location.city,
+                            'class_location_state': nwo.session.location.state,
+                            'class_location_zip': nwo.session.location.zip,
+                            'class_additional_info': nwo.session.additional_info,
+                            'class_url': nwo.session.get_absolute_url(),
+                            'class_ics_url': nwo.session.get_ics_url()
+                        },
+                        [nwmo.guardian.user.email]
+                    )
 
                 next_waitlist_order.waitlist_offer_sent_at = timezone.now()
                 next_waitlist_order.save()
@@ -698,7 +698,8 @@ def session_ics(request, year, month, day, slug, session_id):
         event['dtend'] = '{}Z'.format(mentor_end_date)
         event['dtstamp'] = mentor_start_date
 
-    location = u'{}, {}, {}, {}, {} {}'.format(session_obj.location.name,
+    location = u'{}, {}, {}, {}, {} {}'.format(
+        session_obj.location.name,
         session_obj.location.address,
         session_obj.location.address2,
         session_obj.location.city,
@@ -1000,8 +1001,6 @@ def dojo(request):
         return dojo_guardian(request)
 
 
-# TODO: upcoming classes needs to be all upcoming classes with a choice to RSVP in dojo page
-# TODO: upcoming meetings needs to be all upcoming meetings with a choice to RSVP in dojo page
 @login_required
 def dojo_mentor(request, template_name='mentor/dojo.html'):
 
@@ -1837,8 +1836,8 @@ def check_system(request):
 
     return HttpResponse(responseString)
 
-def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
 
+def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bcc=False):
     if not email and request:
         email = request.user.email
 
@@ -1850,7 +1849,7 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
         return
 
     merge_vars['current_year'] = timezone.now().year
-    merge_vars['company'] = 'CoderDojoChi'
+    merge_vars['company'] = settings.SITE_NAME
     merge_vars['site_url'] = settings.SITE_URL
 
     try:
