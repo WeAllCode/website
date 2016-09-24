@@ -133,7 +133,7 @@ class MentorForm(CDCModelForm):
                     )
                 )
 
-            min_width = min_height = 250
+            min_width = min_height = 500
             if w < min_width or h < min_height:
                 raise forms.ValidationError(
                     u'Please use an image that is {} x {}px or larger.'.format(
