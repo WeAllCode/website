@@ -19,7 +19,10 @@
 1. `docker-machine start coderdojochi`
 1. `eval "$(docker-machine env coderdojochi)"`
 1. `docker-compose up`
+1. To get the URL for your local instance: `docker-machine ip coderdojochi`
 
 ### Misc commands
-1. Run Django management commands like so... `docker-compose run app python manage.py <command>`
-1. Rebuild docker container (when all else fails)... `docker kill $(docker ps -q); docker-compose rm —all -f; docker-compose build && docker-compose up`
+1. Rebuild docker container from scratch: `docker kill $(docker ps -q); docker-compose rm -f; docker-compose build && docker-compose up`
+1. Run Django management commands: `docker-compose run --rm app python manage.py <command>`
+1. Make migrations: `docker-compose run --rm app python manage.py makemigrations`
+1. Run migrations: `docker-compose run --rm app python manage.py migrate coderdojochi`
