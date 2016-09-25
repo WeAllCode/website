@@ -1267,6 +1267,36 @@ def cdc_admin(request, template_name="cdc-admin.html"):
     if 'all_past_meetings' not in request.GET:
         past_meetings = past_meetings[:3]
 
+    orders = Order.objects.select_related()
+
+    past_sessions = Session.objects.select_related().filter(
+        active=True,
+        end_date__lte=timezone.now()
+    ).annotate(
+        num_orders=Count('order'),
+        num_attended=Count(Case(When(order__check_in__isnull=False, then=1)))
+    ).order_by('-start_date')
+
+    total_past_orders = orders.filter(active=True)
+    total_past_orders_count = total_past_orders.count()
+    total_checked_in_orders = orders.filter(active=True, check_in__isnull=False)
+    total_checked_in_orders_count = total_checked_in_orders.count()
+
+    # Genders
+    gender_count = list(
+        Counter(
+            e.student.get_clean_gender() for e in total_checked_in_orders
+        ).iteritems()
+    )
+    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
+
+    # Ages
+    ages = sorted(list(e.student.get_age() for e in total_checked_in_orders))
+    age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1))
+
+    # Average Age
+    average_age = int(round(sum(ages) / float(len(ages))))
+
     return render(request, template_name, {
         'upcoming_sessions': upcoming_sessions,
         'upcoming_sessions_count': upcoming_sessions_count,
@@ -1275,7 +1305,13 @@ def cdc_admin(request, template_name="cdc-admin.html"):
         'upcoming_meetings': upcoming_meetings,
         'upcoming_meetings_count': upcoming_meetings_count,
         'past_meetings': past_meetings,
-        'past_meetings_count': past_meetings_count
+        'past_meetings_count': past_meetings_count,
+        'past_sessions': past_sessions,
+        'gender_count': gender_count,
+        'age_count': age_count,
+        'average_age': average_age,
+        'total_past_orders_count': total_past_orders_count,
+        'total_checked_in_orders_count': total_checked_in_orders_count
     })
 
 
