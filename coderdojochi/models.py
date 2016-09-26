@@ -561,6 +561,7 @@ class EquipmentType(models.Model):
     def __unicode__(self):
         return self.name
 
+
 EquiptmentConditions = (
     ('working', 'Working'),
     ('issue', 'Issue'),
@@ -569,7 +570,12 @@ EquiptmentConditions = (
 
 
 class Equipment(models.Model):
-    uuid = models.CharField(max_length=255, verbose_name="UUID", default='000-000-000-000', null=False)
+    uuid = models.CharField(
+        max_length=255,
+        verbose_name="UUID",
+        default='000-000-000-000',
+        null=False
+    )
     equipment_type = models.ForeignKey(EquipmentType)
     make = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
@@ -577,8 +583,16 @@ class Equipment(models.Model):
     aquisition_date = models.DateTimeField(blank=True, null=True)
     condition = models.CharField(max_length=255, choices=EquiptmentConditions)
     notes = models.TextField(blank=True, null=True)
-    last_system_update_check_in = models.DateTimeField(blank=True,null=True, verbose_name="Last Check In")
-    last_system_update = models.DateTimeField(blank=True,null=True, verbose_name="Last Update")
+    last_system_update_check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Last Check In"
+    )
+    last_system_update = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Last Update"
+    )
     force_update_on_next_boot = models.BooleanField(default=False, verbose_name="Force Update")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

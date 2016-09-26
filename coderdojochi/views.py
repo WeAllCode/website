@@ -14,7 +14,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import get_connection, EmailMessage, EmailMultiAlternatives
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
@@ -26,7 +25,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.util import local_to_utc
 from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType, Equipment)
+                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType,
+                                 Equipment)
 from coderdojochi.forms import CDCModelForm, MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser

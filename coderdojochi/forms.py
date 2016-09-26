@@ -48,6 +48,7 @@ class CDCForm(Form):
             except ValidationError as e:
                 self.add_error(name, e)
 
+
 class CDCModelForm(ModelForm):
     # strip leading or trailing whitespace
     def _clean_fields(self):
@@ -231,13 +232,13 @@ class StudentForm(CDCModelForm):
 
     school_type = forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices = SCHOOL_TYPE_CHOICES,
+        choices=SCHOOL_TYPE_CHOICES,
         required=False
     )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset = RaceEthnicity.objects.filter(visible=True),
+        queryset=RaceEthnicity.objects.filter(visible=True),
         required=False
     )
 
@@ -287,7 +288,8 @@ class StudentForm(CDCModelForm):
                 'required': 'required'
             }
         ),
-        label='I hereby give permission to CoderDojoChi to use the student\'s image and/or likeness in promotional materials.'
+        label='I hereby give permission to CoderDojoChi to use the student\'s'
+              'image and/or likeness in promotional materials.'
     )
 
     consent = forms.BooleanField(
@@ -296,7 +298,8 @@ class StudentForm(CDCModelForm):
                 'required': 'required'
             }
         ),
-        label='I hereby give consent for the student signed up above to participate in CoderDojoChi.'
+        label='I hereby give consent for the student signed up above to participate'
+              'in CoderDojoChi.'
     )
 
     class Meta:

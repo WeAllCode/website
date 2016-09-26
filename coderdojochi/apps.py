@@ -9,3 +9,4 @@ class CoderDojoChiConfig(AppConfig):
 
     def ready(self):
         import coderdojochi.signals_handlers
+

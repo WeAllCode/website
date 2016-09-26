@@ -3,7 +3,6 @@
 import arrow
 import datetime
 
-from django.conf import settings
 from django.core.mail import get_connection
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule

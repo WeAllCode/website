@@ -3,8 +3,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Case, When
-from django.template.defaultfilters import pluralize
+from django.db.models import Count
 from django.utils.safestring import mark_safe
 
 from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
