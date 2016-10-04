@@ -319,8 +319,8 @@ class Session(models.Model):
 
         return orders
 
-    def get_current_mentor_orders(self, checked_in=None):
-        if checked_in is not None:
+    def get_current_mentor_orders(self, checked_in=False):
+        if checked_in is False:
             if checked_in:
                 orders = MentorOrder.objects.filter(
                     active=True,
