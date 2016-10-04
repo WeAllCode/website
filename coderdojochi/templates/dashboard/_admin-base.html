@@ -1,0 +1,52 @@
+{% load staticfiles i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" {% if DEBUG %}class="debug"{% endif %}>
+    <head>
+        <title>{% block title %}CoderDojoChi - Welcome!{% endblock %}</title>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+
+            {% block extra_meta %}{% endblock %}
+
+            <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon">
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Quicksand:300,400,700" rel="stylesheet">
+            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
+
+            <!--[if lt IE 9]>
+            <script src="{% static 'js/vendor/html5shiv.js' %}"></script>
+            <script src="{% static 'js/vendor/selectivizr.js' %}"></script>
+            <script src="{% static 'js/vendor/respond.js' %}"></script>
+            <![endif]-->
+
+        {% block extra_style %}{% endblock %}
+
+        {% block extra_head %}{% endblock %}
+    </head>
+
+    <body class="{% block body_class %}{% endblock %}">
+
+        {% block topnav %}
+            {% include "_topnav.html" %}
+        {% endblock %}
+
+        {% block body_base %}
+            {% include "_messages.html" %}
+            {% block content %}{% endblock %}
+        {% endblock %}
+
+        {% block footer_base %}
+        {% endblock %}
+
+        {% block script_base %}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+            <script>if (!window.jQuery) {document.write('<script src="{% static 'libs/jquery/jquery-1.11.2.min.js' %}"><\/script>');}</script>
+
+            <script src="{% static "js/vendor/cdc.bootstrap.min.js" %}"></script>
+
+            {% block extra_script %}{% endblock %}
+        {% endblock %}
+
+        {% block extra_body %}{% endblock %}
+    </body>
+</html>

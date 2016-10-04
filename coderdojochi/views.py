@@ -13,21 +13,25 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.mail import get_connection, EmailMessage, EmailMultiAlternatives
+from django.core.mail import (get_connection,
+                              EmailMessage,
+                              EmailMultiAlternatives)
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Case, When
+from django.db.models import Count, Case, When, IntegerField
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
 from coderdojochi.util import local_to_utc
-from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
-                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType, Equipment)
-from coderdojochi.forms import CDCModelForm, MentorForm, GuardianForm, StudentForm, ContactForm
+from coderdojochi.models import (Mentor, Guardian, Student, Session, Order,
+                                 MentorOrder, Meeting, MeetingOrder, Donation,
+                                 CDCUser, EquipmentType, Equipment)
+from coderdojochi.forms import (CDCModelForm, MentorForm, GuardianForm,
+                                StudentForm, ContactForm)
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -603,7 +607,13 @@ def meeting_detail(request, year, month, day, slug, meeting_id, template_name="m
     active_meeting_orders = None
 
     if request.user.is_authenticated():
-        mentor = get_object_or_404(Mentor, user=request.user)
+
+        mentor = Mentor.objects.filter(user=request.user)
+
+        if mentor.exists():
+            mentor = mentor.first()
+        else:
+            return redirect('welcome')
 
         active_meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, active=True)
         mentor_meeting_order = active_meeting_orders.filter(mentor=mentor)
@@ -770,13 +780,14 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     event['dtend'] = '{}Z'.format(end_date)
     event['dtstamp'] = start_date
 
-    location = u'{}, {}, {}, {}, {} {}'.format(meeting_obj.location.name,
-                                              meeting_obj.location.address,
-                                              meeting_obj.location.address2,
-                                              meeting_obj.location.city,
-                                              meeting_obj.location.state,
-                                              meeting_obj.location.zip
-                                              )
+    location = u'{}, {}, {}, {}, {} {}'.format(
+        meeting_obj.location.name,
+        meeting_obj.location.address,
+        meeting_obj.location.address2,
+        meeting_obj.location.city,
+        meeting_obj.location.state,
+        meeting_obj.location.zip
+    )
 
     event['location'] = vText(location)
     event['url'] = meeting_obj.get_absolute_url()
@@ -1222,60 +1233,32 @@ def privacy(request, template_name="privacy.html"):
 
 
 @login_required
-def cdc_admin(request, template_name="cdc-admin.html"):
+def cdc_admin(request, template_name="admin.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
         return HttpResponseRedirect(reverse('sessions'))
 
-    sessions = Session.objects.all()
-
-    upcoming_sessions = sessions.filter(
-        active=True,
-        end_date__gte=timezone.now()
-    ).order_by('start_date')
-    upcoming_sessions_count = upcoming_sessions.count()
-
-    if 'all_upcoming_sessions' not in request.GET:
-        upcoming_sessions = upcoming_sessions[:3]
-
-    past_sessions = sessions.filter(
-        active=True,
-        end_date__lte=timezone.now()
+    sessions = Session.objects.select_related().annotate(
+        num_orders=Count('order'),
+        num_attended=Count(Case(When(order__check_in__isnull=False, then=1))),
+        is_future=Case(
+            When(end_date__gte=timezone.now(), then=1),
+            default=0,
+            output_field=IntegerField(),
+        )
     ).order_by('-start_date')
-    past_sessions_count = past_sessions.count()
 
-    if 'all_past_sessions' not in request.GET:
-        past_sessions = past_sessions[:3]
-
-    meetings = Meeting.objects.all()
-
-    upcoming_meetings = meetings.filter(
-        active=True,
-        end_date__gte=timezone.now()
-    ).order_by('start_date')
-    upcoming_meetings_count = upcoming_meetings.count()
-
-    if 'all_upcoming_meetings' not in request.GET:
-        upcoming_meetings = upcoming_meetings[:3]
-
-    past_meetings = meetings.filter(
-        active=True,
-        end_date__lte=timezone.now()
+    meetings = Meeting.objects.select_related().annotate(
+        num_orders=Count('meetingorder'),
+        num_attended=Count(Case(When(meetingorder__check_in__isnull=False, then=1))),
+        is_future=Case(
+            When(end_date__gte=timezone.now(), then=1),
+            default=0,
+            output_field=IntegerField(),
+        )
     ).order_by('-start_date')
-    past_meetings_count = past_meetings.count()
-
-    if 'all_past_meetings' not in request.GET:
-        past_meetings = past_meetings[:3]
 
     orders = Order.objects.select_related()
-
-    past_sessions = Session.objects.select_related().filter(
-        active=True,
-        end_date__lte=timezone.now()
-    ).annotate(
-        num_orders=Count('order'),
-        num_attended=Count(Case(When(order__check_in__isnull=False, then=1)))
-    ).order_by('-start_date')
 
     total_past_orders = orders.filter(active=True)
     total_past_orders_count = total_past_orders.count()
@@ -1292,26 +1275,26 @@ def cdc_admin(request, template_name="cdc-admin.html"):
 
     # Ages
     ages = sorted(list(e.student.get_age() for e in total_checked_in_orders))
-    age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1))
+    age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(0))
 
     # Average Age
     average_age = int(round(sum(ages) / float(len(ages))))
 
     return render(request, template_name, {
-        'upcoming_sessions': upcoming_sessions,
-        'upcoming_sessions_count': upcoming_sessions_count,
-        'past_sessions': past_sessions,
-        'past_sessions_count': past_sessions_count,
-        'upcoming_meetings': upcoming_meetings,
-        'upcoming_meetings_count': upcoming_meetings_count,
-        'past_meetings': past_meetings,
-        'past_meetings_count': past_meetings_count,
-        'past_sessions': past_sessions,
-        'gender_count': gender_count,
         'age_count': age_count,
         'average_age': average_age,
+        'gender_count': gender_count,
+        'meetings': meetings,
+        # 'past_meetings_count': past_meetings_count,
+        # 'past_sessions': past_sessions,
+        # 'past_sessions_count': past_sessions_count,
+        'sessions': sessions,
+        'total_checked_in_orders_count': total_checked_in_orders_count,
         'total_past_orders_count': total_past_orders_count,
-        'total_checked_in_orders_count': total_checked_in_orders_count
+        # 'upcoming_meetings': upcoming_meetings,
+        # 'upcoming_meetings_count': upcoming_meetings_count,
+        # 'upcoming_sessions': upcoming_sessions,
+        # 'upcoming_sessions_count': upcoming_sessions_count,
     })
 
 
@@ -1613,52 +1596,6 @@ def session_announce(request, session_id):
         messages.warning(request, 'Session already announced.')
 
     return HttpResponseRedirect(reverse('cdc_admin'))
-
-
-@login_required
-def dashboard(request, template_name="admin-dashboard.html"):
-    if not request.user.is_staff:
-        messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('sessions'))
-
-    orders = Order.objects.select_related()
-
-    past_sessions = Session.objects.select_related().filter(
-        active=True,
-        end_date__lte=timezone.now()
-    ).annotate(
-        num_orders=Count('order'),
-        num_attended=Count(Case(When(order__check_in__isnull=False, then=1)))
-    ).order_by('-start_date')
-
-    total_past_orders = orders.filter(active=True)
-    total_past_orders_count = total_past_orders.count()
-    total_checked_in_orders = orders.filter(active=True, check_in__isnull=False)
-    total_checked_in_orders_count = total_checked_in_orders.count()
-
-    # Genders
-    gender_count = list(
-        Counter(
-            e.student.get_clean_gender() for e in total_checked_in_orders
-        ).iteritems()
-    )
-    gender_count = sorted(dict(gender_count).items(), key=operator.itemgetter(1))
-
-    # Ages
-    ages = sorted(list(e.student.get_age() for e in total_checked_in_orders))
-    age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1))
-
-    # Average Age
-    average_age = int(round(sum(ages) / float(len(ages))))
-
-    return render(request, template_name, {
-        'past_sessions': past_sessions,
-        'gender_count': gender_count,
-        'age_count': age_count,
-        'average_age': average_age,
-        'total_past_orders_count': total_past_orders_count,
-        'total_checked_in_orders_count': total_checked_in_orders_count,
-    })
 
 
 @csrf_exempt
