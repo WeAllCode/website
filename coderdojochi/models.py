@@ -319,25 +319,20 @@ class Session(models.Model):
 
         return orders
 
-    def get_current_mentor_orders(self, checked_in=None):
-        if checked_in is not None:
-            if checked_in:
-                orders = MentorOrder.objects.filter(
-                    active=True,
-                    session=self
-                ).exclude(check_in=None).order_by('mentor__user__last_name')
-            else:
-                orders = MentorOrder.objects.filter(
-                    active=True,
-                    session=self,
-                    check_in=None
-                ).order_by('mentor__user__last_name')
-        else:
-            orders = MentorOrder.objects.filter(
-                active=True,
-                session=self
-            ).order_by('check_in', 'mentor__user__last_name')
+    def get_mentor_orders(self):
+        orders = MentorOrder.objects.filter(
+            session=self,
+            active=True,
+        ).order_by('mentor__user__last_name')
 
+        return orders
+
+    def get_checked_in_mentor_orders(self):
+        orders = MentorOrder.objects.filter(
+            session=self,
+            active=True,
+            check_in__isnull=False
+        ).order_by('mentor__user__last_name')
         return orders
 
     def get_current_students(self, checked_in=None):
