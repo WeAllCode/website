@@ -1415,7 +1415,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
     # age_count = sorted(dict(list(Counter(ages).iteritems())).items(), key=operator.itemgetter(1), reverse=True)
 
     # Average Age
-    average_age = int(round(sum(ages) / float(len(ages)))) if orders else 0
+    average_age = int(round(sum(ages) / float(len(ages)))) if orders and ages else 0
 
     return render(request, template_name, {
         'session': session,
