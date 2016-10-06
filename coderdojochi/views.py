@@ -99,11 +99,11 @@ def welcome(request, template_name="welcome.html"):
                     if keepGoing:
                         if next_url:
                             if 'enroll' in request.GET:
-                                return HttpResponseRedirect(u'{}?enroll=True&student={}'.format(next_url, new_student.id))
+                                return redirect(u'{}?enroll=True&student={}'.format(next_url, new_student.id))
                             else:
-                                return HttpResponseRedirect(next_url)
+                                return redirect(next_url)
                         else:
-                            return HttpResponseRedirect(reverse('welcome'))
+                            return redirect('welcome')
 
             if keepGoing:
                 if form.is_valid():
@@ -112,11 +112,11 @@ def welcome(request, template_name="welcome.html"):
 
                     if next_url:
                         if 'enroll' in request.GET:
-                            return HttpResponseRedirect(u'{}?enroll=True'.format(next_url))
+                            return redirect(u'{}?enroll=True'.format(next_url))
                         else:
-                            return HttpResponseRedirect(next_url)
+                            return redirect(next_url)
                     else:
-                        return HttpResponseRedirect(reverse('dojo'))
+                        return redirect('dojo')
                 else:
                     keepGoing = False
         else:
@@ -158,7 +158,7 @@ def welcome(request, template_name="welcome.html"):
 
                 next_url = u'?next={}'.format(next_url) if next_url else reverse('dojo')
 
-                return HttpResponseRedirect(next_url)
+                return redirect(next_url)
             else:
                 # check for next upcoming class
                 next_class = Session.objects.filter(active=True).order_by('start_date').first()
@@ -171,7 +171,7 @@ def welcome(request, template_name="welcome.html"):
 
                 next_url = u'?next={}'.format(next_url) if next_url else reverse('welcome')
 
-                return HttpResponseRedirect(next_url)
+                return redirect(next_url)
 
     if role and keepGoing:
         if role == 'mentor':
@@ -191,9 +191,9 @@ def welcome(request, template_name="welcome.html"):
     if account and account.user.first_name and keepGoing:
         if role == 'mentor':
             if next_url:
-                return HttpResponseRedirect(next_url)
+                return redirect(next_url)
             else:
-                return HttpResponseRedirect(reverse('dojo'))
+                return redirect('dojo')
         else:
             students = account.get_students() if account.get_students().count() else False
 
@@ -285,7 +285,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
         else:
             messages.error(request, 'Invalid request, please try again.')
 
-        return HttpResponseRedirect(session_obj.get_absolute_url())
+        return redirect(session_obj.get_absolute_url())
 
     upcoming_classes = Session.objects.filter(
         active=True,
@@ -304,7 +304,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
             if 'enroll' in request.GET:
                 url += '&enroll=True'
 
-            return HttpResponseRedirect(url)
+            return redirect(url)
 
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
@@ -314,7 +314,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
             spots_remaining = session_obj.get_mentor_capacity() - session_orders.count()
 
             if enroll or 'enroll' in request.GET:
-                return HttpResponseRedirect(session_obj.get_absolute_url() + '/sign-up/')
+                return redirect(u'{}/sign-up/'.format(session_obj.get_absolute_url()))
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
             account = guardian
@@ -331,7 +331,7 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
                     )
                 else:
                     if 'student' in request.GET:
-                        return HttpResponseRedirect(
+                        return redirect(
                             u'{}/sign-up/{}'.format(
                                 session_obj.get_absolute_url(),
                                 request.GET['student']
@@ -373,7 +373,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     'https://app.verifiedvolunteers.com/promoorder/6a34f727-3728-4f1a-b80b-7eb3265a3b93'
                 )
             )
-            return HttpResponseRedirect(reverse('dojo'))
+            return redirect('dojo')
 
         session_orders = MentorOrder.objects.filter(session=session_obj, active=True)
         user_signed_up = True if session_orders.filter(mentor=mentor).count() else False
@@ -384,7 +384,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     request,
                     'Sorry this class is at mentor capacity. Please check back soon and/or join us for another upcoming class!'
                 )
-                return HttpResponseRedirect(session_obj.get_absolute_url())
+                return redirect(session_obj.get_absolute_url())
     else:
         student = get_object_or_404(Student, id=student_id)
         guardian = get_object_or_404(Guardian, user=request.user)
@@ -399,7 +399,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                 request,
                 'Sorry, this class is limited to {}s this time around.'.format(session_obj.gender_limitation)
             )
-            return HttpResponseRedirect(session_obj.get_absolute_url())
+            return redirect(session_obj.get_absolute_url())
 
         if not user_signed_up:
             if session_obj.capacity <= session_obj.get_current_students().count():
@@ -407,7 +407,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     request,
                     'Sorry this class has sold out. Please sign up for the wait list and/or check back later.'
                 )
-                return HttpResponseRedirect(session_obj.get_absolute_url())
+                return redirect(session_obj.get_absolute_url())
 
     if request.method == 'POST':
         if user_signed_up:
@@ -514,7 +514,7 @@ def session_sign_up(request, year, month, day, slug, session_id, student_id=Fals
                     }
                 )
 
-        return HttpResponseRedirect(session_obj.get_absolute_url())
+        return redirect(session_obj.get_absolute_url())
 
     return render(request, template_name, {
         'session': session_obj,
@@ -703,7 +703,7 @@ def meeting_sign_up(request, year, month, day, slug, meeting_id, student_id=Fals
 def meeting_announce(request, meeting_id):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('home'))
+        return redirect('home')
 
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
@@ -753,7 +753,7 @@ def meeting_announce(request, meeting_id):
     else:
         messages.warning(request, 'Meeting already announced.')
 
-    return HttpResponseRedirect(reverse('cdc_admin'))
+    return redirect('cdc_admin')
 
 
 def meeting_ics(request, year, month, day, slug, meeting_id):
@@ -846,7 +846,7 @@ def dojo(request):
                 request,
                 'Tell us a little about yourself before going on to your dojo.'
             )
-            return HttpResponseRedirect(reverse('welcome'))
+            return redirect('welcome')
 
 
     if request.user.role == 'mentor':
@@ -909,7 +909,7 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
             form.save()
             user_form.save()
             messages.success(request, 'Profile information saved.')
-            return HttpResponseRedirect(reverse('dojo'))
+            return redirect('dojo')
         else:
             messages.error(request, 'There was an error. Please try again.')
     else:
@@ -956,7 +956,7 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
             form.save()
             user_form.save()
             messages.success(request, 'Profile information saved.')
-            return HttpResponseRedirect(reverse('dojo'))
+            return redirect('dojo')
         else:
             messages.error(request, 'There was an error. Please try again.')
     else:
@@ -994,7 +994,7 @@ def mentor_detail(request, mentor_id=False, template_name="mentor-detail.html"):
 
     if not mentor.public:
         messages.error(request, 'Invalid mentor ID.')
-        return HttpResponseRedirect(reverse('mentors'))
+        return redirect('mentors')
 
     return render(request, template_name, {
         'mentor': mentor
@@ -1035,7 +1035,7 @@ def mentor_approve_avatar(request, mentor_id=False):
                 mentor.user.last_name
             )
         )
-        return HttpResponseRedirect(reverse('mentors'))
+        return redirect('mentors')
 
 
 @login_required
@@ -1075,7 +1075,7 @@ def mentor_reject_avatar(request, mentor_id=False):
         )
     )
 
-    return HttpResponseRedirect(reverse('mentors'))
+    return redirect('mentors')
 
 
 @login_required
@@ -1094,7 +1094,7 @@ def student_detail(request, student_id=False, template_name="student-detail.html
         access = False
 
     if not access:
-        return HttpResponseRedirect(reverse('dojo'))
+        return redirect('dojo')
         messages.error(request, 'You do not have permissions to edit this student.')
 
     if request.method == 'POST':
@@ -1102,7 +1102,7 @@ def student_detail(request, student_id=False, template_name="student-detail.html
         if form.is_valid():
             form.save()
             messages.success(request, 'Student Updated.')
-            return HttpResponseRedirect(reverse('dojo'))
+            return redirect('dojo')
 
     return render(request, template_name, {
         'form': form
@@ -1161,7 +1161,7 @@ def donate_cancel(request):
             reverse('contact')
         )
     )
-    return HttpResponseRedirect(reverse('donate'))
+    return redirect('donate')
 
 
 @csrf_exempt
@@ -1171,7 +1171,7 @@ def donate_return(request):
         'Your donation is being processed. '
         'You should receive a confirmation email shortly. Thanks again!'
     )
-    return HttpResponseRedirect(reverse('donate'))
+    return redirect('donate')
 
 
 def about(request, template_name="about.html"):
@@ -1236,7 +1236,7 @@ def privacy(request, template_name="privacy.html"):
 def cdc_admin(request, template_name="admin.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('sessions'))
+        return redirect('sessions')
 
     sessions = Session.objects.select_related().annotate(
         num_orders=Count('order'),
@@ -1304,7 +1304,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('sessions'))
+        return redirect('sessions')
 
     session_obj = get_object_or_404(Session, id=session_id)
 
@@ -1355,7 +1355,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 def session_check_in(request, session_id, template_name="session-check-in.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('sessions'))
+        return redirect('sessions')
 
 
     if request.method == 'POST':
@@ -1435,7 +1435,7 @@ def session_check_in(request, session_id, template_name="session-check-in.html")
 def session_check_in_mentors(request, session_id, template_name="session-check-in-mentors.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('sessions'))
+        return redirect('sessions')
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1513,7 +1513,7 @@ def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html")
 def session_announce(request, session_id):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('home'))
+        return redirect('home')
 
     session_obj = get_object_or_404(Session, id=session_id)
 
@@ -1595,7 +1595,7 @@ def session_announce(request, session_id):
     else:
         messages.warning(request, 'Session already announced.')
 
-    return HttpResponseRedirect(reverse('cdc_admin'))
+    return redirect('cdc_admin')
 
 
 @csrf_exempt
