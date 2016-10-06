@@ -244,6 +244,8 @@ class Session(models.Model):
     )
     active = models.BooleanField(default=False, help_text="Session is active.")
     public = models.BooleanField(default=False, help_text="Session is a public session.")
+    password = models.CharField(blank=True, max_length=255)
+    partner_message = models.TextField(blank=True)
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -623,3 +625,13 @@ class Donation(models.Model):
 
     def __unicode__(self):
         return u'{} | ${}'.format(self.email, self.amount)
+
+
+class PartnerPasswordAccess(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(CDCUser)
+    session = models.ForeignKey(Session)
+
+    class Meta:
+        verbose_name = _("partner_password_access")
+        db_table = _("partner_password_access")

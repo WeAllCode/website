@@ -25,13 +25,13 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 from coderdojochi.util import local_to_utc
-from coderdojochi.models import (Mentor, Guardian, Student, Session, Order,
-                                 MentorOrder, Meeting, MeetingOrder, Donation,
-                                 CDCUser, EquipmentType, Equipment)
-from coderdojochi.forms import (CDCModelForm, MentorForm, GuardianForm,
-                                StudentForm, ContactForm)
+from coderdojochi.models import (Mentor, Guardian, Student, Session, Order, MentorOrder,
+                                 Meeting, MeetingOrder, Donation, CDCUser, EquipmentType,
+                                 Equipment, PartnerPasswordAccess)
+from coderdojochi.forms import CDCModelForm, MentorForm, GuardianForm, StudentForm, ContactForm
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -244,8 +244,37 @@ def session_detail_enroll(request, year, month, day, slug, session_id, template_
     return session_detail(request, year, month, day, slug, session_id, template_name, enroll=True)
 
 
+def validate_partner_session_access(request, session_id):
+    authed_sessions = request.session.get('authed_partner_sessions')
+    if authed_sessions and session_id in authed_sessions:
+        return True
+
+    if request.user.is_authenticated():
+        try:
+            PartnerPasswordAccess.objects.get(session_id=session_id,
+                                              user_id=request.user.id)
+        except PartnerPasswordAccess.DoesNotExist:
+            return False
+        else:
+            return True
+    else:
+        return False
+
+
 def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html", enroll=False):
     session_obj = get_object_or_404(Session, id=session_id)
+    if session_obj.password:
+        if not validate_partner_session_access(request, session_id):
+            view_kwargs = {
+                'year': year,
+                'month': month,
+                'day': day,
+                'slug': slug,
+                'session_id': session_id
+            }
+            url = reverse('session_password', kwargs=view_kwargs)
+            return HttpResponseRedirect(url)
+
     mentor_signed_up = False
     account = False
     students = False
@@ -1706,3 +1735,29 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
                 print >>sys.stderr, u'user: {}, {}'.format(user.email, response['reject_reason'])
 
             raise e
+
+
+class PasswordSessionView(TemplateView):
+    template_name = 'session-partner-password.html'
+
+    def post(self, request, *args, **kwargs):
+        session_id = kwargs.get('session_id')
+        session_obj = get_object_or_404(Session, id=session_id)
+        password_input = request.POST.get('password')
+        if not password_input:
+            return self.render_to_response({'error': 'Must enter a password.'})
+        if session_obj.password != password_input:
+            return self.render_to_response({'error': 'Invalid password.'})
+
+        authed_partner_sessions = request.session.get('authed_partner_sessions') or set()
+        authed_partner_sessions.update(session_id)
+        request.session['authed_partner_sessions'] = authed_partner_sessions
+
+        if request.user.is_authenticated():
+            try:
+                PartnerPasswordAccess.objects.get(session=session_obj, user=request.user)
+            except PartnerPasswordAccess.DoesNotExist:
+                PartnerPasswordAccess.objects.create(session=session_obj, user=request.user)
+
+        url = reverse('session_detail', kwargs=kwargs)
+        return HttpResponseRedirect(url)
