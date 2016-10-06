@@ -1484,11 +1484,7 @@ def session_check_in_mentors(request, session_id, template_name="session-check-i
 def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html"):
     if not request.user.is_staff:
         messages.error(request, 'You do not have permission to access this page.')
-        return HttpResponseRedirect(reverse('dojo'))
-
-    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-    current_mentor_orders_checked_in = meeting_obj.get_current_orders(checked_in=True)
-    mentors_checked_in = current_mentor_orders_checked_in.values('mentor')
+        return redirect('dojo')
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -1503,9 +1499,19 @@ def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html")
         else:
             messages.error(request, 'Invalid Order')
 
+    orders = MeetingOrder.objects.select_related().filter(
+        meeting=meeting_id
+    ).order_by('mentor__user__first_name')
+
+    active_orders = orders.filter(active=True)
+    inactive_orders = orders.filter(active=False)
+    checked_in = orders.filter(active=True, check_in__isnull=False)
+
+
     return render(request, template_name, {
-        'meeting': meeting_obj,
-        'mentors_checked_in': mentors_checked_in
+        'active_orders': active_orders,
+        'inactive_orders': inactive_orders,
+        'checked_in': checked_in,
     })
 
 
