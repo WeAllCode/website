@@ -12,6 +12,7 @@
     col.error{ background-color: #f2dede; }
     col.warning { background-color: #fcf8e3; }
     col.info { background-color: #d9edf7; }
+    .table tbody > tr > td.vert-align { vertical-align: middle; }
 </style>
 
 <!-- Google Charts -->
@@ -87,7 +88,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a class="pull-right" href="/dj-admin">Django Admin</a></li>
             </ul>
-        </div><!--/.nav-collapse -->
+        </div>
     </div>
 </nav>
 {% endblock %}
@@ -134,7 +135,7 @@
     </div>
 
     {% if sessions %}
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <colgroup>
             <col>
             <col>
@@ -149,16 +150,16 @@
         </colgroup>
         <thead>
             <tr>
-                <th rowspan="2">Date</th>
-                <th rowspan="2">S. Time</th>
-                <th rowspan="2">E. Time</th>
-                <th rowspan="2" class="hidden-xs hidden-sm">Class Name</th>
-                <th rowspan="2" class="hidden-xs hidden-sm">Location</th>
-                <th rowspan="2" class="hidden-xs hidden-sm">Annon.</th>
+                <th rowspan="2" class="col-sm-2">Date</th>
+                <th rowspan="2" class="col-sm-1 text-right">S. Time</th>
+                <th rowspan="2" class="col-sm-1 text-right">E. Time</th>
+                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Class Name</th>
+                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Location</th>
+                <th rowspan="2" class="hidden-xs hidden-sm"></th>
                 <th colspan="3" class="text-center">Students</th>
-                <th rowspan="2"></th>
+                <th rowspan="2" class=""></th>
                 <th colspan="3" class="text-center">Volunteers</th>
-                <th rowspan="2"></th>
+                <th rowspan="2" class=""></th>
             </tr>
             <tr>
                 <th class="text-center"><abbr title="Attended">A</abbr></th>
@@ -183,8 +184,8 @@
                 "
             >
                 <td>{{ session.start_date|date:"M j, Y" }}</td>
-                <td>{{ session.start_date|time }}</td>
-                <td>{{ session.end_date|time }}</td>
+                <td class="text-right">{{ session.start_date|time:"H:i" }}</td>
+                <td class="text-right">{{ session.end_date|time:"H:i" }}</td>
                 <td class="hidden-xs hidden-sm"><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
                 <td class="hidden-xs hidden-sm">{{ session.location.name }}</td>
                 <td class="text-center hidden-xs hidden-sm">
@@ -220,10 +221,16 @@
                         &times;
                     {% endif %}
                 </td>
-                <td class="text-center">&times;</td>
                 <td class="text-center">
                     {% if not session.external_enrollment_url %}
-                        {{ session.get_current_mentor_orders.count|default:'-' }}
+                        {{ session.get_checked_in_mentor_orders.count|default:'-' }}
+                    {% else %}
+                        &times;
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if not session.external_enrollment_url %}
+                        {{ session.get_mentor_orders.count|default:'-' }}
                     {% else %}
                         &times;
                     {% endif %}
@@ -262,7 +269,7 @@
     </div>
 
     {% if meetings %}
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <colgroup>
             <col>
             <col>
@@ -275,14 +282,14 @@
         </colgroup>
         <thead>
             <tr>
-                <th rowspan="2">Date</th>
-                <th rowspan="2">S. Time</th>
-                <th rowspan="2">E. Time</th>
-                <th rowspan="2">Meeting Name</th>
-                <th rowspan="2">Location</th>
-                <th rowspan="2">Annon.</th>
-                <th colspan="2" class="text-center">Volunteers</th>
-                <th rowspan="2"></th>
+                <th rowspan="2" class="col-sm-2">Date</th>
+                <th rowspan="2" class="col-sm-1 text-right">S. Time</th>
+                <th rowspan="2" class="col-sm-1 text-right">E. Time</th>
+                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Meeting Name</th>
+                <th rowspan="2" class="col-sm-4 hidden-xs hidden-sm">Location</th>
+                <th rowspan="2" class="hidden-xs hidden-sm">Annon.</th>
+                <th colspan="2" class="col-sm-1 text-center">Volunteers</th>
+                <th rowspan="2" class=""></th>
             </tr>
             <tr>
                 <th class="text-center"><abbr title="Attended">A</abbr></th>
@@ -302,8 +309,8 @@
                 "
             >
                 <td>{{ meeting.start_date|date:"M j, Y" }}</td>
-                <td>{{ meeting.start_date|time }}</td>
-                <td>{{ meeting.end_date|time }}</td>
+                <td class="text-right">{{ meeting.start_date|time:"H:i" }}</td>
+                <td class="text-right">{{ meeting.end_date|time:"H:i" }}</td>
                 <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
                 <td>{{ meeting.location.name }}</td>
                 <td class="text-center">
