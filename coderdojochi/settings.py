@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 from coderdojochi.util import str_to_bool
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -25,7 +26,7 @@ PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str_to_bool(os.environ.get('DEBUG')) or False
+DEBUG = str_to_bool(os.environ.get('DEBUG')) and 'test' not in sys.argv or False
 DEBUG_EMAIL = str_to_bool(os.environ.get('DEBUG_EMAIL')) or False
 
 ALLOWED_HOSTS = ['*']
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
 
     # coderdojochi
     'coderdojochi',
+    'django_nose',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -85,6 +87,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(PROJECT_ROOT, 'coderdojochi/templates/'),
+            os.path.join(PROJECT_ROOT, 'coderdojochi/templates/dashboard/'),
+            os.path.join(PROJECT_ROOT, 'coderdojochi/emailtemplates/'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -181,40 +185,40 @@ MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
 
+
 # AWS S3
 AWS_HEADERS = {
     'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
     'Cache-Control': 'max-age=94608000',
 }
 
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
-    # Tell django-storages that when coming up with the URL for an item in S3 storage, keep
-    # it simple - just use this domain plus the path. (If this isn't set, things get complicated).
-    # This controls how the `static` template tag from `staticfiles` gets expanded if used.
-    # We also use it in the next setting.
-    AWS_S3_CUSTOM_DOMAIN = u'{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
+if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
 
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'coderdojochi.custom_storages.StaticStorage'
-    STATIC_URL = u'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+    AWS_S3_CALLING_FORMAT = 'boto.s3.connection.OrdinaryCallingFormat'
 
-    MEDIAFILES_LOCATION = 'media'
-    MEDIA_URL = u'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
-    DEFAULT_FILE_STORAGE = 'coderdojochi.custom_storages.MediaStorage'
+    AWS_STATIC_BUCKET_NAME = os.environ.get('AWS_STATIC_BUCKET_NAME')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+
+    STATICFILES_STORAGE = 'coderdojochi.custom_storages.S3StaticStorage'
+    DEFAULT_FILE_STORAGE = 'coderdojochi.custom_storages.S3MediaStorage'
+
+    AWS_STATIC_CUSTOM_DOMAIN = AWS_STATIC_BUCKET_NAME
+    AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME
+
+    STATIC_URL = 'http://{}/'.format(AWS_STATIC_BUCKET_NAME)
+    MEDIA_URL = u'http://{}/'.format(AWS_STORAGE_BUCKET_NAME)
 
 
 # Paypal
-
 PAYPAL_RECEIVER_EMAIL = 'info@coderdojochi.org'
 PAYPAL_BUSINESS_ID = 'CXD22M5GNXDE4'
 PAYPAL_TEST = False
 
-# django allauth
 
+# django allauth
 LOGIN_REDIRECT_URL = '/dojo'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -250,7 +254,6 @@ if DEBUG:
     )
 
     DEBUG_TOOLBAR_CONFIG = {
-        'INTERCEPT_REDIRECTS': True,
         'SHOW_TOOLBAR_CALLBACK': custom_show_toolbar,
         'TAG': 'div',
         'ENABLE_STACKTRACES': True,

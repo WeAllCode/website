@@ -475,26 +475,34 @@ a.icon-action {
 .avatar input,
 .change-overlay {
     position: absolute;
-    left: 0;
+    right: 0;
     bottom: 0;
-    width: 100px;
+    left: 0;
+
     height: 40px;
+
     cursor: pointer;
+
     opacity: 0;
 }
 
+
 .change-overlay {
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    text-align: center;
-    opacity: 1;
     line-height: 40px;
+
+    text-align: center;
+
     opacity: 1;
+    color: #FFF;
+    background: rgba(0, 0, 0, 0.5);
+
+    &:hover {
+        height: 40px;
+
+        background: rgba(0,0,0,0.9);
+    }
 }
-.change-overlay:hover {
-    background: rgba(0,0,0,0.9);
-    height: 41px;
-}
+
 
 // classes
 .upcoming-sessions {
@@ -521,7 +529,7 @@ a.icon-action {
 
         padding: 40px 0;
         background: #fff;
-        background: rgba(255, 255, 255, .7);
+        background: rgba(255, 255, 255, 0.7);
 
 
         @include breakpoint($tablet-and-up) {

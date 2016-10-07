@@ -18,9 +18,9 @@
 
 
             <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon">
-            <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600|Quicksand:300,400,700' rel='stylesheet' type='text/css'>
-            <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-            <link href="{% static "css/vendor/bootstrap.min.css" %}" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Quicksand:300,400,700" rel="stylesheet">
+            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
 
             {% if DEBUG %}
             <link href="{% static "css/cdc.css" %}" rel="stylesheet">
@@ -74,21 +74,40 @@
 
         {% block script_base %}
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script>if (!window.jQuery) {document.write('<script src="{% static 'libs/jquery/jquery-1.11.2.min.js' %}"><\/script>');}</script>
+            <!-- jQuery CDN -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-        <script src="{% static "js/vendor/cdc.bootstrap.min.js" %}"></script>
-        <script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
-        <script src="{% static "js/vendor/picker.js" %}"></script>
-        <script src="{% static "js/vendor/picker.date.js" %}"></script>
+            <!-- jQuery local fallback -->
+            <script>window.jQuery || document.write('<script src="{% static 'js/vendor/jquery-1.12.4.min.js' %}"><\/script>')</script>
 
-        {% if DEBUG %}
-        <script src="{% static "js/cdc.js" %}"></script>
-        {% else %}
-        <script src="{% static "js/cdc.min.js" %}"></script>
-        {% endif %}
+            <!-- Bootstrap JS CDN -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        {% block extra_script %}{% endblock %}
+            <!-- Bootstrap JS local fallback -->
+            <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{% static 'js/vendor/bootstrap-3.3.7.min.js' %}"><\/script>')}</script>
+
+            <!-- Bootstrap CSS local fallback -->
+            <script>
+                $(document).ready(function() {
+                    var bodyColor = $('body').css('color');
+                    if (bodyColor != 'rgb(51, 51, 51)') {
+                        $("head").prepend('<link rel="stylesheet" href="{% static 'css/vendor/bootstrap-3.3.7.min.css' %}">');
+                    }
+                });
+            </script>
+
+
+            <script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
+            <script src="{% static "js/vendor/picker.js" %}"></script>
+            <script src="{% static "js/vendor/picker.date.js" %}"></script>
+
+            {% if DEBUG %}
+                <script src="{% static "js/cdc.js" %}"></script>
+            {% else %}
+                <script src="{% static "js/cdc.min.js" %}"></script>
+            {% endif %}
+
+            {% block extra_script %}{% endblock %}
         {% endblock %}
 
         {% block extra_body %}{% endblock %}
@@ -103,7 +122,5 @@
         ga('create', 'UA-78618586-1', 'auto');
         ga('send', 'pageview');
         </script>
-
-        <!-- {{ request.revision }} -->
     </body>
 </html>
