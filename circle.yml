@@ -42,7 +42,7 @@ deployment:
       - sed -i'' -e "s;<POSTGRES_USER>;$POSTGRES_USER;g" ./deploy/.ebextensions/environment.config
       - sed -i'' -e "s;<POSTGRES_PASSWORD>;$POSTGRES_PASSWORD;g" ./deploy/.ebextensions/environment.config
 
-      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.03 v2.1.0 running Multi-container Docker 1.9.1 (Generic)" -r us-east-1 $DOCKER_REPO
+      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.03 v2.1.7 running Multi-container Docker 1.11.2 (Generic)" -r us-east-1 $DOCKER_REPO
       - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM production
 
   staging:
@@ -66,5 +66,5 @@ deployment:
       - sed -i'' -e "s;<POSTGRES_USER>;$POSTGRES_USER;g" ./deploy/.ebextensions/environment.config
       - sed -i'' -e "s;<POSTGRES_PASSWORD>;$POSTGRES_PASSWORD;g" ./deploy/.ebextensions/environment.config
 
-      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.03 v2.1.0 running Multi-container Docker 1.9.1 (Generic)" -r us-east-1 $DOCKER_REPO
+      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.03 v2.1.7 running Multi-container Docker 1.11.2 (Generic)" -r us-east-1 $DOCKER_REPO
       - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM staging

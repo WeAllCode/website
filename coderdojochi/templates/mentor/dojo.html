@@ -1,0 +1,162 @@
+{% extends "_base.html" %}
+{% load bootstrap3 humanize coderdojochi_extras %}
+
+{% block title %}My Dojo{% endblock %}
+
+{% block body_class %}page-dojo{% endblock %}
+
+{% block content %}
+
+{% if not account_complete %}
+<div class="container">
+    <div class="jumbotron">
+        <h1>Hello {% if mentor.user.first_name %}{{ mentor.user.first_name }}{% else %}there friend{% endif %}!</h1>
+        <p>We're super excited to have you join our ranks. Before you come to your first mentor session, we need to take care of a few things.</p>
+
+        <ul>
+            {% if not mentor.user.first_name or not mentor.user.last_name %}
+            <li><a href="#id_first_name">Enter full name</a>.</li>
+            {% endif %}
+
+            {% if not mentor.bio %}
+            <li><a href="#id_bio">Write a little about yourself.</a></li>
+            {% endif %}
+
+            {% if not mentor.avatar %}
+            <li>Upload profile picture.</li>
+            {% endif %}
+
+            {% if not mentor.background_check %}
+            <li>Complete <a href="https://app.verifiedvolunteers.com/promoorder/3df76c55-9961-46e1-8e5f-f6b38e2ec4dc" target="_blank" data-toggle="popover" data-trigger="hover" data-content="Background checks take 2 minutes to complete and 1-3 days to progress.">background check</a>.</li>
+            {% endif %}
+
+            {% if not past_sessions %}
+            <li>Attend <a href="{% url 'sessions' %}">a class</a>.</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<div class="container">
+    <div class="dojo-content">
+        <h2>Your Classes</h2>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#upcoming" data-toggle="tab">Upcoming</a></li>
+            <li><a href="#past" data-toggle="tab">Past</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="upcoming">
+                {% if upcoming_sessions %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in upcoming_sessions %}
+                        <tr>
+                            <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
+                            <td>{{ order.session.start_date }}</td>
+                            <td>
+                                <a href="{{ order.session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">You have no upcoming classes. <a href="{% url 'sessions' %}">Find one now!</a></p>
+                {% endif %}
+            </div>
+            <div class="tab-pane" id="past">
+                {% if past_sessions %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in past_sessions %}
+                        <tr>
+                            <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
+                            <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.mentor_start_date|time }}</span></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">You have not participated in any classes yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="upcoming-meetings{% if highlight == 'meetings' %} alert alert-warning{% endif %}">
+            <h2>Upcoming Mentor Meetings</h2>
+            {% if upcoming_meetings %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Meeting</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for meeting_order in upcoming_meetings %}
+                    <tr>
+                        <td><a href="{{ meeting_order.meeting.get_absolute_url }}">{{ meeting_order.meeting.meeting_type.title }}</a></td>
+                        <td>{{ meeting_order.meeting.start_date }}</td>
+                        <td>
+                            <a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">{% if mentor in meeting.get_current_mentors %}Can't make it{% else %}RSVP{% endif%}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-muted">No upcoming mentor meetings at this time. Please check back soon.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="dojo-profile">
+        <div class="well well-sm">
+            <form id="profile_form" enctype="multipart/form-data" action="" method="post">
+                {% csrf_token %}
+
+                <div class="avatar">
+                    <img src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" class="avatar" height="" width="283" height="283">
+                    <span class="change-overlay" data-trigger="hover" data-placement="top" data-html="true" data-toggle="popover" title="Avatar Requirements" data-content="Min size: <strong>500 x 500px</strong><br>Max size: <strong>1000 x 1000px</strong><br>Max file size: <strong>2 MB</strong><br>Formats: <strong>.jpeg, .png, .gif</strong>">Change</a>
+                    <input id="id_avatar" name="avatar" title="" type="file" onchange="document.getElementById('profile_form').submit();">
+                </div>
+                {% if mentor.avatar and not mentor.avatar_approved %}
+                    <div class="alert alert-warning text-center">Avatar Pending Approval</div>
+                {% endif %}
+
+                {{ form.avatar.errors }}
+
+
+                <h3>Joined: {{ mentor.user.date_joined|naturalday|capfirst }}</h3>
+
+                {% bootstrap_field user_form.first_name %}
+                {% bootstrap_field user_form.last_name %}
+                {% bootstrap_field form.bio %}
+
+                {% buttons %}
+                <button class="submit btn-cdc btn-cdc-inverse">Save</button>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

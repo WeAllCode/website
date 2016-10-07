@@ -5,6 +5,7 @@ from stdimage.models import StdImageField
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import formats, timezone
@@ -61,7 +62,7 @@ class Mentor(models.Model):
     background_check = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
     avatar = StdImageField(upload_to=generate_filename, blank=True, variations={
-        'thumbnail': {"width": 500, "height": 500, "crop": True}
+        'thumbnail': {'width': 500, 'height': 500, 'crop': True}
     })
     avatar_approved = models.BooleanField(default=False)
 
@@ -188,6 +189,24 @@ class Student(models.Model):
         else:
             return 'other'
 
+    # returns True if the student age is between min_age and max_age
+    def is_within_age_range(self, min_age, max_age):
+        age = self.get_age()
+
+        if age >= min_age and age <= max_age:
+            return True
+        else:
+            return False
+
+    def is_within_gender_limitation(self, limitation):
+        if limitation:
+            if self.get_clean_gender() in [limitation.lower(), 'other']:
+                return True
+            else:
+                return False
+        else:
+            return True
+
 
 class Course(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
@@ -221,6 +240,12 @@ class Location(models.Model):
         return self.name
 
 
+GENDER_LIMITATION_CHOICES = (
+    ('male', 'Male'),
+    ('female', 'Female'),
+)
+
+
 class Session(models.Model):
     course = models.ForeignKey(Course)
     start_date = models.DateTimeField()
@@ -250,6 +275,8 @@ class Session(models.Model):
     )
     active = models.BooleanField(default=False, help_text="Session is active.")
     public = models.BooleanField(default=False, help_text="Session is a public session.")
+    password = models.CharField(blank=True, max_length=255)
+    partner_message = models.TextField(blank=True)
     announced_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -257,6 +284,20 @@ class Session(models.Model):
     bg_image = models.ImageField(blank=True, null=True)
     mentors_week_reminder_sent = models.BooleanField(default=False)
     mentors_day_reminder_sent = models.BooleanField(default=False)
+    gender_limitation = models.CharField(
+        max_length=255,
+        choices=GENDER_LIMITATION_CHOICES,
+        blank=True,
+        null=True
+    )
+    min_age_limitation = models.IntegerField(
+        default=7,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+    max_age_limitation = models.IntegerField(
+        default=17,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
 
     class Meta:
         verbose_name = _("session")
@@ -319,25 +360,20 @@ class Session(models.Model):
 
         return orders
 
-    def get_current_mentor_orders(self, checked_in=None):
-        if checked_in is not None:
-            if checked_in:
-                orders = MentorOrder.objects.filter(
-                    active=True,
-                    session=self
-                ).exclude(check_in=None).order_by('mentor__user__last_name')
-            else:
-                orders = MentorOrder.objects.filter(
-                    active=True,
-                    session=self,
-                    check_in=None
-                ).order_by('mentor__user__last_name')
-        else:
-            orders = MentorOrder.objects.filter(
-                active=True,
-                session=self
-            ).order_by('check_in', 'mentor__user__last_name')
+    def get_mentor_orders(self):
+        orders = MentorOrder.objects.filter(
+            session=self,
+            active=True,
+        ).order_by('mentor__user__last_name')
 
+        return orders
+
+    def get_checked_in_mentor_orders(self):
+        orders = MentorOrder.objects.filter(
+            session=self,
+            active=True,
+            check_in__isnull=False
+        ).order_by('mentor__user__last_name')
         return orders
 
     def get_current_students(self, checked_in=None):
@@ -369,7 +405,6 @@ class Session(models.Model):
             return self.mentor_capacity
         else:
             return self.capacity / 2
-
 
 class MeetingType(models.Model):
     code = models.CharField(max_length=255, blank=True, null=True)
@@ -628,3 +663,13 @@ class Donation(models.Model):
 
     def __unicode__(self):
         return u'{} | ${}'.format(self.email, self.amount)
+
+
+class PartnerPasswordAccess(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(CDCUser)
+    session = models.ForeignKey(Session)
+
+    class Meta:
+        verbose_name = _("partner_password_access")
+        db_table = _("partner_password_access")

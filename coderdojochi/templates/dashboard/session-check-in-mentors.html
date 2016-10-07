@@ -1,0 +1,187 @@
+{% extends "_admin-base.html" %}
+
+{% load i18n humanize coderdojochi_extras %}
+
+{% block title %}CoderDojoChi Admin - Check in mentors{% endblock %}
+
+{% block extra_head %}
+<style>
+    col.success { background-color: #dff0d8; }
+    col.error{ background-color: #f2dede; }
+    col.warning { background-color: #fcf8e3; }
+    col.info { background-color: #d9edf7; }
+    .table tbody > tr > td.vert-align { vertical-align: middle; }
+</style>
+{% endblock %}
+
+{% block topnav %}
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'cdc_admin' %}">CoderDojoChi Admin</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a class="pull-right" href="/dj-admin">Django Admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    {% if active_orders.count %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-xs-12 panel panel-default">
+                        <h3>Attendance:</h3>
+                        <h2>{{ checked_in_orders.count }} of {{ active_orders.count }}</h2>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{% widthratio checked_in_orders.count active_orders.count 100 %}" aria-valuemin="0" aria-valuemax="100" style="width: {% widthratio checked_in_orders.count active_orders.count 100 %}%">
+                                {% widthratio checked_in_orders.count active_orders.count 100 %}%
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if active_orders.count %}
+    <div class="container">
+        {% if active_session %}
+        <h2>Attending Mentors <span class="badge">{{ active_orders.count }}</span></h2>
+        {% else %}
+        <h2>Attended Mentors <span class="badge">{{ active_orders.count }}</span></h2>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-sm-12">
+                {% if active_orders.count %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-1"></th>
+                            <th class="col-sm-4">Mentor Name</th>
+                            <th class="col-sm-1">Age</th>
+                            <th class="col-sm-1">Gender</th>
+                            {% if active_session %}<th class="text-right">Action</th>{% endif %}
+                            <th class="col-sm-2 text-right">Check-in Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in active_orders %}
+                        <tr class="{% if order.check_in and active_session %}success{% endif %}">
+                            <td class="vert-align">{{ forloop.counter|stringformat:"02d" }}</td>
+                            <td class="vert-align">
+                              <strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}
+                            </td>
+                            <td class="vert-align">-</td>
+                            <td class="vert-align">-</td>
+                            {% if active_session %}
+                            <td class="vert-align text-right">
+                                <form method="post" action=".">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                                    {% if not order.check_in %}
+                                    <button class="btn btn-primary">Check In</button>
+                                    {% else %}
+                                    <button class="btn btn-danger">Undo</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                            {% endif %}
+                            <td class="vert-align text-right">
+                                {% if order.check_in %}
+                                    {{ order.check_in }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No mentors registered.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if active_session != True and no_show_orders %}
+    <div class="container">
+        <h2>No Shows <span class="badge">{{ no_show_orders.count }}</span></h2>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-1"></th>
+                            <th class="col-sm-4">Mentor Name</th>
+                            <th class="col-sm-1">Age</th>
+                            <th class="col-sm-1">Gender</th>
+                            <th class="col-sm-2 text-right">Cancelled Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in no_show_orders %}
+                        <tr>
+                            <td>{{ forloop.counter|stringformat:"02d" }}</td>
+                            <td>
+                              <strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}
+                            </td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="text-right">{{ order.updated_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if inactive_orders.count and inactive_orders %}
+    <div class="container">
+        <h2>Cancelled Tickets <span class="badge">{{ inactive_orders.count }}</span></h2>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1"></th>
+                            <th class="col-sm-4">Mentor Name</th>
+                            <th class="col-sm-1">Age</th>
+                            <th class="col-sm-1">Gender</th>
+                            <th class="col-sm-2 text-right">Cancelled Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in inactive_orders %}
+                        <tr>
+                            <td>{{ forloop.counter|stringformat:"02d" }}</td>
+                            <td>
+                              <strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}
+                            </td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="text-right">{{ order.updated_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
