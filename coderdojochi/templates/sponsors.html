@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+
+{% load i18n cache %}
+
+{% block title %}Sponsors{% endblock %}
+
+{% block body_class %}page-sponsors{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <h2>{% trans "Platinum Sponsors" %}</h2>
+    <div class="row ad-space">
+        <div class="col-sm-6 ad-space-ad">
+            <a href="#">Your logo here</a>
+        </div>
+        <div class="col-sm-6 ad-space-ad">
+            <a href="#">Your logo here</a>
+        </div>
+    </div>
+    <h2>{% trans "Gold Sponsors" %}</h2>
+    <div class="row ad-space">
+        <div class="col-sm-4 ad-space-ad">
+            <a href="#">Your logo here</a>
+        </div>
+        <div class="col-sm-4 ad-space-ad">
+            <a href="#">Your logo here</a>
+        </div>
+        <div class="col-sm-4 ad-space-ad">
+            <a href="#">Your logo here</a>
+        </div>
+    </div>
+    <h2>{% trans "Silver Sponsors" %}</h2>
+    <div class="row ad-space">
+        <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
+            <a href="#">Your logo here</a>
+        </div>
+        <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
+            <a href="#">Your logo here</a>
+        </div>
+        <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
+            <a href="#">Your logo here</a>
+        </div>
+        <div class="col-xs-6 col-sm-3 ad-space-ad ad-space-ad-small">
+            <a href="#">Your logo here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

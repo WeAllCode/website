@@ -28,6 +28,8 @@ urlpatterns = [
 
     url(r'^volunteer/$', coderdojochi_views.volunteer, name='volunteer'),
 
+	url(r'^sponsors/', 'coderdojochi.views.sponsors', name='sponsors'),
+
     url(r'^contact/', coderdojochi_views.contact, name='contact'),
 
     url(r'^mentors/(?P<mentor_id>[\d]+)/reject-avatar/$', coderdojochi_views.mentor_reject_avatar, name='mentor_reject_avatar'),

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import logging
-logger = logging.getLogger("mechanize")
+from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation, Sponsor
+from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
 
 import sys
 import arrow
@@ -65,6 +65,7 @@ from coderdojochi.models import (
     PartnerPasswordAccess,
     Session,
     Student,
+	Sponsor,
 )
 from coderdojochi.forms import (
     CDCModelForm,
@@ -1294,6 +1295,14 @@ def about(request, template_name="about.html"):
         'students_served': students_served
     })
 
+
+def sponsors(request, template_name="sponsors.html"):
+
+    sponsors = Sponsor.objects.filter(active=True)
+
+    return render_to_response(template_name, {
+        'sponsors': sponsors
+    }, context_instance=RequestContext(request))
 
 def contact(request, template_name="contact.html"):
     if request.method == 'POST':

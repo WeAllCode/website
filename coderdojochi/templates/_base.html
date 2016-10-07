@@ -63,6 +63,9 @@
                             {% if 'contact' not in request.path %}
                             <a href="{% url 'contact' %}">Contact Us</a>
                             {% endif %}
+                            {% if 'sponsors' not in request.path %}
+                            <a href="{% url 'sponsors' %}">Our Sponsors</a>
+                            {% endif %}
                             {% if 'privacy' not in request.path %}
                             <a href="{% url 'privacy' %}">Privacy &amp; Terms</a>
                             {% endif %}

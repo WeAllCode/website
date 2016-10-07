@@ -24,6 +24,7 @@ from coderdojochi.models import (
     Session,
     Student,
     PartnerPasswordAccess,
+	Sponsor,
 )
 
 User = get_user_model()
@@ -541,3 +542,4 @@ admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Donation, DonationAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(RaceEthnicity)
+admin.site.register(Sponsor)
