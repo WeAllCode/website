@@ -40,20 +40,36 @@ def student_register_link(context, student, session):
     if orders.count():
         button_modifier = 'btn-cdc-danger'
         button_msg = 'Can\'t make it'
-    elif session.gender_limitation and student.get_clean_gender() not in  [
-        session.gender_limitation,
-        'other'
-    ]:
+
+    elif (not student.is_within_age_range(session.min_age_limitation, session.max_age_limitation) or
+            not student.is_within_gender_limitation(session.gender_limitation)):
         button_modifier = 'btn-default'
         button_additional_attributes = 'disabled'
         button_tag = 'span'
-        button_href = ''' data-trigger="hover" data-placement="top" data-toggle="popover"
-                      title="" data-content="Sorry, this class is limited to {}s this time
-                      around." data-original-title="{}-only event."
-                      '''.format(
-                          session.gender_limitation,
-                          'Girls' if session.gender_limitation == 'female' else 'Boys'
-                      )
+        if (not student.is_within_age_range(session.min_age_limitation, session.max_age_limitation) and
+                not student.is_within_gender_limitation(session.gender_limitation)):
+            button_href = ''' data-trigger="hover" data-placement="top" data-toggle="popover"
+                          title="" data-content="Sorry, this class is limited to {}s between
+                          {} and {} this time around." data-original-title="Limited event."
+                          '''.format(session.gender_limitation,
+                              session.min_age_limitation,
+                              session.max_age_limitation
+                          )
+
+        elif not student.is_within_age_range(session.min_age_limitation, session.max_age_limitation):
+            button_href = ''' data-trigger="hover" data-placement="top" data-toggle="popover"
+                          title="" data-content="Sorry, this class is limited to student between
+                          ages {} and {} this time around." data-original-title="Age-limited event."
+                          '''.format(session.min_age_limitation, session.max_age_limitation)
+
+        elif not student.is_within_gender_limitation(session.gender_limitation):
+            button_href = ''' data-trigger="hover" data-placement="top" data-toggle="popover"
+                          title="" data-content="Sorry, this class is limited to {}s this time
+                          around." data-original-title="{}-only event."
+                          '''.format(
+                              session.gender_limitation,
+                              'Girls' if session.gender_limitation == 'female' else 'Boys'
+                          )
 
     form = '<{0} {1} class="btn-cdc btn-cdc-sm {2}" {3}>{4}</{0}>'.format(
         button_tag,
@@ -64,4 +80,3 @@ def student_register_link(context, student, session):
     )
 
     return Template(form).render(context)
-
