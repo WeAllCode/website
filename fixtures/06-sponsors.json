@@ -1,0 +1,107 @@
+[
+{
+  "model": "coderdojochi.sponsor",
+  "pk": 1,
+  "fields": {
+    "name": "Google",
+    "level": "terabytes",
+    "url": null,
+    "description": null,
+    "contact_email": "fake-email@example.com",
+    "logo": "",
+    "active": true,
+    "created_at": "2016-10-06T00:00:00.000",
+    "updated_at": "2016-10-06T00:00:00.000"
+  }
+},
+{
+  "model": "coderdojochi.sponsor",
+  "pk": 2,
+  "fields": {
+    "name": "Apple",
+    "level": "gigabytes",
+    "url": null,
+    "description": null,
+    "contact_email": "fake-email@example.com",
+    "logo": "",
+    "active": true,
+    "created_at": "2016-10-06T00:00:00.000",
+    "updated_at": "2016-10-06T00:00:00.000"
+  }
+},
+{
+  "model": "coderdojochi.sponsor",
+  "pk": 3,
+  "fields": {
+    "name": "Microsoft",
+    "level": "gigabytes",
+    "url": null,
+    "description": null,
+    "contact_email": "fake-email@example.com",
+    "logo": "",
+    "active": true,
+    "created_at": "2016-10-06T00:00:00.000",
+    "updated_at": "2016-10-06T00:00:00.000"
+  }
+},
+{
+  "model": "coderdojochi.sponsor",
+  "pk": 4,
+  "fields": {
+    "name": "Spothero",
+    "level": "megabytes",
+    "url": null,
+    "description": null,
+    "contact_email": "fake-email@example.com",
+    "logo": "",
+    "active": true,
+    "created_at": "2016-10-06T00:00:00.000",
+    "updated_at": "2016-10-06T00:00:00.000"
+  }
+},
+{
+  "model": "coderdojochi.sponsor",
+  "pk": 5,
+  "fields": {
+    "name": "The Nerdery",
+    "level": "megabytes",
+    "url": null,
+    "description": null,
+    "contact_email": "fake-email@example.com",
+    "logo": "",
+    "active": true,
+    "created_at": "2016-10-06T00:00:00.000",
+    "updated_at": "2016-10-06T00:00:00.000"
+  }
+},
+{
+  "model": "coderdojochi.sponsor",
+  "pk": 6,
+  "fields": {
+    "name": "Jellyvision",
+    "level": "megabytes",
+    "url": null,
+    "description": null,
+    "contact_email": "fake-email@example.com",
+    "logo": "",
+    "active": true,
+    "created_at": "2016-10-06T00:00:00.000",
+    "updated_at": "2016-10-06T00:00:00.000"
+  }
+},
+{
+  "model": "coderdojochi.sponsor",
+  "pk": 7,
+  "fields": {
+    "name": "Family Foundation",
+    "level": "kilobytes",
+    "url": null,
+    "description": null,
+    "contact_email": "fake-email@example.com",
+    "logo": "",
+    "active": true,
+    "created_at": "2016-10-06T00:00:00.000",
+    "updated_at": "2016-10-06T00:00:00.000"
+  }
+}
+]

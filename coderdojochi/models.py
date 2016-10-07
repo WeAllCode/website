@@ -661,25 +661,45 @@ class PartnerPasswordAccess(models.Model):
     class Meta:
         verbose_name = _("partner_password_access")
         db_table = _("partner_password_access")
-        return self.email + ' | $' + str(self.amount)
+
 
 SponsorshipLevels = (
-    ('platinum', 'platinum'),
-    ('gold', 'gold'),
-    ('silver', 'silver'),
+
+    # Bronze
+    ('bytes', 'Bytes'),
+
+    # Silver
+    ('kilobytes', 'Kilobytes'),
+
+    # Gold
+    ('megabytes', 'Megabytes'),
+
+    # Platinum
+    ('gigabytes', 'Gigabytes'),
+
+    # Higher?
+    ('terabytes', 'Terabytes'),
 )
+
 
 class Sponsor(models.Model):
     name = models.CharField(max_length=255)
-    contact_email = models.EmailField()
     level = models.CharField(max_length=255, choices=SponsorshipLevels)
+    url = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    contact_email = models.EmailField(blank=True, null=True)
+    logo = models.ImageField(blank=True, null=True)
+
+    active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = _("sponsor")
         verbose_name_plural = _("sponsors")
 
     def __unicode__(self):
-        return self.name + '(' + self.level + ')'
+        return u'{} ({})'.format(
+            self.name,
+            self.level
+        )

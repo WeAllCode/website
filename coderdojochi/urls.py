@@ -28,7 +28,7 @@ urlpatterns = [
 
     url(r'^volunteer/$', coderdojochi_views.volunteer, name='volunteer'),
 
-	url(r'^sponsors/', 'coderdojochi.views.sponsors', name='sponsors'),
+	url(r'^sponsors/$', coderdojochi_views.sponsors, name='sponsors'),
 
     url(r'^contact/', coderdojochi_views.contact, name='contact'),
 

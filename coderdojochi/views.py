@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+#
+import logging
+logger = logging.getLogger("mechanize")
 
-from coderdojochi.models import Mentor, Guardian, Student, Course, Session, Order, Meeting, Donation, Sponsor
-from coderdojochi.forms import MentorForm, GuardianForm, StudentForm, ContactForm
-
-import sys
 import arrow
 import calendar
+import itertools
 import operator
+import sys
 
 from collections import Counter
 from datetime import date, timedelta
@@ -1298,11 +1299,17 @@ def about(request, template_name="about.html"):
 
 def sponsors(request, template_name="sponsors.html"):
 
-    sponsors = Sponsor.objects.filter(active=True)
+    sponsors = Sponsor.objects.filter(active=True).order_by('level')
 
-    return render_to_response(template_name, {
-        'sponsors': sponsors
-    }, context_instance=RequestContext(request))
+    grouped_sponsors_iterator = itertools.groupby(sponsors, lambda sponsor: sponsor.level)
+    grouped_sponsors = { level: list(sponsors_iterator) for level, sponsors_iterator in grouped_sponsors_iterator }
+
+    logger.info(grouped_sponsors)
+
+    return render(request, template_name, {
+        'sponsors': grouped_sponsors
+    })
+
 
 def contact(request, template_name="contact.html"):
     if request.method == 'POST':

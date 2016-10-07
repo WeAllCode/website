@@ -23,8 +23,7 @@ from coderdojochi.models import (
     RaceEthnicity,
     Session,
     Student,
-    PartnerPasswordAccess,
-	Sponsor,
+    Sponsor,
 )
 
 User = get_user_model()
@@ -526,6 +525,30 @@ class LocationAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+class SponsorAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'level',
+    )
+
+    list_filter = (
+        'level',
+    )
+
+    ordering = (
+        'name',
+    )
+
+    date_hierarchy = 'created_at'
+
+    search_fields = (
+        'name',
+        'contact_email',
+    )
+
+    view_on_site = False
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Mentor, MentorAdmin)
 admin.site.register(Guardian, GuardianAdmin)
@@ -542,4 +565,4 @@ admin.site.register(Equipment, EquipmentAdmin)
 admin.site.register(Donation, DonationAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(RaceEthnicity)
-admin.site.register(Sponsor)
+admin.site.register(Sponsor, SponsorAdmin)
