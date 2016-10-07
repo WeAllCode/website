@@ -232,7 +232,49 @@ class GuardianAdmin(ImportMixin, admin.ModelAdmin):
     get_student_count.admin_order_field = 'student__count'
 
 
-class StudentAdmin(admin.ModelAdmin):
+class StudentImportResource(ModelResource):
+    first_name = Field(attribute='first_name', column_name='first_name')
+    last_name = Field(attribute='last_name', column_name='last_name')
+    guardian_email = Field(attribute='guardian_email',
+                           column_name='guardian_email')
+    birthday = Field(attribute='birthday', column_name='birthday')
+    gender = Field(attribute='gender', column_name='gender')
+    school_name = Field(attribute='school_name', column_name='school_name')
+    school_type = Field(attribute='school_type', column_name='school_type')
+    photo_release = Field(attribute='photo_release',
+                          column_name='photo_release')
+    consent = Field(attribute='consent', column_name='consent')
+
+    def import_obj(self, obj, data, dry_run):
+        guardian_email = data.get('guardian_email')
+
+        obj.first_name = data.get('first_name')
+        obj.last_name = data.get('last_name')
+        obj.birthday = datetime.strptime(data.get('birthday', ''), '%m/%d/%Y')
+        obj.gender = data.get('gender', '')
+        obj.school_name = data.get('school_name', '')
+        obj.school_type = data.get('school_type', '')
+        obj.photo_release = str_to_bool(data.get('photo_release', ''))
+        obj.consent = str_to_bool(data.get('consent', ''))
+        obj.active = True
+
+        try:
+            obj.guardian = Guardian.objects.get(user__email=guardian_email)
+        except Guardian.DoesNotExist:
+            raise ImportError(
+                u'guardian with email {} not found'.format(guardian_email)
+            )
+
+        if not dry_run:
+            obj.save()
+
+    class Meta:
+        model = Student
+        import_id_fields = ('first_name', 'last_name')
+        fields = ()
+
+
+class StudentAdmin(ImportMixin, admin.ModelAdmin):
     list_display = (
         'first_name',
         'last_name',
