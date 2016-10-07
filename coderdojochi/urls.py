@@ -73,6 +73,8 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     url(r'^dj-admin/', include(admin.site.urls)),
+
+    url(r'^sponsorship/', 'coderdojochi.views.sponsorship', name='sponsorship'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
