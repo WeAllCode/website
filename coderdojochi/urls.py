@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^volunteer/$', coderdojochi_views.volunteer, name='volunteer'),
 
 	url(r'^sponsors/$', coderdojochi_views.sponsors, name='sponsors'),
+    url(r'^sponsorship/$', coderdojochi_views.sponsorship, name='sponsorship'),
 
     url(r'^contact/', coderdojochi_views.contact, name='contact'),
 
@@ -73,8 +74,6 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     url(r'^dj-admin/', include(admin.site.urls)),
-
-    url(r'^sponsorship/', 'coderdojochi.views.sponsorship', name='sponsorship'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

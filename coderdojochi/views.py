@@ -1288,8 +1288,7 @@ def donate_return(request):
 
 def sponsorship(request, template_name="sponsorship.html"):
 
-    return render_to_response(template_name, {
-    }, context_instance=RequestContext(request))
+    return render(request, template_name)
 
 
 def about(request, template_name="about.html"):
@@ -1308,8 +1307,6 @@ def sponsors(request, template_name="sponsors.html"):
 
     grouped_sponsors_iterator = itertools.groupby(sponsors, lambda sponsor: sponsor.level)
     grouped_sponsors = { level: list(sponsors_iterator) for level, sponsors_iterator in grouped_sponsors_iterator }
-
-    logger.info(grouped_sponsors)
 
     return render(request, template_name, {
         'sponsors': grouped_sponsors
