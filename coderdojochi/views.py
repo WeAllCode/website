@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import logging
+logger = logging.getLogger("mechanize")
+
 import sys
 import arrow
 import calendar
 import operator
+
 from collections import Counter
 from datetime import date, timedelta
 from icalendar import Calendar, Event, vText
@@ -13,25 +17,62 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.mail import (get_connection,
-                              EmailMessage,
-                              EmailMultiAlternatives)
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.mail import (
+    EmailMessage,
+    EmailMultiAlternatives,
+    get_connection,
+)
+from django.core.paginator import (
+    EmptyPage,
+    PageNotAnInteger,
+    Paginator,
+)
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Case, When, IntegerField
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render, get_object_or_404
+from django.db.models import (
+    Case,
+    Count,
+    IntegerField,
+    When,
+)
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+)
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 from coderdojochi.util import local_to_utc
-from coderdojochi.models import (Mentor, Guardian, Student, Session, Order,
-                                 MentorOrder, Meeting, MeetingOrder, Donation,
-                                 CDCUser, EquipmentType, Equipment)
-from coderdojochi.forms import (CDCModelForm, MentorForm, GuardianForm,
-                                StudentForm, ContactForm)
+from coderdojochi.models import (
+    CDCUser,
+    Donation,
+    Equipment,
+    EquipmentType,
+    Guardian,
+    Meeting,
+    MeetingOrder,
+    Mentor,
+    MentorOrder,
+    Order,
+    PartnerPasswordAccess,
+    Session,
+    Student,
+)
+from coderdojochi.forms import (
+    CDCModelForm,
+    ContactForm,
+    GuardianForm,
+    MentorForm,
+    StudentForm,
+)
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -244,30 +285,83 @@ def session_detail_enroll(request, year, month, day, slug, session_id, template_
     return session_detail(request, year, month, day, slug, session_id, template_name, enroll=True)
 
 
+def validate_partner_session_access(request, session_id):
+    authed_sessions = request.session.get('authed_partner_sessions')
+
+    if authed_sessions and session_id in authed_sessions:
+        if request.user.is_authenticated():
+            PartnerPasswordAccess.objects.get_or_create(
+                session_id=session_id,
+                user=request.user
+            )
+
+        return True
+
+    if request.user.is_authenticated():
+        try:
+            PartnerPasswordAccess.objects.get(
+                session_id=session_id,
+                user_id=request.user.id
+            )
+
+        except PartnerPasswordAccess.DoesNotExist:
+            return False
+
+        else:
+            return True
+
+    else:
+        return False
+
+
 def session_detail(request, year, month, day, slug, session_id, template_name="session-detail.html", enroll=False):
     session_obj = get_object_or_404(Session, id=session_id)
+    if session_obj.password:
+        if not validate_partner_session_access(request, session_id):
+            view_kwargs = {
+                'year': year,
+                'month': month,
+                'day': day,
+                'slug': slug,
+                'session_id': session_id
+            }
+            url = reverse('session_password', kwargs=view_kwargs)
+            return HttpResponseRedirect(url)
+
     mentor_signed_up = False
     account = False
     students = False
-    active_mentors = Mentor.objects.filter(id__in=MentorOrder.objects.filter(session=session_obj, active=True).values('mentor__id'))
+    active_mentors = Mentor.objects.filter(
+        id__in=MentorOrder.objects.filter(
+            session=session_obj,
+            active=True
+        ).values('mentor__id')
+    )
 
     if request.method == 'POST':
         if 'waitlist' in request.POST:
 
             if request.POST['waitlist'] == 'student':
-                student = Student.objects.get(id=int(request.POST['account_id']))
+                student = Student.objects.get(
+                    id=int(request.POST['account_id'])
+                )
 
                 if request.POST['remove'] == 'true':
                     session_obj.waitlist_students.remove(student)
                     session_obj.save()
                     messages.success(
                         request,
-                        'You have been removed from the waitlist. Thanks for letting us know.'
+                        'You have been removed from the waitlist. '
+                        'Thanks for letting us know.'
                     )
+
                 else:
                     session_obj.waitlist_students.add(student)
                     session_obj.save()
-                    messages.success(request, 'Added to waitlist successfully.')
+                    messages.success(
+                        request,
+                        'Added to waitlist successfully.'
+                    )
             else:
                 mentor = Mentor.objects.get(id=int(request.POST['account_id']))
 
@@ -276,12 +370,16 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
                     session_obj.save()
                     messages.success(
                         request,
-                        'You have been removed from the waitlist. Thanks for letting us know.'
+                        'You have been removed from the waitlist. '
+                        'Thanks for letting us know.'
                     )
                 else:
                     session_obj.waitlist_mentors.add(mentor)
                     session_obj.save()
-                    messages.success(request, 'Added to waitlist successfully.')
+                    messages.success(
+                        request,
+                        'Added to waitlist successfully.'
+                    )
         else:
             messages.error(request, 'Invalid request, please try again.')
 
@@ -297,9 +395,15 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
 
     if request.user.is_authenticated():
         if not request.user.role:
-            messages.warning(request, 'Please select one of the following options to continue.')
+            messages.warning(
+                request,
+                'Please select one of the following options to continue.'
+            )
 
-            url = u'{}?next={}'.format(reverse('welcome'), session_obj.get_absolute_url())
+            url = u'{}?next={}'.format(
+                reverse('welcome'),
+                session_obj.get_absolute_url()
+            )
 
             if 'enroll' in request.GET:
                 url += '&enroll=True'
@@ -314,7 +418,12 @@ def session_detail(request, year, month, day, slug, session_id, template_name="s
             spots_remaining = session_obj.get_mentor_capacity() - session_orders.count()
 
             if enroll or 'enroll' in request.GET:
-                return redirect(u'{}/sign-up/'.format(session_obj.get_absolute_url()))
+                return redirect(
+                    u'{}/sign-up/'.format(
+                        session_obj.get_absolute_url()
+                    )
+                )
+
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
             account = guardian
@@ -1704,3 +1813,55 @@ def sendSystemEmail(request, subject, template_name, merge_vars, email=False, bc
                 print >>sys.stderr, u'user: {}, {}'.format(user.email, response['reject_reason'])
 
             raise e
+
+
+class PasswordSessionView(TemplateView):
+    template_name = 'session-partner-password.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PasswordSessionView, self).get_context_data(**kwargs)
+
+        session_id = kwargs.get('session_id')
+        session_obj = get_object_or_404(Session, id=session_id)
+
+        context['partner_message'] = session_obj.partner_message
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        session_id = kwargs.get('session_id')
+        session_obj = get_object_or_404(Session, id=session_id)
+        password_input = request.POST.get('password')
+
+        context = self.get_context_data(**kwargs)
+
+        if not password_input:
+            context['error'] = 'Must enter a password.'
+            return render(request, self.template_name, context)
+
+        if session_obj.password != password_input:
+            context['error'] = 'Invalid password.'
+            return render(request, self.template_name, context)
+
+
+        # Get from user session or create an empty set
+        authed_partner_sessions = request.session.get('authed_partner_sessions') or set()
+
+        # Add course session id to user session
+        authed_partner_sessions.update({session_id})
+
+        # Store it.
+        request.session['authed_partner_sessions'] = authed_partner_sessions
+
+        if request.user.is_authenticated():
+            PartnerPasswordAccess.objects.get_or_create(
+                session=session_obj,
+                user=request.user
+            )
+
+        return HttpResponseRedirect(
+            reverse(
+                'session_detail',
+                kwargs=kwargs
+            )
+        )

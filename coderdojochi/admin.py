@@ -2,14 +2,29 @@
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
-from django.db.models import Count, Case, When
-from django.template.defaultfilters import pluralize
-from django.utils.safestring import mark_safe
+# from django.core.urlresolvers import reverse
+from django.db.models import Count
+# from django.template.defaultfilters import pluralize
+# from django.utils.safestring import mark_safe
 
-from coderdojochi.models import (Mentor, Guardian, Student, Course, Session, Order, EquipmentType,
-                                 Equipment, MeetingType, Meeting, Location, Donation,
-                                 RaceEthnicity, MentorOrder, MeetingOrder)
+from coderdojochi.models import (
+    Course,
+    Donation,
+    Equipment,
+    EquipmentType,
+    Guardian,
+    Location,
+    Meeting,
+    MeetingOrder,
+    MeetingType,
+    Mentor,
+    MentorOrder,
+    Order,
+    RaceEthnicity,
+    Session,
+    Student,
+    PartnerPasswordAccess,
+)
 
 User = get_user_model()
 
@@ -160,8 +175,6 @@ class GuardianAdmin(admin.ModelAdmin):
     get_student_count.admin_order_field = 'student__count'
 
 
-
-
 class StudentAdmin(admin.ModelAdmin):
     list_display = (
         'first_name',
@@ -298,8 +311,12 @@ class OrderAdmin(admin.ModelAdmin):
 
 class MentorOrderAdmin(admin.ModelAdmin):
     # def session(obj):
-    #     url = reverse('admin:coderdojochi_session_change', args=(obj.session.id,))
+    #     url = reverse(
+    #         'admin:coderdojochi_session_change',
+    #         args=(obj.session.id,)
+    #     )
     #     return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.session))
+
     # session.short_description = 'Session'
     # raw_id_fields = ('session',)
     # readonly_fields = (session, 'session',)
