@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('coderdojochi', '0006_session_gender_limitation'),
+        ('coderdojochi', '0008_partnerpasswordaccess'),
     ]
 
     operations = [
