@@ -8,9 +8,12 @@ from django.db.models import Count
 # from django.template.defaultfilters import pluralize
 # from django.utils.safestring import mark_safe
 
-from import_export.admin import ImportMixin
-from import_export.formats.base_formats import CSV
-from import_export.resources import ModelResource
+from import_export import resources
+from import_export.admin import (
+    ImportExportActionModelAdmin,
+    ImportExportMixin,
+)
+
 from import_export.fields import Field
 
 from coderdojochi.models import (
@@ -29,7 +32,6 @@ from coderdojochi.models import (
     RaceEthnicity,
     Session,
     Student,
-    PartnerPasswordAccess,
 )
 
 from coderdojochi.util import str_to_bool
@@ -38,7 +40,7 @@ User = get_user_model()
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(ImportExportActionModelAdmin):
     list_display = (
         'email',
         'first_name',
@@ -86,7 +88,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 @admin.register(Mentor)
-class MentorAdmin(admin.ModelAdmin):
+class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     list_display = (
         'user',
@@ -134,7 +136,7 @@ class MentorAdmin(admin.ModelAdmin):
     get_last_name.admin_order_field = 'user__last_name'
 
 
-class GuardianImportResource(ModelResource):
+class GuardianImportResource(resources.ModelResource):
     first_name = Field(attribute='first_name', column_name='first_name')
     last_name = Field(attribute='last_name', column_name='last_name')
     email = Field(attribute='email', column_name='email')
@@ -180,7 +182,7 @@ class GuardianImportResource(ModelResource):
 
 
 @admin.register(Guardian)
-class GuardianAdmin(ImportMixin, admin.ModelAdmin):
+class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         # 'user',
         'get_first_name',
@@ -211,7 +213,6 @@ class GuardianAdmin(ImportMixin, admin.ModelAdmin):
     view_on_site = False
 
     # Import settings
-    formats = (CSV,)
     resource_class = GuardianImportResource
 
     def get_queryset(self, request):
@@ -235,7 +236,7 @@ class GuardianAdmin(ImportMixin, admin.ModelAdmin):
     get_student_count.admin_order_field = 'student__count'
 
 
-class StudentImportResource(ModelResource):
+class StudentResource(resources.ModelResource):
     first_name = Field(attribute='first_name', column_name='first_name')
     last_name = Field(attribute='last_name', column_name='last_name')
     guardian_email = Field(attribute='guardian_email',
@@ -274,11 +275,12 @@ class StudentImportResource(ModelResource):
     class Meta:
         model = Student
         import_id_fields = ('first_name', 'last_name')
-        fields = ()
+        fields = ('first_name', 'last_name')
+        # fields = ()
 
 
 @admin.register(Student)
-class StudentAdmin(ImportMixin, admin.ModelAdmin):
+class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'first_name',
         'last_name',
@@ -313,12 +315,11 @@ class StudentAdmin(ImportMixin, admin.ModelAdmin):
     view_on_site = False
 
     # Import settings
-    formats = (CSV,)
-    resource_class = StudentImportResource
+    resource_class = StudentResource
 
 
 @admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
+class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'code',
         'title',
@@ -339,7 +340,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 @admin.register(Session)
-class SessionAdmin(admin.ModelAdmin):
+class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'course',
         'start_date',
@@ -386,7 +387,7 @@ class SessionAdmin(admin.ModelAdmin):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         # 'id',
         'student',
@@ -420,7 +421,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 @admin.register(MentorOrder)
-class MentorOrderAdmin(admin.ModelAdmin):
+class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     # def session(obj):
     #     url = reverse(
     #         'admin:coderdojochi_session_change',
@@ -476,7 +477,7 @@ class MentorOrderAdmin(admin.ModelAdmin):
 
 
 @admin.register(MeetingOrder)
-class MeetingOrderAdmin(admin.ModelAdmin):
+class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'mentor',
         'meeting',
@@ -511,7 +512,7 @@ class MeetingOrderAdmin(admin.ModelAdmin):
 
 
 @admin.register(MeetingType)
-class MeetingTypeAdmin(admin.ModelAdmin):
+class MeetingTypeAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'code',
         'title',
@@ -524,7 +525,7 @@ class MeetingTypeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Meeting)
-class MeetingAdmin(admin.ModelAdmin):
+class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'meeting_type',
         'start_date',
@@ -559,12 +560,12 @@ class MeetingAdmin(admin.ModelAdmin):
 
 
 @admin.register(EquipmentType)
-class EquipmentTypeAdmin(admin.ModelAdmin):
+class EquipmentTypeAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     view_on_site = False
 
 
 @admin.register(Equipment)
-class EquipmentAdmin(admin.ModelAdmin):
+class EquipmentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'uuid',
         'asset_tag',
@@ -604,7 +605,7 @@ class EquipmentAdmin(admin.ModelAdmin):
 
 
 @admin.register(Donation)
-class DonationAdmin(admin.ModelAdmin):
+class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'first_name',
         'last_name',
@@ -639,5 +640,10 @@ class DonationAdmin(admin.ModelAdmin):
 
 
 @admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
+class LocationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     view_on_site = False
+
+
+@admin.register(RaceEthnicity)
+class RaceEthnicityAdmin(ImportExportMixin, ImportExportActionModelAdmin):
+    pass
