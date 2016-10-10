@@ -119,6 +119,18 @@ class Guardian(models.Model):
         students = Student.objects.filter(guardian=self)
         return students
 
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name
+
+    @property
+    def email(self):
+        return self.user.email
+
 
 class Student(models.Model):
     guardian = models.ForeignKey(Guardian)

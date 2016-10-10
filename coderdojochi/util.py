@@ -3,9 +3,9 @@
 import arrow
 
 def str_to_bool(s):
-    if s == 'True':
+    if s.lower() in ['true', 't', '1', 'yes', 'y']:
         return True
-    elif s == 'False':
+    elif s.lower() in ['false', 'f', '0', 'no', 'n']:
         return False
     else:
         # evil ValueError that doesn't tell you what the wrong value was
