@@ -37,6 +37,7 @@ from coderdojochi.util import str_to_bool
 User = get_user_model()
 
 
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'email',
@@ -84,6 +85,7 @@ class UserAdmin(admin.ModelAdmin):
     change_form_template = 'loginas/change_form.html'
 
 
+@admin.register(Mentor)
 class MentorAdmin(admin.ModelAdmin):
 
     list_display = (
@@ -177,6 +179,7 @@ class GuardianImportResource(ModelResource):
         fields = ('phone', 'zip')
 
 
+@admin.register(Guardian)
 class GuardianAdmin(ImportMixin, admin.ModelAdmin):
     list_display = (
         # 'user',
@@ -274,6 +277,7 @@ class StudentImportResource(ModelResource):
         fields = ()
 
 
+@admin.register(Student)
 class StudentAdmin(ImportMixin, admin.ModelAdmin):
     list_display = (
         'first_name',
@@ -313,6 +317,7 @@ class StudentAdmin(ImportMixin, admin.ModelAdmin):
     resource_class = StudentImportResource
 
 
+@admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = (
         'code',
@@ -333,6 +338,7 @@ class CourseAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(Session)
 class SessionAdmin(admin.ModelAdmin):
     list_display = (
         'course',
@@ -379,6 +385,7 @@ class SessionAdmin(admin.ModelAdmin):
     get_current_orders_count.short_description = "Students"
 
 
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         # 'id',
@@ -412,6 +419,7 @@ class OrderAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(MentorOrder)
 class MentorOrderAdmin(admin.ModelAdmin):
     # def session(obj):
     #     url = reverse(
@@ -467,6 +475,7 @@ class MentorOrderAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(MeetingOrder)
 class MeetingOrderAdmin(admin.ModelAdmin):
     list_display = (
         'mentor',
@@ -501,6 +510,7 @@ class MeetingOrderAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(MeetingType)
 class MeetingTypeAdmin(admin.ModelAdmin):
     list_display = (
         'code',
@@ -513,6 +523,7 @@ class MeetingTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
     list_display = (
         'meeting_type',
@@ -547,10 +558,12 @@ class MeetingAdmin(admin.ModelAdmin):
     get_mentor_count.short_description = 'Mentors'
 
 
+@admin.register(EquipmentType)
 class EquipmentTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(Equipment)
 class EquipmentAdmin(admin.ModelAdmin):
     list_display = (
         'uuid',
@@ -590,6 +603,7 @@ class EquipmentAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(Donation)
 class DonationAdmin(admin.ModelAdmin):
     list_display = (
         'first_name',
@@ -624,23 +638,6 @@ class DonationAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
+@admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     view_on_site = False
-
-
-admin.site.register(User, UserAdmin)
-admin.site.register(Mentor, MentorAdmin)
-admin.site.register(Guardian, GuardianAdmin)
-admin.site.register(Student, StudentAdmin)
-admin.site.register(Course, CourseAdmin)
-admin.site.register(Session, SessionAdmin)
-admin.site.register(Order, OrderAdmin)
-admin.site.register(MentorOrder, MentorOrderAdmin)
-admin.site.register(MeetingOrder, MeetingOrderAdmin)
-admin.site.register(MeetingType, MeetingTypeAdmin)
-admin.site.register(Meeting, MeetingAdmin)
-admin.site.register(EquipmentType, EquipmentTypeAdmin)
-admin.site.register(Equipment, EquipmentAdmin)
-admin.site.register(Donation, DonationAdmin)
-admin.site.register(Location, LocationAdmin)
-admin.site.register(RaceEthnicity)
