@@ -18,8 +18,16 @@ ROLE_CHOICES = (
 
 
 class CDCUser(AbstractUser):
-    role = models.CharField(choices=ROLE_CHOICES, max_length=10, blank=True, null=True)
-    admin_notes = models.TextField(blank=True, null=True)
+    role = models.CharField(
+        choices=ROLE_CHOICES,
+        max_length=10,
+        blank=True,
+        null=True,
+    )
+    admin_notes = models.TextField(
+        blank=True,
+        null=True,
+    )
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -33,8 +41,12 @@ class CDCUser(AbstractUser):
 
 
 class RaceEthnicity(models.Model):
-    race_ethnicity = models.CharField(max_length=255)
-    visible = models.BooleanField(default=False)
+    race_ethnicity = models.CharField(
+        max_length=255,
+    )
+    visible = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("race ethnicity")
@@ -54,17 +66,42 @@ def generate_filename(instance, filename):
 
 
 class Mentor(models.Model):
-    user = models.ForeignKey(CDCUser)
-    bio = models.TextField(blank=True, null=True)
-    active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    background_check = models.BooleanField(default=False)
-    public = models.BooleanField(default=False)
-    avatar = StdImageField(upload_to=generate_filename, blank=True, variations={
-        'thumbnail': {'width': 500, 'height': 500, 'crop': True}
-    })
-    avatar_approved = models.BooleanField(default=False)
+    user = models.ForeignKey(
+        CDCUser
+    )
+    bio = models.TextField(
+        blank=True,
+        null=True,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+    background_check = models.BooleanField(
+        default=False,
+    )
+    public = models.BooleanField(
+        default=False,
+    )
+    avatar = StdImageField(
+        upload_to=generate_filename,
+        blank=True,
+        variations={
+            'thumbnail': {
+                'width': 500,
+                'height': 500,
+                'crop': True,
+            }
+        },
+    )
+    avatar_approved = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("mentors")
@@ -101,19 +138,37 @@ class Mentor(models.Model):
 
 
 class Guardian(models.Model):
-    user = models.ForeignKey(CDCUser)
-    active = models.BooleanField(default=True)
-    phone = models.CharField(max_length=50, blank=True)
-    zip = models.CharField(max_length=20, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        CDCUser
+    )
+    active = models.BooleanField(
+        default=True,
+    )
+    phone = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+    zip = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         verbose_name = _("guardian")
         verbose_name_plural = _("guardians")
 
     def __unicode__(self):
-        return u'{} {}'.format(self.user.first_name, self.user.last_name)
+        return u'{} {}'.format(
+            self.user.first_name,
+            self.user.last_name
+        )
 
     def get_students(self):
         students = Student.objects.filter(guardian=self)
@@ -133,31 +188,64 @@ class Guardian(models.Model):
 
 
 class Student(models.Model):
-    guardian = models.ForeignKey(Guardian)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    guardian = models.ForeignKey(
+        Guardian
+    )
+    first_name = models.CharField(
+        max_length=255,
+    )
+    last_name = models.CharField(
+        max_length=255,
+    )
     birthday = models.DateTimeField()
-    gender = models.CharField(max_length=255)
-    race_ethnicity = models.ManyToManyField(RaceEthnicity, blank=True)
-    school_name = models.CharField(max_length=255, null=True)
-    school_type = models.CharField(max_length=255, null=True)
-    medical_conditions = models.TextField(blank=True, null=True)
-    medications = models.TextField(blank=True, null=True)
+    gender = models.CharField(
+        max_length=255,
+    )
+    race_ethnicity = models.ManyToManyField(
+        RaceEthnicity,
+        blank=True,
+    )
+    school_name = models.CharField(
+        max_length=255,
+        null=True,
+    )
+    school_type = models.CharField(
+        max_length=255,
+        null=True,
+    )
+    medical_conditions = models.TextField(
+        blank=True,
+        null=True,
+    )
+    medications = models.TextField(
+        blank=True,
+        null=True,
+    )
     photo_release = models.BooleanField(
         'Photo Consent',
-        help_text='I hereby give permission to CoderDojoChi to use the student\'s image '
-                  'and/or likeness in promotional materials.',
-        default=False
+        help_text=(
+            'I hereby give permission to CoderDojoChi to use '
+            'the student\'s image and/or likeness in promotional materials.'
+        ),
+        default=False,
     )
     consent = models.BooleanField(
         'General Consent',
-        help_text='I hereby give consent for the student signed up '
-                  'above to participate in CoderDojoChi.',
-        default=False
+        help_text=(
+            'I hereby give consent for the student signed up '
+            'above to participate in CoderDojoChi.'
+        ),
+        default=False,
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
 
     class Meta:
         verbose_name = _("student")
@@ -168,7 +256,11 @@ class Student(models.Model):
 
     def is_registered_for_session(self, session):
         try:
-            Order.objects.get(active=True, student=self, session=session)
+            Order.objects.get(
+                active=True,
+                student=self,
+                session=session,
+            )
             is_registered = True
         except:
             is_registered = False
@@ -179,12 +271,19 @@ class Student(models.Model):
         today = timezone.now()
         birthday = self.birthday
         year_delta = today.year - birthday.year
-        return year_delta - ((today.month, today.day) < (birthday.month, birthday.day))
+        return (
+            year_delta - (
+                (today.month, today.day) < (birthday.month, birthday.day)
+            )
+        )
 
     def get_clean_gender(self):
-        if self.gender.lower() in ['male', 'm', 'boy', 'nino', 'masculino']:
+        MALE = ['male', 'm', 'boy', 'nino', 'masculino']
+        FEMALE = ['female', 'f', 'girl', 'femail', 'femal', 'femenino']
+
+        if self.gender.lower() in MALE:
             return 'male'
-        elif self.gender.lower() in ['female', 'f', 'girl', 'femail', 'femal', 'femenino']:
+        elif self.gender.lower() in FEMALE:
             return 'female'
         else:
             return 'other'
@@ -209,12 +308,30 @@ class Student(models.Model):
 
 
 class Course(models.Model):
-    code = models.CharField(max_length=255, blank=True, null=True)
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=40, blank=True, null=True)
-    description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    code = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    title = models.CharField(
+        max_length=255,
+    )
+    slug = models.SlugField(
+        max_length=40,
+        blank=True,
+        null=True,
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         verbose_name = _("course")
@@ -229,12 +346,27 @@ class Course(models.Model):
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    address2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Address 2")
-    city = models.CharField(max_length=255)
-    state = models.CharField(max_length=255)
-    zip = models.CharField(max_length=20)
+    name = models.CharField(
+        max_length=255,
+    )
+    address = models.CharField(
+        max_length=255,
+    )
+    address2 = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Address 2",
+    )
+    city = models.CharField(
+        max_length=255,
+    )
+    state = models.CharField(
+        max_length=255,
+    )
+    zip = models.CharField(
+        max_length=20,
+    )
 
     def __unicode__(self):
         return self.name
@@ -247,56 +379,107 @@ GENDER_LIMITATION_CHOICES = (
 
 
 class Session(models.Model):
-    course = models.ForeignKey(Course)
+    course = models.ForeignKey(
+        Course,
+    )
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     mentor_start_date = models.DateTimeField()
     mentor_end_date = models.DateTimeField()
-    location = models.ForeignKey(Location)
-    capacity = models.IntegerField(default=20)
-    mentor_capacity = models.IntegerField(blank=True, null=True)
-    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    teacher = models.ForeignKey(Mentor, related_name="session_teacher")
+    location = models.ForeignKey(
+        Location,
+    )
+    capacity = models.IntegerField(
+        default=20,
+    )
+    mentor_capacity = models.IntegerField(
+        blank=True,
+        null=True,
+    )
+    additional_info = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed"
+    )
+    teacher = models.ForeignKey(
+        Mentor,
+        related_name="session_teacher",
+    )
     waitlist_mentors = models.ManyToManyField(
         Mentor,
         blank=True,
-        related_name="session_waitlist_mentors"
+        related_name="session_waitlist_mentors",
     )
     waitlist_students = models.ManyToManyField(
         Student,
         blank=True,
-        related_name="session_waitlist_students"
+        related_name="session_waitlist_students",
     )
     external_enrollment_url = models.CharField(
         max_length=255,
         blank=True,
         null=True,
-        help_text="When provided, local enrollment is disabled."
+        help_text="When provided, local enrollment is disabled.",
     )
-    active = models.BooleanField(default=False, help_text="Session is active.")
-    public = models.BooleanField(default=False, help_text="Session is a public session.")
-    password = models.CharField(blank=True, max_length=255)
-    partner_message = models.TextField(blank=True)
-    announced_date = models.DateTimeField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    image_url = models.CharField(max_length=255, blank=True, null=True)
-    bg_image = models.ImageField(blank=True, null=True)
-    mentors_week_reminder_sent = models.BooleanField(default=False)
-    mentors_day_reminder_sent = models.BooleanField(default=False)
+    active = models.BooleanField(
+        default=False,
+        help_text="Session is active.",
+    )
+    public = models.BooleanField(
+        default=False,
+        help_text="Session is a public session.",
+    )
+    password = models.CharField(
+        blank=True,
+        max_length=255,
+    )
+    partner_message = models.TextField(
+        blank=True,
+    )
+    announced_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+    image_url = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    bg_image = models.ImageField(
+        blank=True,
+        null=True,
+    )
+    mentors_week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    mentors_day_reminder_sent = models.BooleanField(
+        default=False,
+    )
     gender_limitation = models.CharField(
         max_length=255,
         choices=GENDER_LIMITATION_CHOICES,
         blank=True,
-        null=True
+        null=True,
     )
     min_age_limitation = models.IntegerField(
         default=7,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ],
     )
     max_age_limitation = models.IntegerField(
         default=17,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ],
     )
 
     class Meta:
@@ -390,7 +573,10 @@ class Session(models.Model):
                     check_in=None
                 ).values('student')
         else:
-            orders = Order.objects.filter(active=True, session=self).values('student')
+            orders = Order.objects.filter(
+                active=True,
+                session=self
+            ).values('student')
 
         return orders
 
@@ -406,13 +592,32 @@ class Session(models.Model):
         else:
             return self.capacity / 2
 
+
 class MeetingType(models.Model):
-    code = models.CharField(max_length=255, blank=True, null=True)
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=40, blank=True, null=True)
-    description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    code = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    title = models.CharField(
+        max_length=255,
+    )
+    slug = models.SlugField(
+        max_length=40,
+        blank=True,
+        null=True,
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         verbose_name = _("meeting type")
@@ -427,24 +632,56 @@ class MeetingType(models.Model):
 
 
 class Meeting(models.Model):
-    meeting_type = models.ForeignKey(MeetingType)
-    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    start_date = models.DateTimeField(blank=True, null=True)
-    end_date = models.DateTimeField(blank=True, null=True)
-    location = models.ForeignKey(Location)
+    meeting_type = models.ForeignKey(
+        MeetingType,
+    )
+    additional_info = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
+    start_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    end_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    location = models.ForeignKey(
+        Location,
+    )
     external_enrollment_url = models.CharField(
         max_length=255,
         blank=True,
         null=True,
-        help_text="When provided, local enrollment is disabled."
+        help_text="When provided, local enrollment is disabled.",
     )
-    public = models.BooleanField(default=False)
-    active = models.BooleanField(default=False)
-    image_url = models.CharField(max_length=255, blank=True, null=True)
-    bg_image = models.ImageField(blank=True, null=True)
-    announced_date = models.DateTimeField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    public = models.BooleanField(
+        default=False,
+    )
+    active = models.BooleanField(
+        default=False,
+    )
+    image_url = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    bg_image = models.ImageField(
+        blank=True,
+        null=True,
+    )
+    announced_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         verbose_name = _("meeting")
@@ -461,7 +698,7 @@ class Meeting(models.Model):
             settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
-            self.id
+            self.id,
         )
 
     def get_signup_url(self):
@@ -469,7 +706,7 @@ class Meeting(models.Model):
             settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
-            self.id
+            self.id,
         )
 
     def get_ics_url(self):
@@ -477,7 +714,7 @@ class Meeting(models.Model):
             settings.SITE_URL,
             self.start_date.strftime("%Y/%m/%d"),
             self.meeting_type.slug,
-            self.id
+            self.id,
         )
 
     def get_current_orders(self, checked_in=None):
@@ -485,42 +722,92 @@ class Meeting(models.Model):
             if checked_in:
                 orders = MeetingOrder.objects.filter(
                     active=True,
-                    meeting=self
-                ).exclude(check_in=None).order_by('mentor__user__last_name')
+                    meeting=self,
+                ).exclude(
+                    check_in=None,
+                ).order_by(
+                    'mentor__user__last_name'
+                )
             else:
                 orders = MeetingOrder.objects.filter(
                     active=True,
                     meeting=self,
-                    check_in=None
-                ).order_by('mentor__user__last_name')
+                    check_in=None,
+                ).order_by(
+                    'mentor__user__last_name'
+                )
+
         else:
             orders = MeetingOrder.objects.filter(
                 active=True,
-                meeting=self
-            ).order_by('check_in', 'mentor__user__last_name')
+                meeting=self,
+            ).order_by(
+                'check_in',
+                'mentor__user__last_name',
+            )
 
         return orders
 
     def get_current_mentors(self):
         return Mentor.objects.filter(
-            id__in=MeetingOrder.objects.filter(active=True, meeting=self).values('mentor__id')
+            id__in=MeetingOrder.objects.filter(
+                active=True,
+                meeting=self,
+            ).values(
+                'mentor__id',
+            )
         )
 
 
 class Order(models.Model):
-    guardian = models.ForeignKey(Guardian)
-    session = models.ForeignKey(Session)
-    student = models.ForeignKey(Student)
-    active = models.BooleanField(default=True)
-    ip = models.CharField(max_length=255, blank=True, null=True)
-    check_in = models.DateTimeField(blank=True, null=True)
-    alternate_guardian = models.CharField(max_length=255, blank=True, null=True)
-    affiliate = models.CharField(max_length=255, blank=True, null=True)
-    order_number = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    week_reminder_sent = models.BooleanField(default=False)
-    day_reminder_sent = models.BooleanField(default=False)
+    guardian = models.ForeignKey(
+        Guardian,
+    )
+    session = models.ForeignKey(
+        Session,
+    )
+    student = models.ForeignKey(
+        Student,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
+    ip = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    alternate_guardian = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    affiliate = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    order_number = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+    week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    day_reminder_sent = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("order")
@@ -537,21 +824,60 @@ class Order(models.Model):
         birthday = self.student.birthday
         session_date = self.session.start_date
         delta = session_date.year - birthday.year
-        return delta - ((session_date.month, session_date.day) < (birthday.month, birthday.day))
+        return (
+            delta - (
+                (
+                    session_date.month,
+                    session_date.day
+                ) < (
+                    birthday.month,
+                    birthday.day
+                )
+            )
+        )
 
 
 class MentorOrder(models.Model):
-    mentor = models.ForeignKey(Mentor)
-    session = models.ForeignKey(Session)
-    active = models.BooleanField(default=True)
-    ip = models.CharField(max_length=255, blank=True, null=True)
-    check_in = models.DateTimeField(blank=True, null=True)
-    affiliate = models.CharField(max_length=255, blank=True, null=True)
-    order_number = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    week_reminder_sent = models.BooleanField(default=False)
-    day_reminder_sent = models.BooleanField(default=False)
+    mentor = models.ForeignKey(
+        Mentor,
+    )
+    session = models.ForeignKey(
+        Session,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
+    ip = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    affiliate = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    order_number = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+    week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    day_reminder_sent = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("mentor order")
@@ -566,17 +892,46 @@ class MentorOrder(models.Model):
 
 
 class MeetingOrder(models.Model):
-    mentor = models.ForeignKey(Mentor)
-    meeting = models.ForeignKey(Meeting)
-    active = models.BooleanField(default=True)
-    ip = models.CharField(max_length=255, blank=True, null=True)
-    check_in = models.DateTimeField(blank=True, null=True)
-    affiliate = models.CharField(max_length=255, blank=True, null=True)
-    order_number = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    week_reminder_sent = models.BooleanField(default=False)
-    day_reminder_sent = models.BooleanField(default=False)
+    mentor = models.ForeignKey(
+        Mentor,
+    )
+    meeting = models.ForeignKey(
+        Meeting,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
+    ip = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    affiliate = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    order_number = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+    week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    day_reminder_sent = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         verbose_name = _("meeting order")
@@ -596,7 +951,8 @@ class EquipmentType(models.Model):
     def __unicode__(self):
         return self.name
 
-EquiptmentConditions = (
+
+EQUIPTMENTCONDITIONS = (
     ('working', 'Working'),
     ('issue', 'Issue'),
     ('unusable', 'Unusable'),
@@ -604,19 +960,56 @@ EquiptmentConditions = (
 
 
 class Equipment(models.Model):
-    uuid = models.CharField(max_length=255, verbose_name="UUID", default='000-000-000-000', null=False)
-    equipment_type = models.ForeignKey(EquipmentType)
-    make = models.CharField(max_length=255)
-    model = models.CharField(max_length=255)
-    asset_tag = models.CharField(max_length=255)
-    aquisition_date = models.DateTimeField(blank=True, null=True)
-    condition = models.CharField(max_length=255, choices=EquiptmentConditions)
-    notes = models.TextField(blank=True, null=True)
-    last_system_update_check_in = models.DateTimeField(blank=True,null=True, verbose_name="Last Check In")
-    last_system_update = models.DateTimeField(blank=True,null=True, verbose_name="Last Update")
-    force_update_on_next_boot = models.BooleanField(default=False, verbose_name="Force Update")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    uuid = models.CharField(
+        max_length=255,
+        verbose_name="UUID",
+        default='000-000-000-000',
+        null=False,
+    )
+    equipment_type = models.ForeignKey(
+        EquipmentType,
+    )
+    make = models.CharField(
+        max_length=255,
+    )
+    model = models.CharField(
+        max_length=255,
+    )
+    asset_tag = models.CharField(
+        max_length=255,
+    )
+    aquisition_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    condition = models.CharField(
+        max_length=255,
+        choices=EQUIPTMENTCONDITIONS,
+    )
+    notes = models.TextField(
+        blank=True,
+        null=True,
+    )
+    last_system_update_check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Last Check In",
+    )
+    last_system_update = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Last Update",
+    )
+    force_update_on_next_boot = models.BooleanField(
+        default=False,
+        verbose_name="Force Update",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         verbose_name = _("equipment")
@@ -632,12 +1025,26 @@ class Equipment(models.Model):
 
 
 class EmailContent(models.Model):
-    nickname = models.CharField(max_length=255)
-    subject = models.CharField(max_length=255)
-    body = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
+    nickname = models.CharField(
+        max_length=255,
+    )
+    subject = models.CharField(
+        max_length=255,
+    )
+    body = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
 
     class Meta:
         verbose_name = _("email content")
@@ -648,14 +1055,26 @@ class EmailContent(models.Model):
 
 
 class Donation(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(
+        max_length=255,
+    )
+    last_name = models.CharField(
+        max_length=255,
+    )
     email = models.EmailField()
     amount = models.IntegerField()
-    verified = models.BooleanField(default=False)
-    receipt_sent = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    verified = models.BooleanField(
+        default=False,
+    )
+    receipt_sent = models.BooleanField(
+        default=False,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         verbose_name = _("donation")

@@ -1,0 +1,14 @@
+[
+{
+  "model": "coderdojochi.course",
+  "pk": 1,
+  "fields": {
+    "code": "HTML 101",
+    "title": "Choose Your Own Adventure",
+    "slug": "choose-your-own-adventure",
+    "description": "<p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>\r\n\r\n<p>By the end of the session, students will understand how the language HTML, CSS, and Javascript work together to build the web. Students will develop an understanding of how HTML is used to define the structure of web pages. In keeping with CoderDojoChi's philosophy of learning-by-doing, students will use their knowledge to hack together their own \"Choose Your Own Adventure\" game.</p>",
+    "created_at": "2013-01-01T00:00:00",
+    "updated_at": "2013-01-01T00:00:00"
+  }
+}
+]

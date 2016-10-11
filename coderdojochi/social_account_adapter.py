@@ -21,9 +21,10 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         if sociallogin.is_existing:
             return
 
-        # some social logins don't have an email address, e.g. facebook accounts
-        # with mobile numbers only, but allauth takes care of this case so just
-        # ignore it
+        # some social logins don't have an email address,
+        # e.g. facebook accounts
+        # with mobile numbers only, but allauth takes care of this case
+        # so just ignore it
         if 'email' not in sociallogin.account.extra_data:
             return
 

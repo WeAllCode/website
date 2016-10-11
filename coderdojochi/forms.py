@@ -10,7 +10,13 @@ from django.forms import Form, ModelForm, FileField, ValidationError
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from coderdojochi.models import CDCUser, Mentor, Guardian, Student, RaceEthnicity
+from coderdojochi.models import (
+    CDCUser,
+    Guardian,
+    Mentor,
+    RaceEthnicity,
+    Student,
+)
 
 SCHOOL_TYPE_CHOICES = (
     ("Public", "Public"),
@@ -27,7 +33,11 @@ class CDCForm(Form):
             # value_from_datadict() gets the data from the data dictionaries.
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
-            value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
+            value = field.widget.value_from_datadict(
+                self.data,
+                self.files,
+                self.add_prefix(name)
+            )
 
             try:
                 if isinstance(field, FileField):
@@ -48,6 +58,7 @@ class CDCForm(Form):
             except ValidationError as e:
                 self.add_error(name, e)
 
+
 class CDCModelForm(ModelForm):
     # strip leading or trailing whitespace
     def _clean_fields(self):
@@ -55,7 +66,11 @@ class CDCModelForm(ModelForm):
             # value_from_datadict() gets the data from the data dictionaries.
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
-            value = field.widget.value_from_datadict(self.data, self.files, self.add_prefix(name))
+            value = field.widget.value_from_datadict(
+                self.data,
+                self.files,
+                self.add_prefix(name)
+            )
 
             try:
                 if isinstance(field, FileField):
@@ -63,7 +78,8 @@ class CDCModelForm(ModelForm):
                     value = field.clean(value, initial)
                 else:
                     if isinstance(value, basestring):
-                        # regex normalizes carriage return and cuts them to two at most
+                        # regex normalizes carriage return
+                        # and cuts them to two at most
                         value = re.sub(r'\r\n', '\n', value)
                         value = re.sub(r'\n{3,}', '\n\n', value)
                         value = field.clean(value.strip())
@@ -127,7 +143,8 @@ class MentorForm(CDCModelForm):
             max_width = max_height = 1000
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
-                    u'Please use an image that is {} x {}px or smaller.'.format(
+                    u'Please use an image that is '
+                    u'{} x {}px or smaller.'.format(
                         max_width,
                         max_height
                     )
@@ -136,7 +153,8 @@ class MentorForm(CDCModelForm):
             min_width = min_height = 500
             if w < min_width or h < min_height:
                 raise forms.ValidationError(
-                    u'Please use an image that is {} x {}px or larger.'.format(
+                    u'Please use an image that is '
+                    u'{} x {}px or larger.'.format(
                         min_width,
                         min_height
                     )
@@ -144,8 +162,15 @@ class MentorForm(CDCModelForm):
 
             # validate content type
             main, sub = avatar.content_type.split('/')
-            if not (main == 'image' and sub in ['jpeg', 'pjpeg', 'gif', 'png']):
-                raise forms.ValidationError(u'Please use a JPEG, GIF or PNG image.')
+            if (
+                not (
+                    main == 'image' and
+                    sub in ['jpeg', 'pjpeg', 'gif', 'png']
+                )
+            ):
+                raise forms.ValidationError(
+                    u'Please use a JPEG, GIF or PNG image.'
+                )
 
             # validate file size
             if len(avatar) > (2000 * 1024):
@@ -231,13 +256,13 @@ class StudentForm(CDCModelForm):
 
     school_type = forms.ChoiceField(
         widget=forms.RadioSelect,
-        choices = SCHOOL_TYPE_CHOICES,
+        choices=SCHOOL_TYPE_CHOICES,
         required=False
     )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset = RaceEthnicity.objects.filter(visible=True),
+        queryset=RaceEthnicity.objects.filter(visible=True),
         required=False
     )
 
@@ -260,7 +285,10 @@ class StudentForm(CDCModelForm):
         label=format_html(
             u"{0} {1}",
             "Medications",
-            mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>')
+            mark_safe(
+                '<span class="btn btn-xs btn-link js-expand-student-form">'
+                'expand</span>'
+            )
         ),
         required=False
     )
@@ -276,7 +304,10 @@ class StudentForm(CDCModelForm):
         label=format_html(
             u"{0} {1}",
             "Medical Conditions",
-            mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>')
+            mark_safe(
+                '<span class="btn btn-xs btn-link js-expand-student-form">'
+                'expand</span>'
+            )
         ),
         required=False
     )
@@ -287,7 +318,10 @@ class StudentForm(CDCModelForm):
                 'required': 'required'
             }
         ),
-        label='I hereby give permission to CoderDojoChi to use the student\'s image and/or likeness in promotional materials.'
+        label=(
+            'I hereby give permission to CoderDojoChi to use the '
+            'student\'s image and/or likeness in promotional materials.'
+        ),
     )
 
     consent = forms.BooleanField(
@@ -296,7 +330,10 @@ class StudentForm(CDCModelForm):
                 'required': 'required'
             }
         ),
-        label='I hereby give consent for the student signed up above to participate in CoderDojoChi.'
+        label=(
+            'I hereby give consent for the student signed up above to '
+            'participate in CoderDojoChi.'
+        ),
     )
 
     class Meta:
