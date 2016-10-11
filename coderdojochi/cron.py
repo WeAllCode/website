@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-
 import arrow
 import datetime
 
-# from django.conf import settings
 from django.core.mail import get_connection
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
@@ -12,11 +10,141 @@ from coderdojochi.models import Mentor, MentorOrder, Order, Session
 from coderdojochi.views import sendSystemEmail
 
 
+class UpdateWaitlists(CronJobBase):
+    RUN_EVERY_MINS = 60
+
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = 'coderdojochi.UpdateWaitlists'
+
+    def do(self):
+        date_12_hours_ago = timezone.now() - datetime.timedelta(hours=12)
+
+        orders = Order.objects.filter(
+            active=True,
+            session__start_date__gte=timezone.now()
+        )
+
+        for order in orders:
+            # if waitlist offer sent over 12 hours ago revoke it
+            if (order.waitlisted and order.waitlist_offer_sent_at and
+               order.waitlist_offer_sent_at < date_12_hours_ago):
+                order.waitlisted = False
+                order.waitlisted_at = None
+                order.waitlist_offer_sent_at = None
+                order.active = False
+                order.save()
+
+                # send waitlist offer to next waitlisted order (if present)
+                next_waitlist_order = Order.objects.filter(
+                    active=True,
+                    waitlisted=True,
+                    session=order.session
+                ).order_by('waitlisted_at').first()
+
+                if next_waitlist_order:
+                    # TODO: Send offer email to next_waitlist_order.guardian
+                    # nwo = next_waitlist_order
+                    # sendSystemEmail(
+                    #     False,
+                    #     'You are next on the waitlist! Enroll now!',
+                    #     'coderdojochi-waitlist-offer-guardian',
+                    #     {
+                    #         'first_name': nwo.guardian.user.first_name,
+                    #         'last_name': nwo.guardian.user.last_name,
+                    #         'student_first_name': nwo.student.first_name,
+                    #         'student_last_name': nwo.student.last_name,
+                    #         'class_code': nwo.session.course.code,
+                    #         'class_title': nwo.session.course.title,
+                    #         'class_description': nwo.session.course.description,
+                    #         'class_start_date': arrow.get(
+                    #             nwo.session.start_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_start_time': arrow.get(nwo.session.start_date).format('h:mma'),
+                    #         'class_end_date': arrow.get(
+                    #             nwo.session.end_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_end_time': arrow.get(nwo.session.end_date).format('h:mma'),
+                    #         'class_location_name': nwo.session.location.name,
+                    #         'class_location_address': nwo.session.location.address,
+                    #         'class_location_address2': nwo.session.location.address2,
+                    #         'class_location_city': nwo.session.location.city,
+                    #         'class_location_state': nwo.session.location.state,
+                    #         'class_location_zip': nwo.session.location.zip,
+                    #         'class_additional_info': nwo.session.additional_info,
+                    #         'class_url': nwo.session.get_absolute_url(),
+                    #         'class_ics_url': nwo.session.get_ics_url()
+                    #     },
+                    #     nwo.guardian.user.email
+                    # )
+
+                    next_waitlist_order.waitlist_offer_sent_at = timezone.now()
+                    next_waitlist_order.save()
+
+        mentor_orders = MentorOrder.objects.filter(
+            active=True,
+            session__start_date__gte=timezone.now()
+        )
+
+        for mentor_order in mentor_orders:
+            # if waitlist offer sent over 12 hours ago revoke it
+            if (mentor_order.waitlisted and mentor_order.waitlist_offer_sent_at and
+               mentor_order.waitlist_offer_sent_at < date_12_hours_ago):
+                mentor_order.waitlisted = False
+                mentor_order.waitlisted_at = None
+                mentor_order.waitlist_offer_sent_at = None
+                mentor_order.active = False
+                mentor_order.save()
+
+                # send waitlist offer to next waitlisted mentor_order (if present)
+                next_waitlist_mentor_order = MentorOrder.objects.filter(
+                    active=True,
+                    waitlisted=True,
+                    session=mentor_order.session
+                ).order_by('waitlisted_at').first()
+
+                if next_waitlist_mentor_order:
+                    # TODO: Send offer email to next_waitlist_mentor_order.mentor
+                    # nwmo = next_waitlist_mentor_order
+                    # sendSystemEmail(
+                    #     False,
+                    #     'You are next on the waitlist! Enroll now!',
+                    #     'coderdojochi-waitlist-offer-mentor',
+                    #     {
+                    #         'first_name': nwmo.mentor.user.first_name,
+                    #         'last_name': nwmo.mentor.user.last_name,
+                    #         'class_code': nwmo.session.course.code,
+                    #         'class_title': nwmo.session.course.title,
+                    #         'class_description': nwmo.session.course.description,
+                    #         'class_start_date': arrow.get(
+                    #             nwmo.session.mentor_start_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_start_time': arrow.get(nwmo.session.mentor_start_date).format('h:mma'),
+                    #         'class_end_date': arrow.get(
+                    #             nwmo.session.mentor_end_date
+                    #         ).format('dddd, MMMM D, YYYY'),
+                    #         'class_end_time': arrow.get(nwmo.session.mentor_end_date).format('h:mma'),
+                    #         'class_location_name': nwmo.session.location.name,
+                    #         'class_location_address': nwmo.session.location.address,
+                    #         'class_location_address2': nwmo.session.location.address2,
+                    #         'class_location_city': nwmo.session.location.city,
+                    #         'class_location_state': nwmo.session.location.state,
+                    #         'class_location_zip': nwmo.session.location.zip,
+                    #         'class_additional_info': nwmo.session.additional_info,
+                    #         'class_url': nwmo.session.get_absolute_url(),
+                    #         'class_ics_url': nwmo.session.get_ics_url()
+                    #     },
+                    #     nwmo.mentor.user.email
+                    # )
+
+                    next_waitlist_mentor_order.waitlist_offer_sent_at = timezone.now()
+                    next_waitlist_mentor_order.save()
+
+
 class SendReminders(CronJobBase):
     RUN_AT_TIMES = ['10:00', '14:00']
 
     schedule = Schedule(run_at_times=RUN_AT_TIMES)
-    code = 'coderdojochi.send_reminders'
+    code = 'coderdojochi.SendReminders'
 
     def do(self):
         orders_within_a_week = Order.objects.filter(
@@ -28,7 +156,7 @@ class SendReminders(CronJobBase):
             session__start_date__gte=(
                 timezone.now() + datetime.timedelta(days=1)
             ),
-        )
+        ).exclude(waitlisted=True)
         orders_within_a_day = Order.objects.filter(
             active=True,
             day_reminder_sent=False,
@@ -38,7 +166,7 @@ class SendReminders(CronJobBase):
             session__start_date__gte=(
                 timezone.now() - datetime.timedelta(days=2)
             ),
-        )
+        ).exclude(waitlisted=True)
         sessions_within_a_week = Session.objects.filter(
             active=True,
             mentors_week_reminder_sent=False,

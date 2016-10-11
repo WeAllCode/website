@@ -15,7 +15,10 @@
     "created_at": "2016-05-08T13:07:25.346",
     "updated_at": "2016-05-08T13:07:25.346",
     "week_reminder_sent": false,
-    "day_reminder_sent": false
+    "day_reminder_sent": false,
+    "waitlisted": false,
+    "waitlisted_at": null,
+    "waitlist_offer_sent_at": null
   }
 },
 {
@@ -34,7 +37,10 @@
     "created_at": "2016-05-08T13:07:41.042",
     "updated_at": "2016-05-08T13:07:41.042",
     "week_reminder_sent": false,
-    "day_reminder_sent": false
+    "day_reminder_sent": false,
+    "waitlisted": false,
+    "waitlisted_at": null,
+    "waitlist_offer_sent_at": null
   }
 },
 {
@@ -53,7 +59,10 @@
     "created_at": "2016-05-08T13:07:57.868",
     "updated_at": "2016-05-08T13:07:57.868",
     "week_reminder_sent": false,
-    "day_reminder_sent": false
+    "day_reminder_sent": false,
+    "waitlisted": false,
+    "waitlisted_at": null,
+    "waitlist_offer_sent_at": null
   }
 }
 ]

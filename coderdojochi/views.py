@@ -48,7 +48,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from coderdojochi.util import local_to_utc
+from coderdojochi.util import local_to_utc, email
 from coderdojochi.models import (
     CDCUser,
     Donation,
@@ -416,21 +416,27 @@ def session_detail(
     active_mentors = Mentor.objects.filter(
         id__in=MentorOrder.objects.filter(
             session=session_obj,
-            active=True
+            active=True,
+        ).exclude(
+            waitlisted=True,
         ).values('mentor__id')
     )
 
     if request.method == 'POST':
         if 'waitlist' in request.POST:
-
             if request.POST['waitlist'] == 'student':
                 student = Student.objects.get(
                     id=int(request.POST['account_id'])
                 )
 
-                if request.POST['remove'] == 'true':
-                    session_obj.waitlist_students.remove(student)
-                    session_obj.save()
+                if 'order_id' in request.POST:
+                    order = get_object_or_404(Order, id=request.POST['order_id'])
+                    order.waitlisted = False
+                    order.waitlisted_at = None
+                    order.waitlist_offer_sent_at = None
+                    order.active = False
+                    order.save()
+
                     messages.success(
                         request,
                         'You have been removed from the waitlist. '
@@ -438,32 +444,59 @@ def session_detail(
                     )
 
                 else:
-                    session_obj.waitlist_students.add(student)
-                    session_obj.save()
-                    messages.success(
-                        request,
-                        'Added to waitlist successfully.'
+                    order, created = Order.objects.get_or_create(
+                        guardian=student.guardian,
+                        student=student,
+                        session=session_obj
                     )
+
+                    if not settings.DEBUG:
+                        ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
+                    else:
+                        ip = request.META['REMOTE_ADDR']
+
+                    order.ip = ip
+                    order.waitlisted = True
+                    order.waitlisted_at = timezone.now()
+                    order.waitlist_offer_sent_at = None
+                    order.active = True
+                    order.save()
+                    messages.success(request, 'Added to waitlist successfully.')
             else:
                 mentor = Mentor.objects.get(
                     id=int(request.POST['account_id'])
                 )
 
-                if request.POST['remove'] == 'true':
-                    session_obj.waitlist_mentors.remove(mentor)
-                    session_obj.save()
+                if 'order_id' in request.POST:
+                    mentor_order = get_object_or_404(MentorOrder, id=request.POST['order_id'])
+                    mentor_order.waitlisted = False
+                    mentor_order.waitlisted_at = None
+                    mentor_order.waitlist_offer_sent_at = None
+                    mentor_order.active = False
+                    mentor_order.save()
                     messages.success(
                         request,
                         'You have been removed from the waitlist. '
                         'Thanks for letting us know.'
                     )
                 else:
-                    session_obj.waitlist_mentors.add(mentor)
-                    session_obj.save()
-                    messages.success(
-                        request,
-                        'Added to waitlist successfully.'
+                    mentor_order, created = MentorOrder.objects.get_or_create(
+                        mentor=mentor,
+                        session=session_obj
                     )
+
+                    if not settings.DEBUG:
+                        ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
+                    else:
+                        ip = request.META['REMOTE_ADDR']
+
+                    mentor_order.ip = ip
+                    mentor_order.waitlisted = True
+                    mentor_order.waitlist_offer_sent_at = None
+                    mentor_order.waitlisted_at = timezone.now()
+                    mentor_order.active = True
+                    mentor_order.save()
+                    messages.success(request, 'Added to waitlist successfully.')
         else:
             messages.error(request, 'Invalid request, please try again.')
 
@@ -500,17 +533,13 @@ def session_detail(
         if request.user.role == 'mentor':
             mentor = get_object_or_404(Mentor, user=request.user)
             account = mentor
-            session_orders = MentorOrder.objects.filter(
-                session=session_obj,
-                active=True,
-            )
-            mentor_signed_up = True if session_orders.filter(
-                mentor=account
-            ).count() else False
+            mentor_orders = MentorOrder.objects.filter(session=session_obj, active=True).exclude(waitlisted=True)
+            mentor_signed_up = True if mentor_orders.filter(mentor=mentor).count() else False
 
-            spots_remaining = (
-                session_obj.get_mentor_capacity() - session_orders.count()
-            )
+            spots_remaining = session_obj.get_mentor_capacity() - mentor_orders.count() - session_obj.get_mentor_waitlist_count()
+
+            # ensure spots_remaining doesnt go negative
+            spots_remaining = spots_remaining if spots_remaining  > -1 else 0
 
             if enroll or 'enroll' in request.GET:
                 return redirect(
@@ -522,13 +551,11 @@ def session_detail(
         else:
             guardian = get_object_or_404(Guardian, user=request.user)
             account = guardian
-            students = guardian.get_students(
-            ) if guardian.get_students().count() else False
+            students = guardian.get_students() if guardian.get_students().count() else False
+            spots_remaining = session_obj.capacity - session_obj.get_current_student_orders().count() - session_obj.get_student_waitlist_count()
 
-            spots_remaining = (
-                session_obj.capacity -
-                session_obj.get_current_students().count()
-            )
+            # ensure spots_remaining doesnt go negative
+            spots_remaining = spots_remaining if spots_remaining  > -1 else 0
 
             if enroll or 'enroll' in request.GET:
                 if not students:
@@ -548,10 +575,7 @@ def session_detail(
                         )
 
     else:
-        spots_remaining = (
-            session_obj.capacity -
-            session_obj.get_current_students().count()
-        )
+        spots_remaining = session_obj.capacity - session_obj.get_current_student_orders().count()
 
     return render(
         request,
@@ -613,10 +637,8 @@ def session_sign_up(
             )
             return redirect('dojo')
 
-        session_orders = MentorOrder.objects.filter(
-            session=session_obj,
-            active=True
-        )
+        session_orders = MentorOrder.objects.filter(session=session_obj, active=True).exclude(waitlisted=True)
+        user_signed_up = True if session_orders.filter(mentor=mentor).count() else False
 
         user_signed_up = True if session_orders.filter(
             mentor=mentor
@@ -626,9 +648,7 @@ def session_sign_up(
             if session_obj.get_mentor_capacity() <= session_orders.count():
                 messages.error(
                     request,
-                    'Sorry this class is at mentor capacity. '
-                    'Please check back soon and/or join us for '
-                    'another upcoming class!'
+                    'Sorry this class is at mentor capacity. Please sign up for the wait list or check back soon and/or join us for another upcoming class!'
                 )
                 return redirect(session_obj.get_absolute_url())
     else:
@@ -675,10 +695,7 @@ def session_sign_up(
             )
 
         if not user_signed_up:
-            if (
-                session_obj.capacity <=
-                session_obj.get_current_students().count()
-            ):
+            if session_obj.capacity <= session_obj.get_current_student_orders().count():
                 messages.error(
                     request,
                     'Sorry this class has sold out. '
@@ -713,6 +730,94 @@ def session_sign_up(
                 'Thanks for letting us know!'
             )
 
+            if request.user.role == 'mentor':
+                next_waitlist_order = MentorOrder.objects.filter(
+                    active=True,
+                    waitlisted=True,
+                    session=session_obj
+                ).order_by('waitlisted_at').first()
+            else:
+                next_waitlist_order = Order.objects.filter(
+                    active=True,
+                    waitlisted=True,
+                    session=session_obj
+                ).order_by('waitlisted_at').first()
+
+            if next_waitlist_order:
+                if request.user.role == 'mentor':
+                    nwmo = next_waitlist_order
+                    email(
+                        subject='Mentor Waitlist Offer Subject',
+                        template_name='mentor-waitlist-offer',
+                        context={
+                            'first_name': nwmo.mentor.user.first_name,
+                            'last_name': nwmo.mentor.user.last_name,
+                            'class_code': nwmo.session.course.code,
+                            'class_title': nwmo.session.course.title,
+                            'class_description': nwmo.session.course.description,
+                            'class_start_date': arrow.get(
+                                nwmo.session.mentor_start_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_start_time': arrow.get(
+                                nwmo.session.mentor_start_date
+                            ).format('h:mma'),
+                            'class_end_date': arrow.get(
+                                nwmo.session.mentor_end_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_end_time': arrow.get(
+                                nwmo.session.mentor_end_date
+                            ).format('h:mma'),
+                            'class_location_name': nwmo.session.location.name,
+                            'class_location_address': nwmo.session.location.address,
+                            'class_location_address2': nwmo.session.location.address2,
+                            'class_location_city': nwmo.session.location.city,
+                            'class_location_state': nwmo.session.location.state,
+                            'class_location_zip': nwmo.session.location.zip,
+                            'class_additional_info': nwmo.session.additional_info,
+                            'class_url': nwmo.session.get_absolute_url(),
+                            'class_ics_url': nwmo.session.get_ics_url()
+                        },
+                        recipients=[nwmo.mentor.user.email],
+                        preheader='You are next on the waitlist!'
+                    )
+                else:
+                    nwo = next_waitlist_order
+                    email(
+                        subject='Guardian Waitlist Offer Subject',
+                        template_name='guardian-waitlist-offer',
+                        context={
+                            'first_name': nwo.guardian.user.first_name,
+                            'last_name': nwo.guardian.user.last_name,
+                            'student_first_name': nwo.student.first_name,
+                            'student_last_name': nwo.student.last_name,
+                            'class_code': nwo.session.course.code,
+                            'class_title': nwo.session.course.title,
+                            'class_description': nwo.session.course.description,
+                            'class_start_date': arrow.get(
+                                nwo.session.start_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_start_time': arrow.get(nwo.session.start_date).format('h:mma'),
+                            'class_end_date': arrow.get(
+                                nwo.session.end_date
+                            ).format('dddd, MMMM D, YYYY'),
+                            'class_end_time': arrow.get(nwo.session.end_date).format('h:mma'),
+                            'class_location_name': nwo.session.location.name,
+                            'class_location_address': nwo.session.location.address,
+                            'class_location_address2': nwo.session.location.address2,
+                            'class_location_city': nwo.session.location.city,
+                            'class_location_state': nwo.session.location.state,
+                            'class_location_zip': nwo.session.location.zip,
+                            'class_additional_info': nwo.session.additional_info,
+                            'class_url': nwo.session.get_absolute_url(),
+                            'class_ics_url': nwo.session.get_ics_url()
+                        },
+                        recipients=[nwo.guardian.user.email],
+                        preheader='You are next on the waitlist!'
+                    )
+
+                next_waitlist_order.active = True
+                next_waitlist_order.waitlist_offer_sent_at = timezone.now()
+                next_waitlist_order.save()
         else:
             if not settings.DEBUG:
                 ip = (
@@ -730,6 +835,7 @@ def session_sign_up(
                 )
                 order.ip = ip
                 order.active = True
+                order.waitlisted = False
                 order.save()
             else:
                 order, created = Order.objects.get_or_create(
@@ -739,6 +845,7 @@ def session_sign_up(
                 )
                 order.ip = ip
                 order.active = True
+                order.waitlisted = False
                 order.save()
 
             # we dont want guardians getting 7 day reminder
@@ -1301,11 +1408,9 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
 
     mentor = get_object_or_404(Mentor, user=request.user)
 
-    orders = MentorOrder.objects.select_related().filter(
-        active=True,
-        mentor=mentor,
+    orders = MentorOrder.objects.select_related().filter(active=True, mentor=mentor).exclude(
+        waitlisted=True
     )
-
     upcoming_sessions = orders.filter(
         active=True,
         session__end_date__gte=timezone.now()
@@ -1412,13 +1517,12 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
 
     upcoming_orders = student_orders.filter(
         active=True,
-        session__end_date__gte=timezone.now(),
-    ).order_by('session__start_date')
-
+        session__end_date__gte=timezone.now()
+    ).exclude(waitlisted=True).order_by('session__start_date')
     past_orders = student_orders.filter(
         active=True,
-        session__end_date__lte=timezone.now(),
-    ).order_by('session__start_date')
+        session__end_date__lte=timezone.now()
+    ).exclude(waitlisted=True).order_by('session__start_date')
 
     if request.method == 'POST':
         form = GuardianForm(
@@ -2092,23 +2196,11 @@ def session_check_in(
     # get the orders
     orders = Order.objects.select_related().filter(
         session_id=session_id
+    ).exclude(
+        waitlisted=True
     ).annotate(
-        num_attended=Count(
-            Case(
-                When(
-                    student__order__check_in__isnull=False,
-                    then=1
-                )
-            )
-        ),
-        num_missed=Count(
-            Case(
-                When(
-                    student__order__check_in__isnull=True,
-                    then=1
-                )
-            )
-        )
+        num_attended=Count(Case(When(student__order__check_in__isnull=False, then=1))),
+        num_missed=Count(Case(When(student__order__check_in__isnull=True, then=1)))
     )
 
     if active_session:
@@ -2376,7 +2468,6 @@ def session_announce(request, session_id):
 
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
-
             sendSystemEmail(
                 request,
                 'Upcoming class',
@@ -2555,7 +2646,7 @@ def sendSystemEmail(
         return
 
     merge_vars['current_year'] = timezone.now().year
-    merge_vars['company'] = 'CoderDojoChi'
+    merge_vars['company'] = settings.SITE_NAME
     merge_vars['site_url'] = settings.SITE_URL
 
     try:

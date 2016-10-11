@@ -255,15 +255,17 @@ class Student(models.Model):
         return u'{} {}'.format(self.first_name, self.last_name)
 
     def is_registered_for_session(self, session):
-        try:
-            Order.objects.get(
+        is_registered = False
+        if (
+            Order.objects.filter(
                 active=True,
                 student=self,
-                session=session,
-            )
+                session=session
+            ).exclude(
+                waitlisted=True
+            ).exists()
+        ):
             is_registered = True
-        except:
-            is_registered = False
 
         return is_registered
 
@@ -405,16 +407,6 @@ class Session(models.Model):
         Mentor,
         related_name="session_teacher",
     )
-    waitlist_mentors = models.ManyToManyField(
-        Mentor,
-        blank=True,
-        related_name="session_waitlist_mentors",
-    )
-    waitlist_students = models.ManyToManyField(
-        Student,
-        blank=True,
-        related_name="session_waitlist_students",
-    )
     external_enrollment_url = models.CharField(
         max_length=255,
         blank=True,
@@ -523,23 +515,15 @@ class Session(models.Model):
         )
 
     def get_current_orders(self, checked_in=None):
+        orders = Order.objects.filter(active=True, session=self).exclude(waitlisted=True)
+
         if checked_in is not None:
             if checked_in:
-                orders = Order.objects.filter(
-                    active=True,
-                    session=self
-                ).exclude(check_in=None).order_by('student__last_name')
+                orders = orders.exclude(check_in=None).order_by('student__last_name')
             else:
-                orders = Order.objects.filter(
-                    active=True,
-                    session=self,
-                    check_in=None
-                ).order_by('student__last_name')
+               orders = orders.filter(check_in=None).order_by('student__last_name')
         else:
-            orders = Order.objects.filter(
-                active=True,
-                session=self
-            ).order_by('check_in', 'student__last_name')
+            orders = orders.order_by('check_in', 'student__last_name')
 
         return orders
 
@@ -547,7 +531,11 @@ class Session(models.Model):
         orders = MentorOrder.objects.filter(
             session=self,
             active=True,
-        ).order_by('mentor__user__last_name')
+        ).exclude(
+            waitlisted=True
+        ).order_by(
+            'mentor__user__last_name'
+        )
 
         return orders
 
@@ -556,7 +544,12 @@ class Session(models.Model):
             session=self,
             active=True,
             check_in__isnull=False
-        ).order_by('mentor__user__last_name')
+        ).exclude(
+            waitlisted=True
+        ).order_by(
+            'mentor__user__last_name'
+        )
+
         return orders
 
     def get_current_students(self, checked_in=None):
@@ -584,13 +577,31 @@ class Session(models.Model):
         return Order.objects.filter(
             active=True,
             session=self
-        ).exclude(check_in=None).values('student')
+        ).exclude(check_in=None, waitlisted=True).values('student')
 
     def get_mentor_capacity(self):
         if self.mentor_capacity:
             return self.mentor_capacity
         else:
             return self.capacity / 2
+
+    def get_student_waitlist_count(self):
+        student_waitlist_count = Order.objects.filter(
+            active=True,
+            waitlisted=True,
+            session=self
+        ).count()
+
+        return student_waitlist_count
+
+    def get_mentor_waitlist_count(self):
+        mentor_waitlist_count = MentorOrder.objects.filter(
+            active=True,
+            waitlisted=True,
+            session=self
+        ).count()
+
+        return mentor_waitlist_count
 
 
 class MeetingType(models.Model):
@@ -808,6 +819,17 @@ class Order(models.Model):
     day_reminder_sent = models.BooleanField(
         default=False,
     )
+    waitlisted = models.BooleanField(
+        default=False,
+    )
+    waitlisted_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    waitlist_offer_sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = _("order")
@@ -877,6 +899,17 @@ class MentorOrder(models.Model):
     )
     day_reminder_sent = models.BooleanField(
         default=False,
+    )
+    waitlisted = models.BooleanField(
+        default=False,
+    )
+    waitlisted_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    waitlist_offer_sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
     )
 
     class Meta:
