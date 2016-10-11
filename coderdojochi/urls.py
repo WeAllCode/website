@@ -62,6 +62,20 @@ urlpatterns = [
         name='volunteer'
     ),
 
+
+    url(
+        r'^sponsors/$',
+        coderdojochi_views.sponsors,
+        name='sponsors'
+    ),
+    
+    url(
+        r'^sponsorship/$',
+        coderdojochi_views.sponsorship,
+        name='sponsorship'
+    ),    
+
+
     url(
         r'^contact/',
         coderdojochi_views.contact,

@@ -4,7 +4,7 @@ import arrow
 import calendar
 import logging
 import operator
-# import sys
+import itertools
 
 from collections import Counter
 from datetime import date, timedelta
@@ -63,6 +63,7 @@ from coderdojochi.models import (
     PartnerPasswordAccess,
     Session,
     Student,
+	Sponsor,
 )
 from coderdojochi.forms import (
     CDCModelForm,
@@ -1733,6 +1734,10 @@ def donate_return(request):
     )
     return redirect('donate')
 
+def sponsorship(request, template_name="sponsorship.html"):
+
+    return render(request, template_name)
+
 
 def about(request, template_name="about.html"):
     mentor_count = Mentor.objects.filter(
@@ -1750,6 +1755,18 @@ def about(request, template_name="about.html"):
             'students_served': students_served
         }
     )
+
+
+def sponsors(request, template_name="sponsors.html"):
+
+    sponsors = Sponsor.objects.filter(active=True).order_by('level')
+
+    grouped_sponsors_iterator = itertools.groupby(sponsors, lambda sponsor: sponsor.level)
+    grouped_sponsors = { level: list(sponsors_iterator) for level, sponsors_iterator in grouped_sponsors_iterator }
+
+    return render(request, template_name, {
+        'sponsors': grouped_sponsors
+    })
 
 
 def contact(request, template_name="contact.html"):
