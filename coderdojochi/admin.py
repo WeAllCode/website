@@ -149,7 +149,7 @@ class GuardianImportResource(resources.ModelResource):
         """
         try:
             instance = User.objects.get(email=row['email'])
-        except User.DoesNotExist as e:
+        except User.DoesNotExist:
             return Guardian(user=User()), True
         else:
             return (Guardian.objects.get(user=instance), False)
@@ -163,8 +163,13 @@ class GuardianImportResource(resources.ModelResource):
         if obj.pk:
             user = obj.user
         else:
-            user = User(first_name=first_name, last_name=last_name, email=email,
-                        role='guardian', username=email)
+            user = User(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                role='guardian',
+                username=email,
+            )
 
         obj.user = user
         obj.active = False

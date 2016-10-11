@@ -86,7 +86,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a class="pull-right" href="/dj-admin">Django Admin</a></li>
+                <li><a class="pull-right" href="{% url 'admin:index' %}">Django Admin</a></li>
             </ul>
         </div>
     </div>
@@ -124,13 +124,14 @@
     </div>
 </div>
 
+{% load admin_urls %}
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
             <h2 class="text-left">Classes <span class="badge">{{ sessions.count }}</span></h2>
         </div>
         <div class="col-sm-6 text-right h2">
-            <a href="#" class="btn btn-success" role="button">Create New Session</a>
+            <a href="{% url 'admin:coderdojochi_session_add' %}" class="btn btn-success" role="button">Create New Session</a>
         </div>
     </div>
 
@@ -174,10 +175,10 @@
         <tbody>
             {% for session in sessions %}
             <tr class="
-                {% if session.active = False %}
+                {% if session.active == False %}
                     danger
                 {% else %}
-                    {% if session.is_future = 1 %}
+                    {% if session.is_future == 1 %}
                     success
                     {% endif %}
                 {% endif %}
@@ -264,7 +265,7 @@
             <h2 class="text-left">Meetings <span class="badge">{{ meetings.count }}</span></h2>
         </div>
         <div class="col-sm-6 text-right h2">
-            <a href="/dj-admin/coderdojochi/meeting/add" class="btn btn-success" role="button">Create New Meeting</a>
+            <a href="{% url 'admin:coderdojochi_meeting_add' %}" class="btn btn-success" role="button">Create New Meeting</a>
         </div>
     </div>
 
@@ -299,10 +300,10 @@
         <tbody>
             {% for meeting in meetings %}
             <tr class="
-                {% if meeting.active = False %}
+                {% if meeting.active == False %}
                     danger
                 {% else %}
-                    {% if meeting.is_future = 1 %}
+                    {% if meeting.is_future == 1 %}
                     success
                     {% endif %}
                 {% endif %}

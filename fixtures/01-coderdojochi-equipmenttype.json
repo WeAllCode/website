@@ -1,0 +1,9 @@
+[
+{
+  "model": "coderdojochi.equipmenttype",
+  "pk": 1,
+  "fields": {
+    "name": "Laptop"
+  }
+}
+]
