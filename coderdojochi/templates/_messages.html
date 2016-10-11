@@ -2,7 +2,7 @@
 <div class="global-messages">
 	<div class="container">
 		{% for message in messages %}
-		<div class="message {% if message.tags %}text-{% ifequal message.tags 'error' %}danger{% else %}{{ message.tags }}{% endifequal %}{% else %}text-warning{% endif %}">{{ message|safe }}</div>
+		<div class="message {% if message.tags %}text-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% else %}text-warning{% endif %}">{{ message|safe }}</div>
 		{% endfor %}
 	</div>
 	<button class="global-messages-close btn-link"><i class="fa fa-times"></i></button>
