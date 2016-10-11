@@ -6,11 +6,6 @@
 
 {% block body_class %}page-student-detail{% endblock %}
 
-{% block extra_style %}
-<link href="{% static "css/vendor/picker.default.css" %}" rel="stylesheet">
-<link href="{% static "css/vendor/picker.default.date.css" %}" rel="stylesheet">
-{% endblock %}
-
 {% block content %}
 <div class="container registration min-height">
 <h1><small><a href="{% url 'dojo' %}">Back</a></small> Edit Student Info</h1>
@@ -20,26 +15,4 @@
     <button class="submit btn btn-success btn-lg">Update</button> &nbsp;<a href="{% url 'dojo' %}" class="btn-link">Cancel</a>
 </form>
 </div>
-{% endblock %}
-
-
-{% block extra_script %}
-<script src="{% static "js/vendor/picker.js" %}"></script>
-<script src="{% static "js/vendor/picker.date.js" %}"></script>
-<!--[if lt IE 9]>
-    <script src="{% static 'js/vendor/picker.legacy.js' %}"></script>
-<![endif]-->
-<script>
-    $(function() {
-        $('input[type=date]').pickadate({
-            format: 'yyyy-mm-dd',
-            today: false,
-            clear: false,
-            selectMonths: true,
-            selectYears: 17,
-            min: -(17*365),
-            max: -(5*365)
-        });
-    });
-</script>
 {% endblock %}

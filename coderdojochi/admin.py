@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -6,6 +7,14 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count
 # from django.template.defaultfilters import pluralize
 # from django.utils.safestring import mark_safe
+
+from import_export import resources
+from import_export.admin import (
+    ImportExportActionModelAdmin,
+    ImportExportMixin,
+)
+
+from import_export.fields import Field
 
 from coderdojochi.models import (
     Course,
@@ -26,10 +35,13 @@ from coderdojochi.models import (
     Sponsor,
 )
 
+from coderdojochi.util import str_to_bool
+
 User = get_user_model()
 
 
-class UserAdmin(admin.ModelAdmin):
+@admin.register(User)
+class UserAdmin(ImportExportActionModelAdmin):
     list_display = (
         'email',
         'first_name',
@@ -76,7 +88,8 @@ class UserAdmin(admin.ModelAdmin):
     change_form_template = 'loginas/change_form.html'
 
 
-class MentorAdmin(admin.ModelAdmin):
+@admin.register(Mentor)
+class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     list_display = (
         'user',
@@ -124,7 +137,58 @@ class MentorAdmin(admin.ModelAdmin):
     get_last_name.admin_order_field = 'user__last_name'
 
 
-class GuardianAdmin(admin.ModelAdmin):
+class GuardianImportResource(resources.ModelResource):
+    first_name = Field(attribute='first_name', column_name='first_name')
+    last_name = Field(attribute='last_name', column_name='last_name')
+    email = Field(attribute='email', column_name='email')
+    phone = Field(attribute='phone', column_name='phone')
+    zip = Field(attribute='zip', column_name='zip')
+
+    def get_or_init_instance(self, instance_loader, row):
+        """
+        Either fetches an already existing instance or initializes a new one.
+        """
+        try:
+            instance = User.objects.get(email=row['email'])
+        except User.DoesNotExist:
+            return Guardian(user=User()), True
+        else:
+            return (Guardian.objects.get(user=instance), False)
+
+    def import_obj(self, obj, data, dry_run):
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+        zip = data.get('zip')
+        phone = data.get('phone')
+        if obj.pk:
+            user = obj.user
+        else:
+            user = User(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                role='guardian',
+                username=email,
+            )
+
+        obj.user = user
+        obj.active = False
+        obj.zip = zip
+        obj.phone = phone
+        if not dry_run:
+            user.save()
+            obj.user = user
+            obj.save()
+
+    class Meta:
+        model = Guardian
+        import_id_fields = ('phone',)
+        fields = ('phone', 'zip')
+
+
+@admin.register(Guardian)
+class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         # 'user',
         'get_first_name',
@@ -154,6 +218,9 @@ class GuardianAdmin(admin.ModelAdmin):
 
     view_on_site = False
 
+    # Import settings
+    resource_class = GuardianImportResource
+
     def get_queryset(self, request):
         qs = super(GuardianAdmin, self).get_queryset(request)
         qs = qs.annotate(Count('student'))
@@ -175,7 +242,51 @@ class GuardianAdmin(admin.ModelAdmin):
     get_student_count.admin_order_field = 'student__count'
 
 
-class StudentAdmin(admin.ModelAdmin):
+class StudentResource(resources.ModelResource):
+    first_name = Field(attribute='first_name', column_name='first_name')
+    last_name = Field(attribute='last_name', column_name='last_name')
+    guardian_email = Field(attribute='guardian_email',
+                           column_name='guardian_email')
+    birthday = Field(attribute='birthday', column_name='birthday')
+    gender = Field(attribute='gender', column_name='gender')
+    school_name = Field(attribute='school_name', column_name='school_name')
+    school_type = Field(attribute='school_type', column_name='school_type')
+    photo_release = Field(attribute='photo_release',
+                          column_name='photo_release')
+    consent = Field(attribute='consent', column_name='consent')
+
+    def import_obj(self, obj, data, dry_run):
+        guardian_email = data.get('guardian_email')
+
+        obj.first_name = data.get('first_name')
+        obj.last_name = data.get('last_name')
+        obj.birthday = datetime.strptime(data.get('birthday', ''), '%m/%d/%Y')
+        obj.gender = data.get('gender', '')
+        obj.school_name = data.get('school_name', '')
+        obj.school_type = data.get('school_type', '')
+        obj.photo_release = str_to_bool(data.get('photo_release', ''))
+        obj.consent = str_to_bool(data.get('consent', ''))
+        obj.active = True
+
+        try:
+            obj.guardian = Guardian.objects.get(user__email=guardian_email)
+        except Guardian.DoesNotExist:
+            raise ImportError(
+                u'guardian with email {} not found'.format(guardian_email)
+            )
+
+        if not dry_run:
+            obj.save()
+
+    class Meta:
+        model = Student
+        import_id_fields = ('first_name', 'last_name')
+        fields = ('first_name', 'last_name')
+        # fields = ()
+
+
+@admin.register(Student)
+class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'first_name',
         'last_name',
@@ -209,8 +320,12 @@ class StudentAdmin(admin.ModelAdmin):
 
     view_on_site = False
 
+    # Import settings
+    resource_class = StudentResource
 
-class CourseAdmin(admin.ModelAdmin):
+
+@admin.register(Course)
+class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'code',
         'title',
@@ -230,7 +345,8 @@ class CourseAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
-class SessionAdmin(admin.ModelAdmin):
+@admin.register(Session)
+class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'course',
         'start_date',
@@ -276,7 +392,8 @@ class SessionAdmin(admin.ModelAdmin):
     get_current_orders_count.short_description = "Students"
 
 
-class OrderAdmin(admin.ModelAdmin):
+@admin.register(Order)
+class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         # 'id',
         'student',
@@ -309,7 +426,8 @@ class OrderAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
-class MentorOrderAdmin(admin.ModelAdmin):
+@admin.register(MentorOrder)
+class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     # def session(obj):
     #     url = reverse(
     #         'admin:coderdojochi_session_change',
@@ -364,7 +482,8 @@ class MentorOrderAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
-class MeetingOrderAdmin(admin.ModelAdmin):
+@admin.register(MeetingOrder)
+class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'mentor',
         'meeting',
@@ -398,7 +517,8 @@ class MeetingOrderAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
-class MeetingTypeAdmin(admin.ModelAdmin):
+@admin.register(MeetingType)
+class MeetingTypeAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'code',
         'title',
@@ -410,7 +530,8 @@ class MeetingTypeAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
-class MeetingAdmin(admin.ModelAdmin):
+@admin.register(Meeting)
+class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'meeting_type',
         'start_date',
@@ -444,11 +565,13 @@ class MeetingAdmin(admin.ModelAdmin):
     get_mentor_count.short_description = 'Mentors'
 
 
-class EquipmentTypeAdmin(admin.ModelAdmin):
+@admin.register(EquipmentType)
+class EquipmentTypeAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     view_on_site = False
 
 
-class EquipmentAdmin(admin.ModelAdmin):
+@admin.register(Equipment)
+class EquipmentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'uuid',
         'asset_tag',
@@ -487,7 +610,8 @@ class EquipmentAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
-class DonationAdmin(admin.ModelAdmin):
+@admin.register(Donation)
+class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
         'first_name',
         'last_name',
@@ -521,10 +645,17 @@ class DonationAdmin(admin.ModelAdmin):
     view_on_site = False
 
 
-class LocationAdmin(admin.ModelAdmin):
+@admin.register(Location)
+class LocationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     view_on_site = False
 
 
+@admin.register(RaceEthnicity)
+class RaceEthnicityAdmin(ImportExportMixin, ImportExportActionModelAdmin):
+    pass
+
+
+@admin.register(Sponsor)
 class SponsorAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -548,21 +679,3 @@ class SponsorAdmin(admin.ModelAdmin):
 
     view_on_site = False
 
-
-admin.site.register(User, UserAdmin)
-admin.site.register(Mentor, MentorAdmin)
-admin.site.register(Guardian, GuardianAdmin)
-admin.site.register(Student, StudentAdmin)
-admin.site.register(Course, CourseAdmin)
-admin.site.register(Session, SessionAdmin)
-admin.site.register(Order, OrderAdmin)
-admin.site.register(MentorOrder, MentorOrderAdmin)
-admin.site.register(MeetingOrder, MeetingOrderAdmin)
-admin.site.register(MeetingType, MeetingTypeAdmin)
-admin.site.register(Meeting, MeetingAdmin)
-admin.site.register(EquipmentType, EquipmentTypeAdmin)
-admin.site.register(Equipment, EquipmentAdmin)
-admin.site.register(Donation, DonationAdmin)
-admin.site.register(Location, LocationAdmin)
-admin.site.register(RaceEthnicity)
-admin.site.register(Sponsor, SponsorAdmin)

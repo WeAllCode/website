@@ -16,7 +16,12 @@ import sys
 from coderdojochi.util import str_to_bool
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        os.pardir
+    )
+)
 PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -26,7 +31,9 @@ PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str_to_bool(os.environ.get('DEBUG')) and 'test' not in sys.argv or False
+DEBUG = str_to_bool(
+    os.environ.get('DEBUG')
+) and 'test' not in sys.argv or False
 DEBUG_EMAIL = str_to_bool(os.environ.get('DEBUG_EMAIL')) or False
 
 ALLOWED_HOSTS = ['*']
@@ -62,6 +69,7 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'stdimage',
     'storages',
+    'import_export',
 
     # coderdojochi
     'coderdojochi',
@@ -79,7 +87,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
-    'dealer.contrib.django.Middleware',
 ]
 
 TEMPLATES = [
@@ -183,7 +190,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 
 
-SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 
 # AWS S3
@@ -224,7 +231,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
-SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = (
+    'coderdojochi.social_account_adapter.SocialAccountAdapter'
+)
 
 # Email
 EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'

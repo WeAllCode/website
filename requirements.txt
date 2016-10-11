@@ -1,6 +1,5 @@
 arrow==0.7.0
 boto==2.39.0
-dealer==2.0.5
 django-allauth==0.25.2
 django-appconf==1.0.1
 django-bootstrap3==7.0.1
@@ -9,16 +8,20 @@ django-common-helpers==0.8.0
 django-cron==0.4.6
 django-debug-toolbar==1.4
 django-html5==1.0.0
+django-import-export==0.4.5
 django-loginas==0.1.9
+django-nose==1.4.4
 django-paypal==0.3.2
 django-stdimage==2.3.2
 django-storages==1.4.1
 Django==1.9.6
 djrill==2.0
+factory-boy==2.7.0
 gunicorn==19.4.5
 httplib2==0.9.2
 icalendar==3.9.2
 json-logging-py==0.2
+mock==2.0.0
 oauth2==1.9.0.post1
 oauthlib==1.0.3
 Pillow==3.2.0
@@ -31,6 +34,3 @@ requests-oauthlib==0.6.1
 requests==2.9.1
 six==1.10.0
 sqlparse==0.1.19
-django-nose==1.4.4
-factory-boy==2.7.0
-mock==2.0.0

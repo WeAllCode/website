@@ -3,7 +3,7 @@
 import arrow
 import datetime
 
-from django.conf import settings
+# from django.conf import settings
 from django.core.mail import get_connection
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
@@ -22,14 +22,22 @@ class SendReminders(CronJobBase):
         orders_within_a_week = Order.objects.filter(
             active=True,
             week_reminder_sent=False,
-            session__start_date__lte=timezone.now() + datetime.timedelta(days=7),
-            session__start_date__gte=timezone.now() + datetime.timedelta(days=1)
+            session__start_date__lte=(
+                timezone.now() + datetime.timedelta(days=7)
+            ),
+            session__start_date__gte=(
+                timezone.now() + datetime.timedelta(days=1)
+            ),
         )
         orders_within_a_day = Order.objects.filter(
             active=True,
             day_reminder_sent=False,
-            session__start_date__lte=timezone.now() + datetime.timedelta(days=1),
-            session__start_date__gte=timezone.now() - datetime.timedelta(days=2)
+            session__start_date__lte=(
+                timezone.now() + datetime.timedelta(days=1)
+            ),
+            session__start_date__gte=(
+                timezone.now() - datetime.timedelta(days=2)
+            ),
         )
         sessions_within_a_week = Session.objects.filter(
             active=True,
@@ -47,8 +55,9 @@ class SendReminders(CronJobBase):
         # uses SMTP server specified in settings.py
         connection = get_connection()
 
-        # If you don't open the connection manually, Django will automatically open,
-        # then tear down the connection in msg.send()
+        # If you don't open the connection manually,
+        # Django will automatically open, then tear down the connection
+        # in msg.send()
         connection.open()
 
         for order in orders_within_a_week:
@@ -67,11 +76,15 @@ class SendReminders(CronJobBase):
                     'class_start_date': arrow.get(
                         order.session.start_date
                     ).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(order.session.start_date).format('h:mma'),
+                    'class_start_time': arrow.get(
+                        order.session.start_date
+                    ).format('h:mma'),
                     'class_end_date': arrow.get(
                         order.session.end_date
                     ).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(order.session.end_date).format('h:mma'),
+                    'class_end_time': arrow.get(
+                        order.session.end_date
+                    ).format('h:mma'),
                     'class_location_name': order.session.location.name,
                     'class_location_address': order.session.location.address,
                     'class_location_address2': order.session.location.address2,
@@ -103,11 +116,15 @@ class SendReminders(CronJobBase):
                     'class_start_date': arrow.get(
                         order.session.start_date
                     ).format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(order.session.start_date).format('h:mma'),
+                    'class_start_time': arrow.get(
+                        order.session.start_date
+                    ).format('h:mma'),
                     'class_end_date': arrow.get(
                         order.session.end_date
                     ).format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(order.session.end_date).format('h:mma'),
+                    'class_end_time': arrow.get(
+                        order.session.end_date
+                    ).format('h:mma'),
                     'class_location_name': order.session.location.name,
                     'class_location_address': order.session.location.address,
                     'class_location_address2': order.session.location.address2,
@@ -125,7 +142,9 @@ class SendReminders(CronJobBase):
 
         for session in sessions_within_a_week:
             session_mentors = Mentor.objects.filter(
-                id__in=MentorOrder.objects.filter(session=session).values('mentor__id')
+                id__in=MentorOrder.objects.filter(
+                    session=session
+                ).values('mentor__id')
             )
             for mentor in session_mentors:
                 sendSystemEmail(
@@ -141,11 +160,15 @@ class SendReminders(CronJobBase):
                         'class_start_date': arrow.get(
                             session.mentor_start_date
                         ).format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(session.mentor_start_date).format('h:mma'),
+                        'class_start_time': arrow.get(
+                            session.mentor_start_date
+                        ).format('h:mma'),
                         'class_end_date': arrow.get(
                             session.mentor_end_date
                         ).format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(session.mentor_end_date).format('h:mma'),
+                        'class_end_time': arrow.get(
+                            session.mentor_end_date
+                        ).format('h:mma'),
                         'class_location_name': session.location.name,
                         'class_location_address': session.location.address,
                         'class_location_address2': session.location.address2,
@@ -163,7 +186,9 @@ class SendReminders(CronJobBase):
 
         for session in sessions_within_a_day:
             session_mentors = Mentor.objects.filter(
-                id__in=MentorOrder.objects.filter(session=session).values('mentor__id')
+                id__in=MentorOrder.objects.filter(
+                    session=session
+                ).values('mentor__id')
             )
             for mentor in session_mentors:
                 sendSystemEmail(
@@ -179,11 +204,15 @@ class SendReminders(CronJobBase):
                         'class_start_date': arrow.get(
                             session.mentor_start_date
                         ).format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(session.mentor_start_date).format('h:mma'),
+                        'class_start_time': arrow.get(
+                            session.mentor_start_date
+                        ).format('h:mma'),
                         'class_end_date': arrow.get(
                             session.mentor_end_date
                         ).format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(session.mentor_end_date).format('h:mma'),
+                        'class_end_time': arrow.get(
+                            session.mentor_end_date
+                        ).format('h:mma'),
                         'class_location_name': session.location.name,
                         'class_location_address': session.location.address,
                         'class_location_address2': session.location.address2,

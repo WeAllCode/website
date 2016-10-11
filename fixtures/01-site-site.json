@@ -1,8 +1,10 @@
-[{
+[
+{
+  "model": "sites.site",
+  "pk": 1,
   "fields": {
     "domain": "coderdojochi.org",
     "name": "CoderDojoChi"
-  },
-  "model": "sites.site",
-  "pk": 1
-}]
+  }
+}
+]
