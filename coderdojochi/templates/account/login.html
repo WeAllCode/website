@@ -19,7 +19,7 @@
     </div>
     <p class="text-muted">or</p>
     <div class="row">
-        <form method="post" action="." class="form">
+        <form action="{{ app_path }}" method="post" id="login-form" class="form">
             {% csrf_token %}
             {% bootstrap_form form %}
             <input type="hidden" name="next" value="{{ next }}" />
