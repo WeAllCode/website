@@ -177,7 +177,6 @@ urlpatterns = [
         coderdojochi_views.meeting_announce,
         name='meeting_announce'
     ),
-
     url(
         r'^admin/class/(?P<session_id>[\d]+)/stats/$',
         coderdojochi_views.session_stats,
@@ -189,6 +188,11 @@ urlpatterns = [
         name='check_in'
     ),
     url(
+        r'^admin/class/(?P<session_id>[\d]+)/donations/$',
+        coderdojochi_views.session_donations,
+        name='donations'
+    ),
+    url(
         r'^admin/class/(?P<session_id>[\d]+)/check-in-mentors/$',
         coderdojochi_views.session_check_in_mentors,
         name='check_in_mentors'
@@ -198,7 +202,6 @@ urlpatterns = [
         coderdojochi_views.meeting_check_in,
         name='meeting_check_in'
     ),
-
     url(
         r'^admin/$',
         coderdojochi_views.cdc_admin,
@@ -209,31 +212,26 @@ urlpatterns = [
         coderdojochi_views.check_system,
         name='check_system'
     ),
-
     url(
         r'^welcome/$',
         coderdojochi_views.welcome,
         name='welcome'
     ),
-
     url(
         r'^dojo/$',
         coderdojochi_views.dojo,
         name='dojo'
     ),
-
     url(
         r'^login/user/(?P<user_id>.+)/$', loginas_views.user_login,
         name='loginas-user-login'
     ),
-
     url(
         r'^accounts/', include('allauth.urls')
     ),
-
     url(
         r'^dj-admin/', include(admin.site.urls)
-    ),
+    )
 ]
 
 urlpatterns += static(
