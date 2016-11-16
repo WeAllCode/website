@@ -624,6 +624,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     list_filter = (
         'session',
+        'user',
         'verified',
         'receipt_sent',
         'amount',
@@ -672,6 +673,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     get_first_name.short_description = 'First Name'
     get_last_name.short_description = 'Last Name'
     get_email.short_description = 'Email'
+    get_session.short_description = 'Session'
 
 
 @admin.register(Location)
