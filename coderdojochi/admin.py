@@ -612,7 +612,7 @@ class EquipmentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 @admin.register(Donation)
 class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
-        'get_session',
+        'session',
         'get_first_name',
         'get_last_name',
         'get_email',
@@ -646,12 +646,6 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     view_on_site = False
 
-    def get_session(self, obj):
-        if obj.session:
-            return obj.session
-        else:
-            return 'N/A'
-
     def get_first_name(self, obj):
         if obj.user:
             return obj.user.first_name
@@ -673,7 +667,6 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     get_first_name.short_description = 'First Name'
     get_last_name.short_description = 'Last Name'
     get_email.short_description = 'Email'
-    get_session.short_description = 'Session'
 
 
 @admin.register(Location)
