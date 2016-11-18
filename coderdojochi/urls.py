@@ -265,8 +265,15 @@ urlpatterns = [
 
     # AllAuth
     url(
-        r'^dj-admin/', include(admin.site.urls)
-    )
+        r'^accounts/',
+        include('allauth.urls'),
+    ),
+
+    # Django Admin
+    url(
+        r'^dj-admin/',
+        include(admin.site.urls),
+    ),
 ]
 
 urlpatterns += static(
