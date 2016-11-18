@@ -1,0 +1,25 @@
+{% extends "_email-base.html" %}
+
+{% block content %}
+<p>Thanks for signing up for our next meeting, {{ first_name }}. We look forward to seeing you there.</p>
+
+<p><strong>Details</strong>:</p>
+
+<p>{{ meeting_title }}<br>
+{{ meeting_start_date }} {{ meeting_start_time }}-{{ meeting_end_time }}<br>
+{{ meeting_location_name }}<br>
+{{ meeting_location_address }}, {{ meeting_location_address2 }}<br>
+{{ meeting_location_city }}, {{ meeting_location_state }} {{ meeting_location_zip }}</p>
+{% if meeting_additional_info %}
+
+<p><strong>Note</strong>:</p>
+
+<p>{{ meeting_additional_info }}</p>
+{% endif %}
+
+<p>Know others who might be interested in becoming mentors? <a href="{{ site_url }}" target="_blank">Invite them!</a></p>
+
+<p>If you have any questions, just reply back to this email.</p>
+
+<p>The CoderDojoChi Team</p>
+{% endblock %}

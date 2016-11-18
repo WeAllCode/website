@@ -4,16 +4,13 @@ import arrow
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import EmailMultiAlternatives
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
-from django.template.loader import render_to_string
 from email.MIMEImage import MIMEImage
 
 from coderdojochi.models import Mentor, Donation
-
-from coderdojochi.views import sendSystemEmail
+from coderdojochi.util import email
 
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
@@ -34,28 +31,23 @@ def avatar_updated_handler(sender, instance, **kwargs):
 
         instance.avatar_approved = False
 
-        context = {
-            'first_name': instance.user.first_name,
-            'last_name': instance.user.last_name,
-            'image': 'avatar',
-            'approve_url': instance.get_approve_avatar_url(),
-            'reject_url': instance.get_reject_avatar_url(),
-        }
-
-        subject = u"{} {} | Mentor Avatar Changed".format(
-            instance.user.first_name,
-            instance.user.last_name
+        msg = email(
+            subject='{} {} | Mentor Avatar Changed'.format(
+                instance.user.first_name,
+                instance.user.last_name
+            ),
+            template_name='avatar-changed-mentor',
+            context={
+                'first_name': instance.user.first_name,
+                'last_name': instance.user.last_name,
+                'image': 'avatar',
+                'approve_url': instance.get_approve_avatar_url(),
+                'reject_url': instance.get_reject_avatar_url(),
+            },
+            recipients=[settings.CONTACT_EMAIL],
+            preheader='Mentor Avatar Changed',
+            send=False
         )
-        html_content = render_to_string("mentor-avatar-changed.html", context)
-        text_content = render_to_string("mentor-avatar-changed.txt", context)
-        msg = EmailMultiAlternatives(
-            subject=subject,
-            body=text_content,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[settings.CONTACT_EMAIL]
-        )
-
-        msg.attach_alternative(html_content, "text/html")
 
         msg.mixed_subtype = 'related'
 
@@ -76,15 +68,14 @@ def donate_callback(sender, **kwargs):
         donation.verified = True
 
         if not donation.receipt_sent:
-            sendSystemEmail(
-                False,
-                'Thank you!',
-                'coderdojochi-donation-receipt',
-                {
+            email(
+                subject='Donations Receipt from CoderDojoChi',
+                template_name='donation-receipt',
+                context={
                     'first_name': donation.first_name,
                     'last_name': donation.last_name,
                     'email': donation.email,
-                    'amount': u'${}'.format(donation.amount),
+                    'amount': '${:0,.2f}'.format(donation.amount),
                     'transaction_date': arrow.get(
                         donation.created_at
                     ).format(
@@ -92,8 +83,10 @@ def donate_callback(sender, **kwargs):
                     ),
                     'transaction_id': donation.id
                 },
-                donation.email,
-                [v for k, v in settings.ADMINS]
+                recipients=[donation.email],
+                bcc=[settings.CONTACT_EMAIL],
+                preheader='Your generous donation is what'
+                          ' makes CoderDojoChi possible.',
             )
 
             donation.receipt_sent = True

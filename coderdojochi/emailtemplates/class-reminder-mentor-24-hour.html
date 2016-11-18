@@ -1,0 +1,26 @@
+{% extends "_email-base.html" %}
+
+{% block content %}
+<p>{{ first_name }},</p>
+
+<p>Your class is just hours away! You will be one of several mentors who have volunteered to expand the minds of the next generation of coders.</p>
+
+<p><strong>Details</strong>:</p>
+
+<p>{{ class_code }}: {{ class_title }}<br>
+{{ class_start_date }} {{ class_start_time }}-{{ class_end_time }}<br>
+<a href="{{ class_ics_url }}">Mark it in your calendar now.</a><br>
+{{ class_location_name }}<br>
+{{ class_location_address }}, {{ class_location_address2 }}<br>
+{{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}</p>
+{% if class_additional_info %}
+
+<p><strong>Note</strong>:</p>
+
+<p>{{ class_additional_info }}</p>
+{% endif %}
+
+<p>If for any reason you can&rsquo;t make it, please let us know immediately. And please check out our <a href="{{ site_url }}/classes/" target="_blank">upcoming classes</a> if you&rsquo;d like to mentor again!</p>
+
+<p>The CoderDojoChi Team</p>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "_email-base.html" %}
+
+{% block content %}
+<p>{{ first_name }},</p>
+
+<p>Thanks for checking out CoderDojoChi. We&rsquo;re thrilled that you&rsquo;re interested.</p>
+{% if next_class_url %}
+
+<p>The best way to get to know us is to attend a class. Our <a href="{{ site_url }}/{{ next_class_url }}" target="_blank">next class</a> is coming up soon, please take a moment to read about it and sign up your child or children.</p>
+{% endif %}
+
+<p>We offer several classes throughout the year, so we&rsquo;ll keep you updated with the latest news and announcements. If you&rsquo;d like to participate in other ways, such as donating time or <a href="{{ site_url }}/donate" target="_blank">making a generous contribution to our nonprofit</a> (wink wink), you&rsquo;re a click away.</p>
+
+<p>Thanks again for your interest in CoderDojoChi. We&rsquo;ll see you soon!</p>
+
+<p>The CoderDojoChi Team</p>
+{% endblock %}

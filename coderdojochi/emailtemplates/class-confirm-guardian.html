@@ -1,0 +1,25 @@
+{% extends "_email-base.html" %}
+
+{% block content %}
+<p>{{ first_name }},</p>
+
+<p>This reminder was automatically generated and sent to you thanks to the mystical, magical power of coding. Soon your child will know how to code things of this nature and more. Pretty cool, huh?</p>
+
+<p><strong>Details</strong>:</p>
+
+<p>{{ class_code }}: {{ class_title }}<br>
+{{ class_start_date }} {{ class_start_time }}-{{ class_end_time }}<br>
+{{ class_location_name }}<br>
+{{ class_location_address }}, {{ class_location_address2 }}<br>
+{{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}</p>
+{% if class_additional_info %}
+
+<p><strong>Note</strong>:</p>
+
+<p>{{ class_additional_info }}</p>
+{% endif %}
+
+<p>We hope you&rsquo;re as excited about it as we are. <a href="{{ class_ics_url }}">Mark it in your calendar now</a>, but you can expect a reminder email a few days before. See you soon!</p>
+
+<p>The CoderDojoChi Team</p>
+{% endblock %}
