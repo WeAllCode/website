@@ -210,6 +210,11 @@ urlpatterns = [
         name='check_in',
     ),
     url(
+        r'^admin/class/(?P<session_id>[\d]+)/donations/$',
+        coderdojochi_views.session_donations,
+        name='donations'
+    ),
+    url(
         r'^admin/class/(?P<session_id>[\d]+)/check-in-mentors/$',
         coderdojochi_views.session_check_in_mentors,
         name='check_in_mentors',
@@ -260,15 +265,8 @@ urlpatterns = [
 
     # AllAuth
     url(
-        r'^accounts/',
-        include('allauth.urls'),
-    ),
-
-    # Django Admin
-    url(
-        r'^dj-admin/',
-        include(admin.site.urls),
-    ),
+        r'^dj-admin/', include(admin.site.urls)
+    )
 ]
 
 urlpatterns += static(

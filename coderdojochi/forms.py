@@ -16,6 +16,8 @@ from coderdojochi.models import (
     Mentor,
     RaceEthnicity,
     Student,
+    Donation,
+    Session
 )
 
 SCHOOL_TYPE_CHOICES = (
@@ -346,3 +348,13 @@ class ContactForm(CDCForm):
     email = forms.EmailField(max_length=200, label='Your email address')
     body = forms.CharField(widget=forms.Textarea, label='Your message')
     human = forms.CharField(max_length=100, label=False, required=False)
+
+
+class DonationForm(ModelForm):
+    session = forms.ModelChoiceField(queryset=Session.objects.all(), widget=forms.HiddenInput(), required=True)
+    user = forms.ModelChoiceField(queryset=CDCUser.objects.all(), required=True)
+    amount = forms.CharField(label='Amount (dollars)')
+
+    class Meta:
+        model = Donation
+        fields = ['session', 'user', 'amount']
