@@ -137,11 +137,26 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
 
 class GuardianImportResource(resources.ModelResource):
-    first_name = Field(attribute='first_name', column_name='first_name')
-    last_name = Field(attribute='last_name', column_name='last_name')
-    email = Field(attribute='email', column_name='email')
-    phone = Field(attribute='phone', column_name='phone')
-    zip = Field(attribute='zip', column_name='zip')
+    first_name = Field(
+        attribute='first_name',
+        column_name='first_name',
+    )
+    last_name = Field(
+        attribute='last_name',
+        column_name='last_name',
+    )
+    email = Field(
+        attribute='email',
+        column_name='email'
+    )
+    phone = Field(
+        attribute='phone',
+        column_name='phone',
+    )
+    zip = Field(
+        attribute='zip',
+        column_name='zip',
+    )
 
     def get_or_init_instance(self, instance_loader, row):
         """
@@ -160,6 +175,7 @@ class GuardianImportResource(resources.ModelResource):
         email = data.get('email')
         zip = data.get('zip')
         phone = data.get('phone')
+
         if obj.pk:
             user = obj.user
         else:
@@ -175,6 +191,7 @@ class GuardianImportResource(resources.ModelResource):
         obj.active = False
         obj.zip = zip
         obj.phone = phone
+
         if not dry_run:
             user.save()
             obj.user = user
@@ -242,24 +259,52 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
 
 class StudentResource(resources.ModelResource):
-    first_name = Field(attribute='first_name', column_name='first_name')
-    last_name = Field(attribute='last_name', column_name='last_name')
-    guardian_email = Field(attribute='guardian_email',
-                           column_name='guardian_email')
-    birthday = Field(attribute='birthday', column_name='birthday')
-    gender = Field(attribute='gender', column_name='gender')
-    school_name = Field(attribute='school_name', column_name='school_name')
-    school_type = Field(attribute='school_type', column_name='school_type')
-    photo_release = Field(attribute='photo_release',
-                          column_name='photo_release')
-    consent = Field(attribute='consent', column_name='consent')
+    first_name = Field(
+        attribute='first_name',
+        column_name='first_name',
+    )
+    last_name = Field(
+        attribute='last_name',
+        column_name='last_name',
+    )
+    guardian_email = Field(
+        attribute='guardian_email',
+        column_name='guardian_email',
+    )
+    birthday = Field(
+        attribute='birthday',
+        column_name='birthday',
+    )
+    gender = Field(
+        attribute='gender',
+        column_name='gender',
+    )
+    school_name = Field(
+        attribute='school_name',
+        column_name='school_name',
+    )
+    school_type = Field(
+        attribute='school_type',
+        column_name='school_type',
+    )
+    photo_release = Field(
+        attribute='photo_release',
+        column_name='photo_release',
+    )
+    consent = Field(
+        attribute='consent',
+        column_name='consent',
+    )
 
     def import_obj(self, obj, data, dry_run):
         guardian_email = data.get('guardian_email')
 
         obj.first_name = data.get('first_name')
         obj.last_name = data.get('last_name')
-        obj.birthday = datetime.strptime(data.get('birthday', ''), '%m/%d/%Y')
+        obj.birthday = datetime.strptime(
+            data.get('birthday', ''),
+            '%m/%d/%Y'
+        )
         obj.gender = data.get('gender', '')
         obj.school_name = data.get('school_name', '')
         obj.school_type = data.get('school_type', '')
@@ -370,11 +415,6 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         '-start_date',
     )
 
-    filter_horizontal = (
-        'waitlist_mentors',
-        'waitlist_students',
-    )
-
     date_hierarchy = 'start_date'
 
     view_on_site = False
@@ -383,11 +423,16 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return MentorOrder.objects.filter(session__id=obj.id).count()
+        return MentorOrder.objects.filter(
+            session__id=obj.id,
+            active=True
+        ).exclude(waitlisted=True).count()
+
     get_mentor_count.short_description = 'Mentors'
 
     def get_current_orders_count(self, obj):
         return obj.get_current_orders().count()
+
     get_current_orders_count.short_description = "Students"
 
 
@@ -411,7 +456,7 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_filter = (
         'active',
         'check_in',
-        # 'guardian',
+        'waitlisted',
         'student',
         'session',
     )
@@ -560,7 +605,10 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return MeetingOrder.objects.filter(meeting__id=obj.id).count()
+        return MeetingOrder.objects.filter(
+            meeting__id=obj.id,
+            active=True
+        ).exclude(waitlisted=True).count()
     get_mentor_count.short_description = 'Mentors'
 
 

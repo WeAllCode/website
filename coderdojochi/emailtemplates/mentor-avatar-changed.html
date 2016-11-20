@@ -1,4 +1,8 @@
-<h1>{{ first_name }} {{ last_name }}'s avatar changed</h1>
-<img src="cid:{{ image }}">
-<h2><a href="{{ approve_url }}">Approve</a></h2>
-<h2><a href="{{ reject_url }}">Reject</a></h2>
+{% extends "_email-base.html" %}
+
+{% block content %}
+    <h1>{{ first_name }} {{ last_name }}'s avatar changed</h1>
+    <img src="cid:{{ image }}">
+    <h2><a href="{{ approve_url }}">Approve</a></h2>
+    <h2><a href="{{ reject_url }}">Reject</a></h2>
+{% endblock %}

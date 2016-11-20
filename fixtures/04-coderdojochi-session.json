@@ -27,9 +27,7 @@
     "mentors_day_reminder_sent": true,
     "gender_limitation": "male",
     "min_age_limitation": 7,
-    "max_age_limitation": 17,
-    "waitlist_mentors": [],
-    "waitlist_students": []
+    "max_age_limitation": 17
   }
 },
 {
@@ -60,9 +58,7 @@
     "mentors_day_reminder_sent": false,
     "gender_limitation": null,
     "min_age_limitation": 7,
-    "max_age_limitation": 17,
-    "waitlist_mentors": [],
-    "waitlist_students": []
+    "max_age_limitation": 17
   }
 },
 {
@@ -93,9 +89,7 @@
     "mentors_day_reminder_sent": false,
     "gender_limitation": "Male",
     "min_age_limitation": 7,
-    "max_age_limitation": 17,
-    "waitlist_mentors": [],
-    "waitlist_students": []
+    "max_age_limitation": 17
   }
 },
 {
@@ -126,9 +120,7 @@
     "mentors_day_reminder_sent": false,
     "gender_limitation": null,
     "min_age_limitation": 10,
-    "max_age_limitation": 16,
-    "waitlist_mentors": [],
-    "waitlist_students": []
+    "max_age_limitation": 16
   }
 },
 {
@@ -159,9 +151,7 @@
     "mentors_day_reminder_sent": false,
     "gender_limitation": "female",
     "min_age_limitation": 10,
-    "max_age_limitation": 15,
-    "waitlist_mentors": [],
-    "waitlist_students": []
+    "max_age_limitation": 15
   }
 }
 ]
