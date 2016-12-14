@@ -1,0 +1,15 @@
+{% extends "_email-base.html" %}
+
+{% block content %}
+<p>{{ first_name }}, we just announced a brand new class! We&rsquo;d love if you come and help us teach some bright minds.</p>
+
+<p>Since you have a profile already, {{ first_name }}, all you have to do is enroll in the class. How awesome is that?</p>
+
+<p>Just go to <a href="{{ class_url }}" target="_blank">{{ class_url }}</a> and enroll.</p>
+
+<p>If you can&rsquo;t make it, be sure to share this with your best friends, online and offline!</p>
+
+<p>We look forward to seeing you.</p>
+
+<p>The CoderDojoChi Team</p>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "_email-base.html" %}
+
+{% block content %}
+<p>Our meetings aren&rsquo;t like the ones you go to at work. No boring powerpoints with a monotoned person droning on and on. We promise we&rsquo;re not like that!</p>
+
+<p>{{ first_name }}, we just announced a new meeting! Take a look at the link and join us.</p>
+
+<p>Just go to <a href="{{ meeting_url }}" target="_blank">{{ meeting_url }}</a> and sign up.</p>
+
+<p>We look forward to seeing you soon.</p>
+
+<p>The CoderDojoChi Team</p>
+{% endblock %}

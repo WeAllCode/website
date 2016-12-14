@@ -1,0 +1,13 @@
+{% extends "_email-base.txt" %}
+
+{% block content %}
+Our meetings aren't like the ones you go to at work. No boring powerpoints with a monotoned person droning on and on. We promise we're not like that!
+
+{{ first_name }}, we just announced a new meeting! Take a look at the link and join us.
+
+Just go to {{ meeting_url }} and sign up.
+
+We look forward to seeing you soon.
+
+The CoderDojoChi Team
+{% endblock %}

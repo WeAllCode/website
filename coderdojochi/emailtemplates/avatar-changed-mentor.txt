@@ -1,3 +1,7 @@
+{% extends "_email-base.txt" %}
+
+{% block content %}
 {{ first_name }} {{ last_name }}'s avatar changed.
 
 Please approve ({{ approve_url }}) or reject ({{ reject_url }}).
+{% endblock %}

@@ -4,7 +4,6 @@ import arrow
 import calendar
 import logging
 import operator
-# import sys
 
 from collections import Counter
 from datetime import date, timedelta
@@ -15,16 +14,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.mail import (
-    EmailMessage,
-    EmailMultiAlternatives,
-    get_connection,
-)
-# from django.core.paginator import (
-#     EmptyPage,
-#     PageNotAnInteger,
-#     Paginator,
-# )
 from django.core.urlresolvers import reverse
 from django.db.models import (
     Case,
@@ -42,15 +31,13 @@ from django.shortcuts import (
     render,
 )
 from django.utils import timezone
-# from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from coderdojochi.util import local_to_utc
+from coderdojochi.util import local_to_utc, email
 from coderdojochi.models import (
-    CDCUser,
     Donation,
     Equipment,
     EquipmentType,
@@ -226,11 +213,12 @@ def welcome(request, template_name="welcome.html"):
                         'next_intro_meeting_ics_url'
                     ] = next_meeting.get_ics_url()
 
-                sendSystemEmail(
-                    request,
-                    'Welcome!',
-                    'coderdojochi-welcome-mentor',
-                    merge_vars,
+                email(
+                    subject='Welcome!',
+                    template_name='welcome-mentor',
+                    context=merge_vars,
+                    recipients=[request.user.email],
+                    preheader='Your adventure awaits!',
                 )
 
                 next_url = u'?next={}'.format(
@@ -253,11 +241,12 @@ def welcome(request, template_name="welcome.html"):
                         'next_class_ics_url'
                     ] = next_class.get_ics_url()
 
-                sendSystemEmail(
-                    request,
-                    'Welcome!',
-                    'coderdojochi-welcome-guardian',
-                    merge_vars,
+                email(
+                    subject='Welcome!',
+                    template_name='welcome-guardian',
+                    context=merge_vars,
+                    recipients=[request.user.email],
+                    preheader='Your adventure awaits!',
                 )
 
                 next_url = u'?next={}'.format(
@@ -756,11 +745,10 @@ def session_sign_up(
             messages.success(request, 'Success! See you there!')
 
             if request.user.role == 'mentor':
-                sendSystemEmail(
-                    request,
-                    'Upcoming class confirmation',
-                    'coderdojochi-class-confirm-mentor',
-                    {
+                email(
+                    subject='Upcoming class confirmation',
+                    template_name='class-confirm-mentor',
+                    context={
                         'first_name': request.user.first_name,
                         'last_name': request.user.last_name,
                         'class_code': session_obj.course.code,
@@ -789,15 +777,16 @@ def session_sign_up(
                         'class_additional_info': session_obj.additional_info,
                         'class_url': session_obj.get_absolute_url(),
                         'class_ics_url': session_obj.get_ics_url()
-                    }
+                    },
+                    recipients=[request.user.email],
+                    preheader='It\'s time to use your powers for good.',
                 )
 
             else:
-                sendSystemEmail(
-                    request,
-                    'Upcoming class confirmation',
-                    'coderdojochi-class-confirm-guardian',
-                    {
+                email(
+                    subject='Upcoming class confirmation',
+                    template_name='class-confirm-guardian',
+                    context={
                         'first_name': request.user.first_name,
                         'last_name': request.user.last_name,
                         'student_first_name': student.first_name,
@@ -828,7 +817,11 @@ def session_sign_up(
                         'class_additional_info': session_obj.additional_info,
                         'class_url': session_obj.get_absolute_url(),
                         'class_ics_url': session_obj.get_ics_url()
-                    }
+                    },
+                    recipients=[request.user.email],
+                    preheader='Magical wizards have generated this '
+                              'confirmation. All thanks to the mystical '
+                              'power of coding.',
                 )
 
         return redirect(session_obj.get_absolute_url())
@@ -1041,11 +1034,10 @@ def meeting_sign_up(
                 'Success! See you there!'
             )
 
-            sendSystemEmail(
-                request,
-                'Upcoming mentor meeting confirmation',
-                'coderdojochi-meeting-confirm-mentor',
-                {
+            email(
+                subject='Upcoming mentor meeting confirmation',
+                template_name='meeting-confirm-mentor',
+                context={
                     'first_name': request.user.first_name,
                     'last_name': request.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
@@ -1073,7 +1065,11 @@ def meeting_sign_up(
                     'meeting_additional_info': meeting_obj.additional_info,
                     'meeting_url': meeting_obj.get_absolute_url(),
                     'meeting_ics_url': meeting_obj.get_ics_url()
-                }
+                },
+                recipients=[request.user.email],
+                preheader='Thanks for signing up for our next meeting, '
+                          '*|FIRST_NAME|*. We look forward to seeing you '
+                          'there.',
             )
 
         return HttpResponseRedirect(
@@ -1119,11 +1115,10 @@ def meeting_announce(request, meeting_id):
         connection.open()
 
         for mentor in Mentor.objects.filter(active=True):
-            sendSystemEmail(
-                request,
-                'Upcoming mentor meeting',
-                'coderdojochi-meeting-announcement-mentor',
-                {
+            email(
+                subject='New meeting announced!',
+                template_name='meeting-announcement-mentor',
+                context={
                     'first_name': mentor.user.first_name,
                     'last_name': mentor.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
@@ -1152,7 +1147,9 @@ def meeting_announce(request, meeting_id):
                     'meeting_url': meeting_obj.get_absolute_url(),
                     'meeting_ics_url': meeting_obj.get_ics_url()
                 },
-                mentor.user.email
+                recipients=[mentor.user.email],
+                preheader='A new meeting has been announced. '
+                          'Come join us for some amazing fun!',
             )
 
         # Cleanup
@@ -1573,30 +1570,14 @@ def mentor_reject_avatar(request, mentor_id=False):
     mentor.avatar_approved = False
     mentor.save()
 
-    msg = EmailMultiAlternatives(
-        subject='CoderDojoChi | Avatar Rejected',
-        body=(
-            u'Unfortunately your recent avatar image was rejected. '
-            u'Please upload a new image as soon as you get a chance. '
-            u'{}/dojo/'.format(
-                settings.SITE_URL
-            )
-        ),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[mentor.user.email]
+    email(
+        subject='Your CoderDojoChi avatar...',
+        template_name='class-announcement-mentor',
+        context={
+            'site_url': settings.SITE_URL,
+        },
+        recipients=[mentor.user.email],
     )
-
-    msg.attach_alternative(
-        u'<p>Unfortunately your recent avatar image was rejected. '
-        u'Please upload a new image as soon as you get a chance.</p>'
-        u'<p><a href="{}/dojo/">Click here to upload a new avatar now.</a>'
-        u'</p><p>Thank you!<br>The CoderDojoChi Team</p>'.format(
-            settings.SITE_URL
-        ),
-        'text/html'
-    )
-
-    msg.send()
 
     messages.warning(
         request,
@@ -2376,12 +2357,10 @@ def session_announce(request, session_id):
 
         # send mentor announcements
         for mentor in Mentor.objects.filter(active=True):
-
-            sendSystemEmail(
-                request,
-                'Upcoming class',
-                'coderdojochi-class-announcement-mentor',
-                {
+            email(
+                subject='New CoderDojoChi class date announced! Come mentor!',
+                template_name='class-announcement-mentor',
+                context={
                     'first_name': mentor.user.first_name,
                     'last_name': mentor.user.last_name,
                     'class_code': session_obj.course.code,
@@ -2409,15 +2388,16 @@ def session_announce(request, session_id):
                     'class_url': session_obj.get_absolute_url(),
                     'class_ics_url': session_obj.get_ics_url()
                 },
-                mentor.user.email
+                recipients=[mentor.user.email],
+                preheader='Help us make a huge difference! '
+                          'A brand new class was just announced.',
             )
 
         for guardian in Guardian.objects.filter(active=True):
-            sendSystemEmail(
-                request,
-                'Upcoming class',
-                'coderdojochi-class-announcement-guardian',
-                {
+            email(
+                subject='New CoderDojoChi class date announced!',
+                template_name='class-announcement-guardian',
+                context={
                     'first_name': guardian.user.first_name,
                     'last_name': guardian.user.last_name,
                     'class_code': session_obj.course.code,
@@ -2445,8 +2425,11 @@ def session_announce(request, session_id):
                     'class_url': session_obj.get_absolute_url(),
                     'class_ics_url': session_obj.get_ics_url()
                 },
-                guardian.user.email
+                recipients=[guardian.user.email],
+                preheader='We\'re super excited to bring you another class '
+                          'date. Sign up to reserve your spot',
             )
+
 
         # Cleanup
         connection.close()
@@ -2529,106 +2512,6 @@ def check_system(request):
             equipment.save()
 
     return HttpResponse(responseString)
-
-
-def sendSystemEmail(
-    request,
-    subject,
-    template_name,
-    merge_vars,
-    email=False,
-    bcc=False
-):
-
-    if not email and request:
-        email = request.user.email
-
-    user = CDCUser.objects.filter(email=email).first()
-
-    if not user.is_active:
-        if settings.DEBUG:
-            logger.debug(
-                u'Not active user. {}'.format(
-                    user.email
-                )
-            )
-        return
-
-    merge_vars['current_year'] = timezone.now().year
-    merge_vars['company'] = 'CoderDojoChi'
-    merge_vars['site_url'] = settings.SITE_URL
-
-    try:
-        msg = EmailMessage(
-            subject=subject,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[email]
-        )
-
-        if bcc:
-            msg.bcc = bcc
-
-        msg.template_name = template_name
-        msg.global_merge_vars = merge_vars
-        msg.inline_css = True
-        msg.use_template_subject = True
-        # msg.async = True
-
-        if settings.DEBUG:
-            logger.debug(
-                'Sending \'{}\' to {}'.format(
-                    subject,
-                    email
-                )
-            )
-
-        msg.send()
-
-    except Exception, e:
-
-        if settings.DEBUG:
-            logger.debug(
-                u'{}'.format(msg)
-            )
-
-        response = msg.mandrill_response[0]
-
-        reject_reasons = [
-            'hard-bounce',
-            'soft-bounce',
-            'spam',
-            'unsub',
-        ]
-
-        if (
-            response['status'] == u'rejected' and
-            response['reject_reason'] in reject_reasons
-        ):
-            if settings.DEBUG:
-                logger.debug(
-                    u'user: {}, {}'.format(
-                        user.email,
-                        response['reject_reason']
-                    )
-                )
-
-            user.is_active = False
-            user.admin_notes = u'User \'{}\' when checked on {}'.format(
-                response['reject_reason'],
-                timezone.now()
-            )
-            user.save()
-
-        else:
-            if settings.DEBUG:
-                logger.debug(
-                    u'user: {}, {}'.format(
-                        user.email,
-                        response['reject_reason']
-                    )
-                )
-
-            raise e
 
 
 class PasswordSessionView(TemplateView):

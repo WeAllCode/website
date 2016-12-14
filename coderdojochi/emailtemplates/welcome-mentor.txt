@@ -1,0 +1,17 @@
+{% extends "_email-base.txt" %}
+
+{% block content %}
+{{ first_name }},
+
+You're obviously wired for greatness.
+
+We're thrilled that you're interested in participating in CoderDojoChi. The best way to find out more about us is to attend our {% if next_intro_meeting_url %}next meeting ({{ next_intro_meeting_url }}"){% else %}next meeting{% endif %}.
+
+You'll find out how you can help share code with the next generation of coders, hackers and nerds, learn more about our nonprofit, how we work, and get to know other mentors.
+
+We're glad to have you on the team and look forward to seeing you then.
+
+Don't want to come alone? That's cool—bring a friend! Send CoderDojoChi.org to your friends who might be interested in becoming mentors too. Now you'll have a familiar face to sit next to, and you already helped recruit a new mentor—wasn't that easy?
+
+The CoderDojoChi Team
+{% endblock %}

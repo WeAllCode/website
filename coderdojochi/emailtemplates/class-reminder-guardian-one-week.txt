@@ -1,0 +1,24 @@
+{% extends "_email-base.txt" %}
+
+{% block content %}
+Your class is almost here, {{ first_name }}. And all you have to do is show up on time. That’s it. Nothing else. No reading, supply shopping or cramming. We’ve got it all covered.
+
+DETAILS:
+
+{{ class_code }}: {{ class_title }}
+{{ class_start_date }} {{ class_start_time }}-{{ class_end_time }}
+Mark it in your calendar now. ({{ class_ics_url }})
+{{ class_location_name }}
+{{ class_location_address }}, {{ class_location_address2 }}
+{{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
+{% if class_additional_info %}
+
+NOTE:
+
+{{ class_additional_info }}
+{% endif %}
+
+We think you’ll be surprised to see just how easily kids pick up coding. You may even learn a thing or to yourself if you’re not careful. We look forward to seeing you.
+
+The CoderDojoChi Team
+{% endblock %}
