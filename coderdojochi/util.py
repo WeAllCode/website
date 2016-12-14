@@ -51,7 +51,7 @@ def email(
 
     # bcc is set to False by default.
     # make sure bcc is in a list form when sent over
-    if bcc is not False and not isinstance(bcc, list):
+    if bcc not in [False, None] and not isinstance(bcc, list):
         raise TypeError("recipients must be a list")
 
     context['subject'] = subject
