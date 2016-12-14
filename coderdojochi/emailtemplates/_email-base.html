@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>{{ subject }}</title>
+    <title>{% block subject %}{% endblock %}</title>
 
     <style type="text/css">
         #outlook a{
@@ -180,93 +180,94 @@
         .footerContent img{
             display:inline;
         }
-    @media only screen and (max-width: 480px){
-        body,table,td,p,a,li,blockquote{
-            -webkit-text-size-adjust:none !important;
+        @media only screen and (max-width: 480px){
+            body,table,td,p,a,li,blockquote{
+                -webkit-text-size-adjust:none !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        body{
-            width:100% !important;
-            min-width:100% !important;
+        @media only screen and (max-width: 480px){
+            body{
+                width:100% !important;
+                min-width:100% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        td[id=templateBody],td[id=templateFooter]{
-            padding-right:10px !important;
-            padding-left:10px !important;
+        @media only screen and (max-width: 480px){
+            td[id=templateBody],td[id=templateFooter]{
+                padding-right:10px !important;
+                padding-left:10px !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        table[class=templateContainer]{
-            max-width:600px !important;
-            width:100% !important;
+        @media only screen and (max-width: 480px){
+            table[class=templateContainer]{
+                max-width:600px !important;
+                width:100% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        table[id=templatePreheader]{
-            display:none;
+        @media only screen and (max-width: 480px){
+            table[id=templatePreheader]{
+                display:none;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        h1{
-            font-size:28px !important;
-            line-height:100% !important;
+        @media only screen and (max-width: 480px){
+            h1{
+                font-size:28px !important;
+                line-height:100% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        h2{
-            font-size:24px !important;
-            line-height:100% !important;
+        @media only screen and (max-width: 480px){
+            h2{
+                font-size:24px !important;
+                line-height:100% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        h3{
-            font-size:20px !important;
-            line-height:100% !important;
+        @media only screen and (max-width: 480px){
+            h3{
+                font-size:20px !important;
+                line-height:100% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        h4{
-            font-size:16px !important;
-            line-height:100% !important;
+        @media only screen and (max-width: 480px){
+            h4{
+                font-size:16px !important;
+                line-height:100% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        img[id=headerImage]{
-            height:auto !important;
-            max-width:233px !important;
-            width:100% !important;
+        @media only screen and (max-width: 480px){
+            img[id=headerImage]{
+                height:auto !important;
+                max-width:233px !important;
+                width:100% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        .headerContent{
-            font-size:21px !important;
-            line-height:150% !important;
-            padding-top:20px !important;
-            padding-right:10px !important;
-            padding-bottom:20px !important;
-            padding-left:10px !important;
+        @media only screen and (max-width: 480px){
+            .headerContent{
+                font-size:21px !important;
+                line-height:150% !important;
+                padding-top:20px !important;
+                padding-right:10px !important;
+                padding-bottom:20px !important;
+                padding-left:10px !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        .bodyContent{
-            font-size:17px !important;
-            line-height:150% !important;
+        @media only screen and (max-width: 480px){
+            .bodyContent{
+                font-size:17px !important;
+                line-height:150% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        .footerContent{
-            font-size:13px !important;
-            line-height:150% !important;
+        @media only screen and (max-width: 480px){
+            .footerContent{
+                font-size:13px !important;
+                line-height:150% !important;
+            }
         }
-
-}   @media only screen and (max-width: 480px){
-        td[class=footerContent] a{
-            display:block !important;
+        @media only screen and (max-width: 480px){
+            td[class=footerContent] a{
+                display:block !important;
+            }
         }
-
-}</style></head>
+    </style>
+</head>
 
 <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
     <center>
@@ -279,7 +280,7 @@
                                 <td align="center" valign="top">
                                     <table border="0" cellpadding="0" cellspacing="0" width="600">
                                         <tr>
-                                            <td valign="top" class="preheaderContent" mc:edit="preheader_content">{{ preheader }}</td>
+                                            <td valign="top" class="preheaderContent" mc:edit="preheader_content">{% block preheader %}{% endblock %}</td>
                                         </tr>
                                     </table>
                                 </td>
@@ -313,7 +314,7 @@
                                                 <tr>
                                                     <td valign="top" class="bodyContent" mc:edit="body_content">
                                                         <div style="font-size:medium;">
-                                                            {% block content %}{% endblock content %}
+                                                            {% block content %}{% endblock %}
                                                         </div>
                                                     </td>
                                                 </tr>
