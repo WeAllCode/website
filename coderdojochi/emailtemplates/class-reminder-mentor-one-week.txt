@@ -1,0 +1,26 @@
+{% extends "_email-base.txt" %}
+
+{% block content %}
+{{ first_name }},
+
+Your class is almost here. You will be one of several mentors who have volunteered to expand the minds of the next generation of coders.
+
+DETAILS:
+
+{{ class_code }}: {{ class_title }}
+{{ class_start_date }} {{ class_start_time }}-{{ class_end_time }}
+Mark it in your calendar now. ({{ class_ics_url }})
+{{ class_location_name }}
+{{ class_location_address }}, {{ class_location_address2 }}
+{{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
+{% if class_additional_info %}
+
+NOTE:
+
+{{ class_additional_info }}
+{% endif %}
+
+If for any reason you can't make it, please let us know immediately. And please check out our upcoming classes ({{ site_url }}/classes/)</a> if you'd like to mentor again!
+
+The CoderDojoChi Team
+{% endblock %}

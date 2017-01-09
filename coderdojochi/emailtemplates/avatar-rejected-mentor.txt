@@ -1,0 +1,9 @@
+{% extends "_email-base.txt" %}
+
+{% block content %}
+    Unfortunately your recent avatar image was rejected.
+
+    Please upload a new image as soon as you get a chance.
+
+    {{ site_url }}/dojo/
+{% endblock %}
