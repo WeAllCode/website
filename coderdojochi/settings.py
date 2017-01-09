@@ -39,7 +39,11 @@ DEBUG_EMAIL = str_to_bool(os.environ.get('DEBUG_EMAIL')) or False
 ALLOWED_HOSTS = ['*']
 
 SITE_URL = os.environ.get('SITE_URL') or 'http://coderdojochi.local'
+SITE_NAME = 'CoderDojoChi'
 SITE_ID = 1
+
+USE_TZ = True
+TIME_ZONE = 'America/Chicago'
 
 # Application definition
 
@@ -253,6 +257,8 @@ if DEBUG:
 
     def custom_show_toolbar(request):
         return True
+
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
     MIDDLEWARE_CLASSES += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
