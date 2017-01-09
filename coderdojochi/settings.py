@@ -42,6 +42,9 @@ SITE_URL = os.environ.get('SITE_URL') or 'http://coderdojochi.local'
 SITE_NAME = 'CoderDojoChi'
 SITE_ID = 1
 
+USE_TZ = True
+TIME_ZONE = 'America/Chicago'
+
 # Application definition
 
 INSTALLED_APPS = [

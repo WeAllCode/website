@@ -757,16 +757,16 @@ def session_sign_up(
                         'class_description': session_obj.course.description,
                         'class_start_date': arrow.get(
                             session_obj.mentor_start_date
-                        ).format('dddd, MMMM D, YYYY'),
+                        ).to('local').format('dddd, MMMM D, YYYY'),
                         'class_start_time': arrow.get(
                             session_obj.mentor_start_date
-                        ).format('h:mma'),
+                        ).to('local').format('h:mma'),
                         'class_end_date': arrow.get(
                             session_obj.mentor_end_date
-                        ).format('dddd, MMMM D, YYYY'),
+                        ).to('local').format('dddd, MMMM D, YYYY'),
                         'class_end_time': arrow.get(
                             session_obj.mentor_end_date
-                        ).format('h:mma'),
+                        ).to('local').format('h:mma'),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
                         'class_location_address2': (
@@ -797,16 +797,16 @@ def session_sign_up(
                         'class_description': session_obj.course.description,
                         'class_start_date': arrow.get(
                             session_obj.start_date
-                        ).format('dddd, MMMM D, YYYY'),
+                        ).to('local').format('dddd, MMMM D, YYYY'),
                         'class_start_time': arrow.get(
                             session_obj.start_date
-                        ).format('h:mma'),
+                        ).to('local').format('h:mma'),
                         'class_end_date': arrow.get(
                             session_obj.end_date
-                        ).format('dddd, MMMM D, YYYY'),
+                        ).to('local').format('dddd, MMMM D, YYYY'),
                         'class_end_time': arrow.get(
                             session_obj.end_date
-                        ).format('h:mma'),
+                        ).to('local').format('h:mma'),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
                         'class_location_address2': (
@@ -817,7 +817,7 @@ def session_sign_up(
                         'class_location_zip': session_obj.location.zip,
                         'class_additional_info': session_obj.additional_info,
                         'class_url': session_obj.get_absolute_url(),
-                        'class_ics_url': session_obj.get_ics_url()
+                        'class_ics_url': session_obj.get_ics_url(),
                     },
                     recipients=[request.user.email],
                     preheader='Magical wizards have generated this '
@@ -853,8 +853,8 @@ def session_ics(request, year, month, day, slug, session_id):
 
     event = Event()
 
-    start_date = local_to_utc(session_obj.start_date).format('YYYYMMDDTHHmmss')
-    end_date = local_to_utc(session_obj.end_date).format('YYYYMMDDTHHmmss')
+    start_date = arrow.get(session_obj.start_date).format('YYYYMMDDTHHmmss')
+    end_date = arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss')
 
     event['uid'] = u'CLASS{:04}@coderdojochi.org'.format(session_obj.id)
     event['summary'] = u'CoderDojoChi: {} - {}'.format(
@@ -867,11 +867,11 @@ def session_ics(request, year, month, day, slug, session_id):
 
     if request.user.is_authenticated() and request.user.role == 'mentor':
 
-        mentor_start_date = local_to_utc(
+        mentor_start_date = arrow.get(
             session_obj.mentor_start_date
         ).format('YYYYMMDDTHHmmss')
 
-        mentor_end_date = local_to_utc(
+        mentor_end_date = arrow.get(
             session_obj.mentor_end_date
         ).format('YYYYMMDDTHHmmss')
 
@@ -899,8 +899,10 @@ def session_ics(request, year, month, day, slug, session_id):
 
     cal.add_component(event)
 
-    event_slug = u'coderdojochi-class-{}'.format(
-        arrow.get(session_obj.start_date).format('MM-DD-YYYY-HH:mma')
+    event_slug = u'coderdojochi-class_{}'.format(
+        arrow.get(
+            session_obj.start_date
+        ).to('local').format('MM-DD-YYYY_HH-mma')
     )
 
     # Return the ICS formatted calendar
@@ -1047,16 +1049,16 @@ def meeting_sign_up(
                     ),
                     'meeting_start_date': arrow.get(
                         meeting_obj.start_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'meeting_start_time': arrow.get(
                         meeting_obj.start_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'meeting_end_date': arrow.get(
                         meeting_obj.end_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'meeting_end_time': arrow.get(
                         meeting_obj.end_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
                     'meeting_location_address2': meeting_obj.location.address2,
@@ -1128,16 +1130,16 @@ def meeting_announce(request, meeting_id):
                     ),
                     'meeting_start_date': arrow.get(
                         meeting_obj.start_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'meeting_start_time': arrow.get(
                         meeting_obj.start_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'meeting_end_date': arrow.get(
                         meeting_obj.end_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'meeting_end_time': arrow.get(
                         meeting_obj.end_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
                     'meeting_location_address2': meeting_obj.location.address2,
@@ -1182,8 +1184,8 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 
     event = Event()
 
-    start_date = local_to_utc(meeting_obj.start_date).format('YYYYMMDDTHHmmss')
-    end_date = local_to_utc(meeting_obj.end_date).format('YYYYMMDDTHHmmss')
+    start_date = arrow.get(meeting_obj.start_date).format('YYYYMMDDTHHmmss')
+    end_date = arrow.get(meeting_obj.end_date).format('YYYYMMDDTHHmmss')
 
     event['uid'] = u'MEETING{:04}@coderdojochi.org'.format(meeting_obj.id)
 
@@ -1217,7 +1219,9 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 
     cal.add_component(event)
     event_slug = u'coderdojochi-meeting-{}'.format(
-        arrow.get(meeting_obj.start_date).format('MM-DD-YYYY-HH:mma')
+        arrow.get(
+            meeting_obj.start_date
+        ).to('local').format('MM-DD-YYYY-HH:mma')
     )
 
     # Return the ICS formatted calendar
@@ -2369,16 +2373,16 @@ def session_announce(request, session_id):
                     'class_description': session_obj.course.description,
                     'class_start_date': arrow.get(
                         session_obj.mentor_start_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'class_start_time': arrow.get(
                         session_obj.mentor_start_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'class_end_date': arrow.get(
                         session_obj.end_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'class_end_time': arrow.get(
                         session_obj.end_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'class_location_name': session_obj.location.name,
                     'class_location_address': session_obj.location.address,
                     'class_location_address2': session_obj.location.address2,
@@ -2406,16 +2410,16 @@ def session_announce(request, session_id):
                     'class_description': session_obj.course.description,
                     'class_start_date': arrow.get(
                         session_obj.start_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'class_start_time': arrow.get(
                         session_obj.start_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'class_end_date': arrow.get(
                         session_obj.end_date
-                    ).format('dddd, MMMM D, YYYY'),
+                    ).to('local').format('dddd, MMMM D, YYYY'),
                     'class_end_time': arrow.get(
                         session_obj.end_date
-                    ).format('h:mma'),
+                    ).to('local').format('h:mma'),
                     'class_location_name': session_obj.location.name,
                     'class_location_address': session_obj.location.address,
                     'class_location_address2': session_obj.location.address2,
