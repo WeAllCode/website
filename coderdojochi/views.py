@@ -743,11 +743,18 @@ def session_sign_up(
 
             order.save()
 
-            messages.success(request, 'Success! See you there!')
+            messages.success(
+                request,
+                'Success! See you there!'
+            )
 
             if request.user.role == 'mentor':
                 email(
-                    subject='Upcoming class confirmation',
+                    subject='Mentoring confirmation for {} class'.format(
+                        arrow.get(
+                            session_obj.mentor_start_date
+                        ).to('local').format('MMMM D'),
+                    ),
                     template_name='class-confirm-mentor',
                     context={
                         'first_name': request.user.first_name,
@@ -777,7 +784,14 @@ def session_sign_up(
                         'class_location_zip': session_obj.location.zip,
                         'class_additional_info': session_obj.additional_info,
                         'class_url': session_obj.get_absolute_url(),
-                        'class_ics_url': session_obj.get_ics_url()
+                        'class_ics_url': session_obj.get_ics_url(),
+                        'microdata_start_date': arrow.get(
+                            session_obj.mentor_start_date
+                        ).to('local').isoformat(),
+                        'microdata_end_date': arrow.get(
+                            session_obj.mentor_end_date
+                        ).to('local').isoformat(),
+                        'order': order,
                     },
                     recipients=[request.user.email],
                     preheader='It\'s time to use your powers for good.',
@@ -785,7 +799,10 @@ def session_sign_up(
 
             else:
                 email(
-                    subject='Upcoming class confirmation',
+                    subject='Upcoming class confirmation for {} {}'.format(
+                        student.first_name,
+                        student.last_name,
+                    ),
                     template_name='class-confirm-guardian',
                     context={
                         'first_name': request.user.first_name,
@@ -818,6 +835,13 @@ def session_sign_up(
                         'class_additional_info': session_obj.additional_info,
                         'class_url': session_obj.get_absolute_url(),
                         'class_ics_url': session_obj.get_ics_url(),
+                        'microdata_start_date': arrow.get(
+                            session_obj.start_date
+                        ).to('local').isoformat(),
+                        'microdata_end_date': arrow.get(
+                            session_obj.end_date
+                        ).to('local').isoformat(),
+                        'order': order,
                     },
                     recipients=[request.user.email],
                     preheader='Magical wizards have generated this '
@@ -1067,7 +1091,14 @@ def meeting_sign_up(
                     'meeting_location_zip': meeting_obj.location.zip,
                     'meeting_additional_info': meeting_obj.additional_info,
                     'meeting_url': meeting_obj.get_absolute_url(),
-                    'meeting_ics_url': meeting_obj.get_ics_url()
+                    'meeting_ics_url': meeting_obj.get_ics_url(),
+                    'microdata_start_date': arrow.get(
+                        meeting_obj.mentor_start_date
+                    ).to('local').isoformat(),
+                    'microdata_end_date': arrow.get(
+                        meeting_obj.mentor_end_date
+                    ).to('local').isoformat(),
+                    'order': meeting_order,
                 },
                 recipients=[request.user.email],
                 preheader='Thanks for signing up for our next meeting, '
