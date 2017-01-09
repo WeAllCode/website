@@ -78,7 +78,7 @@ def donate_callback(sender, **kwargs):
                     'amount': '${:0,.2f}'.format(donation.amount),
                     'transaction_date': arrow.get(
                         donation.created_at
-                    ).format(
+                    ).to('local').format(
                         'MMMM D, YYYY h:ss a'
                     ),
                     'transaction_id': donation.id
