@@ -37,7 +37,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from coderdojochi.util import local_to_utc, email
+from coderdojochi.util import email
 from coderdojochi.models import (
     Donation,
     Equipment,
