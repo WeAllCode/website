@@ -26,10 +26,6 @@ def str_to_bool(s):
         raise ValueError
 
 
-def local_to_utc(date):
-    return arrow.get(date).replace(tzinfo='America/Chicago').to('UTC')
-
-
 def email(
     subject,
     template_name,
