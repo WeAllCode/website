@@ -258,6 +258,8 @@ if DEBUG:
     def custom_show_toolbar(request):
         return True
 
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
     MIDDLEWARE_CLASSES += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     )

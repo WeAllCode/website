@@ -20,6 +20,7 @@ COPY package.json $DIR_SRC/package.json
 RUN npm install
 
 COPY requirements.txt $DIR_SRC/
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY gulp $DIR_SRC/gulp
