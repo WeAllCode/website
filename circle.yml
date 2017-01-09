@@ -15,6 +15,9 @@ machine:
 dependencies:
   override:
     - pip install awsebcli==3.7.3
+    - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
+    - docker pull "$DOCKER_USER/$DOCKER_REPO:latest"
+    - docker pull "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
 test:
   override:
@@ -27,10 +30,16 @@ deployment:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
       - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
+      - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
       - docker push "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
+      - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:latest"
+      - docker push "$DOCKER_USER/$DOCKER_REPO:latest"
 
       - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" ./nginx
+      - docker tag -f "$DOCKER_REPO-static" $DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM
       - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
+      - docker tag -f "$DOCKER_REPO-static" "$DOCKER_USER/$DOCKER_REPO-static:latest"
+      - docker push "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
       - sed -i'' -e "s;<USER>;$DOCKER_USER;g" ./deploy/Dockerrun.aws.json
       - sed -i'' -e "s;<REPO>;$DOCKER_REPO;g" ./deploy/Dockerrun.aws.json
@@ -51,10 +60,16 @@ deployment:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
       - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
+      - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
       - docker push "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
+      - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:latest"
+      - docker push "$DOCKER_USER/$DOCKER_REPO:latest"
 
       - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" ./nginx
+      - docker tag -f "$DOCKER_REPO-static" $DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM
       - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
+      - docker tag -f "$DOCKER_REPO-static" "$DOCKER_USER/$DOCKER_REPO-static:latest"
+      - docker push "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
       - sed -i'' -e "s;<USER>;$DOCKER_USER;g" ./deploy/Dockerrun.aws.json
       - sed -i'' -e "s;<REPO>;$DOCKER_REPO;g" ./deploy/Dockerrun.aws.json
