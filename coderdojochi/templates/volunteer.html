@@ -44,7 +44,7 @@
 {% if upcoming_meetings %}
 <div class="upcoming-sessions">
     {% for meeting in upcoming_meetings %}
-        <div class="upcoming-session" style="background-image: url({% if meeting.bg_image %}{{ meeting.bg_image.url }}{% else %}/static/images/{{ meeting.image_url }}{% endif %});">
+        <div class="upcoming-session" style="background-image: url({% if meeting.bg_image %}{{ meeting.bg_image.url }}{% else %}{{ static_url }}/images/{{ meeting.image_url }}{% endif %});">
             <div class="session-shim">
                 <div class="container">
                     <div class="date">
