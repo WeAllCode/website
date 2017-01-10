@@ -8,4 +8,5 @@ def main_config_processor(request):
         'SITE_URL': settings.SITE_URL,
         'DEBUG': settings.DEBUG,
         'STATIC_URL': settings.STATIC_URL,
+        'CONTACT_EMAIL': settings.CONTACT_EMAIL,
     }

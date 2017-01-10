@@ -1,0 +1,17 @@
+{% extends "_email-base.html" %}
+
+{% block content %}
+New class date announced!
+
+We&rsquo;re super excited! About what, you may ask? We just announced a brand new class.
+
+Since you have a profile already, {{ first_name }}, all you have to do is enroll in the class. How awesome is that?
+
+Enroll Now at {{ class_url }}.
+
+If you can&rsquo;t make it, be sure to share this with your best friends, online and offline!
+
+We look forward to seeing you.
+
+The CoderDojoChi Team
+{% endblock %}

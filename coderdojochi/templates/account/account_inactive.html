@@ -8,4 +8,13 @@
 <h1>{% trans "Account Inactive" %}</h1>
 
 <p>{% trans "This account is inactive." %}</p>
+<p>The reasons could be:</p>
+<ul>
+    <li>You requested the account to be deleted.</li>
+    <li>You unsubscribed from our emails.</li>
+    <li>You marked our emails as spam.</li>
+    <li>There was a software bug.</li>
+</ul>
+
+<p>For any reason, if you'd like your account to be reactivated, please email us at <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>.</p>
 {% endblock %}

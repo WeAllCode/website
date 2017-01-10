@@ -28,7 +28,7 @@ PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'e^u3u$pukt$s=6#&9oi9&jj5ow6563fuka%y9t7i*2laalk^l$'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str_to_bool(
@@ -39,7 +39,11 @@ DEBUG_EMAIL = str_to_bool(os.environ.get('DEBUG_EMAIL')) or False
 ALLOWED_HOSTS = ['*']
 
 SITE_URL = os.environ.get('SITE_URL') or 'http://coderdojochi.local'
+SITE_NAME = 'CoderDojoChi'
 SITE_ID = 1
+
+USE_TZ = True
+TIME_ZONE = 'America/Chicago'
 
 # Application definition
 
@@ -110,6 +114,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
 
+                'coderdojochi.context_processors.main_config_processor',
             ],
         },
     },
@@ -253,6 +258,8 @@ if DEBUG:
 
     def custom_show_toolbar(request):
         return True
+
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
     MIDDLEWARE_CLASSES += (
         'debug_toolbar.middleware.DebugToolbarMiddleware',
