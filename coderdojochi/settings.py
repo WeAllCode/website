@@ -114,6 +114,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
 
+                'coderdojochi.context_processors.main_config_processor',
             ],
         },
     },
