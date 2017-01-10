@@ -1,3 +1,0 @@
-{{ first_name }} {{ last_name }}'s avatar changed.
-
-Please approve ({{ approve_url }}) or reject ({{ reject_url }}).
