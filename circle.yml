@@ -29,16 +29,12 @@ deployment:
     commands:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
-      - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
-      # - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
+      - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" -t "$DOCKER_USER/$DOCKER_REPO:latest" .
       - docker push "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
-      # - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:latest"
       - docker push "$DOCKER_USER/$DOCKER_REPO:latest"
 
-      - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" ./nginx
-      # - docker tag -f "$DOCKER_REPO-static" $DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM
+      - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" -t "$DOCKER_USER/$DOCKER_REPO-static:latest"./nginx
       - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
-      # - docker tag -f "$DOCKER_REPO-static" "$DOCKER_USER/$DOCKER_REPO-static:latest"
       - docker push "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
       - sed -i'' -e "s;<USER>;$DOCKER_USER;g" ./deploy/Dockerrun.aws.json
@@ -59,16 +55,12 @@ deployment:
     commands:
       - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
 
-      - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" .
-      # - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
+      - docker build -t "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM" -t "$DOCKER_USER/$DOCKER_REPO:latest" .
       - docker push "$DOCKER_USER/$DOCKER_REPO:$CIRCLE_BUILD_NUM"
-      # - docker tag -f "$DOCKER_REPO" "$DOCKER_USER/$DOCKER_REPO:latest"
       - docker push "$DOCKER_USER/$DOCKER_REPO:latest"
 
-      - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" ./nginx
-      - docker tag -f "$DOCKER_REPO-static" $DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM
+      - docker build -t "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM" -t "$DOCKER_USER/$DOCKER_REPO-static:latest"./nginx
       - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
-      - docker tag -f "$DOCKER_REPO-static" "$DOCKER_USER/$DOCKER_REPO-static:latest"
       - docker push "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
       - sed -i'' -e "s;<USER>;$DOCKER_USER;g" ./deploy/Dockerrun.aws.json
