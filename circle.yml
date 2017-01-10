@@ -16,8 +16,8 @@ dependencies:
   override:
     - pip install awsebcli==3.7.3
     - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
-    # - docker pull "$DOCKER_USER/$DOCKER_REPO:latest"
-    # - docker pull "$DOCKER_USER/$DOCKER_REPO-static:latest"
+    - docker pull "$DOCKER_USER/$DOCKER_REPO:latest"
+    - docker pull "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
 test:
   override:
@@ -73,15 +73,15 @@ deployment:
       # - docker push "$DOCKER_USER/$DOCKER_REPO-static:$CIRCLE_BUILD_NUM"
       # - docker push "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
-      - sed -i'' -e "s;<USER>;$DOCKER_USER;g" ./deploy/Dockerrun.aws.json && \
-        sed -i'' -e "s;<REPO>;$DOCKER_REPO;g" ./deploy/Dockerrun.aws.json && \
-        sed -i'' -e "s;<BUILD_NUM>;$CIRCLE_BUILD_NUM;g" ./deploy/Dockerrun.aws.json
+      - sed -i'' -e "s;<USER>;$DOCKER_USER;g" ./deploy/Dockerrun.aws.json
+      - sed -i'' -e "s;<REPO>;$DOCKER_REPO;g" ./deploy/Dockerrun.aws.json
+      - sed -i'' -e "s;<BUILD_NUM>;$CIRCLE_BUILD_NUM;g" ./deploy/Dockerrun.aws.json
 
-      - sed -i'' -e "s;<POSTGRES_HOST>;$POSTGRES_HOST;g" ./deploy/.ebextensions/environment.config && \
-        sed -i'' -e "s;<POSTGRES_PORT>;$POSTGRES_PORT;g" ./deploy/.ebextensions/environment.config && \
-        sed -i'' -e "s;<POSTGRES_DB>;$POSTGRES_DB;g" ./deploy/.ebextensions/environment.config && \
-        sed -i'' -e "s;<POSTGRES_USER>;$POSTGRES_USER;g" ./deploy/.ebextensions/environment.config && \
-        sed -i'' -e "s;<POSTGRES_PASSWORD>;$POSTGRES_PASSWORD;g" ./deploy/.ebextensions/environment.config
+      - sed -i'' -e "s;<POSTGRES_HOST>;$POSTGRES_HOST;g" ./deploy/.ebextensions/environment.config
+      - sed -i'' -e "s;<POSTGRES_PORT>;$POSTGRES_PORT;g" ./deploy/.ebextensions/environment.config
+      - sed -i'' -e "s;<POSTGRES_DB>;$POSTGRES_DB;g" ./deploy/.ebextensions/environment.config
+      - sed -i'' -e "s;<POSTGRES_USER>;$POSTGRES_USER;g" ./deploy/.ebextensions/environment.config
+      - sed -i'' -e "s;<POSTGRES_PASSWORD>;$POSTGRES_PASSWORD;g" ./deploy/.ebextensions/environment.config
 
       - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.03 v2.1.7 running Multi-container Docker 1.11.2 (Generic)" -r us-east-1 $DOCKER_REPO
       - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM staging
