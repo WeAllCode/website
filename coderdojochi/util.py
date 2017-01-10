@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import arrow
 import logging
-
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -76,7 +74,42 @@ def email(
     msg.attach_alternative(html_content, "text/html")
 
     if send:
-        msg.send()
+        try:
+            msg.send()
+        except Exception as e:
+            response = msg.mandrill_response[0]
+            logger.error(
+                u'{}'.format(response)
+            )
+
+            reject_reasons = [
+                'hard-bounce',
+                'soft-bounce',
+                'spam',
+                'unsub',
+                'custom',
+            ]
+
+            if (
+                response['status'] == u'rejected' and
+                response['reject_reason'] in reject_reasons
+            ):
+                logger.error(
+                    'user: {}, {}'.format(
+                        response['email'],
+                        timezone.now()
+                    )
+                )
+
+                from coderdojochi.models import CDCUser
+                user = CDCUser.objects.get(email=response['email'])
+                user.is_active = False
+                user.admin_notes = u'User \'{}\' when checked on {}'.format(
+                    response['reject_reason'],
+                    timezone.now()
+                )
+                user.save()
+            else:
+                raise e
 
     return msg
-
