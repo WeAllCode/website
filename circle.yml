@@ -16,8 +16,8 @@ dependencies:
   override:
     - pip install awsebcli==3.7.3
     - docker login  -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
-    - docker pull "$DOCKER_USER/$DOCKER_REPO:latest"
-    - docker pull "$DOCKER_USER/$DOCKER_REPO-static:latest"
+    # - docker pull "$DOCKER_USER/$DOCKER_REPO:latest"
+    # - docker pull "$DOCKER_USER/$DOCKER_REPO-static:latest"
 
 test:
   override:
