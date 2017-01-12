@@ -4,7 +4,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Server error</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
         	body {
 			    background:#87c448;
@@ -23,7 +23,8 @@
 				bottom: 10px;
 				height: 150px;
 				width: 100%;
-				background-image: url(/static/images/coderdojochi_600x300_transparent.png);
+				background-image: url("{% static "images/coderdojochi_600x300_transparent.png" %}");
+
 			    background-repeat: no-repeat;
 			    background-position: left bottom;
 			    background-size: 300px 150px;
@@ -87,7 +88,7 @@
 			blink {
 			  -webkit-animation: blink 1s steps(5, start) infinite;
 			  -moz-animation:    blink 1s steps(5, start) infinite;
-			  -o-animation:      blink 1s steps(5, start) infinite; 
+			  -o-animation:      blink 1s steps(5, start) infinite;
 			  animation:         blink 1s steps(5, start) infinite;
 			  color: #fff;
 			}

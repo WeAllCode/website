@@ -1,4 +1,4 @@
-{% load staticfiles i18n %}<!DOCTYPE html>
+{% load static i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" {% if DEBUG %}class="debug"{% endif %}>
     <head>
         <title>{% block title %}CoderDojoChi - Welcome!{% endblock %}</title>
@@ -44,20 +44,20 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
             <!-- jQuery local fallback -->
-            <script>window.jQuery || document.write('<script src="{% static 'js/vendor/jquery-1.12.4.min.js' %}"><\/script>')</script>
+            <script>window.jQuery || document.write('<script src="{% static "js/vendor/jquery-1.12.4.min.js" %}"><\/script>')</script>
 
             <!-- Bootstrap JS CDN -->
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
             <!-- Bootstrap JS local fallback -->
-            <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{% static 'js/vendor/bootstrap-3.3.7.min.js' %}"><\/script>')}</script>
+            <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{% static "js/vendor/bootstrap-3.3.7.min.js" %}"><\/script>')}</script>
 
             <!-- Bootstrap CSS local fallback -->
             <script>
                 $(document).ready(function() {
                     var bodyColor = $('body').css('color');
                     if (bodyColor != 'rgb(51, 51, 51)') {
-                        $("head").prepend('<link rel="stylesheet" href="{% static 'css/vendor/bootstrap-3.3.7.min.css' %}">');
+                        $("head").prepend('<link rel="stylesheet" href="{% static "css/vendor/bootstrap-3.3.7.min.css" %}">');
                     }
                 });
             </script>
