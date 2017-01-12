@@ -58,6 +58,7 @@ from coderdojochi.forms import (
     GuardianForm,
     MentorForm,
     StudentForm,
+    DonationForm
 )
 
 logger = logging.getLogger("mechanize")
@@ -2302,6 +2303,53 @@ def session_check_in_mentors(
             'inactive_orders': inactive_orders,
             'no_show_orders': no_show_orders,
             'checked_in_orders': checked_in_orders,
+        }
+    )
+
+@login_required
+@never_cache
+def session_donations(
+    request,
+    session_id,
+    template_name="session-donations.html"
+):
+    # TODO: we should really turn this into a decorator
+    if not request.user.is_staff:
+        messages.error(
+            request,
+            'You do not have permission to access this page.'
+        )
+        return redirect('dojo')
+
+    session = get_object_or_404(Session, id=session_id)
+
+    default_form = DonationForm(initial={'session': session})
+    default_form.fields['user'].queryset = CDCUser.objects.filter(
+        id__in=Order.objects.filter(session=session).values_list('guardian__user__id', flat=True)
+    )
+
+    form = default_form
+
+    donations = Donation.objects.filter(session=session)
+
+    if request.method == 'POST':
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            form = default_form
+            messages.success(
+                request,
+                'Donation added!'
+            )
+
+
+    return render(
+        request,
+        template_name,
+        {
+            'form': form,
+            'session': session,
+            'donations': donations
         }
     )
 

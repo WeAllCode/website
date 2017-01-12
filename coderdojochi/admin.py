@@ -612,17 +612,19 @@ class EquipmentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 @admin.register(Donation)
 class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = (
-        'first_name',
-        'last_name',
-        'email',
+        'session',
+        'get_first_name',
+        'get_last_name',
+        'get_email',
         'amount',
         'verified',
         'receipt_sent',
-        'created_at',
-        'updated_at',
+        'created_at'
     )
 
     list_filter = (
+        'session',
+        'user',
         'verified',
         'receipt_sent',
         'amount',
@@ -634,14 +636,37 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     )
 
     search_fields = (
-        'first_name',
-        'last_name',
-        'email',
+        'get_first_name',
+        'get_last_name',
+        'get_email',
+        'session',
     )
 
     date_hierarchy = 'created_at'
 
     view_on_site = False
+
+    def get_first_name(self, obj):
+        if obj.user:
+            return obj.user.first_name
+        else:
+            return obj.first_name
+
+    def get_last_name(self, obj):
+        if obj.user:
+            return obj.user.last_name
+        else:
+            return obj.last_name
+
+    def get_email(self, obj):
+        if obj.user:
+            return obj.user.email
+        else:
+            return obj.email
+
+    get_first_name.short_description = 'First Name'
+    get_last_name.short_description = 'Last Name'
+    get_email.short_description = 'Email'
 
 
 @admin.register(Location)
