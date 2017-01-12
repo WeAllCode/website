@@ -1,33 +1,6 @@
 {% extends "_email-base.html" %}
 
 {% block content %}
-<p>Thanks for signing up for our next meeting, {{ first_name }}. We look forward to seeing you there.</p>
-
-<p><strong>Details</strong>:</p>
-
-<p>{{ meeting_title }}<br>
-{{ meeting_start_date }} {{ meeting_start_time }}-{{ meeting_end_time }}<br>
-{{ meeting_location_name }}<br>
-{{ meeting_location_address }}, {{ meeting_location_address2 }}<br>
-{{ meeting_location_city }}, {{ meeting_location_state }} {{ meeting_location_zip }}</p>
-{% if meeting_additional_info %}
-
-<p><strong>Note</strong>:</p>
-
-<p>{{ meeting_additional_info }}</p>
-{% endif %}
-
-<p>Know others who might be interested in becoming mentors? <a href="{{ site_url }}" target="_blank">Invite them!</a></p>
-
-<p>If you have any questions, just reply back to this email.</p>
-
-<p>The CoderDojoChi Team</p>
-{% endblock %}
-
-
-{% extends "_email-base.html" %}
-
-{% block content %}
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
         <td bgcolor="#ffffff" align="center" style="padding: 15px;">
@@ -203,7 +176,7 @@
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
                                     <p>We hope you&rsquo;re as excited about it as we are. Mark it in your calendar.</p>
 
-                                    <p>Know others who might be interested in becoming mentors? <a href="{{ site_url }}" target="_blank">Invite them!</a></p>
+                                    <p>Know others who might be interested in becoming mentors? <a href="{{ SITE_URL }}" target="_blank">Invite them!</a></p>
 
                                     <p>If you have any questions, just reply back to this email.</p>
 

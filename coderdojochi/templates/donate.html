@@ -161,7 +161,9 @@
             $('.alert-danger', $personalInfo).remove();
             $input.closest('.form-group')
                 .addClass('has-error')
-                .before('<div class="alert alert-danger">' + message + '</div>');
+                .before(
+                    '<div class="alert alert-danger">' + message + "<\/div>"
+                );
         };
 
         $donateForm.submit(donateFormSubmit);

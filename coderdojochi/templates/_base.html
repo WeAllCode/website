@@ -1,4 +1,4 @@
-{% load staticfiles i18n %}<!DOCTYPE html>
+{% load static i18n %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" {% if DEBUG %}class="debug"{% endif %}>
     <head>
         <title>{% block title %}CoderDojoChi - Welcome!{% endblock %}</title>
@@ -7,7 +7,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <meta name="description" content="CoderDojoChi is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
             <meta property="og:description" content="CoderDojoChi is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
-            <meta property="og:image" content="{{ static_url }}/images/coderdojochi.jpg">
+            <meta property="og:image" content="{% static "images/coderdojochi.jpg" %}">
             <meta property="og:site_name" content="CoderDojoChi">
             <meta property="fb:app_id" content="1454178301519376">
 
@@ -72,41 +72,38 @@
             </footer>
         {% endblock %}
 
-        {% block script_base %}
+        <!-- jQuery CDN -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-            <!-- jQuery CDN -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- jQuery local fallback -->
+        <script>window.jQuery || document.write('<script src="{% static "js/vendor/jquery-1.12.4.min.js" %}"><\/script>')</script>
 
-            <!-- jQuery local fallback -->
-            <script>window.jQuery || document.write('<script src="{% static 'js/vendor/jquery-1.12.4.min.js' %}"><\/script>')</script>
+        <!-- Bootstrap JS CDN -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-            <!-- Bootstrap JS CDN -->
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Bootstrap JS local fallback -->
+        <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{% static "js/vendor/bootstrap-3.3.7.min.js" %}"><\/script>')}</script>
 
-            <!-- Bootstrap JS local fallback -->
-            <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{% static 'js/vendor/bootstrap-3.3.7.min.js' %}"><\/script>')}</script>
-
-            <!-- Bootstrap CSS local fallback -->
-            <script>
-                $(document).ready(function() {
-                    var bodyColor = $('body').css('color');
-                    if (bodyColor != 'rgb(51, 51, 51)') {
-                        $("head").prepend('<link rel="stylesheet" href="{% static 'css/vendor/bootstrap-3.3.7.min.css' %}">');
-                    }
-                });
-            </script>
+        <!-- Bootstrap CSS local fallback -->
+        <script>
+            $(document).ready(function() {
+                var bodyColor = $('body').css('color');
+                if (bodyColor != 'rgb(51, 51, 51)') {
+                    $("head").prepend('<link rel="stylesheet" href="{% static "css/vendor/bootstrap-3.3.7.min.css" %}">');
+                }
+            });
+        </script>
 
 
-            <script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
+        <script src="{% static "js/vendor/jquery.maskedinput.min.js" %}"></script>
 
-            {% if DEBUG %}
-                <script src="{% static "js/cdc.js" %}"></script>
-            {% else %}
-                <script src="{% static "js/cdc.min.js" %}"></script>
-            {% endif %}
+        {% if DEBUG %}
+            <script src="{% static "js/cdc.js" %}"></script>
+        {% else %}
+            <script src="{% static "js/cdc.min.js" %}"></script>
+        {% endif %}
 
-            {% block extra_script %}{% endblock %}
-        {% endblock %}
+        {% block extra_script %}{% endblock %}
 
         {% block extra_body %}{% endblock %}
 
