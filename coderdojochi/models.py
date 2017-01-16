@@ -3,9 +3,11 @@
 import os
 from stdimage.models import StdImageField
 
+from django.core import urlresolvers
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import formats, timezone
@@ -1055,13 +1057,30 @@ class EmailContent(models.Model):
 
 
 class Donation(models.Model):
+    user = models.ForeignKey(
+        CDCUser,
+        blank=True,
+        null=True
+    )
+    session = models.ForeignKey(
+        Session,
+        blank=True,
+        null=True
+    )
     first_name = models.CharField(
         max_length=255,
+        blank=True,
+        null=True
     )
     last_name = models.CharField(
         max_length=255,
+        blank=True,
+        null=True
     )
-    email = models.EmailField()
+    email = models.EmailField(
+        blank=True,
+        null=True
+    )
     amount = models.IntegerField()
     verified = models.BooleanField(
         default=False,
@@ -1082,6 +1101,28 @@ class Donation(models.Model):
 
     def __unicode__(self):
         return u'{} | ${}'.format(self.email, self.amount)
+
+    def get_admin_url(self):
+        content_type = ContentType.objects.get_for_model(self.__class__)
+        return urlresolvers.reverse("admin:%s_%s_change" % (content_type.app_label, content_type.model), args=(self.id,))
+
+    def get_first_name(self):
+        if self.user:
+            return self.user.first_name
+        else:
+            return self.first_name
+
+    def get_last_name(self):
+        if self.user:
+            return self.user.last_name
+        else:
+            return self.last_name
+
+    def get_email(self):
+        if self.user:
+            return self.user.email
+        else:
+            return self.email
 
 
 class PartnerPasswordAccess(models.Model):
