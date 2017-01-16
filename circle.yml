@@ -31,7 +31,7 @@ deployment:
       - bin/push.sh
       - bin/update-variables.sh
 
-      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.09 v2.3.0 running Multi-container Docker 1.11.2 (Generic)" -r us-east-1 $DOCKER_REPO
+      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.09 v2.4.0 running Multi-container Docker 1.12.6 (Generic)" -r us-east-1 $DOCKER_REPO
       - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM production
 
   staging:
@@ -41,5 +41,5 @@ deployment:
       - bin/push.sh
       - bin/update-variables.sh
 
-      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.09 v2.3.0 running Multi-container Docker 1.11.2 (Generic)" -r us-east-1 $DOCKER_REPO
+      - cd ./deploy && eb init -v -p "64bit Amazon Linux 2016.09 v2.4.0 running Multi-container Docker 1.12.6 (Generic)" -r us-east-1 $DOCKER_REPO
       - cd ./deploy && eb deploy -v -l $CIRCLE_BUILD_NUM staging
