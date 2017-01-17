@@ -160,6 +160,7 @@ class GuardianImportResource(resources.ModelResource):
         email = data.get('email')
         zip = data.get('zip')
         phone = data.get('phone')
+
         if obj.pk:
             user = obj.user
         else:
@@ -175,6 +176,7 @@ class GuardianImportResource(resources.ModelResource):
         obj.active = False
         obj.zip = zip
         obj.phone = phone
+
         if not dry_run:
             user.save()
             obj.user = user
@@ -370,11 +372,6 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         '-start_date',
     )
 
-    filter_horizontal = (
-        'waitlist_mentors',
-        'waitlist_students',
-    )
-
     date_hierarchy = 'start_date'
 
     view_on_site = False
@@ -383,11 +380,16 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return MentorOrder.objects.filter(session__id=obj.id).count()
+        return MentorOrder.objects.filter(
+            session__id=obj.id,
+            active=True
+        ).exclude(waitlisted=True).count()
+
     get_mentor_count.short_description = 'Mentors'
 
     def get_current_orders_count(self, obj):
         return obj.get_current_orders().count()
+
     get_current_orders_count.short_description = "Students"
 
 
@@ -411,7 +413,7 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_filter = (
         'active',
         'check_in',
-        # 'guardian',
+        'waitlisted',
         'student',
         'session',
     )
@@ -560,7 +562,10 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return MeetingOrder.objects.filter(meeting__id=obj.id).count()
+        return MeetingOrder.objects.filter(
+            meeting__id=obj.id,
+            active=True
+        ).exclude(waitlisted=True).count()
     get_mentor_count.short_description = 'Mentors'
 
 

@@ -51,73 +51,32 @@
                     <p><a href="{{ session.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Enroll now</a></p>
                 {% else %}
                     {% if user.is_authenticated %}
-                        {% if user.role == 'guardian' %}
-                            {% if students %}
-                                {% if spots_remaining > 0 %}
-                                    <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
-                                {% else %}
-                                    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
-                                {% endif %}
-                                <table class="students">
-                                    <tbody>
-                                    {% for student in students %}
-                                        <tr>
-                                            <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
-                                            <td class="text-right">
-                                                {% student_session_order_count student=student session=session as student_is_enrolled %}
-                                                {% if spots_remaining > 0 or student_is_enrolled %}
-                                                    {% student_register_link student session %}
-                                                {% else %}
-                                                    <form action="" method="post">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="waitlist" value="student">
-                                                        <input type="hidden" name="account_id" value="{{ student.id }}">
-                                                        {% if student in session.waitlist_students.all %}
-                                                            <input type="hidden" name="remove" value="true">
-                                                            <button class="btn-cdc btn-cdc-danger btn-cdc-sm">Remove from Waitlist</button>
-                                                        {% else %}
-                                                            <input type="hidden" name="remove" value="false">
-                                                            <button class="btn-cdc btn-cdc-inverse btn-cdc-sm">Add to Waitlist</button>
-                                                        {% endif %}
-                                                    </form>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                                <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True">Add another student</a></small>
+                        {% mentor_session_order mentor=account session=session as mentor_order %}
+                        {% if spots_remaining > 0 or mentor_order.waitlist_offer_sent_at %}
+                            {% if mentor_signed_up %}
+                                <p>You are signed up to mentor this class.</p>
+                                <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                             {% else %}
-                            <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="btn-cdc btn-cdc-lg btn-block">Enroll</a></p>
+                                <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
                             {% endif %}
                         {% else %}
-                            {% if spots_remaining %}
-                                {% if mentor_signed_up %}
-                                    <p>You are signed up to mentor this class.</p>
-                                    <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
-                                {% else %}
-                                    <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
-                                {% endif %}
+                            {% if mentor_order.waitlisted %}
+                                <p>You are currently on the waitlist for this class. We will contact you ASAP if a spot becomes available.</p>
                             {% else %}
-                                {% if account in session.waitlist_mentors.all %}
-                                    <p>You are currently on the waitlist for this class. We will contact you ASAP if a spot becomes available.</p>
-                                {% else %}
-                                    <p>There are currently no available mentor spots for this class.</p>
-                                {% endif %}
-
-                                <form action="" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="waitlist" value="mentor">
-                                    <input type="hidden" name="account_id" value="{{ account.id }}">
-                                    {% if account in session.waitlist_mentors.all %}
-                                        <input type="hidden" name="remove" value="true">
-                                        <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from waitlist</button>
-                                    {% else %}
-                                        <input type="hidden" name="remove" value="false">
-                                        <button class="btn-cdc btn-cdc-sm">Add me to waitlist</button>
-                                    {% endif %}
-                                </form>
+                                <p>There are currently no available mentor spots for this class.</p>
                             {% endif %}
+
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="waitlist" value="mentor">
+                                <input type="hidden" name="account_id" value="{{ account.id }}">
+                                {% if mentor_order.waitlisted %}
+                                    <input type="hidden" name="order_id" value="{{ mentor_order.id }}">
+                                    <button class="btn-cdc btn-cdc-sm btn-cdc-danger">Remove from waitlist</button>
+                                {% else %}
+                                    <button class="btn-cdc btn-cdc-sm">Add me to waitlist</button>
+                                {% endif %}
+                            </form>
                         {% endif %}
                     {% else %}
                         {% if spots_remaining < 1 %}
@@ -170,7 +129,7 @@
             <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s {% else %}Anyone{% endif %} between {{ session.min_age_limitation|default:"7" }} and {{ session.max_age_limitation|default:"17" }} of age. No computer skills required.</p>
 
             <h3>When</h3>
-            <p>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
+            <p>{{ session.start_date|date }} from {{ session.mentor_start_date|time }} to {{ session.mentor_end_date|time }}</p>
             <p><i class="fa fa-calendar"></i> <a href="{{ session.get_ics_url }}">Add to your calendar</a></p>
 
             <h3>Where</h3>
