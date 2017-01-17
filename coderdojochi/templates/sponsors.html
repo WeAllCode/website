@@ -1,0 +1,57 @@
+{% extends "_base.html" %}
+
+{% load i18n cache %}
+
+{% block title %}Sponsors{% endblock %}
+
+{% block body_class %}page-sponsors{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+
+    {% if sponsors.terabytes %}
+        <div class="row">
+            <h2>Terabytes</h2>
+            {% for sponsor in sponsors.terabytes %}
+            <div class="col-sm-12 ad-space-ad">
+                <a href="#">{{ sponsor.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if sponsors.gigabytes %}
+        <div class="row">
+            <h2>Gigabytes</h2>
+            {% for sponsor in sponsors.gigabytes %}
+            <div class="col-sm-6 ad-space-ad">
+                <a href="#">{{ sponsor.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if sponsors.megabytes %}
+        <div class="row">
+            <h2>Megabytes</h2>
+            {% for sponsor in sponsors.megabytes %}
+            <div class="col-sm-4 ad-space-ad">
+                <a href="#">{{ sponsor.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if sponsors.kilobytes %}
+        <div class="row">
+            <h2>Kilobytes</h2>
+            {% for sponsor in sponsors.kilobytes %}
+            <div class="col-sm-3 ad-space-ad">
+                <a href="#">{{ sponsor.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

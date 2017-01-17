@@ -32,6 +32,7 @@ from coderdojochi.models import (
     RaceEthnicity,
     Session,
     Student,
+    Sponsor,
 )
 
 from coderdojochi.util import str_to_bool
@@ -677,3 +678,29 @@ class LocationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 @admin.register(RaceEthnicity)
 class RaceEthnicityAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     pass
+
+
+@admin.register(Sponsor)
+class SponsorAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'level',
+    )
+
+    list_filter = (
+        'level',
+    )
+
+    ordering = (
+        'name',
+    )
+
+    date_hierarchy = 'created_at'
+
+    search_fields = (
+        'name',
+        'contact_email',
+    )
+
+    view_on_site = False
+
