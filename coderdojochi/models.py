@@ -1133,3 +1133,45 @@ class PartnerPasswordAccess(models.Model):
     class Meta:
         verbose_name = _("partner_password_access")
         db_table = _("partner_password_access")
+
+
+SponsorshipLevels = (
+
+    # Bronze
+    ('bytes', 'Bytes'),
+
+    # Silver
+    ('kilobytes', 'Kilobytes'),
+
+    # Gold
+    ('megabytes', 'Megabytes'),
+
+    # Platinum
+    ('gigabytes', 'Gigabytes'),
+
+    # Higher?
+    ('terabytes', 'Terabytes'),
+)
+
+
+class Sponsor(models.Model):
+    name = models.CharField(max_length=255)
+    level = models.CharField(max_length=255, choices=SponsorshipLevels)
+    url = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    contact_email = models.EmailField(blank=True, null=True)
+    logo = models.ImageField(blank=True, null=True)
+
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("sponsor")
+        verbose_name_plural = _("sponsors")
+
+    def __unicode__(self):
+        return u'{} ({})'.format(
+            self.name,
+            self.level
+        )
