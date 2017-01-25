@@ -113,19 +113,19 @@ class Mentor(models.Model):
         return u'{} {}'.format(self.user.first_name, self.user.last_name)
 
     def get_approve_avatar_url(self):
-        return u'{}/mentors/{}/approve-avatar/'.format(
+        return u'{}/mentor/{}/approve-avatar/'.format(
             settings.SITE_URL,
             self.id
         )
 
     def get_reject_avatar_url(self):
-        return u'{}/mentors/{}/reject-avatar/'.format(
+        return u'{}/mentor/{}/reject-avatar/'.format(
             settings.SITE_URL,
             self.id
         )
 
     def get_absolute_url(self):
-        return u'{}/mentors/{}/'.format(
+        return u'{}/mentor/{}/'.format(
             settings.SITE_URL,
             self.id
         )

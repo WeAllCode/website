@@ -378,6 +378,11 @@ def validate_partner_session_access(request, session_id):
         return False
 
 
+def session_detail_short(request, session_id):
+    session_obj = get_object_or_404(Session, id=session_id)
+    return redirect(session_obj.get_absolute_url())
+
+
 def session_detail(
     request,
     year,
@@ -955,6 +960,11 @@ def meetings(request, template_name="meetings.html"):
     return render(request, template_name, {
         'upcoming_meetings': upcoming_meetings
     })
+
+
+def meeting_detail_short(request, meeting_id):
+    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
+    return redirect(meeting_obj.get_absolute_url())
 
 
 def meeting_detail(
