@@ -184,9 +184,10 @@
                         <thead>
                             <tr>
                                 <th class="col-sm-1"></th>
-                                <th class="col-sm-3">Student Name</th>
+                                <th class="col-sm-2">Student Name</th>
                                 <th class="col-sm-1 text-right">Age</th>
-                                <th class="col-sm-3">Guardian</th>
+                                <th class="col-sm-2">Guardian</th>
+                                <th class="col-sm-3">School</th>
                                 <th class="col-sm-2 text-right">{% if not active_session %}Checkin Date{% endif %}</th>
                                 <th class="col-sm-1 text-right"><abbr title="Number Attended"># A</abbr></th>
                                 <th class="col-sm-1 text-right"><abbr title="Number Missed"># M</abbr></th>
@@ -213,6 +214,9 @@
                                                 {{ order.guardian.user.first_name }} {{ order.guardian.user.last_name }}
                                             {% endif %}
                                         {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ order.student.school_name }}
                                     </td>
                                     <td class="text-right vert-align">
                                         {% if active_session %}
