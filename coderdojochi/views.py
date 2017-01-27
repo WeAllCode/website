@@ -86,7 +86,7 @@ def home(request, template_name="home.html"):
         not request.user.is_authenticated() or
         not request.user.role == 'mentor'
     ):
-        upcoming_classes = upcoming_classes.filter(public=True)
+        upcoming_classes = upcoming_classes.filter(is_public=True)
 
     upcoming_classes = upcoming_classes[:3]
 
@@ -203,7 +203,7 @@ def welcome(request, template_name="welcome.html"):
                 # check for next upcoming meeting
                 next_meeting = Meeting.objects.filter(
                     is_active=True,
-                    public=True
+                    is_public=True
                 ).order_by('start_date').first()
 
                 if next_meeting:
@@ -312,7 +312,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         not request.user.is_authenticated() or
         not request.user.role == 'mentor'
     ):
-        all_sessions = all_sessions.filter(public=True)
+        all_sessions = all_sessions.filter(is_public=True)
 
     sessions = all_sessions.filter(
         start_date__year=year,
@@ -474,7 +474,7 @@ def session_detail(
         not request.user.is_authenticated() or
         not request.user.role == 'mentor'
     ):
-        upcoming_classes = upcoming_classes.filter(public=True)
+        upcoming_classes = upcoming_classes.filter(is_public=True)
 
     if request.user.is_authenticated():
         if not request.user.role:
@@ -953,7 +953,7 @@ def meetings(request, template_name="meetings.html"):
 
     upcoming_meetings = Meeting.objects.filter(
         is_active=True,
-        public=True,
+        is_public=True,
         end_date__gte=timezone.now()
     ).order_by('start_date')[:3]
 
@@ -1282,7 +1282,7 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 def volunteer(request, template_name="volunteer.html"):
     mentors = Mentor.objects.select_related('user').filter(
         is_active=True,
-        public=True,
+        is_public=True,
         background_check=True,
         avatar_approved=True,
     ).annotate(
@@ -1291,7 +1291,7 @@ def volunteer(request, template_name="volunteer.html"):
 
     upcoming_meetings = Meeting.objects.filter(
         is_active=True,
-        public=True,
+        is_public=True,
         end_date__gte=timezone.now()
     ).order_by('start_date')[:3]
 
@@ -1368,7 +1368,7 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
 
     upcoming_meetings = meeting_orders.filter(
         is_active=True,
-        meeting__public=True,
+        meeting__is_public=True,
         meeting__end_date__gte=timezone.now()
     ).order_by('meeting__start_date')
 
@@ -1510,14 +1510,14 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
 def mentors(request, template_name="mentors.html"):
     mentors = Mentor.objects.filter(
         is_active=True,
-        public=True,
+        is_public=True,
         background_check=True,
         avatar_approved=True,
     ).order_by('user__date_joined')
 
     # mentors = Mentor.objects.filter(
     #     is_active=True,
-    #     public=True
+    #     is_public=True
     # ).order_by('user__date_joined')
 
     return render(request, template_name, {
@@ -1533,7 +1533,7 @@ def mentor_detail(
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
-    if not mentor.public:
+    if not mentor.is_public:
         messages.error(
             request,
             'Invalid mentor ID.'
@@ -1767,7 +1767,7 @@ def donate_return(request):
 def about(request, template_name="about.html"):
     mentor_count = Mentor.objects.filter(
         is_active=True,
-        public=True
+        is_public=True
     ).count()
 
     students_served = Order.objects.exclude(check_in=None).count()

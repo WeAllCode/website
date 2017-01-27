@@ -87,7 +87,7 @@ class Mentor(models.Model):
     background_check = models.BooleanField(
         default=False,
     )
-    public = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
     )
     avatar = StdImageField(
@@ -427,7 +427,7 @@ class Session(models.Model):
         default=False,
         help_text="Session is active.",
     )
-    public = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
         help_text="Session is a public session.",
     )
@@ -659,7 +659,7 @@ class Meeting(models.Model):
         null=True,
         help_text="When provided, local enrollment is disabled.",
     )
-    public = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
     )
     is_active = models.BooleanField(

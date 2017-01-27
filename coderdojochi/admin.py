@@ -97,14 +97,14 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'created_at',
         'updated_at',
         'is_active',
-        'public',
+        'is_public',
         'background_check',
         'avatar_approved',
     )
 
     list_filter = (
         'is_active',
-        'public',
+        'is_public',
         'background_check',
         'avatar_approved',
     )
@@ -355,13 +355,13 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_current_orders_count',
         'get_mentor_count',
         'is_active',
-        'public',
+        'is_public',
         'announced_date'
     )
 
     list_filter = (
         'is_active',
-        'public',
+        'is_public',
         'course__title',
         'location',
     )
@@ -537,14 +537,14 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'end_date',
         'location',
         'get_mentor_count',
-        'public',
+        'is_public',
         'announced_date',
         'created_at'
     )
 
     list_filter = (
         'is_active',
-        'public',
+        'is_public',
         'location',
         'meeting_type__title',
     )
