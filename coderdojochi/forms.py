@@ -264,7 +264,7 @@ class StudentForm(CDCModelForm):
 
     race_ethnicity = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset=RaceEthnicity.objects.filter(visible=True),
+        queryset=RaceEthnicity.objects.filter(is_visible=True),
         required=False
     )
 

@@ -46,7 +46,7 @@ class RaceEthnicity(models.Model):
     race_ethnicity = models.CharField(
         max_length=255,
     )
-    visible = models.BooleanField(
+    is_visible = models.BooleanField(
         default=False,
     )
 

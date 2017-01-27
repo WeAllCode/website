@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "race_ethnicity": "American Indian/Alaska Native",
-    "visible": true
+    "is_visible": true
   }
 },
 {
@@ -12,7 +12,7 @@
   "pk": 2,
   "fields": {
     "race_ethnicity": "Asian",
-    "visible": true
+    "is_visible": true
   }
 },
 {
@@ -20,7 +20,7 @@
   "pk": 3,
   "fields": {
     "race_ethnicity": "Arab",
-    "visible": true
+    "is_visible": true
   }
 },
 {
@@ -28,7 +28,7 @@
   "pk": 4,
   "fields": {
     "race_ethnicity": "Black/African American",
-    "visible": true
+    "is_visible": true
   }
 },
 {
@@ -36,7 +36,7 @@
   "pk": 5,
   "fields": {
     "race_ethnicity": "Hispanic/Latino",
-    "visible": true
+    "is_visible": true
   }
 },
 {
@@ -44,7 +44,7 @@
   "pk": 6,
   "fields": {
     "race_ethnicity": "Pacific Islander",
-    "visible": true
+    "is_visible": true
   }
 },
 {
@@ -52,7 +52,7 @@
   "pk": 7,
   "fields": {
     "race_ethnicity": "White",
-    "visible": true
+    "is_visible": true
   }
 },
 {
@@ -60,7 +60,7 @@
   "pk": 8,
   "fields": {
     "race_ethnicity": "Not Listed",
-    "visible": true
+    "is_visible": true
   }
 }
 ]
