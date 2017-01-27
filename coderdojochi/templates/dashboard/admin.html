@@ -175,7 +175,7 @@
         <tbody>
             {% for session in sessions %}
             <tr class="
-                {% if session.active == False %}
+                {% if session.is_active == False %}
                     danger
                 {% else %}
                     {% if session.is_future == 1 %}
@@ -300,7 +300,7 @@
         <tbody>
             {% for meeting in meetings %}
             <tr class="
-                {% if meeting.active == False %}
+                {% if meeting.is_active == False %}
                     danger
                 {% else %}
                     {% if meeting.is_future == 1 %}

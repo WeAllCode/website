@@ -61,7 +61,7 @@
         <div class="col-sm-4 class-detail-sidebar-right">
             {% if user.is_staff %}
                 <ul class="center-block well well-sm list-group list-unstyled">
-                    {% if meeting.active %}
+                    {% if meeting.is_active %}
                         <!-- Todo -->
                         <li class="list-group-item">Attending: <b>{{ active_meeting_orders.count }}</b></li>
 

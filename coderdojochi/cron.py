@@ -8,7 +8,11 @@ from django.core.mail import get_connection
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
 
-from coderdojochi.models import Mentor, MentorOrder, Order, Session
+from coderdojochi.models import (
+    MentorOrder,
+    Order,
+    Session
+)
 from coderdojochi.util import email
 
 
@@ -20,7 +24,7 @@ class SendReminders(CronJobBase):
 
     def do(self):
         orders_within_a_week = Order.objects.filter(
-            active=True,
+            is_active=True,
             week_reminder_sent=False,
             session__start_date__lte=(
                 timezone.now() + datetime.timedelta(days=7)
@@ -30,7 +34,7 @@ class SendReminders(CronJobBase):
             ),
         )
         orders_within_a_day = Order.objects.filter(
-            active=True,
+            is_active=True,
             day_reminder_sent=False,
             session__start_date__lte=(
                 timezone.now() + datetime.timedelta(days=1)
@@ -40,13 +44,13 @@ class SendReminders(CronJobBase):
             ),
         )
         sessions_within_a_week = Session.objects.filter(
-            active=True,
+            is_active=True,
             mentors_week_reminder_sent=False,
             start_date__lte=timezone.now() + datetime.timedelta(days=7),
             start_date__gte=timezone.now() + datetime.timedelta(days=1)
         )
         sessions_within_a_day = Session.objects.filter(
-            active=True,
+            is_active=True,
             mentors_day_reminder_sent=False,
             start_date__lte=timezone.now() + datetime.timedelta(days=1),
             start_date__gte=timezone.now() - datetime.timedelta(days=2)
