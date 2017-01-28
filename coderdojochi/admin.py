@@ -96,15 +96,15 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_last_name',
         'created_at',
         'updated_at',
-        'active',
-        'public',
+        'is_active',
+        'is_public',
         'background_check',
         'avatar_approved',
     )
 
     list_filter = (
-        'active',
-        'public',
+        'is_active',
+        'is_public',
         'background_check',
         'avatar_approved',
     )
@@ -172,7 +172,7 @@ class GuardianImportResource(resources.ModelResource):
             )
 
         obj.user = user
-        obj.active = False
+        obj.is_active = False
         obj.zip = zip
         obj.phone = phone
         if not dry_run:
@@ -265,7 +265,7 @@ class StudentResource(resources.ModelResource):
         obj.school_type = data.get('school_type', '')
         obj.photo_release = str_to_bool(data.get('photo_release', ''))
         obj.consent = str_to_bool(data.get('consent', ''))
-        obj.active = True
+        obj.is_active = True
 
         try:
             obj.guardian = Guardian.objects.get(user__email=guardian_email)
@@ -293,7 +293,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'guardian',
         'created_at',
         'updated_at',
-        'active'
+        'is_active'
     )
 
     list_filter = (
@@ -354,14 +354,14 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'capacity',
         'get_current_orders_count',
         'get_mentor_count',
-        'active',
-        'public',
+        'is_active',
+        'is_public',
         'announced_date'
     )
 
     list_filter = (
-        'active',
-        'public',
+        'is_active',
+        'is_public',
         'course__title',
         'location',
     )
@@ -403,13 +403,13 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'check_in',
         'created_at',
         'updated_at',
-        'active',
+        'is_active',
         'week_reminder_sent',
         'day_reminder_sent',
     )
 
     list_filter = (
-        'active',
+        'is_active',
         'check_in',
         # 'guardian',
         'student',
@@ -443,7 +443,7 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'session',
         'ip',
         'check_in',
-        'active',
+        'is_active',
         'week_reminder_sent',
         'day_reminder_sent',
         'created_at',
@@ -455,7 +455,7 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     )
 
     list_filter = (
-        'active',
+        'is_active',
         'check_in',
         'session',
         # 'mentor',
@@ -488,7 +488,7 @@ class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'meeting',
         'ip',
         'check_in',
-        'active',
+        'is_active',
         'week_reminder_sent',
         'day_reminder_sent',
         'created_at',
@@ -496,7 +496,7 @@ class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     )
 
     list_filter = (
-        'active',
+        'is_active',
         'meeting',
         'check_in',
         'meeting__meeting_type',
@@ -537,14 +537,14 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'end_date',
         'location',
         'get_mentor_count',
-        'public',
+        'is_public',
         'announced_date',
         'created_at'
     )
 
     list_filter = (
-        'active',
-        'public',
+        'is_active',
+        'is_public',
         'location',
         'meeting_type__title',
     )
@@ -617,7 +617,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_last_name',
         'get_email',
         'amount',
-        'verified',
+        'is_verified',
         'receipt_sent',
         'created_at'
     )
@@ -625,7 +625,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_filter = (
         'session',
         'user',
-        'verified',
+        'is_verified',
         'receipt_sent',
         'amount',
         'created_at',

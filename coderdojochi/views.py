@@ -78,7 +78,7 @@ def add_months(sourcedate, months):
 
 def home(request, template_name="home.html"):
     upcoming_classes = Session.objects.filter(
-        active=True,
+        is_active=True,
         end_date__gte=timezone.now(),
     ).order_by('start_date')
 
@@ -86,7 +86,7 @@ def home(request, template_name="home.html"):
         not request.user.is_authenticated() or
         not request.user.role == 'mentor'
     ):
-        upcoming_classes = upcoming_classes.filter(public=True)
+        upcoming_classes = upcoming_classes.filter(is_public=True)
 
     upcoming_classes = upcoming_classes[:3]
 
@@ -202,8 +202,8 @@ def welcome(request, template_name="welcome.html"):
             if role == 'mentor':
                 # check for next upcoming meeting
                 next_meeting = Meeting.objects.filter(
-                    active=True,
-                    public=True
+                    is_active=True,
+                    is_public=True
                 ).order_by('start_date').first()
 
                 if next_meeting:
@@ -231,7 +231,7 @@ def welcome(request, template_name="welcome.html"):
             else:
                 # check for next upcoming class
                 next_class = Session.objects.filter(
-                    active=True
+                    is_active=True
                 ).order_by('start_date').first()
 
                 if next_class:
@@ -304,7 +304,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
     next_date = add_months(calendar_date, 1)
 
     all_sessions = Session.objects.filter(
-        active=True,
+        is_active=True,
         end_date__gte=timezone.now()
     ).order_by('start_date')
 
@@ -312,7 +312,7 @@ def sessions(request, year=False, month=False, template_name="sessions.html"):
         not request.user.is_authenticated() or
         not request.user.role == 'mentor'
     ):
-        all_sessions = all_sessions.filter(public=True)
+        all_sessions = all_sessions.filter(is_public=True)
 
     sessions = all_sessions.filter(
         start_date__year=year,
@@ -412,7 +412,7 @@ def session_detail(
     active_mentors = Mentor.objects.filter(
         id__in=MentorOrder.objects.filter(
             session=session_obj,
-            active=True
+            is_active=True
         ).values('mentor__id')
     )
 
@@ -466,7 +466,7 @@ def session_detail(
         return redirect(session_obj.get_absolute_url())
 
     upcoming_classes = Session.objects.filter(
-        active=True,
+        is_active=True,
         end_date__gte=timezone.now()
     ).order_by('start_date')
 
@@ -474,7 +474,7 @@ def session_detail(
         not request.user.is_authenticated() or
         not request.user.role == 'mentor'
     ):
-        upcoming_classes = upcoming_classes.filter(public=True)
+        upcoming_classes = upcoming_classes.filter(is_public=True)
 
     if request.user.is_authenticated():
         if not request.user.role:
@@ -498,7 +498,7 @@ def session_detail(
             account = mentor
             session_orders = MentorOrder.objects.filter(
                 session=session_obj,
-                active=True,
+                is_active=True,
             )
             mentor_signed_up = True if session_orders.filter(
                 mentor=account
@@ -611,7 +611,7 @@ def session_sign_up(
 
         session_orders = MentorOrder.objects.filter(
             session=session_obj,
-            active=True
+            is_active=True
         )
 
         user_signed_up = True if session_orders.filter(
@@ -698,10 +698,10 @@ def session_sign_up(
                     Order,
                     student=student,
                     session=session_obj,
-                    active=True,
+                    is_active=True,
                 )
 
-            order.active = False
+            order.is_active = False
             order.save()
 
             messages.success(
@@ -725,7 +725,7 @@ def session_sign_up(
                     session=session_obj,
                 )
                 order.ip = ip
-                order.active = True
+                order.is_active = True
                 order.save()
             else:
                 order, created = Order.objects.get_or_create(
@@ -734,7 +734,7 @@ def session_sign_up(
                     session=session_obj,
                 )
                 order.ip = ip
-                order.active = True
+                order.is_active = True
                 order.save()
 
             # we dont want guardians getting 7 day reminder
@@ -952,8 +952,8 @@ def session_ics(request, year, month, day, slug, session_id):
 def meetings(request, template_name="meetings.html"):
 
     upcoming_meetings = Meeting.objects.filter(
-        active=True,
-        public=True,
+        is_active=True,
+        is_public=True,
         end_date__gte=timezone.now()
     ).order_by('start_date')[:3]
 
@@ -991,7 +991,7 @@ def meeting_detail(
 
         active_meeting_orders = MeetingOrder.objects.filter(
             meeting=meeting_obj,
-            active=True
+            is_active=True
         )
 
         mentor_meeting_order = active_meeting_orders.filter(mentor=mentor)
@@ -1027,7 +1027,7 @@ def meeting_sign_up(
 
     meeting_orders = MeetingOrder.objects.filter(
         meeting=meeting_obj,
-        active=True
+        is_active=True
     )
 
     user_meeting_order = meeting_orders.filter(mentor=mentor)
@@ -1041,7 +1041,7 @@ def meeting_sign_up(
                 meeting=meeting_obj,
                 mentor=mentor
             )
-            meeting_order.active = False
+            meeting_order.is_active = False
             meeting_order.save()
 
             messages.success(
@@ -1064,7 +1064,7 @@ def meeting_sign_up(
             )
 
             meeting_order.ip = ip
-            meeting_order.active = True
+            meeting_order.is_active = True
             meeting_order.save()
 
             messages.success(
@@ -1159,7 +1159,9 @@ def meeting_announce(request, meeting_id):
         # connection in msg.send()
         connection.open()
 
-        for mentor in Mentor.objects.filter(active=True):
+        for mentor in Mentor.objects.filter(
+            is_active=True,
+        ):
             email(
                 subject='New meeting announced!',
                 template_name='meeting-announcement-mentor',
@@ -1279,8 +1281,8 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
 
 def volunteer(request, template_name="volunteer.html"):
     mentors = Mentor.objects.select_related('user').filter(
-        active=True,
-        public=True,
+        is_active=True,
+        is_public=True,
         background_check=True,
         avatar_approved=True,
     ).annotate(
@@ -1288,8 +1290,8 @@ def volunteer(request, template_name="volunteer.html"):
     ).order_by('-user__role', '-session_count')
 
     upcoming_meetings = Meeting.objects.filter(
-        active=True,
-        public=True,
+        is_active=True,
+        is_public=True,
         end_date__gte=timezone.now()
     ).order_by('start_date')[:3]
 
@@ -1346,17 +1348,17 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
     mentor = get_object_or_404(Mentor, user=request.user)
 
     orders = MentorOrder.objects.select_related().filter(
-        active=True,
+        is_active=True,
         mentor=mentor,
     )
 
     upcoming_sessions = orders.filter(
-        active=True,
+        is_active=True,
         session__end_date__gte=timezone.now()
     ).order_by('session__start_date')
 
     past_sessions = orders.filter(
-        active=True,
+        is_active=True,
         session__end_date__lte=timezone.now()
     ).order_by('session__start_date')
 
@@ -1365,8 +1367,8 @@ def dojo_mentor(request, template_name='mentor/dojo.html'):
     )
 
     upcoming_meetings = meeting_orders.filter(
-        active=True,
-        meeting__public=True,
+        is_active=True,
+        meeting__is_public=True,
         meeting__end_date__gte=timezone.now()
     ).order_by('meeting__start_date')
 
@@ -1455,12 +1457,12 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
     )
 
     upcoming_orders = student_orders.filter(
-        active=True,
+        is_active=True,
         session__end_date__gte=timezone.now(),
     ).order_by('session__start_date')
 
     past_orders = student_orders.filter(
-        active=True,
+        is_active=True,
         session__end_date__lte=timezone.now(),
     ).order_by('session__start_date')
 
@@ -1507,15 +1509,15 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
 
 def mentors(request, template_name="mentors.html"):
     mentors = Mentor.objects.filter(
-        active=True,
-        public=True,
+        is_active=True,
+        is_public=True,
         background_check=True,
         avatar_approved=True,
     ).order_by('user__date_joined')
 
     # mentors = Mentor.objects.filter(
-    #     active=True,
-    #     public=True
+    #     is_active=True,
+    #     is_public=True
     # ).order_by('user__date_joined')
 
     return render(request, template_name, {
@@ -1531,7 +1533,7 @@ def mentor_detail(
 
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
-    if not mentor.public:
+    if not mentor.is_public:
         messages.error(
             request,
             'Invalid mentor ID.'
@@ -1764,8 +1766,8 @@ def donate_return(request):
 
 def about(request, template_name="about.html"):
     mentor_count = Mentor.objects.filter(
-        active=True,
-        public=True
+        is_active=True,
+        is_public=True
     ).count()
 
     students_served = Order.objects.exclude(check_in=None).count()
@@ -1913,10 +1915,10 @@ def cdc_admin(request, template_name="admin.html"):
 
     orders = Order.objects.select_related()
 
-    total_past_orders = orders.filter(active=True)
+    total_past_orders = orders.filter(is_active=True)
     total_past_orders_count = total_past_orders.count()
     total_checked_in_orders = orders.filter(
-        active=True,
+        is_active=True,
         check_in__isnull=False
     )
     total_checked_in_orders_count = total_checked_in_orders.count()
@@ -2141,30 +2143,30 @@ def session_check_in(
 
     if active_session:
         active_orders = orders.filter(
-            active=True
+            is_active=True
         ).order_by(
             'student__first_name'
         )
 
     else:
         active_orders = orders.filter(
-            active=True,
+            is_active=True,
             check_in__isnull=False
         ).order_by(
             'student__first_name'
         )
 
     inactive_orders = orders.filter(
-        active=False
+        is_active=False
     ).order_by('-updated_at')
 
     no_show_orders = orders.filter(
-        active=True,
+        is_active=True,
         check_in__isnull=True
     )
 
     checked_in_orders = orders.filter(
-        active=True,
+        is_active=True,
         check_in__isnull=False
     )
 
@@ -2276,30 +2278,30 @@ def session_check_in_mentors(
 
     if active_session:
         active_orders = orders.filter(
-            active=True
+            is_active=True
         ).order_by(
             'mentor__user__first_name'
         )
 
     else:
         active_orders = orders.filter(
-            active=True,
+            is_active=True,
             check_in__isnull=False
         ).order_by(
             'mentor__user__first_name'
         )
 
     inactive_orders = orders.filter(
-        active=False
+        is_active=False
     ).order_by('-updated_at')
 
     no_show_orders = orders.filter(
-        active=True,
+        is_active=True,
         check_in__isnull=True
     )
 
     checked_in_orders = orders.filter(
-        active=True,
+        is_active=True,
         check_in__isnull=False
     )
 
@@ -2406,15 +2408,15 @@ def meeting_check_in(
     )
 
     active_orders = orders.filter(
-        active=True
+        is_active=True
     )
 
     inactive_orders = orders.filter(
-        active=False
+        is_active=False
     )
 
     checked_in = orders.filter(
-        active=True,
+        is_active=True,
         check_in__isnull=False
     )
 
@@ -2454,7 +2456,9 @@ def session_announce(request, session_id):
         connection.open()
 
         # send mentor announcements
-        for mentor in Mentor.objects.filter(active=True):
+        for mentor in Mentor.objects.filter(
+            is_active=True,
+        ):
             email(
                 subject='New CoderDojoChi class date announced! Come mentor!',
                 template_name='class-announcement-mentor',
@@ -2491,7 +2495,9 @@ def session_announce(request, session_id):
                           'A brand new class was just announced.',
             )
 
-        for guardian in Guardian.objects.filter(active=True):
+        for guardian in Guardian.objects.filter(
+            is_active=True
+        ):
             email(
                 subject='New CoderDojoChi class date announced!',
                 template_name='class-announcement-guardian',
@@ -2565,7 +2571,7 @@ def check_system(request):
 
     if (
         Session.objects.filter(
-            active=True,
+            is_active=True,
             start_date__lte=timezone.now(),
             mentor_end_date__gte=timezone.now()
         ).count()

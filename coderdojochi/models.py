@@ -46,7 +46,7 @@ class RaceEthnicity(models.Model):
     race_ethnicity = models.CharField(
         max_length=255,
     )
-    visible = models.BooleanField(
+    is_visible = models.BooleanField(
         default=False,
     )
 
@@ -75,7 +75,7 @@ class Mentor(models.Model):
         blank=True,
         null=True,
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=True,
     )
     created_at = models.DateTimeField(
@@ -87,7 +87,7 @@ class Mentor(models.Model):
     background_check = models.BooleanField(
         default=False,
     )
-    public = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
     )
     avatar = StdImageField(
@@ -143,7 +143,7 @@ class Guardian(models.Model):
     user = models.ForeignKey(
         CDCUser
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=True,
     )
     phone = models.CharField(
@@ -245,7 +245,7 @@ class Student(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True,
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=True,
     )
 
@@ -259,7 +259,7 @@ class Student(models.Model):
     def is_registered_for_session(self, session):
         try:
             Order.objects.get(
-                active=True,
+                is_active=True,
                 student=self,
                 session=session,
             )
@@ -423,11 +423,11 @@ class Session(models.Model):
         null=True,
         help_text="When provided, local enrollment is disabled.",
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=False,
         help_text="Session is active.",
     )
-    public = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
         help_text="Session is a public session.",
     )
@@ -528,18 +528,18 @@ class Session(models.Model):
         if checked_in is not None:
             if checked_in:
                 orders = Order.objects.filter(
-                    active=True,
+                    is_active=True,
                     session=self
                 ).exclude(check_in=None).order_by('student__last_name')
             else:
                 orders = Order.objects.filter(
-                    active=True,
+                    is_active=True,
                     session=self,
                     check_in=None
                 ).order_by('student__last_name')
         else:
             orders = Order.objects.filter(
-                active=True,
+                is_active=True,
                 session=self
             ).order_by('check_in', 'student__last_name')
 
@@ -548,7 +548,7 @@ class Session(models.Model):
     def get_mentor_orders(self):
         orders = MentorOrder.objects.filter(
             session=self,
-            active=True,
+            is_active=True,
         ).order_by('mentor__user__last_name')
 
         return orders
@@ -556,7 +556,7 @@ class Session(models.Model):
     def get_checked_in_mentor_orders(self):
         orders = MentorOrder.objects.filter(
             session=self,
-            active=True,
+            is_active=True,
             check_in__isnull=False
         ).order_by('mentor__user__last_name')
         return orders
@@ -565,18 +565,18 @@ class Session(models.Model):
         if checked_in is not None:
             if checked_in:
                 orders = Order.objects.filter(
-                    active=True,
+                    is_active=True,
                     session=self
                 ).exclude(check_in=None).values('student')
             else:
                 orders = Order.objects.filter(
-                    active=True,
+                    is_active=True,
                     session=self,
                     check_in=None
                 ).values('student')
         else:
             orders = Order.objects.filter(
-                active=True,
+                is_active=True,
                 session=self
             ).values('student')
 
@@ -584,7 +584,7 @@ class Session(models.Model):
 
     def get_checked_in_students(self):
         return Order.objects.filter(
-            active=True,
+            is_active=True,
             session=self
         ).exclude(check_in=None).values('student')
 
@@ -659,10 +659,10 @@ class Meeting(models.Model):
         null=True,
         help_text="When provided, local enrollment is disabled.",
     )
-    public = models.BooleanField(
+    is_public = models.BooleanField(
         default=False,
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=False,
     )
     image_url = models.CharField(
@@ -723,7 +723,7 @@ class Meeting(models.Model):
         if checked_in is not None:
             if checked_in:
                 orders = MeetingOrder.objects.filter(
-                    active=True,
+                    is_active=True,
                     meeting=self,
                 ).exclude(
                     check_in=None,
@@ -732,7 +732,7 @@ class Meeting(models.Model):
                 )
             else:
                 orders = MeetingOrder.objects.filter(
-                    active=True,
+                    is_active=True,
                     meeting=self,
                     check_in=None,
                 ).order_by(
@@ -741,7 +741,7 @@ class Meeting(models.Model):
 
         else:
             orders = MeetingOrder.objects.filter(
-                active=True,
+                is_active=True,
                 meeting=self,
             ).order_by(
                 'check_in',
@@ -753,7 +753,7 @@ class Meeting(models.Model):
     def get_current_mentors(self):
         return Mentor.objects.filter(
             id__in=MeetingOrder.objects.filter(
-                active=True,
+                is_active=True,
                 meeting=self,
             ).values(
                 'mentor__id',
@@ -771,7 +771,7 @@ class Order(models.Model):
     student = models.ForeignKey(
         Student,
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=True,
     )
     ip = models.CharField(
@@ -846,7 +846,7 @@ class MentorOrder(models.Model):
     session = models.ForeignKey(
         Session,
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=True,
     )
     ip = models.CharField(
@@ -900,7 +900,7 @@ class MeetingOrder(models.Model):
     meeting = models.ForeignKey(
         Meeting,
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=True,
     )
     ip = models.CharField(
@@ -1044,7 +1044,7 @@ class EmailContent(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True,
     )
-    active = models.BooleanField(
+    is_active = models.BooleanField(
         default=True,
     )
 
@@ -1082,7 +1082,7 @@ class Donation(models.Model):
         null=True
     )
     amount = models.IntegerField()
-    verified = models.BooleanField(
+    is_verified = models.BooleanField(
         default=False,
     )
     receipt_sent = models.BooleanField(
@@ -1104,7 +1104,13 @@ class Donation(models.Model):
 
     def get_admin_url(self):
         content_type = ContentType.objects.get_for_model(self.__class__)
-        return urlresolvers.reverse("admin:%s_%s_change" % (content_type.app_label, content_type.model), args=(self.id,))
+        return urlresolvers.reverse(
+            "admin:{}_{}_change".format(
+                content_type.app_label,
+                content_type.model
+            ),
+            args=(self.id,)
+        )
 
     def get_first_name(self):
         if self.user:

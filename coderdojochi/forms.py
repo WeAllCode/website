@@ -264,7 +264,7 @@ class StudentForm(CDCModelForm):
 
     race_ethnicity = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
-        queryset=RaceEthnicity.objects.filter(visible=True),
+        queryset=RaceEthnicity.objects.filter(is_visible=True),
         required=False
     )
 
@@ -340,7 +340,7 @@ class StudentForm(CDCModelForm):
 
     class Meta:
         model = Student
-        exclude = ('guardian', 'created_at', 'updated_at', 'active')
+        exclude = ('guardian', 'created_at', 'updated_at', 'is_active')
 
 
 class ContactForm(CDCForm):
@@ -351,8 +351,15 @@ class ContactForm(CDCForm):
 
 
 class DonationForm(ModelForm):
-    session = forms.ModelChoiceField(queryset=Session.objects.all(), widget=forms.HiddenInput(), required=True)
-    user = forms.ModelChoiceField(queryset=CDCUser.objects.all(), required=True)
+    session = forms.ModelChoiceField(
+        queryset=Session.objects.all(),
+        widget=forms.HiddenInput(),
+        required=True
+    )
+    user = forms.ModelChoiceField(
+        queryset=CDCUser.objects.all(),
+        required=True
+    )
     amount = forms.CharField(label='Amount (dollars)')
 
     class Meta:

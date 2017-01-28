@@ -65,7 +65,7 @@ def donate_callback(sender, **kwargs):
 
     if ipn_obj.payment_status == ST_PP_COMPLETED:
         donation = get_object_or_404(Donation, id=ipn_obj.invoice)
-        donation.verified = True
+        donation.is_verified = True
 
         if not donation.receipt_sent:
             email(
