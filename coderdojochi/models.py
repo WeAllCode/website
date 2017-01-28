@@ -1082,7 +1082,7 @@ class Donation(models.Model):
         null=True
     )
     amount = models.IntegerField()
-    verified = models.BooleanField(
+    is_verified = models.BooleanField(
         default=False,
     )
     receipt_sent = models.BooleanField(
@@ -1104,7 +1104,13 @@ class Donation(models.Model):
 
     def get_admin_url(self):
         content_type = ContentType.objects.get_for_model(self.__class__)
-        return urlresolvers.reverse("admin:%s_%s_change" % (content_type.app_label, content_type.model), args=(self.id,))
+        return urlresolvers.reverse(
+            "admin:{}_{}_change".format(
+                content_type.app_label,
+                content_type.model
+            ),
+            args=(self.id,)
+        )
 
     def get_first_name(self):
         if self.user:

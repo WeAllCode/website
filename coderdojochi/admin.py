@@ -617,7 +617,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_last_name',
         'get_email',
         'amount',
-        'verified',
+        'is_verified',
         'receipt_sent',
         'created_at'
     )
@@ -625,7 +625,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_filter = (
         'session',
         'user',
-        'verified',
+        'is_verified',
         'receipt_sent',
         'amount',
         'created_at',
