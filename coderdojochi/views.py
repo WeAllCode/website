@@ -1699,12 +1699,24 @@ def donate(request, template_name="donate.html"):
                 amount=request.POST['amount'],
             )
 
+            if 'referral_code' in request.POST and request.POST['referral_code']:
+                donation.referral_code = request.POST['referral_code']
+
             donation.save()
 
             return HttpResponse(donation.id)
 
         else:
             return HttpResponse('fail')
+
+    referral_heading = None
+    referral_code = None
+    referral_disclaimer = None
+
+    if 'zirmed' in request.get_full_path():
+        referral_heading = 'Join ZirMed and donate to CoderDojoChi!'
+        referral_code = 'ZIRMED'
+        referral_disclaimer = 'ZirMed is an organization dedicated to doing things and we can talk about it here.'
 
     paypal_dict = {
         'business': settings.PAYPAL_BUSINESS_ID,
@@ -1736,7 +1748,10 @@ def donate(request, template_name="donate.html"):
     form = PayPalPaymentsForm(initial=paypal_dict)
 
     return render(request, template_name, {
-        'form': form
+        'form': form,
+        'referral_heading': referral_heading,
+        'referral_code': referral_code,
+        'referral_disclaimer': referral_disclaimer
     })
 
 

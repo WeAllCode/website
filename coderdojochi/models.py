@@ -1077,6 +1077,11 @@ class Donation(models.Model):
         blank=True,
         null=True
     )
+    referral_code = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
     email = models.EmailField(
         blank=True,
         null=True
