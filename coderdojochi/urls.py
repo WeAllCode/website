@@ -39,6 +39,12 @@ urlpatterns = [
         coderdojochi_views.donate,
         name='donate',
     ),
+    # /zirmed/
+    url(
+        r'^zirmed/$',
+        coderdojochi_views.donate,
+        name='donate',
+    ),
     # /donate/cancel/
     url(
         r'^donate/cancel/$',

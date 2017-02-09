@@ -10,8 +10,9 @@
 
 <div class="hero">
     <div class="container">
-        <h1 class="title">Donate Today!</h1>
-
+        <h1 class="title">
+            {% if referral_heading %}{{ referral_heading }}{% else %}Donate Today!{% endif %}
+        </h1>
         <ul class="list-inline amount-buttons">
             <li><button class="btn-cdc btn-cdc-inverse" data-value="25">$25</button></li>
             <li><button class="btn-cdc btn-cdc-inverse" data-value="50">$50</button></li>
@@ -29,10 +30,13 @@
                 <input type="text" id="firstNameInput" class="form-control input-lg" placeholder="First name e.g. William">
             </div>
             <div class="form-group">
-                <input type="text" id="lastNameInput"  class="form-control input-lg" placeholder="Last name e.g. Gates">
+                <input type="text" id="lastNameInput" class="form-control input-lg" placeholder="Last name e.g. Gates">
             </div>
             <div class="form-group">
-                <input type="email" id="emailInput"  class="form-control input-lg" placeholder="Email Address e.g. bill.gates@microsoft.com">
+                <input type="email" id="emailInput" class="form-control input-lg" placeholder="Email Address e.g. bill.gates@microsoft.com">
+            </div>
+            <div class="form-group">
+                <input type="referral" id="referralInput" class="form-control input-lg" {% if referral_code %}readonly value="{{ referral_code }}"{% endif %} placeholder="Referral Code (optional)">
             </div>
             <h3 class="text-center">We will email you a receipt<br>(includes tax exempt information)</h3>
 
@@ -45,8 +49,11 @@
     <h2>{% trans "You can help!" %}</h2>
     <p>CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
 
-    {{ form.render }}
+    {% if referral_disclaimer %}
+        <p>{{ referral_disclaimer }}</p>
+    {% endif %}
 
+    {{ form.render }}
 </div>
 
 {% endblock %}
@@ -64,6 +71,7 @@
         var $firstNameInput = $('#firstNameInput');
         var $lastNameInput = $('#lastNameInput');
         var $emailInput = $('#emailInput');
+        var $referralInput = $('#referralInput');
         var $invoiceNumber = $('#id_invoice');
         var $paymentFirstName = $('#id_first_name');
         var $paymentLastName = $('#id_last_name');
@@ -136,6 +144,7 @@
                 first_name: $firstNameInput.val(),
                 last_name: $lastNameInput.val(),
                 email: $emailInput.val(),
+                referral_code: $referralInput.val(),
                 amount: parseInt(selectedAmount),
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             }
