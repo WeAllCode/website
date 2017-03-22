@@ -1104,10 +1104,10 @@ def meeting_sign_up(
                     'meeting_url': meeting_obj.get_absolute_url(),
                     'meeting_ics_url': meeting_obj.get_ics_url(),
                     'microdata_start_date': arrow.get(
-                        meeting_obj.mentor_start_date
+                        meeting_obj.start_date
                     ).to('local').isoformat(),
                     'microdata_end_date': arrow.get(
-                        meeting_obj.mentor_end_date
+                        meeting_obj.end_date
                     ).to('local').isoformat(),
                     'order': meeting_order,
                 },
