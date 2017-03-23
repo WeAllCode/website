@@ -27,7 +27,7 @@ def student_register_link(context, student, session):
     orders = Order.objects.filter(
         student=student,
         session=session,
-        active=True
+        is_active=True
     )
 
     button_tag = 'a'
