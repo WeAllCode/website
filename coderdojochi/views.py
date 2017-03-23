@@ -1112,9 +1112,9 @@ def meeting_sign_up(
                     'order': meeting_order,
                 },
                 recipients=[request.user.email],
-                preheader='Thanks for signing up for our next meeting, '
-                          '*|FIRST_NAME|*. We look forward to seeing you '
-                          'there.',
+                preheader=u'Thanks for signing up for our next meeting, '
+                          '{}. We look forward to seeing you '
+                          'there.'.format(request.user.first_name),
             )
 
         return HttpResponseRedirect(
