@@ -1161,6 +1161,7 @@ def meeting_announce(request, meeting_id):
 
         for mentor in Mentor.objects.filter(
             is_active=True,
+            user__is_active=True,
         ):
             email(
                 subject='New meeting announced!',
@@ -2473,6 +2474,7 @@ def session_announce(request, session_id):
         # send mentor announcements
         for mentor in Mentor.objects.filter(
             is_active=True,
+            user__is_active=True,
         ):
             email(
                 subject='New CoderDojoChi class date announced! Come mentor!',
@@ -2511,7 +2513,8 @@ def session_announce(request, session_id):
             )
 
         for guardian in Guardian.objects.filter(
-            is_active=True
+            is_active=True,
+            user__is_active=True,
         ):
             email(
                 subject='New CoderDojoChi class date announced!',
