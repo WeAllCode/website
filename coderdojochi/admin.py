@@ -462,7 +462,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'end_date',
         'location',
         'capacity',
-        'get_current_orders_count',
+        'get_student_count',
         'get_mentor_count',
         'is_active',
         'is_public',
@@ -493,12 +493,26 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return obj.get_absolute_url()
 
     def get_mentor_count(self, obj):
-        return MentorOrder.objects.filter(session__id=obj.id).count()
+        return mark_safe(
+            '<a href="{}?session__id__exact={}">{}</a>'.format(
+                reverse("admin:coderdojochi_mentororder_changelist"),
+                obj.id,
+                MentorOrder.objects.filter(session__id=obj.id, is_active=True).count(),
+            )
+        )
     get_mentor_count.short_description = 'Mentors'
+    get_mentor_count.admin_order_field = 'mentor__count'
 
-    def get_current_orders_count(self, obj):
-        return obj.get_current_orders().count()
-    get_current_orders_count.short_description = "Students"
+    def get_student_count(self, obj):
+        return mark_safe(
+            '<a href="{}?session__id__exact={}">{}</a>'.format(
+                reverse("admin:coderdojochi_order_changelist"),
+                obj.id,
+                obj.get_current_orders().count(),
+            )
+        )
+    get_student_count.short_description = "Students"
+    get_student_count.admin_order_field = 'student__count'
 
 
 @admin.register(Order)
