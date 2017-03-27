@@ -3,10 +3,10 @@ from datetime import datetime
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-# from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse
 from django.db.models import Count
 # from django.template.defaultfilters import pluralize
-# from django.utils.safestring import mark_safe
+from django.utils.safestring import mark_safe
 
 from import_export import resources
 from import_export.admin import (
@@ -236,7 +236,13 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     get_last_name.admin_order_field = 'user__last_name'
 
     def get_student_count(self, obj):
-        return obj.student__count
+        return mark_safe(
+            '<a href="{}?guardian={}">{}</a>'.format(
+                reverse("admin:coderdojochi_student_changelist"),
+                obj.id,
+                obj.student__count,
+            )
+        )
     get_student_count.short_description = '# of Students'
     get_student_count.admin_order_field = 'student__count'
 
@@ -290,7 +296,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'first_name',
         'last_name',
         'gender',
-        'guardian',
+        'guardian_link',
         'created_at',
         'updated_at',
         'is_active'
@@ -321,6 +327,24 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     # Import settings
     resource_class = StudentResource
+
+    readonly_fields = (
+        'guardian_link',
+    )
+
+    def guardian_link(self, obj):
+        return mark_safe(
+            '<a href="{}">{} {}</a>'.format(
+                reverse(
+                    "admin:coderdojochi_cdcuser_change",
+                    args=(obj.guardian.pk,)
+                ),
+                obj.guardian.user.first_name,
+                obj.guardian.user.last_name,
+            )
+        )
+
+    guardian_link.short_description = 'guardian'
 
 
 @admin.register(Course)
