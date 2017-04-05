@@ -11,7 +11,7 @@ Donor's Name:      {{ first_name }} {{ last_name }}
 Donor's Email:     {{ email }}
 Amount:            {{ amount }}
 Gift Frequency:    One-time gift
-Charity Name:      {{ company }}
+Charity Name:      CoderDojoChi
 Charity Email:     info@coderdojochi.org
 Charity EIN:       46-4988098
 Transaction ID:    {{ transaction_id }}
