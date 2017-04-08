@@ -228,11 +228,8 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
     list_display = (
-        # 'user',
         'get_first_name',
         'get_last_name',
-        # 'phone',
-        # 'zip',
         'get_student_count',
         'user_link',
         'created_at',
@@ -244,7 +241,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     )
 
     ordering = (
-        '-student__count',
+
     )
 
     search_fields = (
@@ -252,6 +249,10 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'user__last_name',
         'user__username',
         'user__email',
+    )
+
+    readonly_fields = (
+        'get_student_count',
     )
 
     date_hierarchy = 'created_at'
@@ -274,7 +275,8 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def get_queryset(self, request):
         qs = super(GuardianAdmin, self).get_queryset(request)
         qs = qs.select_related()
-        qs = qs.annotate(Count('student'))
+        qs = qs.annotate(student_count=Count('student')
+                         ).order_by('-student_count')
         return qs
 
     def get_first_name(self, obj):
@@ -292,11 +294,11 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             '<a href="{}?guardian={}">{}</a>'.format(
                 reverse("admin:coderdojochi_student_changelist"),
                 obj.id,
-                obj.student__count,
+                obj.student_count,
             )
         )
     get_student_count.short_description = 'Students'
-    get_student_count.admin_order_field = 'student__count'
+    get_student_count.admin_order_field = 'student_count'
 
 
 class StudentResource(resources.ModelResource):
@@ -352,8 +354,8 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'gender',
         'guardian_link',
         'get_order_count',
-        'created_at',
-        'updated_at',
+        'get_clean_gender',
+        'get_age',
         'is_active'
     )
 
@@ -419,7 +421,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def get_order_count(self, obj):
         return mark_safe(
-            '<a href="{}?mentor={}">{}</a>'.format(
+            '<a href="{}?student={}">{}</a>'.format(
                 reverse("admin:coderdojochi_order_changelist"),
                 obj.id,
                 obj.order__count,
@@ -497,7 +499,8 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             '<a href="{}?session__id__exact={}">{}</a>'.format(
                 reverse("admin:coderdojochi_mentororder_changelist"),
                 obj.id,
-                MentorOrder.objects.filter(session__id=obj.id, is_active=True).count(),
+                MentorOrder.objects.filter(
+                    session__id=obj.id, is_active=True).count(),
             )
         )
     get_mentor_count.short_description = 'Mentors'
@@ -520,18 +523,20 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
     list_display = (
-        # 'id',
-        'student',
-        'guardian',
+        'id',
+        'get_student_link',
+        'get_student_gender',
+        'get_student_age',
+        'get_guardian_link',
         'alternate_guardian',
-        'session',
+        'get_session_link',
         # 'ip',
-        'check_in',
         'created_at',
-        'updated_at',
+        'is_checked_in',
+        # 'updated_at',
         'is_active',
-        'week_reminder_sent',
-        'day_reminder_sent',
+        # 'week_reminder_sent',
+        # 'day_reminder_sent',
     )
 
     list_filter = (
@@ -549,6 +554,62 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     date_hierarchy = 'created_at'
 
     view_on_site = False
+
+
+    def get_student_link(self, obj):
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse(
+                    'admin:coderdojochi_student_change',
+                    args=(obj.student.id,)
+                ),
+                obj.student,
+            )
+        )
+    get_student_link.short_description = 'Student'
+
+
+    def get_guardian_link(self, obj):
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse(
+                    'admin:coderdojochi_guardian_change',
+                    args=(obj.guardian.id,)
+                ),
+                obj.guardian,
+            )
+        )
+    get_guardian_link.short_description = 'Guardian'
+
+
+    def get_student_gender(self, obj):
+        return obj.student.get_clean_gender().title()
+    get_student_gender.short_description = 'Gender'
+
+
+    def get_student_age(self, obj):
+        return obj.student.get_age(obj.session.start_date)
+    get_student_age.short_description = 'Age'
+
+
+    def get_session_link(self, obj):
+        return mark_safe(
+            '<a href="{}?course={}">{}</a>'.format(
+                reverse("admin:coderdojochi_session_changelist"),
+                obj.session.course.id,
+                obj.session.course.code,
+            )
+        )
+    get_session_link.short_description = 'Session'
+
+
+    def is_checked_in(self, obj):
+        if obj.check_in:
+            return True
+        else:
+            return False
+    is_checked_in.short_description = 'Checked In'
+    is_checked_in.boolean = True
 
 
 @admin.register(MentorOrder)
