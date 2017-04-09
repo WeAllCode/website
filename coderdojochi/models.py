@@ -269,15 +269,16 @@ class Student(models.Model):
 
         return is_registered
 
-    def get_age(self):
-        today = timezone.now()
+    def get_age(self, date=timezone.now()):
+        # today = timezone.now()
         birthday = self.birthday
-        year_delta = today.year - birthday.year
+        year_delta = date.year - birthday.year
         return (
             year_delta - (
-                (today.month, today.day) < (birthday.month, birthday.day)
+                (date.month, date.day) < (birthday.month, birthday.day)
             )
         )
+    get_age.short_description = 'Age'
 
     def get_clean_gender(self):
         MALE = ['male', 'm', 'boy', 'nino', 'masculino']
@@ -289,6 +290,7 @@ class Student(models.Model):
             return 'female'
         else:
             return 'other'
+    get_clean_gender.short_description = 'Gender'
 
     # returns True if the student age is between min_age and max_age
     def is_within_age_range(self, min_age, max_age):
