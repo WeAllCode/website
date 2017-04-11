@@ -15,6 +15,6 @@
         <button class="submit btn btn-success btn-lg">Update</button>&nbsp;
         <a href="{% url 'dojo' %}" class="btn-link">Cancel</a>
     </form>
-    <button role="button" class="btn-link delete-student" data-placement="right" data-toggle="popover" data-title="Are you sure?" data-content='<form action="." method="post"><input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" /><input type="hidden" name="delete" value="true" /><button class="btn btn-danger">Yes, Delete</button></form>'>Delete Student</button>
+    <button role="button" class="btn-link delete-student" data-trigger="focus" data-placement="right" data-toggle="popover" data-title="Are you sure?" data-content='<form action="." method="post"><input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" /><input type="hidden" name="delete" value="true" /><button class="btn btn-danger">Yes, Delete</button></form>'>Delete Student</button>
 </div>
 {% endblock %}

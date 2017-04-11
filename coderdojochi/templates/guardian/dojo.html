@@ -35,6 +35,7 @@
                         <td class="hidden-xs">{% if student.medications %}Yes{% else %}No{% endif %}</td>
                         <td>
                             <a href="{% url 'student_detail' student.id %}" class="btn-cdc btn-cdc-sm">Edit Info</a>
+                            <button role="button" class="btn btn-danger" data-trigger="focus" data-placement="left" data-toggle="popover" data-title="Delete Student?" data-content='<form action="{% url 'student_detail' student.id %}" method="post"><input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" /><input type="hidden" name="delete" value="true" /><button class="btn btn-danger">Yes, Delete</button></form>'><i class="fa fa-times"></i></button>
                         </td>
                     </tr>
                 {% endfor %}
