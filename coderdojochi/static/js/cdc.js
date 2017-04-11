@@ -11,15 +11,13 @@ var CDC = CDC || {};
 CDC.global = (function($, document, window, undefined) {
     'use strict';
 
-    // app global properties
-
-
     /* Public Methods _________________________________________________________________ */
 
     function init() {
 
-        $(function() {
-            $('[data-toggle="popover"]').popover();
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            container: 'body'
         });
 
         // account for csrf in all ajax requests
