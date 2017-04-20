@@ -394,7 +394,9 @@ def session_detail(
     enroll=False,
 ):
     session_obj = get_object_or_404(Session, id=session_id)
-    if session_obj.password:
+    is_authenticated_mentor = (request.user.is_authenticated() and request.user.role == 'mentor')
+
+    if not is_authenticated_mentor and session_obj.password:
         if not validate_partner_session_access(request, session_id):
             view_kwargs = {
                 'year': year,
@@ -2648,6 +2650,24 @@ class PasswordSessionView(TemplateView):
         context['partner_message'] = session_obj.partner_message
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        view_kwargs = {
+            'year': kwargs.get('year'),
+            'month': kwargs.get('month'),
+            'day': kwargs.get('day'),
+            'slug': kwargs.get('slug'),
+            'session_id': kwargs.get('session_id')
+        }
+        session_url = reverse('session_detail', kwargs=view_kwargs)
+
+        if self.request.user.is_authenticated() and self.request.user.role == 'mentor':
+            return HttpResponseRedirect(session_url)
+
+        context = self.get_context_data(**kwargs)
+        context['session_url'] = session_url
+
+        return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         session_id = kwargs.get('session_id')
