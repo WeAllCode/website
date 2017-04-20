@@ -334,7 +334,10 @@ class StudentForm(CDCModelForm):
         ),
         label=(
             'I hereby give consent for the student signed up above to '
-            'participate in CoderDojoChi.'
+            'participate in CoderDojoChi as per the '
+            '<a href="{}">terms</a>.'.format(
+                '/privacy'
+            )
         ),
     )
 
