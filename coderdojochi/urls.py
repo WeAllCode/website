@@ -181,11 +181,17 @@ urlpatterns = [
         coderdojochi_views.session_detail_short,
         name='session_detail_short',
     ),
-    # /class/ID/announce
+    # /class/ID/announce/mentors
     url(
-        r'^class/(?P<session_id>[\d]+)/announce/$',
-        coderdojochi_views.session_announce,
-        name='session_announce',
+        r'^class/(?P<session_id>[\d]+)/announce/mentors/$',
+        coderdojochi_views.session_announce_mentors,
+        name='session_announce_mentors',
+    ),
+    # /class/ID/announce/guardians
+    url(
+        r'^class/(?P<session_id>[\d]+)/announce/guardians/$',
+        coderdojochi_views.session_announce_guardians,
+        name='session_announce_guardians',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/
     url(

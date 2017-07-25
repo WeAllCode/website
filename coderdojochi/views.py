@@ -1149,7 +1149,7 @@ def meeting_announce(request, meeting_id):
         id=meeting_id
     )
 
-    if not meeting_obj.announced_date:
+    if not meeting_obj.announced_date_mentors:
 
         # uses SMTP server specified in settings.py
         connection = get_connection()
@@ -1203,7 +1203,7 @@ def meeting_announce(request, meeting_id):
         # Cleanup
         connection.close()
 
-        meeting_obj.announced_date = timezone.now()
+        meeting_obj.announced_date_mentors = timezone.now()
         meeting_obj.save()
 
         messages.success(
@@ -2448,7 +2448,7 @@ def meeting_check_in(
 
 
 @never_cache
-def session_announce(request, session_id):
+def session_announce_mentors(request, session_id):
     if not request.user.is_staff:
         messages.error(
             request,
@@ -2461,7 +2461,7 @@ def session_announce(request, session_id):
         id=session_id
     )
 
-    if not session_obj.announced_date:
+    if not session_obj.announced_date_mentors:
 
         # uses SMTP server specified in settings.py
         connection = get_connection()
@@ -2510,7 +2510,52 @@ def session_announce(request, session_id):
                 recipients=[mentor.user.email],
                 preheader='Help us make a huge difference! '
                           'A brand new class was just announced.',
-            )
+            )       
+
+        # Cleanup
+        connection.close()
+
+        session_obj.announced_date_mentors = timezone.now()
+        session_obj.save()
+
+        messages.success(
+            request,
+            'Session announced!'
+        )
+
+    else:
+        messages.warning(
+            request,
+            'Session already announced.'
+        )
+
+    return redirect('cdc_admin')
+
+
+
+@never_cache
+def session_announce_guardians(request, session_id):
+    # if not request.user.is_staff:
+    #     messages.error(
+    #         request,
+    #         'You do not have permission to access this page.'
+    #     )
+    #     return redirect('home')
+
+    session_obj = get_object_or_404(
+        Session,
+        id=session_id
+    )
+
+    if not session_obj.announced_date_guardians:
+
+        # uses SMTP server specified in settings.py
+        connection = get_connection()
+
+        # If you don't open the connection manually,
+        # Django will automatically open, then tear down the
+        # connection in msg.send()
+        connection.open()       
 
         for guardian in Guardian.objects.filter(
             is_active=True,
@@ -2556,7 +2601,7 @@ def session_announce(request, session_id):
         # Cleanup
         connection.close()
 
-        session_obj.announced_date = timezone.now()
+        session_obj.announced_date_guardians = timezone.now()
         session_obj.save()
 
         messages.success(
@@ -2571,7 +2616,6 @@ def session_announce(request, session_id):
         )
 
     return redirect('cdc_admin')
-
 
 @csrf_exempt
 # the "service" that computers run to self update

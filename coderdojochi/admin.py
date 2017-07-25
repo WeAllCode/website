@@ -468,7 +468,8 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_mentor_count',
         'is_active',
         'is_public',
-        'announced_date'
+        'announced_date_mentors',
+        'announced_date_guardians',
     )
 
     list_filter = (
