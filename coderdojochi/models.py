@@ -440,7 +440,11 @@ class Session(models.Model):
     partner_message = models.TextField(
         blank=True,
     )
-    announced_date = models.DateTimeField(
+    announced_date_mentors = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    announced_date_guardians = models.DateTimeField(
         blank=True,
         null=True,
     )
