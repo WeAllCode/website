@@ -34,4 +34,4 @@ COPY logging.conf $DIR_BUILD/logging.conf
 COPY memcached.conf /etc/memcached.conf
 COPY deploy.sh $DIR_SRC/deploy.sh
 
-CMD $DIR_SRC/deploy.sh
+ENTRYPOINT ["/bin/bash", "$DIR_SRC/deploy.sh"]
