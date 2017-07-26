@@ -8,11 +8,13 @@
 
 {% block content %}
 <div class="container registration min-height">
-<h1><small><a href="{% url 'dojo' %}">Back</a></small> Edit Student Info</h1>
-<form action="" method="post">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <button class="submit btn btn-success btn-lg">Update</button> &nbsp;<a href="{% url 'dojo' %}" class="btn-link">Cancel</a>
-</form>
+    <h1><small><a href="{% url 'dojo' %}">Back</a></small> Edit Student Info</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="submit btn btn-success btn-lg">Update</button>&nbsp;
+        <a href="{% url 'dojo' %}" class="btn-link">Cancel</a>
+    </form>
+    <button role="button" class="btn-link delete-student" data-trigger="focus" data-placement="right" data-toggle="popover" data-title="Are you sure?" data-content='<form action="." method="post"><input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" /><input type="hidden" name="delete" value="true" /><button class="btn btn-danger">Yes, Delete</button></form>'>Delete Student</button>
 </div>
 {% endblock %}

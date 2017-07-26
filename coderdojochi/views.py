@@ -1668,6 +1668,17 @@ def student_detail(
         )
 
     if request.method == 'POST':
+        if 'delete' in request.POST:
+            student.delete()
+            messages.success(
+                request,
+                'Student "{} {}" Deleted.'.format(
+                    student.first_name,
+                    student.last_name
+                )
+            )
+            return redirect('dojo')
+
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
