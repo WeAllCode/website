@@ -47,7 +47,31 @@ To grab the latest code from the upstream (main) repo, do the following:
 git fetch upstream && git checkout develop && git merge upstream/develop
 ```
 
+## Beginning of each day
 
+1. In terminal, traverse into project folder.
+```sh
+cd /PATH/TO/coderdojochi/
+```
+2. If starting a new task (new feature, new issue, etc.), make sure you are on the `develop` branch.
+```sh
+git checkout develop
+```
+3. Update your local repository with the upstream `develop` branch to make sure you are up to date.
+```sh
+git fetch upstream
+git merge upstream/develop develop
+git push -u origin develop
+```
+4. Create a new branch based off of the now up-to-date `develop` branch to work off of.
+```sh
+git checkout -b feature/a-good-name develop
+```
+5. HACK. commit. HACK. commit. HACK. commit. 
+6. When done, push to your repo (remote), and create a pull request
+```sh
+git push origin feature/a-good-name
+```
 
 
 ## Misc commands
