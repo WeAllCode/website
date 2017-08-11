@@ -14,6 +14,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db.models import (
@@ -1651,8 +1652,16 @@ def student_detail(
     access = True
 
     if request.user.role == 'guardian' and student_id:
-        student = get_object_or_404(Student, id=student_id)
-        guardian = get_object_or_404(Guardian, user=request.user)
+        # for the specific student redirect to admin page
+        try:
+            student = Student.objects.get(id=student_id, is_active=True)
+        except ObjectDoesNotExist:
+            return redirect('dojo')
+
+        try:
+            guardian = Guardian.objects.get(user=request.user, is_active=True)
+        except ObjectDoesNotExist:
+            return redirect('dojo')
 
         if not student.guardian == guardian:
             access = False
