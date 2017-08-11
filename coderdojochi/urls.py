@@ -152,7 +152,6 @@ urlpatterns = [
         name='student_detail',
     ),
 
-
     # Classes
     # /classes/
     url(
