@@ -1450,6 +1450,7 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
     )
 
     students = Student.objects.filter(
+        is_active = True,
         guardian=guardian
     )
 
