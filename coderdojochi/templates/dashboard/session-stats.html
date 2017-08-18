@@ -112,7 +112,7 @@
                         <input type="hidden" name="order_id" value="{{ order.id }}">
                         <td>{{ order.student.last_name }}, {{ order.student.first_name }}</td>
                         <td>{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.user.first_name }} {{ order.guardian.user.last_name }}{% endif %}</td>
-                        <td>{{ order.get_student_age }}</td>
+                        <td>{{ order.student | student_age:session.start_date }}</td>
                         <td>{{ order.student.gender }}</td>
                         {% if order.check_in %}
                         <td>{{ order.check_in|time }}</td>
