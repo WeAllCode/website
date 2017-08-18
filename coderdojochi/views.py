@@ -655,7 +655,8 @@ def session_sign_up(
         if (
             not student.is_within_age_range(
                 session_obj.min_age_limitation,
-                session_obj.max_age_limitation
+                session_obj.max_age_limitation,
+                session_obj.start_date
             )
         ):
             messages.error(
@@ -1953,7 +1954,7 @@ def cdc_admin(request, template_name="admin.html"):
     # Ages
     ages = sorted(
         list(
-            e.student.get_age() for e in total_checked_in_orders
+            e.student.get_age(e.session.start_date) for e in total_checked_in_orders
         )
     )
     age_count = sorted(
@@ -2043,8 +2044,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     # Ages
     ages = sorted(
         list(
-            e.student.get_age()
-            for e in session_obj.get_current_orders()
+            e.student.get_age(e.session.start_date) for e in session_obj.get_current_orders()
         )
     )
 
@@ -2062,7 +2062,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     if current_orders_checked_in:
         student_ages = []
         for order in current_orders_checked_in:
-            student_ages.append(order.get_student_age())
+            student_ages.append(order.student.get_age(order.session.start_date))
 
         average_age = (
             reduce(
@@ -2201,7 +2201,7 @@ def session_check_in(
     # Ages
     ages = sorted(
         list(
-            e.get_student_age() for e in active_orders
+            e.student.get_age(e.session.start_date) for e in active_orders
         )
     )
 
