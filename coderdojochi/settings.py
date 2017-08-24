@@ -100,6 +100,8 @@ TEMPLATES = [
             os.path.join(PROJECT_ROOT, 'coderdojochi/templates/'),
             os.path.join(PROJECT_ROOT, 'coderdojochi/templates/dashboard/'),
             os.path.join(PROJECT_ROOT, 'coderdojochi/emailtemplates/'),
+
+            os.path.join(PROJECT_ROOT, 'coderdojochi/mentors/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

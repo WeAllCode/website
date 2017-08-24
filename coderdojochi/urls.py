@@ -12,7 +12,7 @@ from django.views.generic import RedirectView
 from . import old_views as coderdojochi_views
 
 from .views.profile import DojoMentorView
-from .views.volunteer import VolunteerView
+# from .views.volunteer import VolunteerView
 
 
 admin.autodiscover()
@@ -88,10 +88,11 @@ urlpatterns = [
     # Volunteer
     # /volunteer/
     url(
-        r'^volunteer/$',
+        r'^volunteer/',
+        include('coderdojochi.mentors.urls')
         # coderdojochi_views.volunteer,
-        VolunteerView.as_view(),
-        name='volunteer',
+        # VolunteerView.as_view(),
+        # name='volunteer',
     ),
 
 

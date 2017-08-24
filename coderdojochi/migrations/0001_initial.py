@@ -204,7 +204,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('background_check', models.BooleanField(default=False)),
                 ('public', models.BooleanField(default=False)),
-                ('avatar', stdimage.models.StdImageField(blank=True, upload_to=coderdojochi.models.generate_filename)),
+                ('avatar', stdimage.models.StdImageField(blank=True, upload_to=coderdojochi.mentors.models.generate_filename)),
                 ('avatar_approved', models.BooleanField(default=False)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
