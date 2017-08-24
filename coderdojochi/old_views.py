@@ -2532,7 +2532,7 @@ def session_announce_mentors(request, session_id):
                 recipients=[mentor.user.email],
                 preheader='Help us make a huge difference! '
                           'A brand new class was just announced.',
-            )       
+            )
 
         # Cleanup
         connection.close()
@@ -2577,7 +2577,7 @@ def session_announce_guardians(request, session_id):
         # If you don't open the connection manually,
         # Django will automatically open, then tear down the
         # connection in msg.send()
-        connection.open()       
+        connection.open()
 
         for guardian in Guardian.objects.filter(
             is_active=True,

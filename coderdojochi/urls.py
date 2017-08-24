@@ -9,7 +9,10 @@ from django.contrib import admin
 from django.contrib.auth import views as django_views
 from django.views.generic import RedirectView
 
-from . import views as coderdojochi_views
+from . import old_views as coderdojochi_views
+
+from .views.profile import DojoMentorView
+from .views.volunteer import VolunteerView
 
 
 admin.autodiscover()
@@ -86,7 +89,8 @@ urlpatterns = [
     # /volunteer/
     url(
         r'^volunteer/$',
-        coderdojochi_views.volunteer,
+        # coderdojochi_views.volunteer,
+        VolunteerView.as_view(),
         name='volunteer',
     ),
 
