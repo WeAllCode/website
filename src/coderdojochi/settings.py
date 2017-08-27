@@ -178,7 +178,7 @@ USE_L10N = True
 # URL prefix for static files.
 # Example: 'http://example.com/static/', 'http://static.example.com/'
 STATIC_URL = '/static/'
-STATIC_ROOT = '/build/static/'
+STATIC_ROOT = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (

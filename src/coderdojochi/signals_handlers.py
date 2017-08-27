@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
-from email.MIMEImage import MIMEImage
+from email.mime.image import MIMEImage
 
 from coderdojochi.models import Mentor, Donation
 from coderdojochi.util import email

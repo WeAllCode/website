@@ -1,90 +1,33 @@
-# ------------------------------
-# Miscellaneous
-# ------------------------------
-*.DS_Store
-_internal/
-src/
-static/avatars/**/*
-coderdojochi/static/avatars/**/*
+# Created by https://www.gitignore.io/api/django
 
-# ------------------------------
-# Grunt/Bower
-# ------------------------------
-.sass-cache/
-node_modules/
-
-# ------------------------------
-# Django
-# ------------------------------
+### Django ###
 *.log
 *.pot
 *.pyc
+__pycache__/
 local_settings.py
-test_settings.py
-production_settings.py
+db.sqlite3
+media
 
-# ------------------------------
-# Python
-# ------------------------------
-*.py[cod]
+# End of https://www.gitignore.io/api/django
 
-# C extensions
-*.so
+# Created by https://www.gitignore.io/api/elasticbeanstalk
 
-# Packages
-*.egg
-*.egg-info
-dist
+### ElasticBeanstalk ###
 
-
-# build
-
-
-
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
-__pycache__
-
-# Installer logs
-pip-log.txt
-
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Django Development
-*.bak
-*.sqlite3
-test_settings.py
-
-local_settings.py
-/media
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
+.elasticbeanstalk/
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-
-#############################
-# docker deployment and aws #
-#############################
-.elasticbeanstalk
 .tmp-deploy
 
+# End of https://www.gitignore.io/api/elasticbeanstalk
+
+### Miscellaneous ###
+
+*.DS_Store
+Thumbs.db
+static/
+static/*
 *.sql
+
+# End of Miscellaneous

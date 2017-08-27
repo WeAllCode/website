@@ -1,32 +1,41 @@
-version: '2'
+version: '2.1'
 services:
-  db:
-    restart: always
-    image: postgres:9.4
+  nginx:
+    image: nginx:latest
+    container_name: nz01
     ports:
-      - "5432:5432"
-    env_file:
-      - .env
+      - "80:80"
+    volumes:
+      - ./src:/src
+      - ./config/nginx:/etc/nginx/conf.d
+      - ./static:/static
+    # volumes_from:
+    #   - app
+    depends_on:
+      - app
 
   app:
-    restart: always
     build: .
+    container_name: dz01
+    command: bash -c "./deploy.sh"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./src:/src
+      - ./static:/static
     env_file:
       - .env
     expose:
-      - "8080"
-    volumes:
-      - ./coderdojochi:/src/coderdojochi
-      - /build/static/
-    links:
-      - db
+      - "8000"
 
-  nginx:
-    restart: always
-    build: nginx/
-    links:
-      - app
-    ports:
-      - "80:80"
-    volumes_from:
-      - app
+  db:
+    image: postgres:9.4
+    container_name: pz01
+    healthcheck:
+      test: "exit 0"
+    # ports:
+    #   - "5432:5432"
+    # env_file:
+    #   - .env
+
