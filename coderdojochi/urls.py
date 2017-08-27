@@ -13,6 +13,8 @@ from . import old_views as coderdojochi_views
 
 from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
+from .views.general import HomeView, WelcomeView
+from .views.sessions import SessionsView, SessionDetailView, SessionSignUpView
 
 admin.autodiscover()
 
@@ -20,7 +22,8 @@ urlpatterns = [
     # /
     url(
         r'^$',
-        coderdojochi_views.home,
+        # coderdojochi_views.home,
+        HomeView.as_view(),
         name='home',
     ),
 
@@ -158,13 +161,15 @@ urlpatterns = [
     # /classes/
     url(
         r'^classes/$',
-        coderdojochi_views.sessions,
+        # coderdojochi_views.sessions,
+        SessionsView.as_view(),
         name='sessions',
     ),
     # /classes/YYYY/MM/
     url(
         r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$',
-        coderdojochi_views.sessions,
+        # coderdojochi_views.sessions,
+        SessionsView.as_view(),
         name='sessions',
     ),
 
@@ -173,13 +178,15 @@ urlpatterns = [
     # /c/ID/
     url(
         r'^c/(?P<session_id>[\d]+)/$',
-        coderdojochi_views.session_detail_short,
+        # coderdojochi_views.session_detail_short,
+        SessionDetailView.as_view(),
         name='session_detail_short',
     ),
     # /class/ID/
     url(
         r'^class/(?P<session_id>[\d]+)/$',
-        coderdojochi_views.session_detail_short,
+        # coderdojochi_views.session_detail_short,
+        SessionDetailView.as_view(),
         name='session_detail_short',
     ),
     # /class/ID/announce/mentors
@@ -198,7 +205,8 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/$',
-        coderdojochi_views.session_detail,
+        # coderdojochi_views.session_detail,
+        SessionDetailView.as_view(),
         name='session_detail',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/password
@@ -219,7 +227,8 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/$',
-        coderdojochi_views.session_sign_up,
+        # coderdojochi_views.session_sign_up,
+        SessionSignUpView.as_view(),
         name='session_sign_up',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/sign-up/STUDENT-ID
@@ -227,7 +236,8 @@ urlpatterns = [
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up'
         r'/(?P<student_id>[\d]+)/$',
-        coderdojochi_views.session_sign_up,
+        # coderdojochi_views.session_sign_up,
+        SessionSignUpView.as_view(),
         name='session_sign_up',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/enroll/
@@ -346,7 +356,8 @@ urlpatterns = [
     # /welcome/
     url(
         r'^welcome/$',
-        coderdojochi_views.welcome,
+        # coderdojochi_views.welcome,
+        WelcomeView.as_view(),
         name='welcome',
     ),
 
