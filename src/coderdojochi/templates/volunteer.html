@@ -9,7 +9,7 @@
 
 <div class="container">
     <div class="col-md-12">
-        <h1>{% trans "Volunteer" %}</h1>
+        <h1>Volunteer</h1>
 
         <p>We'd like to invite you to find out what it's like to help shape the minds of tomorrow by giving you the opportunity to volunteer at our next event. If you are passionate about <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr> and teaching children, join us. Everyone is welcome, regardless of technical ability. To join and attend our next meeting please sign up below.</p>
 
@@ -21,12 +21,12 @@
 
         <p>Inspired to make a difference? <a href="{% url 'account_signup' %}">Join us now!</a></p>
 
-        {% if mentors %}
+        {% if view.mentors %}
         <h1>Meet Our Volunteers <a href="{% url 'account_signup' %}" class="btn-cdc">Join us now!</a></h1>
 
 
         <div class="row mentors">
-            {% for mentor in mentors %}
+            {% for mentor in view.mentors %}
             <div class="col-xs-12 col-sm-4 col-md-3">
                 <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
                     <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
@@ -40,9 +40,9 @@
     </div>
 </div>
 
-{% if upcoming_meetings %}
+{% if view.meetings %}
 <div class="upcoming-sessions">
-    {% for meeting in upcoming_meetings %}
+    {% for meeting in view.meetings %}
         <div class="upcoming-session" style="background-image: url({% if meeting.bg_image %}{{ meeting.bg_image.url }}{% else %}{% static '' %}images/{{ meeting.image_url }}{% endif %});">
             <div class="session-shim">
                 <div class="container">

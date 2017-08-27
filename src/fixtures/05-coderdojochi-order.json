@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "guardian": 1,
-    "session": 3,
+    "session": 2,
     "student": 1,
     "is_active": true,
     "ip": "",
@@ -23,7 +23,7 @@
   "pk": 2,
   "fields": {
     "guardian": 1,
-    "session": 3,
+    "session": 2,
     "student": 2,
     "is_active": true,
     "ip": "",
@@ -42,7 +42,7 @@
   "pk": 3,
   "fields": {
     "guardian": 1,
-    "session": 3,
+    "session": 2,
     "student": 3,
     "is_active": true,
     "ip": "",

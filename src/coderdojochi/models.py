@@ -3,15 +3,16 @@
 import os
 from stdimage.models import StdImageField
 
-from django.core import urlresolvers
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
+from django.core import urlresolvers
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
+
 
 ROLE_CHOICES = (
     ('mentor', 'mentor'),
@@ -40,22 +41,6 @@ class CDCUser(AbstractUser):
         return '{}/dojo'.format(
             settings.SITE_URL
         )
-
-
-class RaceEthnicity(models.Model):
-    race_ethnicity = models.CharField(
-        max_length=255,
-    )
-    is_visible = models.BooleanField(
-        default=False,
-    )
-
-    class Meta:
-        verbose_name = _("race ethnicity")
-        verbose_name_plural = _("race ethnicities")
-
-    def __unicode__(self):
-        return self.race_ethnicity
 
 
 def generate_filename(instance, filename):
@@ -137,6 +122,25 @@ class Mentor(models.Model):
                 self.avatar_approved = False
 
         super(Mentor, self).save(*args, **kwargs)
+
+
+
+
+
+class RaceEthnicity(models.Model):
+    race_ethnicity = models.CharField(
+        max_length=255,
+    )
+    is_visible = models.BooleanField(
+        default=False,
+    )
+
+    class Meta:
+        verbose_name = _("race ethnicity")
+        verbose_name_plural = _("race ethnicities")
+
+    def __unicode__(self):
+        return self.race_ethnicity
 
 
 class Guardian(models.Model):

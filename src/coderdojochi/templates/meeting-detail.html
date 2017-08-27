@@ -85,7 +85,7 @@
                 {% if meeting.external_enrollment_url %}
                     <p><a href="{{ meeting.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                 {% else %}
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and user.role == 'mentor' %}
                         {% if mentor_signed_up %}
                             <p>You are signed up to attend this meeting.</p>
                             <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
