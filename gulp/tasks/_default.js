@@ -12,9 +12,5 @@ gulp.task('default', function(cb) {
     global.isWatching = true;
 
     runSequence(
-        [
-            'sprites',
-            'sass'
-        ],
         cb);
 });

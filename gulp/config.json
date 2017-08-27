@@ -1,14 +1,6 @@
 {
-    "sprites": {
-      "src": "./coderdojochi/static/sprites",
-      "dest": "./coderdojochi/static/images/sprites"
-    },
     "css": {
       "src": "./coderdojochi/static/css",
-      "dest": "./coderdojochi/static/css"
-    },
-    "sass": {
-      "src": "./coderdojochi/static/scss",
       "dest": "./coderdojochi/static/css"
     },
     "js": {

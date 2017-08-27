@@ -11,10 +11,6 @@ gulp.task('build', function(cb) {
     global.isWatching = false;
 
     runSequence(
-        [
-            'sprites',
-            'sass',
-        ],
         'cssmin',
         'uglify',
         cb);
