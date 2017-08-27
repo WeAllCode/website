@@ -14,7 +14,10 @@ from . import old_views as coderdojochi_views
 from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
 from .views.general import HomeView, WelcomeView
-from .views.sessions import SessionsView, SessionDetailView, SessionSignUpView
+from .views.sessions import (
+    SessionsView, SessionDetailView, SessionSignUpView, SessionIcsView
+)
+from .views.meetings import MeetingsView, MeetingDetailView, MeetingIcsView
 
 admin.autodiscover()
 
@@ -220,7 +223,8 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/calendar/$',
-        coderdojochi_views.session_ics,
+        # coderdojochi_views.session_ics,
+        SessionIcsView.as_view(),
         name='session_ics',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/sign-up/
@@ -244,7 +248,8 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/enroll/$',
-        coderdojochi_views.session_detail_enroll,
+        # coderdojochi_views.session_detail_enroll,
+        SessionDetailView.as_view(),
         name='session_detail_enroll',
     ),
 
@@ -253,7 +258,8 @@ urlpatterns = [
     # /meetings/
     url(
         r'^meetings/$',
-        coderdojochi_views.meetings,
+        # coderdojochi_views.meetings,
+        MeetingsView.as_view(),
         name='meetings',
     ),
 
@@ -261,13 +267,15 @@ urlpatterns = [
     # /m/ID/
     url(
         r'^m/(?P<meeting_id>[\d]+)/$',
-        coderdojochi_views.meeting_detail_short,
+        # coderdojochi_views.meeting_detail_short,
+        MeetingDetailView.as_view(),
         name='meeting_detail_short',
     ),
     # /meeting/ID/
     url(
         r'^meeting/(?P<meeting_id>[\d]+)/$',
-        coderdojochi_views.meeting_detail_short,
+        # coderdojochi_views.meeting_detail_short,
+        MeetingDetailView.as_view(),
         name='meeting_detail_short',
     ),
     # /meeting/ID/announce/
@@ -280,7 +288,8 @@ urlpatterns = [
     url(
         r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/$',
-        coderdojochi_views.meeting_detail,
+        # coderdojochi_views.meeting_detail,
+        MeetingDetailView.as_view(),
         name='meeting_detail',
     ),
     # /meeting/YYYY/MM/DD/SLUG/ID/sign-up/
@@ -294,7 +303,8 @@ urlpatterns = [
     url(
         r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/calendar/$',
-        coderdojochi_views.meeting_ics,
+        # coderdojochi_views.meeting_ics,
+        MeetingIcsView.as_view(),
         name='meeting_ics',
     ),
 

@@ -38,7 +38,7 @@ from django.utils.functional import cached_property
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView
+from django.views.generic import View, TemplateView
 
 from coderdojochi.util import email
 from coderdojochi.models import (
@@ -64,6 +64,7 @@ from coderdojochi.forms import (
     DonationForm
 )
 from coderdojochi.mixins import RoleRedirectMixin
+from coderdojochi.views.general import IcsView
 
 logger = logging.getLogger("mechanize")
 
@@ -231,7 +232,7 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
                 if not self.validate_partner_session_access(self.request, kwargs['session_id']):
                     return redirect(reverse('session_password', kwargs=kwargs))
             if request.user.is_authenticated() and request.user.role:
-                if 'enroll' in request.GET:
+                if 'enroll' in request.GET or 'enroll' in kwargs:
                     return self.enroll_redirect(request, session_obj)
         return super(SessionDetailView, self).dispatch(request, *args, **kwargs)
 
@@ -494,3 +495,35 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                 session_confirm_guardian(request, session_obj, order, student)
                 
         return redirect(session_obj.get_absolute_url())
+
+class SessionIcsView(IcsView):
+    event_type = 'class'
+    event_kwarg = 'session_id'
+    event_class = Session
+    
+    def get_summary(self, request, event_obj):
+        return u'CoderDojoChi: {} - {}'.format(
+            event_obj.course.code,
+            event_obj.course.title
+        )
+        
+    def get_dtstart(self, request, event_obj):
+        start_date = arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')
+        dtstart = '{}Z'.format(start_date)
+        if request.user.is_authenticated() and request.user.role == 'mentor':
+            dtstart = '{}Z'.format(arrow.get(
+                event_obj.mentor_start_date
+            ).format('YYYYMMDDTHHmmss'))
+        return dtstart
+        
+    def get_dtend(self, request, event_obj):
+        end_date = arrow.get(event_obj.end_date).format('YYYYMMDDTHHmmss')
+        dtend = '{}Z'.format(end_date)
+        if request.user.is_authenticated() and request.user.role == 'mentor':
+            dtend = '{}Z'.format(arrow.get(
+                event_obj.mentor_end_date
+            ).format('YYYYMMDDTHHmmss'))
+        return dtend
+        
+    def get_description(self, event_obj):
+        return strip_tags(event_obj.course.description)
