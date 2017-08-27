@@ -12,7 +12,9 @@ gulp.task('sass', function() {
 
     return gulp.src(config.sass.src + '/*.scss')
         .pipe(gulpif(global.isWatching, sourcemaps.init()))
-        .pipe(sass())
+        .pipe(sass({
+            outputStyle: "expanded",
+        }))
         .pipe(autoprefixer({
             browsers: ['Firefox > 25', 'last 4 versions', '> 3%', 'ie 8']
         }))
