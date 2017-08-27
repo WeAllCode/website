@@ -4,9 +4,10 @@ from django.views.generic.base import TemplateView
 from django.utils.functional import cached_property
 
 
-from coderdojochi.models import Meeting
-
-from .models import Mentor
+from coderdojochi.models import (
+    Meeting,
+    Mentor,
+)
 
 
 class VolunteerView(TemplateView):
