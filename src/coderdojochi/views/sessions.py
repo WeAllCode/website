@@ -223,7 +223,6 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         session_obj = get_object_or_404(Session, id=kwargs['session_id'])
-        kwargs['session_obj'] = session_obj
         if request.method == 'GET':
             # Replaces session_detail_short
             if all([k not in kwargs for k in ['year', 'month', 'day', 'slug']]):
@@ -234,6 +233,7 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
             if request.user.is_authenticated() and request.user.role:
                 if 'enroll' in request.GET or 'enroll' in kwargs:
                     return self.enroll_redirect(request, session_obj)
+        kwargs['session_obj'] = session_obj
         return super(SessionDetailView, self).dispatch(request, *args, **kwargs)
 
     def enroll_redirect(self, request, session_obj):
@@ -495,6 +495,60 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                 session_confirm_guardian(request, session_obj, order, student)
                 
         return redirect(session_obj.get_absolute_url())
+
+
+class PasswordSessionView(TemplateView):
+    template_name = 'session-partner-password.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PasswordSessionView, self).get_context_data(**kwargs)
+
+        session_id = kwargs.get('session_id')
+        session_obj = get_object_or_404(Session, id=session_id)
+
+        context['partner_message'] = session_obj.partner_message
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        session_id = kwargs.get('session_id')
+        session_obj = get_object_or_404(Session, id=session_id)
+        password_input = request.POST.get('password')
+
+        context = self.get_context_data(**kwargs)
+
+        if not password_input:
+            context['error'] = 'Must enter a password.'
+            return render(request, self.template_name, context)
+
+        if session_obj.password != password_input:
+            context['error'] = 'Invalid password.'
+            return render(request, self.template_name, context)
+
+        # Get from user session or create an empty set
+        authed_partner_sessions = request.session.get(
+            'authed_partner_sessions'
+        ) or set()
+
+        # Add course session id to user session
+        authed_partner_sessions.update({session_id})
+
+        # Store it.
+        request.session['authed_partner_sessions'] = authed_partner_sessions
+
+        if request.user.is_authenticated():
+            PartnerPasswordAccess.objects.get_or_create(
+                session=session_obj,
+                user=request.user
+            )
+
+        return HttpResponseRedirect(
+            reverse(
+                'session_detail',
+                kwargs=kwargs
+            )
+        )
+
 
 class SessionIcsView(IcsView):
     event_type = 'class'
