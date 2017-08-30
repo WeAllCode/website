@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'stdimage',
     'storages',
     'import_export',
+    'raven.contrib.django.raven_compat',
 
     # coderdojochi
     'coderdojochi',
@@ -241,6 +242,14 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
 SOCIALACCOUNT_ADAPTER = (
     'coderdojochi.social_account_adapter.SocialAccountAdapter'
 )
+
+# Sentry configuration
+SENTRY_DSN = os.getenv('SENTRY_DSN')
+
+if SENTRY_DSN:
+    RAVEN_CONFIG = {
+        'dsn': SENTRY_DSN
+    }
 
 # Email
 EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'

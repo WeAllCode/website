@@ -15,7 +15,8 @@ from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
 from .views.general import HomeView, WelcomeView
 from .views.sessions import (
-    SessionsView, SessionDetailView, SessionSignUpView, SessionIcsView
+    SessionsView, SessionDetailView, SessionSignUpView, SessionIcsView,
+    PasswordSessionView
 )
 from .views.meetings import MeetingsView, MeetingDetailView, MeetingIcsView
 
@@ -216,7 +217,7 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/password/$',
-        coderdojochi_views.PasswordSessionView.as_view(),
+        PasswordSessionView.as_view(),
         name='session_password',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/calendar/
