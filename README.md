@@ -1,111 +1,90 @@
+# Custom-build Django application for CoderDojoChi
 
-# Setup
-
-## First Time
-
-1. Install `git` and [brew](http://brew.sh/)
-
-1. `brew tap caskroom/cask`
-
-1. `brew cask install virtualbox`
-
-1. `brew install docker docker-machine docker-compose`
-
-1. Fork `https://github.com/coderdojochi/coderdojochi`
-
-1. `git clone http://github.com/USERNAME/coderdojochi`
-
-1. `cd coderdojochi`
-
-1. `git remote add upstream https://github.com/CoderDojoChi/coderdojochi`
-
-1. `docker-machine create --driver virtualbox coderdojochi` (takes 1 minute)
-
-1. `docker-machine start coderdojochi`
-
-1. `eval "$(docker-machine env coderdojochi)"`
-
-1. `docker-compose up` (for the first time, depending on your PC, it'll take 5-10 minutes)
+We, the community and staff, have been building a custom Django application to handle out many parts of our organization.
 
 
+## Initial Setup
 
+1. Fork and clone this repository locally.
 
-## Following times
+1. Download and install Docker for [Mac][docker-mac] or [Windows][docker-windows]*.
 
-1. `docker-machine start coderdojochi`
+1. Navigate into the project directory via terminal and run `docker-compose build`.
 
-1. `eval "$(docker-machine env coderdojochi)"`
+1. Once complete, run `docker-compose up -d`.
 
-1. `docker-compose up`
+1. Load up your browser and go to [localhost]
 
-1. To get the URL for your local instance: `docker-machine ip coderdojochi`
+1. To view logs, you can run `docker logs -f cdc-app`
 
-## Fetch latest code from CoderDojoChi repository
+1. When you are done, you can stop the project via `docker-compose down`
 
-To grab the latest code from the upstream (main) repo, do the following:
-```bash
-git fetch upstream && git checkout develop && git merge upstream/develop
-```
+**Note:** Docker for Mac requires OSX Yosemite 10.10.3 or above. Docker for Windows requires Microsoft Windows 10 Professional or Enterprise 64-bit. For previous versions download [Docker Toolbox][docker-toolbox].
 
-## Beginning of each day
+### Debugging Accounts
 
-1. In terminal, traverse into project folder.
-```sh
-cd /PATH/TO/coderdojochi/
-```
-2. If starting a new task (new feature, new issue, etc.), make sure you are on the `develop` branch.
-```sh
-git checkout develop
-```
-3. Update your local repository with the upstream `develop` branch to make sure you are up to date.
-```sh
-git fetch upstream
-git merge upstream/develop develop
-git push -u origin develop
-```
-4. Create a new branch based off of the now up-to-date `develop` branch to work off of.
-```sh
-git checkout -b feature/a-good-name develop
-```
-5. HACK. commit. HACK. commit. HACK. commit. 
-6. When done, push to your repo (remote), and create a pull request
-```sh
-git push origin feature/a-good-name
-```
-
-
-## Misc commands
-
-##### Rebuild docker container from scratch
-
-```bash
-docker kill $(docker ps -q); docker-compose rm -f; docker-compose build && docker-compose up
-```
-
-##### Run Django management commands
-```bash
-docker-compose run --rm app python manage.py <command>
-```
-
-##### Make migrations
-```bash
-docker-compose run --rm app python manage.py makemigrations
-```
-
-##### Run migrations
-```bash
-docker-compose run --rm app python manage.py migrate coderdojochi
-```
-
-# Getting Started
-Once the app is running (you'll see `app_1 | Installed X object(s) from X fixture(s)`), load up the browser and go to [192.168.99.100](http://192.168.99.100/).
-
-To log into the admin, click the menu item 'My Dojo'.
-
-## Admin
-username: **admin@admin.com**
+#### Admin
+username: **admin@admin.com**  
 password: **admin**
 
-## Guardian
-username: **guardian@guardian.com**
+#### Guardian
+username: **guardian@guardian.com**  
 password: **guardian**
+
+
+## Continual work
+
+After the initial project setup, you will only need to run `docker-compose build` and `docker-compose up -d`. You can speed the set up by running the command together like so `docker-compose build && docker-compose up -d`.
+
+## Useful Information
+
+### Set up main repository as `upstream`
+
+To setup the main respository as `upstream`, you can add a new remote called `upstream`.
+
+```console
+git remote add upstream https://github.com/coderdojochi/coderdojochi
+```
+
+### Update local code from `upsteam`
+
+To grab the latest code from the main repo (named `upstream`), run the following.
+
+```console
+git fetch upstream --prune
+git checkout develop
+git merge upstream/develop develop
+```
+
+### Creating a new branch
+
+Create a new branch based off of `upstream`'s `develop` branch.
+
+```console
+git fetch upsteam --prune
+git checkout -b feature/a-good-name upsteam/develop
+git push -u origin feature/a-good-name
+```
+
+### Pull Request
+
+Pull requests are always welcome. Make sure your pull request does one task only. That is, if it's fixing a bug, the pull request fixes only that bug. If you're adding a feature, make sure the pull request adds that one feature, not multiple at once.
+
+Follow the "Creating a new branch" step above. Be sure to always push to your `origin` remote, not `upstream`.
+
+
+### Running commands on the docker container
+
+#### Run Django management commands
+When running any Django commands, you'll need to run them within the Docker container.
+
+```console
+docker exec -it cdc-app  --rm app python manage.py <command>
+```
+
+
+
+[docker-mac]: https://www.docker.com/docker-mac
+[docker-windows]: https://www.docker.com/docker-windows
+[docker-toolbox]: https://www.docker.com/products/docker-toolbox
+[localhost]: http://localhost/
