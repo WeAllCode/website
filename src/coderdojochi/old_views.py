@@ -865,22 +865,7 @@ def donate_return(request):
     return redirect('donate')
 
 
-def about(request, template_name="about.html"):
-    mentor_count = Mentor.objects.filter(
-        is_active=True,
-        is_public=True
-    ).count()
 
-    students_served = Order.objects.exclude(check_in=None).count()
-
-    return render(
-        request,
-        template_name,
-        {
-            'mentor_count': mentor_count,
-            'students_served': students_served
-        }
-    )
 
 
 def contact(request, template_name="contact.html"):

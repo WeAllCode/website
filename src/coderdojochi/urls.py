@@ -13,7 +13,7 @@ from . import old_views as coderdojochi_views
 
 from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
-from .views.general import HomeView, WelcomeView
+from .views.general import HomeView, WelcomeView, AboutView
 from .views.sessions import (
     SessionsView, SessionDetailView, SessionSignUpView, SessionIcsView
 )
@@ -76,10 +76,9 @@ urlpatterns = [
     # /about/
     url(
         r'^about/$',
-        coderdojochi_views.about,
+        AboutView.as_view(),
         name='about',
     ),
-
 
     # Privacy
     # /privary/

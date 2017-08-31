@@ -89,6 +89,22 @@ class HomeView(TemplateView):
         return upcoming_classes[:3]
 
 
+class AboutView(TemplateView):
+    template_name = "about.html"
+    
+    @cached_property
+    def students_served_count(self):
+        students_served_count = Order.objects.exclude(check_in=None).count()
+        
+        return students_served_count 
+
+    def get_context_data(self, **kwargs):
+        context = super(AboutView, self).get_context_data(**kwargs)
+
+        context['students_served_count'] = self.students_served_count
+
+        return context
+
 class WelcomeView(TemplateView):
     template_name = "welcome.html"
 
