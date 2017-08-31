@@ -14,6 +14,7 @@ from . import old_views as coderdojochi_views
 from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
 from .views.general import HomeView, WelcomeView
+from .views.privacy import PrivacyView
 from .views.sessions import (
     SessionsView, SessionDetailView, SessionSignUpView, SessionIcsView
 )
@@ -85,7 +86,8 @@ urlpatterns = [
     # /privary/
     url(
         r'^privacy/$',
-        coderdojochi_views.privacy,
+        # coderdojochi_views.privacy,
+        PrivacyView.as_view(),
         name='privacy',
     ),
 
