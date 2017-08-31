@@ -2,21 +2,19 @@ version: '2.1'
 services:
   nginx:
     image: nginx:latest
-    container_name: nz01
+    container_name: cdc-web
     ports:
       - "80:80"
     volumes:
       - ./src:/src
       - ./config/nginx:/etc/nginx/conf.d
       - ./static:/static
-    # volumes_from:
-    #   - app
     depends_on:
       - app
 
   app:
     build: .
-    container_name: dz01
+    container_name: cdc-app
     command: bash -c "./deploy.sh"
     depends_on:
       db:
@@ -31,11 +29,8 @@ services:
 
   db:
     image: postgres:9.4
-    container_name: pz01
+    container_name: cdc-db
     healthcheck:
       test: "exit 0"
-    # ports:
-    #   - "5432:5432"
-    # env_file:
-    #   - .env
-
+    ports:
+      - "5432:5432"
