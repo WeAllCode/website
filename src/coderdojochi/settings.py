@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
+import raven
 from coderdojochi.util import str_to_bool
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -248,7 +249,8 @@ SENTRY_DSN = os.getenv('SENTRY_DSN')
 
 if SENTRY_DSN:
     RAVEN_CONFIG = {
-        'dsn': SENTRY_DSN
+        'dsn': SENTRY_DSN,
+        # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
     }
 
 # Email
