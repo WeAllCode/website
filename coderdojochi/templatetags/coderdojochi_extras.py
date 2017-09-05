@@ -55,7 +55,8 @@ def student_register_link(context, student, session):
     elif (
         not student.is_within_age_range(
             session.min_age_limitation,
-            session.max_age_limitation
+            session.max_age_limitation,
+            session.start_date
         ) or
         not student.is_within_gender_limitation(
             session.gender_limitation
@@ -68,7 +69,8 @@ def student_register_link(context, student, session):
         if (
             not student.is_within_age_range(
                 session.min_age_limitation,
-                session.max_age_limitation
+                session.max_age_limitation,
+                session.start_date
             ) and
             not student.is_within_gender_limitation(
                 session.gender_limitation
@@ -88,7 +90,8 @@ def student_register_link(context, student, session):
         elif (
             not student.is_within_age_range(
                 session.min_age_limitation,
-                session.max_age_limitation
+                session.max_age_limitation,
+                session.start_date
             )
         ):
             button_href = '''
@@ -124,3 +127,8 @@ def student_register_link(context, student, session):
     )
 
     return Template(form).render(context)
+
+
+@register.filter
+def student_age(student, date):
+    return student.get_age(date)
