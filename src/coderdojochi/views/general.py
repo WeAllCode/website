@@ -91,19 +91,22 @@ class HomeView(TemplateView):
 class AboutView(TemplateView):
     template_name = "about.html"
 
-    @cached_property
-    def mentor_count(self):
-        return Mentor.objects.filter(
-           is_active=True,
-           is_public=True
+    def get_context_data(self, **kwargs):
+        context = super(AboutView, self).get_context_data(**kwargs)
+
+        # Number of active mentors
+        context['mentor_count'] = Mentor.objects.filter(
+            is_active=True,
+            is_public=True,
         ).count()
-  
-    @cached_property
-    def students_served(self):
-        return Order.objects.exclude(
-			is_active=False,
-			check_in=None
-		).count()
+
+        # Number of served students based on checkin counts
+        context['students_served_count'] = Order.objects.exclude(
+            is_active=False,
+            check_in=None
+        ).count()
+
+        return context
 
 class WelcomeView(TemplateView):
     template_name = "welcome.html"
