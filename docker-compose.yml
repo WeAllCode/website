@@ -6,11 +6,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./src:/src
       - ./config/nginx:/etc/nginx/conf.d
-      - ./static:/static
-    # volumes_from:
-    #   - app
+      - static:/static
     depends_on:
       - app
 
@@ -23,7 +20,7 @@ services:
         condition: service_healthy
     volumes:
       - ./src:/src
-      - ./static:/static
+      - static:/static
     env_file:
       - .env
     expose:
@@ -34,8 +31,10 @@ services:
     container_name: pz01
     healthcheck:
       test: "exit 0"
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     # env_file:
     #   - .env
 
+volumes:
+  static:
