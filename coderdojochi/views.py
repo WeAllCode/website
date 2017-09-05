@@ -956,7 +956,7 @@ def meetings(request, template_name="meetings.html"):
         is_active=True,
         is_public=True,
         end_date__gte=timezone.now()
-    ).order_by('start_date')[:3]
+    ).order_by('start_date')
 
     return render(request, template_name, {
         'upcoming_meetings': upcoming_meetings
