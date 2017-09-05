@@ -2,7 +2,7 @@ version: '2.1'
 services:
   nginx:
     image: nginx:latest
-    container_name: nz01
+    container_name: cdc-web
     ports:
       - "80:80"
     volumes:
@@ -13,7 +13,7 @@ services:
 
   app:
     build: .
-    container_name: dz01
+    container_name: cdc-app
     command: bash -c "./deploy.sh"
     depends_on:
       db:
@@ -28,7 +28,7 @@ services:
 
   db:
     image: postgres:9.4
-    container_name: pz01
+    container_name: cdc-db
     healthcheck:
       test: "exit 0"
     ports:
