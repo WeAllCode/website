@@ -865,22 +865,7 @@ def donate_return(request):
     return redirect('donate')
 
 
-def about(request, template_name="about.html"):
-    mentor_count = Mentor.objects.filter(
-        is_active=True,
-        is_public=True
-    ).count()
 
-    students_served = Order.objects.exclude(check_in=None).count()
-
-    return render(
-        request,
-        template_name,
-        {
-            'mentor_count': mentor_count,
-            'students_served': students_served
-        }
-    )
 
 
 def contact(request, template_name="contact.html"):
@@ -1763,56 +1748,3 @@ def check_system(request):
             equipment.save()
 
     return HttpResponse(responseString)
-
-
-class PasswordSessionView(TemplateView):
-    template_name = 'session-partner-password.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(PasswordSessionView, self).get_context_data(**kwargs)
-
-        session_id = kwargs.get('session_id')
-        session_obj = get_object_or_404(Session, id=session_id)
-
-        context['partner_message'] = session_obj.partner_message
-
-        return context
-
-    def post(self, request, *args, **kwargs):
-        session_id = kwargs.get('session_id')
-        session_obj = get_object_or_404(Session, id=session_id)
-        password_input = request.POST.get('password')
-
-        context = self.get_context_data(**kwargs)
-
-        if not password_input:
-            context['error'] = 'Must enter a password.'
-            return render(request, self.template_name, context)
-
-        if session_obj.password != password_input:
-            context['error'] = 'Invalid password.'
-            return render(request, self.template_name, context)
-
-        # Get from user session or create an empty set
-        authed_partner_sessions = request.session.get(
-            'authed_partner_sessions'
-        ) or set()
-
-        # Add course session id to user session
-        authed_partner_sessions.update({session_id})
-
-        # Store it.
-        request.session['authed_partner_sessions'] = authed_partner_sessions
-
-        if request.user.is_authenticated():
-            PartnerPasswordAccess.objects.get_or_create(
-                session=session_obj,
-                user=request.user
-            )
-
-        return HttpResponseRedirect(
-            reverse(
-                'session_detail',
-                kwargs=kwargs
-            )
-        )

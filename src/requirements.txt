@@ -30,6 +30,7 @@ python-dateutil==2.6.0
 python-memcached==1.58
 python-openid==2.2.5
 pytz==2016.10
+raven==6.1.0
 requests-oauthlib==0.7.0
 requests==2.12.4
 six==1.10.0

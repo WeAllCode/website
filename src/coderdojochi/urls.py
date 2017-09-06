@@ -13,12 +13,24 @@ from . import old_views as coderdojochi_views
 
 from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
-from .views.general import HomeView, WelcomeView
+from .views.general import (
+    AboutView,
+    HomeView,
+    WelcomeView,
+)
 from .views.privacy import PrivacyView
 from .views.sessions import (
-    SessionsView, SessionDetailView, SessionSignUpView, SessionIcsView
+    PasswordSessionView,
+    SessionDetailView, 
+    SessionIcsView,
+    SessionSignUpView, 
+    SessionsView, 
 )
-from .views.meetings import MeetingsView, MeetingDetailView, MeetingIcsView
+from .views.meetings import (
+    MeetingDetailView, 
+    MeetingIcsView,
+    MeetingsView, 
+)
 
 admin.autodiscover()
 
@@ -77,10 +89,9 @@ urlpatterns = [
     # /about/
     url(
         r'^about/$',
-        coderdojochi_views.about,
+        AboutView.as_view(),
         name='about',
     ),
-
 
     # Privacy
     # /privary/
@@ -218,7 +229,7 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/password/$',
-        coderdojochi_views.PasswordSessionView.as_view(),
+        PasswordSessionView.as_view(),
         name='session_password',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/calendar/
