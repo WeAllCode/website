@@ -38,7 +38,6 @@ urlpatterns = [
     # /
     url(
         r'^$',
-        # coderdojochi_views.home,
         HomeView.as_view(),
         name='home',
     ),
@@ -97,7 +96,6 @@ urlpatterns = [
     # /privary/
     url(
         r'^privacy/$',
-        # coderdojochi_views.privacy,
         PrivacyView.as_view(),
         name='privacy',
     ),
@@ -177,14 +175,12 @@ urlpatterns = [
     # /classes/
     url(
         r'^classes/$',
-        # coderdojochi_views.sessions,
         SessionsView.as_view(),
         name='sessions',
     ),
     # /classes/YYYY/MM/
     url(
         r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$',
-        # coderdojochi_views.sessions,
         SessionsView.as_view(),
         name='sessions',
     ),
@@ -194,14 +190,12 @@ urlpatterns = [
     # /c/ID/
     url(
         r'^c/(?P<session_id>[\d]+)/$',
-        # coderdojochi_views.session_detail_short,
         SessionDetailView.as_view(),
         name='session_detail_short',
     ),
     # /class/ID/
     url(
         r'^class/(?P<session_id>[\d]+)/$',
-        # coderdojochi_views.session_detail_short,
         SessionDetailView.as_view(),
         name='session_detail_short',
     ),
@@ -221,7 +215,6 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/$',
-        # coderdojochi_views.session_detail,
         SessionDetailView.as_view(),
         name='session_detail',
     ),
@@ -236,7 +229,6 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/calendar/$',
-        # coderdojochi_views.session_ics,
         SessionIcsView.as_view(),
         name='session_ics',
     ),
@@ -244,7 +236,6 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/$',
-        # coderdojochi_views.session_sign_up,
         SessionSignUpView.as_view(),
         name='session_sign_up',
     ),
@@ -253,7 +244,6 @@ urlpatterns = [
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up'
         r'/(?P<student_id>[\d]+)/$',
-        # coderdojochi_views.session_sign_up,
         SessionSignUpView.as_view(),
         name='session_sign_up',
     ),
@@ -261,7 +251,6 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/enroll/$',
-        # coderdojochi_views.session_detail_enroll,
         SessionDetailView.as_view(),
         name='session_detail_enroll',
     ),
@@ -271,7 +260,6 @@ urlpatterns = [
     # /meetings/
     url(
         r'^meetings/$',
-        # coderdojochi_views.meetings,
         MeetingsView.as_view(),
         name='meetings',
     ),
@@ -280,14 +268,12 @@ urlpatterns = [
     # /m/ID/
     url(
         r'^m/(?P<meeting_id>[\d]+)/$',
-        # coderdojochi_views.meeting_detail_short,
         MeetingDetailView.as_view(),
         name='meeting_detail_short',
     ),
     # /meeting/ID/
     url(
         r'^meeting/(?P<meeting_id>[\d]+)/$',
-        # coderdojochi_views.meeting_detail_short,
         MeetingDetailView.as_view(),
         name='meeting_detail_short',
     ),
@@ -301,7 +287,6 @@ urlpatterns = [
     url(
         r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/$',
-        # coderdojochi_views.meeting_detail,
         MeetingDetailView.as_view(),
         name='meeting_detail',
     ),
@@ -316,7 +301,6 @@ urlpatterns = [
     url(
         r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/calendar/$',
-        # coderdojochi_views.meeting_ics,
         MeetingIcsView.as_view(),
         name='meeting_ics',
     ),
@@ -379,7 +363,6 @@ urlpatterns = [
     # /welcome/
     url(
         r'^welcome/$',
-        # coderdojochi_views.welcome,
         WelcomeView.as_view(),
         name='welcome',
     ),
