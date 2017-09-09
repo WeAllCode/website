@@ -117,6 +117,51 @@ class MeetingDetailView(TemplateView):
 class MeetingSignUpView(TemplateView):
     template_name = "meeting-sign-up.html"
 
+    def post(self, request, *args, **kwargs):
+        meeting = get_object_or_404(
+            Meeting,
+            id=kwargs['meeting_id']
+        )
+        mentor = get_object_or_404(
+            Mentor,
+            user=request.user
+        )
+        meeting_orders = MeetingOrder.objects.filter(
+            meeting=meeting,
+            is_active=True
+        )
+
+        user_meeting_order = meeting_orders.filter(mentor=mentor)
+
+        if user_meeting_order.count:
+            meeting_order = get_object_or_404(
+                MeetingOrder,
+                meeting=meeting,
+                mentor=mentor
+            )
+            meeting_order.is_active = False
+            meeting_order.save()
+        else:
+            if not settings.DEBUG:
+                ip = (
+                    request.META['HTTP_X_FORWARDED_FOR'] or
+                    request.META['REMOTE_ADDR']
+                )
+            else:
+                ip = request.META['REMOTE_ADDR']
+
+            meeting_order, created = MeetingOrder.objects.get_or_create(
+                mentor=mentor,
+                meeting=meeting
+            )
+
+            meeting_order.ip = ip
+            meeting_order.is_active = True
+            meeting_order.save()
+
+
+
+
     def get_context_data(self, **kwargs):
         context = super(MeetingSignUpView, self).get_context_data(**kwargs)
         return self.set_context(context)
