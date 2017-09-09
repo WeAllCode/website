@@ -113,6 +113,32 @@ class MeetingDetailView(TemplateView):
             ).exists()
         return context
 
+@method_decorator(login_required, name='dispatch')
+class MeetingSignUpView(TemplateView):
+    template_name = "meeting-sign-up.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(MeetingSignUpView, self).get_context_data(**kwargs)
+        return self.set_context(context)
+
+    def set_context(self, context):
+        context['meeting'] = get_object_or_404(
+            Meeting,
+            id=context['meeting_id']
+        )
+        context['mentor'] = get_object_or_404(
+            Mentor,
+            user=self.request.user
+        )
+        context['meeting_orders'] = MeetingOrder.objects.filter(
+            meeting=context['meeting'],
+            is_active=True
+        )
+
+        user_meeting_order = context['meeting_orders'].filter(mentor=context['mentor'])
+        context['user_signed_up'] = True if user_meeting_order.count() else False
+
+        return context
 
 class MeetingIcsView(IcsView):
     event_type = 'meeting'
