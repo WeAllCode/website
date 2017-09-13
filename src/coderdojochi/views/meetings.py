@@ -133,7 +133,7 @@ class MeetingSignUpView(TemplateView):
 
         user_meeting_order = meeting_orders.filter(mentor=mentor)
 
-        if user_meeting_order.count:
+        if user_meeting_order.exists():
             meeting_order = get_object_or_404(
                 MeetingOrder,
                 meeting=meeting,
@@ -159,8 +159,68 @@ class MeetingSignUpView(TemplateView):
             meeting_order.is_active = True
             meeting_order.save()
 
+            messages.success(
+                request,
+                'Success! See you there!'
+            )
 
+            email(
+                subject='Upcoming mentor meeting confirmation',
+                template_name='meeting-confirm-mentor',
+                context={
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'meeting_title': meeting.meeting_type.title,
+                    'meeting_description': (
+                        meeting.meeting_type.description
+                    ),
+                    'meeting_start_date': arrow.get(
+                        meeting.start_date
+                    ).to('local').format('dddd, MMMM D, YYYY'),
+                    'meeting_start_time': arrow.get(
+                        meeting.start_date
+                    ).to('local').format('h:mma'),
+                    'meeting_end_date': arrow.get(
+                        meeting.end_date
+                    ).to('local').format('dddd, MMMM D, YYYY'),
+                    'meeting_end_time': arrow.get(
+                        meeting.end_date
+                    ).to('local').format('h:mma'),
+                    'meeting_location_name': meeting.location.name,
+                    'meeting_location_address': meeting.location.address,
+                    'meeting_location_address2': meeting.location.address2,
+                    'meeting_location_city': meeting.location.city,
+                    'meeting_location_state': meeting.location.state,
+                    'meeting_location_zip': meeting.location.zip,
+                    'meeting_additional_info': meeting.additional_info,
+                    'meeting_url': meeting.get_absolute_url(),
+                    'meeting_ics_url': meeting.get_ics_url(),
+                    'microdata_start_date': arrow.get(
+                        meeting.start_date
+                    ).to('local').isoformat(),
+                    'microdata_end_date': arrow.get(
+                        meeting.end_date
+                    ).to('local').isoformat(),
+                    'order': meeting_order,
+                },
+                recipients=[request.user.email],
+                preheader=u'Thanks for signing up for our next meeting, '
+                          '{}. We look forward to seeing you '
+                          'there.'.format(request.user.first_name),
+            )
 
+        return HttpResponseRedirect(
+            reverse(
+                'meeting_detail',
+                args=(
+                    meeting.start_date.year,
+                    meeting.start_date.month,
+                    meeting.start_date.day,
+                    meeting.meeting_type.slug,
+                    meeting.id
+                )
+            )
+        )
 
     def get_context_data(self, **kwargs):
         context = super(MeetingSignUpView, self).get_context_data(**kwargs)
