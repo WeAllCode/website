@@ -28,6 +28,7 @@ from .views.sessions import (
 )
 from .views.meetings import (
     MeetingDetailView, 
+    MeetingSignUpView,
     MeetingIcsView,
     MeetingsView, 
 )
@@ -294,7 +295,7 @@ urlpatterns = [
     url(
         r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/sign-up/$',
-        coderdojochi_views.meeting_sign_up,
+        MeetingSignUpView.as_view(),
         name='meeting_sign_up',
     ),
     # /meeting/YYYY/MM/DD/SLUG/ID/calendar/
