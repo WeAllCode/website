@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n bootstrap3 %}
+{% load bootstrap3 %}
 
 {% block title %}Contact Form{% endblock %}
 
@@ -10,11 +10,11 @@
 <div class="container min-height contact">
     <div class="row">
 		<div class="col-sm-6">
-			<h1>{% trans "Contact Us" %}</h1>
+			<h1>Contact Us</h1>
 			<form method="post" action=".">
 				{% csrf_token %}
 				{% bootstrap_form form %}
-				<input class="btn-cdc btn-cdc-success" type="submit" value="{% trans 'Submit' %}" />
+				<input class="btn-cdc btn-cdc-success" type="submit" value="Submit" />
 			</form>
 		</div>
 		<div class="col-sm-5 col-sm-offset-1">
