@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load static i18n coderdojochi_extras %}
+{% load static coderdojochi_extras %}
 
 {% block body_class %}page-homepage{% endblock %}
 
@@ -23,7 +23,7 @@
 <div class="homepage-about text-center">
     <div class="container">
         <div class="row">
-            <h1>{% trans "Our Mission" %}</h1>
+            <h1>Our Mission</h1>
             <p>CoderDojoChi is a volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17. Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors.</p>
             <p>All classes are <strong>100% free of charge</strong> thanks to your generous <a title="Donate now" href="{% url 'donate' %}">donations</a>.</p>
         </div>
