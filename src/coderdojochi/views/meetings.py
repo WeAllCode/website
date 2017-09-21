@@ -113,6 +113,142 @@ class MeetingDetailView(TemplateView):
             ).exists()
         return context
 
+@method_decorator(login_required, name='dispatch')
+class MeetingSignUpView(TemplateView):
+    template_name = "meeting-sign-up.html"
+
+    def post(self, request, *args, **kwargs):
+        meeting = get_object_or_404(
+            Meeting,
+            id=kwargs['meeting_id']
+        )
+        mentor = get_object_or_404(
+            Mentor,
+            user=request.user
+        )
+        meeting_orders = MeetingOrder.objects.filter(
+            meeting=meeting,
+            is_active=True
+        )
+
+        user_meeting_order = meeting_orders.filter(mentor=mentor)
+
+        if user_meeting_order.exists():
+            meeting_order = get_object_or_404(
+                MeetingOrder,
+                meeting=meeting,
+                mentor=mentor
+            )
+            meeting_order.is_active = False
+            meeting_order.save()
+        else:
+            if not settings.DEBUG:
+                ip = (
+                    request.META['HTTP_X_FORWARDED_FOR'] or
+                    request.META['REMOTE_ADDR']
+                )
+            else:
+                ip = request.META['REMOTE_ADDR']
+
+            meeting_order, created = MeetingOrder.objects.get_or_create(
+                mentor=mentor,
+                meeting=meeting
+            )
+
+            meeting_order.ip = ip
+            meeting_order.is_active = True
+            meeting_order.save()
+
+            messages.success(
+                request,
+                'Success! See you there!'
+            )
+
+            self.confirmation_email(
+                request=request,
+                meeting=meeting,
+                meeting_order=meeting_order
+            )
+
+        return HttpResponseRedirect(
+            reverse(
+                'meeting_detail',
+                args=(
+                    meeting.start_date.year,
+                    meeting.start_date.month,
+                    meeting.start_date.day,
+                    meeting.meeting_type.slug,
+                    meeting.id
+                )
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super(MeetingSignUpView, self).get_context_data(**kwargs)
+        
+        context['meeting'] = get_object_or_404(
+            Meeting,
+            id=context['meeting_id']
+        )
+        context['mentor'] = get_object_or_404(
+            Mentor,
+            user=self.request.user
+        )
+        context['meeting_orders'] = MeetingOrder.objects.filter(
+            meeting=context['meeting'],
+            is_active=True
+        )
+
+        user_meeting_order = context['meeting_orders'].filter(mentor=context['mentor'])
+        context['user_signed_up'] = True if user_meeting_order.count() else False
+        
+        return context
+
+    def confirmation_email(self, **kwargs):
+        email(
+            subject='Upcoming mentor meeting confirmation',
+            template_name='meeting-confirm-mentor',
+            context={
+                'first_name': kwargs['request'].user.first_name,
+                'last_name': kwargs['request'].user.last_name,
+                'meeting_title': kwargs['meeting'].meeting_type.title,
+                'meeting_description': (
+                    kwargs['meeting'].meeting_type.description
+                ),
+                'meeting_start_date': arrow.get(
+                    kwargs['meeting'].start_date
+                ).to('local').format('dddd, MMMM D, YYYY'),
+                'meeting_start_time': arrow.get(
+                    kwargs['meeting'].start_date
+                ).to('local').format('h:mma'),
+                'meeting_end_date': arrow.get(
+                    kwargs['meeting'].end_date
+                ).to('local').format('dddd, MMMM D, YYYY'),
+                'meeting_end_time': arrow.get(
+                    kwargs['meeting'].end_date
+                ).to('local').format('h:mma'),
+                'meeting_location_name': kwargs['meeting'].location.name,
+                'meeting_location_address': kwargs['meeting'].location.address,
+                'meeting_location_address2': kwargs['meeting'].location.address2,
+                'meeting_location_city': kwargs['meeting'].location.city,
+                'meeting_location_state': kwargs['meeting'].location.state,
+                'meeting_location_zip': kwargs['meeting'].location.zip,
+                'meeting_additional_info': kwargs['meeting'].additional_info,
+                'meeting_url': kwargs['meeting'].get_absolute_url(),
+                'meeting_ics_url': kwargs['meeting'].get_ics_url(),
+                'microdata_start_date': arrow.get(
+                    kwargs['meeting'].start_date
+                ).to('local').isoformat(),
+                'microdata_end_date': arrow.get(
+                    kwargs['meeting'].end_date
+                ).to('local').isoformat(),
+                'order': kwargs['meeting_order'],
+            },
+            recipients=[kwargs['request'].user.email],
+            preheader=u'Thanks for signing up for our next meeting, '
+                      '{}. We look forward to seeing you '
+                      'there.'.format(kwargs['request'].user.first_name),
+        )
 
 class MeetingIcsView(IcsView):
     event_type = 'meeting'
