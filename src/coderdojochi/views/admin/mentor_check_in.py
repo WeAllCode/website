@@ -1,3 +1,5 @@
+from django.contrib import messages
+
 from coderdojochi.views.admin import AdminView
 
 from coderdojochi.models import (
@@ -5,7 +7,10 @@ from coderdojochi.models import (
 	MentorOrder
 )
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import (
+	get_object_or_404,
+	render
+)
 from django.utils import timezone
 
 
@@ -59,4 +64,23 @@ class AdminMentorCheckInView(AdminView):
 		}
 
 	def post(self, request, *args, **kwargs):
-		pass
+		if 'order_id' in request.POST:
+			order = get_object_or_404(
+				MentorOrder,
+				id=request.POST['order_id']
+			)
+
+			if order.check_in:
+				order.check_in = None
+			else:
+				order.check_in = timezone.now()
+
+			order.save()
+		else:
+			messages.error(
+				request,
+				'Invalid Order'
+			)
+
+		context = self.get_context_data(**kwargs)
+		return render(request, self.template_name, context)
