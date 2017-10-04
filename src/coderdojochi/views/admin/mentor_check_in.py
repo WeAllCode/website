@@ -14,9 +14,6 @@ from django.shortcuts import (
 from django.utils import timezone
 
 
-
-
-import sys
 class AdminMentorCheckInView(AdminView):
 	template_name = 'session-check-in-mentors.html'
 
