@@ -55,7 +55,6 @@ from coderdojochi.models import (
 )
 from coderdojochi.forms import (
     CDCModelForm,
-    ContactForm,
     GuardianForm,
     MentorForm,
     StudentForm,
@@ -730,78 +729,6 @@ def donate_return(request):
         'You should receive a confirmation email shortly. Thanks again!'
     )
     return redirect('donate')
-
-
-
-
-
-def contact(request, template_name="contact.html"):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        human = True
-
-        if form.is_valid():
-            if request.POST['human']:
-                messages.error(request, 'Bad robot.')
-                human = False
-
-            if human:
-                msg = EmailMultiAlternatives(
-                    subject=u'{} | CoderDojoChi Contact Form'.format(
-                        request.POST['name']
-                    ),
-                    body=request.POST['body'],
-                    from_email=u'CoderDojoChi<{}>'.format(
-                        settings.DEFAULT_FROM_EMAIL
-                    ),
-                    reply_to=[
-                        u'{}<{}>'.format(
-                            request.POST['name'],
-                            request.POST['email']
-                        )
-                    ],
-                    to=[settings.CONTACT_EMAIL]
-                )
-
-                msg.attach_alternative(
-                    request.POST['body'].replace(
-                        "\r\n",
-                        "<br />"
-                    ).replace(
-                        "\n",
-                        "<br />"
-                    ),
-                    'text/html'
-                )
-
-                msg.send()
-
-                messages.success(
-                    request,
-                    u'Thank you for contacting us! '
-                    u'We will respond as soon as possible.'
-                )
-
-            form = ContactForm()
-        else:
-            messages.error(
-                request,
-                u'There was an error. Please try again.'
-            )
-    else:
-        form = ContactForm()
-
-    return render(
-        request,
-        template_name,
-        {
-            'form': form
-        }
-    )
-
-
-def privacy(request, template_name="privacy.html"):
-    return render(request, template_name)
 
 
 @login_required

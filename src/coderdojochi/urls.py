@@ -12,13 +12,19 @@ from django.views.generic import RedirectView
 from . import old_views as coderdojochi_views
 
 from .views.admin.student_check_in import AdminStudentCheckInView
-from .views.profile import DojoMentorView
-from .views.volunteer import VolunteerView
+from .views.contact import ContactView
 from .views.general import (
     AboutView,
     HomeView,
     WelcomeView,
 )
+from .views.meetings import (
+    MeetingDetailView,
+    MeetingSignUpView,
+    MeetingIcsView,
+    MeetingsView,
+)
+from .views.profile import DojoMentorView
 from .views.privacy import PrivacyView
 from .views.sessions import (
     PasswordSessionView,
@@ -27,12 +33,7 @@ from .views.sessions import (
     SessionSignUpView,
     SessionsView,
 )
-from .views.meetings import (
-    MeetingDetailView,
-    MeetingSignUpView,
-    MeetingIcsView,
-    MeetingsView,
-)
+from .views.volunteer import VolunteerView
 
 admin.autodiscover()
 
@@ -116,7 +117,7 @@ urlpatterns = [
     # /contact/
     url(
         r'^contact/',
-        coderdojochi_views.contact,
+        ContactView.as_view(),
         name='contact',
     ),
 
