@@ -33,6 +33,11 @@ from .views.sessions import (
     SessionSignUpView,
     SessionsView,
 )
+from .views.donate import (
+    DonateView,
+    DonateCancelView,
+    DonateReturnView
+)
 from .views.volunteer import VolunteerView
 
 admin.autodiscover()
@@ -45,7 +50,6 @@ urlpatterns = [
         name='home',
     ),
 
-
     # FAQs
     # /faqs/
     url(
@@ -54,38 +58,33 @@ urlpatterns = [
         name='faqs',
     ),
 
-
     # Donation
     # /donate/
     url(
         r'^donate/$',
-        coderdojochi_views.donate,
+        DonateView.as_view(),
         name='donate',
     ),
-    # /zirmed/
-    url(
-        r'^zirmed/$',
-        coderdojochi_views.donate,
-        name='donate_zirmed',
-    ),
+
     # /donate/cancel/
     url(
         r'^donate/cancel/$',
-        coderdojochi_views.donate_cancel,
+        DonateCancelView.as_view(),
         name='donate_cancel',
     ),
+
     # /donate/return/
     url(
         r'^donate/return/$',
-        coderdojochi_views.donate_return,
+        DonateReturnView.as_view(),
         name='donate_return',
     ),
+
     # /donate/paypal/
     url(
         r'^donate/paypal/',
         include('paypal.standard.ipn.urls')
     ),
-
 
     # About
     # /about/
