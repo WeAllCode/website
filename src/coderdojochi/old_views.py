@@ -58,7 +58,6 @@ from coderdojochi.forms import (
     ContactForm,
     GuardianForm,
     MentorForm,
-    StudentForm,
     DonationForm
 )
 
@@ -704,68 +703,6 @@ def mentor_reject_avatar(request, mentor_id=False):
     )
 
     return redirect('mentors')
-
-
-@login_required
-def student_detail(
-    request,
-    student_id=False,
-    template_name="student-detail.html"
-):
-    access = True
-
-    if request.user.role == 'guardian' and student_id:
-        # for the specific student redirect to admin page
-        try:
-            student = Student.objects.get(id=student_id, is_active=True)
-        except ObjectDoesNotExist:
-            return redirect('dojo')
-
-        try:
-            guardian = Guardian.objects.get(user=request.user, is_active=True)
-        except ObjectDoesNotExist:
-            return redirect('dojo')
-
-        if not student.guardian == guardian:
-            access = False
-
-        form = StudentForm(instance=student)
-    else:
-        access = False
-
-    if not access:
-        return redirect('dojo')
-        messages.error(
-            request,
-            'You do not have permissions to edit this student.'
-        )
-
-    if request.method == 'POST':
-        if 'delete' in request.POST:
-            student.is_active = False
-            student.save()
-            messages.success(
-                request,
-                'Student "{} {}" Deleted.'.format(
-                    student.first_name,
-                    student.last_name
-                )
-            )
-            return redirect('dojo')
-
-        form = StudentForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Student Updated.')
-            return redirect('dojo')
-
-    return render(
-        request,
-        template_name,
-        {
-            'form': form
-        }
-    )
 
 
 def donate(request, template_name="donate.html"):

@@ -60,7 +60,6 @@ from coderdojochi.forms import (
     ContactForm,
     GuardianForm,
     MentorForm,
-    StudentForm,
     DonationForm
 )
 from coderdojochi.mixins import RoleRedirectMixin
@@ -74,7 +73,7 @@ User = get_user_model()
 
 class MeetingsView(TemplateView):
     template_name = "meetings.html"
-    
+
     @cached_property
     def upcoming_meetings(self):
         return Meeting.objects.filter(
@@ -118,7 +117,7 @@ class MeetingIcsView(IcsView):
     event_type = 'meeting'
     event_kwarg = 'meeeting_id'
     event_class = Meeting
-    
+
     def get_summary(self, request, event_obj):
         event_name = u'{} - '.format(
             event_obj.meeting_type.code
@@ -135,4 +134,3 @@ class MeetingIcsView(IcsView):
     def get_description(self, event_obj):
         return strip_tags(event_obj.meeting_type.description)
 
-            

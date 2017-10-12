@@ -60,7 +60,6 @@ from coderdojochi.forms import (
     ContactForm,
     GuardianForm,
     MentorForm,
-    StudentForm,
     DonationForm
 )
 from coderdojochi.mixins import RoleRedirectMixin
@@ -186,35 +185,35 @@ def add_months(sourcedate, months):
 
 class SessionsView(TemplateView):
     template_name = "sessions.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super(SessionsView, self).get_context_data(**kwargs)
         now = timezone.now()
         year = int(kwargs.get('year')) if kwargs.get('year') else now.year
-        month = int(kwargs.get('month')) if kwargs.get('month') else now.month 
+        month = int(kwargs.get('month')) if kwargs.get('month') else now.month
         calendar_date = date(day=1, month=month, year=year)
-        
+
         context['prev_date'] = add_months(calendar_date, -1)
         context['next_date'] = add_months(calendar_date, 1)
         context['calendar_date'] = calendar_date
-        
+
         all_sessions = Session.objects.filter(
             is_active=True,
             end_date__gte=now
         ).order_by('start_date')
-        
+
         if (
             not self.request.user.is_authenticated() or
             not self.request.user.role == 'mentor'
         ):
             all_sessions = all_sessions.filter(is_public=True)
-            
-        context['all_sessions'] = all_sessions 
+
+        context['all_sessions'] = all_sessions
         context['sessions'] = all_sessions.filter(
             start_date__year=year,
             start_date__month=month
         ).order_by('start_date')
-        
+
         return context
 
 
@@ -305,14 +304,14 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
                 account = get_object_or_404(Guardian, user=self.request.user)
                 context['students'] = account.get_students()
                 context['spots_remaining'] = (
-                    session_obj.capacity - 
+                    session_obj.capacity -
                     session_obj.get_current_students().count()
                 )
             context['account'] = account
         else:
             context['upcoming_classes'] = upcoming_classes.filter(is_public=True)
             context['spots_remaining'] = (
-                session_obj.capacity - 
+                session_obj.capacity -
                 session_obj.get_current_students().count()
             )
 
@@ -401,7 +400,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
             )
             if limits:
                 access_dict = {
-                    'message': limits, 
+                    'message': limits,
                     'redirect': kwargs['session_obj'].get_absolute_url()
                 }
         return access_dict
@@ -429,7 +428,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                         'Please sign up for the wait list '
                         'and/or check back later.')
         return False
-        
+
     def get_context_data(self, **kwargs):
         context = super(SessionSignUpView, self).get_context_data(**kwargs)
         context['session'] = kwargs['session_obj']
@@ -443,11 +442,11 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
         mentor = kwargs.get('mentor')
         guardian = kwargs.get('guardian')
         student = kwargs.get('student')
-        
+
         if user_signed_up:
             if mentor:
                 order = get_object_or_404(
-                    MentorOrder, 
+                    MentorOrder,
                     mentor=mentor,
                     session=session_obj
                 )
@@ -460,7 +459,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                 )
             order.is_active = False
             order.save()
-            
+
             messages.success(request, 'Thanks for letting us know!')
         else:
             if not settings.DEBUG:
@@ -471,7 +470,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
 
             else:
                 ip = request.META['REMOTE_ADDR']
-                
+
             if mentor:
                 order, created = MentorOrder.objects.get_or_create(
                     mentor=mentor,
@@ -483,17 +482,17 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                     student=student,
                     session=session_obj,
                 )
-            order.ip = ip 
+            order.ip = ip
             order.is_active = True
             order.save()
-            
+
             messages.success(request, 'Success! See you there!')
-            
+
             if mentor:
                 session_confirm_mentor(request, session_obj, order)
             else:
                 session_confirm_guardian(request, session_obj, order, student)
-                
+
         return redirect(session_obj.get_absolute_url())
 
 
@@ -554,13 +553,13 @@ class SessionIcsView(IcsView):
     event_type = 'class'
     event_kwarg = 'session_id'
     event_class = Session
-    
+
     def get_summary(self, request, event_obj):
         return u'CoderDojoChi: {} - {}'.format(
             event_obj.course.code,
             event_obj.course.title
         )
-        
+
     def get_dtstart(self, request, event_obj):
         start_date = arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')
         dtstart = '{}Z'.format(start_date)
@@ -569,7 +568,7 @@ class SessionIcsView(IcsView):
                 event_obj.mentor_start_date
             ).format('YYYYMMDDTHHmmss'))
         return dtstart
-        
+
     def get_dtend(self, request, event_obj):
         end_date = arrow.get(event_obj.end_date).format('YYYYMMDDTHHmmss')
         dtend = '{}Z'.format(end_date)
@@ -578,6 +577,6 @@ class SessionIcsView(IcsView):
                 event_obj.mentor_end_date
             ).format('YYYYMMDDTHHmmss'))
         return dtend
-        
+
     def get_description(self, event_obj):
         return strip_tags(event_obj.course.description)
