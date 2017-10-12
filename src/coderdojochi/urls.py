@@ -33,12 +33,6 @@ from .views.sessions import (
     SessionSignUpView,
     SessionsView,
 )
-from .views.meetings import (
-    MeetingDetailView,
-    MeetingSignUpView,
-    MeetingIcsView,
-    MeetingsView,
-)
 from .views.donate import (
     DonateView,
     DonateCancelView,
