@@ -64,7 +64,7 @@ from coderdojochi.forms import (
     DonationForm
 )
 from coderdojochi.mixins import RoleRedirectMixin
-from coderdojochi.views.general import IcsView
+from coderdojochi.views.ics import IcsView
 
 logger = logging.getLogger("mechanize")
 
@@ -74,7 +74,7 @@ User = get_user_model()
 
 class MeetingsView(TemplateView):
     template_name = "meetings.html"
-    
+
     @cached_property
     def upcoming_meetings(self):
         return Meeting.objects.filter(
@@ -185,7 +185,7 @@ class MeetingSignUpView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MeetingSignUpView, self).get_context_data(**kwargs)
-        
+
         context['meeting'] = get_object_or_404(
             Meeting,
             id=context['meeting_id']
@@ -201,7 +201,7 @@ class MeetingSignUpView(TemplateView):
 
         user_meeting_order = context['meeting_orders'].filter(mentor=context['mentor'])
         context['user_signed_up'] = True if user_meeting_order.count() else False
-        
+
         return context
 
     def confirmation_email(self, **kwargs):
@@ -254,7 +254,7 @@ class MeetingIcsView(IcsView):
     event_type = 'meeting'
     event_kwarg = 'meeeting_id'
     event_class = Meeting
-    
+
     def get_summary(self, request, event_obj):
         event_name = u'{} - '.format(
             event_obj.meeting_type.code
@@ -270,5 +270,3 @@ class MeetingIcsView(IcsView):
 
     def get_description(self, event_obj):
         return strip_tags(event_obj.meeting_type.description)
-
-            
