@@ -113,6 +113,7 @@ class MeetingDetailView(TemplateView):
             ).exists()
         return context
 
+
 @method_decorator(login_required, name='dispatch')
 class MeetingSignUpView(TemplateView):
     template_name = "meeting-sign-up.html"
@@ -199,7 +200,9 @@ class MeetingSignUpView(TemplateView):
             is_active=True
         )
 
-        user_meeting_order = context['meeting_orders'].filter(mentor=context['mentor'])
+        user_meeting_order = context['meeting_orders'].filter(
+            mentor=context['mentor']
+        )
         context['user_signed_up'] = True if user_meeting_order.count() else False
 
         return context
@@ -250,6 +253,7 @@ class MeetingSignUpView(TemplateView):
                       'there.'.format(kwargs['request'].user.first_name),
         )
 
+
 class MeetingIcsView(IcsView):
     event_type = 'meeting'
     event_kwarg = 'meeeting_id'
@@ -268,5 +272,5 @@ class MeetingIcsView(IcsView):
     def get_dtend(self, request, event_obj):
         return arrow.get(event_obj.end_date).format('YYYYMMDDTHHmmss')
 
-    def get_description(self, event_obj):
+    def get_description(self, request, event_obj):
         return strip_tags(event_obj.meeting_type.description)

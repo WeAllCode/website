@@ -379,6 +379,14 @@ class Location(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def full(self):
+        return "{address}, {city}, {state} {zip}".format(
+            address=', '.join(filter(None, (self.address, self.address2))),
+            city=self.city,
+            state=self.state,
+            zip=self.zip,
+        )
 
 GENDER_LIMITATION_CHOICES = (
     ('male', 'Male'),

@@ -175,16 +175,27 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     event['dtend'] = '{}Z'.format(end_date)
     event['dtstamp'] = start_date
 
-    location = u'{}, {}, {}, {}, {} {}'.format(
-        meeting_obj.location.name,
-        meeting_obj.location.address,
-        meeting_obj.location.address2,
-        meeting_obj.location.city,
-        meeting_obj.location.state,
-        meeting_obj.location.zip
-    )
+    # location =
 
-    event['location'] = vText(location)
+    # (
+    #     "%(meeting_obj.location.name)s, "
+    #     "%(meeting_obj.location.address)s, "
+    #     "%(meeting_obj.location.address2)s, "
+    #     "%(meeting_obj.location.city)s, "
+    #     "%(meeting_obj.location.state)s, "
+    #     "%(meeting_obj.location.zi)sp "
+    # )
+
+    # location = u'{}, {}, {}, {}, {} {}'.format(
+    #     meeting_obj.location.name,
+    #     meeting_obj.location.address,
+    #     meeting_obj.location.address2 ?,
+    #     meeting_obj.location.city,
+    #     meeting_obj.location.state,
+    #     meeting_obj.location.zip
+    # )
+
+    event['location'] = vText(meeting_obj.location.full())
     event['url'] = meeting_obj.get_absolute_url()
     event['description'] = strip_tags(meeting_obj.meeting_type.description)
 

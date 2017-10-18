@@ -408,26 +408,30 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
 
     def student_limitations(self, student, session_obj, user_signed_up):
         if not student.is_within_gender_limitation(
-                session_obj.gender_limitation
-            ):
+            session_obj.gender_limitation
+        ):
             return ('Sorry, this class is limited to {}s '
                     'this time around.'.format(
                         session_obj.gender_limitation
                     ))
         if not student.is_within_age_range(
-                session_obj.min_age_limitation,
-                session_obj.max_age_limitation
-            ):
-            return ('Sorry, this class is limited to students between ages '
-                    '{} and {}.'.format(
-                        session_obj.min_age_limitation,
-                        session_obj.max_age_limitation
-                    ))
+            session_obj.min_age_limitation,
+            session_obj.max_age_limitation
+        ):
+            return (
+                'Sorry, this class is limited to students between ages '
+                '{} and {}.'.format(
+                    session_obj.min_age_limitation,
+                    session_obj.max_age_limitation
+                )
+            )
         if not user_signed_up:
             if session_obj.capacity <= session_obj.get_current_students().count():
-                return ('Sorry this class has sold out. '
-                        'Please sign up for the wait list '
-                        'and/or check back later.')
+                return (
+                    'Sorry this class has sold out. '
+                    'Please sign up for the wait list '
+                    'and/or check back later.'
+                )
         return False
 
     def get_context_data(self, **kwargs):
@@ -579,5 +583,5 @@ class SessionIcsView(IcsView):
             ).format('YYYYMMDDTHHmmss'))
         return dtend
 
-    def get_description(self, event_obj):
+    def get_description(self, request, event_obj):
         return strip_tags(event_obj.course.description)

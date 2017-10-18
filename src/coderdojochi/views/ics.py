@@ -22,7 +22,7 @@ class IcsView(View):
     def get_dtend(self, request, event_obj):
         raise NotImplementedError
 
-    def get_description(self, event_obj):
+    def get_description(self, request, event_obj):
         raise NotImplementedError
 
     def get(self, request, *args, **kwargs):
@@ -58,7 +58,7 @@ class IcsView(View):
         event['location'] = vText(location)
 
         event['url'] = event_obj.get_absolute_url()
-        event['description'] = self.get_description(event_obj)
+        event['description'] = self.get_description(request, event_obj)
 
         # A value of 5 is the normal or "MEDIUM" priority.
         # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
