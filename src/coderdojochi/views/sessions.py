@@ -232,7 +232,9 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
 
     def enroll_redirect(self, request, session_obj):
         if request.user.role == 'mentor':
-            return redirect(u'{}/sign-up/'.format(session_obj.get_absolute_url()))
+            return redirect(
+                u'{}/sign-up/'.format(session_obj.get_absolute_url())
+            )
         guardian = get_object_or_404(Guardian, user=request.user)
         students = guardian.get_students()
         if students and 'student' in request.GET:
@@ -304,7 +306,9 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
                 )
             context['account'] = account
         else:
-            context['upcoming_classes'] = upcoming_classes.filter(is_public=True)
+            context['upcoming_classes'] = upcoming_classes.filter(
+                is_public=True
+            )
             context['spots_remaining'] = (
                 session_obj.capacity -
                 session_obj.get_current_students().count()
@@ -361,8 +365,12 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
             ).exists()
         elif request.user.role == 'guardian':
             kwargs['guardian'] = get_object_or_404(Guardian, user=request.user)
-            kwargs['student'] = get_object_or_404(Student, id=kwargs['student_id'])
-            kwargs['user_signed_up'] = kwargs['student'].is_registered_for_session(session_obj)
+            kwargs['student'] = get_object_or_404(
+                Student, id=kwargs['student_id']
+            )
+            kwargs['user_signed_up'] = kwargs['student'].is_registered_for_session(
+                session_obj
+            )
 
         access_dict = self.check_access(request, *args, **kwargs)
         if access_dict.get('message'):
@@ -391,7 +399,9 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                 }
         if kwargs.get('student'):
             limits = self.student_limitations(
-                kwargs['student'], kwargs['session_obj'], kwargs['user_signed_up']
+                kwargs['student'],
+                kwargs['session_obj'],
+                kwargs['user_signed_up']
             )
             if limits:
                 access_dict = {

@@ -58,7 +58,9 @@ class WelcomeView(TemplateView):
                 context['form'] = GuardianForm(instance=account)
             else:
                 context['add_student'] = True
-                context['form'] = StudentForm(initial={'guardian': guardian.pk})
+                context['form'] = StudentForm(
+                    initial={'guardian': guardian.pk}
+                )
 
             if account.user.first_name and account.get_students():
                 context['students'] = account.get_students().count()
