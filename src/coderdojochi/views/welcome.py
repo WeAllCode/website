@@ -29,8 +29,8 @@ class WelcomeView(TemplateView):
         kwargs['next_url'] = next_url
         # Check for redirect condition on mentor, otherwise pass as kwarg
         if (
-            getattr(request.user, 'role', False) == 'mentor'
-            and request.method == 'GET'
+            getattr(request.user, 'role', False) == 'mentor' and
+            request.method == 'GET'
         ):
             mentor = get_object_or_404(Mentor, user=request.user)
             if mentor.user.first_name:
