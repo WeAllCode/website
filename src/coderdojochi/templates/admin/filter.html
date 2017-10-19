@@ -1,7 +1,6 @@
-{% load i18n %}
+
 <script type="text/javascript">var go_from_select = function(opt) { window.location = window.location.pathname + opt };</script>
-{# <h3>{{ title|title }}</h3> #}
-<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+<h3> By {{ title }} </h3>
 <ul class="admin-filter-{{ title|cut:' ' }}">
 {% if choices|slice:"5:" %}
     <li>

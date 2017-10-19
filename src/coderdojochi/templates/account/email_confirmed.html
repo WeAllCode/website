@@ -1,17 +1,16 @@
 {% extends "account/_base.html" %}
 
-{% load i18n %}
 {% load account %}
 
-{% block title_placeholder %}{% trans "Confirm E-mail Address" %}{% endblock %}
+{% block title_placeholder %}Confirm E-mail Address{% endblock %}
 
 
 {% block content_placeholder %}
 
-<h1>{% trans "Confirm E-mail Address" %}</h1>
+<h1>Confirm E-mail Address</h1>
 
 {% user_display confirmation.email_address.user as user_display %}
 
-<p>{% blocktrans with confirmation.email_address.email as email %}You have confirmed that <a href="mailto:{{email}}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktrans %}</p>
+<p>You have confirmed that <a href="mailto:{{ confirmation.email_address.email }}">{{ confirmation.email_address.email }}</a> is an e-mail address for user {{ user_display }}.</p>
 
 {% endblock %}
