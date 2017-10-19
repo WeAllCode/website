@@ -14,6 +14,11 @@ from . import old_views as coderdojochi_views
 from .views.about import AboutView
 from .views.admin.mentor_check_in import AdminMentorCheckInView
 from .views.admin.student_check_in import AdminStudentCheckInView
+from .views.announcements import (
+    MeetingAnnounceView,
+    SessionAnnounceMentorsView,
+    SessionAnnounceGuardiansView
+)
 from .views.contact import ContactView
 from .views.home import HomeView
 from .views.meetings import (
@@ -205,13 +210,13 @@ urlpatterns = [
     # /class/ID/announce/mentors
     url(
         r'^class/(?P<session_id>[\d]+)/announce/mentors/$',
-        coderdojochi_views.session_announce_mentors,
+        SessionAnnounceMentorsView.as_view(),
         name='session_announce_mentors',
     ),
     # /class/ID/announce/guardians
     url(
         r'^class/(?P<session_id>[\d]+)/announce/guardians/$',
-        coderdojochi_views.session_announce_guardians,
+        SessionAnnounceGuardiansView.as_view(),
         name='session_announce_guardians',
     ),
     # /class/YYYY/MM/DD/SLUG/ID/
@@ -283,7 +288,7 @@ urlpatterns = [
     # /meeting/ID/announce/
     url(
         r'^meeting/(?P<meeting_id>[\d]+)/announce/$',
-        coderdojochi_views.meeting_announce,
+        MeetingAnnounceView.as_view(),
         name='meeting_announce',
     ),
     # /meeting/YYYY/MM/DD/SLUG/ID/
