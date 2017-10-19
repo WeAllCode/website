@@ -72,14 +72,14 @@ User = get_user_model()
 
 class HomeView(TemplateView):
     template_name = "home.html"
-    
+
     @cached_property
     def upcoming_classes(self):
         upcoming_classes = Session.objects.filter(
             is_active=True,
             end_date__gte=timezone.now(),
         ).order_by('start_date')
-        
+
         if (
             not self.request.user.is_authenticated() or
             not self.request.user.role == 'mentor'
@@ -87,7 +87,7 @@ class HomeView(TemplateView):
             upcoming_classes = upcoming_classes.filter(is_public=True)
 
         return upcoming_classes[:3]
-      
+
 class AboutView(TemplateView):
     template_name = "about.html"
 
@@ -308,11 +308,11 @@ class IcsView(View):
 
     def get(self, request, *args, **kwargs):
         event_obj = get_object_or_404(
-            self.event_class, 
+            self.event_class,
             id=kwargs[self.event_kwarg]
         )
         cal = Calendar()
-        
+
         cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
         cal['version'] = '2.0'
         cal['calscale'] = 'GREGORIAN'
@@ -336,12 +336,12 @@ class IcsView(View):
             event_obj.location.state,
             event_obj.location.zip
         )
-        
+
         event['location'] = vText(location)
 
         event['url'] = event_obj.get_absolute_url()
         event['description'] = self.get_description(event_obj)
-        
+
         # A value of 5 is the normal or "MEDIUM" priority.
         # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
         event['priority'] = 5

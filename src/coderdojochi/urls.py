@@ -19,6 +19,7 @@ from .views.sessions import (
     PasswordSessionView
 )
 from .views.meetings import MeetingsView, MeetingDetailView, MeetingIcsView
+from .views.mentor import MentorDetailView
 
 admin.autodiscover()
 
@@ -117,8 +118,8 @@ urlpatterns = [
     ),
     # /mentor/ID/
     url(
-        r'^mentor/(?P<mentor_id>[\d]+)/$',
-        coderdojochi_views.mentor_detail,
+        r'^mentor/(?P<pk>[\d]+)/$',
+        MentorDetailView.as_view(),
         name='mentor_detail',
     ),
     # 301 /mentors/ID/
