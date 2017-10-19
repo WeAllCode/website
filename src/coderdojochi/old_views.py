@@ -573,49 +573,6 @@ def dojo_guardian(request, template_name='guardian/dojo.html'):
     return render(request, template_name, context)
 
 
-# def mentors(request, template_name="mentors.html"):
-#     mentors = Mentor.objects.filter(
-#         is_active=True,
-#         is_public=True,
-#         background_check=True,
-#         avatar_approved=True,
-#     ).order_by('user__date_joined')
-
-#     # mentors = Mentor.objects.filter(
-#     #     is_active=True,
-#     #     is_public=True
-#     # ).order_by('user__date_joined')
-
-#     return render(request, template_name, {
-#         'mentors': mentors
-#     })
-
-
-# def mentor_detail(
-#     request,
-#     mentor_id=False,
-#     template_name="mentor-detail.html"
-# ):
-
-#     mentor = get_object_or_404(Mentor, id=mentor_id)
-
-#     if not mentor.is_public:
-#         messages.error(
-#             request,
-#             'Invalid mentor ID.'
-#         )
-
-#         return redirect('mentors')
-
-#     return render(
-#         request,
-#         template_name,
-#         {
-#             'mentor': mentor
-#         }
-#     )
-
-
 @login_required
 def mentor_approve_avatar(request, mentor_id=False):
     mentor = get_object_or_404(Mentor, id=mentor_id)
