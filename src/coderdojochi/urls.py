@@ -13,12 +13,23 @@ from . import old_views as coderdojochi_views
 
 from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
-from .views.general import HomeView, WelcomeView, AboutView
-from .views.sessions import (
-    SessionsView, SessionDetailView, SessionSignUpView, SessionIcsView,
-    PasswordSessionView
+from .views.general import (
+    AboutView,
+    HomeView,
+    WelcomeView,
 )
-from .views.meetings import MeetingsView, MeetingDetailView, MeetingIcsView
+from .views.sessions import (
+    PasswordSessionView,
+    SessionDetailView,
+    SessionIcsView,
+    SessionSignUpView,
+    SessionsView,
+)
+from .views.meetings import (
+    MeetingDetailView,
+    MeetingIcsView
+    MeetingsView,
+)
 from .views.mentor import (
     MentorDetailView,
     MentorListView,
