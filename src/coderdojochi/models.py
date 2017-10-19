@@ -381,7 +381,7 @@ class Location(models.Model):
 
     @property
     def street(self):
-        return ', '.join(filter(None, (self.address, self.address2)))
+        return ' '.join(filter(None, (self.address, self.address2)))
 
     @property
     def full(self):
