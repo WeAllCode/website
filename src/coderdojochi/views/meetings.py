@@ -64,7 +64,7 @@ from coderdojochi.forms import (
     DonationForm
 )
 from coderdojochi.mixins import RoleRedirectMixin
-from coderdojochi.views.general import IcsView
+from coderdojochi.views.ics import IcsView
 
 logger = logging.getLogger("mechanize")
 
@@ -74,7 +74,7 @@ User = get_user_model()
 
 class MeetingsView(TemplateView):
     template_name = "meetings.html"
-    
+
     @cached_property
     def upcoming_meetings(self):
         return Meeting.objects.filter(
@@ -112,6 +112,7 @@ class MeetingDetailView(TemplateView):
                 mentor=mentor
             ).exists()
         return context
+
 
 @method_decorator(login_required, name='dispatch')
 class MeetingSignUpView(TemplateView):
@@ -185,7 +186,7 @@ class MeetingSignUpView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MeetingSignUpView, self).get_context_data(**kwargs)
-        
+
         context['meeting'] = get_object_or_404(
             Meeting,
             id=context['meeting_id']
@@ -199,9 +200,11 @@ class MeetingSignUpView(TemplateView):
             is_active=True
         )
 
-        user_meeting_order = context['meeting_orders'].filter(mentor=context['mentor'])
+        user_meeting_order = context['meeting_orders'].filter(
+            mentor=context['mentor']
+        )
         context['user_signed_up'] = True if user_meeting_order.count() else False
-        
+
         return context
 
     def confirmation_email(self, **kwargs):
@@ -228,8 +231,7 @@ class MeetingSignUpView(TemplateView):
                     kwargs['meeting'].end_date
                 ).to('local').format('h:mma'),
                 'meeting_location_name': kwargs['meeting'].location.name,
-                'meeting_location_address': kwargs['meeting'].location.address,
-                'meeting_location_address2': kwargs['meeting'].location.address2,
+                'meeting_location_street': kwargs['meeting'].location.street,
                 'meeting_location_city': kwargs['meeting'].location.city,
                 'meeting_location_state': kwargs['meeting'].location.state,
                 'meeting_location_zip': kwargs['meeting'].location.zip,
@@ -250,11 +252,12 @@ class MeetingSignUpView(TemplateView):
                       'there.'.format(kwargs['request'].user.first_name),
         )
 
+
 class MeetingIcsView(IcsView):
     event_type = 'meeting'
     event_kwarg = 'meeeting_id'
     event_class = Meeting
-    
+
     def get_summary(self, request, event_obj):
         event_name = u'{} - '.format(
             event_obj.meeting_type.code
@@ -268,7 +271,5 @@ class MeetingIcsView(IcsView):
     def get_dtend(self, request, event_obj):
         return arrow.get(event_obj.end_date).format('YYYYMMDDTHHmmss')
 
-    def get_description(self, event_obj):
+    def get_description(self, request, event_obj):
         return strip_tags(event_obj.meeting_type.description)
-
-            

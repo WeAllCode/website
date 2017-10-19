@@ -1,112 +1,24 @@
-# -*- coding: utf-8 -*-
-
-import arrow
-import calendar
-import logging
-import operator
-
-from collections import Counter
-from datetime import date, timedelta
-from icalendar import Calendar, Event, vText
-from paypal.standard.forms import PayPalPaymentsForm
-
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
-from django.core.mail import EmailMultiAlternatives, get_connection
-from django.db.models import (
-    Case,
-    Count,
-    IntegerField,
-    When,
-)
-from django.http import (
-    HttpResponse,
-    HttpResponseRedirect,
-)
 from django.shortcuts import (
     get_object_or_404,
     redirect,
     render,
 )
-from django.utils import timezone
-from django.utils.html import strip_tags
-from django.utils.functional import cached_property
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView
 
-from coderdojochi.util import email
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-)
 from coderdojochi.forms import (
-    CDCModelForm,
-    ContactForm,
     GuardianForm,
     MentorForm,
     StudentForm,
-    DonationForm
+)
+from coderdojochi.models import (
+    Guardian,
+    Meeting,
+    Mentor,
+    Session,
 )
 
-logger = logging.getLogger("mechanize")
-
-# this will assign User to our custom CDCUser
-User = get_user_model()
-
-
-class HomeView(TemplateView):
-    template_name = "home.html"
-    
-    @cached_property
-    def upcoming_classes(self):
-        upcoming_classes = Session.objects.filter(
-            is_active=True,
-            end_date__gte=timezone.now(),
-        ).order_by('start_date')
-        
-        if (
-            not self.request.user.is_authenticated() or
-            not self.request.user.role == 'mentor'
-        ):
-            upcoming_classes = upcoming_classes.filter(is_public=True)
-
-        return upcoming_classes[:3]
-      
-class AboutView(TemplateView):
-    template_name = "about.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(AboutView, self).get_context_data(**kwargs)
-
-        # Number of active mentors
-        context['mentor_count'] = Mentor.objects.filter(
-            is_active=True,
-            is_public=True,
-        ).count()
-
-        # Number of served students based on checkin counts
-        context['students_served_count'] = Order.objects.exclude(
-            is_active=False,
-            check_in=None
-        ).count()
-
-        return context
 
 class WelcomeView(TemplateView):
     template_name = "welcome.html"
@@ -146,7 +58,9 @@ class WelcomeView(TemplateView):
                 context['form'] = GuardianForm(instance=account)
             else:
                 context['add_student'] = True
-                context['form'] = StudentForm(initial={'guardian': guardian.pk})
+                context['form'] = StudentForm(
+                    initial={'guardian': guardian.pk}
+                )
 
             if account.user.first_name and account.get_students():
                 context['students'] = account.get_students().count()
@@ -287,84 +201,3 @@ class WelcomeView(TemplateView):
         )
 
         return redirect(next_url)
-
-
-class IcsView(View):
-    event_type = None
-    event_kwarg = None
-    event_class = None
-
-    def get_summary(self, event_obj):
-        raise NotImplementedError
-
-    def get_dtstart(self, request, event_obj):
-        raise NotImplementedError
-
-    def get_dtend(self, request, event_obj):
-        raise NotImplementedError
-
-    def get_description(self, event_obj):
-        raise NotImplementedError
-
-    def get(self, request, *args, **kwargs):
-        event_obj = get_object_or_404(
-            self.event_class, 
-            id=kwargs[self.event_kwarg]
-        )
-        cal = Calendar()
-        
-        cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
-        cal['version'] = '2.0'
-        cal['calscale'] = 'GREGORIAN'
-
-        event = Event()
-
-
-        event['uid'] = u'{}{:04}@coderdojochi.org'.format(
-            self.event_type.upper(), event_obj.id
-        )
-        event['summary'] = self.get_event_summary(event_obj)
-        event['dtstart'] = self.get_dtstart(request, event_obj)
-        event['dtend'] = self.get_dtend(request, event_obj)
-        event['dtstamp'] = event['dtstart'][:-1]
-
-        location = u'{}, {}, {}, {}, {} {}'.format(
-            event_obj.location.name,
-            event_obj.location.address,
-            event_obj.location.address2,
-            event_obj.location.city,
-            event_obj.location.state,
-            event_obj.location.zip
-        )
-        
-        event['location'] = vText(location)
-
-        event['url'] = event_obj.get_absolute_url()
-        event['description'] = self.get_description(event_obj)
-        
-        # A value of 5 is the normal or "MEDIUM" priority.
-        # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
-        event['priority'] = 5
-
-        cal.add_component(event)
-
-        event_slug = u'coderdojochi-{}_{}'.format(
-            self.event_type.lower(),
-            arrow.get(
-                event_obj.start_date
-            ).to('local').format('MM-DD-YYYY_HH-mma')
-        )
-
-        # Return the ICS formatted calendar
-        response = HttpResponse(
-            cal.to_ical(),
-            content_type='text/calendar',
-            charset='utf-8'
-        )
-
-        response['Content-Disposition'] = u'attachment;filename={}.ics'.format(
-            event_slug
-        )
-
-        return response
-

@@ -79,7 +79,7 @@ Follow the "Creating a new branch" step above. Be sure to always push to your `o
 When running any Django commands, you'll need to run them within the Docker container.
 
 ```console
-docker exec -it cdc-app  --rm app python manage.py <command>
+docker exec -it cdc-app python manage.py <command>
 ```
 
 

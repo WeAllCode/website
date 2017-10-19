@@ -8,7 +8,7 @@ DETAILS:
 {{ meeting_title }}
 {{ meeting_start_date }} {{ meeting_start_time }}-{{ meeting_end_time }}
 {{ meeting_location_name }}
-{{ meeting_location_address }}, {{ meeting_location_address2 }}
+{{ meeting_location_street }}
 {{ meeting_location_city }}, {{ meeting_location_state }} {{ meeting_location_zip }}
 {% if meeting_additional_info %}
 

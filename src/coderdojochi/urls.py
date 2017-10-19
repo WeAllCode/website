@@ -11,13 +11,10 @@ from django.views.generic import RedirectView
 
 from . import old_views as coderdojochi_views
 
+from .views.about import AboutView
 from .views.admin.student_check_in import AdminStudentCheckInView
 from .views.contact import ContactView
-from .views.general import (
-    AboutView,
-    HomeView,
-    WelcomeView,
-)
+from .views.home import HomeView
 from .views.meetings import (
     MeetingDetailView,
     MeetingSignUpView,
@@ -34,6 +31,7 @@ from .views.sessions import (
     SessionsView,
 )
 from .views.volunteer import VolunteerView
+from .views.welcome import WelcomeView
 
 admin.autodiscover()
 

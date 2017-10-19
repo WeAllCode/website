@@ -10,7 +10,7 @@ DETAILS:
 {{ class_code }}: {{ class_title }}
 {{ class_start_date }} {{ class_start_time }}-{{ class_end_time }}
 {{ class_location_name }}
-{{ class_location_address }}, {{ class_location_address2 }}
+{{ class_location_street }}
 {{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
 {% if class_additional_info %}
 

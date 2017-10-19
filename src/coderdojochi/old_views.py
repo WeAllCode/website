@@ -116,8 +116,7 @@ def meeting_announce(request, meeting_id):
                         meeting_obj.end_date
                     ).to('local').format('h:mma'),
                     'meeting_location_name': meeting_obj.location.name,
-                    'meeting_location_address': meeting_obj.location.address,
-                    'meeting_location_address2': meeting_obj.location.address2,
+                    'meeting_location_street': meeting_obj.location.street,
                     'meeting_location_city': meeting_obj.location.city,
                     'meeting_location_state': meeting_obj.location.state,
                     'meeting_location_zip': meeting_obj.location.zip,
@@ -175,16 +174,7 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     event['dtend'] = '{}Z'.format(end_date)
     event['dtstamp'] = start_date
 
-    location = u'{}, {}, {}, {}, {} {}'.format(
-        meeting_obj.location.name,
-        meeting_obj.location.address,
-        meeting_obj.location.address2,
-        meeting_obj.location.city,
-        meeting_obj.location.state,
-        meeting_obj.location.zip
-    )
-
-    event['location'] = vText(location)
+    event['location'] = vText(meeting_obj.location.full)
     event['url'] = meeting_obj.get_absolute_url()
     event['description'] = strip_tags(meeting_obj.meeting_type.description)
 
@@ -1200,8 +1190,7 @@ def session_announce_mentors(request, session_id):
                         session_obj.end_date
                     ).to('local').format('h:mma'),
                     'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
+                    'class_location_street': session_obj.location.street,
                     'class_location_city': session_obj.location.city,
                     'class_location_state': session_obj.location.state,
                     'class_location_zip': session_obj.location.zip,
@@ -1285,8 +1274,7 @@ def session_announce_guardians(request, session_id):
                         session_obj.end_date
                     ).to('local').format('h:mma'),
                     'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
+                    'class_location_street': session_obj.location.street,
                     'class_location_city': session_obj.location.city,
                     'class_location_state': session_obj.location.state,
                     'class_location_zip': session_obj.location.zip,
