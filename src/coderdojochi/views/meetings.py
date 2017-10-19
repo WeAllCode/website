@@ -231,8 +231,7 @@ class MeetingSignUpView(TemplateView):
                     kwargs['meeting'].end_date
                 ).to('local').format('h:mma'),
                 'meeting_location_name': kwargs['meeting'].location.name,
-                'meeting_location_address': kwargs['meeting'].location.address,
-                'meeting_location_address2': kwargs['meeting'].location.address2,
+                'meeting_location_street': kwargs['meeting'].location.street,
                 'meeting_location_city': kwargs['meeting'].location.city,
                 'meeting_location_state': kwargs['meeting'].location.state,
                 'meeting_location_zip': kwargs['meeting'].location.zip,

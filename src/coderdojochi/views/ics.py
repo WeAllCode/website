@@ -45,18 +45,7 @@ class IcsView(View):
         event['dtstart'] = self.get_dtstart(request, event_obj)
         event['dtend'] = self.get_dtend(request, event_obj)
         event['dtstamp'] = event['dtstart'][:-1]
-
-        location = u'{}, {}, {}, {}, {} {}'.format(
-            event_obj.location.name,
-            event_obj.location.address,
-            event_obj.location.address2,
-            event_obj.location.city,
-            event_obj.location.state,
-            event_obj.location.zip
-        )
-
-        event['location'] = vText(location)
-
+        event['location'] = vText(event_obj.location.full)
         event['url'] = event_obj.get_absolute_url()
         event['description'] = self.get_description(request, event_obj)
 

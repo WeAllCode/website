@@ -145,7 +145,7 @@
                                                     <tr>
                                                         <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">
                                                         {% if meeting_location_name %}{{ meeting_location_name }}<br>{% endif %}
-                                                        {{ meeting_location_address }}, {{ meeting_location_address2 }}<br>
+                                                        {{ meeting_location_street }}<br>
                                                         {{ meeting_location_city }}, {{ meeting_location_state }} {{ meeting_location_zip }}
                                                         </td>
                                                     </tr>
@@ -213,7 +213,7 @@
         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
             <meta itemprop="name" content="{{ meeting_location_name }}"/>
             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                <meta itemprop="streetAddress" content="{{ meeting_location_address }} {{ meeting_location_address2 }}"/>
+                <meta itemprop="streetAddress" content="{{ meeting_location_street }}"/>
                 <meta itemprop="addressLocality" content="{{ meeting_location_city }}"/>
                 <meta itemprop="addressRegion" content="{{ meeting_location_state }}"/>
                 <meta itemprop="postalCode" content="{{ meeting_location_zip }}"/>

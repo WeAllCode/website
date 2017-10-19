@@ -99,10 +99,7 @@ def session_confirm_mentor(request, session_obj, order):
                 session_obj.mentor_end_date
             ).to('local').format('h:mma'),
             'class_location_name': session_obj.location.name,
-            'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
+            'class_location_street': session_obj.location.street,
             'class_location_city': session_obj.location.city,
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
@@ -150,10 +147,7 @@ def session_confirm_guardian(request, session_obj, order, student):
                 session_obj.end_date
             ).to('local').format('h:mma'),
             'class_location_name': session_obj.location.name,
-            'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
+            'class_location_street': session_obj.location.street,
             'class_location_city': session_obj.location.city,
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
