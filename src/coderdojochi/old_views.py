@@ -66,6 +66,7 @@ logger = logging.getLogger("mechanize")
 # this will assign User to our custom CDCUser
 User = get_user_model()
 
+
 def meeting_ics(request, year, month, day, slug, meeting_id):
     meeting_obj = get_object_or_404(Meeting, id=meeting_id)
 
@@ -92,16 +93,7 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     event['dtend'] = '{}Z'.format(end_date)
     event['dtstamp'] = start_date
 
-    location = u'{}, {}, {}, {}, {} {}'.format(
-        meeting_obj.location.name,
-        meeting_obj.location.address,
-        meeting_obj.location.address2,
-        meeting_obj.location.city,
-        meeting_obj.location.state,
-        meeting_obj.location.zip
-    )
-
-    event['location'] = vText(location)
+    event['location'] = vText(meeting_obj.location.full)
     event['url'] = meeting_obj.get_absolute_url()
     event['description'] = strip_tags(meeting_obj.meeting_type.description)
 
@@ -865,94 +857,6 @@ def session_stats(request, session_id, template_name="session-stats.html"):
             'gender_count': gender_count
         }
     )
-
-
-@login_required
-@never_cache
-def session_check_in_mentors(
-    request,
-    session_id,
-    template_name="session-check-in-mentors.html"
-):
-
-    if not request.user.is_staff:
-        messages.error(
-            request,
-            'You do not have permission to access this page.'
-        )
-        return redirect('sessions')
-
-    if request.method == 'POST':
-        if 'order_id' in request.POST:
-            order = get_object_or_404(
-                MentorOrder,
-                id=request.POST['order_id']
-            )
-
-            if order.check_in:
-                order.check_in = None
-            else:
-                order.check_in = timezone.now()
-
-            order.save()
-        else:
-            messages.error(
-                request,
-                'Invalid Order'
-            )
-
-    session = get_object_or_404(Session, id=session_id)
-
-    # Active Session
-    active_session = True if timezone.now() < session.end_date else False
-
-    # get the orders
-    orders = MentorOrder.objects.select_related().filter(
-        session_id=session_id
-    )
-
-    if active_session:
-        active_orders = orders.filter(
-            is_active=True
-        ).order_by(
-            'mentor__user__first_name'
-        )
-
-    else:
-        active_orders = orders.filter(
-            is_active=True,
-            check_in__isnull=False
-        ).order_by(
-            'mentor__user__first_name'
-        )
-
-    inactive_orders = orders.filter(
-        is_active=False
-    ).order_by('-updated_at')
-
-    no_show_orders = orders.filter(
-        is_active=True,
-        check_in__isnull=True
-    )
-
-    checked_in_orders = orders.filter(
-        is_active=True,
-        check_in__isnull=False
-    )
-
-    return render(
-        request,
-        template_name,
-        {
-            'session': session,
-            'active_session': active_session,
-            'active_orders': active_orders,
-            'inactive_orders': inactive_orders,
-            'no_show_orders': no_show_orders,
-            'checked_in_orders': checked_in_orders,
-        }
-    )
-
 
 @login_required
 @never_cache

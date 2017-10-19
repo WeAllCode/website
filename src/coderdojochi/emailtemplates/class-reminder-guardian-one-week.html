@@ -144,7 +144,7 @@
                                                     <tr>
                                                         <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">
                                                         {% if class_location_name %}{{ class_location_name }}<br>{% endif %}
-                                                        {{ class_location_address }}, {{ class_location_address2 }}<br>
+                                                        {{ class_location_street }}<br>
                                                         {{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
                                                         </td>
                                                     </tr>
@@ -205,7 +205,7 @@
         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
             <meta itemprop="name" content="{{ class_location_name }}"/>
             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                <meta itemprop="streetAddress" content="{{ class_location_address }} {{ class_location_address2 }}"/>
+                <meta itemprop="streetAddress" content="{{ class_location_street }}"/>
                 <meta itemprop="addressLocality" content="{{ class_location_city }}"/>
                 <meta itemprop="addressRegion" content="{{ class_location_state }}"/>
                 <meta itemprop="postalCode" content="{{ class_location_zip }}"/>

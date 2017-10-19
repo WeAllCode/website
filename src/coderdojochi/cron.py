@@ -100,8 +100,7 @@ class SendReminders(CronJobBase):
                         order.session.end_date
                     ).to('local').format('h:mma'),
                     'class_location_name': order.session.location.name,
-                    'class_location_address': order.session.location.address,
-                    'class_location_address2': order.session.location.address2,
+                    'class_location_street': order.session.location.street,
                     'class_location_city': order.session.location.city,
                     'class_location_state': order.session.location.state,
                     'class_location_zip': order.session.location.zip,
@@ -148,8 +147,7 @@ class SendReminders(CronJobBase):
                         order.session.end_date
                     ).to('local').format('h:mma'),
                     'class_location_name': order.session.location.name,
-                    'class_location_address': order.session.location.address,
-                    'class_location_address2': order.session.location.address2,
+                    'class_location_street': order.session.location.street,
                     'class_location_city': order.session.location.city,
                     'class_location_state': order.session.location.state,
                     'class_location_zip': order.session.location.zip,
@@ -197,10 +195,8 @@ class SendReminders(CronJobBase):
                             order.session.mentor_end_date
                         ).to('local').format('h:mma'),
                         'class_location_name': order.session.location.name,
-                        'class_location_address':
-                            order.session.location.address,
-                        'class_location_address2':
-                            order.session.location.address2,
+                        'class_location_street':
+                            order.session.location.street,
                         'class_location_city': order.session.location.city,
                         'class_location_state': order.session.location.state,
                         'class_location_zip': order.session.location.zip,
@@ -248,10 +244,8 @@ class SendReminders(CronJobBase):
                             order.session.mentor_end_date
                         ).to('local').format('h:mma'),
                         'class_location_name': order.session.location.name,
-                        'class_location_address':
-                            order.session.location.address,
-                        'class_location_address2':
-                            order.session.location.address2,
+                        'class_location_street':
+                            order.session.location.street,
                         'class_location_city': order.session.location.city,
                         'class_location_state': order.session.location.state,
                         'class_location_zip': order.session.location.zip,
