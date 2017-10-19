@@ -5,6 +5,7 @@ import datetime
 
 # from django.conf import settings
 from django.core.mail import get_connection
+from django.core.management import call_command
 from django.utils import timezone
 from django_cron import CronJobBase, Schedule
 
@@ -14,6 +15,16 @@ from coderdojochi.models import (
     Session
 )
 from coderdojochi.util import email
+
+
+class processBackgroundJobs(CronJobBase):
+    RUN_EVERY_MINS = 1
+
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = 'coderdojochi.process_background_jobs'
+
+    def do(self):
+        call_command('process_tasks')
 
 
 class SendReminders(CronJobBase):
