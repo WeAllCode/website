@@ -19,7 +19,10 @@ from .views.sessions import (
     PasswordSessionView
 )
 from .views.meetings import MeetingsView, MeetingDetailView, MeetingIcsView
-from .views.mentor import MentorDetailView
+from .views.mentor import (
+    MentorDetailView,
+    MentorListView,
+)
 
 admin.autodiscover()
 
@@ -113,8 +116,8 @@ urlpatterns = [
     # /mentors/
     url(
         r'^mentors/$',
-        coderdojochi_views.mentors,
-        name='mentors',
+        MentorListView.as_view(),
+        name='mentor_list',
     ),
     # /mentor/ID/
     url(
