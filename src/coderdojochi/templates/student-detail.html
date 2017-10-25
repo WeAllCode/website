@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="container registration min-height">
-    <h1><small><a href="{% url 'dojo' %}">Back</a></small> Edit Student Info</h1>
+    <h1><small><a href="{% url 'dojo' %}">Back</a></small> Edit {{ student.first_name }} {{ student.last_name }}</h1>
     <form action="" method="post">
         {% csrf_token %}
         {% bootstrap_form form %}

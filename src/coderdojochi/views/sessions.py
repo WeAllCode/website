@@ -60,7 +60,6 @@ from coderdojochi.forms import (
     ContactForm,
     GuardianForm,
     MentorForm,
-    StudentForm,
     DonationForm
 )
 from coderdojochi.mixins import RoleRedirectMixin

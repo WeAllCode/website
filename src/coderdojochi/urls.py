@@ -35,6 +35,8 @@ from .views.sessions import (
 )
 from .views.welcome import WelcomeView
 
+from .views.student import StudentDetailView
+
 admin.autodiscover()
 
 urlpatterns = [
@@ -170,7 +172,7 @@ urlpatterns = [
     # /student/ID/
     url(
         r'^student/(?P<student_id>[\d]+)/$',
-        coderdojochi_views.student_detail,
+        StudentDetailView.as_view(),
         name='student_detail',
     ),
 
