@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n coderdojochi_extras %}
+{% load coderdojochi_extras %}
 
 {% block title %}{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}{% endblock %}
 
@@ -36,7 +36,7 @@
                             <li class="text-muted list-group-item">Announced to mentors on:<br><b>{{ session.announced_date_mentors|date:'F j, Y \a\t g:i a' }}</b></li>
                         {% else %}
                             <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce_mentors' session.id %}'>Announce mentors</a>" data-html="true">Announce to mentors</a></li>
-                        {% endif %}                        
+                        {% endif %}
                         {% if session.announced_date_guardians %}
                             <li class="text-muted list-group-item">Announced to guardians on:<br><b>{{ session.announced_date_guardians|date:'F j, Y \a\t g:i a' }}</b></li>
                         {% else %}
@@ -131,7 +131,7 @@
             </div>
             <div class="sidebar-right-section center-block">
                 <div class="map">
-                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="//maps.google.com/maps/api/staticmap?size=281x281&amp;sensor=false&amp;zoom=15&amp;markers={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"></a>
+                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.full }}"><img src="//maps.google.com/maps/api/staticmap?size=281x281&amp;sensor=false&amp;zoom=15&amp;markers={{ session.location.full }}&amp;center={{ session.location.full }}"></a>
                 </div>
             </div>
             <div class="sidebar-right-section center-block">
@@ -162,7 +162,7 @@
             <p><i class="fa fa-calendar"></i> <a href="{{ session.get_ics_url }}">Add to your calendar</a></p>
 
             <h3>Where</h3>
-            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.full }}">{{ session.location.full }}</a></p>
 
             <h3>FAQs</h3>
             <p><a href="{% url 'faqs' %}">Read more here.</a></p>

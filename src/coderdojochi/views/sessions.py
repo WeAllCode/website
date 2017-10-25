@@ -63,7 +63,7 @@ from coderdojochi.forms import (
     DonationForm
 )
 from coderdojochi.mixins import RoleRedirectMixin
-from coderdojochi.views.general import IcsView
+from coderdojochi.views.ics import IcsView
 
 logger = logging.getLogger("mechanize")
 
@@ -98,10 +98,7 @@ def session_confirm_mentor(request, session_obj, order):
                 session_obj.mentor_end_date
             ).to('local').format('h:mma'),
             'class_location_name': session_obj.location.name,
-            'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
+            'class_location_street': session_obj.location.street,
             'class_location_city': session_obj.location.city,
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
@@ -149,10 +146,7 @@ def session_confirm_guardian(request, session_obj, order, student):
                 session_obj.end_date
             ).to('local').format('h:mma'),
             'class_location_name': session_obj.location.name,
-            'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
+            'class_location_street': session_obj.location.street,
             'class_location_city': session_obj.location.city,
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
@@ -237,7 +231,9 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
 
     def enroll_redirect(self, request, session_obj):
         if request.user.role == 'mentor':
-            return redirect(u'{}/sign-up/'.format(session_obj.get_absolute_url()))
+            return redirect(
+                u'{}/sign-up/'.format(session_obj.get_absolute_url())
+            )
         guardian = get_object_or_404(Guardian, user=request.user)
         students = guardian.get_students()
         if students and 'student' in request.GET:
@@ -309,7 +305,9 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
                 )
             context['account'] = account
         else:
-            context['upcoming_classes'] = upcoming_classes.filter(is_public=True)
+            context['upcoming_classes'] = upcoming_classes.filter(
+                is_public=True
+            )
             context['spots_remaining'] = (
                 session_obj.capacity -
                 session_obj.get_current_students().count()
@@ -366,8 +364,12 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
             ).exists()
         elif request.user.role == 'guardian':
             kwargs['guardian'] = get_object_or_404(Guardian, user=request.user)
-            kwargs['student'] = get_object_or_404(Student, id=kwargs['student_id'])
-            kwargs['user_signed_up'] = kwargs['student'].is_registered_for_session(session_obj)
+            kwargs['student'] = get_object_or_404(
+                Student, id=kwargs['student_id']
+            )
+            kwargs['user_signed_up'] = kwargs['student'].is_registered_for_session(
+                session_obj
+            )
 
         access_dict = self.check_access(request, *args, **kwargs)
         if access_dict.get('message'):
@@ -396,7 +398,9 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                 }
         if kwargs.get('student'):
             limits = self.student_limitations(
-                kwargs['student'], kwargs['session_obj'], kwargs['user_signed_up']
+                kwargs['student'],
+                kwargs['session_obj'],
+                kwargs['user_signed_up']
             )
             if limits:
                 access_dict = {
@@ -407,26 +411,30 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
 
     def student_limitations(self, student, session_obj, user_signed_up):
         if not student.is_within_gender_limitation(
-                session_obj.gender_limitation
-            ):
+            session_obj.gender_limitation
+        ):
             return ('Sorry, this class is limited to {}s '
                     'this time around.'.format(
                         session_obj.gender_limitation
                     ))
         if not student.is_within_age_range(
-                session_obj.min_age_limitation,
-                session_obj.max_age_limitation
-            ):
-            return ('Sorry, this class is limited to students between ages '
-                    '{} and {}.'.format(
-                        session_obj.min_age_limitation,
-                        session_obj.max_age_limitation
-                    ))
+            session_obj.min_age_limitation,
+            session_obj.max_age_limitation
+        ):
+            return (
+                'Sorry, this class is limited to students between ages '
+                '{} and {}.'.format(
+                    session_obj.min_age_limitation,
+                    session_obj.max_age_limitation
+                )
+            )
         if not user_signed_up:
             if session_obj.capacity <= session_obj.get_current_students().count():
-                return ('Sorry this class has sold out. '
-                        'Please sign up for the wait list '
-                        'and/or check back later.')
+                return (
+                    'Sorry this class has sold out. '
+                    'Please sign up for the wait list '
+                    'and/or check back later.'
+                )
         return False
 
     def get_context_data(self, **kwargs):
@@ -578,5 +586,5 @@ class SessionIcsView(IcsView):
             ).format('YYYYMMDDTHHmmss'))
         return dtend
 
-    def get_description(self, event_obj):
+    def get_description(self, request, event_obj):
         return strip_tags(event_obj.course.description)

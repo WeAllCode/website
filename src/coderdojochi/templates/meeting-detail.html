@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load i18n coderdojochi_extras %}
+{% load coderdojochi_extras %}
 
 {% block title %}{{ meeting.meeting_type.title }}{% endblock %}
 
@@ -33,7 +33,7 @@
             <p><i class="fa fa-calendar"></i> <a href="{{ meeting.get_ics_url }}">Add to your calendar</a></p>
 
             <h3>Where</h3>
-            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }}<br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
+            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.full }}">{{ meeting.location.name }} {{ meeting.location.street }} <br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
 
             {% if meeting.additional_info %}
             <h3>Additional Info</h3>

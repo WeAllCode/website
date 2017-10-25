@@ -55,7 +55,6 @@ from coderdojochi.models import (
 )
 from coderdojochi.forms import (
     CDCModelForm,
-    ContactForm,
     GuardianForm,
     MentorForm,
     DonationForm
@@ -65,139 +64,6 @@ logger = logging.getLogger("mechanize")
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
-
-
-@login_required
-def meeting_sign_up(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    meeting_id,
-    student_id=False,
-    template_name="meeting-sign-up.html"
-):
-    meeting_obj = get_object_or_404(
-        Meeting,
-        id=meeting_id
-    )
-
-    mentor = get_object_or_404(
-        Mentor,
-        user=request.user
-    )
-
-    meeting_orders = MeetingOrder.objects.filter(
-        meeting=meeting_obj,
-        is_active=True
-    )
-
-    user_meeting_order = meeting_orders.filter(mentor=mentor)
-    user_signed_up = True if user_meeting_order.count() else False
-
-    if request.method == 'POST':
-
-        if user_signed_up:
-            meeting_order = get_object_or_404(
-                MeetingOrder,
-                meeting=meeting_obj,
-                mentor=mentor
-            )
-            meeting_order.is_active = False
-            meeting_order.save()
-
-            messages.success(
-                request,
-                'Thanks for letting us know!'
-            )
-
-        else:
-            if not settings.DEBUG:
-                ip = (
-                    request.META['HTTP_X_FORWARDED_FOR'] or
-                    request.META['REMOTE_ADDR']
-                )
-            else:
-                ip = request.META['REMOTE_ADDR']
-
-            meeting_order, created = MeetingOrder.objects.get_or_create(
-                mentor=mentor,
-                meeting=meeting_obj
-            )
-
-            meeting_order.ip = ip
-            meeting_order.is_active = True
-            meeting_order.save()
-
-            messages.success(
-                request,
-                'Success! See you there!'
-            )
-
-            email(
-                subject='Upcoming mentor meeting confirmation',
-                template_name='meeting-confirm-mentor',
-                context={
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'meeting_title': meeting_obj.meeting_type.title,
-                    'meeting_description': (
-                        meeting_obj.meeting_type.description
-                    ),
-                    'meeting_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_start_time': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('h:mma'),
-                    'meeting_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_end_time': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('h:mma'),
-                    'meeting_location_name': meeting_obj.location.name,
-                    'meeting_location_address': meeting_obj.location.address,
-                    'meeting_location_address2': meeting_obj.location.address2,
-                    'meeting_location_city': meeting_obj.location.city,
-                    'meeting_location_state': meeting_obj.location.state,
-                    'meeting_location_zip': meeting_obj.location.zip,
-                    'meeting_additional_info': meeting_obj.additional_info,
-                    'meeting_url': meeting_obj.get_absolute_url(),
-                    'meeting_ics_url': meeting_obj.get_ics_url(),
-                    'microdata_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').isoformat(),
-                    'microdata_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').isoformat(),
-                    'order': meeting_order,
-                },
-                recipients=[request.user.email],
-                preheader=u'Thanks for signing up for our next meeting, '
-                          '{}. We look forward to seeing you '
-                          'there.'.format(request.user.first_name),
-            )
-
-        return HttpResponseRedirect(
-            reverse(
-                'meeting_detail',
-                args=(
-                    meeting_obj.start_date.year,
-                    meeting_obj.start_date.month,
-                    meeting_obj.start_date.day,
-                    meeting_obj.meeting_type.slug,
-                    meeting_obj.id
-                )
-            )
-        )
-
-    return render(request, template_name, {
-        'meeting': meeting_obj,
-        'user_signed_up': user_signed_up
-    })
-
 
 def meeting_announce(request, meeting_id):
     if not request.user.is_staff:
@@ -249,8 +115,7 @@ def meeting_announce(request, meeting_id):
                         meeting_obj.end_date
                     ).to('local').format('h:mma'),
                     'meeting_location_name': meeting_obj.location.name,
-                    'meeting_location_address': meeting_obj.location.address,
-                    'meeting_location_address2': meeting_obj.location.address2,
+                    'meeting_location_street': meeting_obj.location.street,
                     'meeting_location_city': meeting_obj.location.city,
                     'meeting_location_state': meeting_obj.location.state,
                     'meeting_location_zip': meeting_obj.location.zip,
@@ -308,16 +173,7 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     event['dtend'] = '{}Z'.format(end_date)
     event['dtstamp'] = start_date
 
-    location = u'{}, {}, {}, {}, {} {}'.format(
-        meeting_obj.location.name,
-        meeting_obj.location.address,
-        meeting_obj.location.address2,
-        meeting_obj.location.city,
-        meeting_obj.location.state,
-        meeting_obj.location.zip
-    )
-
-    event['location'] = vText(location)
+    event['location'] = vText(meeting_obj.location.full)
     event['url'] = meeting_obj.get_absolute_url()
     event['description'] = strip_tags(meeting_obj.meeting_type.description)
 
@@ -802,78 +658,6 @@ def donate_return(request):
     return redirect('donate')
 
 
-
-
-
-def contact(request, template_name="contact.html"):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        human = True
-
-        if form.is_valid():
-            if request.POST['human']:
-                messages.error(request, 'Bad robot.')
-                human = False
-
-            if human:
-                msg = EmailMultiAlternatives(
-                    subject=u'{} | CoderDojoChi Contact Form'.format(
-                        request.POST['name']
-                    ),
-                    body=request.POST['body'],
-                    from_email=u'CoderDojoChi<{}>'.format(
-                        settings.DEFAULT_FROM_EMAIL
-                    ),
-                    reply_to=[
-                        u'{}<{}>'.format(
-                            request.POST['name'],
-                            request.POST['email']
-                        )
-                    ],
-                    to=[settings.CONTACT_EMAIL]
-                )
-
-                msg.attach_alternative(
-                    request.POST['body'].replace(
-                        "\r\n",
-                        "<br />"
-                    ).replace(
-                        "\n",
-                        "<br />"
-                    ),
-                    'text/html'
-                )
-
-                msg.send()
-
-                messages.success(
-                    request,
-                    u'Thank you for contacting us! '
-                    u'We will respond as soon as possible.'
-                )
-
-            form = ContactForm()
-        else:
-            messages.error(
-                request,
-                u'There was an error. Please try again.'
-            )
-    else:
-        form = ContactForm()
-
-    return render(
-        request,
-        template_name,
-        {
-            'form': form
-        }
-    )
-
-
-def privacy(request, template_name="privacy.html"):
-    return render(request, template_name)
-
-
 @login_required
 def cdc_admin(request, template_name="admin.html"):
     if not request.user.is_staff:
@@ -1092,256 +876,6 @@ def session_stats(request, session_id, template_name="session-stats.html"):
         }
     )
 
-
-@login_required
-@never_cache
-def session_check_in(
-    request,
-    session_id,
-    template_name="session-check-in.html"
-):
-
-    if not request.user.is_staff:
-        messages.error(
-            request,
-            'You do not have permission to access this page.'
-        )
-
-        return redirect('sessions')
-
-    if request.method == 'POST':
-        if 'order_id' in request.POST:
-            order = get_object_or_404(
-                Order,
-                id=request.POST['order_id']
-            )
-
-            if order.check_in:
-                order.check_in = None
-            else:
-                order.check_in = timezone.now()
-
-            if (
-                u'{} {}'.format(
-                    order.guardian.user.first_name,
-                    order.guardian.user.last_name
-                ) !=
-                request.POST['order_alternate_guardian']
-            ):
-                order.alternate_guardian = request.POST[
-                    'order_alternate_guardian'
-                ]
-
-            order.save()
-        else:
-            messages.error(request, 'Invalid Order')
-
-    # Get current session
-    session = get_object_or_404(Session, id=session_id)
-
-    # Active Session
-    active_session = True if timezone.now() < session.end_date else False
-
-    # get the orders
-    orders = Order.objects.select_related().filter(
-        session_id=session_id
-    ).annotate(
-        num_attended=Count(
-            Case(
-                When(
-                    student__order__check_in__isnull=False,
-                    then=1
-                )
-            )
-        ),
-        num_missed=Count(
-            Case(
-                When(
-                    student__order__check_in__isnull=True,
-                    then=1
-                )
-            )
-        )
-    )
-
-    if active_session:
-        active_orders = orders.filter(
-            is_active=True
-        ).order_by(
-            'student__first_name'
-        )
-
-    else:
-        active_orders = orders.filter(
-            is_active=True,
-            check_in__isnull=False
-        ).order_by(
-            'student__first_name'
-        )
-
-    inactive_orders = orders.filter(
-        is_active=False
-    ).order_by('-updated_at')
-
-    no_show_orders = orders.filter(
-        is_active=True,
-        check_in__isnull=True
-    )
-
-    checked_in_orders = orders.filter(
-        is_active=True,
-        check_in__isnull=False
-    )
-
-    # Genders
-    gender_count = sorted(
-        dict(
-            list(
-                Counter(
-                    e.student.get_clean_gender() for e in active_orders
-                ).iteritems()
-            )
-        ).items(),
-        key=operator.itemgetter(1)
-    )
-
-    # Ages
-    ages = sorted(
-        list(
-            e.get_student_age() for e in active_orders
-        )
-    )
-
-    age_count = sorted(
-        dict(
-            list(
-                Counter(ages).iteritems()
-            )
-        ).items(),
-        key=operator.itemgetter(0)
-    )
-
-    # age_count = sorted(
-    #     dict(
-    #         list(
-    #             Counter(ages).iteritems()
-    #         )
-    #     ).items(),
-    #     key=operator.itemgetter(1),
-    #     reverse=True
-    # )
-
-    # Average Age
-    average_age = int(
-        round(
-            sum(ages) / float(len(ages))
-        )
-    ) if orders and ages else 0
-
-    return render(
-        request,
-        template_name,
-        {
-            'session': session,
-            'active_session': active_session,
-            'active_orders': active_orders,
-            'inactive_orders': inactive_orders,
-            'no_show_orders': no_show_orders,
-            'gender_count': gender_count,
-            'age_count': age_count,
-            'average_age': average_age,
-            'checked_in_orders': checked_in_orders,
-        }
-    )
-
-
-@login_required
-@never_cache
-def session_check_in_mentors(
-    request,
-    session_id,
-    template_name="session-check-in-mentors.html"
-):
-
-    if not request.user.is_staff:
-        messages.error(
-            request,
-            'You do not have permission to access this page.'
-        )
-        return redirect('sessions')
-
-    if request.method == 'POST':
-        if 'order_id' in request.POST:
-            order = get_object_or_404(
-                MentorOrder,
-                id=request.POST['order_id']
-            )
-
-            if order.check_in:
-                order.check_in = None
-            else:
-                order.check_in = timezone.now()
-
-            order.save()
-        else:
-            messages.error(
-                request,
-                'Invalid Order'
-            )
-
-    session = get_object_or_404(Session, id=session_id)
-
-    # Active Session
-    active_session = True if timezone.now() < session.end_date else False
-
-    # get the orders
-    orders = MentorOrder.objects.select_related().filter(
-        session_id=session_id
-    )
-
-    if active_session:
-        active_orders = orders.filter(
-            is_active=True
-        ).order_by(
-            'mentor__user__first_name'
-        )
-
-    else:
-        active_orders = orders.filter(
-            is_active=True,
-            check_in__isnull=False
-        ).order_by(
-            'mentor__user__first_name'
-        )
-
-    inactive_orders = orders.filter(
-        is_active=False
-    ).order_by('-updated_at')
-
-    no_show_orders = orders.filter(
-        is_active=True,
-        check_in__isnull=True
-    )
-
-    checked_in_orders = orders.filter(
-        is_active=True,
-        check_in__isnull=False
-    )
-
-    return render(
-        request,
-        template_name,
-        {
-            'session': session,
-            'active_session': active_session,
-            'active_orders': active_orders,
-            'inactive_orders': inactive_orders,
-            'no_show_orders': no_show_orders,
-            'checked_in_orders': checked_in_orders,
-        }
-    )
-
-
 @login_required
 @never_cache
 def session_donations(
@@ -1505,8 +1039,7 @@ def session_announce_mentors(request, session_id):
                         session_obj.end_date
                     ).to('local').format('h:mma'),
                     'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
+                    'class_location_street': session_obj.location.street,
                     'class_location_city': session_obj.location.city,
                     'class_location_state': session_obj.location.state,
                     'class_location_zip': session_obj.location.zip,
@@ -1590,8 +1123,7 @@ def session_announce_guardians(request, session_id):
                         session_obj.end_date
                     ).to('local').format('h:mma'),
                     'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
+                    'class_location_street': session_obj.location.street,
                     'class_location_city': session_obj.location.city,
                     'class_location_state': session_obj.location.state,
                     'class_location_zip': session_obj.location.zip,

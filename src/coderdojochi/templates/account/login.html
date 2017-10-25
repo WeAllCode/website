@@ -1,5 +1,5 @@
 {% extends "account/_base.html" %}
-{% load i18n bootstrap3 socialaccount %}
+{% load bootstrap3 socialaccount %}
 
 {% block title_placeholder %}Login{% endblock %}
 
@@ -9,10 +9,10 @@
 <div class="container min-height">
     <div class="row">
         <h1>Login</h1>
-        <h2>{% trans "Not yet a member" %}? <a href="{% url 'account_signup' %}">{% trans "Register now" %}</a>!</h2>
+        <h2>Not yet a member? <a href="{% url 'account_signup' %}">Register now</a>!</h2>
     </div>
     <div class="half">
-        <p><a class="btn login-google" href="/accounts/google/login">{% trans "Sign in with Google" %}</a></p>
+        <p><a class="btn login-google" href="/accounts/google/login">Sign in with Google</a></p>
     </div>
     <div class="half">
         <p><a href="{% provider_login_url "facebook" method="js_sdk" %}" class="btn login-facebook">Sign in with Facebook</a></p>
@@ -23,10 +23,10 @@
             {% csrf_token %}
             {% bootstrap_form form %}
             <input type="hidden" name="next" value="{{ next }}" />
-            <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Log in' %}" />
+            <input class="btn-cdc btn-cdc-lg" type="submit" value="Log in" />
         </form>
     </div>
-    <p>{% trans "Forgot your password" %}? <a href="{% url 'account_reset_password' %}">{% trans "Reset it" %}</a>!</p>
+    <p>Forgot your password? <a href="{% url 'account_reset_password' %}">Reset it</a>!</p>
 </div>
 {% endblock %}
 
