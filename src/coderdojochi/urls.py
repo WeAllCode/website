@@ -7,20 +7,35 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as django_views
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import RedirectView
 
 from . import old_views as coderdojochi_views
 
 from .views.about import AboutView
 from .views.admin.mentor_check_in import AdminMentorCheckInView
+from .views.admin.mentor_avatar import (
+    AdminMentorAvatarApproveRedirectView,
+    AdminMentorAvatarRejectRedirectView,
+)
 from .views.admin.student_check_in import AdminStudentCheckInView
 from .views.contact import ContactView
+from .views.general import (
+    AboutView,
+    HomeView,
+    WelcomeView,
+)
 from .views.home import HomeView
 from .views.meetings import (
     MeetingDetailView,
     MeetingIcsView,
     MeetingSignUpView,
     MeetingsView,
+)
+from .views.mentor import (
+    MentorDetailView,
+    MentorListView,
 )
 from .views.profile import DojoMentorView
 from .views.volunteer import VolunteerView
@@ -126,13 +141,13 @@ urlpatterns = [
     # /mentors/
     url(
         r'^mentors/$',
-        coderdojochi_views.mentors,
-        name='mentors',
+        MentorListView.as_view(),
+        name='mentor_list',
     ),
     # /mentor/ID/
     url(
-        r'^mentor/(?P<mentor_id>[\d]+)/$',
-        coderdojochi_views.mentor_detail,
+        r'^mentor/(?P<pk>[\d]+)/$',
+        MentorDetailView.as_view(),
         name='mentor_detail',
     ),
     # 301 /mentors/ID/
@@ -141,29 +156,7 @@ urlpatterns = [
         RedirectView.as_view(pattern_name='mentor_detail'),
     ),
 
-    # /mentor/ID/reject-avatar/
-    url(
-        r'^mentor/(?P<mentor_id>[\d]+)/reject-avatar/$',
-        coderdojochi_views.mentor_reject_avatar,
-        name='mentor_reject_avatar',
-    ),
-    # 301 /mentors/ID/reject-avatar/
-    url(
-        r'^mentors/(?P<mentor_id>[\d]+)/reject-avatar/$',
-        RedirectView.as_view(pattern_name='mentor_reject_avatar'),
-    ),
 
-    # /mentor/ID/approve-avatar/
-    url(
-        r'^mentor/(?P<mentor_id>[\d]+)/approve-avatar/$',
-        coderdojochi_views.mentor_approve_avatar,
-        name='mentor_approve_avatar',
-    ),
-    # 301 /mentors/ID/approve-avatar/
-    url(
-        r'^mentors/(?P<mentor_id>[\d]+)/approve-avatar/$',
-        RedirectView.as_view(pattern_name='mentor_approve_avatar'),
-    ),
 
 
     # Student
@@ -351,6 +344,22 @@ urlpatterns = [
         coderdojochi_views.meeting_check_in,
         name='meeting_check_in',
     ),
+
+    # Admin Mentor Avatar
+    # /admin/mentor/ID/reject-avatar/
+    url(
+        r'^admin/mentor/(?P<pk>[\d]+)/reject-avatar/$',
+        staff_member_required(AdminMentorAvatarRejectRedirectView.as_view()),
+        name='mentor_reject_avatar',
+    ),
+
+    # /admin/mentor/ID/approve-avatar/
+    url(
+        r'^admin/mentor/(?P<pk>[\d]+)/approve-avatar/$',
+        staff_member_required(AdminMentorAvatarApproveRedirectView.as_view()),
+        name='mentor_approve_avatar',
+    ),
+
 
 
     # Admin Check System
