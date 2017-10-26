@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -14,6 +15,6 @@ class AdminView(TemplateView):
                 request, 'You do not have permission to access this page.'
             )
 
-            return redirect('sessions')
+            return redirect('home')
 
         return super(TemplateView, self).dispatch(request, *args, **kwargs)

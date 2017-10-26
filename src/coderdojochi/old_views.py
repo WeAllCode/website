@@ -990,67 +990,6 @@ def session_donations(
     )
 
 
-@login_required
-@never_cache
-def meeting_check_in(
-    request,
-    meeting_id,
-    template_name="meeting-check-in.html"
-):
-
-    if not request.user.is_staff:
-        messages.error(
-            request,
-            'You do not have permission to access this page.'
-        )
-        return redirect('dojo')
-
-    if request.method == 'POST':
-        if 'order_id' in request.POST:
-            order = get_object_or_404(
-                MeetingOrder,
-                id=request.POST['order_id']
-            )
-
-            if order.check_in:
-                order.check_in = None
-            else:
-                order.check_in = timezone.now()
-
-            order.save()
-        else:
-            messages.error(request, 'Invalid Order')
-
-    orders = MeetingOrder.objects.select_related().filter(
-        meeting=meeting_id
-    ).order_by(
-        'mentor__user__first_name'
-    )
-
-    active_orders = orders.filter(
-        is_active=True
-    )
-
-    inactive_orders = orders.filter(
-        is_active=False
-    )
-
-    checked_in = orders.filter(
-        is_active=True,
-        check_in__isnull=False
-    )
-
-    return render(
-        request,
-        template_name,
-        {
-            'active_orders': active_orders,
-            'inactive_orders': inactive_orders,
-            'checked_in': checked_in,
-        }
-    )
-
-
 @never_cache
 def session_announce_mentors(request, session_id):
     if not request.user.is_staff:

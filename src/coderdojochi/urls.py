@@ -14,6 +14,7 @@ from . import old_views as coderdojochi_views
 from .views.about import AboutView
 from .views.admin.mentor_check_in import AdminMentorCheckInView
 from .views.admin.student_check_in import AdminStudentCheckInView
+from .views.admin.mentor_meeting_check_in import AdminMentorMeetingCheckInView
 from .views.contact import ContactView
 from .views.home import HomeView
 from .views.meetings import (
@@ -348,7 +349,7 @@ urlpatterns = [
     # /admin/meeting/ID/check-in/
     url(
         r'^admin/meeting/(?P<meeting_id>[\d]+)/check-in/$',
-        coderdojochi_views.meeting_check_in,
+        AdminMentorMeetingCheckInView.as_view(),
         name='meeting_check_in',
     ),
 
