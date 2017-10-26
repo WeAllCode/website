@@ -221,12 +221,19 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
             # Replaces session_detail_short
             if all([k not in kwargs for k in ['year', 'month', 'day', 'slug']]):
                 return redirect(session_obj.get_absolute_url())
-            if session_obj.password:
+
+            is_authenticated_mentor = (
+                request.user.is_authenticated() and request.user.role == 'mentor'
+            )
+
+            if not is_authenticated_mentor and session_obj.password:
                 if not self.validate_partner_session_access(self.request, kwargs['session_id']):
                     return redirect(reverse('session_password', kwargs=kwargs))
+
             if request.user.is_authenticated() and request.user.role:
                 if 'enroll' in request.GET or 'enroll' in kwargs:
                     return self.enroll_redirect(request, session_obj)
+
         kwargs['session_obj'] = session_obj
         return super(SessionDetailView, self).dispatch(request, *args, **kwargs)
 
@@ -517,6 +524,24 @@ class PasswordSessionView(TemplateView):
         context['partner_message'] = session_obj.partner_message
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        view_kwargs = {
+            'year': kwargs.get('year'),
+            'month': kwargs.get('month'),
+            'day': kwargs.get('day'),
+            'slug': kwargs.get('slug'),
+            'session_id': kwargs.get('session_id')
+        }
+        session_url = reverse('session_detail', kwargs=view_kwargs)
+
+        if self.request.user.is_authenticated() and self.request.user.role == 'mentor':
+            return HttpResponseRedirect(session_url)
+
+        context = self.get_context_data(**kwargs)
+        context['session_url'] = session_url
+
+        return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         session_id = kwargs.get('session_id')
