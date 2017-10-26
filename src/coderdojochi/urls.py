@@ -15,7 +15,10 @@ from . import old_views as coderdojochi_views
 
 from .views.about import AboutView
 from .views.admin.mentor_check_in import AdminMentorCheckInView
-from .views.admin.mentor_avatar import AdminMentorAvatarApproveRedirectView
+from .views.admin.mentor_avatar import (
+    AdminMentorAvatarApproveRedirectView,
+    AdminMentorAvatarRejectRedirectView,
+)
 from .views.admin.student_check_in import AdminStudentCheckInView
 from .views.contact import ContactView
 from .views.general import (
@@ -346,7 +349,7 @@ urlpatterns = [
     # /admin/mentor/ID/reject-avatar/
     url(
         r'^admin/mentor/(?P<pk>[\d]+)/reject-avatar/$',
-        coderdojochi_views.mentor_reject_avatar,
+        staff_member_required(AdminMentorAvatarRejectRedirectView.as_view()),
         name='mentor_reject_avatar',
     ),
 
