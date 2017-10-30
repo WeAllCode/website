@@ -128,14 +128,14 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
-            <h2 class="text-left">Classes <span class="badge">{{ object_list.count }}</span></h2>
+            <h2 class="text-left">Classes <span class="badge">{{ sessions.count }}</span></h2>
         </div>
         <div class="col-sm-6 text-right h2">
             <a href="{% url 'admin:coderdojochi_session_add' %}" class="btn btn-success" role="button">Create New Session</a>
         </div>
     </div>
 
-    {% if object_list %}
+    {% if sessions %}
     <table class="table table-striped">
         <colgroup>
             <col>
@@ -173,7 +173,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for session in object_list %}
+            {% for session in sessions %}
             <tr class="
                 {% if session.is_active == False %}
                     danger
