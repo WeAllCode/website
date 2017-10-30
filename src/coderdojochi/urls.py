@@ -35,6 +35,8 @@ from .views.sessions import (
 )
 from .views.welcome import WelcomeView
 
+from .views.admin.classes import AdminClassesListView
+
 admin.autodiscover()
 
 urlpatterns = [
@@ -311,9 +313,17 @@ urlpatterns = [
 
     # Admin
     # /admin/
+    # url(
+    #     r'^admin/$',
+    #     AdminDashboardListView.as_view(),
+    #     name='cdc_admin',
+    # ),
+
+    # Admin Class List
+    # /admin/classes/
     url(
-        r'^admin/$',
-        coderdojochi_views.cdc_admin,
+        r'^admin/classes/$',
+        AdminClassesListView.as_view(),
         name='cdc_admin',
     ),
 

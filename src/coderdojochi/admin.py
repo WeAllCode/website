@@ -477,6 +477,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_public',
         'course__title',
         'location',
+        'start_date',
     )
 
     ordering = (
@@ -518,6 +519,17 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     get_student_count.short_description = "Students"
     get_student_count.admin_order_field = 'student__count'
 
+    # def get_class_count(self, obj):
+    #     return mark_safe(
+    #         '<a href="{}?course={}">{}</a>'.format(
+    #             reverse("admin:coderdojochi_session_start_date"),
+    #             obj.session.course.id,
+    #             obj.session.course.start_date,
+    #         )
+    #     )
+    # #     if ((session.course.start_date >= 01/01/2017) && (session.course.start_date <= 12/31/2017)){
+    # #  give the course description and details
+    #  get_class_count.short_description = 'Session'
 
 @admin.register(Order)
 class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
@@ -617,16 +629,16 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
-    # def session(obj):
-    #     url = reverse(
-    #         'admin:coderdojochi_session_change',
-    #         args=(obj.session.id,)
-    #     )
-    #     return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.session))
+    def session(obj):
+        url = reverse(
+            'admin:coderdojochi_session_change',
+            args=(obj.session.id,)
+        )
+        return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.session))
 
-    # session.short_description = 'Session'
-    # raw_id_fields = ('session',)
-    # readonly_fields = (session, 'session',)
+    session.short_description = 'Session'
+    raw_id_fields = ('session',)
+    readonly_fields = (session, 'session',)
 
     list_display = (
         'mentor',
