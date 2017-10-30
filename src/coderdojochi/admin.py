@@ -477,7 +477,6 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_public',
         'course__title',
         'location',
-        'start_date',
     )
 
     ordering = (
