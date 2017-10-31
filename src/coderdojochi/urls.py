@@ -36,6 +36,7 @@ from .views.sessions import (
 from .views.welcome import WelcomeView
 
 from .views.admin.classes import AdminClassesListView
+from .views.admin.meetings import AdminMeetingsListView
 
 admin.autodiscover()
 
@@ -353,6 +354,13 @@ urlpatterns = [
         name='check_in_mentors',
     ),
 
+    # Admin Meetings List
+    # /admin/Meetings/
+    url(
+        r'^admin/meetings/$',
+        AdminMeetingsListView.as_view(),
+        name='meetings_admin',
+    ),
 
     # Admin Meetings
     # /admin/meeting/ID/check-in/

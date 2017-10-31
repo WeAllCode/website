@@ -44,17 +44,7 @@
           {% endfor %}
           ]);
 
-        // var age_options = {
-        //   legend: {
-        //     position: 'bottom',
-        // }
-
         var age_options = {
-            // chart: {
-            //   title: 'Genders of Registered Students',
-            // },
-            // bars: 'horizontal', // Required for Material Bar Charts.
-            // hAxis: { format: 'short' },
             legend: {
                 position: 'none'
             },
@@ -62,9 +52,6 @@
                 alwaysOutside: true,
             },
         };
-
-        // var age_chart = new google.visualization.BarChart(document.getElementById('age_chart'));
-        // age_chart.draw(age_data, age_options);
 
         var age_chart = new google.charts.Bar(document.getElementById('age_chart'));
         age_chart.draw(age_data, age_options);
