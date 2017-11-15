@@ -44,17 +44,7 @@
           {% endfor %}
           ]);
 
-        // var age_options = {
-        //   legend: {
-        //     position: 'bottom',
-        // }
-
         var age_options = {
-            // chart: {
-            //   title: 'Genders of Registered Students',
-            // },
-            // bars: 'horizontal', // Required for Material Bar Charts.
-            // hAxis: { format: 'short' },
             legend: {
                 position: 'none'
             },
@@ -62,9 +52,6 @@
                 alwaysOutside: true,
             },
         };
-
-        // var age_chart = new google.visualization.BarChart(document.getElementById('age_chart'));
-        // age_chart.draw(age_data, age_options);
 
         var age_chart = new google.charts.Bar(document.getElementById('age_chart'));
         age_chart.draw(age_data, age_options);
@@ -128,14 +115,14 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
-            <h2 class="text-left">Classes <span class="badge">{{ sessions.count }}</span></h2>
+            <h2 class="text-left">Classes <span class="badge">{{ object_list.count }}</span></h2>
         </div>
         <div class="col-sm-6 text-right h2">
             <a href="{% url 'admin:coderdojochi_session_add' %}" class="btn btn-success" role="button">Create New Session</a>
         </div>
     </div>
 
-    {% if sessions %}
+    {% if object_list %}
     <table class="table table-striped">
         <colgroup>
             <col>
@@ -173,7 +160,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for session in sessions %}
+            {% for session in object_list %}
             <tr class="
                 {% if session.is_active == False %}
                     danger
@@ -190,8 +177,8 @@
                 <td class="hidden-xs hidden-sm"><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
                 <td class="hidden-xs hidden-sm">{{ session.location.name }}</td>
                 <td class="text-center hidden-xs hidden-sm">
-                    {% if session.announced_date|yesno:'yes,no' == 'yes' %}
-                        <i class="fa fa-calendar-check-o" title="{{ session.announced_date }}" aria-hidden="true"></i>
+                    {% if session.announced_date_guardians|yesno:'yes,no' == 'yes' %}
+                        <i class="fa fa-calendar-check-o" title="{{ session.announced_date_guardians }}" aria-hidden="true"></i>
                     {% endif %}
                 </td>
                 <td class="text-right">
@@ -256,94 +243,6 @@
     </table>
     {% else %}
     <p>No past sessions.</p>
-    {% endif %}
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-6">
-            <h2 class="text-left">Meetings <span class="badge">{{ meetings.count }}</span></h2>
-        </div>
-        <div class="col-sm-6 text-right h2">
-            <a href="{% url 'admin:coderdojochi_meeting_add' %}" class="btn btn-success" role="button">Create New Meeting</a>
-        </div>
-    </div>
-
-    {% if meetings %}
-    <table class="table table-striped">
-        <colgroup>
-            <col>
-            <col>
-            <col>
-            <col>
-            <col>
-            <col>
-            <col span="2" class="info">
-            <col>
-        </colgroup>
-        <thead>
-            <tr>
-                <th rowspan="2" class="col-sm-2">Date</th>
-                <th rowspan="2" class="col-sm-1 text-right">S. Time</th>
-                <th rowspan="2" class="col-sm-1 text-right">E. Time</th>
-                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Meeting Name</th>
-                <th rowspan="2" class="col-sm-4 hidden-xs hidden-sm">Location</th>
-                <th rowspan="2" class="hidden-xs hidden-sm">Annon.</th>
-                <th colspan="2" class="col-sm-1 text-center">Volunteers</th>
-                <th rowspan="2" class=""></th>
-            </tr>
-            <tr>
-                <th class="text-center"><abbr title="Attended">A</abbr></th>
-                <th class="text-center"><abbr title="Orders">O</abbr></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for meeting in meetings %}
-            <tr class="
-                {% if meeting.is_active == False %}
-                    danger
-                {% else %}
-                    {% if meeting.is_future == 1 %}
-                    success
-                    {% endif %}
-                {% endif %}
-                "
-            >
-                <td>{{ meeting.start_date|date:"M j, Y" }}</td>
-                <td class="text-right">{{ meeting.start_date|time:"H:i" }}</td>
-                <td class="text-right">{{ meeting.end_date|time:"H:i" }}</td>
-                <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
-                <td>{{ meeting.location.name }}</td>
-                <td class="text-center">
-                    {% if meeting.announced_date|yesno:'yes,no' == 'yes' %}
-                        <i class="fa fa-calendar-check-o" title="{{ meeting.announced_date }}" aria-hidden="true"></i>
-                    {% endif %}
-                </td>
-                <td class="text-right">
-                    {% if not meeting.external_enrollment_url %}
-                        {{ meeting.num_attended|default:'-' }}
-                    {% else %}
-                        &times;
-                    {% endif %}
-                </td>
-                <td class="text-right">
-                    {% if not meeting.external_enrollment_url %}
-                        {{ meeting.num_orders|default:'-' }}
-                    {% else %}
-                        &times;
-                    {% endif %}
-                </td>
-                <td class="text-center">
-                    {% if not meeting.external_enrollment_url %}
-                        <a href="{% url 'meeting_check_in' meeting.id %}"><span class="glyphicon glyphicon-check"></span></a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No upcoming meetings.</p>
     {% endif %}
 </div>
 {% endblock %}

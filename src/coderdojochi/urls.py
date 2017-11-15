@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from loginas import views as loginas_views
 
 from django.conf import settings
@@ -34,6 +32,9 @@ from .views.sessions import (
     SessionsView,
 )
 from .views.welcome import WelcomeView
+
+from .views.admin.classes import AdminClassesListView
+from .views.admin.meetings import AdminMeetingsListView
 
 admin.autodiscover()
 
@@ -311,9 +312,17 @@ urlpatterns = [
 
     # Admin
     # /admin/
+    # url(
+    #     r'^admin/$',
+    #     AdminDashboardListView.as_view(),
+    #     name='cdc_admin',
+    # ),
+
+    # Admin Class List
+    # /admin/classes/
     url(
-        r'^admin/$',
-        coderdojochi_views.cdc_admin,
+        r'^admin/classes/$',
+        AdminClassesListView.as_view(),
         name='cdc_admin',
     ),
 
@@ -343,6 +352,13 @@ urlpatterns = [
         name='check_in_mentors',
     ),
 
+    # Admin Meetings List
+    # /admin/Meetings/
+    url(
+        r'^admin/meetings/$',
+        AdminMeetingsListView.as_view(),
+        name='meetings_admin',
+    ),
 
     # Admin Meetings
     # /admin/meeting/ID/check-in/

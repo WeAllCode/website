@@ -1,0 +1,135 @@
+{% extends "_admin-base.html" %}
+
+{% load coderdojochi_extras %}
+
+{% block title %}CoderDojoChi Admin{% endblock %}
+
+{% block body_class %}page-cdc-admin{% endblock %}
+
+{% block extra_head %}
+<style>
+    col.success { background-color: #dff0d8; }
+    col.error{ background-color: #f2dede; }
+    col.warning { background-color: #fcf8e3; }
+    col.info { background-color: #d9edf7; }
+    .table tbody > tr > td.vert-align { vertical-align: middle; }
+</style>
+
+<!-- Google Charts -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+
+{% block topnav %}
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'cdc_admin' %}">CoderDojoChi Admin</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class="pull-right" href="{% url 'admin:index' %}">Django Admin</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+{% load admin_urls %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2 class="text-left">Meetings <span class="badge">{{ object_list.count }}</span></h2>
+        </div>
+        <div class="col-sm-6 text-right h2">
+            <a href="{% url 'admin:coderdojochi_meeting_add' %}" class="btn btn-success" role="button">Create New Meeting</a>
+        </div>
+    </div>
+
+    {% if object_list %}
+    <table class="table table-striped">
+        <colgroup>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col span="2" class="info">
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th rowspan="2" class="col-sm-2">Date</th>
+                <th rowspan="2" class="col-sm-1 text-right">S. Time</th>
+                <th rowspan="2" class="col-sm-1 text-right">E. Time</th>
+                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Meeting Name</th>
+                <th rowspan="2" class="col-sm-4 hidden-xs hidden-sm">Location</th>
+                <th rowspan="2" class="hidden-xs hidden-sm">Annon.</th>
+                <th colspan="2" class="col-sm-1 text-center">Volunteers</th>
+                <th rowspan="2" class=""></th>
+            </tr>
+            <tr>
+                <th class="text-center"><abbr title="Attended">A</abbr></th>
+                <th class="text-center"><abbr title="Orders">O</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meeting in object_list %}
+            <tr class="
+                {% if meeting.is_active == False %}
+                    danger
+                {% else %}
+                    {% if meeting.is_future == 1 %}
+                    success
+                    {% endif %}
+                {% endif %}
+                "
+            >
+                <td>{{ meeting.start_date|date:"M j, Y" }}</td>
+                <td class="text-right">{{ meeting.start_date|time:"H:i" }}</td>
+                <td class="text-right">{{ meeting.end_date|time:"H:i" }}</td>
+                <td><a href="{{ meeting.get_absolute_url }}">{{ meeting.meeting_type.title }}</a></td>
+                <td>{{ meeting.location.name }}</td>
+                <td class="text-center">
+                    {% if meeting.announced_date|yesno:'yes,no' == 'yes' %}
+                        <i class="fa fa-calendar-check-o" title="{{ meeting.announced_date }}" aria-hidden="true"></i>
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    {% if not meeting.external_enrollment_url %}
+                        {{ meeting.num_attended|default:'-' }}
+                    {% else %}
+                        &times;
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    {% if not meeting.external_enrollment_url %}
+                        {{ meeting.num_orders|default:'-' }}
+                    {% else %}
+                        &times;
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if not meeting.external_enrollment_url %}
+                        <a href="{% url 'meeting_check_in' meeting.id %}"><span class="glyphicon glyphicon-check"></span></a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No upcoming object_list.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block footer_base %}{% endblock %}

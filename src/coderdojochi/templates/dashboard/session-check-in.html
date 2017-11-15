@@ -161,15 +161,6 @@
     </div>
     {% endif %}
 
-    {% if active_orders.count %}
-    <div class="container">
-        <div class="row">
-
-        </div>
-    </div>
-    {% endif %}
-
-    {% if active_orders.count %}
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
@@ -242,9 +233,8 @@
             </div>
         </div>
     </div>
-    {% endif %}
 
-    {% if active_session != True %}
+    {% if active_session != True and no_show_orders.count %}
     <div class="container">
         <div class="row">
             <div class="col-sm-12">

@@ -55,7 +55,6 @@
         </div>
     {% endif %}
 
-    {% if active_orders.count %}
     <div class="container">
         {% if active_session %}
         <h2>Attending Mentors <span class="badge">{{ active_orders.count }}</span></h2>
@@ -114,7 +113,6 @@
             </div>
         </div>
     </div>
-    {% endif %}
 
     {% if active_session != True and no_show_orders %}
     <div class="container">
