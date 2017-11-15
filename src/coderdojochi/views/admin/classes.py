@@ -1,17 +1,11 @@
-from django.views.generic.list import ListView
-from django.utils import timezone
-from collections import Counter
 import operator
-from django.db.models import (
-    Case,
-    Count,
-    IntegerField,
-    When,
-)
-from coderdojochi.models import (
-    Order,
-    Session,
-)
+from collections import Counter
+
+from django.db.models import Case, Count, IntegerField, When
+from django.utils import timezone
+from django.views.generic.list import ListView
+
+from coderdojochi.models import Order, Session
 
 
 class AdminClassesListView(ListView):

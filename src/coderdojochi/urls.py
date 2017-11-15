@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from loginas import views as loginas_views
 
 from django.conf import settings

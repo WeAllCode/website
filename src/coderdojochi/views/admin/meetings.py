@@ -1,7 +1,9 @@
-from coderdojochi.models import Meeting
 from django.db.models import Case, Count, IntegerField, When
 from django.utils import timezone
 from django.views.generic.list import ListView
+
+from coderdojochi.models import Meeting
+
 
 class AdminMeetingsListView(ListView):
 

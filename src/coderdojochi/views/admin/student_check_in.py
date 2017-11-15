@@ -1,24 +1,13 @@
 import operator
-
 from collections import Counter
 
-from coderdojochi.models import (
-    Order,
-    Session,
-)
-from coderdojochi.views.admin import AdminView
-
 from django.contrib import messages
-from django.db.models import (
-    Case,
-    Count,
-    When,
-)
-from django.shortcuts import (
-    get_object_or_404,
-    render,
-)
+from django.db.models import Case, Count, When
+from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+
+from coderdojochi.models import Order, Session
+from coderdojochi.views.admin import AdminView
 
 
 class AdminStudentCheckInView(AdminView):
@@ -151,13 +140,12 @@ class AdminStudentCheckInView(AdminView):
             else:
                 order.check_in = timezone.now()
 
-            if (
-                u'{} {}'.format(
-                    order.guardian.user.first_name,
-                    order.guardian.user.last_name
-                ) !=
-                request.POST['order_alternate_guardian']
-            ):
+            order_name = u'{} {}'.format(
+                order.guardian.user.first_name,
+                order.guardian.user.last_name
+            )
+
+            if order_name != request.POST['order_alternate_guardian']:
                 order.alternate_guardian = self.request.POST[
                     'order_alternate_guardian'
                 ]
