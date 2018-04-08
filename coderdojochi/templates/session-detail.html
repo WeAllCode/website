@@ -25,6 +25,12 @@
 
     <div class="row">
         <div class="col-sm-4 col-sm-push-8 class-detail-sidebar-right">
+            {% if user.role == 'mentor' %}
+                <ul class="center-block well well-sm well-admin list-group list-unstyled">
+                    <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
+                    <li class="list-group-item">Mentors: <b>{{ session.get_mentor_orders.count }} / {{ session.get_mentor_capacity }}</b></li>
+                </ul>
+            {% endif %}
             {% if user.is_staff %}
                 <ul class="center-block well well-sm well-admin list-group list-unstyled">
                     {% if session.is_active %}
@@ -128,19 +134,6 @@
                 <div class="map">
                     <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img src="//maps.google.com/maps/api/staticmap?size=281x281&amp;sensor=false&amp;zoom=15&amp;markers={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"></a>
                 </div>
-            </div>
-            <div class="sidebar-right-section center-block">
-                <h3 class="subtitle">Upcoming Classes</h3>
-                {% for upcoming_class in upcoming_classes %}
-                    {% if upcoming_class.id != session.id %}
-                    <div class="row upcoming-class">
-                        <div class="col-xs-3 date">{{ upcoming_class.start_date|date:'M' }} <strong>{{ upcoming_class.start_date|date:'d' }}</strong></div>
-                        <div class="col-xs-9">
-                            <a href="{{ upcoming_class.get_absolute_url }}">{{ upcoming_class.course.title }}</a>
-                        </div>
-                    </div>
-                    {% endif %}
-                {% endfor %}
             </div>
         </div>
         <div class="col-sm-8 col-sm-pull-4 class-detail-content">
