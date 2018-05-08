@@ -35,6 +35,84 @@
             <![endif]-->
         </td>
     </tr>
+        <tr>
+        <td bgcolor="#ffffff" align="center" style="padding: 15px;">
+            <!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="500">
+            <tr>
+            <td align="center" valign="top" width="500">
+            <![endif]-->
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="responsive-table">
+                <tr>
+                    <td>
+                        <!-- COPY -->
+                        <h1>
+                            <span style="font-size:20px;">Class Information</span>
+                        </h1>
+                        <table border="0" cellpadding="1" cellspacing="1" style="width:500px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 100px">
+                                        <span style="font-size:16px;">
+                                            <strong>Course Title</strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <p>
+                                            <span style="font-size:16px;">{{ class_title }}</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px">
+                                        <span style="font-size:16px;">
+                                            <strong>Who</strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <p>
+                                            <span style="font-size:16px;">Free to attend!
+                                                <strong>Anyone between {{ min_age_limitation }} and {{ max_age_limitation }} of age</strong>.
+                                                No computer skills required.</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px">
+                                        <span style="font-size:16px;">
+                                            <strong>When</strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <p>
+                                            <span style="font-size:16px;">{{ class_start_date }} {{ class_start_time }} to {{ class_end_time }}</span> <span style="font-size:10px;">(<a draggable="false" href="{{ class_ics_url }}">Add to your calendar</a>)</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px">
+                                        <span style="font-size:16px;">
+                                            <strong>Where</strong>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size:16px;">
+                                            {{ class_location_name }}, {{ class_location_address }}, {{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </td>
+    </tr>
     <tr>
         <td bgcolor="#ffffff" align="center" style="padding: 15px;">
             <!--[if (gte mso 9)|(IE)]>

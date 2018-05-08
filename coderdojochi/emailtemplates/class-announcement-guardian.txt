@@ -1,4 +1,4 @@
-{% extends "_email-base.html" %}
+{% extends "_email-base.txt" %}
 
 {% block content %}
 New class date announced!
@@ -8,6 +8,13 @@ We&rsquo;re super excited! About what, you may ask? We just announced a brand ne
 Since you have a profile already, {{ first_name }}, all you have to do is enroll in the class. How awesome is that?
 
 Enroll Now at {{ class_url }}.
+
+Class Information
+
+Course Title: {{ class_title }}
+Who: Free to attend! Anyone between {{ min_age_limitation }} and {{ max_age_limitation }} of age. No computer skills required.
+When: {{ class_start_date }} {{ class_start_time }} to {{ class_end_time }}
+Where: {{ class_location_name }}, {{ class_location_address }}, {{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
 
 If you can&rsquo;t make it, be sure to share this with your best friends, online and offline!
 
