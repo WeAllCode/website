@@ -2497,6 +2497,8 @@ def session_announce(request, session_id):
                     'class_end_time': arrow.get(
                         session_obj.end_date
                     ).to('local').format('h:mma'),
+                    'min_age_limitation': session_obj.min_age_limitation,
+                    'max_age_limitation': session_obj.max_age_limitation,
                     'class_location_name': session_obj.location.name,
                     'class_location_address': session_obj.location.address,
                     'class_location_address2': session_obj.location.address2,
@@ -2537,6 +2539,8 @@ def session_announce(request, session_id):
                     'class_end_time': arrow.get(
                         session_obj.end_date
                     ).to('local').format('h:mma'),
+                    'min_age_limitation': session_obj.min_age_limitation,
+                    'max_age_limitation': session_obj.max_age_limitation,
                     'class_location_name': session_obj.location.name,
                     'class_location_address': session_obj.location.address,
                     'class_location_address2': session_obj.location.address2,
@@ -2551,7 +2555,6 @@ def session_announce(request, session_id):
                 preheader='We\'re super excited to bring you another class '
                           'date. Sign up to reserve your spot',
             )
-
 
         # Cleanup
         connection.close()
