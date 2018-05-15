@@ -77,6 +77,12 @@ def email(
         try:
             msg.send()
         except Exception as e:
+            logger.error(
+                u'{}'.format(e)
+            )
+            logger.error(
+                u'{}'.format(msg)
+            )
             response = msg.mandrill_response[0]
             logger.error(
                 u'{}'.format(response)
