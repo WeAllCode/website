@@ -3,7 +3,7 @@
   "model": "coderdojochi.location",
   "pk": 1,
   "fields": {
-    "name": "SapientNitro Office",
+    "name": "SapientNitro",
     "address": "30 West Monroe St",
     "address2": "12th Floor",
     "city": "Chicago",
