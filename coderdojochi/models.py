@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
 import os
-from stdimage.models import StdImageField
 
-from django.core import urlresolvers
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
+from django.core import urlresolvers
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
+
+from stdimage.models import StdImageField
 
 ROLE_CHOICES = (
     ('mentor', 'mentor'),
@@ -112,6 +113,14 @@ class Mentor(models.Model):
     def __unicode__(self):
         return u'{} {}'.format(self.user.first_name, self.user.last_name)
 
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = Mentor.objects.get(pk=self.pk)
+            if orig.avatar != self.avatar:
+                self.avatar_approved = False
+
+        super(Mentor, self).save(*args, **kwargs)
+
     def get_approve_avatar_url(self):
         return u'{}/mentor/{}/approve-avatar/'.format(
             settings.SITE_URL,
@@ -129,14 +138,6 @@ class Mentor(models.Model):
             settings.SITE_URL,
             self.id
         )
-
-    def save(self, *args, **kwargs):
-        if self.pk is not None:
-            orig = Mentor.objects.get(pk=self.pk)
-            if orig.avatar != self.avatar:
-                self.avatar_approved = False
-
-        super(Mentor, self).save(*args, **kwargs)
 
 
 class Guardian(models.Model):
@@ -172,10 +173,6 @@ class Guardian(models.Model):
             self.user.last_name
         )
 
-    def get_students(self):
-        students = Student.objects.filter(guardian=self)
-        return students
-
     @property
     def first_name(self):
         return self.user.first_name
@@ -187,6 +184,9 @@ class Guardian(models.Model):
     @property
     def email(self):
         return self.user.email
+
+    def get_students(self):
+        return Student.objects.filter(guardian=self)
 
 
 class Student(models.Model):
@@ -285,7 +285,7 @@ class Student(models.Model):
             return 'female'
         else:
             return 'other'
-    get_clean_gender.short_description = 'Gender'
+    get_clean_gender.short_description = 'Clean Gender'
 
     # returns True if the student age is between min_age and max_age
     def is_within_age_range(self, min_age, max_age, date=timezone.now()):
@@ -757,6 +757,10 @@ class Meeting(models.Model):
             )
         )
 
+    def get_mentor_count(self):
+        return MeetingOrder.objects.filter(meeting__id=self.id).count()
+    get_mentor_count.short_description = 'Mentors'
+
 
 class Order(models.Model):
     guardian = models.ForeignKey(
@@ -819,6 +823,18 @@ class Order(models.Model):
             self.session.course.title
         )
 
+    def is_checked_in(self):
+        return self.check_in is not None
+    is_checked_in.boolean = True
+
+    def get_student_age(self):
+        return self.student.get_age(self.session.start_date)
+    get_student_age.short_description = 'Age'
+
+    def get_student_gender(self):
+        return self.student.get_clean_gender().title()
+    get_student_gender.short_description = 'Gender'
+
 
 class MentorOrder(models.Model):
     mentor = models.ForeignKey(
@@ -873,6 +889,18 @@ class MentorOrder(models.Model):
             self.session.course.title
         )
 
+    def is_checked_in(self):
+        return self.check_in is not None
+
+    is_checked_in.boolean = True
+
+
+def mentor_check_out(modeladmin, request, queryset):
+    queryset.update(check_in=None)
+
+
+mentor_check_out.short_description = "Check out"
+
 
 class MeetingOrder(models.Model):
     mentor = models.ForeignKey(
@@ -926,6 +954,10 @@ class MeetingOrder(models.Model):
             self.mentor.user.last_name,
             self.meeting.meeting_type.title
         )
+
+    def is_checked_in(self):
+        return self.check_in is not None
+    is_checked_in.boolean = True
 
 
 class EquipmentType(models.Model):
@@ -1103,18 +1135,21 @@ class Donation(models.Model):
             return self.user.first_name
         else:
             return self.first_name
+    get_first_name.short_description = 'First Name'
 
     def get_last_name(self):
         if self.user:
             return self.user.last_name
         else:
             return self.last_name
+    get_last_name.short_description = 'Last Name'
 
     def get_email(self):
         if self.user:
             return self.user.email
         else:
             return self.email
+    get_email.short_description = 'Email'
 
 
 class PartnerPasswordAccess(models.Model):
