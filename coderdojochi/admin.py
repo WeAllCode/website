@@ -249,6 +249,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'user__last_name',
         'user__username',
         'user__email',
+        'phone',
     )
 
     readonly_fields = (
@@ -555,7 +556,6 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     view_on_site = False
 
-
     def get_student_link(self, obj):
         return mark_safe(
             '<a href="{}">{}</a>'.format(
@@ -567,7 +567,6 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             )
         )
     get_student_link.short_description = 'Student'
-
 
     def get_guardian_link(self, obj):
         return mark_safe(
@@ -581,16 +580,13 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         )
     get_guardian_link.short_description = 'Guardian'
 
-
     def get_student_gender(self, obj):
         return obj.student.get_clean_gender().title()
     get_student_gender.short_description = 'Gender'
 
-
     def get_student_age(self, obj):
         return obj.student.get_age(obj.session.start_date)
     get_student_age.short_description = 'Age'
-
 
     def get_session_link(self, obj):
         return mark_safe(
@@ -601,7 +597,6 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             )
         )
     get_session_link.short_description = 'Session'
-
 
     def is_checked_in(self, obj):
         if obj.check_in:
