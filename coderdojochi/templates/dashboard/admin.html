@@ -182,6 +182,9 @@
                     success
                     {% endif %}
                 {% endif %}
+                {% if forloop.counter > 5 %}
+                    collapse session-collapse
+                {% endif %}
                 "
             >
                 <td>{{ session.start_date|date:"M j, Y" }}</td>
@@ -253,6 +256,15 @@
             </tr>
             {% endfor %}
         </tbody>
+        {% if sessions.count > 5 %}
+        <tfoot>
+            <tr>
+                <td colspan="100" class="text-center">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target=".session-collapse">Show/Hide</button>
+                </td>
+            </tr>
+        </tfoot>
+        {% endif %}
     </table>
     {% else %}
     <p>No past sessions.</p>
@@ -307,6 +319,9 @@
                     success
                     {% endif %}
                 {% endif %}
+                {% if forloop.counter > 5 %}
+                    collapse session-collapse
+                {% endif %}
                 "
             >
                 <td>{{ meeting.start_date|date:"M j, Y" }}</td>
@@ -341,6 +356,15 @@
             </tr>
             {% endfor %}
         </tbody>
+        {% if meetings.count > 5 %}
+        <tfoot>
+            <tr>
+                <td colspan="100" class="text-center">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target=".meeting-collapse">Show/Hide</button>
+                </td>
+            </tr>
+        </tfoot>
+        {% endif %}
     </table>
     {% else %}
     <p>No upcoming meetings.</p>
