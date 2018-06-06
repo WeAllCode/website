@@ -1,98 +1,27 @@
-# ------------------------------
-# Miscellaneous
-# ------------------------------
-*.DS_Store
-_internal/
-src/
-static/avatars/**/*
-coderdojochi/static/avatars/**/*
-coderdojochi/static/css/*.css
-coderdojochi/static/css/*.css.map
-coderdojochi/static/js/*.min.js
-coderdojochi/static/js/*.min.map
-coderdojochi/static/images/sprites/**/*
-coderdojochi/static/*.jpg
-coderdojochi/static/*.png
-coderdojochi/static/*.gif
+# Created by https://www.gitignore.io/api/django
 
-# ------------------------------
-# Grunt/Bower
-# ------------------------------
-.sass-cache/
-node_modules/
-
-# ------------------------------
-# Django
-# ------------------------------
+### Django ###
 *.log
 *.pot
 *.pyc
+__pycache__/
 local_settings.py
-test_settings.py
-production_settings.py
+db.sqlite3
+media
 
-# ------------------------------
-# Python
-# ------------------------------
-*.py[cod]
+# If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
+# in your Git repository. Update and uncomment the following line accordingly.
+staticfiles/
 
-# C extensions
-*.so
+# env file
+.env
+.env.*
 
-# Packages
-*.egg
-*.egg-info
-dist
-
-
-# build
-
-
-
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
-lib
-lib64
-__pycache__
-
-# Installer logs
-pip-log.txt
-
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Django Development
-*.bak
-*.sqlite3
-test_settings.py
-
-local_settings.py
-/media
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-
-#############################
-# docker deployment and aws #
-#############################
-.elasticbeanstalk
-.tmp-deploy
-
+# psql dump files
+*.dump
 *.sql
+
+# End of https://www.gitignore.io/api/django
+
+# notes
+_notes/*

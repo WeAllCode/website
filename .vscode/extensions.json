@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "PeterJausovec.vscode-docker",
+        "thebarkman.vscode-djaneiro",
+        "Zignd.html-css-class-completion"
+    ]
+}

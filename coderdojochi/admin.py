@@ -1,15 +1,14 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import (
     Case,
     Count,
     When,
 )
-# from django.template.defaultfilters import pluralize
+
 from django.utils.safestring import mark_safe
 
 from import_export import resources
@@ -163,11 +162,8 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def get_mentororder_count(self, obj):
         return mark_safe(
-            '<a href="{}?mentor={}">{}</a>'.format(
-                reverse("admin:coderdojochi_mentororder_changelist"),
-                obj.id,
-                obj.mentororder__count,
-            )
+            f"<a href='{reverse('admin:coderdojochi_mentororder_changelist')}?mentor={obj.id}'>"
+            f"{obj.mentororder__count}</a>"
         )
     get_mentororder_count.short_description = 'Orders'
     get_mentororder_count.admin_order_field = 'mentororder__count'
@@ -265,19 +261,14 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def user_link(self, obj):
         return mark_safe(
-            '<a href="{}?q={}">{}</a>'.format(
-                reverse("admin:coderdojochi_cdcuser_changelist"),
-                obj.user.email,
-                obj.user,
-            )
+            f"<a href='{reverse('admin:coderdojochi_cdcuser_changelist')}?q={obj.user.email}'>{obj.user}</a>"
         )
     user_link.short_description = 'User'
 
     def get_queryset(self, request):
         qs = super(GuardianAdmin, self).get_queryset(request)
         qs = qs.select_related()
-        qs = qs.annotate(student_count=Count('student')
-                         ).order_by('-student_count')
+        qs = qs.annotate(student_count=Count('student')).order_by('-student_count')
         return qs
 
     def get_first_name(self, obj):
@@ -292,11 +283,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def get_student_count(self, obj):
         return mark_safe(
-            '<a href="{}?guardian={}">{}</a>'.format(
-                reverse("admin:coderdojochi_student_changelist"),
-                obj.id,
-                obj.student_count,
-            )
+            f"<a href='{reverse('admin:coderdojochi_student_changelist')}?guardian={obj.id}'>{obj.student_count}</a>"
         )
     get_student_count.short_description = 'Students'
     get_student_count.admin_order_field = 'student_count'
@@ -332,7 +319,7 @@ class StudentResource(resources.ModelResource):
             obj.guardian = Guardian.objects.get(user__email=guardian_email)
         except Guardian.DoesNotExist:
             raise ImportError(
-                u'guardian with email {} not found'.format(guardian_email)
+                f'guardian with email {guardian_email} not found'
             )
 
         if not dry_run:
@@ -393,12 +380,8 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def guardian_link(self, obj):
         return mark_safe(
-            '<a href="{}?q={}">{} {}</a>'.format(
-                reverse("admin:coderdojochi_guardian_changelist"),
-                obj.guardian.user.email,
-                obj.guardian.user.first_name,
-                obj.guardian.user.last_name,
-            )
+            f"<a href='{reverse('admin:coderdojochi_guardian_changelist')}?q={obj.guardian.user.email}'>"
+            f"{obj.guardian.user.first_name} {obj.guardian.user.last_name}</a>"
         )
     guardian_link.short_description = 'Guardian'
 
@@ -422,11 +405,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def get_order_count(self, obj):
         return mark_safe(
-            '<a href="{}?student={}">{}</a>'.format(
-                reverse("admin:coderdojochi_order_changelist"),
-                obj.id,
-                obj.order__count,
-            )
+            f"<a href='{reverse('admin:coderdojochi_order_changelist')}?student={obj.id}'>{obj.order__count}</a>"
         )
     get_order_count.short_description = 'Orders'
     get_order_count.admin_order_field = 'order__count'
@@ -469,7 +448,8 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_mentor_count',
         'is_active',
         'is_public',
-        'announced_date'
+        'announced_date_mentors',
+        'announced_date_guardians',
     )
 
     list_filter = (
@@ -500,12 +480,11 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             '<a href="{}?session__id__exact={}">{}</a>'.format(
                 reverse("admin:coderdojochi_mentororder_changelist"),
                 obj.id,
-                MentorOrder.objects.filter(
-                    session__id=obj.id, is_active=True).count(),
+                MentorOrder.objects.filter(session__id=obj.id, is_active=True).count(),
             )
         )
-    get_mentor_count.short_description = 'Mentors'
-    get_mentor_count.admin_order_field = 'mentor__count'
+    get_mentor_count.short_description = "Mentors"
+    get_mentor_count.admin_order_field = "mentor__count"
 
     def get_student_count(self, obj):
         return mark_safe(
@@ -516,7 +495,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             )
         )
     get_student_count.short_description = "Students"
-    get_student_count.admin_order_field = 'student__count'
+    get_student_count.admin_order_field = "student__count"
 
 
 @admin.register(Order)
