@@ -29,7 +29,7 @@ SCHOOL_TYPE_CHOICES = (
 class CDCForm(Form):
     # strip leading or trailing whitespace
     def _clean_fields(self):
-        for name, field in self.fields.items():
+        for name, field in list(self.fields.items()):
             # value_from_datadict() gets the data from the data dictionaries.
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
@@ -44,7 +44,7 @@ class CDCForm(Form):
                     initial = self.initial.get(name, field.initial)
                     value = field.clean(value, initial)
                 else:
-                    if isinstance(value, basestring):
+                    if isinstance(value, str):
                         value = field.clean(value.strip())
                     else:
                         value = field.clean(value)
@@ -62,7 +62,7 @@ class CDCForm(Form):
 class CDCModelForm(ModelForm):
     # strip leading or trailing whitespace
     def _clean_fields(self):
-        for name, field in self.fields.items():
+        for name, field in list(self.fields.items()):
             # value_from_datadict() gets the data from the data dictionaries.
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
@@ -77,7 +77,7 @@ class CDCModelForm(ModelForm):
                     initial = self.initial.get(name, field.initial)
                     value = field.clean(value, initial)
                 else:
-                    if isinstance(value, basestring):
+                    if isinstance(value, str):
                         # regex normalizes carriage return
                         # and cuts them to two at most
                         value = re.sub(r'\r\n', '\n', value)
@@ -275,7 +275,7 @@ class StudentForm(CDCModelForm):
             }
         ),
         label=format_html(
-            u"{0} {1}",
+            "{0} {1}",
             "Medications",
             mark_safe(
                 '<span class="btn btn-xs btn-link js-expand-student-form">'
@@ -294,7 +294,7 @@ class StudentForm(CDCModelForm):
             }
         ),
         label=format_html(
-            u"{0} {1}",
+            "{0} {1}",
             "Medical Conditions",
             mark_safe(
                 '<span class="btn btn-xs btn-link js-expand-student-form">'

@@ -47,6 +47,7 @@ from coderdojochi.models import (
 from coderdojochi.util import email
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
+from functools import reduce
 
 logger = logging.getLogger("mechanize")
 
@@ -1849,7 +1850,7 @@ def cdc_admin(request, template_name="admin.html"):
         ).items()
     )
     gender_count = sorted(
-        dict(gender_count).items(),
+        list(dict(gender_count).items()),
         key=operator.itemgetter(1)
     )
 
@@ -1860,11 +1861,11 @@ def cdc_admin(request, template_name="admin.html"):
         )
     )
     age_count = sorted(
-        dict(
+        list(dict(
             list(
                 Counter(ages).items()
             )
-        ).items(),
+        ).items()),
         key=operator.itemgetter(0)
     )
 
@@ -1939,7 +1940,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     )
 
     gender_count = sorted(
-        dict(gender_count).items(),
+        list(dict(gender_count).items()),
         key=operator.itemgetter(1)
     )
 
@@ -1951,11 +1952,11 @@ def session_stats(request, session_id, template_name="session-stats.html"):
     )
 
     age_count = sorted(
-        dict(
+        list(dict(
             list(
                 Counter(ages).items()
             )
-        ).items(),
+        ).items()),
         key=operator.itemgetter(1)
     )
 
@@ -2087,13 +2088,13 @@ def session_check_in(
 
     # Genders
     gender_count = sorted(
-        dict(
+        list(dict(
             list(
                 Counter(
                     e.student.get_clean_gender() for e in active_orders
                 ).items()
             )
-        ).items(),
+        ).items()),
         key=operator.itemgetter(1)
     )
 
@@ -2105,11 +2106,11 @@ def session_check_in(
     )
 
     age_count = sorted(
-        dict(
+        list(dict(
             list(
                 Counter(ages).items()
             )
-        ).items(),
+        ).items()),
         key=operator.itemgetter(0)
     )
 

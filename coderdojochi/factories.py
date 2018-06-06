@@ -2,12 +2,12 @@ import factory
 from datetime import datetime
 from pytz import utc
 
-from models import Session
-from models import Course
-from models import Location
-from models import Mentor
-from models import CDCUser
-from models import PartnerPasswordAccess
+from .models import Session
+from .models import Course
+from .models import Location
+from .models import Mentor
+from .models import CDCUser
+from .models import PartnerPasswordAccess
 
 
 class CourseFactory(factory.DjangoModelFactory):
@@ -30,7 +30,7 @@ class LocationFactory(factory.DjangoModelFactory):
 
 
 class CDCUserFactory(factory.DjangoModelFactory):
-    username = factory.Sequence(lambda n: f'username_{n}")
+    username = factory.Sequence(lambda n: f"username_{n}")
 
     class Meta:
         model = CDCUser
