@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import logging
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
-
 
 logger = logging.getLogger("mechanize")
 
@@ -56,14 +53,12 @@ def email(
     if preheader:
         context['preheader'] = preheader
 
-    html_content = render_to_string('{}.html'.format(template_name), context)
-    text_content = render_to_string('{}.txt'.format(template_name), context)
+    html_content = render_to_string(f"{template_name}.html", context)
+    text_content = render_to_string(f"{template_name}.txt", context)
     msg = EmailMultiAlternatives(
         subject=subject,
         body=text_content,
-        from_email=u'CoderDojoChi<{}>'.format(
-            settings.DEFAULT_FROM_EMAIL
-        ),
+        from_email=f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>",
         to=recipients
     )
 
@@ -77,16 +72,10 @@ def email(
         try:
             msg.send()
         except Exception as e:
-            logger.error(
-                u'{}'.format(e)
-            )
-            logger.error(
-                u'{}'.format(msg)
-            )
+            logger.error(e)
+            logger.error(msg)
             response = msg.mandrill_response[0]
-            logger.error(
-                u'{}'.format(response)
-            )
+            logger.error(response)
 
             reject_reasons = [
                 'hard-bounce',
@@ -97,23 +86,17 @@ def email(
             ]
 
             if (
-                response['status'] == u'rejected' and
+                response['status'] == 'rejected' and
                 response['reject_reason'] in reject_reasons
             ):
                 logger.error(
-                    'user: {}, {}'.format(
-                        response['email'],
-                        timezone.now()
-                    )
+                    f"user: {response['email']}, {timezone.now()}"
                 )
 
                 from coderdojochi.models import CDCUser
                 user = CDCUser.objects.get(email=response['email'])
                 user.is_active = False
-                user.admin_notes = u'User \'{}\' when checked on {}'.format(
-                    response['reject_reason'],
-                    timezone.now()
-                )
+                user.admin_notes = f"User '{response['reject_reason']}' when checked on {timezone.now()}"
                 user.save()
             else:
                 raise e

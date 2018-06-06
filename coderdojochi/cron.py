@@ -1,19 +1,12 @@
-# -*- coding: utf-8 -*-
-
-import arrow
 import datetime
 
-# from django.conf import settings
 from django.core.mail import get_connection
 from django.utils import timezone
-from django_cron import CronJobBase, Schedule
 
-from coderdojochi.models import (
-    MentorOrder,
-    Order,
-    Session
-)
+import arrow
+from coderdojochi.models import MentorOrder, Order, Session
 from coderdojochi.util import email
+from django_cron import CronJobBase, Schedule
 
 
 class SendReminders(CronJobBase):

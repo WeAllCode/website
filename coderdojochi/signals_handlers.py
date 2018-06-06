@@ -1,19 +1,16 @@
-# -*- coding: utf-8 -*-
-
-import arrow
+from email.mime.image import MIMEImage
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
-from email.MIMEImage import MIMEImage
 
-from coderdojochi.models import Mentor, Donation
+import arrow
+from coderdojochi.models import Donation, Mentor
 from coderdojochi.util import email
-
-from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
+from paypal.standard.models import ST_PP_COMPLETED
 
 
 @receiver(pre_save, sender=Mentor)
@@ -32,10 +29,7 @@ def avatar_updated_handler(sender, instance, **kwargs):
         instance.avatar_approved = False
 
         msg = email(
-            subject='{} {} | Mentor Avatar Changed'.format(
-                instance.user.first_name,
-                instance.user.last_name
-            ),
+            subject=f"{instance.user.first_name} {instance.user.last_name} | Mentor Avatar Changed",
             template_name='avatar-changed-mentor',
             context={
                 'first_name': instance.user.first_name,
@@ -75,18 +69,13 @@ def donate_callback(sender, **kwargs):
                     'first_name': donation.first_name,
                     'last_name': donation.last_name,
                     'email': donation.email,
-                    'amount': '${:0,.2f}'.format(donation.amount),
-                    'transaction_date': arrow.get(
-                        donation.created_at
-                    ).to('local').format(
-                        'MMMM D, YYYY h:ss a'
-                    ),
-                    'transaction_id': donation.id
+                    'amount': f"${donation.amount:0,.2f}",
+                    'transaction_date': arrow.get(donation.created_at).to('local').format('MMMM D, YYYY h:ss a'),
+                    'transaction_id': donation.id,
                 },
                 recipients=[donation.email],
                 bcc=[settings.CONTACT_EMAIL],
-                preheader='Your generous donation is what'
-                          ' makes CoderDojoChi possible.',
+                preheader="Your generous donation is what makes CoderDojoChi possible.",
             )
 
             donation.receipt_sent = True
