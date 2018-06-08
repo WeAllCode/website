@@ -28,6 +28,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
+# If True, the SecurityMiddleware redirects all non-HTTPS requests to HTTPS
+# (except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT).
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', False)
+
 
 # Application definition
 
