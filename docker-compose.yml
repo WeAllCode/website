@@ -6,7 +6,7 @@ services:
     build: .
     env_file: .env
     container_name: dojo-v1-app
-    command: invoke start
+    command: invoke release start
     volumes:
       - .:/app
     ports:

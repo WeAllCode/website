@@ -16,7 +16,7 @@ def start(ctx, port=os.environ.get("PORT", 8000)):
 
 @task
 def migrate(ctx):
-    ctx.run("python manage.py migrate")
+    ctx.run("python3 manage.py migrate")
 
 
 @task
@@ -24,17 +24,17 @@ def load_fixtures(ctx):
     # ctx.run("python manage.py loaddata 01-defaults")
 
     if os.environ.get("ENABLE_DEV_FIXTURES", False):
-        ctx.run("python manage.py loaddata fixtures/*.json")
+        ctx.run("python3 manage.py loaddata fixtures/*.json")
 
 
 @task
 def collect_static(ctx):
-    ctx.run("python manage.py collectstatic --no-input")
+    ctx.run("python3 manage.py collectstatic --no-input")
 
 
 @task(help={"app": "Specific app to run tests on. Defaults to all apps."})
 def test(ctx, app=""):
-    ctx.run(f"python manage.py test {app}")
+    ctx.run(f"python3 manage.py test {app}")
     format(ctx)
 
 

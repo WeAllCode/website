@@ -23,7 +23,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 't1oGk/M/"}&ww=I^mOys~R_ddln^[jTEZ}K,hA)%KYN}Lm2r(F'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
@@ -37,20 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    # Disable Django's own staticfiles handling in favour of WhiteNoise, for
-    # greater consistency between gunicorn and `./manage.py runserver`. See:
-    # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.humanize',
 
     # vendor
+
+    # allauth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+
     'bootstrap3',
     'django_cleanup',
     'djrill',
@@ -58,7 +57,6 @@ INSTALLED_APPS = [
     'loginas',
     'paypal.standard.ipn',
     'stdimage',
-    'storages',
     'import_export',
 
     # coderdojochi
@@ -68,7 +66,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -160,48 +157,64 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = '/static/'
-
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, 'static'),
-]
-
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Media files
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
-MEDIA_URL = '/media/'
-
-# AWS S3
-# AWS_HEADERS = {
-#     'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
-#     'Cache-Control': 'max-age=94608000',
-# }
-
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
-if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
-
-    AWS_S3_CALLING_FORMAT = 'boto.s3.connection.OrdinaryCallingFormat'
-
-    # AWS_STATIC_BUCKET_NAME = os.environ.get('AWS_STATIC_BUCKET_NAME')
+if not DEBUG:
+    # STORAGES
+    # ------------------------------------------------------------------------------
+    # https://django-storages.readthedocs.io/en/latest/#installation
+    INSTALLED_APPS += ['storages']  # noqa F405
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_AUTO_CREATE_BUCKET = True
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_QUERYSTRING_AUTH = False
+    # DO NOT change these unless you know what you're doing.
+    _AWS_EXPIRY = 60 * 60 * 24 * 7
+    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': f'max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate',
+    }
 
-    # STATICFILES_STORAGE = 'coderdojochi.custom_storages.S3StaticStorage'
-    DEFAULT_FILE_STORAGE = 'coderdojochi.custom_storages.S3MediaStorage'
+    # STATIC
+    # ------------------------
+    STATICFILES_STORAGE = 'coderdojochi.settings.StaticRootS3BotoStorage'
+    STATIC_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/static/'
 
-    # AWS_STATIC_CUSTOM_DOMAIN = AWS_STATIC_BUCKET_NAME
-    AWS_S3_CUSTOM_DOMAIN = AWS_STORAGE_BUCKET_NAME
+    # MEDIA
+    # ------------------------------------------------------------------------------
+    # region http://stackoverflow.com/questions/10390244/
+    from storages.backends.s3boto3 import S3Boto3Storage  # noqa E402
 
-    # STATIC_URL = u'https://{}/'.format(AWS_STATIC_BUCKET_NAME)
-    MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}/"
+    class StaticRootS3BotoStorage(S3Boto3Storage):
+        def __init__(self):
+            super().__init__(location='static')
+
+    class MediaRootS3BotoStorage(S3Boto3Storage):
+        def __init__(self):
+            super().__init__(location='media', file_overwrite=False)
+
+    # endregion
+    DEFAULT_FILE_STORAGE = 'coderdojochi.settings.MediaRootS3BotoStorage'
+    MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
+
+else:
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/2.0/howto/static-files/
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_URL = '/static/'
+
+    # Extra places for collectstatic to find static files.
+    STATICFILES_DIRS = [
+        os.path.join(PROJECT_ROOT, 'static'),
+    ]
+
+    # Media files
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
 
 
 AUTHENTICATION_BACKENDS = (
@@ -215,9 +228,9 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 
 # Paypal
-PAYPAL_RECEIVER_EMAIL = 'info@coderdojochi.org'
-PAYPAL_BUSINESS_ID = 'CXD22M5GNXDE4'
-PAYPAL_TEST = False
+PAYPAL_RECEIVER_EMAIL = os.environ.get('PAYPAL_RECEIVER_EMAIL')
+PAYPAL_BUSINESS_ID = os.environ.get('PAYPAL_BUSINESS_ID')
+PAYPAL_TEST = os.environ.get('PAYPAL_TEST')
 
 
 # django allauth
@@ -268,4 +281,4 @@ if DEBUG:
 
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+django_heroku.settings(locals(), staticfiles=False)
