@@ -13,6 +13,14 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import dj_database_url
 import django_heroku
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False),
+    ENABLE_DEV_FIXTURES=(bool, False),
+    SECURE_SSL_REDIRECT=(bool, False),
+    PAYPAL_TEST=(bool, False),
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,14 +31,14 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = env('DEBUG')  # False if not in os.environ
 
 # If True, the SecurityMiddleware redirects all non-HTTPS requests to HTTPS
 # (except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT).
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', False)
+SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
 
 
 # Application definition
@@ -111,11 +119,11 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
+        'NAME': env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': env('POSTGRES_HOST'),
+        'PORT': env('POSTGRES_PORT'),
     }
 }
 
@@ -149,8 +157,8 @@ USE_L10N = True
 USE_TZ = True
 
 SITE_ID = 1
-SITE_NAME = os.environ.get('SITE_NAME')
-SITE_URL = os.environ.get('SITE_URL')
+SITE_NAME = env('SITE_NAME')
+SITE_URL = env('SITE_URL')
 
 # Change 'default' database configuration with $DATABASE_URL.
 DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
@@ -167,11 +175,11 @@ if not DEBUG:
     # https://django-storages.readthedocs.io/en/latest/#installation
     INSTALLED_APPS += ['storages']  # noqa F405
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_AUTO_CREATE_BUCKET = True
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
@@ -232,9 +240,9 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 
 # Paypal
-PAYPAL_RECEIVER_EMAIL = os.environ.get('PAYPAL_RECEIVER_EMAIL')
-PAYPAL_BUSINESS_ID = os.environ.get('PAYPAL_BUSINESS_ID')
-PAYPAL_TEST = os.environ.get('PAYPAL_TEST')
+PAYPAL_RECEIVER_EMAIL = env('PAYPAL_RECEIVER_EMAIL')
+PAYPAL_BUSINESS_ID = env('PAYPAL_BUSINESS_ID')
+PAYPAL_TEST = env('PAYPAL_TEST')
 
 
 # django allauth
@@ -253,12 +261,12 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
-MANDRILL_API_KEY = os.environ.get('MANDRILL_API_KEY')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+CONTACT_EMAIL = env('CONTACT_EMAIL')
+MANDRILL_API_KEY = env('MANDRILL_API_KEY')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = MANDRILL_API_KEY
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 

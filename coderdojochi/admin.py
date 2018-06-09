@@ -122,7 +122,7 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     )
 
     readonly_fields = (
-        'get_mentororder_count',
+        'mentor_count_link',
     )
 
     def view_on_site(self, obj):
