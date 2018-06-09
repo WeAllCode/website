@@ -15,12 +15,7 @@ import dj_database_url
 import django_heroku
 import environ
 
-env = environ.Env(
-    DEBUG=(bool, False),
-    ENABLE_DEV_FIXTURES=(bool, False),
-    SECURE_SSL_REDIRECT=(bool, False),
-    PAYPAL_TEST=(bool, False),
-)
+env = environ.Env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,11 +29,11 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')  # False if not in os.environ
+DEBUG = env.bool('DEBUG', default=False)
 
 # If True, the SecurityMiddleware redirects all non-HTTPS requests to HTTPS
 # (except for those URLs matching a regular expression listed in SECURE_REDIRECT_EXEMPT).
-SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
+SECURE_SSL_REDIRECT = env.bool('DJANGO_SECURE_SSL_REDIRECT', default=False)
 
 
 # Application definition
