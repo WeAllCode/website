@@ -2,22 +2,10 @@ from datetime import datetime
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+from django.db.models import Case, Count, When
 from django.urls import reverse
-from django.db.models import (
-    Case,
-    Count,
-    When,
-)
-
+from django.utils import timezone
 from django.utils.safestring import mark_safe
-
-from import_export import resources
-from import_export.admin import (
-    ImportExportActionModelAdmin,
-    ImportExportMixin,
-)
-
-from import_export.fields import Field
 
 from coderdojochi.models import (
     Course,
@@ -36,8 +24,10 @@ from coderdojochi.models import (
     Session,
     Student,
 )
-
 from coderdojochi.util import str_to_bool
+from import_export import resources
+from import_export.admin import ImportExportActionModelAdmin, ImportExportMixin
+from import_export.fields import Field
 
 User = get_user_model()
 
@@ -98,7 +88,7 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'user',
         'get_first_name',
         'get_last_name',
-        'get_mentororder_count',
+        'mentor_count_link',
         'created_at',
         'updated_at',
         'is_active',
@@ -112,6 +102,10 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_public',
         'background_check',
         'avatar_approved',
+    )
+
+    list_select_related = (
+        'user',
     )
 
     ordering = (
@@ -134,16 +128,6 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
-    def get_first_name(self, obj):
-        return obj.user.first_name
-    get_first_name.short_description = 'First Name'
-    get_first_name.admin_order_field = 'user__first_name'
-
-    def get_last_name(self, obj):
-        return obj.user.last_name
-    get_last_name.short_description = 'First Name'
-    get_last_name.admin_order_field = 'user__last_name'
-
     def get_queryset(self, request):
         qs = super(MentorAdmin, self).get_queryset(request)
 
@@ -160,13 +144,23 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         )
         return qs
 
-    def get_mentororder_count(self, obj):
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    get_first_name.short_description = 'First Name'
+    get_first_name.admin_order_field = 'user__first_name'
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    get_last_name.short_description = 'First Name'
+    get_last_name.admin_order_field = 'user__last_name'
+
+    def mentor_count_link(self, obj):
         return mark_safe(
             f"<a href='{reverse('admin:coderdojochi_mentororder_changelist')}?mentor={obj.id}'>"
             f"{obj.mentororder__count}</a>"
         )
-    get_mentororder_count.short_description = 'Orders'
-    get_mentororder_count.admin_order_field = 'mentororder__count'
+    mentor_count_link.short_description = 'Orders'
+    mentor_count_link.admin_order_field = 'mentororder__count'
 
 
 class GuardianImportResource(resources.ModelResource):
@@ -216,7 +210,7 @@ class GuardianImportResource(resources.ModelResource):
     class Meta:
         model = Guardian
         import_id_fields = ('phone',)
-        fields = ('phone', 'zip')
+        fields = ('phone', 'zip',)
 
 
 @admin.register(Guardian)
@@ -224,9 +218,9 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
     list_display = (
-        'get_first_name',
-        'get_last_name',
-        'get_student_count',
+        'first_name',
+        'last_name',
+        'student_count_link',
         'user_link',
         'created_at',
         'updated_at',
@@ -236,8 +230,8 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'zip',
     )
 
-    ordering = (
-
+    list_select_related = (
+        'user',
     )
 
     search_fields = (
@@ -249,7 +243,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     )
 
     readonly_fields = (
-        'get_student_count',
+        'student_count_link',
     )
 
     date_hierarchy = 'created_at'
@@ -259,55 +253,75 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     # Import settings
     resource_class = GuardianImportResource
 
+    def get_queryset(self, request):
+        qs = super(GuardianAdmin, self).get_queryset(request)
+        qs = qs.select_related()
+        qs = qs.annotate(
+            student_count=Count('student')
+        ).order_by('-student_count')
+        return qs
+
     def user_link(self, obj):
         return mark_safe(
             f"<a href='{reverse('admin:coderdojochi_cdcuser_changelist')}?q={obj.user.email}'>{obj.user}</a>"
         )
     user_link.short_description = 'User'
 
-    def get_queryset(self, request):
-        qs = super(GuardianAdmin, self).get_queryset(request)
-        qs = qs.select_related()
-        qs = qs.annotate(student_count=Count('student')).order_by('-student_count')
-        return qs
-
-    def get_first_name(self, obj):
-        return obj.user.first_name
-    get_first_name.short_description = 'First Name'
-    get_first_name.admin_order_field = 'user__first_name'
-
-    def get_last_name(self, obj):
-        return obj.user.last_name
-    get_last_name.short_description = 'Last Name'
-    get_last_name.admin_order_field = 'user__last_name'
-
-    def get_student_count(self, obj):
+    def student_count_link(self, obj):
         return mark_safe(
             f"<a href='{reverse('admin:coderdojochi_student_changelist')}?guardian={obj.id}'>{obj.student_count}</a>"
         )
-    get_student_count.short_description = 'Students'
-    get_student_count.admin_order_field = 'student_count'
+    student_count_link.short_description = 'Students'
+    student_count_link.admin_order_field = 'student_count'
 
 
 class StudentResource(resources.ModelResource):
-    first_name = Field(attribute='first_name', column_name='first_name')
-    last_name = Field(attribute='last_name', column_name='last_name')
-    guardian_email = Field(attribute='guardian_email',
-                           column_name='guardian_email')
-    birthday = Field(attribute='birthday', column_name='birthday')
-    gender = Field(attribute='gender', column_name='gender')
-    school_name = Field(attribute='school_name', column_name='school_name')
-    school_type = Field(attribute='school_type', column_name='school_type')
-    photo_release = Field(attribute='photo_release',
-                          column_name='photo_release')
-    consent = Field(attribute='consent', column_name='consent')
+    first_name = Field(
+        attribute='first_name',
+        column_name='first_name',
+    )
+    last_name = Field(
+        attribute='last_name',
+        column_name='last_name',
+    )
+    guardian_email = Field(
+        attribute='guardian_email',
+        column_name='guardian_email',
+    )
+    birthday = Field(
+        attribute='birthday',
+        column_name='birthday',
+    )
+    gender = Field(
+        attribute='gender',
+        column_name='gender',
+    )
+    school_name = Field(
+        attribute='school_name',
+        column_name='school_name',
+    )
+    school_type = Field(
+        attribute='school_type',
+        column_name='school_type',
+    )
+    photo_release = Field(
+        attribute='photo_release',
+        column_name='photo_release',
+    )
+    consent = Field(
+        attribute='consent',
+        column_name='consent',
+    )
 
     def import_obj(self, obj, data, dry_run):
         guardian_email = data.get('guardian_email')
 
         obj.first_name = data.get('first_name')
         obj.last_name = data.get('last_name')
-        obj.birthday = datetime.strptime(data.get('birthday', ''), '%m/%d/%Y')
+        obj.birthday = datetime.strptime(
+            data.get('birthday', ''),
+            '%m/%d/%Y'
+        )
         obj.gender = data.get('gender', '')
         obj.school_name = data.get('school_name', '')
         obj.school_type = data.get('school_type', '')
@@ -327,9 +341,8 @@ class StudentResource(resources.ModelResource):
 
     class Meta:
         model = Student
-        import_id_fields = ('first_name', 'last_name')
-        fields = ('first_name', 'last_name')
-        # fields = ()
+        import_id_fields = ('first_name', 'last_name',)
+        fields = ('first_name', 'last_name',)
 
 
 @admin.register(Student)
@@ -340,11 +353,11 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'first_name',
         'last_name',
         'gender',
-        'guardian_link',
-        'get_order_count',
         'get_clean_gender',
+        'guardian_link',
+        'order_count_link',
         'get_age',
-        'is_active'
+        'is_active',
     )
 
     list_filter = (
@@ -375,15 +388,8 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     readonly_fields = (
         'guardian_link',
-        'get_order_count',
+        'order_count_link',
     )
-
-    def guardian_link(self, obj):
-        return mark_safe(
-            f"<a href='{reverse('admin:coderdojochi_guardian_changelist')}?q={obj.guardian.user.email}'>"
-            f"{obj.guardian.user.first_name} {obj.guardian.user.last_name}</a>"
-        )
-    guardian_link.short_description = 'Guardian'
 
     def get_queryset(self, request):
         qs = super(StudentAdmin, self).get_queryset(request)
@@ -403,12 +409,23 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         )
         return qs
 
-    def get_order_count(self, obj):
+    def guardian_link(self, obj):
+        return mark_safe(
+            '<a href="{}?q={}">{} {}</a>'.format(
+                reverse("admin:coderdojochi_guardian_changelist"),
+                obj.guardian.user.email,
+                obj.guardian.user.first_name,
+                obj.guardian.user.last_name,
+            )
+        )
+    guardian_link.short_description = 'Guardian'
+
+    def order_count_link(self, obj):
         return mark_safe(
             f"<a href='{reverse('admin:coderdojochi_order_changelist')}?student={obj.id}'>{obj.order__count}</a>"
         )
-    get_order_count.short_description = 'Orders'
-    get_order_count.admin_order_field = 'order__count'
+    order_count_link.short_description = 'Orders'
+    order_count_link.admin_order_field = 'order__count'
 
 
 @admin.register(Course)
@@ -439,24 +456,30 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
     list_display = (
-        'course',
+        '_course',
         'start_date',
         'end_date',
         'location',
         'capacity',
-        'get_student_count',
-        'get_mentor_count',
+        'student_count_link',
+        'mentor_count_link',
         'is_active',
         'is_public',
-        'announced_date_mentors',
-        'announced_date_guardians',
+        'is_announced',
     )
 
     list_filter = (
         'is_active',
         'is_public',
+        'course__code',
         'course__title',
         'location',
+    )
+
+    list_select_related = (
+        'course',
+        'location',
+        'teacher',
     )
 
     ordering = (
@@ -475,7 +498,12 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
-    def get_mentor_count(self, obj):
+    def _course(self, obj):
+        return obj.course.code
+    _course.short_description = 'Course'
+    _course.admin_order_field = 'course__code'
+
+    def mentor_count_link(self, obj):
         return mark_safe(
             '<a href="{}?session__id__exact={}">{}</a>'.format(
                 reverse("admin:coderdojochi_mentororder_changelist"),
@@ -483,10 +511,10 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 MentorOrder.objects.filter(session__id=obj.id, is_active=True).count(),
             )
         )
-    get_mentor_count.short_description = "Mentors"
-    get_mentor_count.admin_order_field = "mentor__count"
+    mentor_count_link.short_description = "Mentors"
+    mentor_count_link.admin_order_field = "mentor__count"
 
-    def get_student_count(self, obj):
+    def student_count_link(self, obj):
         return mark_safe(
             '<a href="{}?session__id__exact={}">{}</a>'.format(
                 reverse("admin:coderdojochi_order_changelist"),
@@ -494,8 +522,29 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 obj.get_current_orders().count(),
             )
         )
-    get_student_count.short_description = "Students"
-    get_student_count.admin_order_field = "student__count"
+    student_count_link.short_description = "Students"
+    student_count_link.admin_order_field = "student__count"
+
+    def is_announced(self, obj):
+        return obj.announced_date is not None
+
+    is_announced.boolean = True
+    is_announced.short_description = "Is Announced"
+    is_announced.admin_order_field = 'announced_date'
+
+
+def student_check_in(modeladmin, request, queryset):
+    queryset.update(check_in=timezone.now())
+
+
+student_check_in.short_description = "Check in"
+
+
+def student_check_out(modeladmin, request, queryset):
+    queryset.update(check_in=None)
+
+
+student_check_out.short_description = "Check out"
 
 
 @admin.register(Order)
@@ -508,10 +557,10 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_student_gender',
         'get_student_age',
         'get_guardian_link',
-        'alternate_guardian',
+        # 'alternate_guardian',
         'get_session_link',
         # 'ip',
-        'created_at',
+        '_created_at',
         'is_checked_in',
         # 'updated_at',
         'is_active',
@@ -523,8 +572,19 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_active',
         'check_in',
         # 'guardian',
-        'student',
+        # 'student',
         'session',
+    )
+
+    list_select_related = (
+        'guardian',
+        'session',
+        'student',
+    )
+
+    search_fields = (
+        'student__first_name',
+        'student__last_name',
     )
 
     ordering = (
@@ -534,6 +594,11 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     date_hierarchy = 'created_at'
 
     view_on_site = False
+
+    actions = [
+        student_check_in,
+        student_check_out,
+    ]
 
     def get_student_link(self, obj):
         return mark_safe(
@@ -559,14 +624,6 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         )
     get_guardian_link.short_description = 'Guardian'
 
-    def get_student_gender(self, obj):
-        return obj.student.get_clean_gender().title()
-    get_student_gender.short_description = 'Gender'
-
-    def get_student_age(self, obj):
-        return obj.student.get_age(obj.session.start_date)
-    get_student_age.short_description = 'Age'
-
     def get_session_link(self, obj):
         return mark_safe(
             '<a href="{}?course={}">{}</a>'.format(
@@ -577,35 +634,34 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         )
     get_session_link.short_description = 'Session'
 
-    def is_checked_in(self, obj):
-        if obj.check_in:
-            return True
-        else:
-            return False
-    is_checked_in.short_description = 'Checked In'
-    is_checked_in.boolean = True
+    def _created_at(self, obj):
+        return obj.created_at.strftime("%m/%d/%y %H:%M")
+    _created_at.short_description = 'Created At'
+
+
+def mentor_check_in(modeladmin, request, queryset):
+    queryset.update(check_in=timezone.now())
+
+
+mentor_check_in.short_description = "Check in"
+
+
+def mentor_check_out(modeladmin, request, queryset):
+    queryset.update(check_in=None)
+
+
+mentor_check_out.short_description = "Check out"
 
 
 @admin.register(MentorOrder)
 class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
-    # def session(obj):
-    #     url = reverse(
-    #         'admin:coderdojochi_session_change',
-    #         args=(obj.session.id,)
-    #     )
-    #     return mark_safe('<a href="{0}">{1}</a>'.format(url, obj.session))
-
-    # session.short_description = 'Session'
-    # raw_id_fields = ('session',)
-    # readonly_fields = (session, 'session',)
-
     list_display = (
         'mentor',
         'session',
         'ip',
-        'check_in',
+        'is_checked_in',
         'is_active',
         'week_reminder_sent',
         'day_reminder_sent',
@@ -624,6 +680,11 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         # 'mentor',
     )
 
+    list_select_related = (
+        'mentor',
+        'session',
+    )
+
     ordering = (
         'created_at',
     )
@@ -640,8 +701,27 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         # 'check_in',
     )
 
+    actions = [
+        mentor_check_in,
+        mentor_check_out,
+    ]
+
     date_hierarchy = 'created_at'
     view_on_site = False
+
+
+def meeting_order_check_in(modeladmin, request, queryset):
+    queryset.update(check_in=timezone.now())
+
+
+meeting_order_check_in.short_description = "Check in"
+
+
+def meeting_order_check_out(modeladmin, request, queryset):
+    queryset.update(check_in=None)
+
+
+meeting_order_check_out.short_description = "Check out"
 
 
 @admin.register(MeetingOrder)
@@ -652,12 +732,12 @@ class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'mentor',
         'meeting',
         'ip',
-        'check_in',
+        'is_checked_in',
         'is_active',
         'week_reminder_sent',
         'day_reminder_sent',
         'created_at',
-        'updated_at'
+        'updated_at',
     )
 
     list_filter = (
@@ -665,6 +745,11 @@ class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'meeting',
         'check_in',
         'meeting__meeting_type',
+    )
+
+    list_select_related = (
+        'mentor',
+        'meeting',
     )
 
     ordering = (
@@ -676,9 +761,16 @@ class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'mentor__user__last_name',
     )
 
+    actions = [
+        meeting_order_check_in,
+        meeting_order_check_out,
+    ]
+
     date_hierarchy = 'created_at'
 
     view_on_site = False
+
+    show_full_result_count = False
 
 
 @admin.register(MeetingType)
@@ -706,7 +798,7 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'get_mentor_count',
         'is_public',
         'announced_date',
-        'created_at'
+        'created_at',
     )
 
     list_filter = (
@@ -714,6 +806,11 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_public',
         'location',
         'meeting_type__title',
+    )
+
+    list_select_related = (
+        'meeting_type',
+        'location',
     )
 
     ordering = (
@@ -725,10 +822,6 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
-
-    def get_mentor_count(self, obj):
-        return MeetingOrder.objects.filter(meeting__id=obj.id).count()
-    get_mentor_count.short_description = 'Mentors'
 
 
 @admin.register(EquipmentType)
@@ -755,6 +848,10 @@ class EquipmentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'equipment_type',
         'make',
         'model',
+    )
+
+    list_select_related = (
+        'equipment_type',
     )
 
     ordering = (
@@ -786,7 +883,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'amount',
         'is_verified',
         'receipt_sent',
-        'created_at'
+        'created_at',
     )
 
     list_filter = (
@@ -812,27 +909,6 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     date_hierarchy = 'created_at'
 
     view_on_site = False
-
-    def get_first_name(self, obj):
-        if obj.user:
-            return obj.user.first_name
-        else:
-            return obj.first_name
-    get_first_name.short_description = 'First Name'
-
-    def get_last_name(self, obj):
-        if obj.user:
-            return obj.user.last_name
-        else:
-            return obj.last_name
-    get_last_name.short_description = 'Last Name'
-
-    def get_email(self, obj):
-        if obj.user:
-            return obj.user.email
-        else:
-            return obj.email
-    get_email.short_description = 'Email'
 
 
 @admin.register(Location)
