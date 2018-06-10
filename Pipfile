@@ -31,7 +31,6 @@ djrill = "*"
 factory_boy = "*"
 icalendar = "*"
 json-logging-py = "*"
-django-environ = "*"
 
 [dev-packages]
 pylint = "*"
