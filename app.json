@@ -3,22 +3,16 @@
   "scripts": {
   },
   "env": {
-    "AWS_ACCESS_KEY_ID": {
+    "DEBUG": {
       "required": true
     },
-    "AWS_SECRET_ACCESS_KEY": {
+    "ENABLE_DEV_FIXTURES": {
       "required": true
     },
-    "AWS_STATIC_BUCKET_NAME": {
-      "required": true
-    },
-    "AWS_STORAGE_BUCKET_NAME": {
+    "SECRET_KEY": {
       "required": true
     },
     "CONTACT_EMAIL": {
-      "required": true
-    },
-    "DEBUG": {
       "required": true
     },
     "DEFAULT_FROM_EMAIL": {
@@ -31,9 +25,6 @@
       "required": true
     },
     "EMAIL_PORT": {
-      "required": true
-    },
-    "ENABLE_DEV_FIXTURES": {
       "required": true
     },
     "MANDRILL_API_KEY": {
