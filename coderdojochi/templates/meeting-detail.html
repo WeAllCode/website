@@ -48,7 +48,7 @@
                     {% if mentor.is_public == True %}
                         <div class="col-xs-12 col-sm-4 col-md-4">
                             <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                                <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
+                                <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
                                 <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
                             </a>
                         </div>
@@ -85,7 +85,7 @@
                 {% if meeting.external_enrollment_url %}
                     <p><a href="{{ meeting.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                 {% else %}
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and user.role == 'mentor' %}
                         {% if mentor_signed_up %}
                             <p>You are signed up to attend this meeting.</p>
                             <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>

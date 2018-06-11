@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
-
 import os
-from stdimage.models import StdImageField
 
-from django.core import urlresolvers
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.urls import reverse
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
+
+from stdimage.models import StdImageField
 
 ROLE_CHOICES = (
     ('mentor', 'mentor'),
@@ -37,39 +36,19 @@ class CDCUser(AbstractUser):
         super(CDCUser, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return '{}/dojo'.format(
-            settings.SITE_URL
-        )
-
-
-class RaceEthnicity(models.Model):
-    race_ethnicity = models.CharField(
-        max_length=255,
-    )
-    is_visible = models.BooleanField(
-        default=False,
-    )
-
-    class Meta:
-        verbose_name = _("race ethnicity")
-        verbose_name_plural = _("race ethnicities")
-
-    def __unicode__(self):
-        return self.race_ethnicity
+        return "/dojo/"
 
 
 def generate_filename(instance, filename):
     # file will be uploaded to MEDIA_ROOT/avatar/<username>
     filename, file_extension = os.path.splitext(filename)
-    return u'avatar/{}{}'.format(
-        instance.user.username,
-        file_extension.lower()
-    )
+    return f"avatar/{instance.user.username}{file_extension.lower()}"
 
 
 class Mentor(models.Model):
     user = models.ForeignKey(
-        CDCUser
+        CDCUser,
+        on_delete=models.CASCADE,
     )
     bio = models.TextField(
         blank=True,
@@ -109,26 +88,8 @@ class Mentor(models.Model):
         verbose_name = _("mentors")
         verbose_name_plural = _("mentors")
 
-    def __unicode__(self):
-        return u'{} {}'.format(self.user.first_name, self.user.last_name)
-
-    def get_approve_avatar_url(self):
-        return u'{}/mentor/{}/approve-avatar/'.format(
-            settings.SITE_URL,
-            self.id
-        )
-
-    def get_reject_avatar_url(self):
-        return u'{}/mentor/{}/reject-avatar/'.format(
-            settings.SITE_URL,
-            self.id
-        )
-
-    def get_absolute_url(self):
-        return u'{}/mentor/{}/'.format(
-            settings.SITE_URL,
-            self.id
-        )
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}"
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
@@ -138,10 +99,36 @@ class Mentor(models.Model):
 
         super(Mentor, self).save(*args, **kwargs)
 
+    def get_approve_avatar_url(self):
+        return f'/mentor/{self.id}/approve-avatar/'
+
+    def get_reject_avatar_url(self):
+        return f'/mentor/{self.id}/reject-avatar/'
+
+    def get_absolute_url(self):
+        return f'/mentor/{self.id}/'
+
+
+class RaceEthnicity(models.Model):
+    race_ethnicity = models.CharField(
+        max_length=255,
+    )
+    is_visible = models.BooleanField(
+        default=False,
+    )
+
+    class Meta:
+        verbose_name = _("race ethnicity")
+        verbose_name_plural = _("race ethnicities")
+
+    def __str__(self):
+        return self.race_ethnicity
+
 
 class Guardian(models.Model):
     user = models.ForeignKey(
-        CDCUser
+        CDCUser,
+        on_delete=models.CASCADE,
     )
     is_active = models.BooleanField(
         default=True,
@@ -166,15 +153,8 @@ class Guardian(models.Model):
         verbose_name = _("guardian")
         verbose_name_plural = _("guardians")
 
-    def __unicode__(self):
-        return u'{} {}'.format(
-            self.user.first_name,
-            self.user.last_name
-        )
-
-    def get_students(self):
-        students = Student.objects.filter(guardian=self)
-        return students
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}"
 
     @property
     def first_name(self):
@@ -188,10 +168,14 @@ class Guardian(models.Model):
     def email(self):
         return self.user.email
 
+    def get_students(self):
+        return Student.objects.filter(guardian=self)
+
 
 class Student(models.Model):
     guardian = models.ForeignKey(
-        Guardian
+        Guardian,
+        on_delete=models.CASCADE,
     )
     first_name = models.CharField(
         max_length=255,
@@ -253,8 +237,8 @@ class Student(models.Model):
         verbose_name = _("student")
         verbose_name_plural = _("students")
 
-    def __unicode__(self):
-        return u'{} {}'.format(self.first_name, self.last_name)
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
     def is_registered_for_session(self, session):
         try:
@@ -264,7 +248,7 @@ class Student(models.Model):
                 session=session,
             )
             is_registered = True
-        except:
+        except Exception:
             is_registered = False
 
         return is_registered
@@ -285,7 +269,7 @@ class Student(models.Model):
             return 'female'
         else:
             return 'other'
-    get_clean_gender.short_description = 'Gender'
+    get_clean_gender.short_description = 'Clean Gender'
 
     # returns True if the student age is between min_age and max_age
     def is_within_age_range(self, min_age, max_age, date=timezone.now()):
@@ -336,8 +320,11 @@ class Course(models.Model):
         verbose_name = _("course")
         verbose_name_plural = _("courses")
 
-    def __unicode__(self):
-        return u'{} | {}'.format(self.code, self.title)
+    def __str__(self):
+        if self.code:
+            return f"{self.code} | {self.title}"
+        else:
+            return f"{self.title}"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -367,7 +354,7 @@ class Location(models.Model):
         max_length=20,
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -380,6 +367,7 @@ GENDER_LIMITATION_CHOICES = (
 class Session(models.Model):
     course = models.ForeignKey(
         Course,
+        on_delete=models.CASCADE,
     )
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -387,6 +375,7 @@ class Session(models.Model):
     mentor_end_date = models.DateTimeField()
     location = models.ForeignKey(
         Location,
+        on_delete=models.CASCADE,
     )
     capacity = models.IntegerField(
         default=20,
@@ -403,6 +392,7 @@ class Session(models.Model):
     teacher = models.ForeignKey(
         Mentor,
         related_name="session_teacher",
+        on_delete=models.CASCADE,
     )
     waitlist_mentors = models.ManyToManyField(
         Mentor,
@@ -435,7 +425,11 @@ class Session(models.Model):
     partner_message = models.TextField(
         blank=True,
     )
-    announced_date = models.DateTimeField(
+    announced_date_mentors = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    announced_date_guardians = models.DateTimeField(
         blank=True,
         null=True,
     )
@@ -485,41 +479,27 @@ class Session(models.Model):
         verbose_name = _("session")
         verbose_name_plural = _("sessions")
 
-    def __unicode__(self):
-        return u'{} | {}'.format(
-            self.course.title,
-            formats.date_format(self.start_date, 'SHORT_DATETIME_FORMAT')
-        )
+    def __str__(self):
+        date = formats.date_format(self.start_date, 'SHORT_DATETIME_FORMAT')
+        return f"{self.course.title} | {date}"
 
     def save(self, *args, **kwargs):
         if self.mentor_capacity is None:
-            self.mentor_capacity = self.capacity / 2
+            self.mentor_capacity = int(self.capacity / 2)
 
         super(Session, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return u'{}/class/{}/{}/{}'.format(
-            settings.SITE_URL,
-            self.start_date.strftime("%Y/%m/%d"),
-            self.course.slug,
-            self.id
-        )
+        start_date = self.start_date.strftime("%Y/%m/%d")
+        return f'/class/{start_date}/{self.course.slug}/{self.id}/'
 
     def get_signup_url(self):
-        return u'{}/class/{}/{}/{}/sign-up/'.format(
-            settings.SITE_URL,
-            self.start_date.strftime("%Y/%m/%d"),
-            self.course.slug,
-            self.id
-        )
+        start_date = self.start_date.strftime("%Y/%m/%d")
+        return f'/class/{start_date}/{self.course.slug}/{self.id}/sign-up/'
 
     def get_ics_url(self):
-        return u'{}/class/{}/{}/{}/calendar/'.format(
-            settings.SITE_URL,
-            self.start_date.strftime("%Y/%m/%d"),
-            self.course.slug,
-            self.id
-        )
+        start_date = self.start_date.strftime("%Y/%m/%d")
+        return f'/class/{start_date}/{self.course.slug}/{self.id}/calendar/'
 
     def get_current_orders(self, checked_in=None):
         if checked_in is not None:
@@ -589,7 +569,7 @@ class Session(models.Model):
         if self.mentor_capacity:
             return self.mentor_capacity
         else:
-            return self.capacity / 2
+            return int(self.capacity / 2)
 
 
 class MeetingType(models.Model):
@@ -622,8 +602,11 @@ class MeetingType(models.Model):
         verbose_name = _("meeting type")
         verbose_name_plural = _("meeting types")
 
-    def __unicode__(self):
-        return u'{} | {}'.format(self.code, self.title)
+    def __str__(self):
+        if self.code:
+            return f'{self.code} | {self.title}'
+        else:
+            return f'{self.title}'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -633,6 +616,7 @@ class MeetingType(models.Model):
 class Meeting(models.Model):
     meeting_type = models.ForeignKey(
         MeetingType,
+        on_delete=models.CASCADE,
     )
     additional_info = models.TextField(
         blank=True,
@@ -649,6 +633,7 @@ class Meeting(models.Model):
     )
     location = models.ForeignKey(
         Location,
+        on_delete=models.CASCADE,
     )
     external_enrollment_url = models.CharField(
         max_length=255,
@@ -686,35 +671,21 @@ class Meeting(models.Model):
         verbose_name = _("meeting")
         verbose_name_plural = _("meetings")
 
-    def __unicode__(self):
-        return u'{} | {}'.format(
-            self.meeting_type.title,
-            formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
-        )
+    def __str__(self):
+        date = formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
+        return f'{self.meeting_type.title} | {date}'
 
     def get_absolute_url(self):
-        return u'{}/meeting/{}/{}/{}'.format(
-            settings.SITE_URL,
-            self.start_date.strftime("%Y/%m/%d"),
-            self.meeting_type.slug,
-            self.id,
-        )
+        start_date = self.start_date.strftime("%Y/%m/%d")
+        return f'/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/'
 
     def get_signup_url(self):
-        return u'{}/meeting/{}/{}/{}/sign-up'.format(
-            settings.SITE_URL,
-            self.start_date.strftime("%Y/%m/%d"),
-            self.meeting_type.slug,
-            self.id,
-        )
+        start_date = self.start_date.strftime("%Y/%m/%d")
+        return f'/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/sign-up/'
 
     def get_ics_url(self):
-        return u'{}/meeting/{}/{}/{}/calendar'.format(
-            settings.SITE_URL,
-            self.start_date.strftime("%Y/%m/%d"),
-            self.meeting_type.slug,
-            self.id,
-        )
+        start_date = self.start_date.strftime("%Y/%m/%d")
+        return f'/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/calendar/'
 
     def get_current_orders(self, checked_in=None):
         if checked_in is not None:
@@ -757,16 +728,23 @@ class Meeting(models.Model):
             )
         )
 
+    def get_mentor_count(self):
+        return MeetingOrder.objects.filter(meeting__id=self.id).count()
+    get_mentor_count.short_description = 'Mentors'
+
 
 class Order(models.Model):
     guardian = models.ForeignKey(
         Guardian,
+        on_delete=models.CASCADE,
     )
     session = models.ForeignKey(
         Session,
+        on_delete=models.CASCADE,
     )
     student = models.ForeignKey(
         Student,
+        on_delete=models.CASCADE,
     )
     is_active = models.BooleanField(
         default=True,
@@ -812,20 +790,30 @@ class Order(models.Model):
         verbose_name = _("order")
         verbose_name_plural = _("orders")
 
-    def __unicode__(self):
-        return u'{} {} | {}'.format(
-            self.student.first_name,
-            self.student.last_name,
-            self.session.course.title
-        )
+    def __str__(self):
+        return f'{self.student.first_name} {self.student.last_name} | {self.session.course.title}'
+
+    def is_checked_in(self):
+        return self.check_in is not None
+    is_checked_in.boolean = True
+
+    def get_student_age(self):
+        return self.student.get_age(self.session.start_date)
+    get_student_age.short_description = 'Age'
+
+    def get_student_gender(self):
+        return self.student.get_clean_gender().title()
+    get_student_gender.short_description = 'Gender'
 
 
 class MentorOrder(models.Model):
     mentor = models.ForeignKey(
         Mentor,
+        on_delete=models.CASCADE,
     )
     session = models.ForeignKey(
         Session,
+        on_delete=models.CASCADE,
     )
     is_active = models.BooleanField(
         default=True,
@@ -866,20 +854,23 @@ class MentorOrder(models.Model):
         verbose_name = _("mentor order")
         verbose_name_plural = _("mentor orders")
 
-    def __unicode__(self):
-        return u'{} {} | {}'.format(
-            self.mentor.user.first_name,
-            self.mentor.user.last_name,
-            self.session.course.title
-        )
+    def __str__(self):
+        return f"{self.mentor.user.first_name} {self.mentor.user.last_name} | {self.session.course.title}"
+
+    def is_checked_in(self):
+        return self.check_in is not None
+
+    is_checked_in.boolean = True
 
 
 class MeetingOrder(models.Model):
     mentor = models.ForeignKey(
         Mentor,
+        on_delete=models.CASCADE,
     )
     meeting = models.ForeignKey(
         Meeting,
+        on_delete=models.CASCADE,
     )
     is_active = models.BooleanField(
         default=True,
@@ -920,18 +911,18 @@ class MeetingOrder(models.Model):
         verbose_name = _("meeting order")
         verbose_name_plural = _("meeting orders")
 
-    def __unicode__(self):
-        return u'{} {} | {}'.format(
-            self.mentor.user.first_name,
-            self.mentor.user.last_name,
-            self.meeting.meeting_type.title
-        )
+    def __str__(self):
+        return f"{self.mentor.user.first_name} {self.mentor.user.last_name} | {self.meeting.meeting_type.title}"
+
+    def is_checked_in(self):
+        return self.check_in is not None
+    is_checked_in.boolean = True
 
 
 class EquipmentType(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -951,6 +942,7 @@ class Equipment(models.Model):
     )
     equipment_type = models.ForeignKey(
         EquipmentType,
+        on_delete=models.CASCADE,
     )
     make = models.CharField(
         max_length=255,
@@ -998,13 +990,8 @@ class Equipment(models.Model):
         verbose_name = _("equipment")
         verbose_name_plural = _("equipment")
 
-    def __unicode__(self):
-        return u'{} | {} {} | {}'.format(
-            self.equipment_type.name,
-            self.make,
-            self.model,
-            self.aquisition_date
-        )
+    def __str__(self):
+        return f"{self.equipment_type.name} | {self.make} {self.model} | {self.aquisition_date}"
 
 
 class EmailContent(models.Model):
@@ -1033,39 +1020,41 @@ class EmailContent(models.Model):
         verbose_name = _("email content")
         verbose_name_plural = _("email content")
 
-    def __unicode__(self):
-        return u'{} | {}'.format(self.nickname, self.subject)
+    def __str__(self):
+        return f"{self.nickname} | {self.subject}"
 
 
 class Donation(models.Model):
     user = models.ForeignKey(
         CDCUser,
         blank=True,
-        null=True
+        null=True,
+        on_delete=models.CASCADE,
     )
     session = models.ForeignKey(
         Session,
         blank=True,
-        null=True
+        null=True,
+        on_delete=models.CASCADE,
     )
     first_name = models.CharField(
         max_length=255,
         blank=True,
-        null=True
+        null=True,
     )
     last_name = models.CharField(
         max_length=255,
         blank=True,
-        null=True
+        null=True,
     )
     referral_code = models.CharField(
         max_length=255,
         blank=True,
-        null=True
+        null=True,
     )
     email = models.EmailField(
         blank=True,
-        null=True
+        null=True,
     )
     amount = models.IntegerField()
     is_verified = models.BooleanField(
@@ -1085,16 +1074,13 @@ class Donation(models.Model):
         verbose_name = _("donation")
         verbose_name_plural = _("donations")
 
-    def __unicode__(self):
-        return u'{} | ${}'.format(self.email, self.amount)
+    def __str__(self):
+        return f"{self.email} | ${self.amount}"
 
     def get_admin_url(self):
         content_type = ContentType.objects.get_for_model(self.__class__)
-        return urlresolvers.reverse(
-            "admin:{}_{}_change".format(
-                content_type.app_label,
-                content_type.model
-            ),
+        return reverse(
+            f"admin:{content_type.app_label}_{content_type.model}_change",
             args=(self.id,)
         )
 
@@ -1103,24 +1089,33 @@ class Donation(models.Model):
             return self.user.first_name
         else:
             return self.first_name
+    get_first_name.short_description = 'First Name'
 
     def get_last_name(self):
         if self.user:
             return self.user.last_name
         else:
             return self.last_name
+    get_last_name.short_description = 'Last Name'
 
     def get_email(self):
         if self.user:
             return self.user.email
         else:
             return self.email
+    get_email.short_description = 'Email'
 
 
 class PartnerPasswordAccess(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(CDCUser)
-    session = models.ForeignKey(Session)
+    user = models.ForeignKey(
+        CDCUser,
+        on_delete=models.CASCADE,
+    )
+    session = models.ForeignKey(
+        Session,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         verbose_name = _("partner_password_access")

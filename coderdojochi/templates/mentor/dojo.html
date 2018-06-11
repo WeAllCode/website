@@ -134,7 +134,7 @@
                 {% csrf_token %}
 
                 <div class="avatar">
-                    <img src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" class="avatar" height="" width="283" height="283">
+                    <img src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" class="avatar" height="" width="283" height="283">
                     <span class="change-overlay" data-trigger="hover" data-placement="top" data-html="true" data-toggle="popover" title="Avatar Requirements" data-content="Min size: <strong>500 x 500px</strong><br>Max size: <strong>1000 x 1000px</strong><br>Max file size: <strong>2 MB</strong><br>Formats: <strong>.jpeg, .png, .gif</strong>">Change</a>
                     <input id="id_avatar" name="avatar" title="" type="file" onchange="document.getElementById('profile_form').submit();">
                 </div>

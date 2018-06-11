@@ -1,32 +1,20 @@
-version: '2'
-services:
-  db:
-    restart: always
-    image: postgres:9.4
-    ports:
-      - "5432:5432"
-    env_file:
-      - .env
+version: '3'
 
+services:
   app:
     restart: always
     build: .
-    env_file:
-      - .env
-    expose:
-      - "8080"
+    env_file: .env
+    container_name: dojo-v1-app
+    command: invoke release start
     volumes:
-      - ./coderdojochi:/src/coderdojochi
-      - /build/static/
-    links:
-      - db
-
-  nginx:
-    restart: always
-    build: nginx/
-    links:
-      - app
+      - .:/app
     ports:
-      - "80:80"
-    volumes_from:
-      - app
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    image: postgres:10.3-alpine
+    container_name: dojo-v1-db
+    ports:
+      - "5432:5432"

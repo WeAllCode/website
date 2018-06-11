@@ -2,25 +2,25 @@ import factory
 from datetime import datetime
 from pytz import utc
 
-from models import Session
-from models import Course
-from models import Location
-from models import Mentor
-from models import CDCUser
-from models import PartnerPasswordAccess
+from .models import Session
+from .models import Course
+from .models import Location
+from .models import Mentor
+from .models import CDCUser
+from .models import PartnerPasswordAccess
 
 
 class CourseFactory(factory.DjangoModelFactory):
-    title = factory.Sequence(lambda n: 'Test Course {}'.format(n))
-    slug = factory.Sequence(lambda n: 'test-course-{}'.format(n))
+    title = factory.Sequence(lambda n: f"Test Course {n}")
+    slug = factory.Sequence(lambda n: f"test-course-{n}")
 
     class Meta:
         model = Course
 
 
 class LocationFactory(factory.DjangoModelFactory):
-    name = factory.Sequence(lambda n: 'Test Location {}'.format(n))
-    address = factory.Sequence(lambda n: '{} Street'.format(n))
+    name = factory.Sequence(lambda n: f"Test Location {n}")
+    address = factory.Sequence(lambda n: f"{n} Street")
     city = 'Chicago'
     state = 'IL'
     zip = '60605'
@@ -30,7 +30,7 @@ class LocationFactory(factory.DjangoModelFactory):
 
 
 class CDCUserFactory(factory.DjangoModelFactory):
-    username = factory.Sequence(lambda n: 'username_{}'.format(n))
+    username = factory.Sequence(lambda n: f"username_{n}")
 
     class Meta:
         model = CDCUser

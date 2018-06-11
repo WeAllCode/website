@@ -2,22 +2,23 @@
 <html lang="{{ LANGUAGE_CODE }}" {% if DEBUG %}class="debug"{% endif %}>
     <head>
         <title>{% block title %}CoderDojoChi - Welcome!{% endblock %}</title>
-            <meta charset="utf-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-            {% block extra_meta %}{% endblock %}
+        {% block extra_meta %}{% endblock %}
 
-            <link rel="icon" href="{% static "favicon.ico" %}" type="image/x-icon">
-            <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Quicksand:300,400,700" rel="stylesheet">
-            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
+        <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Quicksand:300,400,700" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
 
-            <!--[if lt IE 9]>
-            <script src="{% static 'js/vendor/html5shiv.js' %}"></script>
-            <script src="{% static 'js/vendor/selectivizr.js' %}"></script>
-            <script src="{% static 'js/vendor/respond.js' %}"></script>
-            <![endif]-->
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
 
         {% block extra_style %}{% endblock %}
 
@@ -43,24 +44,8 @@
             <!-- jQuery CDN -->
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-            <!-- jQuery local fallback -->
-            <script>window.jQuery || document.write('<script src="{% static "js/vendor/jquery-1.12.4.min.js" %}"><\/script>')</script>
-
-            <!-- Bootstrap JS CDN -->
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-            <!-- Bootstrap JS local fallback -->
-            <script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="{% static "js/vendor/bootstrap-3.3.7.min.js" %}"><\/script>')}</script>
-
-            <!-- Bootstrap CSS local fallback -->
-            <script>
-                $(document).ready(function() {
-                    var bodyColor = $('body').css('color');
-                    if (bodyColor != 'rgb(51, 51, 51)') {
-                        $("head").prepend('<link rel="stylesheet" href="{% static "css/vendor/bootstrap-3.3.7.min.css" %}">');
-                    }
-                });
-            </script>
+            <!-- Latest compiled and minified JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
             {% block extra_script %}{% endblock %}
         {% endblock %}

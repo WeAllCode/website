@@ -38,13 +38,22 @@
                         <li class="list-group-item">Max Age: {{ session.max_age_limitation|default:"17" }}</li>
                         <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
                         <li class="list-group-item">Mentors: <b>{{ session.get_mentor_orders.count }} / {{ session.get_mentor_capacity }}</b></li>
-                        {% if session.announced_date %}
-                            <li class="text-muted list-group-item">Announced: <b>{{ session.announced_date|date }}</b></li>
+
+                        {% if session.announced_date_mentors %}
+                            <li class="text-muted list-group-item">Announced to mentors on:<br><b>{{ session.announced_date_mentors|date:'F j, Y \a\t g:i a' }}</b></li>
                         {% else %}
-                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce' session.id %}'>Announce</a>" data-html="true">Announce</a></li>
+                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce_mentors' session.id %}'>Announce mentors</a>" data-html="true">Announce to mentors</a></li>
                         {% endif %}
+
+                        {% if session.announced_date_guardians %}
+                            <li class="text-muted list-group-item">Announced to guardians on:<br><b>{{ session.announced_date_guardians|date:'F j, Y \a\t g:i a' }}</b></li>
+                        {% else %}
+                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce_guardians' session.id %}'>Announce guardians</a>" data-html="true">Announce to guardians</a></li>
+                        {% endif %}
+
                         <li class="list-group-item"><a href="{% url 'check_in' session.id %}">Check-in Class</a></li>
                     {% endif %}
+
                     <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>
                     <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
                 </ul>
@@ -165,7 +174,7 @@
             <div class="teachers">
                 <div class="teacher">
                     <div class="image">
-                        <a href="{% url 'mentor_detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
+                        <a href="{% url 'mentor_detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
                     </div>
                     <div class="info">
                         <h3 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
@@ -183,7 +192,7 @@
                     {% if mentor.is_public == True %}
                 <div class="col-xs-12 col-sm-4 col-md-4">
                     <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
-                        <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}http://gravatar.com/avatar/?s=175&d=mm{% endif %}" height="175" width="175">
+                        <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" height="175" width="175">
                         <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
                     </a>
                 </div>

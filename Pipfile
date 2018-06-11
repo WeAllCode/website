@@ -1,0 +1,40 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+Django = "*"
+invoke = "*"
+gunicorn = "*"
+arrow = "*"
+"boto3" = "*"
+Pillow = "*"
+mock = "*"
+"psycopg2-binary" = "*"
+django-allauth = "*"
+django-appconf = "*"
+"django-bootstrap3" = "*"
+django-cleanup = "*"
+django-common-helpers = "*"
+django-cron = "*"
+django-debug-toolbar = "*"
+django-heroku = "*"
+"django-html5" = "*"
+django-import-export = "*"
+django-loginas = "*"
+django-nose = "*"
+django-paypal = "*"
+django-stdimage = "*"
+django-storages = "*"
+djrill = "*"
+factory_boy = "*"
+icalendar = "*"
+json-logging-py = "*"
+
+[dev-packages]
+pylint = "*"
+"autopep8" = "*"
+
+[requires]
+python_version = "3.6"

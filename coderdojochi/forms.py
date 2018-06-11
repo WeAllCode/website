@@ -1,23 +1,21 @@
-# -*- coding: utf-8 -*-
-
 import re
-import html5.forms.widgets as html5_widgets
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
-from django.forms import Form, ModelForm, FileField, ValidationError
+from django.forms import FileField, Form, ModelForm, ValidationError
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
+import html5.forms.widgets as html5_widgets
 from coderdojochi.models import (
     CDCUser,
+    Donation,
     Guardian,
     Mentor,
     RaceEthnicity,
-    Student,
-    Donation,
-    Session
+    Session,
+    Student
 )
 
 SCHOOL_TYPE_CHOICES = (
@@ -31,7 +29,7 @@ SCHOOL_TYPE_CHOICES = (
 class CDCForm(Form):
     # strip leading or trailing whitespace
     def _clean_fields(self):
-        for name, field in self.fields.items():
+        for name, field in list(self.fields.items()):
             # value_from_datadict() gets the data from the data dictionaries.
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
@@ -46,15 +44,15 @@ class CDCForm(Form):
                     initial = self.initial.get(name, field.initial)
                     value = field.clean(value, initial)
                 else:
-                    if isinstance(value, basestring):
+                    if isinstance(value, str):
                         value = field.clean(value.strip())
                     else:
                         value = field.clean(value)
 
                 self.cleaned_data[name] = value
 
-                if hasattr(self, u'clean_{}'.format(name)):
-                    value = getattr(self, u'clean_{}'.format(name))()
+                if hasattr(self, f"clean_{name}"):
+                    value = getattr(self, f"clean_{name}")()
                     self.cleaned_data[name] = value
 
             except ValidationError as e:
@@ -64,7 +62,7 @@ class CDCForm(Form):
 class CDCModelForm(ModelForm):
     # strip leading or trailing whitespace
     def _clean_fields(self):
-        for name, field in self.fields.items():
+        for name, field in list(self.fields.items()):
             # value_from_datadict() gets the data from the data dictionaries.
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
@@ -79,7 +77,7 @@ class CDCModelForm(ModelForm):
                     initial = self.initial.get(name, field.initial)
                     value = field.clean(value, initial)
                 else:
-                    if isinstance(value, basestring):
+                    if isinstance(value, str):
                         # regex normalizes carriage return
                         # and cuts them to two at most
                         value = re.sub(r'\r\n', '\n', value)
@@ -90,8 +88,8 @@ class CDCModelForm(ModelForm):
 
                 self.cleaned_data[name] = value
 
-                if hasattr(self, u'clean_{}'.format(name)):
-                    value = getattr(self, u'clean_{}'.format(name))()
+                if hasattr(self, f"clean_{name}"):
+                    value = getattr(self, f"clean_{name}")()
                     self.cleaned_data[name] = value
 
             except ValidationError as e:
@@ -145,21 +143,13 @@ class MentorForm(CDCModelForm):
             max_width = max_height = 1000
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
-                    u'Please use an image that is '
-                    u'{} x {}px or smaller.'.format(
-                        max_width,
-                        max_height
-                    )
+                    f'Please use an image that is {max_width} x {max_height}px or smaller.'
                 )
 
             min_width = min_height = 500
             if w < min_width or h < min_height:
                 raise forms.ValidationError(
-                    u'Please use an image that is '
-                    u'{} x {}px or larger.'.format(
-                        min_width,
-                        min_height
-                    )
+                    f'Please use an image that is {min_width} x {min_height}px or larger.'
                 )
 
             # validate content type
@@ -171,13 +161,13 @@ class MentorForm(CDCModelForm):
                 )
             ):
                 raise forms.ValidationError(
-                    u'Please use a JPEG, GIF or PNG image.'
+                    'Please use a JPEG, GIF or PNG image.'
                 )
 
             # validate file size
             if len(avatar) > (2000 * 1024):
                 raise forms.ValidationError(
-                    u'Avatar file size may not exceed 2MB.'
+                    'Avatar file size may not exceed 2MB.'
                 )
 
         except AttributeError:
@@ -285,7 +275,7 @@ class StudentForm(CDCModelForm):
             }
         ),
         label=format_html(
-            u"{0} {1}",
+            "{0} {1}",
             "Medications",
             mark_safe(
                 '<span class="btn btn-xs btn-link js-expand-student-form">'
@@ -304,7 +294,7 @@ class StudentForm(CDCModelForm):
             }
         ),
         label=format_html(
-            u"{0} {1}",
+            "{0} {1}",
             "Medical Conditions",
             mark_safe(
                 '<span class="btn btn-xs btn-link js-expand-student-form">'
@@ -335,9 +325,7 @@ class StudentForm(CDCModelForm):
         label=(
             'I hereby give consent for the student signed up above to '
             'participate in CoderDojoChi as per the '
-            '<a href="{}">terms</a>.'.format(
-                '/privacy'
-            )
+            '<a href="/privacy">terms</a>.'
         ),
     )
 
