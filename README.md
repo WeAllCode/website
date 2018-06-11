@@ -1,3 +1,6 @@
+# PROJECT FROZEN
+This is the _current_ live version of [coderdojochi.org](https://www.coderdojochi.org) but no new development will be done on it. Version 2 is being developed at [CoderDojoChi/c2](https://github.com/CoderDojoChi/c2).
+
 # Custom-build Django application for CoderDojoChi
 
 We, the community and staff, have been building a custom Django application to handle out many parts of our organization.
