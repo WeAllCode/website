@@ -29,6 +29,12 @@
     },
     "MANDRILL_API_KEY": {
       "required": true
+    },
+    "PAYPAL_RECEIVER_EMAIL": {
+      "required": true
+    },
+    "PAYPAL_BUSINESS_ID": {
+      "required": true
     }
   },
   "formation": {
