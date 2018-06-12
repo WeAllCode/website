@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e149bf9a87543d3aa65241d7428c6188defef452a472c82e6e0cbf4b3b38117e"
+            "sha256": "4b195f9a33348c7fea8c1e072509999e8aeb95b719bd51db463f3e95c4fb4465"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -25,18 +25,18 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:06b8bd0a6ecc875c5b7a73b023617a714e0aae2dda194c624790cb5ce3767919",
-                "sha256:6b2a3640da3e1282acee29a05494fa96d0850426233f50c49e46f6f07ea08c20"
+                "sha256:1023b6049cf542a48fc0dda536aef7c5702f76c34dccbe8ab1706d9cfb2c8a6b",
+                "sha256:4376b0844bc68c917e4e805638dfee1fcc08c3744e97f0465c09595140004adf"
             ],
             "index": "pypi",
-            "version": "==1.7.35"
+            "version": "==1.7.36"
         },
         "botocore": {
             "hashes": [
-                "sha256:15bd5b023348b1b51caa8b2e70c99945031cc80b2610c3b4ed351774d04ab95d",
-                "sha256:7529de3954989d8433d65d9c57013f2109099a1b7d64f6a6f9e53c2ad6f9a06b"
+                "sha256:5edb2c13dfd7a797c285b2d611738d6aee2ab3cf08ead50c9d1e728f7fceccb1",
+                "sha256:c29cdf7e3e8134c37a2f1535fbd513161504e2171acf3fba359f63945ed9c0f7"
             ],
-            "version": "==1.10.35"
+            "version": "==1.10.36"
         },
         "certifi": {
             "hashes": [
@@ -86,6 +86,14 @@
             ],
             "index": "pypi",
             "version": "==0.36.0"
+        },
+        "django-anymail": {
+            "hashes": [
+                "sha256:a3c6d3793d5d2c2dbb5d8407c9881015d7733073aaa42865a0576ced27230a38",
+                "sha256:ea2302f0bb3b52c6abcb0a43a54ffcd7b5ef8e19d4c8f67dfeda2e23e26f4dc2"
+            ],
+            "index": "pypi",
+            "version": "==3.0"
         },
         "django-appconf": {
             "hashes": [
@@ -195,13 +203,6 @@
             "index": "pypi",
             "version": "==1.6.6"
         },
-        "djrill": {
-            "hashes": [
-                "sha256:1047a11f3982816aa3aa02eab778e199d5d9561815fe01460f45f70a503c65f4"
-            ],
-            "index": "pypi",
-            "version": "==2.1.0"
-        },
         "docutils": {
             "hashes": [
                 "sha256:02aec4bd92ab067f6ff27a38a38a41173bf01bed8f89157768c1573f53e474a6",
@@ -249,10 +250,10 @@
         },
         "idna": {
             "hashes": [
-                "sha256:2c6a5de3089009e3da7c5dde64a141dbc8551d5b7f6cf4ed7c2568d0cc520a8f",
-                "sha256:8c7309c718f94b3a625cb648ace320157ad16ff131ae0af362c9f21b80ef6ec4"
+                "sha256:156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e",
+                "sha256:684a38a6f903c1d71d6d5fac066b58d7768af4de2b832e426ec79c30daa94a16"
             ],
-            "version": "==2.6"
+            "version": "==2.7"
         },
         "invoke": {
             "hashes": [
@@ -497,10 +498,10 @@
         },
         "requests": {
             "hashes": [
-                "sha256:6a1b267aa90cac58ac3a765d067950e7dbbf75b1da07e895d1f594193a40a38b",
-                "sha256:9c443e7324ba5b85070c4a818ade28bfabedf16ea10206da1132edaa6dda237e"
+                "sha256:421cfc8d9dde7d6aff68196420afd86b88c65d77d8da9cf83f4ecad785d7b9d6",
+                "sha256:cc408268d0e21589bcc2b2c248e42932b8c4d112f499c12c92e99e2178a6134c"
             ],
-            "version": "==2.18.4"
+            "version": "==2.19.0"
         },
         "requests-oauthlib": {
             "hashes": [
@@ -552,10 +553,10 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:06330f386d6e4b195fbfc736b297f58c5a892e4440e54d294d7004e3a9bbea1b",
-                "sha256:cc44da8e1145637334317feebd728bd869a35285b93cbb4cca2577da7e62db4f"
+                "sha256:a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf",
+                "sha256:b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5"
             ],
-            "version": "==1.22"
+            "version": "==1.23"
         },
         "whitenoise": {
             "hashes": [

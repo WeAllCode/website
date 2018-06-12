@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 
     'bootstrap3',
     'django_cleanup',
-    'djrill',
+    'anymail',
     'html5',
     'loginas',
     'paypal.standard.ipn',
@@ -247,20 +247,12 @@ SOCIALACCOUNT_ADAPTER = (
     'coderdojochi.social_account_adapter.SocialAccountAdapter'
 )
 
-
-# Email
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
+ANYMAIL = {
+    "MANDRILL_API_KEY": os.environ.get('MANDRILL_API_KEY'),
+}
+EMAIL_BACKEND = "anymail.backends.mandrill.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
-MANDRILL_API_KEY = os.environ.get('MANDRILL_API_KEY')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = MANDRILL_API_KEY
-SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
 
 if DEBUG:
 
