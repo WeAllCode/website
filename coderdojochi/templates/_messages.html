@@ -1,10 +1,21 @@
-{% if messages %}
-<div class="global-messages">
+{% for message in messages %}
+<div class="alert alert-dismissible alert-{% if message.tags %}{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% else %}warning{% endif %}" role="alert">
 	<div class="container">
-		{% for message in messages %}
-		<div class="message text-{% if message.tags %}{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% else %}warning{% endif %}">{{ message|safe }}</div>
-		{% endfor %}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		{% if message.tags %}
+			{% if message.tags == 'error' %}
+			<strong>Oh snap!</strong>
+			{% elif message.tags == 'warning' %}
+			<strong>Warning!</strong>
+			{% elif message.tags == 'success' %}
+			<strong>Well done!</strong>
+			{% elif message.tags == 'info' %}
+			<strong>Heads up!</strong>
+			{% elif message.tags == 'debug' %}
+			<strong>Heads up!</strong>
+			{% endif %}
+		{% endif %}
+		{{ message|safe }}
 	</div>
-	<button class="global-messages-close btn-link"><i class="fa fa-times"></i></button>
 </div>
-{% endif %}
+{% endfor %}

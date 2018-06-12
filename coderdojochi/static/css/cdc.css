@@ -424,40 +424,6 @@ hr {
     display: none;
 }
 
-.global-messages {
-    position: absolute;
-    z-index: 1033;
-    top: -100px;
-    left: 0;
-
-    width: 100%;
-    padding: 20px 0;
-
-    text-align: center;
-
-    background: #FFFFFF;
-}
-
-.global-messages a {
-    color: #87C448;
-}
-
-.global-messages .global-messages-close {
-    position: absolute;
-    top: 5px;
-    right: 20px;
-
-    color: #888888;
-}
-
-.global-messages .global-messages-close:hover {
-    color: #000000;
-}
-
-.global-messages .global-messages-close:active {
-    outline: none;
-}
-
 /* -------------------------------------------------------------------------*/
 /* Global Typography */
 h1,

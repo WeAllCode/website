@@ -45,16 +45,6 @@ CDC.global = (function($, document, window, undefined) {
             }
         });
 
-        // display any global messages
-
-        setTimeout(function() {
-            $('.global-messages:first')
-                .animate({
-                    top: 0
-                }, 250)
-                .css('zIndex', 1033);
-        }, 500);
-
         // Scroll listener
 
         $(window).scroll(function() {
@@ -72,7 +62,7 @@ CDC.global = (function($, document, window, undefined) {
             .on('click', '.js-expand-student-form', expandStudentForm)
             // Login / Register email show/hide
             .on('click', '.login-email, .signup-email', displayRegistrationEmailForm)
-            .on('click', '.global-messages .global-messages-close', closeGlobalMessages);
+        ;
 
         $('#id_phone').mask('(999) 999-9999');
         $('#id_zip').mask('99999');
@@ -110,13 +100,6 @@ CDC.global = (function($, document, window, undefined) {
         $form.find('input:not([type=hidden]):eq(0)').focus();
     }
 
-    function closeGlobalMessages() {
-        $('.global-messages:first').animate({
-            top: '-100px'
-        }, 250, function() {
-            $(this).remove();
-        });
-    }
 
     /* Expose Public Methods ________________________________________________________________ */
 

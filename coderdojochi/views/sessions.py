@@ -110,10 +110,7 @@ def session_confirm_mentor(request, session_obj, order):
 
 def session_confirm_guardian(request, session_obj, order, student):
     email(
-        subject='Upcoming class confirmation for {} {}'.format(
-            student.first_name,
-            student.last_name,
-        ),
+        subject=f'Upcoming class confirmation for {student.first_name} {student.last_name}',
         template_name='class-confirm-guardian',
         context={
             'first_name': request.user.first_name,
@@ -347,9 +344,15 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
         access_dict = self.check_access(request, *args, **kwargs)
         if access_dict.get('message'):
             if access_dict.get('redirect') == 'dojo':
-                messages.warning(access_dict['message'])
+                messages.warning(
+                    request,
+                    access_dict['message']
+                )
             else:
-                messages.error(access_dict['message'])
+                messages.error(
+                    request,
+                    access_dict['message']
+                )
             return redirect(access_dict['redirect'])
 
         return super(SessionSignUpView, self).dispatch(request, *args, **kwargs)
@@ -365,8 +368,9 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                         f"\"https://app.verifiedvolunteers.com/promoorder/6a34f727-3728-4f1a-b80b-7eb3265a3b93\""
                         f" target=\"_blank\">fill out the background search form</a>."
                     ),
-                    'redirect': 'dojo'
+                    'redirect': request.META.get('HTTP_REFERER', '/dojo')
                 }
+
         if kwargs.get('student'):
             limits = self.student_limitations(
                 kwargs['student'], kwargs['session_obj'], kwargs['user_signed_up']
@@ -382,10 +386,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
         if not student.is_within_gender_limitation(
             session_obj.gender_limitation
         ):
-            return ('Sorry, this class is limited to {}s '
-                    'this time around.'.format(
-                        session_obj.gender_limitation
-                    ))
+            return f'Sorry, this class is limited to {session_obj.gender_limitation}s this time around.'
 
         if not student.is_within_age_range(
             session_obj.min_age_limitation,

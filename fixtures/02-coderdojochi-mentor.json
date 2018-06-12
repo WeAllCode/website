@@ -13,5 +13,20 @@
     "avatar": "avatar/test_admin.jpg",
     "avatar_approved": true
   }
+},
+{
+  "model": "coderdojochi.mentor",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "bio": "",
+    "is_active": true,
+    "created_at": "2013-01-01T06:00:00Z",
+    "updated_at": "2013-01-01T06:00:00Z",
+    "background_check": false,
+    "is_public": false,
+    "avatar": "",
+    "avatar_approved": false
+  }
 }
 ]

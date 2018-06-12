@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Case, Count, When
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 
 from coderdojochi.models import (
     Course,
@@ -38,7 +38,7 @@ class UserAdmin(ImportExportActionModelAdmin):
         'email',
         'first_name',
         'last_name',
-        'role',
+        'role_link',
         'date_joined',
         'last_login',
         'is_active',
@@ -79,15 +79,34 @@ class UserAdmin(ImportExportActionModelAdmin):
 
     change_form_template = 'loginas/change_form.html'
 
+    def role_link(self, obj):
+        if obj.role == 'mentor':
+            return format_html(
+                '<a href="{url}?q={query}">{role}</a>',
+                url=reverse('admin:coderdojochi_mentor_changelist'),
+                query=obj.email,
+                role=obj.role,
+            )
+        elif obj.role == 'guardian':
+            return format_html(
+                '<a href="{url}?q={query}">{role}</a>',
+                url=reverse('admin:coderdojochi_guardian_changelist'),
+                query=obj.email,
+                role=obj.role,
+            )
+
+        return obj.role
+    role_link.short_description = 'Role'
+
 
 @admin.register(Mentor)
 class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
     list_display = (
-        'user',
-        'get_first_name',
-        'get_last_name',
+        'first_name',
+        'last_name',
+        'user_link',
         'mentor_count_link',
         'created_at',
         'updated_at',
@@ -144,23 +163,23 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         )
         return qs
 
-    def get_first_name(self, obj):
-        return obj.user.first_name
-    get_first_name.short_description = 'First Name'
-    get_first_name.admin_order_field = 'user__first_name'
-
-    def get_last_name(self, obj):
-        return obj.user.last_name
-    get_last_name.short_description = 'First Name'
-    get_last_name.admin_order_field = 'user__last_name'
-
     def mentor_count_link(self, obj):
-        return mark_safe(
-            f"<a href='{reverse('admin:coderdojochi_mentororder_changelist')}?mentor={obj.id}'>"
-            f"{obj.mentororder__count}</a>"
+        return format_html(
+            '<a href="{url}?mentor={query}">{count}</a>',
+            url=reverse('admin:coderdojochi_mentororder_changelist'),
+            query=obj.id,
+            count=obj.mentororder__count,
         )
     mentor_count_link.short_description = 'Orders'
     mentor_count_link.admin_order_field = 'mentororder__count'
+
+    def user_link(self, obj):
+        return format_html(
+            '<a href="{url}">{user}</a>',
+            url=reverse('admin:coderdojochi_cdcuser_change', args=(obj.user.id,)),
+            user=obj.user,
+        )
+    user_link.short_description = 'User'
 
 
 class GuardianImportResource(resources.ModelResource):
@@ -262,14 +281,19 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return qs
 
     def user_link(self, obj):
-        return mark_safe(
-            f"<a href='{reverse('admin:coderdojochi_cdcuser_changelist')}?q={obj.user.email}'>{obj.user}</a>"
+        return format_html(
+            '<a href="{url}">{name}</a>',
+            url=reverse('admin:coderdojochi_cdcuser_change', args=(obj.user.id,)),
+            name=obj.user,
         )
     user_link.short_description = 'User'
 
     def student_count_link(self, obj):
-        return mark_safe(
-            f"<a href='{reverse('admin:coderdojochi_student_changelist')}?guardian={obj.id}'>{obj.student_count}</a>"
+        return format_html(
+            '<a href="{url}?guardian={query}">{count}</a>',
+            url=reverse('admin:coderdojochi_student_changelist'),
+            query=obj.id,
+            count=obj.student_count,
         )
     student_count_link.short_description = 'Students'
     student_count_link.admin_order_field = 'student_count'
@@ -410,19 +434,21 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return qs
 
     def guardian_link(self, obj):
-        return mark_safe(
-            '<a href="{}?q={}">{} {}</a>'.format(
-                reverse("admin:coderdojochi_guardian_changelist"),
-                obj.guardian.user.email,
-                obj.guardian.user.first_name,
-                obj.guardian.user.last_name,
-            )
+        return format_html(
+            '<a href="{url}">{first} {last}</a>',
+            url=reverse("admin:coderdojochi_guardian_change", args=(obj.guardian.id,)),
+            # query=obj.guardian.user.email,
+            first=obj.guardian.user.first_name,
+            last=obj.guardian.user.last_name,
         )
     guardian_link.short_description = 'Guardian'
 
     def order_count_link(self, obj):
-        return mark_safe(
-            f"<a href='{reverse('admin:coderdojochi_order_changelist')}?student={obj.id}'>{obj.order__count}</a>"
+        return format_html(
+            '<a href="{url}?student={student}">{count}</a>',
+            url=reverse('admin:coderdojochi_order_changelist'),
+            student=obj.id,
+            count=obj.order__count,
         )
     order_count_link.short_description = 'Orders'
     order_count_link.admin_order_field = 'order__count'
@@ -465,7 +491,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'mentor_count_link',
         'is_active',
         'is_public',
-        'is_announced',
+        'is_guardian_announced',
     )
 
     list_filter = (
@@ -504,33 +530,24 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     _course.admin_order_field = 'course__code'
 
     def mentor_count_link(self, obj):
-        return mark_safe(
-            '<a href="{}?session__id__exact={}">{}</a>'.format(
-                reverse("admin:coderdojochi_mentororder_changelist"),
-                obj.id,
-                MentorOrder.objects.filter(session__id=obj.id, is_active=True).count(),
-            )
+        return format_html(
+            '<a href="{url}?session__id__exact={query}">{count}</a>',
+            url=reverse("admin:coderdojochi_mentororder_changelist"),
+            query=obj.id,
+            count=MentorOrder.objects.filter(session__id=obj.id, is_active=True).count(),
         )
     mentor_count_link.short_description = "Mentors"
     mentor_count_link.admin_order_field = "mentor__count"
 
     def student_count_link(self, obj):
-        return mark_safe(
-            '<a href="{}?session__id__exact={}">{}</a>'.format(
-                reverse("admin:coderdojochi_order_changelist"),
-                obj.id,
-                obj.get_current_orders().count(),
-            )
+        return format_html(
+            '<a href="{url}?session__id__exact={query}">{count}</a>',
+            url=reverse("admin:coderdojochi_order_changelist"),
+            query=obj.id,
+            count=obj.get_current_orders().count(),
         )
     student_count_link.short_description = "Students"
     student_count_link.admin_order_field = "student__count"
-
-    def is_announced(self, obj):
-        return obj.announced_date is not None
-
-    is_announced.boolean = True
-    is_announced.short_description = "Is Announced"
-    is_announced.admin_order_field = 'announced_date'
 
 
 def student_check_in(modeladmin, request, queryset):
@@ -601,36 +618,26 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     def get_student_link(self, obj):
-        return mark_safe(
-            '<a href="{}">{}</a>'.format(
-                reverse(
-                    'admin:coderdojochi_student_change',
-                    args=(obj.student.id,)
-                ),
-                obj.student,
-            )
+        return format_html(
+            '<a href="{url}">{student}</a>',
+            url=reverse('admin:coderdojochi_student_change', args=(obj.student.id,)),
+            student=obj.student,
         )
     get_student_link.short_description = 'Student'
 
     def get_guardian_link(self, obj):
-        return mark_safe(
-            '<a href="{}">{}</a>'.format(
-                reverse(
-                    'admin:coderdojochi_guardian_change',
-                    args=(obj.guardian.id,)
-                ),
-                obj.guardian,
-            )
+        return format_html(
+            '<a href="{url}">{guardian}</a>',
+            url=reverse('admin:coderdojochi_guardian_change', args=(obj.guardian.id,)),
+            guardian=obj.guardian,
         )
     get_guardian_link.short_description = 'Guardian'
 
     def get_session_link(self, obj):
-        return mark_safe(
-            '<a href="{}?course={}">{}</a>'.format(
-                reverse("admin:coderdojochi_session_changelist"),
-                obj.session.course.id,
-                obj.session.course.code,
-            )
+        return format_html(
+            '<a href="{url}">{course_code}</a>',
+            url=reverse("admin:coderdojochi_session_change", args=(obj.session.course.id,)),
+            course_code=obj.session.course.code,
         )
     get_session_link.short_description = 'Session'
 

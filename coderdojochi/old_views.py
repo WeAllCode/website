@@ -1505,7 +1505,7 @@ def mentor_approve_avatar(request, mentor_id=False):
     if mentor.background_check:
         messages.success(
             request,
-            f"{mentor.user.first_name}{mentor.user.last_name}'s avatar approved and their account is now public."
+            f"{mentor.user.first_name} {mentor.user.last_name}'s avatar approved and their account is now public."
         )
 
         return HttpResponseRedirect(

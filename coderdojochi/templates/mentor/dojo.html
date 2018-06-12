@@ -13,7 +13,7 @@
         <h1>Hello {% if mentor.user.first_name %}{{ mentor.user.first_name }}{% else %}there friend{% endif %}!</h1>
         <p>We're super excited to have you join our ranks. Before you come to your first mentor session, we need to take care of a few things.</p>
 
-        <ul>
+        <ol>
             {% if not mentor.user.first_name or not mentor.user.last_name %}
             <li><a href="#id_first_name">Enter full name</a>.</li>
             {% endif %}
@@ -33,7 +33,7 @@
             {% if not past_sessions %}
             <li>Attend <a href="{% url 'sessions' %}">a class</a>.</li>
             {% endif %}
-        </ul>
+        </ol>
     </div>
 </div>
 {% endif %}
