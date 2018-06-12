@@ -1,3 +1,0 @@
-{% if preheader %}{{ preheader }}{% endif %}
-
-{% block content %}{% endblock content %}

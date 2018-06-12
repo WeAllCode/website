@@ -19,7 +19,7 @@
                             </tr>
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
-                                    <p><b>{{ first_name }}</b>,</p>
+                                    <p><b>*|first_name|*</b>,</p>
 
                                     <p>Your class is just 1 day away! All you have to do is show up on time. That’s it. Nothing else. No reading, supply shopping or cramming. We’ve got it all covered.</p>
                                 </td>
@@ -64,7 +64,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">{{ class_code }}: {{ class_title }}</td>
+                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">*|class_code|*: *|class_title|*</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -90,7 +90,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">{{ class_start_date }}</td>
+                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">*|class_start_date|*</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -116,7 +116,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">{{ class_start_time }} &ndash; {{ class_end_time }}</td>
+                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">*|class_start_time|* &ndash; *|class_end_time|*</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -143,9 +143,9 @@
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
                                                         <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">
-                                                        {% if class_location_name %}{{ class_location_name }}<br>{% endif %}
-                                                        {{ class_location_address }}, {{ class_location_address2 }}<br>
-                                                        {{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
+                                                        {% if class_location_name %}*|class_location_name|*<br>{% endif %}
+                                                        *|class_location_address|*, *|class_location_address2|*<br>
+                                                        *|class_location_city|*, *|class_location_state|* *|class_location_zip|*
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -173,7 +173,7 @@
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
-                                    <p>We hope you&rsquo;re as excited about it as we are. <a href="{{ class_ics_url }}">Mark it in your calendar now</a>, but you can expect a reminder email a few days before. See you soon!</p>
+                                    <p>We hope you&rsquo;re as excited about it as we are. <a href="*|class_ics_url|*">Mark it in your calendar now</a>, but you can expect a reminder email a few days before. See you soon!</p>
                                     <p>The CoderDojoChi Team</p>
                                 </td>
                             </tr>
@@ -196,19 +196,19 @@
     <meta itemprop="reservationNumber" content="E{{order.id}}"/>
     <link itemprop="reservationStatus" href="http://schema.org/Confirmed"/>
     <div itemprop="underName" itemscope itemtype="http://schema.org/Person">
-        <meta itemprop="name" content="{{ student_first_name }} {{ student_last_name }}"/>
+        <meta itemprop="name" content="*|student_first_name|* *|student_last_name|*"/>
     </div>
     <div itemprop="reservationFor" itemscope itemtype="http://schema.org/Event">
-        <meta itemprop="name" content="{{ class_code }}: {{ class_title }}"/>
-        <meta itemprop="startDate" content="{{ microdata_start_date }}"/>
-        <meta itemprop="endDate" content="{{ microdata_end_date }}"/>
+        <meta itemprop="name" content="*|class_code|*: *|class_title|*"/>
+        <meta itemprop="startDate" content="*|microdata_start_date|*"/>
+        <meta itemprop="endDate" content="*|microdata_end_date|*"/>
         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-            <meta itemprop="name" content="{{ class_location_name }}"/>
+            <meta itemprop="name" content="*|class_location_name|*"/>
             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                <meta itemprop="streetAddress" content="{{ class_location_address }} {{ class_location_address2 }}"/>
-                <meta itemprop="addressLocality" content="{{ class_location_city }}"/>
-                <meta itemprop="addressRegion" content="{{ class_location_state }}"/>
-                <meta itemprop="postalCode" content="{{ class_location_zip }}"/>
+                <meta itemprop="streetAddress" content="*|class_location_address|* *|class_location_address2|*"/>
+                <meta itemprop="addressLocality" content="*|class_location_city|*"/>
+                <meta itemprop="addressRegion" content="*|class_location_state|*"/>
+                <meta itemprop="postalCode" content="*|class_location_zip|*"/>
                 <meta itemprop="addressCountry" content="US"/>
             </div>
         </div>

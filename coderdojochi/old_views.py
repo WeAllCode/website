@@ -192,7 +192,7 @@ def welcome(request, template_name="welcome.html"):
                 email(
                     subject='Welcome!',
                     template_name='welcome-mentor',
-                    context=merge_vars,
+                    merge_global_data=merge_vars,
                     recipients=[request.user.email],
                     preheader='Your adventure awaits!',
                 )
@@ -218,7 +218,7 @@ def welcome(request, template_name="welcome.html"):
                 email(
                     subject='Welcome!',
                     template_name='welcome-guardian',
-                    context=merge_vars,
+                    merge_global_data=merge_vars,
                     recipients=[request.user.email],
                     preheader='Your adventure awaits!',
                 )
@@ -716,7 +716,7 @@ def session_sign_up(
                         ).to('local').format('MMMM D'),
                     ),
                     template_name='class-confirm-mentor',
-                    context={
+                    merge_global_data={
                         'first_name': request.user.first_name,
                         'last_name': request.user.last_name,
                         'class_code': session_obj.course.code,
@@ -761,7 +761,7 @@ def session_sign_up(
                 email(
                     subject=f"Upcoming class confirmation for {student.first_name} {student.last_name}",
                     template_name='class-confirm-guardian',
-                    context={
+                    merge_global_data={
                         'first_name': request.user.first_name,
                         'last_name': request.user.last_name,
                         'student_first_name': student.first_name,
@@ -1017,7 +1017,7 @@ def meeting_sign_up(
             email(
                 subject='Upcoming mentor meeting confirmation',
                 template_name='meeting-confirm-mentor',
-                context={
+                merge_global_data={
                     'first_name': request.user.first_name,
                     'last_name': request.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
@@ -1094,57 +1094,55 @@ def meeting_announce(request, meeting_id):
 
     if not meeting_obj.announced_date_mentors:
 
-        # uses SMTP server specified in settings.py
-        connection = get_connection()
-
-        # If you don't open the connection manually,
-        # Django will automatically open, then tear down the
-        # connection in msg.send()
-        connection.open()
+        merge_data = {}
+        recipients = []
+        merge_global_data = {
+            'meeting_title': meeting_obj.meeting_type.title,
+            'meeting_description': (
+                meeting_obj.meeting_type.description
+            ),
+            'meeting_start_date': arrow.get(
+                meeting_obj.start_date
+            ).to('local').format('dddd, MMMM D, YYYY'),
+            'meeting_start_time': arrow.get(
+                meeting_obj.start_date
+            ).to('local').format('h:mma'),
+            'meeting_end_date': arrow.get(
+                meeting_obj.end_date
+            ).to('local').format('dddd, MMMM D, YYYY'),
+            'meeting_end_time': arrow.get(
+                meeting_obj.end_date
+            ).to('local').format('h:mma'),
+            'meeting_location_name': meeting_obj.location.name,
+            'meeting_location_address': meeting_obj.location.address,
+            'meeting_location_address2': meeting_obj.location.address2,
+            'meeting_location_city': meeting_obj.location.city,
+            'meeting_location_state': meeting_obj.location.state,
+            'meeting_location_zip': meeting_obj.location.zip,
+            'meeting_additional_info': meeting_obj.additional_info,
+            'meeting_url': meeting_obj.get_absolute_url(),
+            'meeting_ics_url': meeting_obj.get_ics_url()
+        }
 
         for mentor in Mentor.objects.filter(
             is_active=True,
             user__is_active=True,
         ):
-            email(
-                subject='New meeting announced!',
-                template_name='meeting-announcement-mentor',
-                context={
-                    'first_name': mentor.user.first_name,
-                    'last_name': mentor.user.last_name,
-                    'meeting_title': meeting_obj.meeting_type.title,
-                    'meeting_description': (
-                        meeting_obj.meeting_type.description
-                    ),
-                    'meeting_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_start_time': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('h:mma'),
-                    'meeting_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_end_time': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('h:mma'),
-                    'meeting_location_name': meeting_obj.location.name,
-                    'meeting_location_address': meeting_obj.location.address,
-                    'meeting_location_address2': meeting_obj.location.address2,
-                    'meeting_location_city': meeting_obj.location.city,
-                    'meeting_location_state': meeting_obj.location.state,
-                    'meeting_location_zip': meeting_obj.location.zip,
-                    'meeting_additional_info': meeting_obj.additional_info,
-                    'meeting_url': meeting_obj.get_absolute_url(),
-                    'meeting_ics_url': meeting_obj.get_ics_url()
-                },
-                recipients=[mentor.user.email],
-                preheader='A new meeting has been announced. '
-                          'Come join us for some amazing fun!',
-            )
+            recipients.append(mentor.user.email)
+            merge_data[mentor.user.email] = {
+                'first_name': mentor.user.first_name,
+                'last_name': mentor.user.last_name,
+            }
 
-        # Cleanup
-        connection.close()
+        email(
+            subject='New meeting announced!',
+            template_name='meeting-announcement-mentor',
+            merge_data=merge_data,
+            merge_global_data=merge_global_data,
+            recipients=recipients,
+            preheader='A new meeting has been announced. '
+                      'Come join us for some amazing fun!',
+        )
 
         meeting_obj.announced_date_mentors = timezone.now()
         meeting_obj.save()
@@ -1544,7 +1542,7 @@ def mentor_reject_avatar(request, mentor_id=False):
     email(
         subject='Your CoderDojoChi avatar...',
         template_name='class-announcement-mentor',
-        context={
+        merge_global_data={
             'site_url': settings.SITE_URL,
         },
         recipients=[mentor.user.email],
@@ -2445,59 +2443,56 @@ def session_announce_guardians(request, session_id):
     )
 
     if not session_obj.announced_date_guardians:
-
-        # uses SMTP server specified in settings.py
-        connection = get_connection()
-
-        # If you don't open the connection manually,
-        # Django will automatically open, then tear down the
-        # connection in msg.send()
-        connection.open()
+        merge_data = {}
+        recipients = []
+        merge_global_data = {
+            'class_code': session_obj.course.code,
+            'class_title': session_obj.course.title,
+            'class_description': session_obj.course.description,
+            'class_start_date': arrow.get(
+                session_obj.start_date
+            ).to('local').format('dddd, MMMM D, YYYY'),
+            'class_start_time': arrow.get(
+                session_obj.start_date
+            ).to('local').format('h:mma'),
+            'class_end_date': arrow.get(
+                session_obj.end_date
+            ).to('local').format('dddd, MMMM D, YYYY'),
+            'class_end_time': arrow.get(
+                session_obj.end_date
+            ).to('local').format('h:mma'),
+            'min_age_limitation': session_obj.min_age_limitation,
+            'max_age_limitation': session_obj.max_age_limitation,
+            'class_location_name': session_obj.location.name,
+            'class_location_address': session_obj.location.address,
+            'class_location_address2': session_obj.location.address2,
+            'class_location_city': session_obj.location.city,
+            'class_location_state': session_obj.location.state,
+            'class_location_zip': session_obj.location.zip,
+            'class_additional_info': session_obj.additional_info,
+            'class_url': session_obj.get_absolute_url(),
+            'class_ics_url': session_obj.get_ics_url()
+        }
 
         for guardian in Guardian.objects.filter(
             is_active=True,
             user__is_active=True,
         ):
-            email(
-                subject='New CoderDojoChi class date announced!',
-                template_name='class-announcement-guardian',
-                context={
-                    'first_name': guardian.user.first_name,
-                    'last_name': guardian.user.last_name,
-                    'class_code': session_obj.course.code,
-                    'class_title': session_obj.course.title,
-                    'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(
-                        session_obj.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(
-                        session_obj.start_date
-                    ).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('h:mma'),
-                    'min_age_limitation': session_obj.min_age_limitation,
-                    'max_age_limitation': session_obj.max_age_limitation,
-                    'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
-                    'class_location_city': session_obj.location.city,
-                    'class_location_state': session_obj.location.state,
-                    'class_location_zip': session_obj.location.zip,
-                    'class_additional_info': session_obj.additional_info,
-                    'class_url': session_obj.get_absolute_url(),
-                    'class_ics_url': session_obj.get_ics_url()
-                },
-                recipients=[guardian.user.email],
-                preheader='We\'re super excited to bring you another class '
-                          'date. Sign up to reserve your spot',
-            )
+            recipients.append(guardian.user.email)
+            merge_data[guardian.user.email] = {
+                'first_name': guardian.user.first_name,
+                'last_name': guardian.user.last_name,
+            }
 
-        # Cleanup
-        connection.close()
+        email(
+            subject='New CoderDojoChi class date announced!',
+            template_name='class-announcement-guardian',
+            merge_data=merge_data,
+            merge_global_data=merge_global_data,
+            recipients=recipients,
+            preheader='We\'re super excited to bring you another class '
+                      'date. Sign up to reserve your spot',
+        )
 
         session_obj.announced_date_guardians = timezone.now()
         session_obj.save()

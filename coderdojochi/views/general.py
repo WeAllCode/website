@@ -266,7 +266,7 @@ class WelcomeView(TemplateView):
         email(
             subject='Welcome!',
             template_name=f"welcome-{role}",
-            context=merge_vars,
+            merge_global_data=merge_vars,
             recipients=[user.email],
             preheader='Your adventure awaits!',
         )
