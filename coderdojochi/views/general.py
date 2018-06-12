@@ -279,7 +279,7 @@ class IcsView(View):
     event_kwarg = None
     event_class = None
 
-    def get_summary(self, event_obj):
+    def get_summary(self, request, event_obj):
         raise NotImplementedError
 
     def get_dtstart(self, request, event_obj):
@@ -305,7 +305,7 @@ class IcsView(View):
         event = Event()
 
         event['uid'] = f"{self.event_type.upper()}{event_obj.id:04}@coderdojochi.org"
-        event['summary'] = self.get_event_summary(event_obj)
+        event['summary'] = self.get_summary(request, event_obj)
         event['dtstart'] = self.get_dtstart(request, event_obj)
         event['dtend'] = self.get_dtend(request, event_obj)
         event['dtstamp'] = event['dtstart'][:-1]

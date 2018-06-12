@@ -101,7 +101,7 @@ class MeetingDetailView(TemplateView):
 
 class MeetingIcsView(IcsView):
     event_type = 'meeting'
-    event_kwarg = 'meeeting_id'
+    event_kwarg = 'meeting_id'
     event_class = Meeting
 
     def get_summary(self, request, event_obj):
