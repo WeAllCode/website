@@ -2371,48 +2371,56 @@ def session_announce_mentors(request, session_id):
         # connection in msg.send()
         connection.open()
 
+        merge_global_data = {
+            'class_code': session_obj.course.code,
+            'class_title': session_obj.course.title,
+            'class_description': session_obj.course.description,
+            'class_start_date': arrow.get(
+                session_obj.mentor_start_date
+            ).to('local').format('dddd, MMMM D, YYYY'),
+            'class_start_time': arrow.get(
+                session_obj.mentor_start_date
+            ).to('local').format('h:mma'),
+            'class_end_date': arrow.get(
+                session_obj.end_date
+            ).to('local').format('dddd, MMMM D, YYYY'),
+            'class_end_time': arrow.get(
+                session_obj.end_date
+            ).to('local').format('h:mma'),
+            'min_age_limitation': session_obj.min_age_limitation,
+            'max_age_limitation': session_obj.max_age_limitation,
+            'class_location_name': session_obj.location.name,
+            'class_location_address': session_obj.location.address,
+            'class_location_address2': session_obj.location.address2,
+            'class_location_city': session_obj.location.city,
+            'class_location_state': session_obj.location.state,
+            'class_location_zip': session_obj.location.zip,
+            'class_additional_info': session_obj.additional_info,
+            'class_url': session_obj.get_absolute_url(),
+            'class_ics_url': session_obj.get_ics_url()
+        }
+        merge_data = {}
+        recipients = []
         # send mentor announcements
         for mentor in Mentor.objects.filter(
             is_active=True,
             user__is_active=True,
         ):
-            email(
-                subject='New CoderDojoChi class date announced! Come mentor!',
-                template_name='class-announcement-mentor',
-                context={
-                    'first_name': mentor.user.first_name,
-                    'last_name': mentor.user.last_name,
-                    'class_code': session_obj.course.code,
-                    'class_title': session_obj.course.title,
-                    'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(
-                        session_obj.mentor_start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(
-                        session_obj.mentor_start_date
-                    ).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('h:mma'),
-                    'min_age_limitation': session_obj.min_age_limitation,
-                    'max_age_limitation': session_obj.max_age_limitation,
-                    'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
-                    'class_location_city': session_obj.location.city,
-                    'class_location_state': session_obj.location.state,
-                    'class_location_zip': session_obj.location.zip,
-                    'class_additional_info': session_obj.additional_info,
-                    'class_url': session_obj.get_absolute_url(),
-                    'class_ics_url': session_obj.get_ics_url()
-                },
-                recipients=[mentor.user.email],
-                preheader='Help us make a huge difference! '
-                          'A brand new class was just announced.',
-            )
+            recipients.append(mentor.user.email)
+            merge_data[mentor.user.email] = {
+                'first_name': mentor.user.first_name,
+                'last_name': mentor.user.last_name,
+            }
+
+        email(
+            subject='New CoderDojoChi class date announced! Come mentor!',
+            template_name='class-announcement-mentor',
+            merge_data=merge_data,
+            merge_global_data=merge_global_data,
+            recipients=recipients,
+            preheader='Help us make a huge difference! '
+                      'A brand new class was just announced.',
+        )
 
         # Cleanup
         connection.close()
