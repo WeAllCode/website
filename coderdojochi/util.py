@@ -66,8 +66,6 @@ def email(
     if reply_to:
         msg.reply_to = reply_to
 
-    msg.inline_css = True
-
     if send:
         try:
             msg.send()
