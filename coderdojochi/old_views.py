@@ -2362,15 +2362,6 @@ def session_announce_mentors(request, session_id):
     )
 
     if not session_obj.announced_date_mentors:
-
-        # uses SMTP server specified in settings.py
-        connection = get_connection()
-
-        # If you don't open the connection manually,
-        # Django will automatically open, then tear down the
-        # connection in msg.send()
-        connection.open()
-
         merge_global_data = {
             'class_code': session_obj.course.code,
             'class_title': session_obj.course.title,
@@ -2421,9 +2412,6 @@ def session_announce_mentors(request, session_id):
             preheader='Help us make a huge difference! '
                       'A brand new class was just announced.',
         )
-
-        # Cleanup
-        connection.close()
 
         session_obj.announced_date_mentors = timezone.now()
         session_obj.save()
