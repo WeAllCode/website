@@ -30,23 +30,23 @@ def student_register_link(context, student, session):
         is_active=True
     )
 
+    url = reverse(
+        'session_sign_up',
+        args=(
+            session.start_date.year,
+            f"{session.start_date.month:02}",
+            f"{session.start_date.day:02}",
+            session.course.slug,
+            session.id,
+            student.id
+        )
+    )
+
     button_tag = 'a'
     button_modifier = ''
     button_additional_attributes = ''
     button_msg = 'Enroll'
-    button_href = 'href={}'.format(
-        reverse(
-            'session_sign_up',
-            args=(
-                session.start_date.year,
-                f"{session.start_date.month:02}",
-                f"{session.start_date.day:02}",
-                session.course.slug,
-                session.id,
-                student.id
-            )
-        )
-    )
+    button_href = f'href={url}'
 
     if orders.count():
         button_modifier = "btn-cdc-danger"
@@ -76,11 +76,15 @@ def student_register_link(context, student, session):
                 session.gender_limitation
             )
         ):
+            title = "Limited event."
+            message = (
+                f"Sorry, this class is limited to {session.gender_limitation}s between {session.min_age_limitation} "
+                f"and {session.max_age_limitation} this time around."
+            )
+
             button_href = (
-                f"data-trigger='hover' data-placement='top' data-toggle='popover' title=' "
-                f"data-content='Sorry, this class is limited to {session.gender_limitation}s "
-                f"between {session.min_age_limitation} and {session.max_age_limitation} this time around.' "
-                f"data-original-title='Limited event.'"
+                'data-trigger="hover" data-placement="top" data-toggle="popover" title="" '
+                f'data-content="{message}" data-original-title="{title}"'
             )
 
         elif (
@@ -90,11 +94,14 @@ def student_register_link(context, student, session):
                 session.start_date
             )
         ):
+            title = "Age-limited event."
+            message = (
+                f"Sorry, this class is limited to student between ages {session.min_age_limitation} and "
+                f"{session.max_age_limitation} this time around."
+            )
             button_href = (
-                f"data-trigger='hover' data-placement='top' data-toggle='popover' "
-                f"title=' data-content='Sorry, this class is limited to student between "
-                f"ages {session.min_age_limitation} and {session.max_age_limitation} this time around.' "
-                f"data-original-title='Age-limited event.' "
+                'data-trigger="hover" data-placement="top" data-toggle="popover" title="" '
+                f'data-content="{message}" data-original-title="{title}"'
             )
 
         elif (
@@ -102,13 +109,13 @@ def student_register_link(context, student, session):
                 session.gender_limitation
             )
         ):
-            button_href = '''
-                data-trigger="hover" data-placement="top" data-toggle="popover"
-                title="" data-content="Sorry, this class is limited to {}s
-                this time around." data-original-title="{}-only event."
-            '''.format(
-                session.gender_limitation,
-                'Girls' if session.gender_limitation == 'female' else 'Boys'
+            title = "{gender}-only event.".format(
+                gender='Girls' if session.gender_limitation == 'female' else 'Boys'
+            )
+            message = f"Sorry, this class is limited to {session.gender_limitation}s this time around."
+            button_href = (
+                'data-trigger="hover" data-placement="top" data-toggle="popover" title="" '
+                f'data-content="{message}" data-original-title="{title}" '
             )
 
     form = (

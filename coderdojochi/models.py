@@ -108,6 +108,14 @@ class Mentor(models.Model):
     def get_absolute_url(self):
         return f'/mentor/{self.id}/'
 
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name
+
 
 class RaceEthnicity(models.Model):
     race_ethnicity = models.CharField(
@@ -571,6 +579,12 @@ class Session(models.Model):
         else:
             return int(self.capacity / 2)
 
+    def is_guardian_announced(self):
+        return self.announced_date_guardians is not None
+    is_guardian_announced.boolean = True
+    is_guardian_announced.short_description = "Is Announced"
+    is_guardian_announced.admin_order_field = 'announced_date_guardians'
+
 
 class MeetingType(models.Model):
     code = models.CharField(
@@ -859,7 +873,6 @@ class MentorOrder(models.Model):
 
     def is_checked_in(self):
         return self.check_in is not None
-
     is_checked_in.boolean = True
 
 
