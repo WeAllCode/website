@@ -5,8 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import localtime
 
-import arrow
 from coderdojochi.models import Donation, Mentor
 from coderdojochi.util import email
 from paypal.standard.ipn.signals import valid_ipn_received
@@ -70,7 +70,7 @@ def donate_callback(sender, **kwargs):
                     'last_name': donation.last_name,
                     'email': donation.email,
                     'amount': f"${donation.amount:0,.2f}",
-                    'transaction_date': arrow.get(donation.created_at).to('local').format('MMMM D, YYYY h:ss a'),
+                    'transaction_date': localtime(donation.created_at).strftime('%A, %B %-d, %Y %-I:%M%P'),
                     'transaction_id': donation.id,
                 },
                 recipients=[donation.email],

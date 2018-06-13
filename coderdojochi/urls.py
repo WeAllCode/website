@@ -223,7 +223,6 @@ urlpatterns = [
     url(
         r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/calendar/$',
-        # coderdojochi_views.session_ics,
         SessionIcsView.as_view(),
         name='session_ics',
     ),
@@ -303,7 +302,6 @@ urlpatterns = [
     url(
         r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
         r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/calendar/$',
-        # coderdojochi_views.meeting_ics,
         MeetingIcsView.as_view(),
         name='meeting_ics',
     ),
