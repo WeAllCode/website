@@ -22,7 +22,6 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, View
 
-import arrow
 from coderdojochi.forms import (
     CDCModelForm,
     ContactForm,
@@ -110,10 +109,10 @@ class MeetingIcsView(IcsView):
         return f"CoderDojoChi: {event_name}"
 
     def get_dtstart(self, request, event_obj):
-        return arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')
+        return f"{event_obj.start_date.strftime('%Y%m%dT%H%M%S')}Z"
 
     def get_dtend(self, request, event_obj):
-        return arrow.get(event_obj.end_date).format('YYYYMMDDTHHmmss')
+        return f"{event_obj.end_date.strftime('%Y%m%dT%H%M%S')}Z"
 
     def get_description(self, event_obj):
         return strip_tags(event_obj.meeting_type.description)

@@ -2,8 +2,8 @@ import datetime
 
 from django.core.mail import get_connection
 from django.utils import timezone
+from django.utils.timezone import localtime
 
-import arrow
 from coderdojochi.models import MentorOrder, Order, Session
 from coderdojochi.util import email
 from django_cron import CronJobBase, Schedule
@@ -69,18 +69,10 @@ class SendReminders(CronJobBase):
                     'class_code': order.session.course.code,
                     'class_title': order.session.course.title,
                     'class_description': order.session.course.description,
-                    'class_start_date': arrow.get(
-                        order.session.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(
-                        order.session.start_date
-                    ).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(
-                        order.session.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(
-                        order.session.end_date
-                    ).to('local').format('h:mma'),
+                    'class_start_date': localtime(order.session.start_date).strftime('%A, %B %-d, %Y'),
+                    'class_start_time': localtime(order.session.start_date).strftime('%-I:%M%P'),
+                    'class_end_date': localtime(order.session.end_date).strftime('%A, %B %-d, %Y'),
+                    'class_end_time': localtime(order.session.end_date).strftime('%-I:%M%P'),
                     'class_location_name': order.session.location.name,
                     'class_location_address': order.session.location.address,
                     'class_location_address2': order.session.location.address2,
@@ -90,12 +82,8 @@ class SendReminders(CronJobBase):
                     'class_additional_info': order.session.additional_info,
                     'class_url': order.session.get_absolute_url(),
                     'class_ics_url': order.session.get_ics_url(),
-                    'microdata_start_date': arrow.get(
-                        order.session.start_date
-                    ).to('local').isoformat(),
-                    'microdata_end_date': arrow.get(
-                        order.session.end_date
-                    ).to('local').isoformat(),
+                    'microdata_start_date': localtime(order.session.start_date).isoformat(),
+                    'microdata_end_date': localtime(order.session.end_date).isoformat(),
                     'order': order,
                 },
                 recipients=[order.guardian.user.email],
@@ -117,18 +105,10 @@ class SendReminders(CronJobBase):
                     'class_code': order.session.course.code,
                     'class_title': order.session.course.title,
                     'class_description': order.session.course.description,
-                    'class_start_date': arrow.get(
-                        order.session.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(
-                        order.session.start_date
-                    ).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(
-                        order.session.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(
-                        order.session.end_date
-                    ).to('local').format('h:mma'),
+                    'class_start_date': localtime(order.session.start_date).strftime('%A, %B %-d, %Y'),
+                    'class_start_time': localtime(order.session.start_date).strftime('%-I:%M%P'),
+                    'class_end_date': localtime(order.session.end_date).strftime('%A, %B %-d, %Y'),
+                    'class_end_time': localtime(order.session.end_date).strftime('%-I:%M%P'),
                     'class_location_name': order.session.location.name,
                     'class_location_address': order.session.location.address,
                     'class_location_address2': order.session.location.address2,
@@ -138,12 +118,8 @@ class SendReminders(CronJobBase):
                     'class_additional_info': order.session.additional_info,
                     'class_url': order.session.get_absolute_url(),
                     'class_ics_url': order.session.get_ics_url(),
-                    'microdata_start_date': arrow.get(
-                        order.session.start_date
-                    ).to('local').isoformat(),
-                    'microdata_end_date': arrow.get(
-                        order.session.end_date
-                    ).to('local').isoformat(),
+                    'microdata_start_date': localtime(order.session.start_date).isoformat(),
+                    'microdata_end_date': localtime(order.session.end_date).isoformat(),
                     'order': order,
                 },
                 recipients=[order.guardian.user.email],
@@ -166,35 +142,21 @@ class SendReminders(CronJobBase):
                         'class_code': order.session.course.code,
                         'class_title': order.session.course.title,
                         'class_description': order.session.course.description,
-                        'class_start_date': arrow.get(
-                            order.session.mentor_start_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(
-                            order.session.mentor_start_date
-                        ).to('local').format('h:mma'),
-                        'class_end_date': arrow.get(
-                            order.session.mentor_end_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(
-                            order.session.mentor_end_date
-                        ).to('local').format('h:mma'),
+                        'class_start_date': localtime(order.session.mentor_start_date).strftime('%A, %B %-d, %Y'),
+                        'class_start_time': localtime(order.session.mentor_start_date).strftime('%-I:%M%P'),
+                        'class_end_date': localtime(order.session.mentor_end_date).strftime('%A, %B %-d, %Y'),
+                        'class_end_time': localtime(order.session.mentor_end_date).strftime('%-I:%M%P'),
                         'class_location_name': order.session.location.name,
-                        'class_location_address':
-                            order.session.location.address,
-                        'class_location_address2':
-                            order.session.location.address2,
+                        'class_location_address': order.session.location.address,
+                        'class_location_address2': order.session.location.address2,
                         'class_location_city': order.session.location.city,
                         'class_location_state': order.session.location.state,
                         'class_location_zip': order.session.location.zip,
                         'class_additional_info': order.session.additional_info,
                         'class_url': order.session.get_absolute_url(),
                         'class_ics_url': order.session.get_ics_url(),
-                        'microdata_start_date': arrow.get(
-                            order.session.start_date
-                        ).to('local').isoformat(),
-                        'microdata_end_date': arrow.get(
-                            order.session.end_date
-                        ).to('local').isoformat(),
+                        'microdata_start_date': localtime(order.session.start_date).isoformat(),
+                        'microdata_end_date': localtime(order.session.end_date).isoformat(),
                         'order': order,
                     },
                     recipients=[order.mentor.user.email],
@@ -217,35 +179,21 @@ class SendReminders(CronJobBase):
                         'class_code': order.session.course.code,
                         'class_title': order.session.course.title,
                         'class_description': order.session.course.description,
-                        'class_start_date': arrow.get(
-                            order.session.mentor_start_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(
-                            order.session.mentor_start_date
-                        ).to('local').format('h:mma'),
-                        'class_end_date': arrow.get(
-                            order.session.mentor_end_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(
-                            order.session.mentor_end_date
-                        ).to('local').format('h:mma'),
+                        'class_start_date': localtime(order.session.mentor_start_date).strftime('%A, %B %-d, %Y'),
+                        'class_start_time': localtime(order.session.mentor_start_date).strftime('%-I:%M%P'),
+                        'class_end_date': localtime(order.session.mentor_end_date).strftime('%A, %B %-d, %Y'),
+                        'class_end_time': localtime(order.session.mentor_end_date).strftime('%-I:%M%P'),
                         'class_location_name': order.session.location.name,
-                        'class_location_address':
-                            order.session.location.address,
-                        'class_location_address2':
-                            order.session.location.address2,
+                        'class_location_address': order.session.location.address,
+                        'class_location_address2': order.session.location.address2,
                         'class_location_city': order.session.location.city,
                         'class_location_state': order.session.location.state,
                         'class_location_zip': order.session.location.zip,
                         'class_additional_info': order.session.additional_info,
                         'class_url': order.session.get_absolute_url(),
                         'class_ics_url': order.session.get_ics_url(),
-                        'microdata_start_date': arrow.get(
-                            order.session.start_date
-                        ).to('local').isoformat(),
-                        'microdata_end_date': arrow.get(
-                            order.session.end_date
-                        ).to('local').isoformat(),
+                        'microdata_start_date': localtime(order.session.start_date).isoformat(),
+                        'microdata_end_date': localtime(order.session.end_date).isoformat(),
                         'order': order,
                     },
                     recipients=[order.mentor.user.email],

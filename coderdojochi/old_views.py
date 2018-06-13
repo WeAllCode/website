@@ -17,11 +17,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags
+from django.utils.timezone import localtime
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-import arrow
 from coderdojochi.forms import (
     CDCModelForm,
     ContactForm,
@@ -710,10 +710,8 @@ def session_sign_up(
 
             if request.user.role == 'mentor':
                 email(
-                    subject='Mentoring confirmation for {} class'.format(
-                        arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').format('MMMM D'),
+                    subject='Mentoring confirmation for {date} class'.format(
+                        date=localtime(session_obj.mentor_start_date).strftime('%B %-d'),
                     ),
                     template_name='class-confirm-mentor',
                     context={
@@ -722,35 +720,21 @@ def session_sign_up(
                         'class_code': session_obj.course.code,
                         'class_title': session_obj.course.title,
                         'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').format('h:mma'),
-                        'class_end_date': arrow.get(
-                            session_obj.mentor_end_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(
-                            session_obj.mentor_end_date
-                        ).to('local').format('h:mma'),
+                        'class_start_date': localtime(session_obj.mentor_start_date).strftime('%A, %B %-d, %Y'),
+                        'class_start_time': localtime(session_obj.mentor_start_date).strftime('%-I:%M%P'),
+                        'class_end_date': localtime(session_obj.mentor_end_date).strftime('%A, %B %-d, %Y'),
+                        'class_end_time': localtime(session_obj.mentor_end_date).strftime('%-I:%M%P'),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
-                        'class_location_address2': (
-                            session_obj.location.address2
-                        ),
+                        'class_location_address2': session_obj.location.address2,
                         'class_location_city': session_obj.location.city,
                         'class_location_state': session_obj.location.state,
                         'class_location_zip': session_obj.location.zip,
                         'class_additional_info': session_obj.additional_info,
                         'class_url': session_obj.get_absolute_url(),
                         'class_ics_url': session_obj.get_ics_url(),
-                        'microdata_start_date': arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').isoformat(),
-                        'microdata_end_date': arrow.get(
-                            session_obj.mentor_end_date
-                        ).to('local').isoformat(),
+                        'microdata_start_date': localtime(session_obj.mentor_start_date).isoformat(),
+                        'microdata_end_date': localtime(session_obj.mentor_end_date).isoformat(),
                         'order': order,
                     },
                     recipients=[request.user.email],
@@ -769,35 +753,21 @@ def session_sign_up(
                         'class_code': session_obj.course.code,
                         'class_title': session_obj.course.title,
                         'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(
-                            session_obj.start_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(
-                            session_obj.start_date
-                        ).to('local').format('h:mma'),
-                        'class_end_date': arrow.get(
-                            session_obj.end_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(
-                            session_obj.end_date
-                        ).to('local').format('h:mma'),
+                        'class_start_date': localtime(session_obj.start_date).strftime('%A, %B %-d, %Y'),
+                        'class_start_time': localtime(session_obj.start_date).strftime('%-I:%M%P'),
+                        'class_end_date': localtime(session_obj.end_date).strftime('%A, %B %-d, %Y'),
+                        'class_end_time': localtime(session_obj.end_date).strftime('%-I:%M%P'),
                         'class_location_name': session_obj.location.name,
                         'class_location_address': session_obj.location.address,
-                        'class_location_address2': (
-                            session_obj.location.address2
-                        ),
+                        'class_location_address2': session_obj.location.address2,
                         'class_location_city': session_obj.location.city,
                         'class_location_state': session_obj.location.state,
                         'class_location_zip': session_obj.location.zip,
                         'class_additional_info': session_obj.additional_info,
                         'class_url': session_obj.get_absolute_url(),
                         'class_ics_url': session_obj.get_ics_url(),
-                        'microdata_start_date': arrow.get(
-                            session_obj.start_date
-                        ).to('local').isoformat(),
-                        'microdata_end_date': arrow.get(
-                            session_obj.end_date
-                        ).to('local').isoformat(),
+                        'microdata_start_date': localtime(session_obj.start_date).isoformat(),
+                        'microdata_end_date': localtime(session_obj.end_date).isoformat(),
                         'order': order,
                     },
                     recipients=[request.user.email],
@@ -817,78 +787,6 @@ def session_sign_up(
             'student': student,
         }
     )
-
-
-def session_ics(request, year, month, day, slug, session_id):
-
-    session_obj = get_object_or_404(
-        Session,
-        id=session_id,
-    )
-
-    cal = Calendar()
-
-    cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
-    cal['version'] = '2.0'
-    cal['calscale'] = 'GREGORIAN'
-
-    event = Event()
-
-    start_date = arrow.get(session_obj.start_date).format('YYYYMMDDTHHmmss')
-    end_date = arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss')
-
-    event['uid'] = f"CLASS{session_obj.id:04}@coderdojochi.org"
-    event['summary'] = f"CoderDojoChi: {session_obj.course.code} - {session_obj.course.title}"
-    event['dtstart'] = f"{start_date}Z"
-    event['dtend'] = f"{end_date}Z"
-    event['dtstamp'] = start_date
-
-    if request.user.is_authenticated and request.user.role == 'mentor':
-
-        mentor_start_date = arrow.get(
-            session_obj.mentor_start_date
-        ).format('YYYYMMDDTHHmmss')
-
-        mentor_end_date = arrow.get(
-            session_obj.mentor_end_date
-        ).format('YYYYMMDDTHHmmss')
-
-        event['dtstart'] = f"{mentor_start_date}Z"
-        event['dtend'] = f"{mentor_end_date}Z"
-        event['dtstamp'] = mentor_start_date
-
-    location = (
-        f"{session_obj.location.name}, {session_obj.location.address}, {session_obj.location.address2}, "
-        f"{session_obj.location.city}, {session_obj.location.state} {session_obj.location.zip}"
-    )
-
-    event['location'] = vText(location)
-
-    event['url'] = session_obj.get_absolute_url()
-    event['description'] = strip_tags(session_obj.course.description)
-
-    # A value of 5 is the normal or "MEDIUM" priority.
-    # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
-    event['priority'] = 5
-
-    cal.add_component(event)
-
-    event_slug = f"coderdojochi-class_{date}".format(
-        date=arrow.get(
-            session_obj.start_date
-        ).to('local').format('MM-DD-YYYY_HH-mma')
-    )
-
-    # Return the ICS formatted calendar
-    response = HttpResponse(
-        cal.to_ical(),
-        content_type='text/calendar',
-        charset='utf-8'
-    )
-
-    response['Content-Disposition'] = f"attachment;filename={event_slug}.ics"
-
-    return response
 
 
 def meetings(request, template_name="meetings.html"):
@@ -1024,18 +922,10 @@ def meeting_sign_up(
                     'meeting_description': (
                         meeting_obj.meeting_type.description
                     ),
-                    'meeting_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_start_time': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('h:mma'),
-                    'meeting_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_end_time': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('h:mma'),
+                    'meeting_start_date': localtime(meeting_obj.start_date).strftime('%A, %B %-d, %Y'),
+                    'meeting_start_time': localtime(meeting_obj.start_date).strftime('%-I:%M%P'),
+                    'meeting_end_date': localtime(meeting_obj.end_date).strftime('%A, %B %-d, %Y'),
+                    'meeting_end_time': localtime(meeting_obj.end_date).strftime('%-I:%M%P'),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
                     'meeting_location_address2': meeting_obj.location.address2,
@@ -1045,12 +935,8 @@ def meeting_sign_up(
                     'meeting_additional_info': meeting_obj.additional_info,
                     'meeting_url': meeting_obj.get_absolute_url(),
                     'meeting_ics_url': meeting_obj.get_ics_url(),
-                    'microdata_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').isoformat(),
-                    'microdata_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').isoformat(),
+                    'microdata_start_date': localtime(meeting_obj.start_date).isoformat(),
+                    'microdata_end_date': localtime(meeting_obj.end_date).isoformat(),
                     'order': meeting_order,
                 },
                 recipients=[request.user.email],
@@ -1113,21 +999,11 @@ def meeting_announce(request, meeting_id):
                     'first_name': mentor.user.first_name,
                     'last_name': mentor.user.last_name,
                     'meeting_title': meeting_obj.meeting_type.title,
-                    'meeting_description': (
-                        meeting_obj.meeting_type.description
-                    ),
-                    'meeting_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_start_time': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('h:mma'),
-                    'meeting_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_end_time': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('h:mma'),
+                    'meeting_description': meeting_obj.meeting_type.description,
+                    'meeting_start_date': localtime(meeting_obj.start_date).strftime('%A, %B %-d, %Y'),
+                    'meeting_start_time': localtime(meeting_obj.start_date).strftime('%-I:%M%P'),
+                    'meeting_end_date': localtime(meeting_obj.end_date).strftime('%A, %B %-d, %Y'),
+                    'meeting_end_time': localtime(meeting_obj.end_date).strftime('%-I:%M%P'),
                     'meeting_location_name': meeting_obj.location.name,
                     'meeting_location_address': meeting_obj.location.address,
                     'meeting_location_address2': meeting_obj.location.address2,
@@ -1160,60 +1036,6 @@ def meeting_announce(request, meeting_id):
         )
 
     return redirect('cdc_admin')
-
-
-def meeting_ics(request, year, month, day, slug, meeting_id):
-    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-
-    cal = Calendar()
-
-    cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
-    cal['version'] = '2.0'
-
-    event = Event()
-
-    start_date = arrow.get(meeting_obj.start_date).format('YYYYMMDDTHHmmss')
-    end_date = arrow.get(meeting_obj.end_date).format('YYYYMMDDTHHmmss')
-
-    event['uid'] = f"MEETING{meeting_obj.id:04}@coderdojochi.org"
-
-    event_name = f"{meeting_obj.meeting_type.code} - " if meeting_obj.meeting_type.code else ''
-    event_name += meeting_obj.meeting_type.title
-
-    event['summary'] = f"CoderDojoChi: {event_name}"
-    event['dtstart'] = f"{start_date}Z"
-    event['dtend'] = f"{end_date}Z"
-    event['dtstamp'] = start_date
-
-    location = (
-        f"{meeting_obj.location.name}, {meeting_obj.location.address} {meeting_obj.location.address2}, "
-        f"{meeting_obj.location.city}, {meeting_obj.location.state} {meeting_obj.location.zip}"
-    )
-
-    event['location'] = vText(location)
-    event['url'] = meeting_obj.get_absolute_url()
-    event['description'] = strip_tags(meeting_obj.meeting_type.description)
-
-    # A value of 5 is the normal or "MEDIUM" priority.
-    # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
-    event['priority'] = 5
-
-    cal.add_component(event)
-    event_slug = "coderdojochi-meeting-{date}".format(
-        date=arrow.get(
-            meeting_obj.start_date
-        ).to('local').format('MM-DD-YYYY-HH:mma')
-    )
-
-    # Return the ICS formatted calendar
-    response = HttpResponse(
-        cal.to_ical(),
-        content_type='text/calendar',
-        charset='utf-8'
-    )
-    response['Content-Disposition'] = f"attachment;filename={event_slug}.ics"
-
-    return response
 
 
 def volunteer(request, template_name="volunteer.html"):
@@ -2385,18 +2207,10 @@ def session_announce_mentors(request, session_id):
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(
-                        session_obj.mentor_start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(
-                        session_obj.mentor_start_date
-                    ).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('h:mma'),
+                    'class_start_date': localtime(session_obj.mentor_start_date).strftime('%A, %B %-d, %Y'),
+                    'class_start_time': localtime(session_obj.mentor_start_date).strftime('%-I:%M%P'),
+                    'class_end_date': localtime(session_obj.end_date).strftime('%A, %B %-d, %Y'),
+                    'class_end_time': localtime(session_obj.end_date).strftime('%-I:%M%P'),
                     'min_age_limitation': session_obj.min_age_limitation,
                     'max_age_limitation': session_obj.max_age_limitation,
                     'class_location_name': session_obj.location.name,
@@ -2471,18 +2285,10 @@ def session_announce_guardians(request, session_id):
                     'class_code': session_obj.course.code,
                     'class_title': session_obj.course.title,
                     'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(
-                        session_obj.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(
-                        session_obj.start_date
-                    ).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(
-                        session_obj.end_date
-                    ).to('local').format('h:mma'),
+                    'class_start_date': localtime(session_obj.start_date).strftime('%A, %B %-d, %Y'),
+                    'class_start_time': localtime(session_obj.start_date).strftime('%-I:%M%P'),
+                    'class_end_date': localtime(session_obj.end_date).strftime('%A, %B %-d, %Y'),
+                    'class_end_time': localtime(session_obj.end_date).strftime('%-I:%M%P'),
                     'min_age_limitation': session_obj.min_age_limitation,
                     'max_age_limitation': session_obj.max_age_limitation,
                     'class_location_name': session_obj.location.name,

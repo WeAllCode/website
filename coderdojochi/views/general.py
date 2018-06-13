@@ -18,11 +18,11 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
+from django.utils.timezone import localtime
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, View
 
-import arrow
 from coderdojochi.forms import (
     CDCModelForm,
     ContactForm,
@@ -308,7 +308,7 @@ class IcsView(View):
         event['summary'] = self.get_summary(request, event_obj)
         event['dtstart'] = self.get_dtstart(request, event_obj)
         event['dtend'] = self.get_dtend(request, event_obj)
-        event['dtstamp'] = event['dtstart'][:-1]
+        # event['dtstamp'] = timezone.now()
 
         location = (
             f"{event_obj.location.name}, {event_obj.location.address} {event_obj.location.address2}, "
@@ -326,13 +326,6 @@ class IcsView(View):
 
         cal.add_component(event)
 
-        event_slug = "coderdojochi-{event_type}_{date}".format(
-            event_type=self.event_type.lower(),
-            date=arrow.get(
-                event_obj.start_date
-            ).to('local').format('MM-DD-YYYY_HH-mma')
-        )
-
         # Return the ICS formatted calendar
         response = HttpResponse(
             cal.to_ical(),
@@ -340,6 +333,8 @@ class IcsView(View):
             charset='utf-8'
         )
 
-        response['Content-Disposition'] = f"attachment;filename={event_slug}.ics"
+        response['Content-Disposition'] = (
+            f"attachment;filename=coderdojochi-{self.event_type.upper()}{event_obj.id:04}.ics"
+        )
 
         return response

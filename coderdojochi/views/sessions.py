@@ -16,6 +16,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.timezone import localtime
 from django.utils.decorators import method_decorator
 from django.utils.functional import cached_property
 from django.utils.html import strip_tags
@@ -23,7 +24,6 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, View
 
-import arrow
 from coderdojochi.forms import (
     CDCModelForm,
     ContactForm,
@@ -60,10 +60,8 @@ User = get_user_model()
 
 def session_confirm_mentor(request, session_obj, order):
     email(
-        subject='Mentoring confirmation for {} class'.format(
-            arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('MMMM D'),
+        subject='Mentoring confirmation for {date} class'.format(
+            date=localtime(session_obj.mentor_start_date).strftime('%B %-d'),
         ),
         template_name='class-confirm-mentor',
         context={
@@ -72,35 +70,21 @@ def session_confirm_mentor(request, session_obj, order):
             'class_code': session_obj.course.code,
             'class_title': session_obj.course.title,
             'class_description': session_obj.course.description,
-            'class_start_date': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_start_time': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('h:mma'),
-            'class_end_date': arrow.get(
-                session_obj.mentor_end_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_end_time': arrow.get(
-                session_obj.mentor_end_date
-            ).to('local').format('h:mma'),
+            'class_start_date': localtime(session_obj.mentor_start_date).strftime('%A, %B %-d, %Y'),
+            'class_start_time': localtime(session_obj.mentor_start_date).strftime('%-I:%M%P'),
+            'class_end_date': localtime(session_obj.mentor_end_date).strftime('%A, %B %-d, %Y'),
+            'class_end_time': localtime(session_obj.mentor_end_date).strftime('%-I:%M%P'),
             'class_location_name': session_obj.location.name,
             'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
+            'class_location_address2': session_obj.location.address2,
             'class_location_city': session_obj.location.city,
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
             'class_additional_info': session_obj.additional_info,
             'class_url': session_obj.get_absolute_url(),
             'class_ics_url': session_obj.get_ics_url(),
-            'microdata_start_date': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').isoformat(),
-            'microdata_end_date': arrow.get(
-                session_obj.mentor_end_date
-            ).to('local').isoformat(),
+            'microdata_start_date': localtime(session_obj.mentor_start_date).isoformat(),
+            'microdata_end_date': localtime(session_obj.mentor_end_date).isoformat(),
             'order': order,
         },
         recipients=[request.user.email],
@@ -120,35 +104,21 @@ def session_confirm_guardian(request, session_obj, order, student):
             'class_code': session_obj.course.code,
             'class_title': session_obj.course.title,
             'class_description': session_obj.course.description,
-            'class_start_date': arrow.get(
-                session_obj.start_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_start_time': arrow.get(
-                session_obj.start_date
-            ).to('local').format('h:mma'),
-            'class_end_date': arrow.get(
-                session_obj.end_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_end_time': arrow.get(
-                session_obj.end_date
-            ).to('local').format('h:mma'),
+            'class_start_date': localtime(session_obj.start_date).strftime('%A, %B %-d, %Y'),
+            'class_start_time': localtime(session_obj.start_date).strftime('%-I:%M%P'),
+            'class_end_date': localtime(session_obj.end_date).strftime('%A, %B %-d, %Y'),
+            'class_end_time': localtime(session_obj.end_date).strftime('%-I:%M%P'),
             'class_location_name': session_obj.location.name,
             'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
+            'class_location_address2': session_obj.location.address2,
             'class_location_city': session_obj.location.city,
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
             'class_additional_info': session_obj.additional_info,
             'class_url': session_obj.get_absolute_url(),
             'class_ics_url': session_obj.get_ics_url(),
-            'microdata_start_date': arrow.get(
-                session_obj.start_date
-            ).to('local').isoformat(),
-            'microdata_end_date': arrow.get(
-                session_obj.end_date
-            ).to('local').isoformat(),
+            'microdata_start_date': localtime(session_obj.start_date).isoformat(),
+            'microdata_end_date': localtime(session_obj.end_date).isoformat(),
             'order': order,
         },
         recipients=[request.user.email],
@@ -531,18 +501,20 @@ class SessionIcsView(IcsView):
         return f"CoderDojoChi: {event_obj.course.code} - {event_obj.course.title}"
 
     def get_dtstart(self, request, event_obj):
-        dtstart = f"{arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')}Z"
+        date = event_obj.start_date
 
         if request.user.is_authenticated and request.user.role == 'mentor':
-            dtstart = f"{arrow.get(event_obj.mentor_start_date).format('YYYYMMDDTHHmmss')}Z"
+            date = event_obj.mentor_start_date
 
-        return dtstart
+        return f"{date.strftime('%Y%m%dT%H%M%S')}Z"
 
     def get_dtend(self, request, event_obj):
-        dtend = f"{arrow.get(event_obj.end_date).format('YYYYMMDDTHHmmss')}Z"
+        date = event_obj.end_date
+
         if request.user.is_authenticated and request.user.role == 'mentor':
-            dtend = f"{arrow.get(event_obj.mentor_end_date).format('YYYYMMDDTHHmmss')}Z"
-        return dtend
+            date = event_obj.mentor_end_date
+
+        return f"{date.strftime('%Y%m%dT%H%M%S')}Z"
 
     def get_description(self, event_obj):
         return strip_tags(event_obj.course.description)

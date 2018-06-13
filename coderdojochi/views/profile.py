@@ -17,11 +17,11 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
+from django.utils.timezone import localtime
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-import arrow
 from coderdojochi.forms import (
     CDCModelForm,
     ContactForm,
