@@ -193,7 +193,7 @@
 
 {% block email-markup %}
 <div itemscope itemtype="http://schema.org/EventReservation">
-    <meta itemprop="reservationNumber" content="E{{order.id}}"/>
+    <meta itemprop="reservationNumber" content="E*|order_id|*"/>
     <link itemprop="reservationStatus" href="http://schema.org/Confirmed"/>
     <div itemprop="underName" itemscope itemtype="http://schema.org/Person">
         <meta itemprop="name" content="*|student_first_name|* *|student_last_name|*"/>

@@ -101,7 +101,7 @@ def session_confirm_mentor(request, session_obj, order):
             'microdata_end_date': arrow.get(
                 session_obj.mentor_end_date
             ).to('local').isoformat(),
-            'order': order,
+            'order_id': order.id,
         },
         recipients=[request.user.email],
         preheader='It\'s time to use your powers for good.',
@@ -149,7 +149,7 @@ def session_confirm_guardian(request, session_obj, order, student):
             'microdata_end_date': arrow.get(
                 session_obj.end_date
             ).to('local').isoformat(),
-            'order': order,
+            'order_id': order.id,
         },
         recipients=[request.user.email],
         preheader='Magical wizards have generated this '

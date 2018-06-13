@@ -24,9 +24,9 @@ def str_to_bool(s):
 def email(
     subject,
     template_name,
-    merge_data,
-    merge_global_data,
-    recipients,
+    merge_data={},
+    merge_global_data={},
+    recipients=[],
     preheader=None,
     bcc=None,
     reply_to=None,
@@ -72,31 +72,18 @@ def email(
         except Exception as e:
             logger.error(e)
             logger.error(msg)
-            response = msg.mandrill_response[0]
-            logger.error(response)
+            raise e
 
-            reject_reasons = [
-                'hard-bounce',
-                'soft-bounce',
-                'spam',
-                'unsub',
-                'custom',
-            ]
-
-            if (
-                response['status'] == 'rejected' and
-                response['reject_reason'] in reject_reasons
-            ):
+        for recipient, send_attempt in msg.anymail_status.recipients.keys():
+            if not send_attempt.status.issubset({'queued', 'sent'}):
                 logger.error(
-                    f"user: {response['email']}, {timezone.now()}"
+                    f"user: {recipient}, {timezone.now()}"
                 )
 
                 from coderdojochi.models import CDCUser
-                user = CDCUser.objects.get(email=response['email'])
+                user = CDCUser.objects.get(email=recipient)
                 user.is_active = False
-                user.admin_notes = f"User '{response['reject_reason']}' when checked on {timezone.now()}"
+                user.admin_notes = f"User '{send_attempt.reject_reason}' when checked on {timezone.now()}"
                 user.save()
-            else:
-                raise e
 
     return msg

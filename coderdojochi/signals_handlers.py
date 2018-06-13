@@ -25,7 +25,6 @@ def avatar_updated_handler(sender, instance, **kwargs):
         return
 
     if original_mentor.avatar != instance.avatar:
-
         instance.avatar_approved = False
 
         msg = email(

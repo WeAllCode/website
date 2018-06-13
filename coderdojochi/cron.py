@@ -90,7 +90,7 @@ class SendReminders(CronJobBase):
                 'microdata_end_date': arrow.get(
                     order.session.end_date
                 ).to('local').isoformat(),
-                'order': order,
+                'order_id': order.id,
             }
 
         email(
@@ -146,7 +146,7 @@ class SendReminders(CronJobBase):
                 'microdata_end_date': arrow.get(
                     order.session.end_date
                 ).to('local').isoformat(),
-                'order': order,
+                'order_id': order.id,
             }
 
         email(
@@ -205,7 +205,7 @@ class SendReminders(CronJobBase):
                     'microdata_end_date': arrow.get(
                         order.session.end_date
                     ).to('local').isoformat(),
-                    'order': order,
+                    'order_id': order.id,
                 }
 
             email(
@@ -259,7 +259,7 @@ class SendReminders(CronJobBase):
                     'microdata_end_date': arrow.get(
                         order.session.end_date
                     ).to('local').isoformat(),
-                    'order': order,
+                    'order_id': order.id,
                 }
 
             email(

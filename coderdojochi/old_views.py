@@ -751,7 +751,7 @@ def session_sign_up(
                         'microdata_end_date': arrow.get(
                             session_obj.mentor_end_date
                         ).to('local').isoformat(),
-                        'order': order,
+                        'order_id': order.id,
                     },
                     recipients=[request.user.email],
                     preheader='It\'s time to use your powers for good.',
@@ -798,7 +798,7 @@ def session_sign_up(
                         'microdata_end_date': arrow.get(
                             session_obj.end_date
                         ).to('local').isoformat(),
-                        'order': order,
+                        'order_id': order.id,
                     },
                     recipients=[request.user.email],
                     preheader='Magical wizards have generated this '
@@ -1051,7 +1051,7 @@ def meeting_sign_up(
                     'microdata_end_date': arrow.get(
                         meeting_obj.end_date
                     ).to('local').isoformat(),
-                    'order': meeting_order,
+                    'order_id': meeting_order.id,
                 },
                 recipients=[request.user.email],
                 preheader=(
@@ -1093,7 +1093,6 @@ def meeting_announce(request, meeting_id):
     )
 
     if not meeting_obj.announced_date_mentors:
-
         merge_data = {}
         recipients = []
         merge_global_data = {
