@@ -21,7 +21,7 @@
     "MANDRILL_API_KEY": {
       "required": true
     },
-    "WEBHOOK_SECRET": {
+    "MANDRILL_WEBHOOK_KEY": {
       "required": true
     },
     "PAYPAL_RECEIVER_EMAIL": {
