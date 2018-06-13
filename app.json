@@ -18,16 +18,10 @@
     "DEFAULT_FROM_EMAIL": {
       "required": true
     },
-    "EMAIL_HOST": {
-      "required": true
-    },
-    "EMAIL_HOST_USER": {
-      "required": true
-    },
-    "EMAIL_PORT": {
-      "required": true
-    },
     "MANDRILL_API_KEY": {
+      "required": true
+    },
+    "WEBHOOK_SECRET": {
       "required": true
     },
     "PAYPAL_RECEIVER_EMAIL": {

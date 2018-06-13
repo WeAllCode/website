@@ -16,7 +16,7 @@ from .views.sessions import (
     SessionDetailView,
     SessionIcsView,
     SessionSignUpView,
-    SessionsView,
+    SessionsView
 )
 from .views.volunteer import VolunteerView
 
@@ -415,16 +415,22 @@ urlpatterns = [
     ),
 ]
 
+# Static files
 urlpatterns += static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT
 )
 
+# Media files
 urlpatterns += static(
     settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT
 )
 
+# Anymail
+urlpatterns += [
+    url(r'^anymail/', include('anymail.urls')),
+]
 
 if settings.DEBUG:
     import debug_toolbar
