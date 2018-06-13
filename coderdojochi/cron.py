@@ -50,7 +50,6 @@ class SendReminders(CronJobBase):
         )
 
         # Clear email send data
-        merge_global_data = {}
         merge_data = {}
         recipients = []
 
@@ -98,7 +97,6 @@ class SendReminders(CronJobBase):
             subject='Upcoming class reminder',
             template_name='class-reminder-guardian-one-week',
             merge_data=merge_data,
-            merge_global_data=merge_global_data,
             recipients=recipients,
             preheader='Your class is just a few days away!',
         )
@@ -108,7 +106,6 @@ class SendReminders(CronJobBase):
             order.save()
 
         # Clear email send data
-        merge_global_data = {}
         merge_data = {}
         recipients = []
 
@@ -156,7 +153,6 @@ class SendReminders(CronJobBase):
             subject='Your CoderDojoChi is coming up!',
             template_name='class-reminder-guardian-24-hour',
             merge_data=merge_data,
-            merge_global_data=merge_global_data,
             recipients=recipients,
             preheader='Your class is just hours away!',
         )
@@ -169,7 +165,6 @@ class SendReminders(CronJobBase):
             orders = MentorOrder.objects.filter(session=session)
 
             # Clear email send data
-            merge_global_data = {}
             merge_data = {}
             recipients = []
 
@@ -217,7 +212,6 @@ class SendReminders(CronJobBase):
                 subject='Your CoderDojoChi class is in less than a week!',
                 template_name='class-reminder-mentor-one-week',
                 merge_data=merge_data,
-                merge_global_data=merge_global_data,
                 recipients=recipients,
                 preheader='The class is just a few days away!',
             )
@@ -272,7 +266,6 @@ class SendReminders(CronJobBase):
                 subject='Your CoderDojoChi class is tomorrow!',
                 template_name='class-reminder-mentor-24-hour',
                 merge_data=merge_data,
-                merge_global_data=merge_global_data,
                 recipients=recipients,
                 preheader='The class is just a few hours away!',
             )
