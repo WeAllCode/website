@@ -74,8 +74,9 @@ def email(
             logger.error(msg)
             raise e
 
-        for recipient, send_attempt in msg.anymail_status.recipients.keys():
-            if not send_attempt.status.issubset({'queued', 'sent'}):
+        for recipient in msg.anymail_status.recipients.keys():
+            send_attempt = msg.anymail_status.recipients[recipient]
+            if send_attempt.status not in ['queued', 'sent']:
                 logger.error(
                     f"user: {recipient}, {timezone.now()}"
                 )
