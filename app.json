@@ -1,7 +1,6 @@
 {
   "name": "coderdojochi",
   "scripts": {
-    "postdeploy": "export HOST='$HEROKU_APP_NAME.herokuapp.com'"
   },
   "env": {
     "HEROKU_APP_NAME": {
