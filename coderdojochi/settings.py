@@ -248,7 +248,7 @@ SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapte
 ANYMAIL = {
     'MANDRILL_API_KEY': os.environ.get('MANDRILL_API_KEY'),
     'MANDRILL_WEBHOOK_KEY': os.environ.get('MANDRILL_WEBHOOK_KEY'),
-    'WEBHOOK_AUTHORIZATION': os.environ.get('MANDRILL_WEBHOOK_KEY'),
+    'WEBHOOK_SECRET': os.environ.get('MANDRILL_WEBHOOK_KEY'),
 }
 
 if 'HEROKU_APP_NAME' in os.environ:
