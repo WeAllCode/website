@@ -252,7 +252,7 @@ ANYMAIL = {
 
 if 'HEROKU_APP_NAME' in os.environ:
     ANYMAIL['MANDRILL_WEBHOOK_URL'] = (
-        'https://{secret_key}@{app_name}.herokuapp.com/anymail/mandrill/tracking'.format(
+        'https://{secret_key}@{app_name}.herokuapp.com/anymail/mandrill/'.format(
             secret_key=ANYMAIL['MANDRILL_WEBHOOK_KEY'],
             app_name=os.environ.get('HEROKU_APP_NAME'),
         )
