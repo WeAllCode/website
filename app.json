@@ -1,7 +1,7 @@
 {
   "name": "coderdojochi",
   "scripts": {
-    "postdeploy": "if [ \"$HEROKU_APP_NAME\" != \"\" ]; then export HOST_NAME=${HEROKU_APP_NAME}; fi"
+    "postdeploy": "export HOST_NAME_1=${HEROKU_APP_NAME};"
   },
   "env": {
     "HEROKU_APP_NAME": {
