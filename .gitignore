@@ -15,7 +15,6 @@ staticfiles/
 
 # env file
 .env
-.env.*
 
 # psql dump files
 *.dump

@@ -66,7 +66,7 @@ def session_confirm_mentor(request, session_obj, order):
             ).to('local').format('MMMM D'),
         ),
         template_name='class-confirm-mentor',
-        context={
+        merge_global_data={
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
             'class_code': session_obj.course.code,
@@ -101,7 +101,7 @@ def session_confirm_mentor(request, session_obj, order):
             'microdata_end_date': arrow.get(
                 session_obj.mentor_end_date
             ).to('local').isoformat(),
-            'order': order,
+            'order_id': order.id,
         },
         recipients=[request.user.email],
         preheader='It\'s time to use your powers for good.',
@@ -112,7 +112,7 @@ def session_confirm_guardian(request, session_obj, order, student):
     email(
         subject=f'Upcoming class confirmation for {student.first_name} {student.last_name}',
         template_name='class-confirm-guardian',
-        context={
+        merge_global_data={
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
             'student_first_name': student.first_name,
@@ -149,7 +149,7 @@ def session_confirm_guardian(request, session_obj, order, student):
             'microdata_end_date': arrow.get(
                 session_obj.end_date
             ).to('local').isoformat(),
-            'order': order,
+            'order_id': order.id,
         },
         recipients=[request.user.email],
         preheader='Magical wizards have generated this '

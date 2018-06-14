@@ -25,13 +25,12 @@ def avatar_updated_handler(sender, instance, **kwargs):
         return
 
     if original_mentor.avatar != instance.avatar:
-
         instance.avatar_approved = False
 
         msg = email(
             subject=f"{instance.user.first_name} {instance.user.last_name} | Mentor Avatar Changed",
             template_name='avatar-changed-mentor',
-            context={
+            merge_global_data={
                 'first_name': instance.user.first_name,
                 'last_name': instance.user.last_name,
                 'image': 'avatar',
@@ -65,7 +64,7 @@ def donate_callback(sender, **kwargs):
             email(
                 subject='Donations Receipt from CoderDojoChi',
                 template_name='donation-receipt',
-                context={
+                merge_global_data={
                     'first_name': donation.first_name,
                     'last_name': donation.last_name,
                     'email': donation.email,

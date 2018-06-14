@@ -19,9 +19,9 @@
                             </tr>
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
-                                    <p>{{ first_name }}, we just announced a brand new class! We&rsquo;d love if you come and help us teach some bright minds.</p>
+                                    <p>*|first_name|*, we just announced a brand new class! We&rsquo;d love if you come and help us teach some bright minds.</p>
 
-                                    <p>Since you have a profile already, {{ first_name }}, all you have to do is enroll in the class. How awesome is that?</p>
+                                    <p>Since you have a profile already, *|first_name|*, all you have to do is enroll in the class. How awesome is that?</p>
                                 </td>
                             </tr>
                         </table>
@@ -59,7 +59,7 @@
                                     </td>
                                     <td>
                                         <p>
-                                            <span style="font-size:16px;">{{ class_title }}</span>
+                                            <span style="font-size:16px;">*|class_title|*</span>
                                         </p>
                                     </td>
                                 </tr>
@@ -72,7 +72,7 @@
                                     <td>
                                         <p>
                                             <span style="font-size:16px;">Free to attend!
-                                                <strong>Anyone between {{ min_age_limitation }} and {{ max_age_limitation }} of age</strong>.
+                                                <strong>Anyone between *|min_age_limitation|* and *|max_age_limitation|* of age</strong>.
                                                 No computer skills required.</span>
                                         </p>
                                     </td>
@@ -85,7 +85,7 @@
                                     </td>
                                     <td>
                                         <p>
-                                            <span style="font-size:16px;">{{ class_start_date }} {{ class_start_time }} to {{ class_end_time }}</span> <span style="font-size:10px;">(<a draggable="false" href="{{ class_ics_url }}">Add to your calendar</a>)</span>
+                                            <span style="font-size:16px;">*|class_start_date|* *|class_start_time|* to *|class_end_time|*</span> <span style="font-size:10px;">(<a draggable="false" href="*|class_ics_url|*">Add to your calendar</a>)</span>
                                         </p>
                                     </td>
                                 </tr>
@@ -97,7 +97,7 @@
                                     </td>
                                     <td>
                                         <span style="font-size:16px;">
-                                            {{ class_location_name }}, {{ class_location_address }}, {{ class_location_city }}, {{ class_location_state }} {{ class_location_zip }}
+                                            *|class_location_name|*, *|class_location_address|*, *|class_location_city|*, *|class_location_state|* *|class_location_zip|*
                                         </span>
                                     </td>
                                 </tr>
@@ -131,7 +131,7 @@
                                             <td align="center" style="padding-top: 25px;" class="padding">
                                                 <table border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
                                                     <tr>
-                                                        <td align="center" style="border-radius: 3px;" bgcolor="#86C447"><a href="{{ class_url }}" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: 700; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; border: 1px solid #86C447; display: inline-block;" class="mobile-button">MENTOR NOW &rarr;</a></td>
+                                                        <td align="center" style="border-radius: 3px;" bgcolor="#86C447"><a href="*|class_url|*" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: 700; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; border: 1px solid #86C447; display: inline-block;" class="mobile-button">MENTOR NOW &rarr;</a></td>
                                                     </tr>
                                                 </table>
                                             </td>

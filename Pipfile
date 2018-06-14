@@ -27,10 +27,10 @@ django-nose = "*"
 django-paypal = "*"
 django-stdimage = "*"
 django-storages = "*"
-djrill = "*"
 factory_boy = "*"
 icalendar = "*"
 json-logging-py = "*"
+django-anymail = "*"
 
 [dev-packages]
 pylint = "*"

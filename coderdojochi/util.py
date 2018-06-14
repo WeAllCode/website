@@ -24,8 +24,9 @@ def str_to_bool(s):
 def email(
     subject,
     template_name,
-    context,
-    recipients,
+    merge_data={},
+    merge_global_data={},
+    recipients=[],
     preheader=None,
     bcc=None,
     reply_to=None,
@@ -34,7 +35,7 @@ def email(
 
     from django.conf import settings
 
-    if not (subject and template_name and context and recipients):
+    if not (subject and template_name and recipients):
         raise NameError()
 
     if not isinstance(recipients, list):
@@ -45,28 +46,25 @@ def email(
     if bcc not in [False, None] and not isinstance(bcc, list):
         raise TypeError("recipients must be a list")
 
-    context['subject'] = subject
-    context['current_year'] = timezone.now().year
-    context['company_name'] = settings.SITE_NAME
-    context['site_url'] = settings.SITE_URL
+    merge_global_data['subject'] = subject
+    merge_global_data['current_year'] = timezone.now().year
+    merge_global_data['company_name'] = settings.SITE_NAME
+    merge_global_data['site_url'] = settings.SITE_URL
 
     if preheader:
-        context['preheader'] = preheader
+        merge_global_data['preheader'] = preheader
 
-    html_content = render_to_string(f"{template_name}.html", context)
-    text_content = render_to_string(f"{template_name}.txt", context)
-    msg = EmailMultiAlternatives(
-        subject=subject,
-        body=text_content,
-        from_email=f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>",
-        to=recipients
-    )
+    msg = EmailMultiAlternatives()
+    msg.body = render_to_string(f"{template_name}.html")
+    msg.content_subtype = "html"
+    msg.from_email = f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>"
+    msg.merge_data = merge_data
+    msg.merge_global_data = merge_global_data
+    msg.subject = subject
+    msg.to = recipients
 
     if reply_to:
         msg.reply_to = reply_to
-
-    msg.inline_css = True
-    msg.attach_alternative(html_content, "text/html")
 
     if send:
         try:
@@ -74,31 +72,19 @@ def email(
         except Exception as e:
             logger.error(e)
             logger.error(msg)
-            response = msg.mandrill_response[0]
-            logger.error(response)
+            raise e
 
-            reject_reasons = [
-                'hard-bounce',
-                'soft-bounce',
-                'spam',
-                'unsub',
-                'custom',
-            ]
-
-            if (
-                response['status'] == 'rejected' and
-                response['reject_reason'] in reject_reasons
-            ):
+        for recipient in msg.anymail_status.recipients.keys():
+            send_attempt = msg.anymail_status.recipients[recipient]
+            if send_attempt.status not in ['queued', 'sent']:
                 logger.error(
-                    f"user: {response['email']}, {timezone.now()}"
+                    f"user: {recipient}, {timezone.now()}"
                 )
 
                 from coderdojochi.models import CDCUser
-                user = CDCUser.objects.get(email=response['email'])
+                user = CDCUser.objects.get(email=recipient)
                 user.is_active = False
-                user.admin_notes = f"User '{response['reject_reason']}' when checked on {timezone.now()}"
+                user.admin_notes = f"User '{send_attempt.reject_reason}' when checked on {timezone.now()}"
                 user.save()
-            else:
-                raise e
 
     return msg

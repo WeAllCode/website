@@ -56,7 +56,7 @@ INSTALLED_APPS = [
 
     'bootstrap3',
     'django_cleanup',
-    'djrill',
+    'anymail',
     'html5',
     'loginas',
     'paypal.standard.ipn',
@@ -243,24 +243,33 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
-SOCIALACCOUNT_ADAPTER = (
-    'coderdojochi.social_account_adapter.SocialAccountAdapter'
-)
+SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapter'
 
+ANYMAIL = {
+    'MANDRILL_API_KEY': os.environ.get('MANDRILL_API_KEY'),
+    'MANDRILL_WEBHOOK_KEY': os.environ.get('MANDRILL_WEBHOOK_KEY'),
+}
 
-# Email
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_BACKEND = 'djrill.mail.backends.djrill.DjrillBackend'
+# TODO: Be sure to add the following to app.json
+# "HEROKU_APP_NAME": {
+#    "required": true
+#  },
+#  "HEROKU_PARENT_APP_NAME": {
+#    "required": true
+#  },
+#
+# if 'HEROKU_APP_NAME' in os.environ:
+#     ANYMAIL['WEBHOOK_SECRET'] = os.environ.get('MANDRILL_WEBHOOK_KEY')
+#     ANYMAIL['MANDRILL_WEBHOOK_URL'] = (
+#         'https://{secret_key}@{app_name}.herokuapp.com/anymail/mandrill/tracking/'.format(
+#             secret_key=ANYMAIL['MANDRILL_WEBHOOK_KEY'],
+#             app_name=os.environ.get('HEROKU_APP_NAME'),
+#         )
+#     )
+
+EMAIL_BACKEND = "anymail.backends.mandrill.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
-MANDRILL_API_KEY = os.environ.get('MANDRILL_API_KEY')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = MANDRILL_API_KEY
-SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
 
 if DEBUG:
 
