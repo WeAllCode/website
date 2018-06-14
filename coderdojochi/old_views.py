@@ -181,13 +181,8 @@ def welcome(request, template_name="welcome.html"):
                 ).order_by('start_date').first()
 
                 if next_meeting:
-                    merge_vars[
-                        'next_intro_meeting_url'
-                    ] = next_meeting.get_absolute_url()
-
-                    merge_vars[
-                        'next_intro_meeting_ics_url'
-                    ] = next_meeting.get_ics_url()
+                    merge_vars['next_intro_meeting_url'] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
+                    merge_vars['next_intro_meeting_ics_url'] = f"{settings.SITE_URL}{next_meeting.get_ics_url()}"
 
                 email(
                     subject='Welcome!',
@@ -207,13 +202,8 @@ def welcome(request, template_name="welcome.html"):
                 ).order_by('start_date').first()
 
                 if next_class:
-                    merge_vars[
-                        'next_class_url'
-                    ] = next_class.get_absolute_url()
-
-                    merge_vars[
-                        'next_class_ics_url'
-                    ] = next_class.get_ics_url()
+                    merge_vars['next_class_url'] = f"{settings.SITE_URL}{next_class.get_absolute_url()}"
+                    merge_vars['next_class_ics_url'] = f"{settings.SITE_URL}{next_class.get_ics_url()}"
 
                 email(
                     subject='Welcome!',
@@ -709,101 +699,78 @@ def session_sign_up(
             )
 
             if request.user.role == 'mentor':
+                merge_global_data = {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'order_id': order.id,
+                    'class_code': session_obj.course.code,
+                    'class_title': session_obj.course.title,
+                    'class_description': session_obj.course.description,
+                    'class_start_date': arrow.get(
+                        session_obj.mentor_start_date
+                    ).to('local').format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session_obj.mentor_start_date).to('local').format('h:mma'),
+                    'class_end_date': arrow.get(session_obj.mentor_end_date).to('local').format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session_obj.mentor_end_date).to('local').format('h:mma'),
+                    'class_location_name': session_obj.location.name,
+                    'class_location_address': session_obj.location.address,
+                    'class_location_address2': session_obj.location.address2,
+                    'class_location_city': session_obj.location.city,
+                    'class_location_state': session_obj.location.state,
+                    'class_location_zip': session_obj.location.zip,
+                    'class_additional_info': session_obj.additional_info,
+                    'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
+                    'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
+                    'microdata_start_date': arrow.get(session_obj.mentor_start_date).to('local').isoformat(),
+                    'microdata_end_date': arrow.get(session_obj.mentor_end_date).to('local').isoformat(),
+                }
+
                 email(
                     subject='Mentoring confirmation for {} class'.format(
-                        arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').format('MMMM D'),
+                        arrow.get(session_obj.mentor_start_date).to('local').format('MMMM D'),
                     ),
                     template_name='class-confirm-mentor',
-                    merge_global_data={
-                        'first_name': request.user.first_name,
-                        'last_name': request.user.last_name,
-                        'class_code': session_obj.course.code,
-                        'class_title': session_obj.course.title,
-                        'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').format('h:mma'),
-                        'class_end_date': arrow.get(
-                            session_obj.mentor_end_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(
-                            session_obj.mentor_end_date
-                        ).to('local').format('h:mma'),
-                        'class_location_name': session_obj.location.name,
-                        'class_location_address': session_obj.location.address,
-                        'class_location_address2': (
-                            session_obj.location.address2
-                        ),
-                        'class_location_city': session_obj.location.city,
-                        'class_location_state': session_obj.location.state,
-                        'class_location_zip': session_obj.location.zip,
-                        'class_additional_info': session_obj.additional_info,
-                        'class_url': session_obj.get_absolute_url(),
-                        'class_ics_url': session_obj.get_ics_url(),
-                        'microdata_start_date': arrow.get(
-                            session_obj.mentor_start_date
-                        ).to('local').isoformat(),
-                        'microdata_end_date': arrow.get(
-                            session_obj.mentor_end_date
-                        ).to('local').isoformat(),
-                        'order_id': order.id,
-                    },
+                    merge_global_data=merge_global_data,
                     recipients=[request.user.email],
                     preheader='It\'s time to use your powers for good.',
                 )
 
             else:
+                merge_global_data = {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'student_first_name': student.first_name,
+                    'student_last_name': student.last_name,
+                    'order_id': order.id,
+                    'class_code': session_obj.course.code,
+                    'class_title': session_obj.course.title,
+                    'class_description': session_obj.course.description,
+                    'class_start_date': arrow.get(session_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
+                    'class_start_time': arrow.get(session_obj.start_date).to('local').format('h:mma'),
+                    'class_end_date': arrow.get(session_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
+                    'class_end_time': arrow.get(session_obj.end_date).to('local').format('h:mma'),
+                    'class_location_name': session_obj.location.name,
+                    'class_location_address': session_obj.location.address,
+                    'class_location_address2': session_obj.location.address2,
+                    'class_location_city': session_obj.location.city,
+                    'class_location_state': session_obj.location.state,
+                    'class_location_zip': session_obj.location.zip,
+                    'class_additional_info': session_obj.additional_info,
+                    'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
+                    'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
+                    'microdata_start_date': arrow.get(session_obj.start_date).to('local').isoformat(),
+                    'microdata_end_date': arrow.get(session_obj.end_date).to('local').isoformat(),
+                }
+
                 email(
                     subject=f"Upcoming class confirmation for {student.first_name} {student.last_name}",
                     template_name='class-confirm-guardian',
-                    merge_global_data={
-                        'first_name': request.user.first_name,
-                        'last_name': request.user.last_name,
-                        'student_first_name': student.first_name,
-                        'student_last_name': student.last_name,
-                        'class_code': session_obj.course.code,
-                        'class_title': session_obj.course.title,
-                        'class_description': session_obj.course.description,
-                        'class_start_date': arrow.get(
-                            session_obj.start_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_start_time': arrow.get(
-                            session_obj.start_date
-                        ).to('local').format('h:mma'),
-                        'class_end_date': arrow.get(
-                            session_obj.end_date
-                        ).to('local').format('dddd, MMMM D, YYYY'),
-                        'class_end_time': arrow.get(
-                            session_obj.end_date
-                        ).to('local').format('h:mma'),
-                        'class_location_name': session_obj.location.name,
-                        'class_location_address': session_obj.location.address,
-                        'class_location_address2': (
-                            session_obj.location.address2
-                        ),
-                        'class_location_city': session_obj.location.city,
-                        'class_location_state': session_obj.location.state,
-                        'class_location_zip': session_obj.location.zip,
-                        'class_additional_info': session_obj.additional_info,
-                        'class_url': session_obj.get_absolute_url(),
-                        'class_ics_url': session_obj.get_ics_url(),
-                        'microdata_start_date': arrow.get(
-                            session_obj.start_date
-                        ).to('local').isoformat(),
-                        'microdata_end_date': arrow.get(
-                            session_obj.end_date
-                        ).to('local').isoformat(),
-                        'order_id': order.id,
-                    },
+                    merge_global_data=merge_global_data,
                     recipients=[request.user.email],
-                    preheader='Magical wizards have generated this '
-                              'confirmation. All thanks to the mystical '
-                              'power of coding.',
+                    preheader=(
+                        'Magical wizards have generated this confirmation. '
+                        'All thanks to the mystical power of coding.'
+                    ),
                 )
 
         return redirect(session_obj.get_absolute_url())
@@ -864,7 +831,7 @@ def session_ics(request, year, month, day, slug, session_id):
 
     event['location'] = vText(location)
 
-    event['url'] = session_obj.get_absolute_url()
+    event['url'] = f"{settings.SITE_URL}{session_obj.get_absolute_url()}"
     event['description'] = strip_tags(session_obj.course.description)
 
     # A value of 5 is the normal or "MEDIUM" priority.
@@ -1014,45 +981,33 @@ def meeting_sign_up(
                 'Success! See you there!'
             )
 
+            merge_global_data = {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'order_id': meeting_order.id,
+                'meeting_title': meeting_obj.meeting_type.title,
+                'meeting_description': meeting_obj.meeting_type.description,
+                'meeting_start_date': arrow.get(meeting_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
+                'meeting_start_time': arrow.get(meeting_obj.start_date).to('local').format('h:mma'),
+                'meeting_end_date': arrow.get(meeting_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
+                'meeting_end_time': arrow.get(meeting_obj.end_date).to('local').format('h:mma'),
+                'meeting_location_name': meeting_obj.location.name,
+                'meeting_location_address': meeting_obj.location.address,
+                'meeting_location_address2': meeting_obj.location.address2,
+                'meeting_location_city': meeting_obj.location.city,
+                'meeting_location_state': meeting_obj.location.state,
+                'meeting_location_zip': meeting_obj.location.zip,
+                'meeting_additional_info': meeting_obj.additional_info,
+                'meeting_url': f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}",
+                'meeting_ics_url': f"{settings.SITE_URL}{meeting_obj.get_ics_url()}",
+                'microdata_start_date': arrow.get(meeting_obj.start_date).to('local').isoformat(),
+                'microdata_end_date': arrow.get(meeting_obj.end_date).to('local').isoformat(),
+            }
+
             email(
                 subject='Upcoming mentor meeting confirmation',
                 template_name='meeting-confirm-mentor',
-                merge_global_data={
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'meeting_title': meeting_obj.meeting_type.title,
-                    'meeting_description': (
-                        meeting_obj.meeting_type.description
-                    ),
-                    'meeting_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_start_time': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').format('h:mma'),
-                    'meeting_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'meeting_end_time': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').format('h:mma'),
-                    'meeting_location_name': meeting_obj.location.name,
-                    'meeting_location_address': meeting_obj.location.address,
-                    'meeting_location_address2': meeting_obj.location.address2,
-                    'meeting_location_city': meeting_obj.location.city,
-                    'meeting_location_state': meeting_obj.location.state,
-                    'meeting_location_zip': meeting_obj.location.zip,
-                    'meeting_additional_info': meeting_obj.additional_info,
-                    'meeting_url': meeting_obj.get_absolute_url(),
-                    'meeting_ics_url': meeting_obj.get_ics_url(),
-                    'microdata_start_date': arrow.get(
-                        meeting_obj.start_date
-                    ).to('local').isoformat(),
-                    'microdata_end_date': arrow.get(
-                        meeting_obj.end_date
-                    ).to('local').isoformat(),
-                    'order_id': meeting_order.id,
-                },
+                merge_global_data=merge_global_data,
                 recipients=[request.user.email],
                 preheader=(
                     f"Thanks for signing up for our next meeting, {request.user.first_name}. "
@@ -1093,25 +1048,15 @@ def meeting_announce(request, meeting_id):
     )
 
     if not meeting_obj.announced_date_mentors:
-        merge_data = {}
         recipients = []
+        merge_data = {}
         merge_global_data = {
             'meeting_title': meeting_obj.meeting_type.title,
-            'meeting_description': (
-                meeting_obj.meeting_type.description
-            ),
-            'meeting_start_date': arrow.get(
-                meeting_obj.start_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'meeting_start_time': arrow.get(
-                meeting_obj.start_date
-            ).to('local').format('h:mma'),
-            'meeting_end_date': arrow.get(
-                meeting_obj.end_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'meeting_end_time': arrow.get(
-                meeting_obj.end_date
-            ).to('local').format('h:mma'),
+            'meeting_description': meeting_obj.meeting_type.description,
+            'meeting_start_date': arrow.get(meeting_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
+            'meeting_start_time': arrow.get(meeting_obj.start_date).to('local').format('h:mma'),
+            'meeting_end_date': arrow.get(meeting_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
+            'meeting_end_time': arrow.get(meeting_obj.end_date).to('local').format('h:mma'),
             'meeting_location_name': meeting_obj.location.name,
             'meeting_location_address': meeting_obj.location.address,
             'meeting_location_address2': meeting_obj.location.address2,
@@ -1119,8 +1064,8 @@ def meeting_announce(request, meeting_id):
             'meeting_location_state': meeting_obj.location.state,
             'meeting_location_zip': meeting_obj.location.zip,
             'meeting_additional_info': meeting_obj.additional_info,
-            'meeting_url': meeting_obj.get_absolute_url(),
-            'meeting_ics_url': meeting_obj.get_ics_url()
+            'meeting_url': f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}",
+            'meeting_ics_url': f"{settings.SITE_URL}{meeting_obj.get_ics_url()}",
         }
 
         for mentor in Mentor.objects.filter(
@@ -1139,8 +1084,7 @@ def meeting_announce(request, meeting_id):
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
-            preheader='A new meeting has been announced. '
-                      'Come join us for some amazing fun!',
+            preheader='A new meeting has been announced. Come join us for some amazing fun!',
         )
 
         meeting_obj.announced_date_mentors = timezone.now()
@@ -1188,7 +1132,7 @@ def meeting_ics(request, year, month, day, slug, meeting_id):
     )
 
     event['location'] = vText(location)
-    event['url'] = meeting_obj.get_absolute_url()
+    event['url'] = f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"
     event['description'] = strip_tags(meeting_obj.meeting_type.description)
 
     # A value of 5 is the normal or "MEDIUM" priority.
@@ -1701,8 +1645,7 @@ def donate_cancel(request):
 def donate_return(request):
     messages.success(
         request,
-        'Your donation is being processed. '
-        'You should receive a confirmation email shortly. Thanks again!'
+        'Your donation is being processed. You should receive a confirmation email shortly. Thanks again!'
     )
     return redirect('donate')
 
@@ -2359,22 +2302,15 @@ def session_announce_mentors(request, session_id):
     )
 
     if not session_obj.announced_date_mentors:
+        merge_data = {}
         merge_global_data = {
             'class_code': session_obj.course.code,
             'class_title': session_obj.course.title,
             'class_description': session_obj.course.description,
-            'class_start_date': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_start_time': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('h:mma'),
-            'class_end_date': arrow.get(
-                session_obj.end_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_end_time': arrow.get(
-                session_obj.end_date
-            ).to('local').format('h:mma'),
+            'class_start_date': arrow.get(session_obj.mentor_start_date).to('local').format('dddd, MMMM D, YYYY'),
+            'class_start_time': arrow.get(session_obj.mentor_start_date).to('local').format('h:mma'),
+            'class_end_date': arrow.get(session_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
+            'class_end_time': arrow.get(session_obj.end_date).to('local').format('h:mma'),
             'min_age_limitation': session_obj.min_age_limitation,
             'max_age_limitation': session_obj.max_age_limitation,
             'class_location_name': session_obj.location.name,
@@ -2384,11 +2320,11 @@ def session_announce_mentors(request, session_id):
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
             'class_additional_info': session_obj.additional_info,
-            'class_url': session_obj.get_absolute_url(),
-            'class_ics_url': session_obj.get_ics_url()
+            'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
+            'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
         }
-        merge_data = {}
         recipients = []
+
         # send mentor announcements
         for mentor in Mentor.objects.filter(
             is_active=True,
@@ -2406,8 +2342,7 @@ def session_announce_mentors(request, session_id):
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
-            preheader='Help us make a huge difference! '
-                      'A brand new class was just announced.',
+            preheader='Help us make a huge difference! A brand new class was just announced.',
         )
 
         session_obj.announced_date_mentors = timezone.now()
@@ -2429,12 +2364,12 @@ def session_announce_mentors(request, session_id):
 
 @never_cache
 def session_announce_guardians(request, session_id):
-    # if not request.user.is_staff:
-    #     messages.error(
-    #         request,
-    #         'You do not have permission to access this page.'
-    #     )
-    #     return redirect('home')
+    if not request.user.is_staff:
+        messages.error(
+            request,
+            'You do not have permission to access this page.'
+        )
+        return redirect('home')
 
     session_obj = get_object_or_404(
         Session,
@@ -2443,23 +2378,14 @@ def session_announce_guardians(request, session_id):
 
     if not session_obj.announced_date_guardians:
         merge_data = {}
-        recipients = []
         merge_global_data = {
             'class_code': session_obj.course.code,
             'class_title': session_obj.course.title,
             'class_description': session_obj.course.description,
-            'class_start_date': arrow.get(
-                session_obj.start_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_start_time': arrow.get(
-                session_obj.start_date
-            ).to('local').format('h:mma'),
-            'class_end_date': arrow.get(
-                session_obj.end_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_end_time': arrow.get(
-                session_obj.end_date
-            ).to('local').format('h:mma'),
+            'class_start_date': arrow.get(session_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
+            'class_start_time': arrow.get(session_obj.start_date).to('local').format('h:mma'),
+            'class_end_date': arrow.get(session_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
+            'class_end_time': arrow.get(session_obj.end_date).to('local').format('h:mma'),
             'min_age_limitation': session_obj.min_age_limitation,
             'max_age_limitation': session_obj.max_age_limitation,
             'class_location_name': session_obj.location.name,
@@ -2469,9 +2395,10 @@ def session_announce_guardians(request, session_id):
             'class_location_state': session_obj.location.state,
             'class_location_zip': session_obj.location.zip,
             'class_additional_info': session_obj.additional_info,
-            'class_url': session_obj.get_absolute_url(),
-            'class_ics_url': session_obj.get_ics_url()
+            'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
+            'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
         }
+        recipients = []
 
         for guardian in Guardian.objects.filter(
             is_active=True,
@@ -2489,8 +2416,7 @@ def session_announce_guardians(request, session_id):
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
-            preheader='We\'re super excited to bring you another class '
-                      'date. Sign up to reserve your spot',
+            preheader="We're super excited to bring you another class date. Sign up to reserve your spot",
         )
 
         session_obj.announced_date_guardians = timezone.now()

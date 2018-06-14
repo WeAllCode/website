@@ -34,8 +34,8 @@ def avatar_updated_handler(sender, instance, **kwargs):
                 'first_name': instance.user.first_name,
                 'last_name': instance.user.last_name,
                 'image': 'avatar',
-                'approve_url': instance.get_approve_avatar_url(),
-                'reject_url': instance.get_reject_avatar_url(),
+                'approve_url': f"{settings.SITE_URL}{instance.get_approve_avatar_url()}",
+                'reject_url': f"{settings.SITE_URL}{instance.get_reject_avatar_url()}",
             },
             recipients=[settings.CONTACT_EMAIL],
             preheader='Mentor Avatar Changed',
@@ -61,17 +61,19 @@ def donate_callback(sender, **kwargs):
         donation.is_verified = True
 
         if not donation.receipt_sent:
+            merge_global_data = {
+                'first_name': donation.first_name,
+                'last_name': donation.last_name,
+                'email': donation.email,
+                'amount': f"${donation.amount:0,.2f}",
+                'transaction_date': arrow.get(donation.created_at).to('local').format('MMMM D, YYYY h:ss a'),
+                'transaction_id': donation.id,
+            }
+
             email(
                 subject='Donations Receipt from CoderDojoChi',
                 template_name='donation-receipt',
-                merge_global_data={
-                    'first_name': donation.first_name,
-                    'last_name': donation.last_name,
-                    'email': donation.email,
-                    'amount': f"${donation.amount:0,.2f}",
-                    'transaction_date': arrow.get(donation.created_at).to('local').format('MMMM D, YYYY h:ss a'),
-                    'transaction_id': donation.id,
-                },
+                merge_global_data=merge_global_data,
                 recipients=[donation.email],
                 bcc=[settings.CONTACT_EMAIL],
                 preheader="Your generous donation is what makes CoderDojoChi possible.",

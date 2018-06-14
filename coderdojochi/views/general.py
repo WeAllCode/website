@@ -221,7 +221,7 @@ class WelcomeView(TemplateView):
         user.role = role
         user.save()
 
-        merge_vars = {
+        merge_global_data = {
             'user': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name
@@ -237,13 +237,8 @@ class WelcomeView(TemplateView):
             ).order_by('start_date').first()
 
             if next_meeting:
-                merge_vars[
-                    'next_intro_meeting_url'
-                ] = next_meeting.get_absolute_url()
-
-                merge_vars[
-                    'next_intro_meeting_ics_url'
-                ] = next_meeting.get_ics_url()
+                merge_global_data['next_intro_meeting_url'] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
+                merge_global_data['next_intro_meeting_ics_url'] = f"{settings.SITE_URL}{next_meeting.get_ics_url()}"
             if not next_url:
                 next_url = reverse('dojo')
         else:
@@ -253,20 +248,16 @@ class WelcomeView(TemplateView):
             ).order_by('start_date').first()
 
             if next_class:
-                merge_vars[
-                    'next_class_url'
-                ] = next_class.get_absolute_url()
+                merge_global_data['next_class_url'] = f"{settings.SITE_URL}{next_class.get_absolute_url()}"
+                merge_global_data['next_class_ics_url'] = f"{settings.SITE_URL}{next_class.get_ics_url()}"
 
-                merge_vars[
-                    'next_class_ics_url'
-                ] = next_class.get_ics_url()
             if not next_url:
                 next_url = reverse('welcome')
 
         email(
             subject='Welcome!',
             template_name=f"welcome-{role}",
-            merge_global_data=merge_vars,
+            merge_global_data=merge_global_data,
             recipients=[user.email],
             preheader='Your adventure awaits!',
         )
