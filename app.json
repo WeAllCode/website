@@ -24,6 +24,9 @@
     "MANDRILL_WEBHOOK_KEY": {
       "required": true
     },
+    "MANDRILL_WEBHOOK_URL": {
+      "required": true
+    },
     "PAYPAL_RECEIVER_EMAIL": {
       "required": true
     },
