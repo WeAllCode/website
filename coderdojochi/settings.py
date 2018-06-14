@@ -250,12 +250,8 @@ SOCIALACCOUNT_ADAPTER = (
 ANYMAIL = {
     "MANDRILL_API_KEY": os.environ.get('MANDRILL_API_KEY'),
     "MANDRILL_WEBHOOK_KEY": os.environ.get('MANDRILL_WEBHOOK_KEY'),
+    "MANDRILL_WEBHOOK_URL": os.environ.get('MANDRILL_WEBHOOK_URL'),
 }
-
-_url_parts = list(SITE_URL.partition("//"))
-_url_parts[2:2] = [ANYMAIL['MANDRILL_WEBHOOK_KEY'], "@"]
-ANYMAIL['MANDRILL_WEBHOOK_URL'] = "".join(_url_parts)
-
 EMAIL_BACKEND = "anymail.backends.mandrill.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
