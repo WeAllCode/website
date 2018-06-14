@@ -243,15 +243,28 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
-SOCIALACCOUNT_ADAPTER = (
-    'coderdojochi.social_account_adapter.SocialAccountAdapter'
-)
+SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapter'
 
 ANYMAIL = {
-    "MANDRILL_API_KEY": os.environ.get('MANDRILL_API_KEY'),
-    "MANDRILL_WEBHOOK_KEY": os.environ.get('MANDRILL_WEBHOOK_KEY'),
-    "MANDRILL_WEBHOOK_URL": os.environ.get('MANDRILL_WEBHOOK_URL'),
+    'MANDRILL_API_KEY': os.environ.get('MANDRILL_API_KEY'),
+    'MANDRILL_WEBHOOK_KEY': os.environ.get('MANDRILL_WEBHOOK_KEY'),
 }
+
+if 'HEROKU_APP_NAME' in os.environ:
+    ANYMAIL['MANDRILL_WEBHOOK_URL'] = (
+        'https://{secret_key}@{app_name}.herokuapp.com/anymail/mandrill/tracking'.format(
+            secret_key=ANYMAIL['MANDRILL_WEBHOOK_KEY'],
+            app_name=os.environ.get('HEROKU_APP_NAME'),
+        )
+    )
+# else:
+#     ANYMAIL['MANDRILL_WEBHOOK_URL'] = (
+#         'https://{secret_key}@{app_name}.herokuapp.com/anymail/mandrill/tracking'.format(
+#             secret_key=ANYMAIL['MANDRILL_WEBHOOK_KEY'],
+#             app_name=os.environ.get('HEROKU_APP_NAME'),
+#         )
+#     )
+
 EMAIL_BACKEND = "anymail.backends.mandrill.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
