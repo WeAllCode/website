@@ -36,7 +36,7 @@ class CDCUser(AbstractUser):
         super(CDCUser, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return "/dojo/"
+        return f"{settings.SITE_URL}/dojo/"
 
 
 def generate_filename(instance, filename):
@@ -106,7 +106,7 @@ class Mentor(models.Model):
         return f'/mentor/{self.id}/reject-avatar/'
 
     def get_absolute_url(self):
-        return f'/mentor/{self.id}/'
+        return f'{settings.SITE_URL}/mentor/{self.id}/'
 
     @property
     def first_name(self):
@@ -499,7 +499,7 @@ class Session(models.Model):
 
     def get_absolute_url(self):
         start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/class/{start_date}/{self.course.slug}/{self.id}/'
+        return f'{settings.SITE_URL}/class/{start_date}/{self.course.slug}/{self.id}/'
 
     def get_signup_url(self):
         start_date = self.start_date.strftime("%Y/%m/%d")
@@ -691,7 +691,7 @@ class Meeting(models.Model):
 
     def get_absolute_url(self):
         start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/'
+        return f'{settings.SITE_URL}/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/'
 
     def get_signup_url(self):
         start_date = self.start_date.strftime("%Y/%m/%d")
