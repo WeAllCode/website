@@ -59,102 +59,74 @@ User = get_user_model()
 
 
 def session_confirm_mentor(request, session_obj, order):
+    merge_global_data = {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'order_id': order.id,
+        'class_code': session_obj.course.code,
+        'class_title': session_obj.course.title,
+        'class_description': session_obj.course.description,
+        'class_start_date': arrow.get(session_obj.mentor_start_date).to('local').format('dddd, MMMM D, YYYY'),
+        'class_start_time': arrow.get(session_obj.mentor_start_date).to('local').format('h:mma'),
+        'class_end_date': arrow.get(session_obj.mentor_end_date).to('local').format('dddd, MMMM D, YYYY'),
+        'class_end_time': arrow.get(session_obj.mentor_end_date).to('local').format('h:mma'),
+        'class_location_name': session_obj.location.name,
+        'class_location_address': session_obj.location.address,
+        'class_location_address2': session_obj.location.address2,
+        'class_location_city': session_obj.location.city,
+        'class_location_state': session_obj.location.state,
+        'class_location_zip': session_obj.location.zip,
+        'class_additional_info': session_obj.additional_info,
+        'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
+        'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
+        'microdata_start_date': arrow.get(session_obj.mentor_start_date).to('local').isoformat(),
+        'microdata_end_date': arrow.get(session_obj.mentor_end_date).to('local').isoformat(),
+    }
+
     email(
         subject='Mentoring confirmation for {} class'.format(
-            arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('MMMM D'),
+            arrow.get(session_obj.mentor_start_date).to('local').format('MMMM D'),
         ),
         template_name='class-confirm-mentor',
-        merge_global_data={
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'class_code': session_obj.course.code,
-            'class_title': session_obj.course.title,
-            'class_description': session_obj.course.description,
-            'class_start_date': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_start_time': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').format('h:mma'),
-            'class_end_date': arrow.get(
-                session_obj.mentor_end_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_end_time': arrow.get(
-                session_obj.mentor_end_date
-            ).to('local').format('h:mma'),
-            'class_location_name': session_obj.location.name,
-            'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
-            'class_location_city': session_obj.location.city,
-            'class_location_state': session_obj.location.state,
-            'class_location_zip': session_obj.location.zip,
-            'class_additional_info': session_obj.additional_info,
-            'class_url': session_obj.get_absolute_url(),
-            'class_ics_url': session_obj.get_ics_url(),
-            'microdata_start_date': arrow.get(
-                session_obj.mentor_start_date
-            ).to('local').isoformat(),
-            'microdata_end_date': arrow.get(
-                session_obj.mentor_end_date
-            ).to('local').isoformat(),
-            'order_id': order.id,
-        },
+        merge_global_data=merge_global_data,
         recipients=[request.user.email],
-        preheader='It\'s time to use your powers for good.',
+        preheader="It's time to use your powers for good.",
     )
 
 
 def session_confirm_guardian(request, session_obj, order, student):
+    merge_global_data = {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'student_first_name': student.first_name,
+        'student_last_name': student.last_name,
+        'order_id': order.id,
+        'class_code': session_obj.course.code,
+        'class_title': session_obj.course.title,
+        'class_description': session_obj.course.description,
+        'class_start_date': arrow.get(session_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
+        'class_start_time': arrow.get(session_obj.start_date).to('local').format('h:mma'),
+        'class_end_date': arrow.get(session_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
+        'class_end_time': arrow.get(session_obj.end_date).to('local').format('h:mma'),
+        'class_location_name': session_obj.location.name,
+        'class_location_address': session_obj.location.address,
+        'class_location_address2': session_obj.location.address2,
+        'class_location_city': session_obj.location.city,
+        'class_location_state': session_obj.location.state,
+        'class_location_zip': session_obj.location.zip,
+        'class_additional_info': session_obj.additional_info,
+        'class_url': session_obj.get_absolute_url(),
+        'class_ics_url': session_obj.get_ics_url(),
+        'microdata_start_date': arrow.get(session_obj.start_date).to('local').isoformat(),
+        'microdata_end_date': arrow.get(session_obj.end_date).to('local').isoformat(),
+    }
+
     email(
         subject=f'Upcoming class confirmation for {student.first_name} {student.last_name}',
         template_name='class-confirm-guardian',
-        merge_global_data={
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'student_first_name': student.first_name,
-            'student_last_name': student.last_name,
-            'class_code': session_obj.course.code,
-            'class_title': session_obj.course.title,
-            'class_description': session_obj.course.description,
-            'class_start_date': arrow.get(
-                session_obj.start_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_start_time': arrow.get(
-                session_obj.start_date
-            ).to('local').format('h:mma'),
-            'class_end_date': arrow.get(
-                session_obj.end_date
-            ).to('local').format('dddd, MMMM D, YYYY'),
-            'class_end_time': arrow.get(
-                session_obj.end_date
-            ).to('local').format('h:mma'),
-            'class_location_name': session_obj.location.name,
-            'class_location_address': session_obj.location.address,
-            'class_location_address2': (
-                session_obj.location.address2
-            ),
-            'class_location_city': session_obj.location.city,
-            'class_location_state': session_obj.location.state,
-            'class_location_zip': session_obj.location.zip,
-            'class_additional_info': session_obj.additional_info,
-            'class_url': session_obj.get_absolute_url(),
-            'class_ics_url': session_obj.get_ics_url(),
-            'microdata_start_date': arrow.get(
-                session_obj.start_date
-            ).to('local').isoformat(),
-            'microdata_end_date': arrow.get(
-                session_obj.end_date
-            ).to('local').isoformat(),
-            'order_id': order.id,
-        },
+        merge_global_data=merge_global_data,
         recipients=[request.user.email],
-        preheader='Magical wizards have generated this '
-                  'confirmation. All thanks to the mystical '
-                  'power of coding.',
+        preheader='Magical wizards have generated this confirmation. All thanks to the mystical power of coding.',
     )
 
 
