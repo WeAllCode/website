@@ -31,6 +31,7 @@ factory_boy = "*"
 icalendar = "*"
 json-logging-py = "*"
 django-anymail = "*"
+raven = "*"
 
 [dev-packages]
 pylint = "*"

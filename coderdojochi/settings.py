@@ -271,6 +271,14 @@ EMAIL_BACKEND = "anymail.backends.mandrill.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 
+# Sentry
+SENTRY_DSN = os.environ.get('SENTRY_DSN', False)
+
+if SENTRY_DSN:
+    INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
+
+
+# Debug toolbar
 if DEBUG:
 
     def custom_show_toolbar(request):
