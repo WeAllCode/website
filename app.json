@@ -37,7 +37,9 @@
     }
   },
   "addons": [
-    "heroku-postgresql"
+    "heroku-postgresql",
+    "sentry",
+    "logdna"
   ],
   "buildpacks": [
     {
