@@ -1,4 +1,5 @@
-{% load static i18n %}<!DOCTYPE html>
+{% load static i18n raven %}
+<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" {% if DEBUG %}class="debug"{% endif %}>
     <head>
         <title>{% block title %}CoderDojoChi - Welcome!{% endblock %}</title>
@@ -92,5 +93,7 @@
         ga('create', 'UA-78618586-1', 'auto');
         ga('send', 'pageview');
         </script>
+
+        <script>Raven.config('{% sentry_public_dsn %}').install()</script>
     </body>
 </html>
