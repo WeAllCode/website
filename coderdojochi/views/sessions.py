@@ -230,6 +230,14 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
         ).order_by('start_date')
         context['upcoming_classes'] = upcoming_classes
 
+        active_mentors = Mentor.objects.filter(
+            id__in=MentorOrder.objects.filter(
+                session=session_obj,
+                is_active=True
+            ).values('mentor__id')
+        )
+        context['active_mentors'] = active_mentors
+
         if self.request.user.is_authenticated:
             if self.request.user.role == 'mentor':
                 account = get_object_or_404(Mentor, user=self.request.user)
