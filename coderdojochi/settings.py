@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'collectfast',
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.humanize',
@@ -204,6 +205,49 @@ if not DEBUG:
     # endregion
     DEFAULT_FILE_STORAGE = 'coderdojochi.settings.MediaRootS3BotoStorage'
     MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
+
+    # Collectfast
+    AWS_PRELOAD_METADATA = True
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        },
+        'collectfast': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'collectfast_cache',
+            'TIMEOUT': 60,
+            'OPTIONS': {
+                'MAX_ENTRIES': 10000
+            },
+        },
+    }
+
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.environ.get('REDIS_URL'),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                # Mimicing memcache behavior.
+                # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+                'IGNORE_EXCEPTIONS': True,
+            }
+        },
+        'collectfast': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.environ.get('REDIS_URL'),
+            'TIMEOUT': 60,
+            'OPTIONS': {
+                'MAX_ENTRIES': 10000
+            },
+        },
+    }
+
+    # COLLECTFAST_DEBUG = True
+    COLLECTFAST_THREADS = 20
+    COLLECTFAST_CACHE = 'collectfast'
+
+
 
 else:
     # Static files (CSS, JavaScript, Images)
