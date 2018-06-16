@@ -280,7 +280,10 @@ if SENTRY_DSN:
     import raven
 
     INSTALLED_APPS += ['raven.contrib.django.raven_compat']
-    MIDDLEWARE = ['raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware'] + MIDDLEWARE
+    MIDDLEWARE = [
+        'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
+        'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+    ] + MIDDLEWARE
 
     RAVEN_CONFIG = {
         'dsn': SENTRY_DSN,
