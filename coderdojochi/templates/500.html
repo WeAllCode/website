@@ -149,7 +149,20 @@
           ga('send', 'pageview');
         </script>
 
+		<!-- Sentry JS SDK 2.1.+ required -->
+		<script src="https://cdn.ravenjs.com/2.3.0/raven.min.js"></script>
 		<script>Raven.config('{% sentry_public_dsn %}').install()</script>
+
+		{% if request.sentry.id %}
+		<script>
+		Raven.showReportDialog({
+			eventId: '{{ request.sentry.id }}',
+
+			// use the public DSN (dont include your secret!)
+			dsn: '{% sentry_public_dsn %}'
+		});
+		</script>
+		{% endif %}
 
     </body>
 </html>
