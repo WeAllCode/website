@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+
+from django.urls import reverse_lazy
+
 import dj_database_url
 import django_heroku
 
@@ -245,6 +248,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'coderdojochi.forms.SignupForm'
 SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapter'
 
+
+# Email
 ANYMAIL = {
     'MANDRILL_API_KEY': os.environ.get('MANDRILL_API_KEY'),
     'MANDRILL_WEBHOOK_KEY': os.environ.get('MANDRILL_WEBHOOK_KEY'),
@@ -304,8 +309,9 @@ if SENTRY_DSN:
         },
         'handlers': {
             'sentry': {
-                'level': 'ERROR',
+                'level': 'INFO',
                 'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+                'tags': {'custom-tag': 'x'},
             },
             'console': {
                 'level': 'DEBUG',
@@ -327,11 +333,6 @@ if SENTRY_DSN:
             'sentry.errors': {
                 'level': 'DEBUG',
                 'handlers': ['console'],
-                'propagate': False,
-            },
-            'django.security.DisallowedHost': {
-                'level': 'ERROR',
-                'handlers': ['console', 'sentry'],
                 'propagate': False,
             },
         },

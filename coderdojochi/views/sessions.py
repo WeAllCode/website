@@ -4,6 +4,7 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
+import arrow
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
@@ -12,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db.models import Case, Count, IntegerField, When
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -21,17 +22,9 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, View
+from django.views.generic import RedirectView, TemplateView, View
 
-import arrow
-from coderdojochi.forms import (
-    CDCModelForm,
-    ContactForm,
-    DonationForm,
-    GuardianForm,
-    MentorForm,
-    StudentForm,
-)
+from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
 from coderdojochi.mixins import RoleRedirectMixin
 from coderdojochi.models import (
     Donation,
@@ -45,14 +38,14 @@ from coderdojochi.models import (
     Order,
     PartnerPasswordAccess,
     Session,
-    Student,
+    Student
 )
 from coderdojochi.util import email
-from coderdojochi.views.general import IcsView
+from coderdojochi.views.general import CalendarView
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
 
-logger = logging.getLogger("mechanize")
+logger = logging.getLogger(__name__)
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
@@ -78,7 +71,7 @@ def session_confirm_mentor(request, session_obj, order):
         'class_location_zip': session_obj.location.zip,
         'class_additional_info': session_obj.additional_info,
         'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-        'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
+        'class_calendar_url': f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
         'microdata_start_date': arrow.get(session_obj.mentor_start_date).to('local').isoformat(),
         'microdata_end_date': arrow.get(session_obj.mentor_end_date).to('local').isoformat(),
     }
@@ -116,7 +109,7 @@ def session_confirm_guardian(request, session_obj, order, student):
         'class_location_zip': session_obj.location.zip,
         'class_additional_info': session_obj.additional_info,
         'class_url': session_obj.get_absolute_url(),
-        'class_ics_url': session_obj.get_ics_url(),
+        'class_calendar_url': session_obj.get_calendar_url(),
         'microdata_start_date': arrow.get(session_obj.start_date).to('local').isoformat(),
         'microdata_end_date': arrow.get(session_obj.end_date).to('local').isoformat(),
     }
@@ -128,6 +121,11 @@ def session_confirm_guardian(request, session_obj, order, student):
         recipients=[request.user.email],
         preheader='Magical wizards have generated this confirmation. All thanks to the mystical power of coding.',
     )
+
+
+class SessionsRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('sessions')
 
 
 class SessionsView(TemplateView):
@@ -164,43 +162,35 @@ class SessionsView(TemplateView):
         return context
 
 
+class SessionDetailRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('session-detail', args=(kwargs['pk'],))
+
+
 class SessionDetailView(RoleRedirectMixin, TemplateView):
     template_name = "session-detail.html"
 
     def dispatch(self, request, *args, **kwargs):
-        session_obj = get_object_or_404(Session, id=kwargs['session_id'])
+        session_obj = get_object_or_404(Session, id=kwargs['pk'])
+
         if request.method == 'GET':
-            # Replaces session_detail_short
-            if all([k not in kwargs for k in ['year', 'month', 'day', 'slug']]):
-                return redirect(session_obj.get_absolute_url())
-            if session_obj.password:
-                if not self.validate_partner_session_access(self.request, kwargs['session_id']):
-                    return redirect(reverse('session_password', kwargs=kwargs))
+            if session_obj.password and not self.validate_partner_session_access(self.request, kwargs['pk']):
+                return redirect(reverse('session-password', kwargs=kwargs))
+
             if request.user.is_authenticated and request.user.role:
                 if 'enroll' in request.GET or 'enroll' in kwargs:
                     return self.enroll_redirect(request, session_obj)
+
         kwargs['session_obj'] = session_obj
         return super(SessionDetailView, self).dispatch(request, *args, **kwargs)
 
-    def enroll_redirect(self, request, session_obj):
-        if request.user.role == 'mentor':
-            return redirect(f"{session_obj.get_absolute_url()}/sign-up/")
-
-        guardian = get_object_or_404(Guardian, user=request.user)
-        students = guardian.get_students()
-
-        if students and 'student' in request.GET:
-            return redirect(f"{session_obj.get_absolute_url()}/sign-up/{request.GET['student']}")
-
-        return redirect(f"{reverse('welcome')}?next={session_obj.get_absolute_url()}&enroll=True")
-
-    def validate_partner_session_access(self, request, session_id):
+    def validate_partner_session_access(self, request, pk):
         authed_sessions = request.session.get('authed_partner_sessions')
 
-        if authed_sessions and session_id in authed_sessions:
+        if authed_sessions and pk in authed_sessions:
             if request.user.is_authenticated:
                 PartnerPasswordAccess.objects.get_or_create(
-                    session_id=session_id,
+                    session_id=pk,
                     user=request.user
                 )
             return True
@@ -208,7 +198,7 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
         if request.user.is_authenticated:
             try:
                 PartnerPasswordAccess.objects.get(
-                    session_id=session_id,
+                    session_id=pk,
                     user_id=request.user.id
                 )
             except PartnerPasswordAccess.DoesNotExist:
@@ -300,12 +290,17 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
         return redirect(session_obj.get_absolute_url())
 
 
+class SessionSignUpRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('session-sign-up', args=(kwargs['pk'],))
+
+
 class SessionSignUpView(RoleRedirectMixin, TemplateView):
     template_name = "session-sign-up.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        session_obj = get_object_or_404(Session, id=kwargs['session_id'])
+        session_obj = get_object_or_404(Session, id=kwargs['pk'])
         kwargs['session_obj'] = session_obj
         if request.user.role == 'mentor':
             session_orders = MentorOrder.objects.filter(
@@ -416,11 +411,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
             messages.success(request, 'Thanks for letting us know!')
         else:
             if not settings.DEBUG:
-                ip = (
-                    request.META['HTTP_X_FORWARDED_FOR'] or
-                    request.META['REMOTE_ADDR']
-                )
-
+                ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
             else:
                 ip = request.META['REMOTE_ADDR']
 
@@ -435,6 +426,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
                     student=student,
                     session=session_obj,
                 )
+
             order.ip = ip
             order.is_active = True
             order.save()
@@ -449,22 +441,25 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
         return redirect(session_obj.get_absolute_url())
 
 
+class PasswordSessionRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('session-password', args=(kwargs['pk'],))
+
+
 class PasswordSessionView(TemplateView):
     template_name = 'session-partner-password.html'
 
     def get_context_data(self, **kwargs):
         context = super(PasswordSessionView, self).get_context_data(**kwargs)
 
-        session_id = kwargs.get('session_id')
-        session_obj = get_object_or_404(Session, id=session_id)
+        session_obj = get_object_or_404(Session, id=kwargs.get('pk'))
 
         context['partner_message'] = session_obj.partner_message
 
         return context
 
     def post(self, request, *args, **kwargs):
-        session_id = kwargs.get('session_id')
-        session_obj = get_object_or_404(Session, id=session_id)
+        session_obj = get_object_or_404(Session, id=kwargs.get('pk'))
         password_input = request.POST.get('password')
 
         context = self.get_context_data(**kwargs)
@@ -478,12 +473,13 @@ class PasswordSessionView(TemplateView):
             return render(request, self.template_name, context)
 
         # Get from user session or create an empty set
-        authed_partner_sessions = request.session.get(
-            'authed_partner_sessions'
-        ) or set()
+        authed_partner_sessions = request.session.get('authed_partner_sessions', [])
 
         # Add course session id to user session
-        authed_partner_sessions.update({session_id})
+        authed_partner_sessions.append(kwargs.get('pk'))
+
+        # Remove duplicates
+        authed_partner_sessions = list(set(authed_partner_sessions))
 
         # Store it.
         request.session['authed_partner_sessions'] = authed_partner_sessions
@@ -494,17 +490,17 @@ class PasswordSessionView(TemplateView):
                 user=request.user
             )
 
-        return HttpResponseRedirect(
-            reverse(
-                'session_detail',
-                kwargs=kwargs
-            )
-        )
+        return redirect(session_obj)
 
 
-class SessionIcsView(IcsView):
+class SessionCalendarRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('session-calendar', args=(kwargs['pk'],))
+
+
+class SessionCalendarView(CalendarView):
     event_type = 'class'
-    event_kwarg = 'session_id'
+    event_kwarg = 'pk'
     event_class = Session
 
     def get_summary(self, request, event_obj):

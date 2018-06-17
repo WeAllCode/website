@@ -36,7 +36,7 @@ class CDCUser(AbstractUser):
         super(CDCUser, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return "/dojo/"
+        return reverse('dojo')
 
 
 def generate_filename(instance, filename):
@@ -100,13 +100,13 @@ class Mentor(models.Model):
         super(Mentor, self).save(*args, **kwargs)
 
     def get_approve_avatar_url(self):
-        return f'/mentor/{self.id}/approve-avatar/'
+        return reverse('mentor-approve-avatar', args=[str(self.id)])
 
     def get_reject_avatar_url(self):
-        return f'/mentor/{self.id}/reject-avatar/'
+        return reverse('mentor-reject-avatar', args=[str(self.id)])
 
     def get_absolute_url(self):
-        return f'/mentor/{self.id}/'
+        return reverse('mentor-detail', args=[str(self.id)])
 
     @property
     def first_name(self):
@@ -498,16 +498,13 @@ class Session(models.Model):
         super(Session, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/class/{start_date}/{self.course.slug}/{self.id}/'
+        return reverse('session-detail', args=[str(self.id)])
 
-    def get_signup_url(self):
-        start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/class/{start_date}/{self.course.slug}/{self.id}/sign-up/'
+    def get_sign_up_url(self):
+        return reverse('session-sign-up', args=[str(self.id)])
 
-    def get_ics_url(self):
-        start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/class/{start_date}/{self.course.slug}/{self.id}/calendar/'
+    def get_calendar_url(self):
+        return reverse('session-calendar', args=[str(self.id)])
 
     def get_current_orders(self, checked_in=None):
         if checked_in is not None:
@@ -690,16 +687,13 @@ class Meeting(models.Model):
         return f'{self.meeting_type.title} | {date}'
 
     def get_absolute_url(self):
-        start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/'
+        return reverse('meeting-detail', args=[str(self.id)])
 
-    def get_signup_url(self):
-        start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/sign-up/'
+    def get_sign_up_url(self):
+        return reverse('meeting-register', args=[str(self.id)])
 
-    def get_ics_url(self):
-        start_date = self.start_date.strftime("%Y/%m/%d")
-        return f'/meeting/{start_date}/{self.meeting_type.slug}/{self.id}/calendar/'
+    def get_calendar_url(self):
+        return reverse('meeting-calendar', args=[str(self.id)])
 
     def get_current_orders(self, checked_in=None):
         if checked_in is not None:

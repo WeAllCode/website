@@ -22,7 +22,7 @@ from coderdojochi.models import (
     Order,
     RaceEthnicity,
     Session,
-    Student,
+    Student
 )
 from coderdojochi.util import str_to_bool
 from import_export import resources

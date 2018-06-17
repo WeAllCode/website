@@ -3,7 +3,9 @@ import logging
 import operator
 from collections import Counter
 from datetime import date, timedelta
+from functools import reduce
 
+import arrow
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
@@ -12,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db.models import Case, Count, IntegerField, When
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -21,15 +23,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-import arrow
-from coderdojochi.forms import (
-    CDCModelForm,
-    ContactForm,
-    DonationForm,
-    GuardianForm,
-    MentorForm,
-    StudentForm,
-)
+from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
 from coderdojochi.models import (
     Donation,
     Equipment,
@@ -42,12 +36,11 @@ from coderdojochi.models import (
     Order,
     PartnerPasswordAccess,
     Session,
-    Student,
+    Student
 )
 from coderdojochi.util import email
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
-from functools import reduce
 
 logger = logging.getLogger("mechanize")
 
@@ -72,1089 +65,6 @@ def home(request, template_name="home.html"):
     return render(request, template_name, {
         'upcoming_classes': upcoming_classes
     })
-
-
-@login_required
-def welcome(request, template_name="welcome.html"):
-    keepGoing = True
-
-    user = request.user
-    account = False
-    add_student = False
-    students = False
-    form = False
-    role = user.role if user.role else False
-
-    next_url = False
-
-    if 'next' in request.GET:
-        next_url = request.GET['next']
-
-    if request.method == 'POST':
-        if role:
-            if role == 'mentor':
-                form = MentorForm(
-                    request.POST,
-                    instance=get_object_or_404(Mentor, user=user)
-                )
-
-            else:
-                account = get_object_or_404(Guardian, user=user)
-
-                if not account.phone or not account.zip:
-                    form = GuardianForm(request.POST, instance=account)
-
-                else:
-                    form = StudentForm(request.POST)
-
-                    if form.is_valid():
-                        new_student = form.save(commit=False)
-                        new_student.guardian = account
-                        new_student.save()
-                        messages.success(request, 'Student Registered.')
-
-                    else:
-                        keepGoing = False
-
-                    if keepGoing:
-                        if next_url:
-                            if 'enroll' in request.GET:
-                                return redirect(
-                                    f"{next_url}?enroll=True&student={new_student.id}"
-                                )
-
-                            else:
-                                return redirect(next_url)
-
-                        else:
-                            return redirect('welcome')
-
-            if keepGoing:
-                if form.is_valid():
-                    form.save()
-                    messages.success(request, 'Profile information saved.')
-
-                    if next_url:
-                        if 'enroll' in request.GET:
-                            return redirect(
-                                f"{next_url}?enroll=True"
-                            )
-
-                        else:
-                            return redirect(next_url)
-
-                    else:
-                        return redirect('dojo')
-
-                else:
-                    keepGoing = False
-
-        else:
-            if request.POST.get('role') == 'mentor':
-                role = 'mentor'
-                mentor, created = Mentor.objects.get_or_create(user=user)
-                mentor.user.first_name = user.first_name
-                mentor.user.last_name = user.last_name
-                mentor.save()
-                user.role = role
-            else:
-                role = 'guardian'
-                guardian, created = Guardian.objects.get_or_create(user=user)
-                guardian.user.first_name = user.first_name
-                guardian.user.last_name = user.last_name
-                guardian.save()
-                user.role = role
-
-            user.save()
-
-            merge_vars = {
-                'user': request.user.username,
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name
-            }
-
-            if role == 'mentor':
-                # check for next upcoming meeting
-                next_meeting = Meeting.objects.filter(
-                    is_active=True,
-                    is_public=True
-                ).order_by('start_date').first()
-
-                if next_meeting:
-                    merge_vars['next_intro_meeting_url'] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
-                    merge_vars['next_intro_meeting_ics_url'] = f"{settings.SITE_URL}{next_meeting.get_ics_url()}"
-
-                email(
-                    subject='Welcome!',
-                    template_name='welcome-mentor',
-                    merge_global_data=merge_vars,
-                    recipients=[request.user.email],
-                    preheader='Your adventure awaits!',
-                )
-
-                next_url = f"?next={next_url}" if next_url else reverse('dojo')
-
-                return redirect(next_url)
-            else:
-                # check for next upcoming class
-                next_class = Session.objects.filter(
-                    is_active=True
-                ).order_by('start_date').first()
-
-                if next_class:
-                    merge_vars['next_class_url'] = f"{settings.SITE_URL}{next_class.get_absolute_url()}"
-                    merge_vars['next_class_ics_url'] = f"{settings.SITE_URL}{next_class.get_ics_url()}"
-
-                email(
-                    subject='Welcome!',
-                    template_name='welcome-guardian',
-                    merge_global_data=merge_vars,
-                    recipients=[request.user.email],
-                    preheader='Your adventure awaits!',
-                )
-
-                next_url = f"?next={next_url}" if next_url else reverse('welcome')
-
-                return redirect(next_url)
-
-    if role and keepGoing:
-        if role == 'mentor':
-            mentor = get_object_or_404(Mentor, user=user)
-            account = mentor
-            form = MentorForm(instance=account)
-
-        if role == 'guardian':
-            guardian = get_object_or_404(Guardian, user=user)
-            account = guardian
-            if not account.phone or not account.zip:
-                form = GuardianForm(instance=account)
-            else:
-                add_student = True
-                form = StudentForm(initial={'guardian': guardian.pk})
-
-    if account and account.user.first_name and keepGoing:
-        if role == 'mentor':
-            if next_url:
-                return redirect(next_url)
-            else:
-                return redirect('dojo')
-        else:
-            students = account.get_students(
-            ) if account.get_students().count() else False
-
-    if keepGoing:
-        next_url = request.GET['next'] if 'next' in request.GET else False
-
-    return render(request, template_name, {
-        'role': role,
-        'account': account,
-        'form': form,
-        'add_student': add_student,
-        'students': students,
-        'next_url': next_url
-    })
-
-
-def sessions(request, year=False, month=False, template_name="sessions.html"):
-    now = timezone.now()
-    year = int(year) if year else now.year
-    month = int(month) if month else now.month
-    calendar_date = date(day=1, month=month, year=year)
-    prev_date = calendar_date - relativedelta(months=1)
-    next_date = calendar_date + relativedelta(months=1)
-
-    all_sessions = Session.objects.filter(
-        is_active=True,
-        end_date__gte=timezone.now()
-    ).order_by('start_date')
-
-    if (
-        not request.user.is_authenticated or
-        not request.user.role == 'mentor'
-    ):
-        all_sessions = all_sessions.filter(is_public=True)
-
-    sessions = all_sessions.filter(
-        start_date__year=year,
-        start_date__month=month
-    ).order_by('start_date')
-
-    return render(request, template_name, {
-        'all_sessions': all_sessions,
-        'sessions': sessions,
-        'calendar_date': calendar_date,
-        'prev_date': prev_date,
-        'next_date': next_date,
-    })
-
-
-def session_detail_enroll(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    session_id,
-    template_name="session-detail.html"
-):
-    return session_detail(
-        request,
-        year,
-        month,
-        day,
-        slug,
-        session_id,
-        template_name,
-        enroll=True,
-    )
-
-
-def validate_partner_session_access(request, session_id):
-    authed_sessions = request.session.get('authed_partner_sessions')
-
-    if authed_sessions and session_id in authed_sessions:
-        if request.user.is_authenticated:
-            PartnerPasswordAccess.objects.get_or_create(
-                session_id=session_id,
-                user=request.user
-            )
-
-        return True
-
-    if request.user.is_authenticated:
-        try:
-            PartnerPasswordAccess.objects.get(
-                session_id=session_id,
-                user_id=request.user.id
-            )
-
-        except PartnerPasswordAccess.DoesNotExist:
-            return False
-
-        else:
-            return True
-
-    else:
-        return False
-
-
-def session_detail_short(request, session_id):
-    session_obj = get_object_or_404(Session, id=session_id)
-    return redirect(session_obj.get_absolute_url())
-
-
-def session_detail(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    session_id,
-    template_name="session-detail.html",
-    enroll=False,
-):
-    session_obj = get_object_or_404(Session, id=session_id)
-    if session_obj.password:
-        if not validate_partner_session_access(request, session_id):
-            view_kwargs = {
-                'year': year,
-                'month': month,
-                'day': day,
-                'slug': slug,
-                'session_id': session_id
-            }
-            url = reverse('session_password', kwargs=view_kwargs)
-            return HttpResponseRedirect(url)
-
-    mentor_signed_up = False
-    account = False
-    students = False
-    active_mentors = Mentor.objects.filter(
-        id__in=MentorOrder.objects.filter(
-            session=session_obj,
-            is_active=True
-        ).values('mentor__id')
-    )
-
-    if request.method == 'POST':
-        if 'waitlist' in request.POST:
-
-            if request.POST['waitlist'] == 'student':
-                student = Student.objects.get(
-                    id=int(request.POST['account_id'])
-                )
-
-                if request.POST['remove'] == 'true':
-                    session_obj.waitlist_students.remove(student)
-                    session_obj.save()
-                    messages.success(
-                        request,
-                        'You have been removed from the waitlist. '
-                        'Thanks for letting us know.'
-                    )
-
-                else:
-                    session_obj.waitlist_students.add(student)
-                    session_obj.save()
-                    messages.success(
-                        request,
-                        'Added to waitlist successfully.'
-                    )
-            else:
-                mentor = Mentor.objects.get(
-                    id=int(request.POST['account_id'])
-                )
-
-                if request.POST['remove'] == 'true':
-                    session_obj.waitlist_mentors.remove(mentor)
-                    session_obj.save()
-                    messages.success(
-                        request,
-                        'You have been removed from the waitlist. '
-                        'Thanks for letting us know.'
-                    )
-                else:
-                    session_obj.waitlist_mentors.add(mentor)
-                    session_obj.save()
-                    messages.success(
-                        request,
-                        'Added to waitlist successfully.'
-                    )
-        else:
-            messages.error(request, 'Invalid request, please try again.')
-
-        return redirect(session_obj.get_absolute_url())
-
-    upcoming_classes = Session.objects.filter(
-        is_active=True,
-        end_date__gte=timezone.now()
-    ).order_by('start_date')
-
-    if (
-        not request.user.is_authenticated or
-        not request.user.role == 'mentor'
-    ):
-        upcoming_classes = upcoming_classes.filter(is_public=True)
-
-    if request.user.is_authenticated:
-        if not request.user.role:
-            messages.warning(
-                request,
-                'Please select one of the following options to continue.'
-            )
-
-            url = f"{reverse('welcome')}?next={session_obj.get_absolute_url()}"
-
-            if 'enroll' in request.GET:
-                url += '&enroll=True'
-
-            return redirect(url)
-
-        if request.user.role == 'mentor':
-            mentor = get_object_or_404(Mentor, user=request.user)
-            account = mentor
-            session_orders = MentorOrder.objects.filter(
-                session=session_obj,
-                is_active=True,
-            )
-            mentor_signed_up = True if session_orders.filter(
-                mentor=account
-            ).count() else False
-
-            spots_remaining = (
-                session_obj.get_mentor_capacity() - session_orders.count()
-            )
-
-            if enroll or 'enroll' in request.GET:
-                return redirect(
-                    f"{session_obj.get_absolute_url()}/sign-up/"
-                )
-
-        else:
-            guardian = get_object_or_404(Guardian, user=request.user)
-            account = guardian
-            students = guardian.get_students(
-            ) if guardian.get_students().count() else False
-
-            spots_remaining = (
-                session_obj.capacity -
-                session_obj.get_current_students().count()
-            )
-
-            if enroll or 'enroll' in request.GET:
-                if not students:
-                    return HttpResponseRedirect(
-                        f"{reverse('welcome')}?next={session_obj.get_absolute_url()}&enroll=True"
-                    )
-                else:
-                    if 'student' in request.GET:
-                        return redirect(
-                            f"{session_obj.get_absolute_url()}/sign-up/{request.GET['student']}"
-                        )
-
-    else:
-        spots_remaining = (
-            session_obj.capacity -
-            session_obj.get_current_students().count()
-        )
-
-    return render(
-        request,
-        template_name,
-        {
-            'session': session_obj,
-            'active_mentors': active_mentors,
-            'mentor_signed_up': mentor_signed_up,
-            'students': students,
-            'account': account,
-            'upcoming_classes': upcoming_classes,
-            'spots_remaining': spots_remaining,
-        }
-    )
-
-
-@login_required
-def session_sign_up(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    session_id,
-    student_id=False,
-    template_name="session-sign-up.html",
-):
-    session_obj = get_object_or_404(Session, id=session_id)
-    student = False
-    guardian = False
-
-    if not request.user.role:
-        messages.warning(
-            request,
-            'Please select one of the following options to continue.'
-        )
-
-        return HttpResponseRedirect(
-            f"{reverse('welcome')}?next={session_obj.get_absolute_url()}"
-        )
-
-    if request.user.role == 'mentor':
-
-        mentor = get_object_or_404(Mentor, user=request.user)
-
-        if not mentor.background_check:
-            messages.warning(
-                request,
-                (
-                    'You cannot sign up for a class until you '
-                    '<a href="https://app.verifiedvolunteers.com/promoorder/6a34f727-3728-4f1a-b80b-7eb3265a3b93" '
-                    'target="_blank">'
-                    'fill out the background search form'
-                    '</a>.'
-                )
-            )
-            return redirect('dojo')
-
-        session_orders = MentorOrder.objects.filter(
-            session=session_obj,
-            is_active=True
-        )
-
-        user_signed_up = True if session_orders.filter(
-            mentor=mentor
-        ).count() else False
-
-        if not user_signed_up:
-            if session_obj.get_mentor_capacity() <= session_orders.count():
-                messages.error(
-                    request,
-                    'Sorry this class is at mentor capacity. '
-                    'Please check back soon and/or join us for '
-                    'another upcoming class!'
-                )
-                return redirect(session_obj.get_absolute_url())
-    else:
-        student = get_object_or_404(Student, id=student_id)
-        guardian = get_object_or_404(Guardian, user=request.user)
-        user_signed_up = True if student.is_registered_for_session(
-            session_obj
-        ) else False
-
-        # are there session limitations?
-        if (
-            not student.is_within_gender_limitation(
-                session_obj.gender_limitation
-            )
-        ):
-            messages.error(
-                request,
-                f"Sorry, this class is limited to {session_obj.gender_limitation} this time around."
-            )
-
-            return HttpResponseRedirect(
-                session_obj.get_absolute_url()
-            )
-
-        if (
-            not student.is_within_age_range(
-                session_obj.min_age_limitation,
-                session_obj.max_age_limitation,
-                session_obj.start_date
-            )
-        ):
-            messages.error(
-                request,
-                (
-                    f"Sorry, this class is limited to students between ages {session_obj.min_age_limitation} and "
-                    f"{session_obj.max_age_limitation}."
-                )
-            )
-
-            return redirect(
-                session_obj.get_absolute_url()
-            )
-
-        if not user_signed_up:
-            if (
-                session_obj.capacity <=
-                session_obj.get_current_students().count()
-            ):
-                messages.error(
-                    request,
-                    'Sorry this class has sold out. '
-                    'Please sign up for the wait list and/or check back later.'
-                )
-                return redirect(
-                    session_obj.get_absolute_url()
-                )
-
-    if request.method == 'POST':
-        if user_signed_up:
-            if request.user.role == 'mentor':
-                order = get_object_or_404(
-                    MentorOrder,
-                    mentor=mentor,
-                    session=session_obj,
-                )
-
-            else:
-                order = get_object_or_404(
-                    Order,
-                    student=student,
-                    session=session_obj,
-                    is_active=True,
-                )
-
-            order.is_active = False
-            order.save()
-
-            messages.success(
-                request,
-                'Thanks for letting us know!'
-            )
-
-        else:
-            if not settings.DEBUG:
-                ip = (
-                    request.META['HTTP_X_FORWARDED_FOR'] or
-                    request.META['REMOTE_ADDR']
-                )
-
-            else:
-                ip = request.META['REMOTE_ADDR']
-
-            if request.user.role == 'mentor':
-                order, created = MentorOrder.objects.get_or_create(
-                    mentor=mentor,
-                    session=session_obj,
-                )
-                order.ip = ip
-                order.is_active = True
-                order.save()
-            else:
-                order, created = Order.objects.get_or_create(
-                    guardian=guardian,
-                    student=student,
-                    session=session_obj,
-                )
-                order.ip = ip
-                order.is_active = True
-                order.save()
-
-            # we dont want guardians getting 7 day reminder
-            # email if they sign up within 9 days
-            if session_obj.start_date < timezone.now() + timedelta(days=9):
-                order.week_reminder_sent = True
-
-            # or 24 hours notice if signed up within 48 hours
-            if session_obj.start_date < timezone.now() + timedelta(days=2):
-                order.week_reminder_sent = True
-                order.day_reminder_sent = True
-
-            order.save()
-
-            messages.success(
-                request,
-                'Success! See you there!'
-            )
-
-            if request.user.role == 'mentor':
-                merge_global_data = {
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'order_id': order.id,
-                    'class_code': session_obj.course.code,
-                    'class_title': session_obj.course.title,
-                    'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(
-                        session_obj.mentor_start_date
-                    ).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session_obj.mentor_start_date).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(session_obj.mentor_end_date).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session_obj.mentor_end_date).to('local').format('h:mma'),
-                    'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
-                    'class_location_city': session_obj.location.city,
-                    'class_location_state': session_obj.location.state,
-                    'class_location_zip': session_obj.location.zip,
-                    'class_additional_info': session_obj.additional_info,
-                    'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-                    'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
-                    'microdata_start_date': arrow.get(session_obj.mentor_start_date).to('local').isoformat(),
-                    'microdata_end_date': arrow.get(session_obj.mentor_end_date).to('local').isoformat(),
-                }
-
-                email(
-                    subject='Mentoring confirmation for {} class'.format(
-                        arrow.get(session_obj.mentor_start_date).to('local').format('MMMM D'),
-                    ),
-                    template_name='class-confirm-mentor',
-                    merge_global_data=merge_global_data,
-                    recipients=[request.user.email],
-                    preheader='It\'s time to use your powers for good.',
-                )
-
-            else:
-                merge_global_data = {
-                    'first_name': request.user.first_name,
-                    'last_name': request.user.last_name,
-                    'student_first_name': student.first_name,
-                    'student_last_name': student.last_name,
-                    'order_id': order.id,
-                    'class_code': session_obj.course.code,
-                    'class_title': session_obj.course.title,
-                    'class_description': session_obj.course.description,
-                    'class_start_date': arrow.get(session_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_start_time': arrow.get(session_obj.start_date).to('local').format('h:mma'),
-                    'class_end_date': arrow.get(session_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
-                    'class_end_time': arrow.get(session_obj.end_date).to('local').format('h:mma'),
-                    'class_location_name': session_obj.location.name,
-                    'class_location_address': session_obj.location.address,
-                    'class_location_address2': session_obj.location.address2,
-                    'class_location_city': session_obj.location.city,
-                    'class_location_state': session_obj.location.state,
-                    'class_location_zip': session_obj.location.zip,
-                    'class_additional_info': session_obj.additional_info,
-                    'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-                    'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
-                    'microdata_start_date': arrow.get(session_obj.start_date).to('local').isoformat(),
-                    'microdata_end_date': arrow.get(session_obj.end_date).to('local').isoformat(),
-                }
-
-                email(
-                    subject=f"Upcoming class confirmation for {student.first_name} {student.last_name}",
-                    template_name='class-confirm-guardian',
-                    merge_global_data=merge_global_data,
-                    recipients=[request.user.email],
-                    preheader=(
-                        'Magical wizards have generated this confirmation. '
-                        'All thanks to the mystical power of coding.'
-                    ),
-                )
-
-        return redirect(session_obj.get_absolute_url())
-
-    return render(
-        request,
-        template_name,
-        {
-            'session': session_obj,
-            'user_signed_up': user_signed_up,
-            'student': student,
-        }
-    )
-
-
-def session_ics(request, year, month, day, slug, session_id):
-
-    session_obj = get_object_or_404(
-        Session,
-        id=session_id,
-    )
-
-    cal = Calendar()
-
-    cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
-    cal['version'] = '2.0'
-    cal['calscale'] = 'GREGORIAN'
-
-    event = Event()
-
-    start_date = arrow.get(session_obj.start_date).format('YYYYMMDDTHHmmss')
-    end_date = arrow.get(session_obj.end_date).format('YYYYMMDDTHHmmss')
-
-    event['uid'] = f"CLASS{session_obj.id:04}@coderdojochi.org"
-    event['summary'] = f"CoderDojoChi: {session_obj.course.code} - {session_obj.course.title}"
-    event['dtstart'] = f"{start_date}Z"
-    event['dtend'] = f"{end_date}Z"
-    event['dtstamp'] = start_date
-
-    if request.user.is_authenticated and request.user.role == 'mentor':
-
-        mentor_start_date = arrow.get(
-            session_obj.mentor_start_date
-        ).format('YYYYMMDDTHHmmss')
-
-        mentor_end_date = arrow.get(
-            session_obj.mentor_end_date
-        ).format('YYYYMMDDTHHmmss')
-
-        event['dtstart'] = f"{mentor_start_date}Z"
-        event['dtend'] = f"{mentor_end_date}Z"
-        event['dtstamp'] = mentor_start_date
-
-    location = (
-        f"{session_obj.location.name}, {session_obj.location.address}, {session_obj.location.address2}, "
-        f"{session_obj.location.city}, {session_obj.location.state} {session_obj.location.zip}"
-    )
-
-    event['location'] = vText(location)
-
-    event['url'] = f"{settings.SITE_URL}{session_obj.get_absolute_url()}"
-    event['description'] = strip_tags(session_obj.course.description)
-
-    # A value of 5 is the normal or "MEDIUM" priority.
-    # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
-    event['priority'] = 5
-
-    cal.add_component(event)
-
-    event_slug = f"coderdojochi-class_{date}".format(
-        date=arrow.get(
-            session_obj.start_date
-        ).to('local').format('MM-DD-YYYY_HH-mma')
-    )
-
-    # Return the ICS formatted calendar
-    response = HttpResponse(
-        cal.to_ical(),
-        content_type='text/calendar',
-        charset='utf-8'
-    )
-
-    response['Content-Disposition'] = f"attachment;filename={event_slug}.ics"
-
-    return response
-
-
-def meetings(request, template_name="meetings.html"):
-
-    upcoming_meetings = Meeting.objects.filter(
-        is_active=True,
-        is_public=True,
-        end_date__gte=timezone.now()
-    ).order_by('start_date')
-
-    return render(request, template_name, {
-        'upcoming_meetings': upcoming_meetings
-    })
-
-
-def meeting_detail_short(request, meeting_id):
-    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-    return redirect(meeting_obj.get_absolute_url())
-
-
-def meeting_detail(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    meeting_id,
-    template_name="meeting-detail.html"
-):
-    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-    mentor_signed_up = False
-    active_meeting_orders = None
-
-    if request.user.is_authenticated:
-
-        mentor = Mentor.objects.filter(user=request.user)
-
-        if mentor.exists():
-            mentor = mentor.first()
-        else:
-            return redirect('welcome')
-
-        active_meeting_orders = MeetingOrder.objects.filter(
-            meeting=meeting_obj,
-            is_active=True
-        )
-
-        mentor_meeting_order = active_meeting_orders.filter(mentor=mentor)
-        mentor_signed_up = True if mentor_meeting_order.count() else False
-
-    return render(request, template_name, {
-        'meeting': meeting_obj,
-        'active_meeting_orders': active_meeting_orders,
-        'mentor_signed_up': mentor_signed_up,
-    })
-
-
-@login_required
-def meeting_sign_up(
-    request,
-    year,
-    month,
-    day,
-    slug,
-    meeting_id,
-    student_id=False,
-    template_name="meeting-sign-up.html"
-):
-    meeting_obj = get_object_or_404(
-        Meeting,
-        id=meeting_id
-    )
-
-    mentor = get_object_or_404(
-        Mentor,
-        user=request.user
-    )
-
-    meeting_orders = MeetingOrder.objects.filter(
-        meeting=meeting_obj,
-        is_active=True
-    )
-
-    user_meeting_order = meeting_orders.filter(mentor=mentor)
-    user_signed_up = True if user_meeting_order.count() else False
-
-    if request.method == 'POST':
-
-        if user_signed_up:
-            meeting_order = get_object_or_404(
-                MeetingOrder,
-                meeting=meeting_obj,
-                mentor=mentor
-            )
-            meeting_order.is_active = False
-            meeting_order.save()
-
-            messages.success(
-                request,
-                'Thanks for letting us know!'
-            )
-
-        else:
-            if not settings.DEBUG:
-                ip = (
-                    request.META['HTTP_X_FORWARDED_FOR'] or
-                    request.META['REMOTE_ADDR']
-                )
-            else:
-                ip = request.META['REMOTE_ADDR']
-
-            meeting_order, created = MeetingOrder.objects.get_or_create(
-                mentor=mentor,
-                meeting=meeting_obj
-            )
-
-            meeting_order.ip = ip
-            meeting_order.is_active = True
-            meeting_order.save()
-
-            messages.success(
-                request,
-                'Success! See you there!'
-            )
-
-            merge_global_data = {
-                'first_name': request.user.first_name,
-                'last_name': request.user.last_name,
-                'order_id': meeting_order.id,
-                'meeting_title': meeting_obj.meeting_type.title,
-                'meeting_description': meeting_obj.meeting_type.description,
-                'meeting_start_date': arrow.get(meeting_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
-                'meeting_start_time': arrow.get(meeting_obj.start_date).to('local').format('h:mma'),
-                'meeting_end_date': arrow.get(meeting_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
-                'meeting_end_time': arrow.get(meeting_obj.end_date).to('local').format('h:mma'),
-                'meeting_location_name': meeting_obj.location.name,
-                'meeting_location_address': meeting_obj.location.address,
-                'meeting_location_address2': meeting_obj.location.address2,
-                'meeting_location_city': meeting_obj.location.city,
-                'meeting_location_state': meeting_obj.location.state,
-                'meeting_location_zip': meeting_obj.location.zip,
-                'meeting_additional_info': meeting_obj.additional_info,
-                'meeting_url': f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}",
-                'meeting_ics_url': f"{settings.SITE_URL}{meeting_obj.get_ics_url()}",
-                'microdata_start_date': arrow.get(meeting_obj.start_date).to('local').isoformat(),
-                'microdata_end_date': arrow.get(meeting_obj.end_date).to('local').isoformat(),
-            }
-
-            email(
-                subject='Upcoming mentor meeting confirmation',
-                template_name='meeting-confirm-mentor',
-                merge_global_data=merge_global_data,
-                recipients=[request.user.email],
-                preheader=(
-                    f"Thanks for signing up for our next meeting, {request.user.first_name}. "
-                    f"We look forward to seeing there."
-                ),
-            )
-
-        return HttpResponseRedirect(
-            reverse(
-                'meeting_detail',
-                args=(
-                    meeting_obj.start_date.year,
-                    meeting_obj.start_date.month,
-                    meeting_obj.start_date.day,
-                    meeting_obj.meeting_type.slug,
-                    meeting_obj.id
-                )
-            )
-        )
-
-    return render(request, template_name, {
-        'meeting': meeting_obj,
-        'user_signed_up': user_signed_up
-    })
-
-
-def meeting_announce(request, meeting_id):
-    if not request.user.is_staff:
-        messages.error(
-            request,
-            'You do not have permission to access this page.'
-        )
-        return redirect('home')
-
-    meeting_obj = get_object_or_404(
-        Meeting,
-        id=meeting_id
-    )
-
-    if not meeting_obj.announced_date_mentors:
-        recipients = []
-        merge_data = {}
-        merge_global_data = {
-            'meeting_title': meeting_obj.meeting_type.title,
-            'meeting_description': meeting_obj.meeting_type.description,
-            'meeting_start_date': arrow.get(meeting_obj.start_date).to('local').format('dddd, MMMM D, YYYY'),
-            'meeting_start_time': arrow.get(meeting_obj.start_date).to('local').format('h:mma'),
-            'meeting_end_date': arrow.get(meeting_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
-            'meeting_end_time': arrow.get(meeting_obj.end_date).to('local').format('h:mma'),
-            'meeting_location_name': meeting_obj.location.name,
-            'meeting_location_address': meeting_obj.location.address,
-            'meeting_location_address2': meeting_obj.location.address2,
-            'meeting_location_city': meeting_obj.location.city,
-            'meeting_location_state': meeting_obj.location.state,
-            'meeting_location_zip': meeting_obj.location.zip,
-            'meeting_additional_info': meeting_obj.additional_info,
-            'meeting_url': f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}",
-            'meeting_ics_url': f"{settings.SITE_URL}{meeting_obj.get_ics_url()}",
-        }
-
-        for mentor in Mentor.objects.filter(
-            is_active=True,
-            user__is_active=True,
-        ):
-            recipients.append(mentor.user.email)
-            merge_data[mentor.user.email] = {
-                'first_name': mentor.user.first_name,
-                'last_name': mentor.user.last_name,
-            }
-
-        email(
-            subject='New meeting announced!',
-            template_name='meeting-announcement-mentor',
-            merge_data=merge_data,
-            merge_global_data=merge_global_data,
-            recipients=recipients,
-            preheader='A new meeting has been announced. Come join us for some amazing fun!',
-        )
-
-        meeting_obj.announced_date_mentors = timezone.now()
-        meeting_obj.save()
-
-        messages.success(
-            request,
-            'Meeting announced!'
-        )
-    else:
-        messages.warning(
-            request,
-            'Meeting already announced.'
-        )
-
-    return redirect('cdc_admin')
-
-
-def meeting_ics(request, year, month, day, slug, meeting_id):
-    meeting_obj = get_object_or_404(Meeting, id=meeting_id)
-
-    cal = Calendar()
-
-    cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
-    cal['version'] = '2.0'
-
-    event = Event()
-
-    start_date = arrow.get(meeting_obj.start_date).format('YYYYMMDDTHHmmss')
-    end_date = arrow.get(meeting_obj.end_date).format('YYYYMMDDTHHmmss')
-
-    event['uid'] = f"MEETING{meeting_obj.id:04}@coderdojochi.org"
-
-    event_name = f"{meeting_obj.meeting_type.code} - " if meeting_obj.meeting_type.code else ''
-    event_name += meeting_obj.meeting_type.title
-
-    event['summary'] = f"CoderDojoChi: {event_name}"
-    event['dtstart'] = f"{start_date}Z"
-    event['dtend'] = f"{end_date}Z"
-    event['dtstamp'] = start_date
-
-    location = (
-        f"{meeting_obj.location.name}, {meeting_obj.location.address} {meeting_obj.location.address2}, "
-        f"{meeting_obj.location.city}, {meeting_obj.location.state} {meeting_obj.location.zip}"
-    )
-
-    event['location'] = vText(location)
-    event['url'] = f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"
-    event['description'] = strip_tags(meeting_obj.meeting_type.description)
-
-    # A value of 5 is the normal or "MEDIUM" priority.
-    # see: https://tools.ietf.org/html/rfc5545#section-3.8.1.9
-    event['priority'] = 5
-
-    cal.add_component(event)
-    event_slug = "coderdojochi-meeting-{date}".format(
-        date=arrow.get(
-            meeting_obj.start_date
-        ).to('local').format('MM-DD-YYYY-HH:mma')
-    )
-
-    # Return the ICS formatted calendar
-    response = HttpResponse(
-        cal.to_ical(),
-        content_type='text/calendar',
-        charset='utf-8'
-    )
-    response['Content-Disposition'] = f"attachment;filename={event_slug}.ics"
-
-    return response
 
 
 def volunteer(request, template_name="volunteer.html"):
@@ -1187,7 +97,7 @@ def faqs(request, template_name="faqs.html"):
 def dojo(request):
     if not request.user.role:
         if 'next' in request.GET:
-            return HttpResponseRedirect(
+            return redirect(
                 f"{reverse('welcome')}?next={request.GET['next']}"
             )
         else:
@@ -1204,10 +114,8 @@ def dojo(request):
         return dojo_guardian(request)
 
 
-# TODO: upcoming classes needs to be all upcoming classes with a
-#       choice to RSVP in dojo page
-# TODO: upcoming meetings needs to be all upcoming meetings with a
-#       choice to RSVP in dojo page
+# TODO: upcoming classes needs to be all upcoming classes with a choice to RSVP in dojo page
+# TODO: upcoming meetings needs to be all upcoming meetings with a choice to RSVP in dojo page
 @login_required
 def dojo_mentor(request, template_name='mentor/dojo.html'):
 
@@ -1401,13 +309,9 @@ def mentors(request, template_name="mentors.html"):
     })
 
 
-def mentor_detail(
-    request,
-    mentor_id=False,
-    template_name="mentor-detail.html"
-):
+def mentor_detail(request, pk=None, template_name="mentor-detail.html"):
 
-    mentor = get_object_or_404(Mentor, id=mentor_id)
+    mentor = get_object_or_404(Mentor, id=pk)
 
     if not mentor.is_public:
         messages.error(
@@ -1427,8 +331,8 @@ def mentor_detail(
 
 
 @login_required
-def mentor_approve_avatar(request, mentor_id=False):
-    mentor = get_object_or_404(Mentor, id=mentor_id)
+def mentor_approve_avatar(request, pk=None):
+    mentor = get_object_or_404(Mentor, id=pk)
 
     if not request.user.is_staff:
         messages.error(
@@ -1436,7 +340,7 @@ def mentor_approve_avatar(request, mentor_id=False):
             'You do not have permissions to moderate content.'
         )
 
-        return HttpResponseRedirect(
+        return redirect(
             f"{reverse('account_login')}?next={mentor.get_approve_avatar_url()}"
         )
 
@@ -1449,7 +353,7 @@ def mentor_approve_avatar(request, mentor_id=False):
             f"{mentor.user.first_name} {mentor.user.last_name}'s avatar approved and their account is now public."
         )
 
-        return HttpResponseRedirect(
+        return redirect(
             f"{reverse('mentors')}{mentor.id}"
         )
 
@@ -1466,8 +370,8 @@ def mentor_approve_avatar(request, mentor_id=False):
 
 
 @login_required
-def mentor_reject_avatar(request, mentor_id=False):
-    mentor = get_object_or_404(Mentor, id=mentor_id)
+def mentor_reject_avatar(request, pk=None):
+    mentor = get_object_or_404(Mentor, id=pk)
 
     if not request.user.is_staff:
         messages.error(
@@ -1475,7 +379,7 @@ def mentor_reject_avatar(request, mentor_id=False):
             'You do not have permissions to moderate content.'
         )
 
-        return HttpResponseRedirect(
+        return redirect(
             f"{reverse('account_login')}?next={mentor.get_reject_avatar_url()}"
         )
 
@@ -1707,10 +611,6 @@ def contact(request, template_name="contact.html"):
     )
 
 
-def privacy(request, template_name="privacy.html"):
-    return render(request, template_name)
-
-
 @login_required
 def cdc_admin(request, template_name="admin.html"):
     if not request.user.is_staff:
@@ -1840,7 +740,7 @@ def cdc_admin(request, template_name="admin.html"):
 
 @login_required
 @never_cache
-def session_stats(request, session_id, template_name="session-stats.html"):
+def session_stats(request, pk, template_name="session-stats.html"):
 
     if not request.user.is_staff:
         messages.error(
@@ -1849,10 +749,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
         )
         return redirect('sessions')
 
-    session_obj = get_object_or_404(
-        Session,
-        id=session_id
-    )
+    session_obj = get_object_or_404(Session, pk=pk)
 
     current_orders_checked_in = session_obj.get_current_orders(
         checked_in=True
@@ -1931,11 +828,7 @@ def session_stats(request, session_id, template_name="session-stats.html"):
 
 @login_required
 @never_cache
-def session_check_in(
-    request,
-    session_id,
-    template_name="session-check-in.html"
-):
+def session_check_in(request, pk, template_name="session-check-in.html"):
 
     if not request.user.is_staff:
         messages.error(
@@ -1970,15 +863,13 @@ def session_check_in(
             messages.error(request, 'Invalid Order')
 
     # Get current session
-    session = get_object_or_404(Session, id=session_id)
+    session = get_object_or_404(Session, pk=pk)
 
     # Active Session
     active_session = True if timezone.now() < session.end_date else False
 
     # get the orders
-    orders = Order.objects.select_related().filter(
-        session_id=session_id
-    ).annotate(
+    orders = Order.objects.select_related().filter(session_id=pk).annotate(
         num_attended=Count(
             Case(
                 When(
@@ -2090,11 +981,7 @@ def session_check_in(
 
 @login_required
 @never_cache
-def session_check_in_mentors(
-    request,
-    session_id,
-    template_name="session-check-in-mentors.html"
-):
+def session_check_in_mentors(request, pk, template_name="session-check-in-mentors.html"):
 
     if not request.user.is_staff:
         messages.error(
@@ -2122,15 +1009,13 @@ def session_check_in_mentors(
                 'Invalid Order'
             )
 
-    session = get_object_or_404(Session, id=session_id)
+    session = get_object_or_404(Session, pk=pk)
 
     # Active Session
     active_session = True if timezone.now() < session.end_date else False
 
     # get the orders
-    orders = MentorOrder.objects.select_related().filter(
-        session_id=session_id
-    )
+    orders = MentorOrder.objects.select_related().filter(session_id=pk)
 
     if active_session:
         active_orders = orders.filter(
@@ -2177,11 +1062,8 @@ def session_check_in_mentors(
 
 @login_required
 @never_cache
-def session_donations(
-    request,
-    session_id,
-    template_name="session-donations.html"
-):
+def session_donations(request, pk, template_name="session-donations.html"):
+
     # TODO: we should really turn this into a decorator
     if not request.user.is_staff:
         messages.error(
@@ -2190,7 +1072,7 @@ def session_donations(
         )
         return redirect('dojo')
 
-    session = get_object_or_404(Session, id=session_id)
+    session = get_object_or_404(Session, pk=pk)
 
     default_form = DonationForm(initial={'session': session})
     default_form.fields['user'].queryset = User.objects.filter(
@@ -2288,7 +1170,7 @@ def meeting_check_in(
 
 
 @never_cache
-def session_announce_mentors(request, session_id):
+def session_announce_mentors(request, pk):
     if not request.user.is_staff:
         messages.error(
             request,
@@ -2296,10 +1178,7 @@ def session_announce_mentors(request, session_id):
         )
         return redirect('home')
 
-    session_obj = get_object_or_404(
-        Session,
-        id=session_id
-    )
+    session_obj = get_object_or_404(Session, pk=pk)
 
     if not session_obj.announced_date_mentors:
         merge_data = {}
@@ -2321,15 +1200,17 @@ def session_announce_mentors(request, session_id):
             'class_location_zip': session_obj.location.zip,
             'class_additional_info': session_obj.additional_info,
             'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-            'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
+            'class_calendar_url': f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
         }
         recipients = []
 
         # send mentor announcements
-        for mentor in Mentor.objects.filter(
+        mentors = Mentor.objects.filter(
             is_active=True,
             user__is_active=True,
-        ):
+        )
+
+        for mentor in mentors:
             recipients.append(mentor.user.email)
             merge_data[mentor.user.email] = {
                 'first_name': mentor.user.first_name,
@@ -2350,20 +1231,20 @@ def session_announce_mentors(request, session_id):
 
         messages.success(
             request,
-            'Session announced!'
+            f'Session announced to {mentors.count()} mentors.'
         )
 
     else:
         messages.warning(
             request,
-            'Session already announced.'
+            f'Session already announced.'
         )
 
     return redirect('cdc_admin')
 
 
 @never_cache
-def session_announce_guardians(request, session_id):
+def session_announce_guardians(request, pk):
     if not request.user.is_staff:
         messages.error(
             request,
@@ -2371,10 +1252,7 @@ def session_announce_guardians(request, session_id):
         )
         return redirect('home')
 
-    session_obj = get_object_or_404(
-        Session,
-        id=session_id
-    )
+    session_obj = get_object_or_404(Session, pk=pk)
 
     if not session_obj.announced_date_guardians:
         merge_data = {}
@@ -2396,14 +1274,16 @@ def session_announce_guardians(request, session_id):
             'class_location_zip': session_obj.location.zip,
             'class_additional_info': session_obj.additional_info,
             'class_url': f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-            'class_ics_url': f"{settings.SITE_URL}{session_obj.get_ics_url()}",
+            'class_calendar_url': f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
         }
         recipients = []
 
-        for guardian in Guardian.objects.filter(
+        guardians = Guardian.objects.filter(
             is_active=True,
             user__is_active=True,
-        ):
+        )
+
+        for guardian in guardians:
             recipients.append(guardian.user.email)
             merge_data[guardian.user.email] = {
                 'first_name': guardian.user.first_name,
@@ -2424,7 +1304,7 @@ def session_announce_guardians(request, session_id):
 
         messages.success(
             request,
-            'Session announced!'
+            f'Session announced to {guardians.count()} guardians!'
         )
 
     else:

@@ -1,6 +1,5 @@
 {% extends "_base.html" %}
-{% load i18n %}
-{% load static cache %}
+{% load static %}
 
 {% block title %}Meetings{% endblock %}
 
@@ -10,18 +9,16 @@
 
 <div class="container">
     <div class="col-md-12">
-        <h1>{% trans "Meetings" %}</h1>
+        <h1>Meetings</h1>
 
         <p>Here are a list of upcoming meetings. Meetings provide an opportunity for volunteers to collaborate on coding projects, as well as prepare for upcoming Coder Dojo classes.</p>
 
         <p>We look forward to seeing you soon!</p>
-
     </div>
 </div>
 
-{% if upcoming_meetings %}
 <div class="upcoming-sessions">
-    {% for meeting in upcoming_meetings %}
+    {% for meeting in object_list %}
         <div class="upcoming-session" style="background-image: url({% if meeting.bg_image %}{{ meeting.bg_image.url }}{% else %}{% static '' %}images/{{ meeting.image_url }}{% endif %});">
             <div class="session-shim">
                 <div class="container">
@@ -39,8 +36,9 @@
                 </div>
             </div>
         </div>
+    {% empty %}
+        <p>No meetings currently.</p>
     {% endfor %}
 </div>
-{% endif %}
 
 {% endblock %}

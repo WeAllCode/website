@@ -1,12 +1,12 @@
 from email.mime.image import MIMEImage
 
+import arrow
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 
-import arrow
 from coderdojochi.models import Donation, Mentor
 from coderdojochi.util import email
 from paypal.standard.ipn.signals import valid_ipn_received

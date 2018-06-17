@@ -30,17 +30,7 @@ def student_register_link(context, student, session):
         is_active=True
     )
 
-    url = reverse(
-        'session_sign_up',
-        args=(
-            session.start_date.year,
-            f"{session.start_date.month:02}",
-            f"{session.start_date.day:02}",
-            session.course.slug,
-            session.id,
-            student.id
-        )
-    )
+    url = reverse('session-sign-up', kwargs={'pk': session.id, 'student_id': student.id, })
 
     button_tag = 'a'
     button_modifier = ''
