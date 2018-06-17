@@ -2,16 +2,15 @@
 # import sys
 
 from django.contrib.auth import get_user_model
-from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.test import Client
 # from django.test import RequestFactory
-from django.test import TestCase
+from django.test import Client, TestCase
+from django.urls import reverse
 
 # from coderdojochi.factories import CDCUserFactory
-from coderdojochi.factories import PartnerPasswordAccessFactory
-from coderdojochi.factories import SessionFactory
+from coderdojochi.factories import PartnerPasswordAccessFactory, SessionFactory
 from coderdojochi.models import PartnerPasswordAccess
+
 # from coderdojochi.views import session_detail
 
 

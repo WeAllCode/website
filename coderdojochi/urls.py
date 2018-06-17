@@ -3,415 +3,303 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as django_views
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.http import HttpResponse
+from django.urls import path
+from django.views import defaults
 from django.views.generic import RedirectView
 
 from loginas import views as loginas_views
 
-from . import old_views as coderdojochi_views
-from .views.general import AboutView, HomeView, WelcomeView
-from .views.meetings import MeetingDetailView, MeetingIcsView, MeetingsView
+from . import old_views
+from .views.general import AboutView, HomeView, PrivacyView, WelcomeView
+from .views.meetings import (
+    MeetingCalendarView,
+    MeetingDetailRedirectView,
+    MeetingDetailView,
+    MeetingsView,
+    meeting_announce,
+    meeting_sign_up
+)
 from .views.profile import DojoMentorView
 from .views.sessions import (
+    PasswordSessionRedirectView,
     PasswordSessionView,
+    SessionCalendarRedirectView,
+    SessionCalendarView,
+    SessionDetailRedirectView,
     SessionDetailView,
-    SessionIcsView,
+    SessionSignUpRedirectView,
     SessionSignUpView,
+    SessionsRedirectView,
     SessionsView
 )
 from .views.volunteer import VolunteerView
 
 admin.autodiscover()
 
-urlpatterns = [
+# Empty to start
+urlpatterns = []
+
+# General
+urlpatterns += [
     # /
-    url(
-        r'^$',
-        # coderdojochi_views.home,
-        HomeView.as_view(),
-        name='home',
-    ),
-
-
-    # FAQs
-    # /faqs/
-    url(
-        r'^faqs/$',
-        coderdojochi_views.faqs,
-        name='faqs',
-    ),
-
-
-    # Donation
-    # /donate/
-    url(
-        r'^donate/$',
-        coderdojochi_views.donate,
-        name='donate',
-    ),
-    # /zirmed/
-    url(
-        r'^zirmed/$',
-        coderdojochi_views.donate,
-        name='donate_zirmed',
-    ),
-    # /donate/cancel/
-    url(
-        r'^donate/cancel/$',
-        coderdojochi_views.donate_cancel,
-        name='donate_cancel',
-    ),
-    # /donate/return/
-    url(
-        r'^donate/return/$',
-        coderdojochi_views.donate_return,
-        name='donate_return',
-    ),
-    # /donate/paypal/
-    url(
-        r'^donate/paypal/',
-        include('paypal.standard.ipn.urls')
-    ),
-
+    # old_views.home,
+    path('', HomeView.as_view(), name='home'),
 
     # About
     # /about/
-    url(
-        r'^about/$',
-        AboutView.as_view(),
-        name='about',
-    ),
-
-    # Privacy
-    # /privary/
-    url(
-        r'^privacy/$',
-        coderdojochi_views.privacy,
-        name='privacy',
-    ),
-
+    path('about/', AboutView.as_view(), name='about'),
 
     # Volunteer
     # /volunteer/
-    url(
-        r'^volunteer/',
-        VolunteerView.as_view(),
-        name='volunteer',
-    ),
-
+    path('volunteer/', VolunteerView.as_view(), name='volunteer'),
 
     # Contact
     # /contact/
-    url(
-        r'^contact/',
-        coderdojochi_views.contact,
-        name='contact',
-    ),
+    path('contact/', old_views.contact, name='contact'),
+
+    # Privacy
+    # /privary/
+    path('privacy/', PrivacyView.as_view(), name='privacy'),
+
+    # FAQs
+    # /faqs/
+    path('faqs/', old_views.faqs, name='faqs'),
+]
+
+# Donate / Donations
+urlpatterns += [
+    # Donation
+    # /donate/
+    path('donate/', old_views.donate, name='donate'),
+
+    # /donate/cancel/
+    path('donate/cancel/', old_views.donate_cancel, name='donate_cancel'),
+
+    # /donate/return/
+    path('donate/return/', old_views.donate_return, name='donate_return'),
+
+    # /donate/paypal/
+    path('donate/paypal/', include('paypal.standard.ipn.urls')),
+
+    # One off pages
+    # /zirmed/
+    path('zirmed/', old_views.donate, name='donate_zirmed'),
+]
 
 
-    # Mentors
-    # /mentors/
-    url(
-        r'^mentors/$',
-        coderdojochi_views.mentors,
-        name='mentors',
-    ),
-    # /mentor/ID/
-    url(
-        r'^mentor/(?P<mentor_id>[\d]+)/$',
-        coderdojochi_views.mentor_detail,
-        name='mentor_detail',
-    ),
-    # 301 /mentors/ID/
-    url(
-        r'^mentors/(?P<mentor_id>[\d]+)/$',
-        RedirectView.as_view(pattern_name='mentor_detail'),
-    ),
+# All Auth / Logins
+urlpatterns += [
 
-    # /mentor/ID/reject-avatar/
-    url(
-        r'^mentor/(?P<mentor_id>[\d]+)/reject-avatar/$',
-        coderdojochi_views.mentor_reject_avatar,
-        name='mentor_reject_avatar',
-    ),
-    # 301 /mentors/ID/reject-avatar/
-    url(
-        r'^mentors/(?P<mentor_id>[\d]+)/reject-avatar/$',
-        RedirectView.as_view(pattern_name='mentor_reject_avatar'),
-    ),
+    # AllAuth
+    # /accounts/
+    path('accounts/', include('allauth.urls')),
+]
 
-    # /mentor/ID/approve-avatar/
-    url(
-        r'^mentor/(?P<mentor_id>[\d]+)/approve-avatar/$',
-        coderdojochi_views.mentor_approve_avatar,
-        name='mentor_approve_avatar',
-    ),
-    # 301 /mentors/ID/approve-avatar/
-    url(
-        r'^mentors/(?P<mentor_id>[\d]+)/approve-avatar/$',
-        RedirectView.as_view(pattern_name='mentor_approve_avatar'),
-    ),
+# Login As
+urlpatterns += [
+    path('dj-admin/', include('loginas.urls')),
+]
 
+# Admin
+urlpatterns += [
 
-    # Student
-    # /student/ID/
-    url(
-        r'^student/(?P<student_id>[\d]+)/$',
-        coderdojochi_views.student_detail,
-        name='student_detail',
-    ),
-
-    # Classes
-    # /classes/
-    url(
-        r'^classes/$',
-        # coderdojochi_views.sessions,
-        SessionsView.as_view(),
-        name='sessions',
-    ),
-    # /classes/YYYY/MM/
-    url(
-        r'^classes/(?P<year>[\d]+)/(?P<month>[\d]+)/$',
-        # coderdojochi_views.sessions,
-        SessionsView.as_view(),
-        name='sessions',
-    ),
-
-
-    # Individual Class
-    # /c/ID/
-    url(
-        r'^c/(?P<session_id>[\d]+)/$',
-        # coderdojochi_views.session_detail_short,
-        SessionDetailView.as_view(),
-        name='session_detail_short',
-    ),
-    # /class/ID/
-    url(
-        r'^class/(?P<session_id>[\d]+)/$',
-        # coderdojochi_views.session_detail_short,
-        SessionDetailView.as_view(),
-        name='session_detail_short',
-    ),
-    # /class/ID/announce/mentors
-    url(
-        r'^class/(?P<session_id>[\d]+)/announce/mentors/$',
-        coderdojochi_views.session_announce_mentors,
-        name='session_announce_mentors',
-    ),
-    # /class/ID/announce/guardians
-    url(
-        r'^class/(?P<session_id>[\d]+)/announce/guardians/$',
-        coderdojochi_views.session_announce_guardians,
-        name='session_announce_guardians',
-    ),
-    # /class/YYYY/MM/DD/SLUG/ID/
-    url(
-        r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/$',
-        # coderdojochi_views.session_detail,
-        SessionDetailView.as_view(),
-        name='session_detail',
-    ),
-    # /class/YYYY/MM/DD/SLUG/ID/password
-    url(
-        r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/password/$',
-        PasswordSessionView.as_view(),
-        name='session_password',
-    ),
-    # /class/YYYY/MM/DD/SLUG/ID/calendar/
-    url(
-        r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/calendar/$',
-        # coderdojochi_views.session_ics,
-        SessionIcsView.as_view(),
-        name='session_ics',
-    ),
-    # /class/YYYY/MM/DD/SLUG/ID/sign-up/
-    url(
-        r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up/$',
-        # coderdojochi_views.session_sign_up,
-        SessionSignUpView.as_view(),
-        name='session_sign_up',
-    ),
-    # /class/YYYY/MM/DD/SLUG/ID/sign-up/STUDENT-ID
-    url(
-        r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/sign-up'
-        r'/(?P<student_id>[\d]+)/$',
-        # coderdojochi_views.session_sign_up,
-        SessionSignUpView.as_view(),
-        name='session_sign_up',
-    ),
-    # /class/YYYY/MM/DD/SLUG/ID/enroll/
-    url(
-        r'^class/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<session_id>[\d]+)/enroll/$',
-        # coderdojochi_views.session_detail_enroll,
-        SessionDetailView.as_view(),
-        name='session_detail_enroll',
-    ),
-
-
-    # Meetings
-    # /meetings/
-    url(
-        r'^meetings/$',
-        # coderdojochi_views.meetings,
-        MeetingsView.as_view(),
-        name='meetings',
-    ),
-
-    # Individual Meeting
-    # /m/ID/
-    url(
-        r'^m/(?P<meeting_id>[\d]+)/$',
-        # coderdojochi_views.meeting_detail_short,
-        MeetingDetailView.as_view(),
-        name='meeting_detail_short',
-    ),
-    # /meeting/ID/
-    url(
-        r'^meeting/(?P<meeting_id>[\d]+)/$',
-        # coderdojochi_views.meeting_detail_short,
-        MeetingDetailView.as_view(),
-        name='meeting_detail_short',
-    ),
-    # /meeting/ID/announce/
-    url(
-        r'^meeting/(?P<meeting_id>[\d]+)/announce/$',
-        coderdojochi_views.meeting_announce,
-        name='meeting_announce',
-    ),
-    # /meeting/YYYY/MM/DD/SLUG/ID/
-    url(
-        r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/$',
-        # coderdojochi_views.meeting_detail,
-        MeetingDetailView.as_view(),
-        name='meeting_detail',
-    ),
-    # /meeting/YYYY/MM/DD/SLUG/ID/sign-up/
-    url(
-        r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/sign-up/$',
-        coderdojochi_views.meeting_sign_up,
-        name='meeting_sign_up',
-    ),
-    # /meeting/YYYY/MM/DD/SLUG/ID/calendar/
-    url(
-        r'^meeting/(?P<year>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)'
-        r'/(?P<slug>[-\w]+)/(?P<meeting_id>[\d]+)/calendar/$',
-        # coderdojochi_views.meeting_ics,
-        MeetingIcsView.as_view(),
-        name='meeting_ics',
-    ),
-
+    # Django Admin
+    # /dj-admin/
+    path('dj-admin/', admin.site.urls),
 
     # Admin
     # /admin/
-    url(
-        r'^admin/$',
-        coderdojochi_views.cdc_admin,
-        name='cdc_admin',
-    ),
+    path('admin/', old_views.cdc_admin, name='cdc_admin'),
+
 
     # Admin Classes
     # /admin/class/ID/stats/
-    url(
-        r'^admin/class/(?P<session_id>[\d]+)/stats/$',
-        coderdojochi_views.session_stats,
-        name='stats',
-    ),
+    path('admin/class/<int:pk>/stats/', old_views.session_stats, name='stats'),
+
     # /admin/class/ID/check-in/
-    url(
-        r'^admin/class/(?P<session_id>[\d]+)/check-in/$',
-        coderdojochi_views.session_check_in,
-        name='check_in',
-    ),
+    path('admin/class/<int:pk>/check-in/', old_views.session_check_in, name='check_in'),
+
     # /admin/class/ID/donations/
-    url(
-        r'^admin/class/(?P<session_id>[\d]+)/donations/$',
-        coderdojochi_views.session_donations,
-        name='donations'
-    ),
+    path('admin/class/<int:pk>/donations/', old_views.session_donations, name='donations'),
+
     # /admin/class/ID/check-in-mentors/
-    url(
-        r'^admin/class/(?P<session_id>[\d]+)/check-in-mentors/$',
-        coderdojochi_views.session_check_in_mentors,
-        name='check_in_mentors',
+    path(
+        'admin/class/<int:pk>/check-in-mentors/',
+        old_views.session_check_in_mentors,
+        name='check_in_mentors'
     ),
 
 
     # Admin Meetings
     # /admin/meeting/ID/check-in/
-    url(
-        r'^admin/meeting/(?P<meeting_id>[\d]+)/check-in/$',
-        coderdojochi_views.meeting_check_in,
-        name='meeting_check_in',
-    ),
+    path('admin/meeting/<int:meeting_id>/check-in/', old_views.meeting_check_in, name='meeting-check-in'),
 
 
     # Admin Check System
     # /admin/checksystem/
-    url(
-        r'^admin/checksystem/$',
-        coderdojochi_views.check_system,
-        name='check_system',
+    path('admin/checksystem/', old_views.check_system, name='check_system'),
+]
+
+# Sessions
+urlpatterns += [
+    # Classes
+    # /classes/
+    path('classes/', SessionsView.as_view(), name='sessions'),
+    path('class/', SessionsRedirectView.as_view()),
+
+    # Individual Class
+    # /class/ID/
+    path('class/<int:pk>/', SessionDetailView.as_view(), name='session-detail'),
+
+    # Redirect
+    # /c/ID/ -> /class/ID/
+    path('c/<int:pk>/', SessionDetailRedirectView.as_view()),
+
+    # Redirect
+    # /class/YYYY/MM/DD/SLUG/ID/ -> /class/ID/
+    path('class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', SessionDetailRedirectView.as_view()),
+
+
+
+    # Password
+    path('class/<int:pk>/password/', PasswordSessionView.as_view(), name='session-password'),
+
+    # Redirect
+    # /class/YYYY/MM/DD/SLUG/ID/password/ -> /class/ID/password/
+    path(
+        'class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/password/',
+        PasswordSessionRedirectView.as_view()
     ),
 
 
-    # Welcome
-    # /welcome/
-    url(
-        r'^welcome/$',
-        # coderdojochi_views.welcome,
-        WelcomeView.as_view(),
-        name='welcome',
+
+    # Announce
+    # /class/ID/announce/mentors
+    path('class/<int:pk>/announce/mentors/', old_views.session_announce_mentors, name='session-announce-mentors'),
+
+    # /class/ID/announce/guardians
+    path('class/<int:pk>/announce/guardians/', old_views.session_announce_guardians, name='session-announce-guardians'),
+
+
+
+    # Calendar
+    # /class/ID/calendar/
+    path('class/<int:pk>/calendar/', SessionCalendarView.as_view(), name='session-calendar'),
+
+    # /class/YYYY/MM/DD/SLUG/ID/calendar/ -> /class/ID/calendar/
+    path(
+        'class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/calendar/',
+        SessionCalendarRedirectView.as_view()
     ),
 
+
+
+    # Sign up
+    # /class/ID/sign-up/
+    path('class/<int:pk>/sign-up/', SessionSignUpView.as_view(), name='session-sign-up'),
+
+    # /class/YYYY/MM/DD/SLUG/ID/sign-up/ -> /class/ID/sign-up/
+    path('class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/', SessionSignUpRedirectView.as_view()),
+
+    # /class/ID/sign-up/STUDENT-ID/
+    path('class/<int:pk>/sign-up/<int:student_id>/', SessionSignUpView.as_view(), name='session-sign-up'),
+
+    # /class/YYYY/MM/DD/SLUG/ID/sign-up/STUDENT-ID/ -> /class/ID/sign-up/STUDENT-ID/
+    path(
+        'class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/<int:student_id>/',
+        SessionSignUpRedirectView.as_view(),
+    ),
+
+]
+
+# Mentors
+urlpatterns += [
+    # Mentors
+    # /mentors/
+    path('mentors/', old_views.mentors, name='mentors'),
+
+    # /mentor/ID/
+    path('mentor/<int:pk>/', old_views.mentor_detail, name='mentor-detail'),
+
+    # 301 /mentors/ID/
+    path('mentors/<int:pk>/', RedirectView.as_view(pattern_name='mentor-detail')),
+
+    # /mentor/ID/reject-avatar/
+    path('mentor/<int:pk>/reject-avatar/', old_views.mentor_reject_avatar, name='mentor-reject-avatar'),
+
+    # 301 /mentors/ID/reject-avatar/
+    path('mentors/<int:pk>/reject-avatar/', RedirectView.as_view(pattern_name='mentor-reject-avatar')),
+
+    # /mentor/ID/approve-avatar/
+    path('mentor/<int:pk>/approve-avatar/', old_views.mentor_approve_avatar, name='mentor-approve-avatar'),
+
+    # 301 /mentors/ID/approve-avatar/
+    path('mentors/<int:pk>/approve-avatar/', RedirectView.as_view(pattern_name='mentor-approve-avatar')),
+]
+
+# Students
+urlpatterns += [
+    # Student
+    # /student/ID/
+    path('student/<int:student_id>/', old_views.student_detail, name='student-detail'),
+]
+
+# Dojo
+urlpatterns += [
 
     # Dojo / Account
     # /dojo/
-    url(
-        r'^dojo/$',
-        coderdojochi_views.dojo,
-        name='dojo',
-    ),
+    path('dojo/', old_views.dojo, name='dojo'),
+
+    # Welcome
+    # /welcome/
+    path('welcome/', WelcomeView.as_view(), name='welcome'),
+]
+
+# Meetings
+urlpatterns += [
+    # Meetings
+    # /meetings/
+    path('meetings/', MeetingsView.as_view(), name='meetings'),
+
+    # Individual Meeting
+    # /meeting/ID/
+    path('meeting/<int:pk>/', MeetingDetailView.as_view(), name='meeting-detail'),
+
+    # Redirect /m/ID/ -> /meeting/ID/
+    path('m/<int:pk>/', MeetingDetailRedirectView.as_view()),
+
+    # Redirect /meeting/YYYY/MM/DD/SLUG/ID/ -> /meeting/ID/
+    path('meeting/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', MeetingDetailRedirectView.as_view()),
 
 
-    # Login as user
-    # /login/user/ID/
-    url(
-        r'^login/user/(?P<user_id>.+)/$',
-        loginas_views.user_login,
-        name='loginas-user-login',
-    ),
+    # /meeting/ID/announce/
+    path('meeting/<int:pk>/announce/', meeting_announce, name='meeting-announce'),
 
-    # Account logout override
-    # /accounts/logout/
-    url(
-        r'^accounts/logout/$',
-        django_views.logout,
-        {
-            'next_page': '/'
-        },
-        name='account_logout',
-    ),
 
-    # AllAuth
-    # /accounts/
-    url(
-        r'^accounts/',
-        include('allauth.urls'),
-    ),
+    # Meeting sign up
+    # /meeting/ID/sign-up/
+    path('meeting/<int:pk>/register/', meeting_sign_up, name='meeting-register'),
 
-    # Django Admin
-    # /dj-admin/
-    url(
-        r'^dj-admin/',
-        admin.site.urls,
+    # Meeting Calendar
+    # /meeting/ID/calendar/
+    path('meeting/<int:pk>/calendar/', MeetingCalendarView.as_view(), name='meeting-calendar'),
+]
+
+
+# robots.txt
+urlpatterns += [
+    path('robots.txt', lambda r: HttpResponse('User-agent: *\nDisallow:', content_type='text/plain'))
+]
+
+# favicon.ico
+urlpatterns += [
+    path(
+        'favicon.ico',
+        RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'), permanent=False),
+        name='favicon'
     ),
 ]
 
@@ -429,11 +317,31 @@ urlpatterns += static(
 
 # Anymail
 urlpatterns += [
-    url(r'^anymail/', include('anymail.urls')),
+    path('anymail/', include('anymail.urls')),
 ]
 
 if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns
+    # This allows the error pages to be debugged during development, just visit
+    # these url in browser to see how these error pages look like.
+    urlpatterns += [
+        path(
+            '400/',
+            defaults.bad_request,
+            kwargs={'exception': Exception('Bad Request!')},
+        ),
+        path(
+            '403/',
+            defaults.permission_denied,
+            kwargs={'exception': Exception('Permission Denied')},
+        ),
+        path(
+            '404/',
+            defaults.page_not_found,
+            kwargs={'exception': Exception('Page not Found')},
+        ),
+        path('500/', defaults.server_error),
+    ]
+
+    if 'debug_toolbar' in settings.INSTALLED_APPS:
+        import debug_toolbar
+        urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns

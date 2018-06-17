@@ -4,6 +4,7 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
+import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db.models import Case, Count, IntegerField, When
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -21,15 +22,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-import arrow
-from coderdojochi.forms import (
-    CDCModelForm,
-    ContactForm,
-    DonationForm,
-    GuardianForm,
-    MentorForm,
-    StudentForm,
-)
+from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
 from coderdojochi.models import (
     Donation,
     Equipment,
@@ -42,7 +35,7 @@ from coderdojochi.models import (
     Order,
     PartnerPasswordAccess,
     Session,
-    Student,
+    Student
 )
 from coderdojochi.util import email
 from icalendar import Calendar, Event, vText

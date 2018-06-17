@@ -63,7 +63,7 @@
                             <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
                             <td>{{ order.session.mentor_start_date }}</td>
                             <td>
-                                <a href="{{ order.session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
+                                <a href="{{ order.session.get_sign_up_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">Can't make it</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -116,7 +116,7 @@
                         <td><a href="{{ meeting_order.meeting.get_absolute_url }}">{{ meeting_order.meeting.meeting_type.title }}</a></td>
                         <td>{{ meeting_order.meeting.start_date }}</td>
                         <td>
-                            <a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">{% if mentor in meeting.get_current_mentors %}Can't make it{% else %}RSVP{% endif%}</a>
+                            <a href="{{ meeting.get_sign_up_url }}" class="btn-cdc btn-cdc-danger btn-cdc-sm">{% if mentor in meeting.get_current_mentors %}Can't make it{% else %}RSVP{% endif%}</a>
                         </td>
                     </tr>
                 {% endfor %}

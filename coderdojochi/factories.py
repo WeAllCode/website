@@ -1,13 +1,10 @@
-import factory
 from datetime import datetime
+
 from pytz import utc
 
-from .models import Session
-from .models import Course
-from .models import Location
-from .models import Mentor
-from .models import CDCUser
-from .models import PartnerPasswordAccess
+import factory
+
+from .models import CDCUser, Course, Location, Mentor, PartnerPasswordAccess, Session
 
 
 class CourseFactory(factory.DjangoModelFactory):

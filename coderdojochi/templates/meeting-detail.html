@@ -2,11 +2,11 @@
 
 {% load i18n coderdojochi_extras %}
 
-{% block title %}{{ meeting.meeting_type.title }}{% endblock %}
+{% block title %}{{ object.meeting_type.title }}{% endblock %}
 
 {% block extra_meta %}
-<meta property="og:url" content="{{ meeting.get_absolute_url }}">
-<meta property="og:title" content="{{ meeting.start_date|date }} | {{ meeting.meeting_type.title }}">
+<meta property="og:url" content="{{ object.get_absolute_url }}">
+<meta property="og:title" content="{{ object.start_date|date }} | {{ object.meeting_type.title }}">
 {% endblock %}
 
 {% block body_class %}page-class-detail{% endblock %}
@@ -15,13 +15,13 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <h1 class="title">{{ meeting.meeting_type.title }} <small>{{ meeting.start_date|date }}</small></h1>
+            <h1 class="title">{{ object.meeting_type.title }} <small>{{ object.start_date|date }}</small></h1>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-8 class-detail-content">
-            <p>{{ meeting.meeting_type.description|safe }}</p>
+            <p>{{ object.meeting_type.description|safe }}</p>
 
             <h2 class="title light space-above">Meeting Information</h2>
 
@@ -29,25 +29,25 @@
             <p>Teachers, coders, writers, crafters, nurturers, leaders, tinkers, go getters to name a few. If you are passionate about coding and/or teaching children, join us. Everyone is welcome, regardless of technical ability.</p>
 
             <h3>When</h3>
-            <p>{{ meeting.start_date|date }} from {{ meeting.start_date|time }} to {{ meeting.end_date|time }}</p>
-            <p><i class="fa fa-calendar"></i> <a href="{{ meeting.get_ics_url }}">Add to your calendar</a></p>
+            <p>{{ object.start_date|date }} from {{ object.start_date|time }} to {{ object.end_date|time }}</p>
+            <p><i class="fa fa-calendar"></i> <a href="{{ object.get_calendar_url }}">Add to your calendar</a></p>
 
             <h3>Where</h3>
-            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.address }} {{ meeting.location.address2 }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}">{{ meeting.location.name }} {{ meeting.location.address }} {{ meeting.location.address2 }}<br>{{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}</a></p>
+            <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ object.location.address }} {{ object.location.address2 }} {{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}">{{ object.location.name }} {{ object.location.address }} {{ object.location.address2 }}<br>{{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}</a></p>
 
-            {% if meeting.additional_info %}
+            {% if object.additional_info %}
             <h3>Additional Info</h3>
-            <p>{{ meeting.additional_info|safe }}</p>
+            <p>{{ object.additional_info|safe }}</p>
             {% endif %}
 
-            {% if meeting.get_current_mentors.count %}
+            {% if object.get_current_mentors.count %}
             <h2 class="subtitle">Attending</h2>
 
             <div class="row mentors">
-                {% for mentor in meeting.get_current_mentors %}
+                {% for mentor in object.get_current_mentors %}
                     {% if mentor.is_public == True %}
                         <div class="col-xs-12 col-sm-4 col-md-4">
-                            <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                            <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
                                 <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
                                 <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
                             </a>
@@ -61,46 +61,46 @@
         <div class="col-sm-4 class-detail-sidebar-right">
             {% if user.is_staff %}
                 <ul class="center-block well well-sm list-group list-unstyled">
-                    {% if meeting.is_active %}
-                        <!-- Todo -->
+                    {% if object.is_active %}
+                        <!-- TODO -->
                         <li class="list-group-item">Attending: <b>{{ active_meeting_orders.count }}</b></li>
 
-                        {% if meeting.announced_date %}
-                            <li class="text-muted list-group-item">Announced: <b>{{ meeting.announced_date|date }}</b></li>
+                        {% if object.announced_date %}
+                            <li class="text-muted list-group-item">Announced: <b>{{ object.announced_date|date }}</b></li>
                         {% else %}
-                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Meeting?" data-content="<a class='btn btn-danger' href='{% url 'meeting_announce' meeting.id %}'>Announce</a>" data-html="true">Announce</a></li>
+                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Meeting?" data-content="<a class='btn btn-danger' href='{% url 'meeting-announce' object.id %}'>Announce</a>" data-html="true">Announce</a></li>
                         {% endif %}
 
-                        <li class="list-group-item"><a href="{% url 'meeting_check_in' meeting.id %}">Check-in Meeting</a></li>
+                        <li class="list-group-item"><a href="{% url 'meeting-check-in' object.id %}">Check-in Meeting</a></li>
                     {% endif %}
 
                     <!-- Todo -->
                     {# <li class="list-group-item"><a href="#" disabled>Meeting Stats</a></li> #}
 
-                    <li class="list-group-item"><a href="/dj-admin/coderdojochi/meeting/{{ meeting.id }}">Edit Meeting</a></li>
+                    <li class="list-group-item"><a href="/dj-admin/coderdojochi/meeting/{{ object.id }}">Edit Meeting</a></li>
                 </ul>
             {% endif %}
 
             <div class="sidebar-right-section center-block">
-                {% if meeting.external_enrollment_url %}
-                    <p><a href="{{ meeting.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
+                {% if object.external_enrollment_url %}
+                    <p><a href="{{ object.external_enrollment_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                 {% else %}
                     {% if user.is_authenticated and user.role == 'mentor' %}
                         {% if mentor_signed_up %}
-                            <p>You are signed up to attend this meeting.</p>
-                            <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
+                            <p>You are signed up to attend this object.</p>
+                            <p><a href="{{ object.get_sign_up_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                         {% else %}
-                            <p><a href="{{ meeting.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
+                            <p><a href="{{ object.get_sign_up_url }}" class="btn-cdc btn-cdc-lg btn-block">Attend Meeting</a></p>
                         {% endif %}
                     {% else %}
-                    <p><a href="{% url 'account_login' %}?next={{ meeting.get_absolute_url }}">Login</a> or <a href="{% url 'account_signup' %}?next={{ meeting.get_absolute_url }}">register</a> to sign up for this mentor meeting.</p>
+                    <p><a href="{% url 'account_login' %}?next={{ object.get_absolute_url }}">Login</a> or <a href="{% url 'account_signup' %}?next={{ object.get_absolute_url }}">register</a> to sign up for this mentor object.</p>
                     {% endif %}
                 {% endif %}
             </div>
 
             <div class="sidebar-right-section center-block">
                 <div class="map">
-                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ meeting.location.address }}, {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"><img src="//maps.google.com/maps/api/staticmap?size=281x281&amp;sensor=false&amp;zoom=15&amp;markers={{ meeting.location.address }}, {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}&amp;center={{ meeting.location.address }} {{ meeting.location.city }}, {{ meeting.location.state }} {{ meeting.location.zip }}"></a>
+                    <a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ object.location.address }}, {{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}"><img src="//maps.google.com/maps/api/staticmap?size=281x281&amp;sensor=false&amp;zoom=15&amp;markers={{ object.location.address }}, {{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}&amp;center={{ object.location.address }} {{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}"></a>
                 </div>
             </div>
         </div>

@@ -21,14 +21,14 @@
 
         <p>Inspired to make a difference? <a href="{% url 'account_signup' %}">Join us now!</a></p>
 
-        {% if view.mentors %}
+        {% if mentors %}
             <h1>Meet Our Volunteers <a href="{% url 'account_signup' %}" class="btn-cdc">Join us now!</a></h1>
 
 
             <div class="row mentors">
-                {% for mentor in view.mentors %}
+                {% for mentor in mentors %}
                 <div class="col-xs-12 col-sm-4 col-md-3">
-                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                    <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
                         {% if mentor.avatar %}
                             <img src="{{ mentor.avatar.thumbnail.url }}" width="175" height="175">
                         {% else %}
@@ -43,9 +43,9 @@
     </div>
 </div>
 
-{% if view.meetings %}
+{% if meetings %}
 <div class="upcoming-sessions">
-    {% for meeting in view.meetings %}
+    {% for meeting in meetings %}
         {% if meeting.bg_image %}
             <div class="upcoming-session" style="background-image: url({{ meeting.bg_image.url }});">
         {% elif meeting.image_url %}

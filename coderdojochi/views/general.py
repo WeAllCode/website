@@ -4,6 +4,7 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
+import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -11,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db.models import Case, Count, IntegerField, When
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -22,15 +23,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, View
 
-import arrow
-from coderdojochi.forms import (
-    CDCModelForm,
-    ContactForm,
-    DonationForm,
-    GuardianForm,
-    MentorForm,
-    StudentForm,
-)
+from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
 from coderdojochi.models import (
     Donation,
     Equipment,
@@ -43,7 +36,7 @@ from coderdojochi.models import (
     Order,
     PartnerPasswordAccess,
     Session,
-    Student,
+    Student
 )
 from coderdojochi.util import email
 from icalendar import Calendar, Event, vText
@@ -58,27 +51,27 @@ User = get_user_model()
 class HomeView(TemplateView):
     template_name = "home.html"
 
-    @cached_property
-    def upcoming_classes(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
         upcoming_classes = Session.objects.filter(
             is_active=True,
             end_date__gte=timezone.now(),
         ).order_by('start_date')
 
-        if (
-            not self.request.user.is_authenticated or
-            not self.request.user.role == 'mentor'
-        ):
+        if (not self.request.user.is_authenticated or not self.request.user.role == 'mentor'):
             upcoming_classes = upcoming_classes.filter(is_public=True)
 
-        return upcoming_classes[:3]
+        context['upcoming_classes'] = upcoming_classes[:3]
+
+        return context
 
 
 class AboutView(TemplateView):
     template_name = "about.html"
 
     def get_context_data(self, **kwargs):
-        context = super(AboutView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         # Number of active mentors
         context['mentor_count'] = Mentor.objects.filter(
@@ -93,6 +86,10 @@ class AboutView(TemplateView):
         ).count()
 
         return context
+
+
+class PrivacyView(TemplateView):
+    template_name = "privacy.html"
 
 
 class WelcomeView(TemplateView):
@@ -238,7 +235,9 @@ class WelcomeView(TemplateView):
 
             if next_meeting:
                 merge_global_data['next_intro_meeting_url'] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
-                merge_global_data['next_intro_meeting_ics_url'] = f"{settings.SITE_URL}{next_meeting.get_ics_url()}"
+                merge_global_data['next_intro_meeting_calendar_url'] = (
+                    f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
+                )
             if not next_url:
                 next_url = reverse('dojo')
         else:
@@ -249,7 +248,7 @@ class WelcomeView(TemplateView):
 
             if next_class:
                 merge_global_data['next_class_url'] = f"{settings.SITE_URL}{next_class.get_absolute_url()}"
-                merge_global_data['next_class_ics_url'] = f"{settings.SITE_URL}{next_class.get_ics_url()}"
+                merge_global_data['next_class_calendar_url'] = f"{settings.SITE_URL}{next_class.get_calendar_url()}"
 
             if not next_url:
                 next_url = reverse('welcome')
@@ -265,9 +264,9 @@ class WelcomeView(TemplateView):
         return redirect(next_url)
 
 
-class IcsView(View):
+class CalendarView(View):
     event_type = None
-    event_kwarg = None
+    event_kwarg = "pk"
     event_class = None
 
     def get_summary(self, request, event_obj):

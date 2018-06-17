@@ -42,13 +42,13 @@
                         {% if session.announced_date_mentors %}
                             <li class="text-muted list-group-item">Announced to mentors on:<br><b>{{ session.announced_date_mentors|date:'F j, Y \a\t g:i a' }}</b></li>
                         {% else %}
-                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce_mentors' session.id %}'>Announce mentors</a>" data-html="true">Announce to mentors</a></li>
+                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session-announce-mentors' session.id %}'>Announce mentors</a>" data-html="true">Announce to mentors</a></li>
                         {% endif %}
 
                         {% if session.announced_date_guardians %}
                             <li class="text-muted list-group-item">Announced to guardians on:<br><b>{{ session.announced_date_guardians|date:'F j, Y \a\t g:i a' }}</b></li>
                         {% else %}
-                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session_announce_guardians' session.id %}'>Announce guardians</a>" data-html="true">Announce to guardians</a></li>
+                            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session-announce-guardians' session.id %}'>Announce guardians</a>" data-html="true">Announce to guardians</a></li>
                         {% endif %}
 
                         <li class="list-group-item"><a href="{% url 'check_in' session.id %}">Check-in Class</a></li>
@@ -106,9 +106,9 @@
                             {% if spots_remaining %}
                                 {% if mentor_signed_up %}
                                     <p>You are signed up to mentor this class.</p>
-                                    <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
+                                    <p><a href="{{ session.get_sign_up_url }}" class="btn-cdc btn-cdc-danger btn-block">I can't make it...</a></p>
                                 {% else %}
-                                    <p><a href="{{ session.get_signup_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
+                                    <p><a href="{{ session.get_sign_up_url }}" class="btn-cdc btn-cdc-lg btn-block">Sign up now!</a></p>
                                 {% endif %}
                             {% else %}
                                 {% if account in session.waitlist_mentors.all %}
@@ -156,7 +156,7 @@
 
             <h3>When</h3>
             <p>{{ session.start_date|date }} from {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
-            <p><i class="fa fa-calendar"></i> <a href="{{ session.get_ics_url }}">Add to your calendar</a></p>
+            <p><i class="fa fa-calendar"></i> <a href="{{ session.get_calendar_url }}">Add to your calendar</a></p>
 
             <h3>Where</h3>
             <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ session.location.address }} {{ session.location.address2 }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.name }}, {{ session.location.address }}, {{ session.location.address2 }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
@@ -174,12 +174,12 @@
             <div class="teachers">
                 <div class="teacher">
                     <div class="image">
-                        <a href="{% url 'mentor_detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
+                        <a href="{% url 'mentor-detail' session.teacher.id %}"><img src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}" height="320" width="320"></a>
                     </div>
                     <div class="info">
                         <h3 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
                         <p>{{ session.teacher.bio|truncatechars:120 }}</p>
-                        <p><a href="{% url 'mentor_detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
+                        <p><a href="{% url 'mentor-detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
                     </div>
                 </div>
             </div>
@@ -191,7 +191,7 @@
                 {% for mentor in active_mentors %}
                     {% if mentor.is_public == True %}
                 <div class="col-xs-12 col-sm-4 col-md-4">
-                    <a href="{% url 'mentor_detail' mentor.id %}" class="thumbnail">
+                    <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
                         <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" height="175" width="175">
                         <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
                     </a>
