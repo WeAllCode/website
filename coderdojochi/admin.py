@@ -34,7 +34,7 @@ User = get_user_model()
 
 @admin.register(User)
 class UserAdmin(ImportExportActionModelAdmin):
-    list_display = (
+    list_display = [
         'email',
         'first_name',
         'last_name',
@@ -44,38 +44,38 @@ class UserAdmin(ImportExportActionModelAdmin):
         'is_active',
         'is_staff',
         'is_superuser',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'role',
         'is_active',
         'is_staff',
         'date_joined',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         '-date_joined',
-    )
+    ]
 
     date_hierarchy = 'date_joined'
 
-    search_fields = (
+    search_fields = [
         'first_name',
         'last_name',
         'email',
-    )
+    ]
 
-    view_on_site = False
-
-    filter_horizontal = (
+    filter_horizontal = [
         'groups',
         'user_permissions',
-    )
+    ]
 
-    readonly_fields = (
+    readonly_fields = [
         'password',
         'last_login',
-    )
+    ]
+
+    view_on_site = False
 
     change_form_template = 'loginas/change_form.html'
 
@@ -103,7 +103,7 @@ class UserAdmin(ImportExportActionModelAdmin):
 class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
-    list_display = (
+    list_display = [
         'first_name',
         'last_name',
         'user_link',
@@ -114,35 +114,39 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_public',
         'background_check',
         'avatar_approved',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'is_active',
         'is_public',
         'background_check',
         'avatar_approved',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'user',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         '-created_at',
-    )
+    ]
 
     date_hierarchy = 'created_at'
 
-    search_fields = (
+    search_fields = [
         'user__first_name',
         'user__last_name',
         'user__username',
         'user__email',
-    )
+    ]
 
-    readonly_fields = (
+    readonly_fields = [
         'mentor_count_link',
-    )
+    ]
+
+    autocomplete_fields = [
+        'user',
+    ]
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()
@@ -228,42 +232,51 @@ class GuardianImportResource(resources.ModelResource):
 
     class Meta:
         model = Guardian
-        import_id_fields = ('phone',)
-        fields = ('phone', 'zip',)
+        import_id_fields = [
+            'phone',
+        ]
+        fields = [
+            'phone',
+            'zip',
+        ]
 
 
 @admin.register(Guardian)
 class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
-    list_display = (
+    list_display = [
         'first_name',
         'last_name',
         'student_count_link',
         'user_link',
         'created_at',
         'updated_at',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'zip',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'user',
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         'user__first_name',
         'user__last_name',
         'user__username',
         'user__email',
         'phone',
-    )
+    ]
 
-    readonly_fields = (
+    readonly_fields = [
         'student_count_link',
-    )
+    ]
+
+    autocomplete_fields = [
+        'user',
+    ]
 
     date_hierarchy = 'created_at'
 
@@ -365,15 +378,21 @@ class StudentResource(resources.ModelResource):
 
     class Meta:
         model = Student
-        import_id_fields = ('first_name', 'last_name',)
-        fields = ('first_name', 'last_name',)
+        import_id_fields = [
+            'first_name',
+            'last_name',
+        ]
+        fields = [
+            'first_name',
+            'last_name',
+        ]
 
 
 @admin.register(Student)
 class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
-    list_display = (
+    list_display = [
         'first_name',
         'last_name',
         'gender',
@@ -382,26 +401,30 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'order_count_link',
         'get_age',
         'is_active',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'gender',
-    )
+    ]
 
-    filter_horizontal = (
+    filter_horizontal = [
         'race_ethnicity',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         'guardian',
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         'first_name',
         'last_name',
         'guardian__user__first_name',
         'guardian__user__last_name',
-    )
+    ]
+
+    autocomplete_fields = [
+        'guardian',
+    ]
 
     date_hierarchy = 'created_at'
 
@@ -410,10 +433,10 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     # Import settings
     resource_class = StudentResource
 
-    readonly_fields = (
+    readonly_fields = [
         'guardian_link',
         'order_count_link',
-    )
+    ]
 
     def get_queryset(self, request):
         qs = super(StudentAdmin, self).get_queryset(request)
@@ -437,7 +460,6 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return format_html(
             '<a href="{url}">{first} {last}</a>',
             url=reverse("admin:coderdojochi_guardian_change", args=(obj.guardian.id,)),
-            # query=obj.guardian.user.email,
             first=obj.guardian.user.first_name,
             last=obj.guardian.user.last_name,
         )
@@ -458,21 +480,25 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
-    list_display = (
+    list_display = [
         'code',
         'title',
         'slug',
         'created_at',
         'updated_at',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'code',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         'created_at',
-    )
+    ]
+
+    search_fields = [
+        'title'
+    ]
 
     view_on_site = False
 
@@ -481,7 +507,7 @@ class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
-    list_display = (
+    list_display = [
         '_course',
         'start_date',
         'end_date',
@@ -492,30 +518,40 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_active',
         'is_public',
         'is_guardian_announced',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'is_active',
         'is_public',
         'course__code',
         'course__title',
         'location',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'course',
         'location',
         'teacher',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         '-start_date',
-    )
+    ]
 
-    filter_horizontal = (
+    filter_horizontal = [
         'waitlist_mentors',
         'waitlist_students',
-    )
+    ]
+
+    autocomplete_fields = [
+        'course',
+        'location',
+        'teacher',
+    ]
+
+    search_fields = [
+        'start_date'
+    ]
 
     date_hierarchy = 'start_date'
 
@@ -568,45 +604,44 @@ student_check_out.short_description = "Check out"
 class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
-    list_display = (
+    list_display = [
         'id',
         'get_student_link',
         'get_student_gender',
         'get_student_age',
         'get_guardian_link',
-        # 'alternate_guardian',
         'get_session_link',
-        # 'ip',
         '_created_at',
         'is_checked_in',
-        # 'updated_at',
         'is_active',
-        # 'week_reminder_sent',
-        # 'day_reminder_sent',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'is_active',
         'check_in',
-        # 'guardian',
-        # 'student',
         'session',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'guardian',
         'session',
         'student',
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         'student__first_name',
         'student__last_name',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         'created_at',
-    )
+    ]
+
+    autocomplete_fields = [
+        'guardian',
+        'session',
+        'student',
+    ]
 
     date_hierarchy = 'created_at'
 
@@ -664,7 +699,7 @@ mentor_check_out.short_description = "Check out"
 class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
-    list_display = (
+    list_display = [
         'mentor',
         'session',
         'ip',
@@ -674,39 +709,40 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'day_reminder_sent',
         'created_at',
         'updated_at',
-    )
+    ]
 
-    list_display_links = (
+    list_display_links = [
         'mentor',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'is_active',
         'check_in',
         'session',
-        # 'mentor',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'mentor',
         'session',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         'created_at',
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         'mentor__user__first_name',
         'mentor__user__last_name',
-    )
+    ]
 
-    readonly_fields = (
-        # 'mentor',
-        # 'session',
+    autocomplete_fields = [
+        'mentor',
+        'session',
+    ]
+
+    readonly_fields = [
         'ip',
-        # 'check_in',
-    )
+    ]
 
     actions = [
         mentor_check_in,
@@ -735,7 +771,7 @@ meeting_order_check_out.short_description = "Check out"
 class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 50
 
-    list_display = (
+    list_display = [
         'mentor',
         'meeting',
         'ip',
@@ -745,28 +781,33 @@ class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'day_reminder_sent',
         'created_at',
         'updated_at',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'is_active',
         'meeting',
         'check_in',
         'meeting__meeting_type',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'mentor',
         'meeting',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         'created_at',
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         'mentor__user__first_name',
         'mentor__user__last_name',
-    )
+    ]
+
+    autocomplete_fields = [
+        'mentor',
+        'meeting',
+    ]
 
     actions = [
         meeting_order_check_in,
@@ -782,14 +823,20 @@ class MeetingOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
 @admin.register(MeetingType)
 class MeetingTypeAdmin(ImportExportMixin, ImportExportActionModelAdmin):
-    list_display = (
+    list_display = [
         'code',
         'title',
         'slug',
-    )
-    list_display_links = (
+    ]
+
+    list_display_links = [
         'title',
-    )
+    ]
+
+    search_fields = [
+        'code',
+        'title',
+    ]
     view_on_site = False
 
 
@@ -797,7 +844,7 @@ class MeetingTypeAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
-    list_display = (
+    list_display = [
         'meeting_type',
         'start_date',
         'end_date',
@@ -806,23 +853,32 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_public',
         'announced_date',
         'created_at',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'is_active',
         'is_public',
         'location',
         'meeting_type__title',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'meeting_type',
         'location',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         '-start_date',
-    )
+    ]
+
+    search_fields = [
+        'start_date'
+    ]
+
+    autocomplete_fields = [
+        'meeting_type',
+        'location',
+    ]
 
     date_hierarchy = 'start_date'
     view_on_site = False
@@ -838,7 +894,7 @@ class EquipmentTypeAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
 @admin.register(Equipment)
 class EquipmentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
-    list_display = (
+    list_display = [
         'uuid',
         'asset_tag',
         'equipment_type',
@@ -848,41 +904,41 @@ class EquipmentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'last_system_update_check_in',
         'last_system_update',
         'force_update_on_next_boot',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'condition',
         'equipment_type',
         'make',
         'model',
-    )
+    ]
 
-    list_select_related = (
+    list_select_related = [
         'equipment_type',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         'uuid',
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         'uuid',
         'make',
         'model',
         'asset_tag',
-    )
+    ]
 
-    readonly_fields = (
+    readonly_fields = [
         'last_system_update_check_in',
         'last_system_update',
-    )
+    ]
 
     view_on_site = False
 
 
 @admin.register(Donation)
 class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
-    list_display = (
+    list_display = [
         'session',
         'get_first_name',
         'get_last_name',
@@ -891,29 +947,34 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'is_verified',
         'receipt_sent',
         'created_at',
-    )
+    ]
 
-    list_filter = (
+    list_filter = [
         'session',
         'user',
         'is_verified',
         'receipt_sent',
         'amount',
         'created_at',
-    )
+    ]
 
-    ordering = (
+    ordering = [
         '-created_at',
-    )
+    ]
 
-    search_fields = (
+    search_fields = [
         'get_first_name',
         'get_last_name',
         'get_email',
         'session',
-    )
+    ]
 
     date_hierarchy = 'created_at'
+
+    autocomplete_fields = [
+        'user',
+        'session',
+    ]
 
     view_on_site = False
 
@@ -921,6 +982,10 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 @admin.register(Location)
 class LocationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     view_on_site = False
+
+    search_fields = [
+        'name'
+    ]
 
 
 @admin.register(RaceEthnicity)
