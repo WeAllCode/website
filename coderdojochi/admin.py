@@ -7,6 +7,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
+from import_export import resources
+from import_export.admin import ImportExportActionModelAdmin, ImportExportMixin
+from import_export.fields import Field
+
 from coderdojochi.models import (
     Course,
     Donation,
@@ -22,12 +26,9 @@ from coderdojochi.models import (
     Order,
     RaceEthnicity,
     Session,
-    Student
+    Student,
 )
 from coderdojochi.util import str_to_bool
-from import_export import resources
-from import_export.admin import ImportExportActionModelAdmin, ImportExportMixin
-from import_export.fields import Field
 
 User = get_user_model()
 

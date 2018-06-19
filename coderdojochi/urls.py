@@ -19,7 +19,7 @@ from .views.meetings import (
     MeetingDetailView,
     MeetingsView,
     meeting_announce,
-    meeting_sign_up
+    meeting_sign_up,
 )
 from .views.profile import DojoMentorView
 from .views.sessions import (
@@ -32,7 +32,7 @@ from .views.sessions import (
     SessionSignUpRedirectView,
     SessionSignUpView,
     SessionsRedirectView,
-    SessionsView
+    SessionsView,
 )
 from .views.volunteer import VolunteerView
 

@@ -1,13 +1,14 @@
 import datetime
 
-import arrow
 from django.conf import settings
 from django.core.mail import get_connection
 from django.utils import timezone
 
+import arrow
+from django_cron import CronJobBase, Schedule
+
 from coderdojochi.models import MentorOrder, Order, Session
 from coderdojochi.util import email
-from django_cron import CronJobBase, Schedule
 
 
 class SendReminders(CronJobBase):

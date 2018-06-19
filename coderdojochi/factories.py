@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from pytz import utc
-
 import factory
+from pytz import utc
 
 from .models import CDCUser, Course, Location, Mentor, PartnerPasswordAccess, Session
 
