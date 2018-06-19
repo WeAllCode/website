@@ -70,18 +70,20 @@ urlpatterns += [
 
 # Donate / Donations
 urlpatterns += [
-    # Donation
-    # /donate/
-    path('donate/', old_views.donate, name='donate'),
+    path('donate/', include([
+        # Donation
+        # /donate/
+        path('', old_views.donate, name='donate'),
 
-    # /donate/cancel/
-    path('donate/cancel/', old_views.donate_cancel, name='donate_cancel'),
+        # /donate/cancel/
+        path('cancel/', old_views.donate_cancel, name='donate-cancel'),
 
-    # /donate/return/
-    path('donate/return/', old_views.donate_return, name='donate_return'),
+        # /donate/return/
+        path('return/', old_views.donate_return, name='donate-return'),
 
-    # /donate/paypal/
-    path('donate/paypal/', include('paypal.standard.ipn.urls')),
+        # /donate/paypal/
+        path('paypal/', include('paypal.standard.ipn.urls')),
+    ])),
 
     # One off pages
     # /zirmed/
@@ -91,7 +93,6 @@ urlpatterns += [
 
 # All Auth / Logins
 urlpatterns += [
-
     # AllAuth
     # /accounts/
     path('accounts/', include('allauth.urls')),
@@ -102,148 +103,146 @@ urlpatterns += [
     path('dj-admin/', include('loginas.urls')),
 ]
 
-# Admin
+# Django Admin
 urlpatterns += [
-
-    # Django Admin
     # /dj-admin/
     path('dj-admin/', admin.site.urls),
+]
 
-    # Admin
-    # /admin/
-    path('admin/', old_views.cdc_admin, name='cdc_admin'),
+# Admin
+urlpatterns += [
+    path('admin/', include([
+        # Admin
+        # /admin/
+        path('', old_views.cdc_admin, name='cdc_admin'),
 
+        path('classes/', include([
+            # /admin/class/ID/stats/
+            path('<int:pk>/stats/', old_views.session_stats, name='stats'),
 
-    # Admin Classes
-    # /admin/class/ID/stats/
-    path('admin/class/<int:pk>/stats/', old_views.session_stats, name='stats'),
+            # /admin/class/ID/check-in/
+            path('<int:pk>/check-in/', old_views.session_check_in, name='student-check-in'),
 
-    # /admin/class/ID/check-in/
-    path('admin/class/<int:pk>/check-in/', old_views.session_check_in, name='check_in'),
+            # /admin/class/ID/check-in-mentors/
+            path('<int:pk>/check-in-mentors/', old_views.session_check_in_mentors, name='mentor-check-in'),
 
-    # /admin/class/ID/donations/
-    path('admin/class/<int:pk>/donations/', old_views.session_donations, name='donations'),
+            # /admin/class/ID/donations/
+            path('<int:pk>/donations/', old_views.session_donations, name='donations'),
+        ])),
 
-    # /admin/class/ID/check-in-mentors/
-    path(
-        'admin/class/<int:pk>/check-in-mentors/',
-        old_views.session_check_in_mentors,
-        name='check_in_mentors'
-    ),
+        path('meetings/', include([
+            # /admin/meeting/ID/check-in/
+            path('<int:meeting_id>/check-in/', old_views.meeting_check_in, name='meeting-check-in'),
+        ])),
 
-
-    # Admin Meetings
-    # /admin/meeting/ID/check-in/
-    path('admin/meeting/<int:meeting_id>/check-in/', old_views.meeting_check_in, name='meeting-check-in'),
-
-
-    # Admin Check System
-    # /admin/checksystem/
-    path('admin/checksystem/', old_views.check_system, name='check_system'),
+        # Admin Check System
+        # /admin/checksystem/
+        path('checksystem/', old_views.check_system, name='check-system'),
+    ]))
 ]
 
 # Sessions
 urlpatterns += [
-    # Classes
-    # /classes/
-    path('classes/', SessionsView.as_view(), name='sessions'),
-    path('class/', SessionsRedirectView.as_view()),
 
-    # Individual Class
-    # /class/ID/
-    path('class/<int:pk>/', SessionDetailView.as_view(), name='session-detail'),
+    path('classes/', include([
+        # Classes
+        # /classes/
+        path('', SessionsView.as_view(), name='sessions'),
 
-    # Redirect
-    # /c/ID/ -> /class/ID/
+        # Individual Class
+        # /classes/ID/
+        path('<int:pk>/', SessionDetailView.as_view(), name='session-detail'),
+
+        # Password
+        # /classes/ID/password/
+        path('<int:pk>/password/', PasswordSessionView.as_view(), name='session-password'),
+
+        # Announce
+        # /classes/ID/announce/mentors/
+        path('<int:pk>/announce/mentors/', old_views.session_announce_mentors, name='session-announce-mentors'),
+
+        # /classes/ID/announce/guardians/
+        path('<int:pk>/announce/guardians/', old_views.session_announce_guardians, name='session-announce-guardians'),
+
+        # Calendar
+        # /classes/ID/calendar/
+        path('<int:pk>/calendar/', SessionCalendarView.as_view(), name='session-calendar'),
+
+        # Sign up
+        # /classes/ID/sign-up/
+        path('<int:pk>/sign-up/', SessionSignUpView.as_view(), name='session-sign-up'),
+
+        # /classes/ID/sign-up/STUDENT-ID/
+        path('<int:pk>/sign-up/<int:student_id>/', SessionSignUpView.as_view(), name='session-sign-up'),
+    ])),
+
+    # TODO: Old redirects. Remove by July 2018
+    path('class/', include([
+        # Redirect /class/ -> /classes/
+        path('', SessionsRedirectView.as_view()),
+
+        # Redirect /class/ID/ -> /classes/ID/
+        path('<int:pk>/', SessionDetailRedirectView.as_view()),
+
+        # Redirect /class/YYYY/MM/DD/SLUG/ID/ -> /classes/ID/
+        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', SessionDetailRedirectView.as_view()),
+
+        # Redirect /class/YYYY/MM/DD/SLUG/ID/password/ -> /classes/ID/password/
+        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/password/', PasswordSessionRedirectView.as_view()),
+
+        # Redirect /class/YYYY/MM/DD/SLUG/ID/calendar/ -> /classes/ID/calendar/
+        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/calendar/', SessionCalendarRedirectView.as_view()),
+
+        # Redirect /class/YYYY/MM/DD/SLUG/ID/sign-up/ -> /classes/ID/sign-up/
+        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/', SessionSignUpRedirectView.as_view()),
+
+        # Redirect /class/YYYY/MM/DD/SLUG/ID/sign-up/STUDENT-ID/ -> /classes/ID/sign-up/STUDENT-ID/
+        path(
+            '<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/<int:student_id>/',
+            SessionSignUpRedirectView.as_view(),
+        ),
+    ])),
+
+    # TODO: Old redirects. Remove by July 2018
+    # Redirect /c/ID/ -> /class/ID/
     path('c/<int:pk>/', SessionDetailRedirectView.as_view()),
-
-    # Redirect
-    # /class/YYYY/MM/DD/SLUG/ID/ -> /class/ID/
-    path('class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', SessionDetailRedirectView.as_view()),
-
-
-
-    # Password
-    path('class/<int:pk>/password/', PasswordSessionView.as_view(), name='session-password'),
-
-    # Redirect
-    # /class/YYYY/MM/DD/SLUG/ID/password/ -> /class/ID/password/
-    path(
-        'class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/password/',
-        PasswordSessionRedirectView.as_view()
-    ),
-
-
-
-    # Announce
-    # /class/ID/announce/mentors
-    path('class/<int:pk>/announce/mentors/', old_views.session_announce_mentors, name='session-announce-mentors'),
-
-    # /class/ID/announce/guardians
-    path('class/<int:pk>/announce/guardians/', old_views.session_announce_guardians, name='session-announce-guardians'),
-
-
-
-    # Calendar
-    # /class/ID/calendar/
-    path('class/<int:pk>/calendar/', SessionCalendarView.as_view(), name='session-calendar'),
-
-    # /class/YYYY/MM/DD/SLUG/ID/calendar/ -> /class/ID/calendar/
-    path(
-        'class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/calendar/',
-        SessionCalendarRedirectView.as_view()
-    ),
-
-
-
-    # Sign up
-    # /class/ID/sign-up/
-    path('class/<int:pk>/sign-up/', SessionSignUpView.as_view(), name='session-sign-up'),
-
-    # /class/YYYY/MM/DD/SLUG/ID/sign-up/ -> /class/ID/sign-up/
-    path('class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/', SessionSignUpRedirectView.as_view()),
-
-    # /class/ID/sign-up/STUDENT-ID/
-    path('class/<int:pk>/sign-up/<int:student_id>/', SessionSignUpView.as_view(), name='session-sign-up'),
-
-    # /class/YYYY/MM/DD/SLUG/ID/sign-up/STUDENT-ID/ -> /class/ID/sign-up/STUDENT-ID/
-    path(
-        'class/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/<int:student_id>/',
-        SessionSignUpRedirectView.as_view(),
-    ),
-
 ]
 
 # Mentors
+# TODO: Uncomment `app_name` after we move mentors to it's own app.
+# app_name = 'mentors'
 urlpatterns += [
-    # Mentors
-    # /mentors/
-    path('mentors/', old_views.mentors, name='mentors'),
 
-    # /mentor/ID/
-    path('mentor/<int:pk>/', old_views.mentor_detail, name='mentor-detail'),
+    path('mentors/', include([
+        # Mentors
+        # /
+        path('', old_views.mentors, name='mentors'),
 
-    # 301 /mentors/ID/
-    path('mentors/<int:pk>/', RedirectView.as_view(pattern_name='mentor-detail')),
+        # /ID/
+        path('<int:pk>/', old_views.mentor_detail, name='mentor-detail'),
 
-    # /mentor/ID/reject-avatar/
-    path('mentor/<int:pk>/reject-avatar/', old_views.mentor_reject_avatar, name='mentor-reject-avatar'),
+        # /ID/reject-avatar/
+        path('<int:pk>/reject-avatar/', old_views.mentor_reject_avatar, name='mentor-reject-avatar'),
 
-    # 301 /mentors/ID/reject-avatar/
-    path('mentors/<int:pk>/reject-avatar/', RedirectView.as_view(pattern_name='mentor-reject-avatar')),
+        # /ID/approve-avatar/
+        path('<int:pk>/approve-avatar/', old_views.mentor_approve_avatar, name='mentor-approve-avatar'),
+    ])),
 
-    # /mentor/ID/approve-avatar/
-    path('mentor/<int:pk>/approve-avatar/', old_views.mentor_approve_avatar, name='mentor-approve-avatar'),
-
-    # 301 /mentors/ID/approve-avatar/
-    path('mentors/<int:pk>/approve-avatar/', RedirectView.as_view(pattern_name='mentor-approve-avatar')),
+    # TODO: Old redirects. Remove by July 2018
+    # Redirect /mentor/* -> /mentors/*
+    path('mentor/', include([
+        path('', RedirectView.as_view(pattern_name='mentors')),
+        path('<int:pk>/', RedirectView.as_view(pattern_name='mentor-detail')),
+        path('<int:pk>/reject-avatar/', RedirectView.as_view(pattern_name='mentor-reject-avatar')),
+        path('<int:pk>/approve-avatar/', RedirectView.as_view(pattern_name='mentor-approve-avatar')),
+    ])),
 ]
 
 # Students
 urlpatterns += [
     # Student
     # /student/ID/
-    path('student/<int:student_id>/', old_views.student_detail, name='student-detail'),
+    path('students/<int:student_id>/', old_views.student_detail, name='student-detail'),
 ]
 
 # Dojo
@@ -260,32 +259,40 @@ urlpatterns += [
 
 # Meetings
 urlpatterns += [
-    # Meetings
-    # /meetings/
-    path('meetings/', MeetingsView.as_view(), name='meetings'),
+    path('meetings/', include([
+        # Meetings
+        # /meetings/
+        path('', MeetingsView.as_view(), name='meetings'),
 
-    # Individual Meeting
-    # /meeting/ID/
-    path('meeting/<int:pk>/', MeetingDetailView.as_view(), name='meeting-detail'),
+        # Individual Meeting
+        # /meeting/ID/
+        path('<int:pk>/', MeetingDetailView.as_view(), name='meeting-detail'),
 
+        # /meeting/ID/announce/
+        path('<int:pk>/announce/', meeting_announce, name='meeting-announce'),
+
+        # Meeting sign up
+        # /meeting/ID/sign-up/
+        path('<int:pk>/register/', meeting_sign_up, name='meeting-register'),
+
+        # Meeting Calendar
+        # /meeting/ID/calendar/
+        path('<int:pk>/calendar/', MeetingCalendarView.as_view(), name='meeting-calendar'),
+    ])),
+
+    # TODO: Old redirects. Remove by July 2018
     # Redirect /m/ID/ -> /meeting/ID/
     path('m/<int:pk>/', MeetingDetailRedirectView.as_view()),
 
-    # Redirect /meeting/YYYY/MM/DD/SLUG/ID/ -> /meeting/ID/
-    path('meeting/<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', MeetingDetailRedirectView.as_view()),
+    # TODO: Old redirects. Remove by July 2018
+    path('meeting/', include([
+        # Redirect /meeting/ID/ -> /meetings/ID/
+        path('<int:pk>/', MeetingDetailRedirectView.as_view()),
 
+        # Redirect /meeting/YYYY/MM/DD/SLUG/ID/ -> /meeting/ID/
+        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', MeetingDetailRedirectView.as_view()),
+    ])),
 
-    # /meeting/ID/announce/
-    path('meeting/<int:pk>/announce/', meeting_announce, name='meeting-announce'),
-
-
-    # Meeting sign up
-    # /meeting/ID/sign-up/
-    path('meeting/<int:pk>/register/', meeting_sign_up, name='meeting-register'),
-
-    # Meeting Calendar
-    # /meeting/ID/calendar/
-    path('meeting/<int:pk>/calendar/', MeetingCalendarView.as_view(), name='meeting-calendar'),
 ]
 
 

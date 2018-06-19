@@ -51,7 +51,8 @@
                             <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='btn btn-danger' href='{% url 'session-announce-guardians' session.id %}'>Announce guardians</a>" data-html="true">Announce to guardians</a></li>
                         {% endif %}
 
-                        <li class="list-group-item"><a href="{% url 'check_in' session.id %}">Check-in Class</a></li>
+                        <li class="list-group-item"><a href="{% url 'student-check-in' session.id %}">Check-in Students</a></li>
+                        <li class="list-group-item"><a href="{% url 'mentor-check-in' session.id %}">Check-in Mentors</a></li>
                     {% endif %}
 
                     <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>

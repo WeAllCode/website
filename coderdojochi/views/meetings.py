@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db.models import Case, Count, IntegerField, When
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -64,6 +64,17 @@ class MeetingsView(ListView):
     model = Meeting
     template_name = "meetings.html"
 
+    def get_queryset(self):
+        objects = self.model.objects.filter()
+
+        if not self.request.user.is_authenticated:
+            objects = objects.filter(is_public=True)
+
+        if not self.request.user.is_staff:
+            objects = objects.filter(is_active=True)
+
+        return objects
+
 
 class MeetingDetailRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -73,6 +84,26 @@ class MeetingDetailRedirectView(RedirectView):
 class MeetingDetailView(DetailView):
     model = Meeting
     template_name = "meeting-detail.html"
+
+    def get_queryset(self):
+        objects = self.model.objects.filter()
+
+        if not self.request.user.is_authenticated:
+            objects = objects.filter(is_public=True)
+
+        if not self.request.user.is_staff:
+            objects = objects.filter(is_active=True)
+
+        return objects
+
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            return redirect('meetings')
+
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

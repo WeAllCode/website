@@ -193,8 +193,8 @@
                 <td class="hidden-xs hidden-sm"><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
                 <td class="hidden-xs hidden-sm">{{ session.location.name }}</td>
                 <td class="text-center hidden-xs hidden-sm">
-                    {% if session.announced_date|yesno:'yes,no' == 'yes' %}
-                        <i class="fa fa-calendar-check-o" title="{{ session.announced_date }}" aria-hidden="true"></i>
+                    {% if session.announced_date_guardians|yesno:'yes,no' == 'yes' %}
+                        <i class="fa fa-calendar-check-o" title="{{ session.announced_date_guardians }}" aria-hidden="true"></i>
                     {% endif %}
                 </td>
                 <td class="text-right">
@@ -220,7 +220,7 @@
                 </td>
                 <td class="text-center">
                     {% if not session.external_enrollment_url %}
-                        <a href="{% url 'check_in' session.id %}"><span class="glyphicon glyphicon-check"></span></a>
+                        <a href="{% url 'student-check-in' session.id %}"><span class="glyphicon glyphicon-check"></span></a>
                     {% else %}
                         &times;
                     {% endif %}
@@ -248,7 +248,7 @@
                 </td>
                 <td>
                     {% if not session.external_enrollment_url %}
-                        <a href="{% url 'check_in_mentors' session.id %}"><span class="glyphicon glyphicon-check"></span></a>
+                        <a href="{% url 'mentor-check-in' session.id %}"><span class="glyphicon glyphicon-check"></span></a>
                     {% else %}
                         &times;
                     {% endif %}
