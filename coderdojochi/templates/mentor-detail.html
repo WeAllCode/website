@@ -27,7 +27,7 @@
         </div>
         {% if user.is_staff %}
         <ul class="well well-sm well-admin list-group list-unstyled">
-            <li class="list-group-item"><a href="/dj-admin/coderdojochi/mentor/{{ mentor.id }}/change">Edit Mentor</a></li>
+            <li class="list-group-item"><a href="{% url 'admin:coderdojochi_mentor_change' mentor.id %}">Edit Mentor</a></li>
         </div>
         {% endif %}
     </div>

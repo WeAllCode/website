@@ -62,15 +62,3 @@
 </div>
 {% endblock %}
 
-{% block extra_script %}
-<script>
-$(function(){
-    $('#calendar-month-select').on('change', function() {
-        window.location = '/classes/{{calendar_date.year }}/' + $(this).val();
-    });
-    $('#calendar-year-select').on('change', function() {
-        window.location = '/classes/' + $(this).val() + '/{{calendar_date.month }}';
-    });
-});
-</script>
-{% endblock %}

@@ -271,8 +271,7 @@ class StudentForm(CDCModelForm):
             "{0} {1}",
             "Medications",
             mark_safe(
-                '<span class="btn btn-xs btn-link js-expand-student-form">'
-                'expand</span>'
+                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'
             )
         ),
         required=False
@@ -290,8 +289,7 @@ class StudentForm(CDCModelForm):
             "{0} {1}",
             "Medical Conditions",
             mark_safe(
-                '<span class="btn btn-xs btn-link js-expand-student-form">'
-                'expand</span>'
+                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'
             )
         ),
         required=False
@@ -316,9 +314,8 @@ class StudentForm(CDCModelForm):
             }
         ),
         label=(
-            'I hereby give consent for the student signed up above to '
-            'participate in CoderDojoChi as per the '
-            '<a href="/privacy">terms</a>.'
+            'I hereby give consent for the student signed up above to participate in CoderDojoChi as per the '
+            f"<a href=\"{{ reverse('privacy') }}\">terms</a>."
         ),
     )
 

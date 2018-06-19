@@ -1241,7 +1241,7 @@ def session_announce_mentors(request, pk):
             f'Session already announced.'
         )
 
-    return redirect('cdc_admin')
+    return redirect('cdc-admin')
 
 
 @never_cache
@@ -1314,7 +1314,7 @@ def session_announce_guardians(request, pk):
             'Session already announced.'
         )
 
-    return redirect('cdc_admin')
+    return redirect('cdc-admin')
 
 
 @csrf_exempt

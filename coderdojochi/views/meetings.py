@@ -307,4 +307,4 @@ def meeting_announce(request, pk):
             'Meeting already announced.'
         )
 
-    return redirect('cdc_admin')
+    return redirect('cdc-admin')

@@ -87,7 +87,7 @@ urlpatterns += [
 
     # One off pages
     # /zirmed/
-    path('zirmed/', old_views.donate, name='donate_zirmed'),
+    path('zirmed/', old_views.donate, name='donate-zirmed'),
 ]
 
 
@@ -114,7 +114,7 @@ urlpatterns += [
     path('admin/', include([
         # Admin
         # /admin/
-        path('', old_views.cdc_admin, name='cdc_admin'),
+        path('', old_views.cdc_admin, name='cdc-admin'),
 
         path('classes/', include([
             # /admin/class/ID/stats/

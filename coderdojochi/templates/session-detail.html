@@ -56,7 +56,7 @@
                     {% endif %}
 
                     <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>
-                    <li class="list-group-item"><a href="/dj-admin/coderdojochi/session/{{ session.id }}">Edit Class</a></li>
+                    <li class="list-group-item"><a href="{% url 'admin:coderdojochi_session_change' session.id %}">Edit Class</a></li>
                 </ul>
             {% endif %}
             <div class="sidebar-right-section center-block">
