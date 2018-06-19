@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand text-hide" href="/">CoderDojoChi</a>
+            <a class="brand text-hide" href="{% url 'home' %}">CoderDojoChi</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -19,7 +19,7 @@
                 {% if user.is_authenticated %}
                 <li{% if '/dojo/' in request.path %} class="active"{% endif %}><a href="{% url 'dojo' %}">My Dojo</a></li>
                 {% if user.is_staff %}
-                <li><a href="{% url 'cdc_admin' %}">Admin</a></li>
+                <li><a href="{% url 'cdc-admin' %}">Admin</a></li>
                 {% endif %}
                 <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}

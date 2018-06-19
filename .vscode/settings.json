@@ -23,11 +23,6 @@
         "--max-line-length=120",
     ],
     "python.pythonPath": "/usr/local/bin/python3",
-    "python.sortImports.args": [
-        "--line-width=120",
-        "--wrap-length=120",
-        "--multi-line=3",
-    ],
     "[python]": {
         "editor.rulers": [120],
     },

@@ -4,7 +4,6 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
-import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -12,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.db.models import Case, Count, IntegerField, When
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -23,6 +22,10 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, RedirectView, TemplateView, View
 
+import arrow
+from icalendar import Calendar, Event, vText
+from paypal.standard.forms import PayPalPaymentsForm
+
 from coderdojochi.forms import (
     CDCForm,
     CDCModelForm,
@@ -31,7 +34,7 @@ from coderdojochi.forms import (
     GuardianForm,
     MentorForm,
     SignupForm,
-    StudentForm
+    StudentForm,
 )
 from coderdojochi.mixins import RoleRedirectMixin
 from coderdojochi.models import (
@@ -46,12 +49,10 @@ from coderdojochi.models import (
     Order,
     PartnerPasswordAccess,
     Session,
-    Student
+    Student,
 )
 from coderdojochi.util import email
 from coderdojochi.views.general import CalendarView
-from icalendar import Calendar, Event, vText
-from paypal.standard.forms import PayPalPaymentsForm
 
 logger = logging.getLogger("mechanize")
 
@@ -63,6 +64,17 @@ class MeetingsView(ListView):
     model = Meeting
     template_name = "meetings.html"
 
+    def get_queryset(self):
+        objects = self.model.objects.filter()
+
+        if not self.request.user.is_authenticated:
+            objects = objects.filter(is_public=True)
+
+        if not self.request.user.is_staff:
+            objects = objects.filter(is_active=True)
+
+        return objects
+
 
 class MeetingDetailRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -72,6 +84,26 @@ class MeetingDetailRedirectView(RedirectView):
 class MeetingDetailView(DetailView):
     model = Meeting
     template_name = "meeting-detail.html"
+
+    def get_queryset(self):
+        objects = self.model.objects.filter()
+
+        if not self.request.user.is_authenticated:
+            objects = objects.filter(is_public=True)
+
+        if not self.request.user.is_staff:
+            objects = objects.filter(is_active=True)
+
+        return objects
+
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            return redirect('meetings')
+
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -275,4 +307,4 @@ def meeting_announce(request, pk):
             'Meeting already announced.'
         )
 
-    return redirect('cdc_admin')
+    return redirect('cdc-admin')

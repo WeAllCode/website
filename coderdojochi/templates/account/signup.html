@@ -13,7 +13,7 @@
     </div>
     <div class="row">
         <div class="half">
-            <p><a class="btn signup-google" href="/accounts/google/login">{% trans "Sign up with Google" %}</a></p>
+            <p><a href="{% provider_login_url "google" %}" class="btn signup-google">{% trans "Sign up with Google" %}</a></p>
         </div>
         <div class="half">
             <p><a href="{% provider_login_url "facebook" method="js_sdk" %}" class="btn signup-facebook">Sign up with Facebook</a></p>

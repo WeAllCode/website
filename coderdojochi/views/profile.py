@@ -4,7 +4,6 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
-import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -22,6 +21,10 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
+import arrow
+from icalendar import Calendar, Event, vText
+from paypal.standard.forms import PayPalPaymentsForm
+
 from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
 from coderdojochi.models import (
     Donation,
@@ -35,11 +38,9 @@ from coderdojochi.models import (
     Order,
     PartnerPasswordAccess,
     Session,
-    Student
+    Student,
 )
 from coderdojochi.util import email
-from icalendar import Calendar, Event, vText
-from paypal.standard.forms import PayPalPaymentsForm
 
 logger = logging.getLogger("mechanize")
 

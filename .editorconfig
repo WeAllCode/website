@@ -13,10 +13,16 @@ indent_style = space
 indent_size = 4
 
 [*.py]
-line_length=120
-known_first_party={{ cookiecutter.project_slug }}
-multi_line_output=3
-default_section=THIRDPARTY
+known_first_party = coderdojochi
+line_length = 120
+include_trailing_comma = true
+use_parentheses = true
+multi_line_output = 3
+indent = '    '
+default_section = THIRDPARTY
+known_django = django
+sections = FUTURE,STDLIB,DJANGO,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
+skip = migrations
 
 [*.{html,css,scss,json,yml}]
 indent_style = space
@@ -24,11 +30,3 @@ indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = false
-
-[Makefile]
-indent_style = tab
-
-[nginx.conf]
-indent_style = space
-indent_size = 2
-

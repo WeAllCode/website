@@ -1,4 +1,5 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+
 from coderdojochi.models import CDCUser
 
 

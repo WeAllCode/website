@@ -132,10 +132,10 @@
     	<p>We are aware of the issue and are already working on a fix.</p>
     	<p class="instruction">Press any link to continue <blink>_</blink></p>
     	<div class="menu">
-    		<a href="/"><u>home</u></a>
-    		<a href="/classes"><u>upcoming classes</u></a>
-    		<a href="/contact"><u>contact us</u></a>
-    		<a href="/donate"><u>donate</u></a>
+    		<a href="{% url 'home' %}"><u>home</u></a>
+    		<a href="{% url 'sessions' %}"><u>upcoming classes</u></a>
+    		<a href="{% url 'contact' %}"><u>contact us</u></a>
+    		<a href="{% url 'donate' %}"><u>donate</u></a>
     	</div>
 
         <!-- Analytics -->
