@@ -185,6 +185,18 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
         kwargs['session_obj'] = session_obj
         return super(SessionDetailView, self).dispatch(request, *args, **kwargs)
 
+    def enroll_redirect(self, request, session_obj):
+        if request.user.role == 'mentor':
+            return redirect('session-sign-up', pk=session_obj.id)
+
+        guardian = get_object_or_404(Guardian, user=request.user)
+        student = get_object_or_404(Student, guardian=guardian, id=(int(request.GET['student']) - 1))
+
+        if student:
+            return redirect('session-sign-up', pk=session_obj.id, student_id=student.id)
+
+        return redirect(f"{reverse('welcome')}?next={session_obj.get_absolute_url()}&enroll=True")
+
     def validate_partner_session_access(self, request, pk):
         authed_sessions = request.session.get('authed_partner_sessions')
 
