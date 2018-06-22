@@ -125,6 +125,11 @@ class MeetingDetailView(DetailView):
         return context
 
 
+class MeetingCalendarRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('meeting-calendar', args=(kwargs['pk'],))
+
+
 class MeetingCalendarView(CalendarView):
     event_type = 'meeting'
     event_kwarg = 'pk'

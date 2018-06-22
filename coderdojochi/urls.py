@@ -14,6 +14,7 @@ from loginas import views as loginas_views
 from . import old_views
 from .views.general import AboutView, HomeView, PrivacyView, WelcomeView
 from .views.meetings import (
+    MeetingCalendarRedirectView,
     MeetingCalendarView,
     MeetingDetailRedirectView,
     MeetingDetailView,
@@ -117,16 +118,16 @@ urlpatterns += [
         path('', old_views.cdc_admin, name='cdc-admin'),
 
         path('classes/', include([
-            # /admin/class/ID/stats/
+            # /admin/classes/ID/stats/
             path('<int:pk>/stats/', old_views.session_stats, name='stats'),
 
-            # /admin/class/ID/check-in/
+            # /admin/classes/ID/check-in/
             path('<int:pk>/check-in/', old_views.session_check_in, name='student-check-in'),
 
-            # /admin/class/ID/check-in-mentors/
+            # /admin/classes/ID/check-in-mentors/
             path('<int:pk>/check-in-mentors/', old_views.session_check_in_mentors, name='mentor-check-in'),
 
-            # /admin/class/ID/donations/
+            # /admin/classes/ID/donations/
             path('<int:pk>/donations/', old_views.session_donations, name='donations'),
         ])),
 
@@ -201,6 +202,9 @@ urlpatterns += [
             '<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/<int:student_id>/',
             SessionSignUpRedirectView.as_view(),
         ),
+
+        # Redirect /class/ID/calendar/ -> /classes/ID/calendar/
+        path('<int:pk>/calendar/', SessionCalendarRedirectView.as_view()),
     ])),
 
     # TODO: Old redirects. Remove by July 2018
@@ -291,6 +295,9 @@ urlpatterns += [
 
         # Redirect /meeting/YYYY/MM/DD/SLUG/ID/ -> /meeting/ID/
         path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', MeetingDetailRedirectView.as_view()),
+
+        # Redirect /meeting/ID/calendar/ -> /classes/ID/calendar/
+        path('<int:pk>/calendar/', MeetingCalendarRedirectView.as_view()),
     ])),
 
 ]
