@@ -152,7 +152,7 @@
             ga('send', 'event', 'button', 'click', 'donation form donate button clicked');
 
             // submit donation record before submitting
-            $.post('/donate/', formData, function(response) {
+            $.post('{% url "donate" %}', formData, function(response) {
                 if(response !== 'failed') {
                     $paymentFirstName.val(formData.first_name);
                     $paymentLastName.val(formData.last_name);

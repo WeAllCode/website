@@ -1,3 +1,5 @@
+import re
+
 from django import template
 from django.template import Template
 from django.urls import reverse
@@ -120,3 +122,13 @@ def student_register_link(context, student, session):
 @register.filter
 def student_age(student, date):
     return student.get_age(date)
+
+
+@register.simple_tag(takes_context=True)
+def menu_is_active(context, pattern_or_urlname, css_class='active'):
+    try:
+        pattern = '^' + reverse(pattern_or_urlname)
+    except NoReverseMatch:
+        pattern = pattern_or_urlname
+
+    return css_class if re.search(pattern, context['request'].path) else ''
