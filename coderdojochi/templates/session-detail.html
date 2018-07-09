@@ -33,12 +33,11 @@
             {% endif %}
             {% if user.is_staff %}
                 <ul class="center-block well well-sm well-admin list-group list-unstyled">
+                    <li class="list-group-item">Active: <b>{{ session.is_active }}</b></li>
+                    <li class="list-group-item">Public: <b>{{ session.is_public }}</b></li>
                     {% if session.is_active %}
-                        <li class="list-group-item">Min Age: {{ session.min_age_limitation|default:"7" }}</li>
-                        <li class="list-group-item">Max Age: {{ session.max_age_limitation|default:"17" }}</li>
-                        <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
-                        <li class="list-group-item">Mentors: <b>{{ session.get_mentor_orders.count }} / {{ session.get_mentor_capacity }}</b></li>
-
+                        <li class="list-group-item">Min Age: <b>{{ session.min_age_limitation }}</b></li>
+                        <li class="list-group-item">Max Age: <b>{{ session.max_age_limitation }}</b></li>
                         {% if session.announced_date_mentors %}
                             <li class="text-muted list-group-item">Announced to mentors on:<br><b>{{ session.announced_date_mentors|date:'F j, Y \a\t g:i a' }}</b></li>
                         {% else %}
