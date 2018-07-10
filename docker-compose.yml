@@ -18,3 +18,5 @@ services:
     container_name: dojo-v1-db
     ports:
       - "5432:5432"
+  redis:
+    image: redis:3.2

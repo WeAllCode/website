@@ -32,6 +32,8 @@ icalendar = "*"
 json-logging-py = "*"
 django-anymail = "*"
 raven = "*"
+collectfast = "*"
+django-redis = "*"
 
 [dev-packages]
 pylint = "*"
