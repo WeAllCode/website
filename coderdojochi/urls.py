@@ -308,14 +308,33 @@ urlpatterns += [
     path('robots.txt', lambda r: HttpResponse('User-agent: *\nDisallow:', content_type='text/plain'))
 ]
 
+
 # favicon.ico
-urlpatterns += [
-    path(
-        'favicon.ico',
-        RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'), permanent=False),
-        name='favicon'
-    ),
+favicons = [
+    'favicon.ico',
+    'android-chrome-192x192.png',
+    'android-chrome-256x256.png',
+    'apple-touch-icon.png',
+    'browserconfig.xml',
+    'favicon-16x16.png',
+    'favicon-32x32.png',
+    'mstile-70x70.png',
+    'mstile-150x150.png',
+    'mstile-310x150.png',
+    'mstile-310x310.png',
+    'safari-pinned-tab.svg',
+    'site.webmanifest',
 ]
+
+for favicon in favicons:
+    urlpatterns += [
+        path(
+            favicon,
+            RedirectView.as_view(url=staticfiles_storage.url(favicon), permanent=False),
+            name=favicon
+        ),
+    ]
+
 
 # Static files
 urlpatterns += static(

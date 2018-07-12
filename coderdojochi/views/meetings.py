@@ -65,7 +65,9 @@ class MeetingsView(ListView):
     template_name = "meetings.html"
 
     def get_queryset(self):
-        objects = self.model.objects.filter()
+        objects = self.model.objects.filter(
+            end_date__gte=timezone.now()
+        )
 
         if not self.request.user.is_authenticated:
             objects = objects.filter(is_public=True)
