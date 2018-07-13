@@ -190,7 +190,7 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
             return redirect('session-sign-up', pk=session_obj.id)
 
         guardian = get_object_or_404(Guardian, user=request.user)
-        student = get_object_or_404(Student, guardian=guardian, id=(int(request.GET['student']) - 1))
+        student = get_object_or_404(Student, guardian=guardian, id=(int(request.GET['student'])))
 
         if student:
             return redirect('session-sign-up', pk=session_obj.id, student_id=student.id)
