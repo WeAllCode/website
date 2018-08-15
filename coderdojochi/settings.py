@@ -318,6 +318,7 @@ if SENTRY_DSN:
 
     RAVEN_CONFIG = {
         'dsn': SENTRY_DSN,
+        'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
     }
 
     LOGGING = {
