@@ -45,6 +45,29 @@ def generate_filename(instance, filename):
     return f"avatar/{instance.user.username}{file_extension.lower()}"
 
 
+class RaceEthnicity(models.Model):
+    race_ethnicity = models.CharField(
+        max_length=255,
+    )
+    is_visible = models.BooleanField(
+        default=False,
+    )
+
+    class Meta:
+        verbose_name = _("race ethnicity")
+        verbose_name_plural = _("race ethnicities")
+
+    def __str__(self):
+        return self.race_ethnicity
+
+
+SHIRT_SIZE_CHOICES = (
+    ('s', 'Small'),
+    ('m', 'Medium'),
+    ('l', 'Large'),
+)
+
+
 class Mentor(models.Model):
     user = models.ForeignKey(
         CDCUser,
@@ -83,6 +106,40 @@ class Mentor(models.Model):
     avatar_approved = models.BooleanField(
         default=False,
     )
+    birthday = models.DateTimeField(
+        blank=False,
+        null=True,
+    )
+    gender = models.CharField(
+        max_length=255,
+        blank=False,
+        null=True,
+    )
+    race_ethnicity = models.ManyToManyField(
+        RaceEthnicity,
+        blank=False,
+    )
+    shirt_size = models.CharField(
+        choices=SHIRT_SIZE_CHOICES,
+        max_length=5,
+        blank=False,
+        null=True,
+    )
+    work_place = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    home_address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = _("mentors")
@@ -117,22 +174,6 @@ class Mentor(models.Model):
         return self.user.last_name
 
 
-class RaceEthnicity(models.Model):
-    race_ethnicity = models.CharField(
-        max_length=255,
-    )
-    is_visible = models.BooleanField(
-        default=False,
-    )
-
-    class Meta:
-        verbose_name = _("race ethnicity")
-        verbose_name_plural = _("race ethnicities")
-
-    def __str__(self):
-        return self.race_ethnicity
-
-
 class Guardian(models.Model):
     user = models.ForeignKey(
         CDCUser,
@@ -149,6 +190,19 @@ class Guardian(models.Model):
         max_length=20,
         blank=True,
         null=True,
+    )
+    birthday = models.DateTimeField(
+        blank=False,
+        null=True,
+    )
+    gender = models.CharField(
+        max_length=255,
+        blank=False,
+        null=True,
+    )
+    race_ethnicity = models.ManyToManyField(
+        RaceEthnicity,
+        blank=False,
     )
     created_at = models.DateTimeField(
         auto_now_add=True,

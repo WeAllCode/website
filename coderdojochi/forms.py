@@ -18,6 +18,12 @@ SCHOOL_TYPE_CHOICES = (
     ("Homeschool", "Homeschool")
 )
 
+SHIRT_SIZE_CHOICES = (
+    ("s", "Small"),
+    ("m", "Medium"),
+    ("l", "Large"),
+)
+
 
 class CDCForm(Form):
     # strip leading or trailing whitespace
@@ -119,9 +125,74 @@ class MentorForm(CDCModelForm):
         required=False
     )
 
+    gender = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Gender',
+        required=True
+    )
+
+    race_ethnicity = forms.ModelMultipleChoiceField(
+        widget=forms.SelectMultiple,
+        queryset=RaceEthnicity.objects.filter(is_visible=True),
+        required=True
+    )
+
+    birthday = forms.CharField(
+        widget=html5_widgets.DateInput(
+            attrs={
+                'class': 'form-control'
+            }
+        ),
+        required=True
+    )
+
+    shirt_size = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SHIRT_SIZE_CHOICES,
+        required=True
+    )
+
+    work_place = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Work Place',
+        required=False
+    )
+
+    phone = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Phone',
+        required=False
+    )
+
+    home_address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Home Address',
+        required=False
+    )
+
     class Meta:
         model = Mentor
-        fields = ('bio', 'avatar')
+        fields = ('bio', 'avatar', 'gender', 'race_ethnicity', 'birthday')
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
@@ -183,6 +254,7 @@ class GuardianForm(CDCModelForm):
         ),
         label='Phone Number'
     )
+
     zip = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -193,9 +265,35 @@ class GuardianForm(CDCModelForm):
         label='Zip Code'
     )
 
+    gender = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Gender',
+        required=True
+    )
+
+    race_ethnicity = forms.ModelMultipleChoiceField(
+        widget=forms.SelectMultiple,
+        queryset=RaceEthnicity.objects.filter(is_visible=True),
+        required=True
+    )
+
+    birthday = forms.CharField(
+        widget=html5_widgets.DateInput(
+            attrs={
+                'class': 'form-control'
+            }
+        ),
+        required=True
+    )
+
     class Meta:
         model = Guardian
-        fields = ('phone', 'zip')
+        fields = ('phone', 'zip', 'gender', 'race_ethnicity', 'birthday')
 
 
 class StudentForm(CDCModelForm):
