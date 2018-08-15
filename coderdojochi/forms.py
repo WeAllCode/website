@@ -18,6 +18,12 @@ SCHOOL_TYPE_CHOICES = (
     ("Homeschool", "Homeschool")
 )
 
+SHIRT_SIZE_CHOICES = (
+    ("s", "Small"),
+    ("m", "Medium"),
+    ("l", "Large"),
+)
+
 
 class CDCForm(Form):
     # strip leading or trailing whitespace
@@ -126,13 +132,14 @@ class MentorForm(CDCModelForm):
                 'class': 'form-control'
             }
         ),
-        label='Gender'
+        label='Gender',
+        required=True
     )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.SelectMultiple,
         queryset=RaceEthnicity.objects.filter(is_visible=True),
-        required=False
+        required=True
     )
 
     birthday = forms.CharField(
@@ -140,7 +147,47 @@ class MentorForm(CDCModelForm):
             attrs={
                 'class': 'form-control'
             }
-        )
+        ),
+        required=True
+    )
+
+    shirt_size = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SHIRT_SIZE_CHOICES,
+        required=True
+    )
+
+    work_place = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Work Place',
+        required=False
+    )
+
+    phone = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Phone',
+        required=False
+    )
+
+    home_address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': '',
+                'class': 'form-control'
+            }
+        ),
+        label='Home Address',
+        required=False
     )
 
     class Meta:
@@ -225,13 +272,14 @@ class GuardianForm(CDCModelForm):
                 'class': 'form-control'
             }
         ),
-        label='Gender'
+        label='Gender',
+        required=True
     )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.SelectMultiple,
         queryset=RaceEthnicity.objects.filter(is_visible=True),
-        required=False
+        required=True
     )
 
     birthday = forms.CharField(
@@ -239,7 +287,8 @@ class GuardianForm(CDCModelForm):
             attrs={
                 'class': 'form-control'
             }
-        )
+        ),
+        required=True
     )
 
     class Meta:

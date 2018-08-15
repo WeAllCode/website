@@ -61,6 +61,13 @@ class RaceEthnicity(models.Model):
         return self.race_ethnicity
 
 
+SHIRT_SIZE_CHOICES = (
+    ('s', 'Small'),
+    ('m', 'Medium'),
+    ('l', 'Large'),
+)
+
+
 class Mentor(models.Model):
     user = models.ForeignKey(
         CDCUser,
@@ -100,17 +107,38 @@ class Mentor(models.Model):
         default=False,
     )
     birthday = models.DateTimeField(
-        blank=True,
+        blank=False,
         null=True,
     )
     gender = models.CharField(
         max_length=255,
-        blank=True,
+        blank=False,
         null=True,
     )
     race_ethnicity = models.ManyToManyField(
         RaceEthnicity,
+        blank=False,
+    )
+    shirt_size = models.CharField(
+        choices=SHIRT_SIZE_CHOICES,
+        max_length=5,
+        blank=False,
+        null=True,
+    )
+    work_place = models.CharField(
+        max_length=255,
         blank=True,
+        null=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    home_address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
     )
 
     class Meta:
@@ -164,17 +192,17 @@ class Guardian(models.Model):
         null=True,
     )
     birthday = models.DateTimeField(
-        blank=True,
+        blank=False,
         null=True,
     )
     gender = models.CharField(
         max_length=255,
-        blank=True,
+        blank=False,
         null=True,
     )
     race_ethnicity = models.ManyToManyField(
         RaceEthnicity,
-        blank=True,
+        blank=False,
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
