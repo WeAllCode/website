@@ -19,9 +19,12 @@ SCHOOL_TYPE_CHOICES = (
 )
 
 SHIRT_SIZE_CHOICES = (
+    ("xs", "XSmall"),
     ("s", "Small"),
     ("m", "Medium"),
     ("l", "Large"),
+    ("xl", "X-Large"),
+    ("xxl", "XX-Large"),
 )
 
 
@@ -192,7 +195,7 @@ class MentorForm(CDCModelForm):
 
     class Meta:
         model = Mentor
-        fields = ('bio', 'avatar', 'gender', 'race_ethnicity', 'birthday')
+        fields = ('bio', 'avatar', 'gender', 'race_ethnicity', 'birthday', 'shirt_size', 'phone', 'home_address', 'work_place')
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
