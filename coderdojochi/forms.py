@@ -18,15 +18,6 @@ SCHOOL_TYPE_CHOICES = (
     ("Homeschool", "Homeschool")
 )
 
-SHIRT_SIZE_CHOICES = (
-    ("xs", "XSmall"),
-    ("s", "Small"),
-    ("m", "Medium"),
-    ("l", "Large"),
-    ("xl", "X-Large"),
-    ("xxl", "XX-Large"),
-)
-
 
 class CDCForm(Form):
     # strip leading or trailing whitespace
@@ -154,12 +145,6 @@ class MentorForm(CDCModelForm):
         required=True
     )
 
-    shirt_size = forms.ChoiceField(
-        widget=forms.RadioSelect,
-        choices=SHIRT_SIZE_CHOICES,
-        required=True
-    )
-
     work_place = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -195,7 +180,7 @@ class MentorForm(CDCModelForm):
 
     class Meta:
         model = Mentor
-        fields = ('bio', 'avatar', 'gender', 'race_ethnicity', 'birthday', 'shirt_size', 'phone', 'home_address', 'work_place')
+        fields = ('bio', 'avatar', 'gender', 'race_ethnicity', 'birthday', 'phone', 'home_address', 'work_place')
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
