@@ -119,12 +119,6 @@ class Mentor(models.Model):
         RaceEthnicity,
         blank=False,
     )
-    shirt_size = models.CharField(
-        choices=SHIRT_SIZE_CHOICES,
-        max_length=5,
-        blank=False,
-        null=True,
-    )
     work_place = models.CharField(
         max_length=255,
         blank=True,
