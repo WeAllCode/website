@@ -18,10 +18,7 @@
     "DEFAULT_FROM_EMAIL": {
       "required": true
     },
-    "MANDRILL_API_KEY": {
-      "required": true
-    },
-    "MANDRILL_WEBHOOK_KEY": {
+    "SENDGRID_API_KEY": {
       "required": true
     },
     "PAYPAL_RECEIVER_EMAIL": {
