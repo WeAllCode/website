@@ -575,7 +575,6 @@ def contact(request, template_name="contact.html"):
                         'email': request.POST['email'],
                         'name': request.POST['name'],
                     },
-
                 )
 
                 messages.success(
