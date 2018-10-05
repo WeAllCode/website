@@ -19,7 +19,7 @@
                             </tr>
                             <tr>
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
-                                    <p><b>*|first_name|*</b>,</p>
+                                    <p><b>{{first_name}}</b>,</p>
 
                                     <p>Thanks for signing up for our next meeting. We look forward to seeing you there.</p>
 
@@ -65,7 +65,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">*|meeting_title|*</td>
+                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">{{meeting_title}}</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -91,7 +91,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">*|meeting_start_date|*</td>
+                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">{{meeting_start_date}}</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -117,7 +117,7 @@
                                             <td style="padding: 0 0 10px 0;">
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
-                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">*|meeting_start_time|* &ndash; *|meeting_end_time|*</td>
+                                                        <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">{{meeting_start_time}} &ndash; {{meeting_end_time}}</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -144,9 +144,9 @@
                                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                     <tr>
                                                         <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">
-                                                        {% if meeting_location_name %}*|meeting_location_name|*<br>{% endif %}
-                                                        *|meeting_location_address|*, *|meeting_location_address2|*<br>
-                                                        *|meeting_location_city|*, *|meeting_location_state|* *|meeting_location_zip|*
+                                                        {% if meeting_location_name %}{{meeting_location_name}}<br>{% endif %}
+                                                        {{meeting_location_address}}, {{meeting_location_address2}}<br>
+                                                        {{meeting_location_city}}, {{meeting_location_state}} {{meeting_location_zip}}
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -176,7 +176,7 @@
                                 <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
                                     <p>We hope you&rsquo;re as excited about it as we are. Mark it in your calendar.</p>
 
-                                    <p>Know others who might be interested in becoming mentors? <a href="*|SITE_URL|*" target="_blank">Invite them!</a></p>
+                                    <p>Know others who might be interested in becoming mentors? <a href="{{SITE_URL}}" target="_blank">Invite them!</a></p>
 
                                     <p>If you have any questions, just reply back to this email.</p>
 
@@ -201,22 +201,22 @@
 
 {% block email-markup %}
 <div itemscope itemtype="http://schema.org/EventReservation">
-    <meta itemprop="reservationNumber" content="E*|order_id|*"/>
+    <meta itemprop="reservationNumber" content="E{{order_id}}"/>
     <link itemprop="reservationStatus" href="http://schema.org/Confirmed"/>
     <div itemprop="underName" itemscope itemtype="http://schema.org/Person">
-        <meta itemprop="name" content="*|first_name|* *|last_name|*"/>
+        <meta itemprop="name" content="{{first_name}} {{last_name}}"/>
     </div>
     <div itemprop="reservationFor" itemscope itemtype="http://schema.org/Event">
-        <meta itemprop="name" content="*|meeting_title|*"/>
-        <meta itemprop="startDate" content="*|microdata_start_date|*"/>
-        <meta itemprop="endDate" content="*|microdata_end_date|*"/>
+        <meta itemprop="name" content="{{meeting_title}}"/>
+        <meta itemprop="startDate" content="{{microdata_start_date}}"/>
+        <meta itemprop="endDate" content="{{microdata_end_date}}"/>
         <div itemprop="location" itemscope itemtype="http://schema.org/Place">
-            <meta itemprop="name" content="*|meeting_location_name|*"/>
+            <meta itemprop="name" content="{{meeting_location_name}}"/>
             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-                <meta itemprop="streetAddress" content="*|meeting_location_address|* *|meeting_location_address2|*"/>
-                <meta itemprop="addressLocality" content="*|meeting_location_city|*"/>
-                <meta itemprop="addressRegion" content="*|meeting_location_state|*"/>
-                <meta itemprop="postalCode" content="*|meeting_location_zip|*"/>
+                <meta itemprop="streetAddress" content="{{meeting_location_address}} {{meeting_location_address2}}"/>
+                <meta itemprop="addressLocality" content="{{meeting_location_city}}"/>
+                <meta itemprop="addressRegion" content="{{meeting_location_state}}"/>
+                <meta itemprop="postalCode" content="{{meeting_location_zip}}"/>
                 <meta itemprop="addressCountry" content="US"/>
             </div>
         </div>

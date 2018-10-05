@@ -4,6 +4,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 
+# from anymail.something import AnymailMessage
+
 logger = logging.getLogger("mechanize")
 
 
@@ -62,6 +64,9 @@ def email(
     msg.merge_global_data = merge_global_data
     msg.subject = subject
     msg.to = recipients
+    msg.esp_extra = {
+        'merge_field_format': "{{{{{}}}}}"  # "{{ {{ {} }} }}" without the spaces
+    }
 
     if reply_to:
         msg.reply_to = reply_to

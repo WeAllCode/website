@@ -277,28 +277,9 @@ SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapte
 
 # Email
 ANYMAIL = {
-    'MANDRILL_API_KEY': os.environ.get('MANDRILL_API_KEY'),
-    'MANDRILL_WEBHOOK_KEY': os.environ.get('MANDRILL_WEBHOOK_KEY'),
+    'SENDGRID_API_KEY': os.environ.get('SENDGRID_API_KEY'),
 }
-
-# TODO: Be sure to add the following to app.json
-# "HEROKU_APP_NAME": {
-#    "required": true
-#  },
-#  "HEROKU_PARENT_APP_NAME": {
-#    "required": true
-#  },
-#
-# if 'HEROKU_APP_NAME' in os.environ:
-#     ANYMAIL['WEBHOOK_SECRET'] = os.environ.get('MANDRILL_WEBHOOK_KEY')
-#     ANYMAIL['MANDRILL_WEBHOOK_URL'] = (
-#         'https://{secret_key}@{app_name}.herokuapp.com/anymail/mandrill/tracking/'.format(
-#             secret_key=ANYMAIL['MANDRILL_WEBHOOK_KEY'],
-#             app_name=os.environ.get('HEROKU_APP_NAME'),
-#         )
-#     )
-
-EMAIL_BACKEND = "anymail.backends.mandrill.EmailBackend"
+EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
 
