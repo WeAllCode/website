@@ -52,24 +52,21 @@ def email(
     merge_global_data['current_year'] = timezone.now().year
     merge_global_data['company_name'] = settings.SITE_NAME
     merge_global_data['site_url'] = settings.SITE_URL
+    merge_global_data['preheader'] = preheader
 
-    if preheader:
-        merge_global_data['preheader'] = preheader
-
-    msg = AnymailMessage()
-    msg.body = render_to_string(f"{template_name}.html")
-    msg.content_subtype = "html"
-    msg.from_email = f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>"
-    msg.merge_data = merge_data
-    msg.merge_global_data = merge_global_data
-    msg.subject = subject
-    msg.to = recipients
-    msg.esp_extra = {
-        'merge_field_format': "{{{{{}}}}}"  # "{{ {{ {} }} }}" without the spaces
-    }
-
-    if reply_to:
-        msg.reply_to = reply_to
+    msg = AnymailMessage(
+        subject=subject,
+        body=render_to_string(f"{template_name}.html"),
+        from_email=f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>",
+        to=recipients[0:1],
+        reply_to=reply_to,
+        # content_subtype="html",
+        merge_data=merge_data,
+        merge_global_data=merge_global_data,
+        esp_extra={
+            'merge_field_format': "{{{{{}}}}}"  # "{{ {{ {} }} }}" without the spaces
+        },
+    )
 
     if send:
         try:
