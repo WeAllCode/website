@@ -3,7 +3,8 @@ import logging
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
-
+from anymail.exceptions import AnymailAPIError
+from anymail.message import AnymailMessage
 
 logger = logging.getLogger("mechanize")
 
@@ -55,7 +56,7 @@ def email(
     if preheader:
         merge_global_data['preheader'] = preheader
 
-    msg = EmailMultiAlternatives()
+    msg = AnymailMessage()
     msg.body = render_to_string(f"{template_name}.html")
     msg.content_subtype = "html"
     msg.from_email = f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>"
