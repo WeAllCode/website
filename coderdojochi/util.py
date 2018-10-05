@@ -4,7 +4,6 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-# from anymail.something import AnymailMessage
 
 logger = logging.getLogger("mechanize")
 
