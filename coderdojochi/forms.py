@@ -413,7 +413,7 @@ class StudentForm(CDCModelForm):
 class ContactForm(CDCForm):
     name = forms.CharField(max_length=100, label='Your name')
     email = forms.EmailField(max_length=200, label='Your email address')
-    body = forms.CharField(widget=forms.Textarea, label='Your message')
+    message = forms.CharField(widget=forms.Textarea, label='Your message')
     human = forms.CharField(max_length=100, label=False, required=False)
 
 

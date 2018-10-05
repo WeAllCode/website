@@ -566,28 +566,17 @@ def contact(request, template_name="contact.html"):
                 human = False
 
             if human:
-                msg = EmailMultiAlternatives(
+                email(
                     subject=f"{request.POST['name']} | CoderDojoChi Contact Form",
-                    body=request.POST['body'],
-                    from_email=f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>",
-                    reply_to=[
-                        f"{request.POST['name']}<{request.POST['email']}>"
-                    ],
-                    to=[settings.CONTACT_EMAIL]
-                )
+                    recipients=["info@coderdojochi.org"],
+                    template_name='contact-email',
+                    merge_data={
+                        'message': request.POST['message'],
+                        'email': request.POST['email'],
+                        'name': request.POST['name'],
+                    },
 
-                msg.attach_alternative(
-                    request.POST['body'].replace(
-                        "\r\n",
-                        "<br />"
-                    ).replace(
-                        "\n",
-                        "<br />"
-                    ),
-                    'text/html'
                 )
-
-                msg.send()
 
                 messages.success(
                     request,
