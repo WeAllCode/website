@@ -55,7 +55,7 @@ def email(
     merge_global_data['site_url'] = settings.SITE_URL
     merge_global_data['preheader'] = preheader
 
-    body = render_to_string(f"{template_name}.html")
+    body = render_to_string(f"{template_name}.html", merge_global_data)
 
     # If we send values that don't exist in the template,
     # SendGrid divides by zero, doesn't pass go, does not collect $200.
