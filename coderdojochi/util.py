@@ -48,7 +48,6 @@ def email(
     if bcc not in [False, None] and not isinstance(bcc, list):
         raise TypeError("recipients must be a list")
 
-
     merge_global_data['subject'] = subject
     merge_global_data['current_year'] = timezone.now().year
     merge_global_data['company_name'] = settings.SITE_NAME
