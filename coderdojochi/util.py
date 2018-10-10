@@ -3,6 +3,8 @@ import logging
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
+from anymail.exceptions import AnymailAPIError
+from anymail.message import AnymailMessage
 
 logger = logging.getLogger("mechanize")
 
@@ -50,21 +52,32 @@ def email(
     merge_global_data['current_year'] = timezone.now().year
     merge_global_data['company_name'] = settings.SITE_NAME
     merge_global_data['site_url'] = settings.SITE_URL
+    merge_global_data['preheader'] = preheader
 
-    if preheader:
-        merge_global_data['preheader'] = preheader
+    body = render_to_string(f"{template_name}.html", merge_global_data)
 
-    msg = EmailMultiAlternatives()
-    msg.body = render_to_string(f"{template_name}.html")
+    # If we send values that don't exist in the template,
+    # SendGrid divides by zero, doesn't pass go, does not collect $200.
+    merge_field_format = "*|{}|*"
+    final_merge_global_data = {}
+    for key, val in merge_global_data.items():
+        if val is not None and merge_field_format.format(key) in body:
+            final_merge_global_data[key] = val
+
+    msg = AnymailMessage(
+        subject=subject,
+        body=body,
+        from_email=f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>",
+        to=recipients,
+        reply_to=reply_to,
+        merge_data=merge_data,
+        merge_global_data=final_merge_global_data,
+        esp_extra={
+            'merge_field_format': merge_field_format
+        },
+    )
+
     msg.content_subtype = "html"
-    msg.from_email = f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>"
-    msg.merge_data = merge_data
-    msg.merge_global_data = merge_global_data
-    msg.subject = subject
-    msg.to = recipients
-
-    if reply_to:
-        msg.reply_to = reply_to
 
     if send:
         try:

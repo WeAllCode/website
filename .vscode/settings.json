@@ -22,7 +22,6 @@
     "python.linting.pep8Args": [
         "--max-line-length=120",
     ],
-    "python.pythonPath": "/usr/local/bin/python3",
     "[python]": {
         "editor.rulers": [120],
     },
@@ -39,5 +38,4 @@
         "editor.quickSuggestions": false,
         "editor.trimAutoWhitespace": false,
     },
-
 }
