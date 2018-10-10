@@ -77,6 +77,8 @@ def email(
         },
     )
 
+    msg.content_subtype = "html"
+
     if send:
         try:
             msg.send()

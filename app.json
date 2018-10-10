@@ -3,30 +3,17 @@
   "scripts": {
   },
   "env": {
-    "DEBUG": {
-      "required": true
-    },
-    "ENABLE_DEV_FIXTURES": {
-      "required": true
-    },
-    "SECRET_KEY": {
-      "required": true
-    },
-    "CONTACT_EMAIL": {
-      "required": true
-    },
-    "DEFAULT_FROM_EMAIL": {
-      "required": true
-    },
-    "SENDGRID_API_KEY": {
-      "required": true
-    },
-    "PAYPAL_RECEIVER_EMAIL": {
-      "required": true
-    },
-    "PAYPAL_BUSINESS_ID": {
-      "required": true
-    }
+    "CONTACT_EMAIL": { "required": true },
+    "DEBUG": { "required": true },
+    "DEFAULT_FROM_EMAIL": { "required": true },
+    "DJANGO_SECURE_SSL_REDIRECT": { "required": true },
+    "ENABLE_DEV_FIXTURES": { "required": true },
+    "MANDRILL_API_KEY": { "required": true },
+    "MANDRILL_WEBHOOK_KEY": { "required": true },
+    "PAYPAL_BUSINESS_ID": { "required": true },
+    "PAYPAL_RECEIVER_EMAIL": { "required": true },
+    "SECRET_KEY": { "required": true },
+    "SENDGRID_API_KEY": { "required": true }
   },
   "formation": {
     "web": {
