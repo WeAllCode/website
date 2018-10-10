@@ -570,12 +570,10 @@ def contact(request, template_name="contact.html"):
                     subject=f"{request.POST['name']} | CoderDojoChi Contact Form",
                     recipients=["info@coderdojochi.org"],
                     template_name='contact-email',
-                    merge_data={
-                        'info@coderdojochi.org': {
-                            'message': request.POST['message'],
-                            'email': request.POST['email'],
-                            'name': request.POST['name'],
-                        }
+                    merge_global_data={
+                        'message': request.POST['message'],
+                        'email': request.POST['email'],
+                        'name': request.POST['name'],
                     },
                 )
 

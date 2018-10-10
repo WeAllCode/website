@@ -48,8 +48,6 @@ def email(
     if bcc not in [False, None] and not isinstance(bcc, list):
         raise TypeError("recipients must be a list")
 
-    body = render_to_string(f"{template_name}.html")
-    merge_field_format = "{{{{{}}}}}"
 
     merge_global_data['subject'] = subject
     merge_global_data['current_year'] = timezone.now().year
@@ -57,8 +55,11 @@ def email(
     merge_global_data['site_url'] = settings.SITE_URL
     merge_global_data['preheader'] = preheader
 
+    body = render_to_string(f"{template_name}.html")
+
     # If we send values that don't exist in the template,
     # SendGrid divides by zero, doesn't pass go, does not collect $200.
+    merge_field_format = "*|{}|*"
     final_merge_global_data = {}
     for key, val in merge_global_data.items():
         if val is not None and merge_field_format.format(key) in body:
