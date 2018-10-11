@@ -38,7 +38,7 @@ def avatar_updated_handler(sender, instance, **kwargs):
                 'approve_url': f"{settings.SITE_URL}{instance.get_approve_avatar_url()}",
                 'reject_url': f"{settings.SITE_URL}{instance.get_reject_avatar_url()}",
             },
-            recipients=[settings.CONTACT_EMAIL],
+            recipients=[settings.DEFAULT_FROM_EMAIL],
             preheader='Mentor Avatar Changed',
             send=False
         )
@@ -76,7 +76,7 @@ def donate_callback(sender, **kwargs):
                 template_name='donation-receipt',
                 merge_global_data=merge_global_data,
                 recipients=[donation.email],
-                bcc=[settings.CONTACT_EMAIL],
+                bcc=[settings.DEFAULT_FROM_EMAIL],
                 preheader="Your generous donation is what makes CoderDojoChi possible.",
             )
 

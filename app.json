@@ -3,7 +3,6 @@
   "scripts": {
   },
   "env": {
-    "CONTACT_EMAIL": { "required": true },
     "DEBUG": { "required": true },
     "DEFAULT_FROM_EMAIL": { "required": true },
     "DJANGO_SECURE_SSL_REDIRECT": { "required": true },

@@ -568,7 +568,7 @@ def contact(request, template_name="contact.html"):
             if human:
                 email(
                     subject=f"{request.POST['name']} | CoderDojoChi Contact Form",
-                    recipients=[settings.CONTACT_EMAIL],
+                    recipients=[settings.DEFAULT_FROM_EMAIL],
                     reply_to=[f"{request.POST['name']}<{request.POST['email']}>"],
                     template_name='contact-email',
                     merge_global_data={
