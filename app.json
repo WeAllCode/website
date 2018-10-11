@@ -5,7 +5,7 @@
   "env": {
     "DEBUG": { "required": true },
     "DEFAULT_FROM_EMAIL": { "required": true },
-    "DJANGO_SECURE_SSL_REDIRECT": { "required": true },
+    "SECURE_SSL_REDIRECT": { "required": true },
     "ENABLE_DEV_FIXTURES": { "required": true },
     "MANDRILL_API_KEY": { "required": true },
     "MANDRILL_WEBHOOK_KEY": { "required": true },
