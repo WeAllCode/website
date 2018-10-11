@@ -23,9 +23,7 @@ def migrate(ctx):
 
 @task
 def load_fixtures(ctx):
-    # ctx.run("python manage.py loaddata 01-defaults")
-
-    if env.bool("ENABLE_DEV_FIXTURES", default=False):
+    if env.bool("DJANGO_ENABLE_DEV_FIXTURES", default=False):
         ctx.run("python3 manage.py loaddata fixtures/*.json")
 
 

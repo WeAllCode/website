@@ -31,11 +31,11 @@ if READ_DOT_ENV_FILE:
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 # # SECURITY
 # # ------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ DEBUG = env.bool('DEBUG', default=False)
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
-# SECURE_SSL_REDIRECT = env.bool('SECURE_SSL_REDIRECT', default=True)
+# SECURE_SSL_REDIRECT = env.bool('DJANGO_SECURE_SSL_REDIRECT', default=True)
 
 # # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
 # SESSION_COOKIE_SECURE = True
@@ -63,13 +63,13 @@ DEBUG = env.bool('DEBUG', default=False)
 # SECURE_HSTS_SECONDS = 60
 
 # # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
 
 # # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
-# SECURE_HSTS_PRELOAD = env.bool('SECURE_HSTS_PRELOAD', default=True)
+# SECURE_HSTS_PRELOAD = env.bool('DJANGO_SECURE_HSTS_PRELOAD', default=True)
 
 # # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-# SECURE_CONTENT_TYPE_NOSNIFF = env.bool('SECURE_CONTENT_TYPE_NOSNIFF', default=True)
+# SECURE_CONTENT_TYPE_NOSNIFF = env.bool('DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', default=True)
 
 # # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
 # SECURE_BROWSER_XSS_FILTER = True
@@ -194,8 +194,8 @@ USE_L10N = True
 USE_TZ = True
 
 SITE_ID = 1
-SITE_NAME = env('SITE_NAME')
-SITE_URL = env('SITE_URL')
+SITE_NAME = env('DJANGO_SITE_NAME')
+SITE_URL = env('DJANGO_SITE_URL')
 
 # Change 'default' database configuration with $DATABASE_URL.
 DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
@@ -308,7 +308,7 @@ ANYMAIL = {
     'SENDGRID_API_KEY': env('SENDGRID_API_KEY'),
 }
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL')
 
 
 # Sentry
