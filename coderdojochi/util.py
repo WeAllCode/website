@@ -3,10 +3,11 @@ import logging
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
+
 from anymail.exceptions import AnymailAPIError
 from anymail.message import AnymailMessage
 
-logger = logging.getLogger("mechanize")
+logger = logging.getLogger(__name__)
 
 
 def str_to_bool(s):
@@ -64,6 +65,10 @@ def email(
         if val is not None and merge_field_format.format(key) in body:
             final_merge_global_data[key] = val
 
+    esp_extra = {
+        'merge_field_format': merge_field_format,
+    },
+
     msg = AnymailMessage(
         subject=subject,
         body=body,
@@ -72,9 +77,7 @@ def email(
         reply_to=reply_to,
         merge_data=merge_data,
         merge_global_data=final_merge_global_data,
-        esp_extra={
-            'merge_field_format': merge_field_format
-        },
+        esp_extra=esp_extra,
     )
 
     msg.content_subtype = "html"
