@@ -1,26 +1,14 @@
 import logging
 
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
+
 from anymail.exceptions import AnymailAPIError
 from anymail.message import AnymailMessage
 
-logger = logging.getLogger("mechanize")
-
-
-def str_to_bool(s):
-    TRUE = ['true', 't', '1', 'yes', 'y']
-    FALSE = ['false', 'f', '0', 'no', 'n']
-
-    if s.lower() in TRUE:
-        return True
-    elif s.lower() in FALSE:
-        return False
-    else:
-        # evil ValueError that doesn't
-        # tell you what the wrong value was
-        raise ValueError
+logger = logging.getLogger(__name__)
 
 
 def email(
@@ -34,8 +22,6 @@ def email(
     reply_to=None,
     send=True
 ):
-
-    from django.conf import settings
 
     if not (subject and template_name and recipients):
         raise NameError()
@@ -62,7 +48,7 @@ def email(
     final_merge_global_data = {}
     for key, val in merge_global_data.items():
         if merge_field_format.format(key) in body:
-            final_merge_global_data[key] = "" if val == None else str(val)
+            final_merge_global_data[key] = "" if val is None else str(val)
 
     msg = AnymailMessage(
         subject=subject,
