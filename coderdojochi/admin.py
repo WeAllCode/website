@@ -1,4 +1,5 @@
 from datetime import datetime
+from distutils.util import strtobool
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -28,7 +29,6 @@ from coderdojochi.models import (
     Session,
     Student,
 )
-from coderdojochi.util import str_to_bool
 
 User = get_user_model()
 
@@ -363,8 +363,8 @@ class StudentResource(resources.ModelResource):
         obj.gender = data.get('gender', '')
         obj.school_name = data.get('school_name', '')
         obj.school_type = data.get('school_type', '')
-        obj.photo_release = str_to_bool(data.get('photo_release', ''))
-        obj.consent = str_to_bool(data.get('consent', ''))
+        obj.photo_release = strtobool(data.get('photo_release', ''))
+        obj.consent = strtobool(data.get('consent', ''))
         obj.is_active = True
 
         try:
