@@ -61,8 +61,8 @@ def email(
     merge_field_format = "*|{}|*"
     final_merge_global_data = {}
     for key, val in merge_global_data.items():
-        if val is not None and merge_field_format.format(key) in body:
-            final_merge_global_data[key] = val
+        if merge_field_format.format(key) in body:
+            final_merge_global_data[key] = "" if val == None else str(val)
 
     msg = AnymailMessage(
         subject=subject,
@@ -73,7 +73,8 @@ def email(
         merge_data=merge_data,
         merge_global_data=final_merge_global_data,
         esp_extra={
-            'merge_field_format': merge_field_format
+            'merge_field_format': merge_field_format,
+            'categories': [template_name],
         },
     )
 
