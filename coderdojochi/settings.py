@@ -10,56 +10,72 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os
-
 from django.urls import reverse_lazy
 
 import dj_database_url
 import django_heroku
+import environ
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = environ.Path(__file__) - 2  # /root/settings.py - 2 = /root/
+APPS_DIR = ROOT_DIR.path('coderdojochi')
+
+env = environ.Env()
+
+READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=False)
+if READ_DOT_ENV_FILE:
+    # OS environment variables take precedence over variables from .env
+    env.read_env(str(ROOT_DIR.path('.env')))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False) == 'True'
+# https://docs.djangoproject.com/en/dev/ref/settings/#debug
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
-# SECURITY
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
-SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE_SSL_REDIRECT', True) == 'True'
-if SECURE_SSL_REDIRECT:
-    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
-    SESSION_COOKIE_SECURE = True
-    # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
-    SESSION_COOKIE_HTTPONLY = True
-    # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
-    CSRF_COOKIE_SECURE = True
-    # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
-    CSRF_COOKIE_HTTPONLY = True
-    # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
-    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
-    # TODO: set this to 60 seconds first and then to 518400 once you prove the former works
-    SECURE_HSTS_SECONDS = 60
-    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', True) == 'True'
-    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
-    SECURE_HSTS_PRELOAD = os.environ.get('DJANGO_SECURE_HSTS_PRELOAD', True) == 'True'
-    # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-    SECURE_CONTENT_TYPE_NOSNIFF = os.environ.get('DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', True) == 'True'
-    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
-    SECURE_BROWSER_XSS_FILTER = True
-    # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
-    X_FRAME_OPTIONS = 'DENY'
+# # SECURITY
+# # ------------------------------------------------------------------------------
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
+# SECURE_SSL_REDIRECT = env.bool('DJANGO_SECURE_SSL_REDIRECT', default=True)
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
+# SESSION_COOKIE_SECURE = True
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
+# SESSION_COOKIE_HTTPONLY = True
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
+# CSRF_COOKIE_SECURE = True
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
+# CSRF_COOKIE_HTTPONLY = True
+
+# # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
+# # TODO: set this to 60 seconds first and then to 518400 once you prove the former works
+# SECURE_HSTS_SECONDS = 60
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
+# SECURE_HSTS_PRELOAD = env.bool('DJANGO_SECURE_HSTS_PRELOAD', default=True)
+
+# # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
+# SECURE_CONTENT_TYPE_NOSNIFF = env.bool('DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', default=True)
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
+# SECURE_BROWSER_XSS_FILTER = True
+
+# # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
+# X_FRAME_OPTIONS = 'DENY'
 
 
 # Application definition
@@ -114,10 +130,10 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'coderdojochi/templates/'),
-            os.path.join(BASE_DIR, 'coderdojochi/templates/dashboard/'),
-            os.path.join(BASE_DIR, 'coderdojochi/emailtemplates/'),
-            os.path.join(BASE_DIR, 'coderdojochi/mentors/templates'),
+            str(APPS_DIR.path('templates')),
+            str(APPS_DIR.path('templates/dashboard')),
+            str(APPS_DIR.path('emailtemplates')),
+            str(APPS_DIR.path('mentors/templates')),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -141,11 +157,11 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
+        'NAME': env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': env('POSTGRES_HOST'),
+        'PORT': env('POSTGRES_PORT'),
     }
 }
 
@@ -179,8 +195,8 @@ USE_L10N = True
 USE_TZ = True
 
 SITE_ID = 1
-SITE_NAME = os.environ.get('SITE_NAME')
-SITE_URL = os.environ.get('SITE_URL')
+SITE_NAME = env('DJANGO_SITE_NAME')
+SITE_URL = env('DJANGO_SITE_URL')
 
 # Change 'default' database configuration with $DATABASE_URL.
 DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
@@ -197,11 +213,11 @@ if not DEBUG:
     # https://django-storages.readthedocs.io/en/latest/#installation
     INSTALLED_APPS += ['storages']  # noqa F405
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_AUTO_CREATE_BUCKET = True
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
@@ -236,20 +252,32 @@ if not DEBUG:
     MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
 
 else:
-    # Static files (CSS, JavaScript, Images)
-    # https://docs.djangoproject.com/en/2.0/howto/static-files/
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # STATIC
+    # ------------------------------------------------------------------------------
+    # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+    STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+
+    # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
     STATIC_URL = '/static/'
 
-    # Extra places for collectstatic to find static files.
+    # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
     STATICFILES_DIRS = [
-        os.path.join(PROJECT_ROOT, 'static'),
+        str(APPS_DIR.path('static')),
     ]
 
-    # Media files
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
+    # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+    STATICFILES_FINDERS = [
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    ]
 
+    # MEDIA
+    # ------------------------------------------------------------------------------
+    # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+    MEDIA_ROOT = str(ROOT_DIR('media'))
+
+    # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+    MEDIA_URL = '/media/'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -262,9 +290,9 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 
 # Paypal
-PAYPAL_RECEIVER_EMAIL = os.environ.get('PAYPAL_RECEIVER_EMAIL')
-PAYPAL_BUSINESS_ID = os.environ.get('PAYPAL_BUSINESS_ID')
-PAYPAL_TEST = os.environ.get('PAYPAL_TEST') == 'True'
+PAYPAL_RECEIVER_EMAIL = env('PAYPAL_RECEIVER_EMAIL')
+PAYPAL_BUSINESS_ID = env('PAYPAL_BUSINESS_ID')
+PAYPAL_TEST = env.bool('PAYPAL_TEST', default=True)
 
 
 # django allauth
@@ -278,15 +306,14 @@ SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapte
 
 # Email
 ANYMAIL = {
-    'SENDGRID_API_KEY': os.environ.get('SENDGRID_API_KEY'),
+    'SENDGRID_API_KEY': env('SENDGRID_API_KEY'),
 }
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
+DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL')
 
 
 # Sentry
-SENTRY_DSN = os.environ.get('SENTRY_DSN', False)
+SENTRY_DSN = env('SENTRY_DSN')
 
 if SENTRY_DSN:
     import logging

@@ -5,7 +5,7 @@
         "**/.DS_Store": true,
         "**/*.pyc": true,
         "**/__pycache__": true,
-        "staticfiles": true,
+        "staticfiles": false,
     },
     "files.associations": {
         "*.html": "django-html",
