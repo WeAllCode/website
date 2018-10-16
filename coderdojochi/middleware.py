@@ -1,9 +1,10 @@
-from django.conf import settings
-from django.shortcuts import render
 import logging
 import traceback
-from urllib3.exceptions import HTTPError
 
+from django.conf import settings
+from django.shortcuts import render
+
+from urllib3.exceptions import HTTPError
 
 logger = logging.getLogger(__name__)
 
@@ -17,4 +18,8 @@ class HandleExceptionMiddleware:
 
     def process_exception(self, request, exception):
         logger.exception(traceback.format_exc(limit=3))
+
+        if settings.DEBUG:
+            raise exception
+
         return render(request, '500.html')

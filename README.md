@@ -27,11 +27,11 @@ We, the community and staff, have been building a custom Django application to h
 ### Debugging Accounts
 
 #### Admin
-username: **admin@admin.com**
+username: **admin@sink.sendgrid.net**
 password: **admin**
 
 #### Guardian
-username: **guardian@guardian.com**
+username: **guardian@sink.sendgrid.net**
 password: **guardian**
 
 

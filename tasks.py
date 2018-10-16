@@ -1,6 +1,7 @@
-import os
-
+import environ
 from invoke import task
+
+env = environ.Env()
 
 
 @task
@@ -11,7 +12,7 @@ def release(ctx):
 
 
 @task(help={"port": "Port to use when serving traffic. Defaults to $PORT."})
-def start(ctx, port=os.environ.get("PORT", 8000)):
+def start(ctx, port=env("PORT", default=8000)):
     ctx.run(f"gunicorn coderdojochi.wsgi -w 2 -b 0.0.0.0:{port} --reload --log-file -")
 
 
@@ -22,9 +23,7 @@ def migrate(ctx):
 
 @task
 def load_fixtures(ctx):
-    # ctx.run("python manage.py loaddata 01-defaults")
-
-    if os.environ.get("ENABLE_DEV_FIXTURES", False):
+    if env.bool("DJANGO_ENABLE_DEV_FIXTURES", default=False):
         ctx.run("python3 manage.py loaddata fixtures/*.json")
 
 
