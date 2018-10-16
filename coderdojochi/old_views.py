@@ -43,7 +43,7 @@ from coderdojochi.models import (
 )
 from coderdojochi.util import email
 
-logger = logging.getLogger("mechanize")
+logger = logging.getLogger(__name__)
 
 # this will assign User to our custom CDCUser
 User = get_user_model()
