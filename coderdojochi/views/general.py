@@ -89,6 +89,48 @@ class AboutView(TemplateView):
         return context
 
 
+class SponsorsView(TemplateView):
+    template_name = "sponsors.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sponsors'] = {
+            # Platinum
+            'terabytes': [
+                {'name': 'CME Group Foundation', 'image': 'images/sponsors/cme-group-foundation.png', },
+            ],
+            # Gold
+            'gigabytes': [
+                {'name': 'CME Group Foundation', 'image': 'images/sponsors/cme-group-foundation.png', },
+            ],
+            # Silver
+            'megabytes': [
+                {'name': 'CME Group Foundation', 'image': 'images/sponsors/cme-group-foundation.png', },
+            ],
+            # Bronze
+            'kilobytes': [
+                {'name': 'West Town Reality', 'image': 'images/sponsors/west-town.png', },
+            ],
+            # Individuals
+            'bytes': [
+
+            ],
+            # In Kind
+            'inkind': [
+                {'name': 'Mind+Hand', 'image': 'images/sponsors/mind-hand.png', },
+                {'name': 'SecondShift', 'image': 'images/sponsors/secondshift.png', },
+                {'name': 'SpotHero', 'image': 'images/sponsors/spothero.png', },
+                {'name': 'The Nerdery', 'image': 'images/sponsors/the-nerdery.png', },
+                {'name': 'Wyzant', 'image': 'images/sponsors/wyzant.png', },
+            ],
+        }
+        return context
+
+
+class SponsorshipView(TemplateView):
+    template_name = "sponsorship.html"
+
+
 class PrivacyView(TemplateView):
     template_name = "privacy.html"
 

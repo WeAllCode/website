@@ -1,0 +1,78 @@
+{% extends "_base.html" %}
+
+{% load staticfiles i18n cache %}
+
+{% block title %}Sponsors{% endblock %}
+
+{% block body_class %}page-sponsors{% endblock %}
+
+{% block content %}
+<div class="container">
+
+{% if sponsors.terabytes %}
+    <div class="row">
+        <h2>Terabytes Sponsors
+        {% comment %} <small>$50K+</small> {% endcomment %}
+        </h2>
+        {% for sponsor in sponsors.terabytes %}
+        <div class="col-sm-12"><img src="{% static ''|add:sponsor.image %}" alt="{{ sponsor.name }}" title="{{ sponsor.name }}" class="img-responsive" /></div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if sponsors.gigabytes %}
+    <div class="row">
+        <h2>Gigabytes Sponsors
+        {% comment %} <small>$20K &ndash; $50K</small> {% endcomment %}
+        </h2>
+        {% for sponsor in sponsors.gigabytes %}
+        <div class="col-sm-6"><img src="{% static ''|add:sponsor.image %}" alt="{{ sponsor.name }}" title="{{ sponsor.name }}" class="img-responsive" /></div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if sponsors.megabytes %}
+    <div class="row">
+        <h2>Megabytes Sponsors
+        {% comment %} <small>$10K &ndash; $20K</small> {% endcomment %}
+        </h2>
+        {% for sponsor in sponsors.megabytes %}
+        <div class="col-sm-4"><img src="{% static ''|add:sponsor.image %}" alt="{{ sponsor.name }}" title="{{ sponsor.name }}" class="img-responsive" /></div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if sponsors.kilobytes %}
+    <div class="row">
+        <h2>Kilobytes Sponsors
+        {% comment %} <small>$1K &ndash; $10K</small> {% endcomment %}
+        </h2>
+        {% for sponsor in sponsors.kilobytes %}
+        <div class="col-sm-3"><img src="{% static ''|add:sponsor.image %}" alt="{{ sponsor.name }}" title="{{ sponsor.name }}" class="img-responsive" /></div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if sponsors.bytes %}
+    <div class="row">
+        <h2>Bytes Sponsors
+        {% comment %} <small>$100 &ndash; $1K</small> {% endcomment %}
+        </h2>
+        {% for sponsor in sponsors.bytes %}
+        <div class="col-sm-2"><img src="{% static ''|add:sponsor.image %}" alt="{{ sponsor.name }}" title="{{ sponsor.name }}" class="img-responsive" /></div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if sponsors.inkind %}
+    <div class="row">
+        <h2>In-Kind Sponsors</h2>
+        {% for sponsor in sponsors.inkind %}
+        <div class="col-sm-3"><img src="{% static ''|add:sponsor.image %}" alt="{{ sponsor.name }}" title="{{ sponsor.name }}" class="img-responsive" /></div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+</div>
+{% endblock %}

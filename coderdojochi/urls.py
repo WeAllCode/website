@@ -12,7 +12,7 @@ from django.views.generic import RedirectView
 from loginas import views as loginas_views
 
 from . import old_views
-from .views.general import AboutView, HomeView, PrivacyView, WelcomeView
+from .views.general import AboutView, HomeView, PrivacyView, SponsorshipView, SponsorsView, WelcomeView
 from .views.meetings import (
     MeetingCalendarRedirectView,
     MeetingCalendarView,
@@ -67,6 +67,14 @@ urlpatterns += [
     # FAQs
     # /faqs/
     path('faqs/', old_views.faqs, name='faqs'),
+
+    # Sponsors
+    # /sponsors/
+    path('sponsors/', SponsorsView.as_view(), name='sponsors'),
+
+    # Sponsorship
+    # /sponsorship/
+    # path('sponsorship/', SponsorshipView.as_view(), name='sponsorship'),
 ]
 
 # Donate / Donations
