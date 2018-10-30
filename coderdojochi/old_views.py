@@ -494,7 +494,7 @@ def donate(request, template_name="donate.html"):
             return HttpResponse('fail')
 
     referral_heading = None
-    referral_code = None
+    referral_code = request.GET['referral']
     referral_disclaimer = None
 
     if 'zirmed' in request.get_full_path():
