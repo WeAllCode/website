@@ -61,13 +61,6 @@ class RaceEthnicity(models.Model):
         return self.race_ethnicity
 
 
-SHIRT_SIZE_CHOICES = (
-    ('s', 'Small'),
-    ('m', 'Medium'),
-    ('l', 'Large'),
-)
-
-
 class Mentor(models.Model):
     user = models.ForeignKey(
         CDCUser,
@@ -225,7 +218,10 @@ class Guardian(models.Model):
         return self.user.email
 
     def get_students(self):
-        return Student.objects.filter(guardian=self)
+        return Student.objects.filter(
+            guardian=self,
+            is_active=True,
+        )
 
 
 class Student(models.Model):
