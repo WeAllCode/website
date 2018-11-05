@@ -23,10 +23,6 @@
                 {% else %}
                     <li class="{% menu_is_active 'account_login' %}"><a href="{% url 'account_login' %}">My Dojo</a></li>
                 {% endif %}
-
-                {% if user.is_staff %}
-                <li><a href="{% url 'cdc-admin' %}">Admin</a></li>
-                {% endif %}
             </ul>
         </div>
     </div>
