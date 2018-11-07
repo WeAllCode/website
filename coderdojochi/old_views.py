@@ -497,8 +497,8 @@ def donate(request, template_name="donate.html"):
     referral_code = None
     referral_disclaimer = None
 
-    if 'referral_code' in request.GET:
-        referral_code = request.GET['referral_code']
+    if 'ref' in request.GET:
+        referral_code = request.GET['ref']
 
     paypal_dict = {
         'business': settings.PAYPAL_BUSINESS_ID,
