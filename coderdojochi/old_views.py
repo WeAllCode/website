@@ -500,11 +500,6 @@ def donate(request, template_name="donate.html"):
     if 'referral_code' in request.GET:
         referral_code = request.GET['referral_code']
 
-    if 'zirmed' in request.get_full_path():
-        referral_heading = 'Join ZirMed and donate to CoderDojoChi!'
-        referral_code = 'ZIRMED'
-        referral_disclaimer = 'ZirMed is an organization dedicated to doing things and we can talk about it here.'
-
     paypal_dict = {
         'business': settings.PAYPAL_BUSINESS_ID,
         'amount': '25',
