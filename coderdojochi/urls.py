@@ -85,10 +85,6 @@ urlpatterns += [
         # /donate/paypal/
         path('paypal/', include('paypal.standard.ipn.urls')),
     ])),
-
-    # One off pages
-    # /zirmed/
-    path('zirmed/', old_views.donate, name='donate-zirmed'),
 ]
 
 

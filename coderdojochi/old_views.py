@@ -497,10 +497,8 @@ def donate(request, template_name="donate.html"):
     referral_code = None
     referral_disclaimer = None
 
-    if 'zirmed' in request.get_full_path():
-        referral_heading = 'Join ZirMed and donate to CoderDojoChi!'
-        referral_code = 'ZIRMED'
-        referral_disclaimer = 'ZirMed is an organization dedicated to doing things and we can talk about it here.'
+    if 'ref' in request.GET:
+        referral_code = request.GET['ref']
 
     paypal_dict = {
         'business': settings.PAYPAL_BUSINESS_ID,
