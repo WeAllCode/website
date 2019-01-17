@@ -78,23 +78,30 @@ Follow the "Creating a new branch" step above. Be sure to always push to your `o
 
 ### Running commands on the docker container
 
-#### Run Django management commands
-
-- When running any Django commands, you'll need to run them within the Docker container.
-
-    ```console
-    docker exec -it cdc-app  --rm app python manage.py <command>
-    ```
-
 - Running a command on a Docker app in a new container.
 
     ```console
     docker-compose run --rm app <command>
     ```
 
-    Example:
+    Examples:
+
     ```console
     docker-compose run --rm app pipenv lock
+    docker-compose run --rm app python manage.py makemigrations
+    docker-compose run --rm app python manage.py migrate
+    ```
+
+- Cleaning up the docker containers:
+
+    ```console
+    docker kill $(docker ps -q); docker-compose rm -f; docker volume rm $(docker volume ls -qf dangling=true);
+    ```
+
+- Rebuild docker containers after major changes:
+
+    ```console
+    docker-compose build
     ```
 
 

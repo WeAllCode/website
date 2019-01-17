@@ -45,11 +45,5 @@
         </form>
 
     {% endif %}
-
-    <div class="row">
-        <a target="_blank" class="map" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"><img width="100%" src="https://maps.google.com/maps/api/staticmap?size=550x550&amp;sensor=false&amp;markers={{ session.location.address }} {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}&amp;center={{ session.location.address }},{{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}"></a>
-    </div>
-
-    <p class="text-center"><a target="_blank" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">Open in Google Maps</a></p>
 </div>
 {% endblock %}
