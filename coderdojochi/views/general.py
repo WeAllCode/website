@@ -302,7 +302,7 @@ class CalendarView(View):
         event['dtstamp'] = event['dtstart'][:-1]
 
         location = (
-            f"{event_obj.location.name}, {event_obj.location.address} {event_obj.location.address2}, "
+            f"{event_obj.location.name}, {event_obj.location.address}, "
             f"{event_obj.location.city}, {event_obj.location.state}, {event_obj.location.zip}"
         )
 

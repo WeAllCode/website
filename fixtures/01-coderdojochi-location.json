@@ -4,11 +4,21 @@
   "pk": 1,
   "fields": {
     "name": "SapientNitro",
-    "address": "30 West Monroe St",
-    "address2": "12th Floor",
+    "address": "30 West Monroe St, 12th Floor",
     "city": "Chicago",
     "state": "IL",
     "zip": "60603"
+  }
+},
+{
+  "model": "coderdojochi.location",
+  "pk": 2,
+  "fields": {
+    "name": "Second Shift",
+    "address": "3432 W Diversey Ave",
+    "city": "Chicago",
+    "state": "IL",
+    "zip": "60647"
   }
 }
 ]

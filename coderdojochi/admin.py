@@ -982,11 +982,19 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
 @admin.register(Location)
 class LocationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
-    view_on_site = False
+    list_display = [
+        'name',
+        'address',
+        'city',
+        'state',
+        'zip',
+    ]
 
     search_fields = [
         'name'
     ]
+
+    view_on_site = False
 
 
 @admin.register(RaceEthnicity)

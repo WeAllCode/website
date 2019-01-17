@@ -390,12 +390,6 @@ class Location(models.Model):
     address = models.CharField(
         max_length=255,
     )
-    address2 = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Address 2",
-    )
     city = models.CharField(
         max_length=255,
     )
