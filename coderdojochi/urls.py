@@ -42,6 +42,11 @@ admin.autodiscover()
 # Empty to start
 urlpatterns = []
 
+# We All Code
+urlpatterns += [
+    path('weallcode/', include('weallcode.urls')),
+]
+
 # General
 urlpatterns += [
     # /

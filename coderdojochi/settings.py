@@ -94,6 +94,7 @@ INSTALLED_APPS = [
 
     # coderdojochi
     'coderdojochi',
+    'weallcode',
     'django_nose',
 ]
 
@@ -114,6 +115,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(BASE_DIR, 'weallcode/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/dashboard/'),
             os.path.join(BASE_DIR, 'coderdojochi/emailtemplates/'),
@@ -244,6 +246,7 @@ else:
     # Extra places for collectstatic to find static files.
     STATICFILES_DIRS = [
         os.path.join(PROJECT_ROOT, 'static'),
+        os.path.join(BASE_DIR, 'weallcode/static/'),
     ]
 
     # Media files
