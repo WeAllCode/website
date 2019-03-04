@@ -8,7 +8,7 @@
         <nav role="navigation" aria-label="dropdown navigation">
           <ul class="dropdown menu align-right" data-dropdown-menu>
             <li class="mega-menu">
-              <a data-toggle="ourStory-menu" href="#" class="mega-link">Our Story</a>
+              <a data-toggle="ourStory-menu" href="{% url 'weallcode_our_story' %}" class="mega-link">Our Story</a>
               <!-- <div class="dropdown-pane bottom" id="ourStory-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
                 <ul class="menu align-right">
                   <li><a href="#">Vision</a></li>
@@ -19,8 +19,8 @@
               </div> -->
             </li>
             <li class="mega-menu">
-              <a data-toggle="programs-menu" href="#" class="mega-link">Programs</a>
-              <!-- <div class="dropdown-pane bottom" id="programs-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
+              <a data-toggle="learn-menu" href="{% url 'weallcode_learn' %}" class="mega-link">Learn</a>
+              <!-- <div class="dropdown-pane bottom" id="learn-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
                 <ul class="menu align-right">
                   <li><a href="#">Weekends</a></li>
                   <li><a href="#">After School</a></li>
@@ -29,7 +29,7 @@
               </div> -->
             </li>
             <li class="mega-menu">
-              <a data-toggle="team-menu" href="#" class="mega-link">Team</a>
+              <a data-toggle="team-menu" href="{% url 'weallcode_team' %}" class="mega-link">Team</a>
               <!-- <div class="dropdown-pane bottom" id="team-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
                 <ul class="menu align-right">
                   <li><a href="#">Leadership</a></li>
@@ -40,7 +40,7 @@
               </div> -->
             </li>
             <li class="mega-menu margin-left-1">
-              <a data-toggle="getInvolved-menu" href="#" class="button">Get Involved</a>
+              <a data-toggle="getInvolved-menu" href="{% url 'weallcode_get_involved' %}" class="button">Get Involved</a>
               <!-- <div class="dropdown-pane bottom" id="getInvolved-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
                 <ul class="menu align-right">
                   <li><a href="#">Volunteer</a></li>
