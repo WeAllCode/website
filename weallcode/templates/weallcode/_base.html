@@ -1,7 +1,32 @@
-<header>
-  WEALLCODE
-</header>
+{% load static %}
 
-{% block content %}
-  <h1>Base</h1>
-{% endblock %}
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %} | We All Code</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans">
+  <link rel="stylesheet" href="{% static 'weallcode/css/foundation.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
+</head>
+<body>
+  {% include 'weallcode/_svgs.html' %}
+
+  <div class="app">
+    {% include 'weallcode/_header.html' %}
+
+    {% block content %}
+      <h1>Page Title</h1>
+    {% endblock %}
+
+    {% include 'weallcode/_footer.html' %}
+  </div>
+
+  <script src="{% static 'weallcode/js/vendor/jquery.js' %}"></script>
+  <script src="{% static 'weallcode/js/vendor/what-input.js' %}"></script>
+  <script src="{% static 'weallcode/js/vendor/foundation.js' %}"></script>
+  <script src="{% static 'weallcode/js/app.js' %}"></script>
+</body>
+</html>

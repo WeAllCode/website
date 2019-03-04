@@ -111,7 +111,7 @@ header {
 
 .bg-binary {
   background-color: var(--all-yellow);
-  background-image: url(../assets/backgrounds/binary-repeatable.png);
+  background-image: url(../images/backgrounds/binary-repeatable.png);
   background-repeat: repeat;
   background-size: 10%;
   padding: 3rem;
