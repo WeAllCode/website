@@ -13,7 +13,6 @@ def release(ctx):
 @task(help={"port": "Port to use when serving traffic. Defaults to $PORT."})
 def start(ctx, port=os.environ.get("PORT", 8000)):
     ctx.run(f"gunicorn coderdojochi.wsgi -w 2 -b 0.0.0.0:{port} --reload --log-file -")
-    # ctx.run(f"python3 manage.py runserver -b 0.0.0.0:{port}")
 
 
 @task
