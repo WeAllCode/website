@@ -4,11 +4,10 @@
   <div class="grid-container">
     <div class="grid-x">
       <div class="cell small-4">
-        <img id="logo" src="{% static 'weallcode/images/logo-horizontal-trim/logo-horizontal-trim.svg' %}">
+        <a href="{% url 'weallcode_home' %}"><img id="logo" src="{% static 'weallcode/images/logo-horizontal-trim/logo-horizontal-trim.svg' %}"></a>
       </div>
       <div class="cell small-8">
-        <div class="vr"></div>
-        <nav role="navigation" aria-label="dropdown navigation">
+        <nav role="navigation" aria-label="dropdown navigation" class="padding-vertical-1">
           <ul class="dropdown menu align-right" data-dropdown-menu>
             <li class="mega-menu">
               <a data-toggle="ourStory-menu" href="{% url 'weallcode_our_story' %}" class="mega-link">Our Story</a>

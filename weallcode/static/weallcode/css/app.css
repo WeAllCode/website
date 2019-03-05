@@ -125,10 +125,6 @@ header {
   fill: white;
 }
 
-.vr {
-  margin-top: 1rem;
-}
-
 /* to override the button color */
 .button.text-white {
   color: white;
@@ -145,9 +141,9 @@ header {
 }
 
 #logo {
-  height: 6em;
-  padding: 1em;
-  margin: 0 -1em;
+  height: 4em;
+  padding: 1.2em;
+  margin: 0 -1.2em;
 }
 
 footer {
