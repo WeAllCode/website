@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{% endblock %} | We All Code</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans">
-  <link rel="stylesheet" href="{% static 'weallcode/css/foundation.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/foundation.min.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
 </head>
 <body>
@@ -16,17 +16,13 @@
 
   <div class="app">
     {% include 'weallcode/_header.html' %}
-
-    {% block content %}
-      <h1>Page Title</h1>
-    {% endblock %}
-
+    {% block content %}{% endblock %}
     {% include 'weallcode/_footer.html' %}
   </div>
 
   <script src="{% static 'weallcode/js/vendor/jquery.js' %}"></script>
   <script src="{% static 'weallcode/js/vendor/what-input.js' %}"></script>
-  <script src="{% static 'weallcode/js/vendor/foundation.js' %}"></script>
+  <script src="{% static 'weallcode/js/vendor/foundation.min.js' %}"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
 </body>
 </html>

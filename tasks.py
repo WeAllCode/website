@@ -13,6 +13,7 @@ def release(ctx):
 @task(help={"port": "Port to use when serving traffic. Defaults to $PORT."})
 def start(ctx, port=os.environ.get("PORT", 8000)):
     ctx.run(f"gunicorn coderdojochi.wsgi -w 2 -b 0.0.0.0:{port} --reload --log-file -")
+    # ctx.run(f"python3 manage.py runserver -b 0.0.0.0:{port}")
 
 
 @task
@@ -22,15 +23,14 @@ def migrate(ctx):
 
 @task
 def load_fixtures(ctx):
-    # ctx.run("python manage.py loaddata 01-defaults")
-
     if os.environ.get("ENABLE_DEV_FIXTURES", False):
         ctx.run("python3 manage.py loaddata fixtures/*.json")
 
 
 @task
 def collect_static(ctx):
-    ctx.run("python3 manage.py collectstatic --no-input")
+    if not os.environ.get("DEBUG", False):
+        ctx.run("python3 manage.py collectstatic --no-input")
 
 
 @task(help={"app": "Specific app to run tests on. Defaults to all apps."})

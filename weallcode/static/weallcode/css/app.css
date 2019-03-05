@@ -144,6 +144,12 @@ header {
   padding: 4em 0;
 }
 
+#logo {
+  height: 6em;
+  padding: 1em;
+  margin: 0 -1em;
+}
+
 footer {
   background-color: var(--black);
   color: white;
