@@ -192,7 +192,23 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-if not DEBUG:
+if DEBUG:
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/2.0/howto/static-files/
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_URL = '/static/'
+
+    # Extra places for collectstatic to find static files.
+    STATICFILES_DIRS = [
+        os.path.join(PROJECT_ROOT, 'static'),
+        os.path.join(BASE_DIR, 'weallcode/static'),
+    ]
+
+    # Media files
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+
+else:
     # STORAGES
     # ------------------------------------------------------------------------------
     # https://django-storages.readthedocs.io/en/latest/#installation
@@ -237,24 +253,7 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = 'coderdojochi.settings.MediaRootS3BotoStorage'
     MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
 
-    # Activate Django-Heroku.
-    django_heroku.settings(locals(), staticfiles=False)
-
-else:
-    # Static files (CSS, JavaScript, Images)
-    # https://docs.djangoproject.com/en/2.0/howto/static-files/
-    # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATIC_URL = '/static/'
-
-    # Extra places for collectstatic to find static files.
-    STATICFILES_DIRS = [
-        os.path.join(PROJECT_ROOT, 'static'),
-        os.path.join(BASE_DIR, 'weallcode/static'),
-    ]
-
-    # Media files
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
+    # endregion
 
 
 AUTHENTICATION_BACKENDS = (
@@ -351,6 +350,10 @@ if SENTRY_DSN:
             },
         },
     }
+
+
+# Activate Django-Heroku.
+django_heroku.settings(locals(), staticfiles=False)
 
 
 # Debug toolbar

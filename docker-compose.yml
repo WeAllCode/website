@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:9.4-alpine
+    image: postgres:10.6-alpine
     container_name: dojo-v1-db
     ports:
       - "5432:5432"
