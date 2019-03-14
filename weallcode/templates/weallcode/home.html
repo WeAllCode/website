@@ -1,0 +1,154 @@
+{% extends 'weallcode/_base.html' %}
+
+{% load static %}
+
+{% block title %}Home | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <!-- Impact -->
+    <section class="margin-bottom-3">
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x padding-bottom-1">
+          <div class="large-6 medium-6 cell">
+            <img class="width-100" src="https://www.fillmurray.com/300/200" alt="That's your opinion man">
+          </div>
+          <div class="large-6 medium-6 cell">
+            <h1 class="title text-primary">Impactful message about all we code.</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ullamcorper libero non elit dapibus
+              fermentum. Curabitur rhoncus ultricies massa, vel viverra mauris accumsan sit amet.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="margin-bottom-3">
+      <div class="grid-container">
+          <div class="grid-x grid-padding-x">
+            <div class="small-6 small-offset-3">
+              <h2 class="title text-tertiary text-center">Core Values</h2>
+            </div>
+          </div>
+          <div class="grid-x grid-padding-x">
+            <div class="large-4 medium-4 cell">
+              <div class="padding-1 bg-gray-blue text-white">
+                <div class="padding-1">
+                  <svg class="fill-white width-100">
+                    <use xlink:href="#intelligent"></use>
+                  </svg>
+                </div>
+                <div class="text-center">
+                  <h3 class="text-uppercase">Open Mind</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at dolor arcu.</p>
+                </div>
+              </div>
+            </div>
+            <div class="large-4 medium-4 cell">
+              <div class="padding-1 bg-tertiary text-white">
+                <div class="padding-1 text-center">
+                  <svg class="fill-white width-100">
+                    <use xlink:href="#respect"></use>
+                  </svg>
+                </div>
+                <div class="text-center">
+                  <h3 class="text-uppercase">Support</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at dolor arcu.</p>
+                </div>
+              </div>
+            </div>
+            <div class="large-4 medium-4 cell">
+              <div class="padding-1 bg-primary text-white">
+                <div class="padding-1 text-center">
+                  <svg class="fill-white width-100">
+                    <use xlink:href="#smile"></use>
+                  </svg>
+                </div>
+                <div class="text-center">
+                  <h3 class="text-uppercase">Respect</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at dolor arcu.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <!-- Free Programs -->
+    <section>
+      <div class="borderless bg-binary">
+        <div class="grid-container">
+          <div class="grid-x grid-padding-x">
+            <div class="large-7 medium-7 cell">
+              <h2 class="title text-primary">Free Programs for Students 7-17 Years Old</h2>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ullamcorper libero non elit dapibus fermentum. Curabitur rhoncus ultricies massa, vel viverra mauris accumsan sit amet.</p>
+              <button type="button" class="button large">See All Programs</button>
+            </div>
+            <div class="large-5 medium-5">
+              <img src="https://www.fillmurray.com/500/500" alt="Bill Murray peering through">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Get Involved -->
+    <section class="get-involved">
+      <div class="grid-container">
+        <h3 class="title text-white text-center">Get Involved</h3>
+
+        <div class="grid-x grid-padding-x margin-vertical-3">
+          <!-- Cell -->
+          <div class="small-12 medium-6 large-4 cell margin-bottom-2">
+            <div class="bg-white">
+              <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Volunteers</h6>
+              <img class="width-100" src="https://www.fillmurray.com/300/169">
+              <div class="padding-1 padding-horizontal-2 text-center">
+                <h4 class="text-blue text-uppercase text-primary">Conrad</h4>
+                <div><strong>Full Stack Software Engineer</strong></div>
+                <div>Fourth Year</div>
+                <a class="button width-100 margin-top-1" href="volunteer">Volunteer</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cell -->
+          <div class="small-12 medium-6 large-4 cell margin-bottom-2">
+            <div class="bg-white">
+              <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Donors</h6>
+              <img class="width-100" src="https://www.fillmurray.com/300/169">
+              <div class="padding-1 padding-horizontal-2 text-center">
+                <h4 class="text-blue text-uppercase text-primary">Christopher</h4>
+                <div><strong>Web Program Student</strong></div>
+                <div>First Year</div>
+                <a class="button width-100 margin-top-1" href="volunteer">Donate</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cell -->
+          <div class="small-12 medium-6 large-4 cell margin-bottom-2">
+            <div class="bg-white">
+              <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Sponsors</h6>
+              <img class="width-100" src="https://www.fillmurray.com/300/169">
+              <div class="padding-1 padding-horizontal-2 text-center">
+                <h4 class="text-blue text-uppercase text-primary">First Name</h4>
+                <div><strong>CEO, Wicker Park Credit Union</strong></div>
+                <div>Terabyte Level</div>
+                <a class="button width-100 margin-top-1" href="volunteer">Sponsor</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-x grid-padding-x">
+          <img class="cell small-4 medium-2 margin-bottom-2" src="{% static 'weallcode/images/companies/amazon.svg' %}">
+          <img class="cell small-4 medium-2 margin-bottom-2" src="{% static 'weallcode/images/companies/apple.svg' %}">
+          <img class="cell small-4 medium-2 margin-bottom-2" src="{% static 'weallcode/images/companies/google.svg' %}">
+          <img class="cell small-4 medium-2 margin-bottom-2" src="{% static 'weallcode/images/companies/microsoft.svg' %}">
+          <img class="cell small-4 medium-2 margin-bottom-2" src="{% static 'weallcode/images/companies/salesforce.svg' %}">
+          <img class="cell small-4 medium-2 margin-bottom-2" src="{% static 'weallcode/images/companies/verizon.svg' %}">
+        </div>
+      </div>
+    </section>
+{% endblock %}

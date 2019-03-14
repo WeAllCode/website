@@ -16,6 +16,7 @@ from django.urls import reverse_lazy
 
 import dj_database_url
 import django_heroku
+import raven
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -70,7 +71,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.humanize',
 
@@ -94,6 +94,7 @@ INSTALLED_APPS = [
 
     # coderdojochi
     'coderdojochi',
+    'weallcode',
     'django_nose',
 ]
 
@@ -114,6 +115,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            os.path.join(BASE_DIR, 'weallcode/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/dashboard/'),
             os.path.join(BASE_DIR, 'coderdojochi/emailtemplates/'),
@@ -191,11 +193,28 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
-if not DEBUG:
+if DEBUG:
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/2.0/howto/static-files/
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_URL = '/static/'
+
+    # Extra places for collectstatic to find static files.
+    STATICFILES_DIRS = [
+        os.path.join(PROJECT_ROOT, 'static'),
+        os.path.join(BASE_DIR, 'weallcode/static'),
+    ]
+
+    # Media files
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+
+else:
     # STORAGES
     # ------------------------------------------------------------------------------
     # https://django-storages.readthedocs.io/en/latest/#installation
     INSTALLED_APPS += ['storages']  # noqa F405
+
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
@@ -215,6 +234,7 @@ if not DEBUG:
 
     # STATIC
     # ------------------------
+    INSTALLED_APPS += ['django.contrib.staticfiles']
     STATICFILES_STORAGE = 'coderdojochi.settings.StaticRootS3BotoStorage'
     STATIC_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/static/'
 
@@ -231,24 +251,10 @@ if not DEBUG:
         def __init__(self):
             super().__init__(location='media', file_overwrite=False)
 
-    # endregion
     DEFAULT_FILE_STORAGE = 'coderdojochi.settings.MediaRootS3BotoStorage'
     MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
 
-else:
-    # Static files (CSS, JavaScript, Images)
-    # https://docs.djangoproject.com/en/2.0/howto/static-files/
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATIC_URL = '/static/'
-
-    # Extra places for collectstatic to find static files.
-    STATICFILES_DIRS = [
-        os.path.join(PROJECT_ROOT, 'static'),
-    ]
-
-    # Media files
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
+    # endregion
 
 
 AUTHENTICATION_BACKENDS = (
@@ -287,12 +293,11 @@ CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
 
 # Sentry
 SENTRY_DSN = os.environ.get('SENTRY_DSN', False)
+INSTALLED_APPS += ['raven.contrib.django.raven_compat']
 
 if SENTRY_DSN:
     import logging
-    import raven
 
-    INSTALLED_APPS += ['raven.contrib.django.raven_compat']
     MIDDLEWARE = [
         'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
         'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',

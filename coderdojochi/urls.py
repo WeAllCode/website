@@ -3,7 +3,6 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as django_views
-from django.contrib.staticfiles.storage import staticfiles_storage
 from django.http import HttpResponse
 from django.urls import path
 from django.views import defaults
@@ -41,6 +40,11 @@ admin.autodiscover()
 
 # Empty to start
 urlpatterns = []
+
+# We All Code
+urlpatterns += [
+    path('weallcode/', include('weallcode.urls')),
+]
 
 # General
 urlpatterns += [
@@ -212,7 +216,6 @@ urlpatterns += [
 # TODO: Uncomment `app_name` after we move mentors to it's own app.
 # app_name = 'mentors'
 urlpatterns += [
-
     path('mentors/', include([
         # Mentors
         # /
@@ -298,58 +301,22 @@ urlpatterns += [
 
 ]
 
-
 # robots.txt
 urlpatterns += [
     path('robots.txt', lambda r: HttpResponse('User-agent: *\nDisallow:', content_type='text/plain'))
 ]
-
-
-# favicon.ico
-favicons = [
-    'favicon.ico',
-    'android-chrome-192x192.png',
-    'android-chrome-256x256.png',
-    'apple-touch-icon.png',
-    'browserconfig.xml',
-    'favicon-16x16.png',
-    'favicon-32x32.png',
-    'mstile-70x70.png',
-    'mstile-150x150.png',
-    'mstile-310x150.png',
-    'mstile-310x310.png',
-    'safari-pinned-tab.svg',
-    'site.webmanifest',
-]
-
-for favicon in favicons:
-    urlpatterns += [
-        path(
-            favicon,
-            RedirectView.as_view(url=staticfiles_storage.url(favicon), permanent=False),
-            name=favicon
-        ),
-    ]
-
-
-# Static files
-urlpatterns += static(
-    settings.STATIC_URL,
-    document_root=settings.STATIC_ROOT
-)
-
-# Media files
-urlpatterns += static(
-    settings.MEDIA_URL,
-    document_root=settings.MEDIA_ROOT
-)
 
 # Anymail
 urlpatterns += [
     path('anymail/', include('anymail.urls')),
 ]
 
+
 if settings.DEBUG:
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+    urlpatterns += staticfiles_urlpatterns()
+
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
     urlpatterns += [
@@ -374,3 +341,44 @@ if settings.DEBUG:
     if 'debug_toolbar' in settings.INSTALLED_APPS:
         import debug_toolbar
         urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
+
+else:
+    from django.contrib.staticfiles.storage import staticfiles_storage
+    from django.contrib.staticfiles.views import serve
+
+    # favicon.ico
+    favicons = [
+        'favicon.ico',
+        'android-chrome-192x192.png',
+        'android-chrome-256x256.png',
+        'apple-touch-icon.png',
+        'browserconfig.xml',
+        'favicon-16x16.png',
+        'favicon-32x32.png',
+        'mstile-70x70.png',
+        'mstile-150x150.png',
+        'mstile-310x150.png',
+        'mstile-310x310.png',
+        'safari-pinned-tab.svg',
+        'site.webmanifest',
+    ]
+
+    for favicon in favicons:
+        urlpatterns += [
+            path(
+                favicon,
+                RedirectView.as_view(url=staticfiles_storage.url(favicon), permanent=False),
+                name=favicon
+            ),
+        ]
+
+    urlpatterns += static(
+        settings.STATIC_URL,
+        document_root=settings.STATIC_ROOT
+    )
+
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
+
