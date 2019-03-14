@@ -9,6 +9,10 @@
       "required": true,
       "value": "True"
     },
+    "DISABLE_COLLECTSTATIC": {
+      "required": true,
+      "value": "True"
+    },
     "DEFAULT_FROM_EMAIL": {
       "required": true
     },
