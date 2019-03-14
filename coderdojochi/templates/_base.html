@@ -1,4 +1,5 @@
-{% load static i18n raven %}
+{% load static i18n %}
+{% if settings.DEBUG != True %}{% load raven %}{% endif %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" {% if DEBUG %}class="debug"{% endif %}>
     <head>

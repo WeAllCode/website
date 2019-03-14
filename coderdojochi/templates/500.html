@@ -1,4 +1,5 @@
-{% load static raven %}
+{% load static %}
+{% if settings.DEBUG != True %}{% load raven %}{% endif %}
 <html>
     <head>
         <meta charset="utf-8">
