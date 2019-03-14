@@ -9,8 +9,8 @@ class OurStoryView(TemplateView):
     template_name = "weallcode/our_story.html"
 
 
-class LearnView(TemplateView):
-    template_name = "weallcode/learn.html"
+class ProgramsView(TemplateView):
+    template_name = "weallcode/programs.html"
 
 
 class TeamView(TemplateView):
@@ -19,3 +19,11 @@ class TeamView(TemplateView):
 
 class GetInvolvedView(TemplateView):
     template_name = "weallcode/get_involved.html"
+
+
+class PrivacyView(TemplateView):
+    template_name = "weallcode/privacy.html"
+
+
+class TermsView(TemplateView):
+    template_name = "weallcode/terms.html"

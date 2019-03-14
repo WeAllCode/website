@@ -1,17 +1,21 @@
-{% load static %}
-
-<!doctype html>
+{% load static %}<!doctype html>
 <html class="no-js" lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}{% endblock %} | We All Code</title>
+  <title>{% block title %}We All Code{% endblock %}</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans">
-  <link rel="stylesheet" href="{% static 'weallcode/css/foundation.min.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/foundation.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
+
+  <meta name="theme-color" content="#426cff">
 </head>
 <body>
+  <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
   {% include 'weallcode/_svgs.html' %}
 
   <div class="app">
@@ -24,5 +28,12 @@
   <script src="{% static 'weallcode/js/vendor/what-input.js' %}"></script>
   <script src="{% static 'weallcode/js/vendor/foundation.min.js' %}"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
+
+  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+  <script>
+    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')
+  </script>
+  <script src="https://www.google-analytics.com/analytics.js" async defer></script>
 </body>
 </html>
