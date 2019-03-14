@@ -16,6 +16,7 @@ from django.urls import reverse_lazy
 
 import dj_database_url
 import django_heroku
+import raven
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -292,12 +293,11 @@ CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
 
 # Sentry
 SENTRY_DSN = os.environ.get('SENTRY_DSN', False)
+INSTALLED_APPS += ['raven.contrib.django.raven_compat']
 
 if SENTRY_DSN:
     import logging
-    import raven
 
-    INSTALLED_APPS += ['raven.contrib.django.raven_compat']
     MIDDLEWARE = [
         'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
         'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
