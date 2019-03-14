@@ -352,10 +352,6 @@ if SENTRY_DSN:
     }
 
 
-# Activate Django-Heroku.
-django_heroku.settings(locals(), staticfiles=False)
-
-
 # Debug toolbar
 if DEBUG:
 
@@ -377,3 +373,7 @@ if DEBUG:
         'TAG': 'div',
         'ENABLE_STACKTRACES': True,
     }
+
+
+# Activate Django-Heroku.
+django_heroku.settings(locals(), staticfiles=False)
