@@ -12,7 +12,7 @@
 
   <meta name="theme-color" content="#426cff">
 </head>
-<body>
+<body class="{% block page-class %}{% endblock %}">
   <!--[if IE]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
@@ -20,9 +20,7 @@
 
   <div class="app">
     {% include 'weallcode/_header.html' %}
-    <div class="margin-top-3">
-      {% block content %}{% endblock %}
-    </div>
+    {% block content %}{% endblock %}
     {% include 'weallcode/_footer.html' %}
   </div>
 
