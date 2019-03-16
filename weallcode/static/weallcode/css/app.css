@@ -125,6 +125,41 @@ ul.list-plus li {
   background-size: 10%;
 }
 
+.binary-drop-left,
+.binary-drop-right {
+  position: relative;
+  display: block;
+}
+
+.binary-drop-left::before,
+.binary-drop-right::before {
+  content: ' ';
+  z-index: -1;
+  position: absolute;
+  display: block;
+  top: 1rem;
+  bottom: -1rem;
+  background-color: var(--all-yellow);
+  background-image: url(../images/backgrounds/binary-repeatable.png);
+  background-repeat: repeat;
+  background-size: 10%;
+}
+
+.binary-drop-left::before {
+  right: 1rem;
+  left: -1rem;
+}
+
+.binary-drop-right::before {
+  right: -1rem;
+  left: 1rem;
+}
+
+.binary-drop-left img,
+.binary-drop-right img {
+  display: block;
+}
+
 .bg-white {
   background-color: var(--white);
 }
