@@ -86,6 +86,10 @@ ul.list-plus li {
   color: var(--code-red);
 }
 
+.text-black {
+  color: var(--black);
+}
+
 .text-white {
   color: var(--white);
 }
@@ -295,6 +299,10 @@ body.our-story .hero {
   height: 500px;
   background-image: url(../images/hero-our-story.jpg);
   background-size: cover;
+}
+
+body.our-story .mission p {
+  font-size: 20px;
 }
 
 

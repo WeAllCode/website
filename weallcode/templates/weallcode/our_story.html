@@ -23,13 +23,13 @@
 {% block content %}
 <section class="hero bg-dark-blue"></section>
 
-<section class="about-us grid-container padding-3">
+<section id="about-us" class="about-us grid-container padding-3">
   <h2 class="title text-tertiary margin-bottom-2">About us</h2>
 
   <p>We All Code was founded in 2013 as CoderDojoChi. Our founder, Ali Karbassi, built We All Code from the ground up in an effort to eliminate the barriers keeping girls and underserved youth from learning STEM skills.</p>
 </section>
 
-<section class="benefits grid-container padding-3">
+<section id="benefits" class="benefits grid-container padding-3">
   <h2 class="title text-tertiary margin-bottom-2">Benefits</h2>
 
   <ul class="list-plus">
@@ -39,4 +39,37 @@
     <li><strong>Kids work collaboratively</strong>, respect their peers, and have fun</li>
   </ul>
 </section>
+
+<section id="mission" class="mission bg-dark-blue text-white padding-3">
+  <div class="grid-container">
+    <h2 class="title margin-bottom-2 text-center">Mission</h2>
+
+    <p class="padding-horizontal-3 ">We All Code exists because <strong class="text-secondary">we believe every kid deserves to excel</strong> in one of the emerging fields of STEM, whether they choose to pursue more education or go straight into careers in computer science. Our mission is to <strong class="text-secondary">inspire, support, and teach</strong> these skills to help them be successful.</p>
+
+    <div class="margin-top-2 grid-x grid-margin-x grid-margin-y text-black">
+      <div class="cell small-6 padding-1 bg-white">
+        <h4 class="text-uppercase text-primary font-bold">Prosperity</h4>
+        <p>STEM fields <strong>out-earn all other fields by 12-30%</strong>.</p>
+      </div>
+
+      <div class="cell small-6 padding-1 bg-white">
+        <h4 class="text-uppercase text-primary font-bold">Gender Equality</h4>
+        <p><strong>Women only make up 28% of the workforce</strong> in the fields of science and engineering.</p>
+      </div>
+
+      <div class="cell small-6 padding-1 bg-white">
+        <h4 class="text-uppercase text-primary font-bold">Ethnic Diversity</h4>
+        <p><strong>Latinx, African Americans, and Native Americans average 2.7%</strong> of the STEM degrees earned.</p>
+      </div>
+
+      <div class="cell small-6 padding-1 bg-white">
+        <h4 class="text-uppercase text-primary font-bold">Opportunity</h4>
+        <p><strong>STEM-related jobs grew three times</strong> the rate of non-STEM jobs between 2000 and 2010.</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
 {% endblock %}
