@@ -16,15 +16,22 @@ body {
   --black: #000000;
   --gray-4-blue: #606060;
   --gray-4-white: #b2b2b2;
+  --white: #ffffff;
 
   font-family: 'Open Sans', sans-serif;
 }
 
-.button, .input-group-label {
+.button,
+.input-group-label {
   font-family: 'Poppins', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Poppins', cursive;
 }
 
@@ -51,16 +58,6 @@ h2 {
   padding: 1em;
 }
 
-.mega-menu a {
-  color: white;
-  font-family: 'Poppins';
-}
-
-.mega-link:hover {
-  margin-bottom: -3px;
-  border-bottom: 3px solid white;
-}
-
 .text-primary {
   color: var(--we-blue);
 }
@@ -74,7 +71,7 @@ h2 {
 }
 
 .text-white {
-  color: white;
+  color: var(--white);
 }
 
 .text-grey-for-white {
@@ -114,16 +111,16 @@ h2 {
 }
 
 .bg-white {
-  background-color: white;
+  background-color: var(--white);
 }
 
 .fill-white {
-  fill: white;
+  fill: var(--white);
 }
 
 /* to override the button color */
 .button.text-white {
-  color: white;
+  color: var(--white);
 }
 
 /* To remove borders from cards and callouts when not needed */
@@ -144,7 +141,7 @@ h2 {
 
 footer {
   background-color: var(--black);
-  color: white;
+  color: var(--white);
   padding: 3em 0;
   font-size: 0.83em;
 }
@@ -185,6 +182,45 @@ footer small span {
   padding-right: 2em;
 }
 
+
+/* Main Menu */
+
+.mega-menu a {
+  color: var(--white);
+  font-family: 'Poppins';
+}
+
+.mega-link:hover {
+  margin-bottom: -5px;
+  border-bottom: 5px solid var(--white);
+}
+
+
+/* Sub Menu */
+
+.sub-menu {
+  background-color: var(--primary);
+  font-family: 'Poppins';
+}
+
+.sub-menu a {
+  color: var(--white);
+  padding-top: 1rem;
+  padding-bottom: calc(1rem - 5px);
+  border-bottom: 5px solid transparent;
+}
+
+.sub-menu a:hover {
+  margin-bottom: 0;
+  border-bottom-color: black;
+}
+
+.sub-menu li:last-of-type a {
+  /* Move the last menu item to the left to align text */
+  margin-right: -0.7rem;
+}
+
+
 /* Page: Home */
 
 body.home .main-menu .logo {
@@ -196,4 +232,3 @@ body.home .hero-logo {
   margin: 0 auto;
   display: block;
 }
-
