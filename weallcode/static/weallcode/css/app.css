@@ -136,7 +136,7 @@ h2 {
   padding: 4em 0;
 }
 
-#logo {
+.main-menu .logo {
   height: 4em;
   padding: 1.2em;
   margin: 0 -1.2em;
@@ -184,3 +184,16 @@ footer nav a.group-link {
 footer small span {
   padding-right: 2em;
 }
+
+/* Page: Home */
+
+body.home .main-menu .logo {
+  display: none;
+}
+
+body.home .hero-logo {
+  width: 50%;
+  margin: 0 auto;
+  display: block;
+}
+
