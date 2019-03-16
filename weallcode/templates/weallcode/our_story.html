@@ -4,6 +4,20 @@
 
 {% block title %}Our Story | {{ block.super }}{% endblock %}
 
+{% block subheader %}
+<div class="sub-menu">
+  <nav class="grid-container" role="navigation">
+    <ul class="menu align-right">
+      <li><a href="{% url 'weallcode_our_story' %}#vision">Vision</a></li>
+      <li><a href="{% url 'weallcode_our_story' %}#mission">Mission</a></li>
+      <li><a href="{% url 'weallcode_our_story' %}#approach">Approach</a></li>
+      <li><a href="{% url 'weallcode_our_story' %}#results">Results</a></li>
+      <li><a href="{% url 'weallcode_our_story' %}#testimonials">Testimonials</a></li>
+    </ul>
+  </nav>
+</div>
+{% endblock subheader %}
+
 {% block content %}
-<h1>Our Story</h1>
+
 {% endblock %}

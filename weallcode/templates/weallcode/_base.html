@@ -19,7 +19,10 @@
   {% include 'weallcode/_svgs.html' %}
 
   <div class="app">
-    {% include 'weallcode/_header.html' %}
+    <header class="margin-bottom-3">
+      {% block header %}{% include 'weallcode/_header.html' %}{% endblock %}
+      {% block subheader %}{% endblock %}
+    </header>
     <div class="margin-top-3">
       {% block content %}{% endblock %}
     </div>
