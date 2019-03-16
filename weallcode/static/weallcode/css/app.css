@@ -133,7 +133,7 @@ h2 {
   padding: 4em 0;
 }
 
-#logo {
+.main-menu .logo {
   height: 4em;
   padding: 1.2em;
   margin: 0 -1.2em;
@@ -218,4 +218,17 @@ footer small span {
 .sub-menu li:last-of-type a {
   /* Move the last menu item to the left to align text */
   margin-right: -0.7rem;
+}
+
+
+/* Page: Home */
+
+body.home .main-menu .logo {
+  display: none;
+}
+
+body.home .hero-logo {
+  width: 50%;
+  margin: 0 auto;
+  display: block;
 }

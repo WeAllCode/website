@@ -4,7 +4,14 @@
 
 {% block title %}Home | {{ block.super }}{% endblock %}
 
+{% block page-class %}home{% endblock %}
+
 {% block content %}
+  <section class="bg-dark-blue padding-vertical-3">
+    <div class="grid-container">
+      <img class="hero-logo padding-vertical-3" src="{% static 'weallcode/images/logo-trim/logo-trim.png' %}">
+    </div>
+  </section>
 
   <!-- Hero -->
   <!-- <section class="margin-bottom-3 bg-primary padding-vertical-3">
