@@ -51,10 +51,6 @@ h2 {
   padding: 1em;
 }
 
-header {
-  background-color: var(--dark-blue);
-}
-
 .mega-menu a {
   color: white;
   font-family: 'Poppins';
@@ -98,6 +94,10 @@ header {
 
 .bg-gray-blue {
   background-color: var(--gray-4-blue);
+}
+
+.bg-dark-blue {
+  background-color: var(--dark-blue);
 }
 
 .bg-binary {
