@@ -107,7 +107,6 @@ h2 {
   background-image: url(../images/backgrounds/binary-repeatable.png);
   background-repeat: repeat;
   background-size: 10%;
-  padding: 3rem;
 }
 
 .bg-white {
@@ -232,3 +231,30 @@ body.home .hero-logo {
   margin: 0 auto;
   display: block;
 }
+
+body.home .free-programs {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+/* Media Queries */
+
+/* Small only */
+@media screen and (max-width: 39.9375em) {}
+
+/* Medium and up */
+@media screen and (min-width: 40em) {
+  body.home .free-programs {
+    padding: 3rem 2rem;
+    text-align: left;
+  }
+}
+
+/* Medium only */
+@media screen and (min-width: 40em) and (max-width: 63.9375em) {}
+
+/* Large and up */
+@media screen and (min-width: 64em) {}
+
+/* Large only */
+@media screen and (min-width: 64em) and (max-width: 74.9375em) {}
