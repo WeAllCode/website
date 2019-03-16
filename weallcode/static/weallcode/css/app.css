@@ -56,6 +56,11 @@ h2 {
   font-family: 'Poppins';
 }
 
+.mega-link:hover {
+  margin-bottom: -3px;
+  border-bottom: 3px solid white;
+}
+
 .text-primary {
   color: var(--we-blue);
 }
