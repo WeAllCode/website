@@ -43,6 +43,22 @@ h2 {
   line-height: 1.3em;
 }
 
+ul.list-plus {
+  font-size: 20px;
+  list-style-type: none;
+  margin-left: 2px;
+}
+
+ul.list-plus li {
+  background-image: url("../images/plus-red.svg");
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 23px;
+
+  margin-bottom: 1em;
+  padding-left: 2.5em;
+}
+
 .title {
   font-family: 'Bungee', cursive;
 }
@@ -231,4 +247,13 @@ body.home .hero-logo {
   width: 50%;
   margin: 0 auto;
   display: block;
+}
+
+
+/* Page: Home */
+
+body.our-story .hero {
+  height: 500px;
+  background-image: url(../images/hero-our-story.jpg);
+  background-size: cover;
 }
