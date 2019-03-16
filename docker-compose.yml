@@ -2,7 +2,6 @@ version: '3'
 
 services:
   app:
-    restart: always
     build: .
     env_file: .env
     container_name: dojo-v1-app

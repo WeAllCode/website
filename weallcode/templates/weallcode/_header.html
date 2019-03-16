@@ -1,6 +1,6 @@
 {% load static %}
 
-<header class="margin-bottom-3">
+<header class="">
   <div class="grid-container">
     <div class="grid-x">
       <div class="cell small-4">
@@ -10,46 +10,19 @@
         <nav role="navigation" aria-label="dropdown navigation" class="padding-vertical-1">
           <ul class="dropdown menu align-right" data-dropdown-menu>
             <li class="mega-menu">
-              <a data-toggle="our-story-menu" href="{% url 'weallcode_our_story' %}" class="mega-link">Our Story</a>
-              <!-- <div class="dropdown-pane bottom" id="our-story-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
-                <ul class="menu align-right">
-                  <li><a href="#">Vision</a></li>
-                  <li><a href="#">Approach</a></li>
-                  <li><a href="#">Results</a></li>
-                  <li><a href="#">Testimonies</a></li>
-                </ul>
-              </div> -->
+              <a href="{% url 'weallcode_our_story' %}">Our Story</a>
             </li>
             <li class="mega-menu">
-              <a data-toggle="programs-menu" href="{% url 'weallcode_programs' %}" class="mega-link">Programs</a>
-              <!-- <div class="dropdown-pane bottom" id="programs-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
-                <ul class="menu align-right">
-                  <li><a href="#">Weekends</a></li>
-                  <li><a href="#">After School</a></li>
-                  <li><a href="#">Summer Camps</a></li>
-                </ul>
-              </div> -->
+              <a href="{% url 'weallcode_programs' %}">Programs</a>
             </li>
             <li class="mega-menu">
-              <a data-toggle="team-menu" href="{% url 'weallcode_team' %}" class="mega-link">Team</a>
-              <!-- <div class="dropdown-pane bottom" id="team-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
-                <ul class="menu align-right">
-                  <li><a href="#">Leadership</a></li>
-                  <li><a href="#">Board</a></li>
-                  <li><a href="#">Assistant Board</a></li>
-                  <li><a href="#">Volunteers</a></li>
-                </ul>
-              </div> -->
+              <a href="{% url 'weallcode_team' %}">Team</a>
             </li>
             <li class="mega-menu margin-left-1">
-              <a data-toggle="get-involved-menu" href="{% url 'weallcode_get_involved' %}" class="button">Get Involved</a>
-              <!-- <div class="dropdown-pane bottom" id="get-involved-menu" data-dropdown data-options="closeOnClick:true; hover: true; hoverPane: true; vOffset:11">
-                <ul class="menu align-right">
-                  <li><a href="#">Volunteer</a></li>
-                  <li><a href="#">Donate</a></li>
-                  <li><a href="#">Sponsorship</a></li>
-                </ul>
-              </div> -->
+              <a href="{% url 'weallcode_get_involved' %}" class="button">Get Involved</a>
+            </li>
+            <li class="mega-menu margin-left-1">
+              <a href="{% url 'weallcode_get_involved' %}" class="button secondary">Log In</a>
             </li>
           </ul>
         </nav>

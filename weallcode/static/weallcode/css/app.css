@@ -28,6 +28,14 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Poppins', cursive;
 }
 
+h1 {
+  line-height: 1.2em;
+}
+
+h2 {
+  line-height: 1.3em;
+}
+
 .title {
   font-family: 'Bungee', cursive;
 }
@@ -47,24 +55,7 @@ header {
   background-color: var(--dark-blue);
 }
 
-.mega-menu .dropdown-pane {
-  width: 100%;
-  max-width: 85rem;
-  margin: 0 auto !important;
-  left: 0% !important;
-  right: 0% !important;
-}
-
-.mega-menu .menu {
-  background: none;
-}
-
-.mega-link:hover {
-  margin-bottom: -3px;
-  border-bottom: 3px solid white;
-}
-
-.mega-menu > a {
+.mega-menu a {
   color: white;
   font-family: 'Poppins';
 }
