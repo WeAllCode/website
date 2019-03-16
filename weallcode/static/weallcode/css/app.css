@@ -17,6 +17,7 @@ body {
   --gray-4-blue: #606060;
   --gray-4-white: #b2b2b2;
   --white: #ffffff;
+  --light-gray: #eaeaea;
 
   font-family: 'Open Sans', sans-serif;
 }
@@ -116,6 +117,10 @@ ul.list-plus li {
 
 .bg-dark-blue {
   background-color: var(--dark-blue);
+}
+
+.bg-light-gray {
+  background-color: var(--light-gray);
 }
 
 .bg-binary {
