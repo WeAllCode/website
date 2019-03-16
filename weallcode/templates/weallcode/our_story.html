@@ -4,6 +4,8 @@
 
 {% block title %}Our Story | {{ block.super }}{% endblock %}
 
+{% block page-class %}our-story{% endblock %}
+
 {% block subheader %}
 <div class="sub-menu">
   <nav class="grid-container" role="navigation">
@@ -19,5 +21,22 @@
 {% endblock subheader %}
 
 {% block content %}
+<section class="hero bg-dark-blue"></section>
 
+<section class="about-us grid-container padding-3">
+  <h2 class="title text-tertiary margin-bottom-2">About us</h2>
+
+  <p>We All Code was founded in 2013 as CoderDojoChi. Our founder, Ali Karbassi, built We All Code from the ground up in an effort to eliminate the barriers keeping girls and underserved youth from learning STEM skills.</p>
+</section>
+
+<section class="benefits grid-container padding-3">
+  <h2 class="title text-tertiary margin-bottom-2">Benefits</h2>
+
+  <ul class="list-plus">
+    <li><strong>Free classes</strong> are open to kids across Chicago</li>
+    <li><strong>Highly-trained teachers and mentors</strong> teach coding skills</li>
+    <li>Students are encouraged to <strong>show what they know with real working projects</strong></li>
+    <li><strong>Kids work collaboratively</strong>, respect their peers, and have fun</li>
+  </ul>
+</section>
 {% endblock %}
