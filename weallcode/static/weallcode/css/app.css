@@ -22,6 +22,10 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+small {
+  font-size: 75%;
+}
+
 .button,
 .input-group-label {
   font-family: 'Poppins', sans-serif;
@@ -136,10 +140,14 @@ ul.list-plus li {
   display: block;
 }
 
+.binary-drop-left img,
+.binary-drop-right img {
+  position: relative;
+}
+
 .binary-drop-left::before,
 .binary-drop-right::before {
   content: ' ';
-  z-index: -1;
   position: absolute;
   display: block;
   top: 1rem;
@@ -181,6 +189,25 @@ ul.list-plus li {
 /* To remove borders from cards and callouts when not needed */
 .borderless {
   border: none;
+}
+
+.bottom-label {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0.3rem 0.5rem;
+  line-height: 0.83em;
+  text-transform: uppercase;
+  position: absolute;
+}
+
+.hero {
+  max-height: 25rem;
+  overflow: hidden;
+}
+
+.hero img {
+  width: 100%;
 }
 
 .get-involved {
@@ -292,16 +319,6 @@ body.home .free-programs {
   text-align: center;
   padding: 2rem 1rem;
 }
-
-
-/* Page: Our Story */
-
-body.our-story .hero {
-  height: 500px;
-  background-image: url(../images/hero-our-story.jpg);
-  background-size: cover;
-}
-
 
 /* Media Queries */
 
