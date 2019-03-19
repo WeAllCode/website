@@ -181,6 +181,11 @@ ul.list-plus li {
   fill: var(--white);
 }
 
+.program-icon {
+  max-height: 7rem;
+  width: 100%;
+}
+
 /* to override the button color */
 .button.text-white {
   color: var(--white);
