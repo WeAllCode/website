@@ -93,6 +93,10 @@ ul.list-plus li {
   color: var(--code-red);
 }
 
+.text-black {
+  color: var(--black);
+}
+
 .text-white {
   color: var(--white);
 }
@@ -331,6 +335,20 @@ body.home .free-programs {
   text-align: center;
   padding: 2rem 1rem;
 }
+
+
+/* Page: Our Story */
+
+body.our-story .hero {
+  height: 500px;
+  background-image: url(../images/hero-our-story.jpg);
+  background-size: cover;
+}
+
+body.our-story .mission p {
+  font-size: 20px;
+}
+
 
 /* Media Queries */
 
