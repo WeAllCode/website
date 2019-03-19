@@ -21,7 +21,9 @@
 {% endblock subheader %}
 
 {% block content %}
-<section class="hero bg-dark-blue"></section>
+<section class="hero bg-dark-blue">
+  <img src="{% static 'weallcode/images/photos/hero-our-story.jpg' %}" alt="our story">
+</section>
 
 <section id="about-us" class="about-us grid-container padding-3">
   <h2 class="title text-tertiary margin-bottom-2">About us</h2>
@@ -32,7 +34,7 @@
 <section id="benefits" class="benefits grid-container padding-3">
   <h2 class="title text-tertiary margin-bottom-2">Benefits</h2>
 
-  <ul class="list-plus">
+  <ul class="list-plus text-large">
     <li><strong>Free classes</strong> are open to kids across Chicago</li>
     <li><strong>Highly-trained teachers and mentors</strong> teach coding skills</li>
     <li>Students are encouraged to <strong>show what they know with real working projects</strong></li>

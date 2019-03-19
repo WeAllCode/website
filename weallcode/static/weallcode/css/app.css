@@ -17,8 +17,13 @@ body {
   --gray-4-blue: #606060;
   --gray-4-white: #b2b2b2;
   --white: #ffffff;
+  --light-gray: #eaeaea;
 
   font-family: 'Open Sans', sans-serif;
+}
+
+small {
+  font-size: 75%;
 }
 
 .button,
@@ -44,19 +49,17 @@ h2 {
 }
 
 ul.list-plus {
-  font-size: 20px;
+  margin: 0;
+  padding: 0;
   list-style-type: none;
-  margin-left: 2px;
 }
 
 ul.list-plus li {
   background-image: url("../images/plus-red.svg");
-  background-position: left center;
+  background-position: 0.3em 0.47em;
   background-repeat: no-repeat;
-  background-size: 23px;
-
-  margin-bottom: 1em;
-  padding-left: 2.5em;
+  background-size: 0.66em;
+  padding-left: 1.5em;
 }
 
 .title {
@@ -72,6 +75,10 @@ ul.list-plus li {
   max-width: 64em;
   margin: 0 auto;
   padding: 1em;
+}
+
+.text-large {
+  font-size: 1.25em;
 }
 
 .text-primary {
@@ -122,6 +129,10 @@ ul.list-plus li {
   background-color: var(--dark-blue);
 }
 
+.bg-light-gray {
+  background-color: var(--light-gray);
+}
+
 .bg-binary {
   background-color: var(--all-yellow);
   background-image: url(../images/backgrounds/binary-repeatable.png);
@@ -135,10 +146,14 @@ ul.list-plus li {
   display: block;
 }
 
+.binary-drop-left img,
+.binary-drop-right img {
+  position: relative;
+}
+
 .binary-drop-left::before,
 .binary-drop-right::before {
   content: ' ';
-  z-index: -1;
   position: absolute;
   display: block;
   top: 1rem;
@@ -172,14 +187,43 @@ ul.list-plus li {
   fill: var(--white);
 }
 
+.program-icon {
+  max-height: 7rem;
+  width: 100%;
+}
+
 /* to override the button color */
 .button.text-white {
   color: var(--white);
 }
 
+.button.tertiary {
+  background-color: var(--tertiary);
+  color: white;
+}
+
 /* To remove borders from cards and callouts when not needed */
 .borderless {
   border: none;
+}
+
+.bottom-label {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0.3rem 0.5rem;
+  line-height: 0.83em;
+  text-transform: uppercase;
+  position: absolute;
+}
+
+.hero {
+  max-height: 25rem;
+  overflow: hidden;
+}
+
+.hero img {
+  width: 100%;
 }
 
 .get-involved {
