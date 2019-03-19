@@ -49,19 +49,17 @@ h2 {
 }
 
 ul.list-plus {
-  font-size: 20px;
+  margin: 0;
+  padding: 0;
   list-style-type: none;
-  margin-left: 2px;
 }
 
 ul.list-plus li {
   background-image: url("../images/plus-red.svg");
-  background-position: left center;
+  background-position: 0.3em 0.47em;
   background-repeat: no-repeat;
-  background-size: 23px;
-
-  margin-bottom: 1em;
-  padding-left: 2.5em;
+  background-size: 0.66em;
+  padding-left: 1.5em;
 }
 
 .title {
@@ -77,6 +75,10 @@ ul.list-plus li {
   max-width: 64em;
   margin: 0 auto;
   padding: 1em;
+}
+
+.text-large {
+  font-size: 1.25em;
 }
 
 .text-primary {
@@ -181,9 +183,19 @@ ul.list-plus li {
   fill: var(--white);
 }
 
+.program-icon {
+  max-height: 7rem;
+  width: 100%;
+}
+
 /* to override the button color */
 .button.text-white {
   color: var(--white);
+}
+
+.button.tertiary {
+  background-color: var(--tertiary);
+  color: white;
 }
 
 /* To remove borders from cards and callouts when not needed */
