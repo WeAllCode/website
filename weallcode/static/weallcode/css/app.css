@@ -22,6 +22,36 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+.text-primary {         color: var(--we-blue); }
+.text-secondary {       color: var(--all-yellow); }
+.text-tertiary {        color: var(--code-red); }
+.text-dark-blue {       color: var(--dark-blue); }
+.text-black {           color: var(--black); }
+.text-white {           color: var(--white); }
+.text-light-gray {      color: var(--light-gray); }
+.text-grey-for-white {  color: var(--gray-4-white); }
+.text-grey-for-blue {   color: var(--gray-4-blue); }
+
+.fill-primary {         fill: var(--we-blue); }
+.fill-secondary {       fill: var(--all-yellow); }
+.fill-tertiary {        fill: var(--code-red); }
+.fill-dark-blue {       fill: var(--dark-blue); }
+.fill-black {           fill: var(--black); }
+.fill-white {           fill: var(--white); }
+.fill-light-gray {      fill: var(--light-gray); }
+.fill-gray-for-white {  fill: var(--gray-4-white); }
+.fill-gray-for-blue {   fill: var(--gray-4-blue); }
+
+.bg-primary {           background-color: var(--we-blue); }
+.bg-secondary {         background-color: var(--all-yellow); }
+.bg-tertiary {          background-color: var(--code-red); }
+.bg-dark-blue {         background-color: var(--dark-blue); }
+.bg-black {             background-color: var(--black); }
+.bg-white {             background-color: var(--white); }
+.bg-light-gray {        background-color: var(--light-gray); }
+.bg-gray-for-white {    background-color: var(--gray-4-white); }
+.bg-gray-for-blue {     background-color: var(--gray-4-blue); }
+
 small {
   font-size: 75%;
 }
@@ -29,6 +59,15 @@ small {
 .button,
 .input-group-label {
   font-family: 'Poppins', sans-serif;
+}
+
+.button.text-white {
+  color: var(--white);
+}
+
+.button.tertiary {
+  background-color: var(--tertiary);
+  color: white;
 }
 
 h1,
@@ -77,60 +116,12 @@ ul.list-plus li {
   padding: 1em;
 }
 
+.text-huge {
+  font-size: 4.5em;
+}
+
 .text-large {
   font-size: 1.25em;
-}
-
-.text-primary {
-  color: var(--we-blue);
-}
-
-.text-secondary {
-  color: var(--all-yellow);
-}
-
-.text-tertiary {
-  color: var(--code-red);
-}
-
-.text-black {
-  color: var(--black);
-}
-
-.text-white {
-  color: var(--white);
-}
-
-.text-grey-for-white {
-  color: var(--gray-4-white);
-}
-
-.text-grey-for-blue {
-  color: var(--gray-4-blue);
-}
-
-.bg-primary {
-  background-color: var(--we-blue);
-}
-
-.bg-secondary {
-  background-color: var(--all-yellow);
-}
-
-.bg-tertiary {
-  background-color: var(--code-red);
-}
-
-.bg-gray-blue {
-  background-color: var(--gray-4-blue);
-}
-
-.bg-dark-blue {
-  background-color: var(--dark-blue);
-}
-
-.bg-light-gray {
-  background-color: var(--light-gray);
 }
 
 .bg-binary {
@@ -140,66 +131,53 @@ ul.list-plus li {
   background-size: 10%;
 }
 
-.binary-drop-left,
-.binary-drop-right {
-  position: relative;
-  display: block;
-}
 
-.binary-drop-left img,
-.binary-drop-right img {
-  position: relative;
-}
+/* Binary Drop (only visible on larger screens) */
 
-.binary-drop-left::before,
-.binary-drop-right::before {
-  content: ' ';
-  position: absolute;
-  display: block;
-  top: 1rem;
-  bottom: -1rem;
-  background-color: var(--all-yellow);
-  background-image: url(../images/backgrounds/binary-repeatable.png);
-  background-repeat: repeat;
-  background-size: 10%;
-}
+@media screen and (min-width: 40em) {
+  .binary-drop-left,
+  .binary-drop-right {
+    position: relative;
+    display: block;
+  }
 
-.binary-drop-left::before {
-  right: 1rem;
-  left: -1rem;
-}
+  .binary-drop-left img,
+  .binary-drop-right img {
+    position: relative;
+  }
 
-.binary-drop-right::before {
-  right: -1rem;
-  left: 1rem;
-}
+  .binary-drop-left::before,
+  .binary-drop-right::before {
+    content: ' ';
+    position: absolute;
+    display: block;
+    top: 1rem;
+    bottom: -1rem;
+    background-color: var(--all-yellow);
+    background-image: url(../images/backgrounds/binary-repeatable.png);
+    background-repeat: repeat;
+    background-size: 10%;
+  }
 
-.binary-drop-left img,
-.binary-drop-right img {
-  display: block;
-}
+  .binary-drop-left::before {
+    right: 1rem;
+    left: -1rem;
+  }
 
-.bg-white {
-  background-color: var(--white);
-}
+  .binary-drop-right::before {
+    right: -1rem;
+    left: 1rem;
+  }
 
-.fill-white {
-  fill: var(--white);
+  .binary-drop-left img,
+  .binary-drop-right img {
+    display: block;
+  }
 }
 
 .program-icon {
   max-height: 7rem;
   width: 100%;
-}
-
-/* to override the button color */
-.button.text-white {
-  color: var(--white);
-}
-
-.button.tertiary {
-  background-color: var(--tertiary);
-  color: white;
 }
 
 /* To remove borders from cards and callouts when not needed */
@@ -335,20 +313,6 @@ body.home .free-programs {
   text-align: center;
   padding: 2rem 1rem;
 }
-
-
-/* Page: Our Story */
-
-body.our-story .hero {
-  height: 500px;
-  background-image: url(../images/hero-our-story.jpg);
-  background-size: cover;
-}
-
-body.our-story .mission p {
-  font-size: 20px;
-}
-
 
 /* Media Queries */
 
