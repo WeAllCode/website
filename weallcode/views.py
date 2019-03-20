@@ -23,7 +23,3 @@ class GetInvolvedView(TemplateView):
 
 class PrivacyView(TemplateView):
     template_name = "weallcode/privacy.html"
-
-
-class TermsView(TemplateView):
-    template_name = "weallcode/terms.html"
