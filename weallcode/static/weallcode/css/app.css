@@ -42,15 +42,15 @@ body {
 .fill-gray-for-white {  fill: var(--gray-4-white); }
 .fill-gray-for-blue {   fill: var(--gray-4-blue); }
 
-.bg-primary {           background-color: var(--we-blue); }
-.bg-secondary {         background-color: var(--all-yellow); }
-.bg-tertiary {          background-color: var(--code-red); }
-.bg-dark-blue {         background-color: var(--dark-blue); }
-.bg-black {             background-color: var(--black); }
-.bg-white {             background-color: var(--white); }
-.bg-light-gray {        background-color: var(--light-gray); }
-.bg-gray-for-white {    background-color: var(--gray-4-white); }
-.bg-gray-for-blue {     background-color: var(--gray-4-blue); }
+.bg-primary {           background-color: var(--we-blue) !important; }
+.bg-secondary {         background-color: var(--all-yellow) !important; }
+.bg-tertiary {          background-color: var(--code-red) !important; }
+.bg-dark-blue {         background-color: var(--dark-blue) !important; }
+.bg-black {             background-color: var(--black) !important; }
+.bg-white {             background-color: var(--white) !important; }
+.bg-light-gray {        background-color: var(--light-gray) !important; }
+.bg-gray-for-white {    background-color: var(--gray-4-white) !important; }
+.bg-gray-for-blue {     background-color: var(--gray-4-blue) !important; }
 
 small {
   font-size: 75%;
@@ -116,12 +116,21 @@ ul.list-plus li {
   padding: 1em;
 }
 
-.text-huge {
-  font-size: 4.5em;
+.text-bold {
+  font-weight: bold;
 }
 
-.text-large {
-  font-size: 1.25em;
+.text-gigantic {  font-size: 4.5em; }
+.text-huge {      font-size: 2.5em; }
+.text-large {     font-size: 1.25em; }
+
+.line-height-1 {
+  line-height: 1.1em;
+}
+
+.line {
+  padding: 3px;
+  display: inline-block;
 }
 
 .bg-binary {
@@ -159,13 +168,21 @@ ul.list-plus li {
     background-size: 10%;
   }
 
+  .binary-drop-left {
+    padding-left: 1rem;
+  }
+
+  .binary-drop-right {
+    padding-right: 1rem;
+  }
+
   .binary-drop-left::before {
     right: 1rem;
-    left: -1rem;
+    left: 0rem;
   }
 
   .binary-drop-right::before {
-    right: -1rem;
+    right: 0;
     left: 1rem;
   }
 
