@@ -246,12 +246,6 @@ ul.list-plus li {
   padding: 4em 0;
 }
 
-.main-menu .logo {
-  height: 4em;
-  padding: 1.2em;
-  margin: 0 -1.2em;
-}
-
 footer {
   background-color: var(--black);
   color: var(--white);
@@ -298,14 +292,25 @@ footer small span {
 
 /* Main Menu */
 
-.mega-menu a {
+.main-menu a {
   color: var(--white);
   font-family: 'Poppins';
 }
 
-.mega-link:hover {
-  margin-bottom: -5px;
+.main-menu a:not(.button):hover {
+  margin-bottom: -16px;
+  padding-bottom: 22px;
   border-bottom: 5px solid var(--white);
+}
+
+.main-menu a.button {
+  margin-left: 1rem;
+}
+
+.main-logo {
+  height: 4em;
+  padding: 1.2em;
+  margin: 0 -1.2em;
 }
 
 

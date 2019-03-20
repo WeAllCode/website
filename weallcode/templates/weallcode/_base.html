@@ -24,7 +24,13 @@
       {% block header %}{% include 'weallcode/_header.html' %}{% endblock %}
       {% block subheader %}{% endblock %}
     </header>
-    {% block content %}{% endblock %}
+    {% block content %}
+    <section class="margin-vertical-3">
+      <div class="grid-container">
+        {% block contained_content %}{% endblock %}
+      </div>
+    </section>
+    {% endblock %}
     {% include 'weallcode/_footer.html' %}
   </div>
 
