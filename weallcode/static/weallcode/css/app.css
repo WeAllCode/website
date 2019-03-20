@@ -140,6 +140,26 @@ ul.list-plus li {
   background-size: 10%;
 }
 
+.aside-title {
+  background-color: var(--dark-blue);
+  font-size: 2em;
+  padding: 2rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  line-height: 1.9em;
+  display: none;
+  position: absolute;
+}
+
+@media screen and (min-width: 64em) {
+  .aside-title {
+    display: block;
+  }
+}
+
 
 /* Binary Drop (only visible on larger screens) */
 
