@@ -308,7 +308,7 @@ class CalendarView(View):
 
         event['location'] = vText(location)
 
-        event['url'] = event_obj.get_absolute_url()
+        event['url'] = f"{settings.SITE_URL}{event_obj.get_absolute_url()}"
         event['description'] = self.get_description(event_obj)
 
         # A value of 5 is the normal or "MEDIUM" priority.
