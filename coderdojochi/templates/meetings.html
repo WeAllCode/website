@@ -5,6 +5,11 @@
 
 {% block body_class %}page-meetings{% endblock %}
 
+{% block extra_meta %}
+<meta property="og:url" content="{{ SITE_URL }}{{ request.get_full_path }}">
+<meta property="og:title" content="Meetings">
+{% endblock %}
+
 {% block content %}
 
 <div class="container">

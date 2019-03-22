@@ -13,8 +13,8 @@
         <meta property="fb:app_id" content="1454178301519376">
 
         {% block extra_meta %}
-        <meta property="og:url" content="https://coderdojochi.org">
-        <meta property="og:title" content="CoderDojoChi - Welcome!">
+        <meta property="og:url" content="{{ SITE_URL }}{{ request.get_full_path }}">
+        <meta property="og:title" content="CoderDojoChi">
         {% endblock %}
 
         <link rel="shortcut icon" href="{% static 'favicon.ico' %}">

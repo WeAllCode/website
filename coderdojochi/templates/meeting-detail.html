@@ -5,7 +5,7 @@
 {% block title %}{{ object.meeting_type.title }}{% endblock %}
 
 {% block extra_meta %}
-<meta property="og:url" content="{{ object.get_absolute_url }}">
+<meta property="og:url" content="{{ SITE_URL }}{{ object.get_absolute_url }}">
 <meta property="og:title" content="{{ object.start_date|date }} | {{ object.meeting_type.title }}">
 {% endblock %}
 
