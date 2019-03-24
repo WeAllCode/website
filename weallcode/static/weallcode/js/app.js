@@ -11,4 +11,9 @@ $(document).ready(function() {
       scrollTop: $(id).offset().top
     }, 1500);
   });
+
+  $('.mobile-nav-trigger').click(function() {
+    $('.mobile-nav').toggleClass('hide');
+    $('.main-logo').toggleClass('show');
+  });
 });
