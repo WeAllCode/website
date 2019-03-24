@@ -52,6 +52,10 @@ body {
 .bg-gray-for-white {    background-color: var(--gray-4-white) !important; }
 .bg-gray-for-blue {     background-color: var(--gray-4-blue) !important; }
 
+.margin-vertical-half {     margin-top: 0.5rem; margin-bottom: 0.5rem; }
+.margin-horizontal-half {   margin-left: 0.5rem; margin-right: 0.5rem; }
+.margin-half {              margin-top: 0.5rem; margin-bottom: 0.5rem; margin-left: 0.5rem; margin-right: 0.5rem; }
+
 small {
   font-size: 75%;
 }
@@ -140,6 +144,13 @@ ul.list-plus li {
   background-size: 10%;
 }
 
+@media screen and (min-width: 40em) {
+  .medium-padding-horizontal-3 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
 .aside-title {
   background-color: var(--dark-blue);
   font-size: 2em;
@@ -148,7 +159,7 @@ ul.list-plus li {
   font-weight: bold;
   bottom: 0;
   right: 0;
-  left: 0;
+  left: 2rem;
   line-height: 1.9em;
   display: none;
   position: absolute;
@@ -246,6 +257,150 @@ ul.list-plus li {
   padding: 4em 0;
 }
 
+
+/* Kill Debug on Mobile */
+
+@media screen and (max-width: 48em) {
+  #djDebug, #djDebugToolbar, #djDebugToolbarHandle {
+    display: none !important;
+  }
+}
+
+
+/* Main Logo & Mobile Nav */
+
+.main-logo,
+.mobile-nav-trigger {
+  box-sizing: content-box;
+  color: white;
+  display: inline-block;
+  height: 1em;
+  line-height: 1em;
+  padding: 1.2em 0.5em;
+}
+
+.mobile-nav-trigger,
+.mobile-nav-trigger:hover,
+.mobile-nav-trigger:active {
+  color: white;
+}
+
+
+@media screen and (min-width: 48em) {
+  .main-logo,
+  .mobile-nav-trigger {
+    height: 1.5em;
+  }
+}
+
+
+/* Main Menu */
+
+.main-menu a {
+  color: var(--white);
+  font-family: 'Poppins';
+}
+
+.main-menu a,
+.sub-menu a {
+  font-size: 0.6em;
+}
+
+@media screen and (min-width: 48em) {
+  .main-menu a,
+  .sub-menu a {
+    font-size: 0.83em;
+  }
+}
+
+@media screen and (min-width: 64em) {
+  .main-menu a,
+  .sub-menu a {
+    font-size: 1em;
+  }
+}
+
+html[data-whatintent='mouse'] .main-menu a:not(.button):hover {
+  margin-bottom: -16px;
+  padding-bottom: 22px;
+  border-bottom: 5px solid var(--white);
+}
+
+.main-menu a.button {
+  margin-left: 1rem;
+}
+
+
+/* Mobile Nav */
+
+.mobile-nav {
+  bottom: 0;
+  background-color: var(--dark-blue);
+  position: absolute;
+  top: 3rem;
+  width: 100%;
+  z-index: 1;
+  padding: 1.4rem;
+}
+
+.mobile-nav a:not(.button) {
+  color: white;
+  display: block;
+  padding: 0.7rem 0;
+}
+
+
+/* Sub Menu */
+
+.sub-menu {
+  background-color: var(--primary);
+  font-family: 'Poppins';
+  padding: 0.5rem 0;
+}
+
+/* .sub-menu li {
+  width: 33.33%;
+} */
+
+.sub-menu a {
+  color: var(--white);
+  margin: 0 auto;
+  padding: 0.8rem 0.5rem;
+  text-align: left;
+}
+
+@media screen and (min-width: 40em) {
+  .sub-menu {
+    padding: 0;
+  }
+
+  .sub-menu .menu {
+    -ms-flex-pack: end;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+    margin-left: -1.2rem;
+    margin-right: -1.2rem;
+  }
+
+  .sub-menu li {
+    width: auto;
+  }
+
+  .sub-menu a {
+    padding: 1.2rem;
+    text-align: right;
+  }
+
+  html[data-whatintent='mouse'] .sub-menu a:hover {
+    padding-bottom: calc(1rem - 5px);
+    border-bottom: 5px solid var(--black);
+  }
+}
+
+
+/* Footer  */
+
 footer {
   background-color: var(--black);
   color: var(--white);
@@ -275,7 +430,7 @@ footer a {
   color: var(--gray-4-white);
 }
 
-footer a:hover {
+html[data-whatintent='mouse'] footer a:hover {
   color: white;
 }
 
@@ -290,65 +445,25 @@ footer small span {
 }
 
 
-/* Main Menu */
-
-.main-menu a {
-  color: var(--white);
-  font-family: 'Poppins';
-}
-
-.main-menu a:not(.button):hover {
-  margin-bottom: -16px;
-  padding-bottom: 22px;
-  border-bottom: 5px solid var(--white);
-}
-
-.main-menu a.button {
-  margin-left: 1rem;
-}
-
-.main-logo {
-  height: 4em;
-  padding: 1.2em;
-  margin: 0 -1.2em;
-}
-
-
-/* Sub Menu */
-
-.sub-menu {
-  background-color: var(--primary);
-  font-family: 'Poppins';
-}
-
-.sub-menu a {
-  color: var(--white);
-  padding-top: 1rem;
-  padding-bottom: calc(1rem - 5px);
-  border-bottom: 5px solid transparent;
-}
-
-.sub-menu a:hover {
-  margin-bottom: 0;
-  border-bottom-color: black;
-}
-
-.sub-menu li:last-of-type a {
-  /* Move the last menu item to the left to align text */
-  margin-right: -0.7rem;
-}
-
-
 /* Page: Home */
 
-body.home .main-menu .logo {
+body.home .main-logo {
   display: none;
+}
+body.home .main-logo.show {
+  display: block;
 }
 
 body.home .hero-logo {
   width: 50%;
   margin: 0 auto;
   display: block;
+}
+
+@media screen and (min-width: 40em) {
+  body.home .hero-logo {
+    padding: 3rem 0;
+  }
 }
 
 body.home .free-programs {

@@ -1,24 +1,38 @@
 {% load static %}
 
-<div class="bg-dark-blue">
-  <div class="grid-container">
-    <div class="grid-x">
-      <div class="cell medium-4">
-        <a href="{% url 'weallcode_home' %}">
-          <img class="main-logo" src="{% static 'weallcode/images/logo/horizontal-trim/logo-horizontal-trim.svg' %}">
-        </a>
-      </div>
-      <div class="cell show-for-medium medium-8">
-        <nav class="padding-vertical-1" role="navigation" aria-label="navigation">
-          <ul class="main-menu menu align-right">
-            <li><a href="{% url 'weallcode_our_story' %}">Our Story</a></li>
-            <li><a href="{% url 'weallcode_programs' %}">Programs</a></li>
-            <li><a href="{% url 'weallcode_team' %}">Team</a></li>
-            <li><a href="{% url 'weallcode_get_involved' %}" class="button">Get Involved</a></li>
-            <li><a href="{% url 'weallcode_get_involved' %}" class="button secondary">Log In</a></li>
-          </ul>
-        </nav>
-      </div>
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="cell auto medium-4">
+      <a href="{% url 'weallcode_home' %}">
+        <img class="main-logo" src="{% static 'weallcode/images/logo/horizontal-trim/logo-horizontal-trim.svg' %}">
+      </a>
     </div>
+    <div class="cell hide-for-medium shrink">
+      <a class="mobile-nav-trigger"><i class="fas fa-bars"></i></a>
+    </div>
+    <div class="cell show-for-medium medium-8">
+      <nav class="padding-vertical-1" role="navigation" aria-label="navigation">
+        <ul class="main-menu menu align-right">
+          <li><a href="{% url 'weallcode_our_story' %}">Our Story</a></li>
+          <li><a href="{% url 'weallcode_programs' %}">Programs</a></li>
+          <li><a href="{% url 'weallcode_team' %}">Team</a></li>
+          <li><a href="{% url 'weallcode_get_involved' %}" class="button">Get Involved</a></li>
+          <li><a href="{% url 'weallcode_get_involved' %}" class="button secondary">Log In</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-nav hide">
+  <a href="{% url 'weallcode_our_story' %}">Our Story</a>
+  <a href="{% url 'weallcode_programs' %}">Programs</a>
+  <a href="{% url 'weallcode_team' %}">Team</a>
+
+  <div class="margin-top-1">
+    <a href="{% url 'weallcode_get_involved' %}" class="button">Get Involved</a>
+  </div>
+  <div>
+    <a href="{% url 'weallcode_get_involved' %}" class="button secondary">Log In</a>
   </div>
 </div>
