@@ -2,13 +2,17 @@ $(document).foundation()
 
 $(document).ready(function() {
   $('a[href*="#"]').click(function(e) {
+    const parts = $(this).attr('href').split('#');
+    const path = parts[0];
+
+    if (parts.length === 1 || path !== window.location.pathname) return;
+
     e.preventDefault();
 
-    const val = $(this).attr('href');
-    const id = val.substr(val.indexOf('#'));
+    const id = parts[1];
 
     $([document.documentElement, document.body]).animate({
-      scrollTop: $(id).offset().top
+      scrollTop: $('#' + id).offset().top
     }, 1500);
   });
 
