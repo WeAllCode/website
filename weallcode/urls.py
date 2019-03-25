@@ -39,4 +39,10 @@ urlpatterns = [
         views.PrivacyView.as_view(),
         name='weallcode_privacy',
     ),
+
+    path(
+        'credits',
+        views.ProgramsView.as_view(),
+        name='weallcode_credits',
+    ),
 ]
