@@ -252,11 +252,6 @@ ul.list-plus li {
   width: 100%;
 }
 
-.get-involved {
-  background-color: var(--dark-blue);
-  padding: 4em 0;
-}
-
 
 /* Kill Debug on Mobile */
 
@@ -358,10 +353,6 @@ html[data-whatintent='mouse'] .main-menu a:not(.button):hover {
   padding: 0.5rem 0;
 }
 
-/* .sub-menu li {
-  width: 33.33%;
-} */
-
 .sub-menu a {
   color: var(--white);
   margin: 0 auto;
@@ -393,7 +384,7 @@ html[data-whatintent='mouse'] .main-menu a:not(.button):hover {
   }
 
   html[data-whatintent='mouse'] .sub-menu a:hover {
-    padding-bottom: calc(1rem - 5px);
+    padding-bottom: calc(1.2rem - 5px);
     border-bottom: 5px solid var(--black);
   }
 }
