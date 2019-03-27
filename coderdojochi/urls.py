@@ -41,36 +41,31 @@ admin.autodiscover()
 # Empty to start
 urlpatterns = []
 
-# We All Code
-urlpatterns += [
-    path('weallcode/', include('weallcode.urls')),
-]
+# General Pages
+urlpatterns += [path('', include('weallcode.urls'))]
 
-# General
+# Accounts
+urlpatterns += [path('account/', include('accounts.urls'))]
+
+# Old General
 urlpatterns += [
     # /
-    # old_views.home,
-    path('', HomeView.as_view(), name='home'),
+    path('old/', HomeView.as_view(), name='home'),
 
     # About
-    # /about/
-    path('about/', AboutView.as_view(), name='about'),
+    path('old/about/', AboutView.as_view(), name='about'),
 
     # Volunteer
-    # /volunteer/
-    path('volunteer/', VolunteerView.as_view(), name='volunteer'),
+    path('old/volunteer/', VolunteerView.as_view(), name='volunteer'),
 
     # Contact
-    # /contact/
-    path('contact/', old_views.contact, name='contact'),
+    path('old/contact/', old_views.contact, name='contact'),
 
     # Privacy
-    # /privary/
-    path('privacy/', PrivacyView.as_view(), name='privacy'),
+    path('old/privacy/', PrivacyView.as_view(), name='privacy'),
 
     # FAQs
-    # /faqs/
-    path('faqs/', old_views.faqs, name='faqs'),
+    path('old/faqs/', old_views.faqs, name='faqs'),
 ]
 
 # Donate / Donations
@@ -89,14 +84,6 @@ urlpatterns += [
         # /donate/paypal/
         path('paypal/', include('paypal.standard.ipn.urls')),
     ])),
-]
-
-
-# All Auth / Logins
-urlpatterns += [
-    # AllAuth
-    # /accounts/
-    path('accounts/', include('allauth.urls')),
 ]
 
 # Login As

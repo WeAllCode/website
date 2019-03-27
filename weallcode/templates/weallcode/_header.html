@@ -17,7 +17,7 @@
           <li><a class="{% if request.resolver_match.url_name == 'weallcode_programs' %}current{% endif %}" href="{% url 'weallcode_programs' %}">Programs</a></li>
           <li><a class="{% if request.resolver_match.url_name == 'weallcode_team' %}current{% endif %}" href="{% url 'weallcode_team' %}">Team</a></li>
           <li><a class="button {% if request.resolver_match.url_name == 'weallcode_get_involved' %}current{% endif %}" href="{% url 'weallcode_get_involved' %}">Get Involved</a></li>
-          <li><a class="button secondary {% if request.resolver_match.url_name == 'weallcode_get_involved' %}current{% endif %}" href="{% url 'weallcode_get_involved' %}">Log In</a></li>
+          <li><a class="button secondary" href="{% url 'account_login' %}">Log In</a></li>
         </ul>
       </nav>
     </div>

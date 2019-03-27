@@ -28,7 +28,11 @@
     {% block content %}
     <section class="margin-vertical-3">
       <div class="grid-container">
-        {% block contained_content %}{% endblock %}
+        {% block contained_content %}
+          <div class="small-container">
+            {% block small_content %} {% endblock %}
+          </div>
+        {% endblock %}
       </div>
     </section>
     {% endblock %}
@@ -39,6 +43,8 @@
   <script src="{% static 'weallcode/js/vendor/what-input.js' %}"></script>
   <script src="{% static 'weallcode/js/vendor/foundation.min.js' %}"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
+
+  {% block extra_script %}{% endblock %}
 
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
   <script>
