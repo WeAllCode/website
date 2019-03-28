@@ -124,7 +124,7 @@ class DojoMentorView(TemplateView):
                 'Profile information saved.'
             )
 
-            return redirect('dojo')
+            return redirect('account_home')
 
         else:
             messages.error(

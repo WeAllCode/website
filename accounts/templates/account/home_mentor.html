@@ -8,8 +8,11 @@
 {% block contained_content %}
 
 {% if not account_complete %}
+
 <section>
-    <h1 class="title text-primary">Hello {% if mentor.user.first_name %}{{ mentor.user.first_name }}{% else %}there friend{% endif %}!</h1>
+    <h1 class="title text-primary">
+        Hello {% if mentor.user.first_name %}{{ mentor.user.first_name }}{% else %}there friend{% endif %}!
+    </h1>
     <p>We're super excited to have you join our ranks. Before you come to your first mentor session, we need to take care of a few things.</p>
 
     <ol>
@@ -39,28 +42,25 @@
 
 <section class="margin-top-3">
     <h2 class="title text-tertiary">Your Profile</h2>
+    <p>Joined on {{ mentor.user.date_joined|naturalday|capfirst }}</p>
 
     <form id="profile_form" enctype="multipart/form-data" action="" method="post">
         {% csrf_token %}
 
         <div class="grid-x grid-margin-x">
-            <div class="cell medium-2">
-                <div class="avatar">
-                    <img src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" class="avatar width-100">
-                    <span class="change-overlay" data-trigger="hover" data-placement="top" data-html="true" data-toggle="popover" title="Avatar Requirements" data-content="Min size: <strong>500 x 500px</strong><br>Max size: <strong>1000 x 1000px</strong><br>Max file size: <strong>2 MB</strong><br>Formats: <strong>.jpeg, .png, .gif</strong>">Change</a>
-                    <input id="id_avatar" name="avatar" title="" type="file">
-                </div>
-            </div>
-            <div class="cell medium-10 grid-x grid-margin-x">
+            <div class="cell small-6 medium-2">
+                <img src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" class="avatar width-100">
+
                 {% if mentor.avatar and not mentor.avatar_approved %}
                 <div class="alert alert-warning text-center">Avatar Pending Approval</div>
                 {% endif %}
+                <span class="change-overlay" data-trigger="hover" data-placement="top" data-html="true" data-toggle="popover" title="Avatar Requirements" data-content="Min size: <strong>500 x 500px</strong><br>Max size: <strong>1000 x 1000px</strong><br>Max file size: <strong>2 MB</strong><br>Formats: <strong>.jpeg, .png, .gif</strong>">Change</a>
+                <input value="Change Avatar" id="id_avatar" name="avatar" title="" type="file">
 
                 {{ form.avatar.errors }}
-
-                <p>Joined on {{ mentor.user.date_joined|naturalday|capfirst }}</p>
             </div>
 
+            <div class="cell medium-10">{% bootstrap_field form.bio %}</div>
             <div class="cell medium-6">{% bootstrap_field user_form.first_name %}</div>
             <div class="cell medium-6">{% bootstrap_field user_form.last_name %}</div>
             <div class="cell medium-6">{% bootstrap_field form.birthday %}</div>
@@ -69,7 +69,6 @@
             <div class="cell medium-6">{% bootstrap_field form.work_place %}</div>
             <div class="cell medium-6">{% bootstrap_field form.phone %}</div>
             <div class="cell medium-6">{% bootstrap_field form.home_address %}</div>
-            <div class="cell">{% bootstrap_field form.bio %}</div>
         </div>
         {% buttons %}
         <button class="submit button">Save</button>

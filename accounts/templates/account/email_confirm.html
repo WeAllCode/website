@@ -7,7 +7,7 @@
 
 
 {% block content_placeholder %}
-<h1>{% trans "Confirm E-mail Address" %}</h1>
+<h1 class="title">{% trans "Confirm E-mail Address" %}</h1>
 
 {% if confirmation %}
 
@@ -17,7 +17,7 @@
 
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
     {% csrf_token %}
-    <button class="btn-cdc btn-cdc-lg" type="submit">{% trans 'Confirm' %}</button>
+    <button class="button" type="submit">{% trans 'Confirm' %}</button>
 </form>
 
 {% else %}

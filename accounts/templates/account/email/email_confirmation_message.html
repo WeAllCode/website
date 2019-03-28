@@ -8,12 +8,13 @@
 {% block child_preheader %}Hello from {{ current_site.name }}!{% endblock %}
 
 {% block child_content %}
-    <p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Hello from {{ site_name }}!{% endblocktrans %}</p>
-    <p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}You're receiving this e-mail because user {{ user_display }} at {{ site_domain }} has given yours as an e-mail address to connect their account.{% endblocktrans %}</p>
-    <p>{% autoescape off %}{% blocktrans %}To confirm this is correct, go to <a href="{{ activate_url }}">{{ activate_url }}</a>{% endblocktrans %}{% endautoescape %}</p>
 
-    <p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you from {{ site_name }}!{% endblocktrans %}<br>
-    {% blocktrans with site_name=current_site.name site_domain=current_site.domain %}{{ site_domain }}{% endblocktrans %}</p>
+<p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Hello from {{ site_name }}!{% endblocktrans %}</p>
+<p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}You're receiving this e-mail because user {{ user_display }} at {{ site_domain }} has given yours as an e-mail address to connect their account.{% endblocktrans %}</p>
+<p>{% autoescape off %}{% blocktrans %}To confirm this is correct, go to <a href="{{ activate_url }}">{{ activate_url }}</a>{% endblocktrans %}{% endautoescape %}</p>
+
+<p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you from {{ site_name }}!{% endblocktrans %}<br>
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}{{ site_domain }}{% endblocktrans %}</p>
 
 {% endblock %}
 

@@ -1,4 +1,15 @@
 from django.urls import path
 from django.conf.urls import include
 
-urlpatterns = [path('', include('allauth.urls'))]
+from . import views
+
+
+urlpatterns = [
+  path(
+      '',
+      views.MyAccountView.as_view(),
+      name='account_home',
+  ),
+
+  path('', include('allauth.urls')),
+]

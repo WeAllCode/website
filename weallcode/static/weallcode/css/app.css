@@ -277,6 +277,7 @@ ul.list-plus li {
   height: 1em;
   line-height: 1em;
   padding: 1.2em 0.5em;
+  margin-left: -0.5em;
 }
 
 .mobile-nav-trigger,

@@ -1,8 +1,8 @@
-{% load static %}
+{% load account static %}
 
 <div class="grid-container">
   <div class="grid-x">
-    <div class="cell auto medium-4">
+    <div class="cell auto medium-3">
       <a href="{% url 'weallcode_home' %}">
         <img class="main-logo" src="{% static 'weallcode/images/logo/horizontal-trim/logo-horizontal-trim.svg' %}">
       </a>
@@ -10,14 +10,20 @@
     <div class="cell hide-for-medium shrink">
       <a class="mobile-nav-trigger"><i class="fas fa-bars"></i></a>
     </div>
-    <div class="cell show-for-medium medium-8">
+    <div class="cell show-for-medium medium-9">
       <nav class="padding-vertical-1" role="navigation" aria-label="navigation">
         <ul class="main-menu menu align-right">
           <li><a class="{% if request.resolver_match.url_name == 'weallcode_our_story' %}current{% endif %}" href="{% url 'weallcode_our_story' %}">Our Story</a></li>
           <li><a class="{% if request.resolver_match.url_name == 'weallcode_programs' %}current{% endif %}" href="{% url 'weallcode_programs' %}">Programs</a></li>
           <li><a class="{% if request.resolver_match.url_name == 'weallcode_team' %}current{% endif %}" href="{% url 'weallcode_team' %}">Team</a></li>
-          <li><a class="button {% if request.resolver_match.url_name == 'weallcode_get_involved' %}current{% endif %}" href="{% url 'weallcode_get_involved' %}">Get Involved</a></li>
-          <li><a class="button secondary" href="{% url 'account_login' %}">Log In</a></li>
+          <li><a class="button small {% if request.resolver_match.url_name == 'weallcode_get_involved' %}current{% endif %}" href="{% url 'weallcode_get_involved' %}">Get Involved</a></li>
+
+          {% if user.is_authenticated %}
+          <li><a class="button secondary small" href="{% url 'account_home' %}">Account</a></li>
+          <li><a class="button tertiary small" href="{% url 'account_logout' %}">Log Out</a></li>
+          {% else %}
+          <li><a class="button secondary small" href="{% url 'account_login' %}">Log In</a></li>
+          {% endif %}
         </ul>
       </nav>
     </div>

@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+{% extends "weallcode/_base.html" %}
 
 {% block title %}
 {% block title_placeholder %}{% endblock %}
@@ -6,8 +6,8 @@
 
 {% block body_class %}page-auth{% endblock %}
 
-{% block content %}
-<div class="container min-height registration">
+{% block contained_content %}
+<div class="registration">
     {% block content_placeholder %}{% endblock %}
 </div>
 {% endblock %}

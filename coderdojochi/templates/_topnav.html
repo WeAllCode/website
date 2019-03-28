@@ -18,7 +18,7 @@
                 <li class="donate {% menu_is_active 'donate' %}"><a href="{% url 'donate' %}">Donate</a></li>
 
                 {% if user.is_authenticated %}
-                    <li class="{% menu_is_active 'dojo' %}"><a href="{% url 'dojo' %}">My Dojo</a></li>
+                    <li class="{% menu_is_active 'account_home' %}"><a href="{% url 'account_home' %}">My Dojo</a></li>
                     <li><a href="{% url 'account_logout' %}?next={{ request.path }}">Logout</a></li>
                 {% else %}
                     <li class="{% menu_is_active 'account_login' %}"><a href="{% url 'account_login' %}">My Dojo</a></li>

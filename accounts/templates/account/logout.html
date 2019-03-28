@@ -4,15 +4,17 @@
 {% block title_placeholder %}Logged Out{% endblock %}
 
 {% block content_placeholder %}
-    <h1>{% trans "Log Out" %}</h1>
+<h1 class="title">{% trans "Log Out" %}</h1>
 
-    <p>{% trans 'Are you sure you want to log out?' %}</p>
+<p>{% trans 'Are you sure you want to log out?' %}</p>
 
-    <form method="post" action="{% url 'account_logout' %}">
-        {% csrf_token %}
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-        {% endif %}
-        <input class="btn-cdc btn-cdc-lg" type="submit" value="{% trans 'Log out' %}" />
-    </form>
+<form method="post" class="margin-top-2" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <button class="button" type="submit">
+        {% trans 'Log out' %} <i class="fas fa-chevron-right margin-left-1"></i>
+    </button>
+</form>
 {% endblock %}

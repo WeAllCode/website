@@ -280,7 +280,7 @@ PAYPAL_TEST = os.environ.get('PAYPAL_TEST') == 'True'
 
 
 # django allauth
-LOGIN_REDIRECT_URL = '/dojo'
+LOGIN_REDIRECT_URL = '/account'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
