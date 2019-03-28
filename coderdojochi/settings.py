@@ -94,9 +94,9 @@ INSTALLED_APPS = [
     'django_nose',
 
     # apps
+    'accounts',
     'coderdojochi',
     'weallcode',
-    'accounts',
 ]
 
 MIDDLEWARE = [
