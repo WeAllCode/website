@@ -5,11 +5,11 @@
 
 {% block body_class %}page-mentors{% endblock %}
 
-{% block content %}
+{% block concontained_contenttent %}
 
 <div class="container">
 
-    <h1>Meet Our Mentors <a href="{% url 'account_signup' %}" class="btn-cdc">Join us now!</a></h1>
+    <h1 class="title">Meet Our Mentors <a href="{% url 'account_signup' %}" class="button">Join us now!</a></h1>
 
     <div class="row mentors">
         {% for mentor in mentors %}

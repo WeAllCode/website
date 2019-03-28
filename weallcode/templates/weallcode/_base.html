@@ -3,16 +3,32 @@
 <head>
   <meta charset="utf-8">
   <title>{% block title %}We All Code{% endblock %}</title>
-  <link rel="shortcut icon" type="image/png" href="{% static 'weallcode/images/favicon/favicon-64.png' %}" />
-  <meta name="description" content="">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="description" content="We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
+  <meta property="og:description" content="We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
+  <meta property="og:image" content="{% static 'images/coderdojochi.jpg' %}">
+  <meta property="og:site_name" content="We All Code">
+  <meta property="fb:app_id" content="1454178301519376">
+
+  {% block extra_meta %}
+  <meta property="og:url" content="{{ SITE_URL }}{{ request.get_full_path }}">
+  <meta property="og:title" content="We All Code">
+  {% endblock %}
+
+  <link rel="shortcut icon" type="image/png" href="{% static 'weallcode/images/favicon/favicon-64.png' %}" />
+  <meta name="theme-color" content="#426cff">
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans">
   <link rel="stylesheet" href="{% static 'weallcode/css/foundation.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
 
-  <meta name="theme-color" content="#426cff">
+  {% block extra_style %}{% endblock %}
+  {% block extra_head %}{% endblock %}
+
 </head>
 <body class="{% block page-class %}{% endblock %}">
   <!--[if IE]>
@@ -25,10 +41,15 @@
       {% block header %}{% include 'weallcode/_header.html' %}{% endblock %}
       {% block subheader %}{% endblock %}
     </header>
+
+    {% block messages %}
+    {% endblock %}
+
     {% block content %}
     <section class="margin-vertical-3">
       <div class="grid-container">
-        {% block contained_content %}{% endblock %}
+        {% block contained_content %}
+        {% endblock %}
       </div>
     </section>
     {% endblock %}
@@ -40,10 +61,13 @@
   <script src="{% static 'weallcode/js/vendor/foundation.min.js' %}"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
 
+  {% block extra_script %}{% endblock %}
+  {% block extra_body %}{% endblock %}
+
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
   <script>
     window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-    ga('create', 'UA-XXXXX-Y', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')
+    ga('create', 'UA-78618586-1', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')
   </script>
   <script src="https://www.google-analytics.com/analytics.js" async defer></script>
 </body>

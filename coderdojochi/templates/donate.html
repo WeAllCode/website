@@ -6,7 +6,7 @@
 
 {% block body_class %}page-donate{% endblock %}
 
-{% block content %}
+{% block contained_content %}
 
 <div class="hero">
     <div class="container">
@@ -14,18 +14,18 @@
             {% if referral_heading %}{{ referral_heading }}{% else %}Donate Today!{% endif %}
         </h1>
         <ul class="list-inline amount-buttons">
-            <li><button class="btn-cdc btn-cdc-inverse" data-value="25">$25</button></li>
-            <li><button class="btn-cdc btn-cdc-inverse" data-value="50">$50</button></li>
-            <li><button class="btn-cdc btn-cdc-inverse" data-value="100">$100</button></li>
-            <li><button class="btn-cdc btn-cdc-inverse" data-value="150">$150</button></li>
-            <li><button class="btn-cdc btn-cdc-inverse" data-value="other">Other</button></li>
+            <li><button class="button-inverse" data-value="25">$25</button></li>
+            <li><button class="button-inverse" data-value="50">$50</button></li>
+            <li><button class="button-inverse" data-value="100">$100</button></li>
+            <li><button class="button-inverse" data-value="150">$150</button></li>
+            <li><button class="button-inverse" data-value="other">Other</button></li>
         </ul>
         <div class="amount-actual">
             <span class="dollar">$</span>
             <input type="text" class="form-control input-lg" maxlength="6">
         </div>
         <div class="personal-info">
-            <h3 class="text-center">Please tell us a little about yourself</h3>
+            <h3 class="title text-center">Please tell us a little about yourself</h3>
             <div class="form-group">
                 <input type="text" id="firstNameInput" class="form-control input-lg" placeholder="First name e.g. William">
             </div>
@@ -38,15 +38,15 @@
             <div class="form-group">
                 <input type="referral" id="referralInput" class="form-control input-lg" {% if referral_code %}readonly value="{{ referral_code }}"{% endif %} placeholder="Referral Code (optional)">
             </div>
-            <h3 class="text-center">We will email you a receipt<br>(includes tax exempt information)</h3>
+            <h3 class="title text-center">We will email you a receipt<br>(includes tax exempt information)</h3>
 
-            <button class="btn-cdc btn-cdc-inverse btn-do-it" disabled>Do it.</button>
+            <button class="button secondary" disabled>Do it.</button>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <h2>{% trans "You can help!" %}</h2>
+    <h2 class="title">{% trans "You can help!" %}</h2>
     <p>CoderDojoChi is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
 
     {% if referral_disclaimer %}

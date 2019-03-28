@@ -94,202 +94,202 @@ def faqs(request, template_name="faqs.html"):
     return render(request, template_name)
 
 
-@login_required
-def dojo(request):
-    if not request.user.role:
-        if 'next' in request.GET:
-            return redirect(
-                f"{reverse('welcome')}?next={request.GET['next']}"
-            )
-        else:
-            messages.warning(
-                request,
-                'Tell us a little about yourself before going on to your dojo.'
-            )
-            return redirect('welcome')
+# @login_required
+# def dojo(request):
+#     if not request.user.role:
+#         if 'next' in request.GET:
+#             return redirect(
+#                 f"{reverse('welcome')}?next={request.GET['next']}"
+#             )
+#         else:
+#             messages.warning(
+#                 request,
+#                 'Tell us a little about yourself before going on to your dojo.'
+#             )
+#             return redirect('welcome')
 
-    if request.user.role == 'mentor':
-        return dojo_mentor(request)
+#     if request.user.role == 'mentor':
+#         return dojo_mentor(request)
 
-    if request.user.role == 'guardian':
-        return dojo_guardian(request)
-
-
-# TODO: upcoming classes needs to be all upcoming classes with a choice to RSVP in dojo page
-# TODO: upcoming meetings needs to be all upcoming meetings with a choice to RSVP in dojo page
-@login_required
-def dojo_mentor(request, template_name='mentor/dojo.html'):
-
-    highlight = (
-        request.GET['highlight'] if 'highlight' in request.GET else False
-    )
-
-    context = {
-        'user': request.user,
-        'highlight': highlight,
-    }
-
-    mentor = get_object_or_404(Mentor, user=request.user)
-
-    orders = MentorOrder.objects.select_related().filter(
-        is_active=True,
-        mentor=mentor,
-    )
-
-    upcoming_sessions = orders.filter(
-        is_active=True,
-        session__end_date__gte=timezone.now()
-    ).order_by('session__start_date')
-
-    past_sessions = orders.filter(
-        is_active=True,
-        session__end_date__lte=timezone.now()
-    ).order_by('session__start_date')
-
-    meeting_orders = MeetingOrder.objects.select_related().filter(
-        mentor=mentor
-    )
-
-    upcoming_meetings = meeting_orders.filter(
-        is_active=True,
-        meeting__is_public=True,
-        meeting__end_date__gte=timezone.now()
-    ).order_by('meeting__start_date')
-
-    context['account_complete'] = False
-
-    if (
-        mentor.user.first_name and
-        mentor.user.last_name and
-        mentor.avatar and
-        mentor.background_check and
-        past_sessions.count() > 0
-    ):
-        context['account_complete'] = True
-
-    if request.method == 'POST':
-        form = MentorForm(
-            request.POST,
-            request.FILES,
-            instance=mentor
-        )
-
-        user_form = CDCModelForm(
-            request.POST,
-            request.FILES,
-            instance=mentor.user
-        )
-
-        if (
-            form.is_valid() and
-            user_form.is_valid()
-        ):
-            form.save()
-            user_form.save()
-            messages.success(
-                request,
-                'Profile information saved.'
-            )
-
-            return redirect('dojo')
-
-        else:
-            messages.error(
-                request,
-                'There was an error. Please try again.'
-            )
-
-    else:
-        form = MentorForm(instance=mentor)
-        user_form = CDCModelForm(instance=mentor.user)
-
-    context['mentor'] = mentor
-    context['upcoming_sessions'] = upcoming_sessions
-    context['upcoming_meetings'] = upcoming_meetings
-    context['past_sessions'] = past_sessions
-
-    context['mentor'] = mentor
-    context['form'] = form
-    context['user_form'] = user_form
-
-    return render(request, template_name, context)
+#     if request.user.role == 'guardian':
+#         return dojo_guardian(request)
 
 
-@login_required
-def dojo_guardian(request, template_name='guardian/dojo.html'):
+# # TODO: upcoming classes needs to be all upcoming classes with a choice to RSVP in dojo page
+# # TODO: upcoming meetings needs to be all upcoming meetings with a choice to RSVP in dojo page
+# @login_required
+# def dojo_mentor(request, template_name='mentor/dojo.html'):
 
-    highlight = (
-        request.GET['highlight'] if 'highlight' in request.GET else False
-    )
+#     highlight = (
+#         request.GET['highlight'] if 'highlight' in request.GET else False
+#     )
 
-    context = {
-        'user': request.user,
-        'highlight': highlight,
-    }
+#     context = {
+#         'user': request.user,
+#         'highlight': highlight,
+#     }
 
-    guardian = get_object_or_404(
-        Guardian,
-        user=request.user
-    )
+#     mentor = get_object_or_404(Mentor, user=request.user)
 
-    students = Student.objects.filter(
-        is_active=True,
-        guardian=guardian,
-    )
+#     orders = MentorOrder.objects.select_related().filter(
+#         is_active=True,
+#         mentor=mentor,
+#     )
 
-    student_orders = Order.objects.filter(
-        student__in=students,
-    )
+#     upcoming_sessions = orders.filter(
+#         is_active=True,
+#         session__end_date__gte=timezone.now()
+#     ).order_by('session__start_date')
 
-    upcoming_orders = student_orders.filter(
-        is_active=True,
-        session__end_date__gte=timezone.now(),
-    ).order_by('session__start_date')
+#     past_sessions = orders.filter(
+#         is_active=True,
+#         session__end_date__lte=timezone.now()
+#     ).order_by('session__start_date')
 
-    past_orders = student_orders.filter(
-        is_active=True,
-        session__end_date__lte=timezone.now(),
-    ).order_by('session__start_date')
+#     meeting_orders = MeetingOrder.objects.select_related().filter(
+#         mentor=mentor
+#     )
 
-    if request.method == 'POST':
-        form = GuardianForm(
-            request.POST,
-            instance=guardian
-        )
+#     upcoming_meetings = meeting_orders.filter(
+#         is_active=True,
+#         meeting__is_public=True,
+#         meeting__end_date__gte=timezone.now()
+#     ).order_by('meeting__start_date')
 
-        user_form = CDCModelForm(
-            request.POST,
-            instance=guardian.user
-        )
+#     context['account_complete'] = False
 
-        if form.is_valid() and user_form.is_valid():
-            form.save()
-            user_form.save()
-            messages.success(
-                request,
-                'Profile information saved.'
-            )
+#     if (
+#         mentor.user.first_name and
+#         mentor.user.last_name and
+#         mentor.avatar and
+#         mentor.background_check and
+#         past_sessions.count() > 0
+#     ):
+#         context['account_complete'] = True
 
-            return redirect('dojo')
+#     if request.method == 'POST':
+#         form = MentorForm(
+#             request.POST,
+#             request.FILES,
+#             instance=mentor
+#         )
 
-        else:
-            messages.error(
-                request,
-                'There was an error. Please try again.'
-            )
+#         user_form = CDCModelForm(
+#             request.POST,
+#             request.FILES,
+#             instance=mentor.user
+#         )
 
-    else:
-        form = GuardianForm(instance=guardian)
-        user_form = CDCModelForm(instance=guardian.user)
+#         if (
+#             form.is_valid() and
+#             user_form.is_valid()
+#         ):
+#             form.save()
+#             user_form.save()
+#             messages.success(
+#                 request,
+#                 'Profile information saved.'
+#             )
 
-    context['students'] = students
-    context['upcoming_orders'] = upcoming_orders
-    context['past_orders'] = past_orders
-    context['guardian'] = guardian
-    context['form'] = form
-    context['user_form'] = user_form
+#             return redirect('account_home')
 
-    return render(request, template_name, context)
+#         else:
+#             messages.error(
+#                 request,
+#                 'There was an error. Please try again.'
+#             )
+
+#     else:
+#         form = MentorForm(instance=mentor)
+#         user_form = CDCModelForm(instance=mentor.user)
+
+#     context['mentor'] = mentor
+#     context['upcoming_sessions'] = upcoming_sessions
+#     context['upcoming_meetings'] = upcoming_meetings
+#     context['past_sessions'] = past_sessions
+
+#     context['mentor'] = mentor
+#     context['form'] = form
+#     context['user_form'] = user_form
+
+#     return render(request, template_name, context)
+
+
+# @login_required
+# def dojo_guardian(request, template_name='guardian/dojo.html'):
+
+#     highlight = (
+#         request.GET['highlight'] if 'highlight' in request.GET else False
+#     )
+
+#     context = {
+#         'user': request.user,
+#         'highlight': highlight,
+#     }
+
+#     guardian = get_object_or_404(
+#         Guardian,
+#         user=request.user
+#     )
+
+#     students = Student.objects.filter(
+#         is_active=True,
+#         guardian=guardian,
+#     )
+
+#     student_orders = Order.objects.filter(
+#         student__in=students,
+#     )
+
+#     upcoming_orders = student_orders.filter(
+#         is_active=True,
+#         session__end_date__gte=timezone.now(),
+#     ).order_by('session__start_date')
+
+#     past_orders = student_orders.filter(
+#         is_active=True,
+#         session__end_date__lte=timezone.now(),
+#     ).order_by('session__start_date')
+
+#     if request.method == 'POST':
+#         form = GuardianForm(
+#             request.POST,
+#             instance=guardian
+#         )
+
+#         user_form = CDCModelForm(
+#             request.POST,
+#             instance=guardian.user
+#         )
+
+#         if form.is_valid() and user_form.is_valid():
+#             form.save()
+#             user_form.save()
+#             messages.success(
+#                 request,
+#                 'Profile information saved.'
+#             )
+
+#             return redirect('account_home')
+
+#         else:
+#             messages.error(
+#                 request,
+#                 'There was an error. Please try again.'
+#             )
+
+#     else:
+#         form = GuardianForm(instance=guardian)
+#         user_form = CDCModelForm(instance=guardian.user)
+
+#     context['students'] = students
+#     context['upcoming_orders'] = upcoming_orders
+#     context['past_orders'] = past_orders
+#     context['guardian'] = guardian
+#     context['form'] = form
+#     context['user_form'] = user_form
+
+#     return render(request, template_name, context)
 
 
 def mentors(request, template_name="mentors.html"):
@@ -420,12 +420,12 @@ def student_detail(
         try:
             student = Student.objects.get(id=student_id, is_active=True)
         except ObjectDoesNotExist:
-            return redirect('dojo')
+            return redirect('account_home')
 
         try:
             guardian = Guardian.objects.get(user=request.user, is_active=True)
         except ObjectDoesNotExist:
-            return redirect('dojo')
+            return redirect('account_home')
 
         if not student.guardian == guardian:
             access = False
@@ -435,7 +435,7 @@ def student_detail(
         access = False
 
     if not access:
-        return redirect('dojo')
+        return redirect('account_home')
         messages.error(
             request,
             'You do not have permissions to edit this student.'
@@ -449,13 +449,13 @@ def student_detail(
                 request,
                 f"Student \"{student.first_name} {student.last_name}\" Deleted."
             )
-            return redirect('dojo')
+            return redirect('account_home')
 
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
             messages.success(request, 'Student Updated.')
-            return redirect('dojo')
+            return redirect('account_home')
 
     return render(
         request,
@@ -1056,7 +1056,7 @@ def session_donations(request, pk, template_name="session-donations.html"):
             request,
             'You do not have permission to access this page.'
         )
-        return redirect('dojo')
+        return redirect('account_home')
 
     session = get_object_or_404(Session, pk=pk)
 
@@ -1107,7 +1107,7 @@ def meeting_check_in(
             request,
             'You do not have permission to access this page.'
         )
-        return redirect('dojo')
+        return redirect('account_home')
 
     if request.method == 'POST':
         if 'order_id' in request.POST:

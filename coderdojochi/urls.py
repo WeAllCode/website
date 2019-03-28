@@ -41,63 +41,50 @@ admin.autodiscover()
 # Empty to start
 urlpatterns = []
 
-# We All Code
-urlpatterns += [
-    path('weallcode/', include('weallcode.urls')),
-]
+# General Pages
+urlpatterns += [path('', include('weallcode.urls'))]
 
-# General
+# Accounts
+urlpatterns += [path('account/', include('accounts.urls'))]
+
+# Old General
 urlpatterns += [
     # /
-    # old_views.home,
-    path('', HomeView.as_view(), name='home'),
+    path('old/', HomeView.as_view(), name='home'),
 
     # About
-    # /about/
-    path('about/', AboutView.as_view(), name='about'),
+    path('old/about/', AboutView.as_view(), name='about'),
 
     # Volunteer
-    # /volunteer/
-    path('volunteer/', VolunteerView.as_view(), name='volunteer'),
+    path('old/volunteer/', VolunteerView.as_view(), name='volunteer'),
 
     # Contact
-    # /contact/
-    path('contact/', old_views.contact, name='contact'),
+    path('old/contact/', old_views.contact, name='contact'),
 
     # Privacy
-    # /privary/
-    path('privacy/', PrivacyView.as_view(), name='privacy'),
+    path('old/privacy/', PrivacyView.as_view(), name='privacy'),
 
     # FAQs
-    # /faqs/
-    path('faqs/', old_views.faqs, name='faqs'),
+    path('old/faqs/', old_views.faqs, name='faqs'),
 ]
 
 # Donate / Donations
-urlpatterns += [
-    path('donate/', include([
-        # Donation
-        # /donate/
-        path('', old_views.donate, name='donate'),
+# urlpatterns += [
+#     path('donate/', include([
+#         # Donation
+#         # /donate/
+#         path('', old_views.donate, name='donate'),
 
-        # /donate/cancel/
-        path('cancel/', old_views.donate_cancel, name='donate-cancel'),
+#         # /donate/cancel/
+#         path('cancel/', old_views.donate_cancel, name='donate-cancel'),
 
-        # /donate/return/
-        path('return/', old_views.donate_return, name='donate-return'),
+#         # /donate/return/
+#         path('return/', old_views.donate_return, name='donate-return'),
 
-        # /donate/paypal/
-        path('paypal/', include('paypal.standard.ipn.urls')),
-    ])),
-]
-
-
-# All Auth / Logins
-urlpatterns += [
-    # AllAuth
-    # /accounts/
-    path('accounts/', include('allauth.urls')),
-]
+#         # /donate/paypal/
+#         path('paypal/', include('paypal.standard.ipn.urls')),
+#     ])),
+# ]
 
 # Login As
 urlpatterns += [
@@ -250,10 +237,9 @@ urlpatterns += [
 
 # Dojo
 urlpatterns += [
-
     # Dojo / Account
     # /dojo/
-    path('dojo/', old_views.dojo, name='dojo'),
+    # path('dojo/', old_views.dojo, name='dojo'),
 
     # Welcome
     # /welcome/
@@ -311,6 +297,11 @@ urlpatterns += [
     path('anymail/', include('anymail.urls')),
 ]
 
+# Media
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT
+)
 
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -375,10 +366,5 @@ else:
     urlpatterns += static(
         settings.STATIC_URL,
         document_root=settings.STATIC_ROOT
-    )
-
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
     )
 

@@ -91,11 +91,12 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'stdimage',
     'import_export',
+    'django_nose',
 
-    # coderdojochi
+    # apps
+    'accounts',
     'coderdojochi',
     'weallcode',
-    'django_nose',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +117,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'weallcode/templates/'),
+            os.path.join(BASE_DIR, 'accounts/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/dashboard/'),
             os.path.join(BASE_DIR, 'coderdojochi/emailtemplates/'),
@@ -195,6 +197,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
+INSTALLED_APPS += ['django.contrib.staticfiles']
+
 if DEBUG:
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -205,6 +209,7 @@ if DEBUG:
     STATICFILES_DIRS = [
         os.path.join(PROJECT_ROOT, 'static'),
         os.path.join(BASE_DIR, 'weallcode/static'),
+        os.path.join(BASE_DIR, 'accounts/static'),
     ]
 
     # Media files
@@ -236,7 +241,6 @@ else:
 
     # STATIC
     # ------------------------
-    INSTALLED_APPS += ['django.contrib.staticfiles']
     STATICFILES_STORAGE = 'coderdojochi.settings.StaticRootS3BotoStorage'
     STATIC_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/static/'
 
@@ -276,7 +280,8 @@ PAYPAL_TEST = os.environ.get('PAYPAL_TEST') == 'True'
 
 
 # django allauth
-LOGIN_REDIRECT_URL = '/dojo'
+LOGIN_REDIRECT_URL = '/account'
+LOGIN_URL = '/account/login'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False

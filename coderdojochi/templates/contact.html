@@ -6,15 +6,15 @@
 
 {% block body_class %}page-contact{% endblock %}
 
-{% block content %}
+{% block contained_content %}
 <div class="container min-height contact">
     <div class="row">
 		<div class="col-sm-6">
-			<h1>{% trans "Contact Us" %}</h1>
+			<h1 class="title">{% trans "Contact Us" %}</h1>
 			<form method="post" action=".">
 				{% csrf_token %}
 				{% bootstrap_form form %}
-				<input class="btn-cdc btn-cdc-success" type="submit" value="{% trans 'Submit' %}" />
+				<input class="button" type="submit" value="{% trans 'Submit' %}" />
 			</form>
 		</div>
 		<div class="col-sm-5 col-sm-offset-1">
@@ -23,14 +23,14 @@
 				<a class="icon-action" href="{% url 'volunteer' %}">
 	                <span class="icon-volunteer fa fa-fw fa-group"></span>
 	            </a>
-	            <h1 class="text-center">Volunteer</h1>
+	            <h1 class="title text-center">Volunteer</h1>
 	            <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
 	        </div>
 	        <div>
 	        	<a class="icon-action" href="{% url 'donate' %}">
 	                <span class="icon-donation fa fa-fw"></span>
 	            </a>
-	            <h1 class="text-center">Donate</h1>
+	            <h1 class="title text-center">Donate</h1>
 	            <p>Funding goes 100% towards equipment and food for youth, attendees, and mentors.</p>
 	        </div>
 		</div>

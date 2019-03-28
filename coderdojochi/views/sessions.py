@@ -329,7 +329,7 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
 
         access_dict = self.check_access(request, *args, **kwargs)
         if access_dict.get('message'):
-            if access_dict.get('redirect') == 'dojo':
+            if access_dict.get('redirect') == 'account_home':
                 messages.warning(
                     request,
                     access_dict['message']

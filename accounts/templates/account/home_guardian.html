@@ -1,0 +1,127 @@
+{% extends "account/_base.html" %}
+{% load bootstrap3 humanize coderdojochi_extras %}
+
+{% block title %}My Account{% endblock %}
+
+{% block body_class %}page-dojo{% endblock %}
+
+{% block messages %}
+{% if not guardian.user.first_name %}
+    <div class="alert alert-warning">
+        <i class="fa fa-warning"></i> Please complete your profile information below.
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block contained_content %}
+
+<section class="margin-top-3">
+    <h2 class="title text-tertiary">Your Profile</h2>
+    <p>Joined on {{ guardian.user.date_joined|naturalday|capfirst }}</p>
+
+    <form id="profile_form" enctype="multipart/form-data" action="" method="post">
+        {% csrf_token %}
+        <div class="grid-x grid-margin-x">
+            <div class="cell medium-6">{% bootstrap_field user_form.first_name %}</div>
+            <div class="cell medium-6">{% bootstrap_field user_form.last_name %}</div>
+            <div class="cell medium-6">{% bootstrap_field form.phone %}</div>
+            <div class="cell medium-6">{% bootstrap_field form.zip %}</div>
+            <div class="cell medium-6">{% bootstrap_field form.birthday %}</div>
+            <div class="cell medium-6">{% bootstrap_field form.gender %}</div>
+            <div class="cell medium-6">{% bootstrap_field form.race_ethnicity %}</div>
+        </div>
+        {% buttons %}
+        <button type="submit" class="button">Save</button>
+        {% endbuttons %}
+    </form>
+</section>
+
+<section class="margin-top-3">
+    <h2 class="title text-tertiary">Students</h2>
+    {% if students %}
+        <table class="students table table-striped">
+            <thead>
+                <tr class="text-muted">
+                    <th>Name</th>
+                    <th class="hidden-xs">Age</th>
+                    <th class="hidden-xs">Medical Conditions</th>
+                    <th class="hidden-xs">Medications</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                    <td class="hidden-xs">{{ student.get_age }}</td>
+                    <td class="hidden-xs">{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
+                    <td class="hidden-xs">{% if student.medications %}Yes{% else %}No{% endif %}</td>
+                    <td><a href="{% url 'student-detail' student.id %}" class="btn-cdc btn-cdc-sm">Edit Info</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p><a href="{% url 'welcome' %}?next={% url 'account_home' %}">Add another student</a></p>
+    {% else %}
+    <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
+    {% endif %}
+</section>
+
+<section class="margin-top-3">
+    <h2 class="title text-secondary">Classes</h2>
+
+    <h3 class="title">Upcoming</h3>
+    {% if upcoming_orders %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="hidden-xs">Class</th>
+                <th>Date</th>
+                <th>Student</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in upcoming_orders %}
+            <tr>
+                <td class="hidden-xs"><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
+                <td><a href="{{ order.session.get_absolute_url }}">{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></a></td>
+                <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
+                <td>{% student_register_link order.student order.session %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <br>
+    <p class="text-muted">You have no upcoming classes.</p>
+    <a href="{% url 'sessions' %}">Find one now!</a>
+    {% endif %}
+
+    <h3 class="title">Past</h3>
+    {% if past_orders %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Date</th>
+                <th>Student</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in past_orders %}
+            <tr>
+                <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
+                <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
+                <td>{{ order.student.first_name }} {{ order.student.last_name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <br>
+    <p class="text-muted">You have not participated in any classes yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
+    {% endif %}
+</section>
+{% endblock %}

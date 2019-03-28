@@ -228,6 +228,11 @@ ul.list-plus li {
   width: 100%;
 }
 
+.small-container {
+  /* max-width: 48em; */
+  margin: 0 auto;
+}
+
 /* To remove borders from cards and callouts when not needed */
 .borderless {
   border: none;
@@ -272,6 +277,7 @@ ul.list-plus li {
   height: 1em;
   line-height: 1em;
   padding: 1.2em 0.5em;
+  margin-left: -0.5em;
 }
 
 .mobile-nav-trigger,

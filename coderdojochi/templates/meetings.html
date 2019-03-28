@@ -10,11 +10,11 @@
 <meta property="og:title" content="Meetings">
 {% endblock %}
 
-{% block content %}
+{% block contained_content %}
 
 <div class="container">
     <div class="col-md-12">
-        <h1>Meetings</h1>
+        <h1 class="title">Meetings</h1>
 
         <p>Here are a list of upcoming meetings. Meetings provide an opportunity for volunteers to collaborate on coding projects, as well as prepare for upcoming CoderDojoChi classes.</p>
 
@@ -36,7 +36,7 @@
                     <p>{{ meeting.meeting_type.description|safe|truncatechars:180 }}</p>
                 </div>
                 <div class="actions">
-                    <p><a href="{{ meeting.get_absolute_url }}" class="btn-cdc">Learn more.</a></p>
+                    <p><a href="{{ meeting.get_absolute_url }}" class="button">Learn more.</a></p>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
     <div class="upcoming-session">
         <div class="session-shim">
             <div class="container">
-                <h1>No meetings currently.</h1>
+                <h1 class="title">No meetings currently.</h1>
                 <p>Check back in a few days for new meetings.</p>
             </div>
         </div>
