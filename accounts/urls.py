@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
   path(
       '',
-      views.MyAccountView.as_view(),
+      views.AccountHomeView.as_view(),
       name='account_home',
   ),
 

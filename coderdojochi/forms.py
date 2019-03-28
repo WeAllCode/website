@@ -112,7 +112,7 @@ class MentorForm(CDCModelForm):
             attrs={
                 'placeholder': 'Short Bio',
                 'class': 'form-control',
-                'rows': 5
+                'rows': 4
             }
         ),
         label='Short Bio',

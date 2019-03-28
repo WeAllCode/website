@@ -6,6 +6,18 @@
 
 {% block body_class %}page-auth{% endblock %}
 
+{% block subheader %}
+{% if user.is_authenticated %}
+<div class="sub-menu">
+  <nav class="grid-container" role="navigation">
+    <ul class="menu">
+      <li><a href="{% url 'account_logout' %}">Log Out</a></li>
+    </ul>
+  </nav>
+</div>
+{% endif %}
+{% endblock subheader %}
+
 {% block contained_content %}
 <div class="registration">
     {% block content_placeholder %}{% endblock %}

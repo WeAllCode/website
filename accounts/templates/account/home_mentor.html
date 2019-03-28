@@ -1,4 +1,4 @@
-{% extends "weallcode/_base.html" %}
+{% extends "account/_base.html" %}
 {% load bootstrap3 humanize coderdojochi_extras %}
 
 {% block title %}My Account{% endblock %}
@@ -48,19 +48,24 @@
         {% csrf_token %}
 
         <div class="grid-x grid-margin-x">
-            <div class="cell small-6 medium-2">
-                <img src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" class="avatar width-100">
-
+            <div class="cell small-4 medium-2">
+                <img class="avatar thumbnail" src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}">
+            </div>
+            <div class="cell small-8 medium-4">
                 {% if mentor.avatar and not mentor.avatar_approved %}
                 <div class="alert alert-warning text-center">Avatar Pending Approval</div>
                 {% endif %}
-                <span class="change-overlay" data-trigger="hover" data-placement="top" data-html="true" data-toggle="popover" title="Avatar Requirements" data-content="Min size: <strong>500 x 500px</strong><br>Max size: <strong>1000 x 1000px</strong><br>Max file size: <strong>2 MB</strong><br>Formats: <strong>.jpeg, .png, .gif</strong>">Change</a>
-                <input value="Change Avatar" id="id_avatar" name="avatar" title="" type="file">
+                <input value="Change Avatar" id="id_avatar" name="avatar" title="Change Avatar" type="file">
 
                 {{ form.avatar.errors }}
+
+                Min size: <strong>500 x 500px</strong><br>
+                Max size: <strong>1000 x 1000px</strong><br>
+                Max file size: <strong>2 MB</strong><br>
+                Formats: <strong>.jpeg, .png, .gif</strong>
             </div>
 
-            <div class="cell medium-10">{% bootstrap_field form.bio %}</div>
+            <div class="cell medium-6">{% bootstrap_field form.bio %}</div>
             <div class="cell medium-6">{% bootstrap_field user_form.first_name %}</div>
             <div class="cell medium-6">{% bootstrap_field user_form.last_name %}</div>
             <div class="cell medium-6">{% bootstrap_field form.birthday %}</div>
