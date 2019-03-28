@@ -11,9 +11,9 @@
 
 {% block body_class %}page-classes{% endblock %}
 
-{% block content %}
+{% block contained_content %}
 <div class="container">
-    <h1>Upcoming Classes</h1>
+    <h1 class="title">Upcoming Classes</h1>
     <p>Thanks for checking out CoderDojoChi. We're thrilled that you're interested.</p>
 
     <p>We offer several classes throughout the year, please take a moment to read about them below and sign up!</p>
@@ -39,15 +39,15 @@
                     <div class="actions">
                         {% if user.is_authenticated and user.role == 'mentor' %}
                             {% if session.mentor_capacity and session.get_mentor_orders.count >= session.mentor_capacity %}
-                                <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Join Waitlist</a>
+                                <a href="{{ session.get_absolute_url }}" class="button">Join Waitlist</a>
                             {% else %}
-                                <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Volunteer</a>
+                                <a href="{{ session.get_absolute_url }}" class="button">Volunteer</a>
                             {% endif %}
                         {% else %}
                             {% if session.get_current_students.count < session.capacity %}
-                                <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Learn more</a>
+                                <a href="{{ session.get_absolute_url }}" class="button">Learn more</a>
                             {% else %}
-                                <a href="{{ session.get_absolute_url }}" class="btn-cdc btn-cdc">Join Waitlist</a>
+                                <a href="{{ session.get_absolute_url }}" class="button">Join Waitlist</a>
                             {% endif %}
                         {% endif %}
 

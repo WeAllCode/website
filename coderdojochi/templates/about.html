@@ -6,9 +6,9 @@
 
 {% block body_class %}page-about{% endblock %}
 
-{% block content %}
+{% block contained_content %}
 <div class="container">
-    <h1>{% trans "About CoderDojoChi" %}</h1>
+    <h1 class="title">{% trans "About CoderDojoChi" %}</h1>
     <div class="row">
         <p>CoderDojoChi is a volunteer not for profit that teaches web, game, and app development to youth ages 7 to 17.</p>
         <p>Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors. All classes are 100% free to attend thanks to your generous <a title="Donate now" href="{% url 'donate' %}">donations</a>.</p>
@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <h2>Contact Us</h2>
+            <h2 class="title">Contact Us</h2>
             <form method="post" action="{% url 'contact' %}" _lpchecked="1">
                 {% csrf_token %}
                 <div class="form-group">
@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <input class="form-control" id="id_human" maxlength="100" name="human" title="" type="text">
                 </div>
-                <input class="btn-cdc btn-cdc-success" type="submit" value="Submit">
+                <input class="button" type="submit" value="Submit">
             </form>
         </div>
         <div class="col-sm-5 col-sm-offset-1">
@@ -44,14 +44,14 @@
                 <a class="icon-action" href="{% url 'volunteer' %}">
                     <span class="icon-volunteer fa fa-fw fa-group"></span>
                 </a>
-                <h1 class="text-center">Volunteer</h1>
+                <h1 class="title text-center">Volunteer</h1>
                 <p>We're looking for people who believe they can make a difference by exposing the youth to the world of coding.</p>
             </div>
             <div>
                 <a class="icon-action" href="{% url 'donate' %}">
                     <span class="icon-donation fa fa-fw"></span>
                 </a>
-                <h1 class="text-center">Donate</h1>
+                <h1 class="title text-center">Donate</h1>
                 <p>Funding goes 100% towards equipment and food for youth, attendees, and mentors.</p>
             </div>
         </div>

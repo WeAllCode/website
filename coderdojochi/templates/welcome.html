@@ -6,49 +6,49 @@
 
 {% block body_class %}page-welcome{% endblock %}
 
-{% block content %}
+{% block contained_content %}
 <div class="container registration min-height">
     {% if role %}
         {% if role == 'guardian' %}
             {% if not add_student %}
-            <h1>Tell us a little more about yourself...</h1>
-            <h3 class="text-muted">Before you sign up your student(s), let's start with some contact information. <strong>We will never share this information with anyone.</strong></h3>
+            <h1 class="title">Tell us a little more about yourself...</h1>
+            <h3 class="title text-muted">Before you sign up your student(s), let's start with some contact information. <strong>We will never share this information with anyone.</strong></h3>
             {% else %}
                 {% if students %}
-                    <h1><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>Register another student</h1>
+                    <h1 class="title"><small class="light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered</small>Register another student</h1>
                 {% else %}
-                    <h1>Register your first student now</h1>
+                    <h1 class="title">Register your first student now</h1>
                 {% endif %}
             {% endif %}
         {% endif %}
         {% if role == 'mentor' %}
-        <h1>Tell us a little more...</h1>
-        <h3 class="text-muted">Before you sign up to mentor classes, come up with a short bio for yourself...</h3>
+        <h1 class="title">Tell us a little more...</h1>
+        <h3 class="title text-muted">Before you sign up to mentor classes, come up with a short bio for yourself...</h3>
         {% endif %}
         {% if form %}
         {% if add_student %}
         <hr>
-        <h3 class="text-muted">Please complete all fields below</h3>
+        <h3 class="title text-muted">Please complete all fields below</h3>
         {% endif %}
         <form action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" method="post">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <button class="submit btn-cdc btn-cdc-lg">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
+            <button class="submit button large">{% if not add_student %}Continue{% else %}Register{% endif %}</button>
         </form>
         {% endif %}
     {% else %}
-    <h1>Thanks for registering!</h1>
-    <h2 class="text-muted">Who are you?</h2>
+    <h1 class="title">Thanks for registering!</h1>
+    <h2 class="title text-muted">Who are you?</h2>
     <div class="row">
         <form method="post" action="" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="parent">
-            <button class="btn btn-success">Parent/Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
+            <button class="button">Parent/Guardian <small>Enroll students for classes</small><i class="fa fa-graduation-cap"></i></button>
         </form>
         <form method="post" action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" class="role">
             {% csrf_token %}
             <input type="hidden" name="role" value="mentor">
-            <button class="btn btn-success">Volunteer <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
+            <button class="button">Volunteer <small>Looking to join our team!</small><i class="fa fa-suitcase "></i></button>
         </form>
     </div>
     {% endif %}
