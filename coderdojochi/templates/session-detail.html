@@ -68,7 +68,7 @@
                                 {% if spots_remaining > 0 %}
                                     <h3 class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
                                 {% else %}
-                                    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
+                                    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}#classes">find another upcoming class.</a></p>
                                 {% endif %}
                                 <table class="students">
                                     <tbody>
@@ -133,7 +133,7 @@
                         {% endif %}
                     {% else %}
                         {% if spots_remaining < 1 %}
-                        <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'sessions' %}">find another upcoming class.</a></p>
+                        <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}">find another upcoming class.</a></p>
                         {% endif %}
                         <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="button large expanded">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
                     {% endif %}
