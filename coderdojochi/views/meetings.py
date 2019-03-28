@@ -23,19 +23,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, RedirectView, TemplateView, View
 
 import arrow
+from accounts.forms import GuardianForm, MentorForm
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
 
-from coderdojochi.forms import (
-    CDCForm,
-    CDCModelForm,
-    ContactForm,
-    DonationForm,
-    GuardianForm,
-    MentorForm,
-    SignupForm,
-    StudentForm,
-)
+from coderdojochi.forms import CDCForm, CDCModelForm, ContactForm, DonationForm, SignupForm, StudentForm
 from coderdojochi.mixins import RoleRedirectMixin
 from coderdojochi.models import (
     Donation,

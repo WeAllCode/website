@@ -1,23 +1,14 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from coderdojochi.forms import (
-    CDCModelForm,
-    GuardianForm,
-    MentorForm
-)
+from coderdojochi.models import Guardian, MeetingOrder, Mentor, MentorOrder, Order, Student
 
-from coderdojochi.models import (
-    Guardian,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    Student,
-)
+from .forms import CDCModelForm, GuardianForm, MentorForm
+
 
 class AccountHomeView(TemplateView):
     @method_decorator(login_required)
@@ -40,9 +31,9 @@ class AccountHomeView(TemplateView):
         if request.user.role == 'guardian':
             return self.my_account_guardian(request)
 
-
     # TODO: upcoming classes needs to be all upcoming classes with a choice to RSVP in dojo page
     # TODO: upcoming meetings needs to be all upcoming meetings with a choice to RSVP in dojo page
+
     def my_account_mentor(self, request, template_name='account/home_mentor.html'):
         highlight = (
             request.GET['highlight'] if 'highlight' in request.GET else False
@@ -138,7 +129,6 @@ class AccountHomeView(TemplateView):
 
         return render(request, template_name, context)
 
-
     def my_account_guardian(self, request, template_name='account/home_guardian.html'):
         highlight = (
             request.GET['highlight'] if 'highlight' in request.GET else False
@@ -212,4 +202,3 @@ class AccountHomeView(TemplateView):
         context['user_form'] = user_form
 
         return render(request, template_name, context)
-

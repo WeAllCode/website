@@ -1,8 +1,33 @@
 {
-    "recommendations": [
-        "ms-python.python",
-        "PeterJausovec.vscode-docker",
-        "thebarkman.vscode-djaneiro",
-        "Zignd.html-css-class-completion"
-    ]
+  "recommendations": [
+    // Python: Linting, Debugging (multi-threaded, remote), Intellisense,
+    // code formatting, refactoring, unit tests, snippets, and more.
+    "ms-python.python",
+
+    // Django: Beautiful syntax and scoped snippets
+    "batisteo.vscode-django",
+
+    // Docker: Adds syntax highlighting, commands, hover tips, and linting
+    // for Dockerfile and docker-compose files
+    "PeterJausovec.vscode-docker",
+
+    // IntelliSense for CSS class names in HTML
+    "Zignd.html-css-class-completion"
+
+    // Auto Rename Tag: Auto rename paired HTML/XML tag
+    "formulahendry.auto-rename-tag",
+
+    // Beautify: Beautify code in place for VS Code
+    "hookyqr.beautify",
+
+    // CSS Peek: Allow peeking to css ID and class strings as definitions
+    // from html files to respective CSS.Allows peek and goto definition.
+    "pranaygp.vscode-css-peek",
+
+    // HTMLHint: A Static Code Analysis Tool for HTML
+    "mkaufman.htmlhint",
+
+    // HTML CSS Support: CSS support for HTML documents
+    "ecmel.vscode-html-css"
+  ]
 }
