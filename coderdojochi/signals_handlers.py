@@ -25,33 +25,33 @@ def avatar_updated_handler(sender, instance, **kwargs):
     if not instance.avatar:
         return
 
-    # if original_mentor.avatar != instance.avatar:
-    #     instance.avatar_approved = False
+    if original_mentor.avatar != instance.avatar:
+        instance.avatar_approved = False
 
-    #     msg = email(
-    #         subject=f"{instance.user.first_name} {instance.user.last_name} | Mentor Avatar Changed",
-    #         template_name='avatar-changed-mentor',
-    #         merge_global_data={
-    #             'first_name': instance.user.first_name,
-    #             'last_name': instance.user.last_name,
-    #             'image': 'avatar',
-    #             'approve_url': f"{settings.SITE_URL}{instance.get_approve_avatar_url()}",
-    #             'reject_url': f"{settings.SITE_URL}{instance.get_reject_avatar_url()}",
-    #         },
-    #         recipients=[settings.CONTACT_EMAIL],
-    #         preheader='Mentor Avatar Changed',
-    #         send=False
-    #     )
+        msg = email(
+            subject=f"{instance.user.first_name} {instance.user.last_name} | Mentor Avatar Changed",
+            template_name='avatar-changed-mentor',
+            merge_global_data={
+                'first_name': instance.user.first_name,
+                'last_name': instance.user.last_name,
+                'image': 'avatar',
+                'approve_url': f"{settings.SITE_URL}{instance.get_approve_avatar_url()}",
+                'reject_url': f"{settings.SITE_URL}{instance.get_reject_avatar_url()}",
+            },
+            recipients=[settings.CONTACT_EMAIL],
+            preheader='Mentor Avatar Changed',
+            send=False
+        )
 
-    #     msg.mixed_subtype = 'related'
+        msg.mixed_subtype = 'related'
 
-    #     img = MIMEImage(instance.avatar.read())
-    #     img.add_header('Content-Id', 'avatar')
-    #     img.add_header("Content-Disposition", "inline", filename="avatar")
+        img = MIMEImage(instance.avatar.read())
+        img.add_header('Content-Id', 'avatar')
+        img.add_header("Content-Disposition", "inline", filename="avatar")
 
-    #     msg.attach(img)
+        msg.attach(img)
 
-    #     msg.send()
+        msg.send()
 
 
 def donate_callback(sender, **kwargs):
