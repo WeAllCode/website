@@ -1,41 +1,49 @@
 {
-    "editor.trimAutoWhitespace": true,
-    "files.exclude": {
-        "**/.git": true,
-        "**/.DS_Store": true,
-        "**/*.pyc": true,
-        "**/__pycache__": true,
-        "staticfiles": true,
+  "editor.trimAutoWhitespace": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/*.pyc": true,
+    "**/__pycache__": true,
+    "staticfiles": true,
+  },
+  "files.associations": {
+    "**/templates/*.html": "django-html",
+    "**/templates/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+  },
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+  "python.linting.enabled": true,
+  "python.linting.ignorePatterns": [
+    ".vscode/*.py",
+    "**/site-packages/**/*.py",
+    "**/migrations/**",
+  ],
+  "python.linting.pylintEnabled": false,
+  "python.linting.pep8Enabled": true,
+  "python.linting.pep8Path": "pycodestyle",
+  "python.linting.pep8Args": [
+    "--max-line-length=120",
+  ],
+  "[python]": {
+    "editor.rulers": [120],
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
     },
-    "files.associations": {
-        "*.html": "django-html",
+  },
+  "[git-commit]": {
+    "editor.rulers": [72],
+  },
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true,
     },
-    "python.linting.enabled": true,
-    "python.linting.ignorePatterns": [
-        ".vscode/*.py",
-        "**/site-packages/**/*.py",
-        "**/migrations/**",
-    ],
-    "python.linting.pylintEnabled": false,
-    "python.linting.pep8Enabled": true,
-    "python.linting.pep8Path": "pycodestyle",
-    "python.linting.pep8Args": [
-        "--max-line-length=120",
-    ],
-    "[python]": {
-        "editor.rulers": [120],
-    },
-    "[git-commit]": {
-        "editor.rulers": [72],
-    },
-    "[json]": {
-        "editor.quickSuggestions": {
-            "strings": true,
-        },
-    },
-    "[markdown]": {
-        "editor.wordWrap": "on",
-        "editor.quickSuggestions": false,
-        "editor.trimAutoWhitespace": false,
-    },
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": false,
+    "editor.trimAutoWhitespace": false,
+  },
 }
