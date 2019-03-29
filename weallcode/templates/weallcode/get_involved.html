@@ -20,10 +20,8 @@
 {% endblock subheader %}
 
 {% block content %}
-<section class="hero bg-dark-blue">
-  <img src="{% static 'weallcode/images/photos/hero-our-story.jpg' %}" alt="">
-</section>
 
+{% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-our-story.png" alt="get involved" %}
 
 <!-- Volunteer -->
 <section id="volunteer" class="padding-vertical-3">

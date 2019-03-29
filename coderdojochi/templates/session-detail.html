@@ -14,43 +14,18 @@
 
 {% block contained_content %}
 
-<h3 class="title text-primary">Class Details</h3>
+<h3 class="title text-primary">Class Details & Enrollment</h3>
 
-<div class="grid-x text-white margin-top-2">
-  <div class="cell medium-8 bg-dark-blue padding-2">
-    <h2>{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</h2>
-    <p>{{ session.course.description|safe }}</p>
-    {% if session.additional_info %}
-      <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
-    {% endif %}
-  </div>
-  <div class="cell medium-4 bg-primary padding-2">
-    <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
-    <p>
-      {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}<br>
-      <i class="fa fa-calendar"></i> <a class="text-white" href="{{ session.get_calendar_url }}">Add to your calendar</a>
-    </p>
+<section class="margin-top-2">
 
-    <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
-    <p><a target="_blank" class="static-map text-white" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
-
-    <h5 class="text-uppercase margin-top-2">Who</h5>
-    {% if session.gender_limitation %}<p><strong>This class is limited to {{ session.gender_limitation }}s only.</strong></p>{% endif %}
-    <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s {% else %}Anyone{% endif %} between {{ session.min_age_limitation|default:"7" }} and {{ session.max_age_limitation|default:"17" }} of age. No computer skills required.</p>
-
-    <h5 class="text-uppercase margin-top-2"><a class="text-white" href="{% url 'faqs' %}">Read the FAQs.</a></h5>
-  </div>
-</div>
-
-<section class="margin-top-3">
     {% if session.external_enrollment_url %}
-    <p><a href="{{ session.external_enrollment_url }}" class="button large">Enroll now</a></p>
+    <p><a href="{{ session.external_enrollment_url }}" class="button large secondary">Enroll now</a></p>
     {% else %}
     {% if user.is_authenticated %}
     {% if user.role == 'guardian' %}
     {% if students %}
     {% if spots_remaining > 0 %}
-    <h3 class="title text-primary">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
+    <p class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</p>
     {% else %}
     <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}#classes">find another upcoming class.</a></p>
     {% endif %}
@@ -84,15 +59,15 @@
     </table>
     <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True">Add another student</a></small>
     {% else %}
-    <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="button large">Enroll</a></p>
+    <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="button large secondary">Enroll</a></p>
     {% endif %}
     {% else %}
     {% if spots_remaining %}
     {% if mentor_signed_up %}
     <p>You are signed up to mentor this class.</p>
-    <p><a href="{{ session.get_sign_up_url }}" class="button tertiary">I can't make it...</a></p>
+    <p><a href="{{ session.get_sign_up_url }}" class="button large tertiary">I can't make it...</a></p>
     {% else %}
-    <p><a href="{{ session.get_sign_up_url }}" class="button large">Sign up now!</a></p>
+    <p><a href="{{ session.get_sign_up_url }}" class="button large secondary">Sign up now!</a></p>
     {% endif %}
     {% else %}
     {% if account in session.waitlist_mentors.all %}
@@ -119,10 +94,36 @@
     {% if spots_remaining < 1 %}
     <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}">find another upcoming class.</a></p>
     {% endif %}
-    <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="button large expanded">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
+    <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="button large secondary">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
     {% endif %}
     {% endif %}
 </section>
+
+<div class="grid-x text-white margin-top-2">
+  <div class="cell medium-8 bg-dark-blue padding-2">
+    <h2>{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</h2>
+    <p>{{ session.course.description|safe }}</p>
+    {% if session.additional_info %}
+      <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
+    {% endif %}
+  </div>
+  <div class="cell medium-4 bg-primary padding-2">
+    <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
+    <p>
+      {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}<br>
+      <i class="fa fa-calendar"></i> <a class="text-white" href="{{ session.get_calendar_url }}">Add to your calendar</a>
+    </p>
+
+    <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
+    <p><a target="_blank" class="static-map text-white" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+
+    <h5 class="text-uppercase margin-top-2">Who</h5>
+    {% if session.gender_limitation %}<p><strong>This class is limited to {{ session.gender_limitation }}s only.</strong></p>{% endif %}
+    <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s {% else %}Anyone{% endif %} between {{ session.min_age_limitation|default:"7" }} and {{ session.max_age_limitation|default:"17" }} of age. No computer skills required.</p>
+
+    <h5 class="text-uppercase margin-top-2"><a class="text-white" href="{% url 'faqs' %}">Read the FAQs.</a></h5>
+  </div>
+</div>
 
 <section class="margin-top-3">
   {% if session.teacher %}
@@ -131,7 +132,7 @@
       <div class="cell small-4 medium-3 image">
         <a href="{% url 'mentor-detail' session.teacher.id %}"><img class="width-100 thumbnail" src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}"></a>
       </div>
-      <div class="cell small-8 medium-9 info">
+      <div class="cell small-8 medium-9 padding-top-1">
         <h4 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
         <p>{{ session.teacher.bio|truncatechars:120 }}</p>
         <p><a href="{% url 'mentor-detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
@@ -149,7 +150,7 @@
         <div class="cell small-4 medium-3">
           <a href="{% url 'mentor-detail' mentor.id %}">
             <img class="thumbnail width-100" src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" >
-            <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
+            <div class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</div>
           </a>
         </div>
         {% endif %}

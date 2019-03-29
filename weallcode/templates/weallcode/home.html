@@ -15,36 +15,6 @@
 {% endblock subheader %}
 
 {% block content %}
-
-{% comment %}
-  <!-- Hero -->
-  <section class="margin-bottom-3 bg-primary padding-vertical-3">
-    <div class="grid-container">
-      <div class="grid-x grid-padding-x padding-bottom-1">
-        <div class="medium-6 cell text-white">
-          <h1 class="title">Let's explore your coding curiosity</h1>
-          <p>We All Code helps young people from age 7 to 17 envision and build toward a future in STEM through learning the coding skills necessary to make it happen.</p>
-        </div>
-        <div class="medium-6 medium-offset-2 cell">
-
-          <div class="bg-white radius">
-            <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Donors</h6>
-            <img class="width-100" src="https://www.fillmurray.com/300/169">
-            <div class="padding-1 padding-horizontal-2 text-center">
-              <h4 class="text-blue text-uppercase text-primary">PY 101: ROBOTICS WITH PYTHON</h4>
-              <div>March 5th, 2019</div>
-              <div>Nerdery Chicago, 60654</div>
-              <a class="button tertiary width-100 margin-top-1" href="volunteer">Enroll Now</a>
-              <a class="margin-top-1" href="volunteer">See all classes</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-{% endcomment %}
-
-
   <!-- Impact -->
   <section class="margin-vertical-3">
     <div class="grid-container">
@@ -71,47 +41,8 @@
           <h2 class="title text-tertiary text-center">Core Values</h2>
         </div>
       </div>
-      <div class="grid-x grid-padding-x grid-padding-y">
-        <div class="large-4 medium-4 cell">
-          <div class="padding-1 bg-gray-for-blue text-white height-100">
-            <div class="padding-1">
-              <svg class="fill-white width-100">
-                <use xlink:href="#svg-intellectual"></use>
-              </svg>
-            </div>
-            <div class="text-center">
-              <h3 class="text-uppercase">Open Mind</h3>
-              <p>We emphasize fast-paced, experiential learning in an engaging and iterative format.</p>
-            </div>
-          </div>
-        </div>
-        <div class="large-4 medium-4 cell">
-          <div class="padding-1 bg-tertiary text-white height-100">
-            <div class="padding-1 text-center">
-              <svg class="fill-white width-100">
-                <use xlink:href="#svg-respect"></use>
-              </svg>
-            </div>
-            <div class="text-center">
-              <h3 class="text-uppercase">Support</h3>
-              <p>Our close 2:1 student-to-mentor ratio ensures every kid gets the support they need.</p>
-            </div>
-          </div>
-        </div>
-        <div class="large-4 medium-4 cell">
-          <div class="padding-1 bg-primary text-white height-100">
-            <div class="padding-1 text-center">
-              <svg class="fill-white width-100">
-                <use xlink:href="#svg-smile"></use>
-              </svg>
-            </div>
-            <div class="text-center">
-              <h3 class="text-uppercase">Respect</h3>
-              <p>We prize collaborative learning, teamwork, and fun.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-intellectual" title_1="Open Mind" content_1="We emphasize fast-paced, experiential learning in an engaging and iterative format." svg_href_2="#svg-respect" title_2="Support" content_2="Our close 2:1 student-to-mentor ratio ensures every kid gets the support they need." svg_href_3="#svg-smile" title_3="Respect" content_3="We prize collaborative learning, teamwork, and fun." %}
     </div>
   </section>
 
