@@ -81,10 +81,11 @@
     </form>
 </section>
 
+
 <section class="margin-top-3">
     <h2 class="title text-tertiary">Your Classes &amp; Meetings</h2>
 
-    <h4 class="title">Upcoming</h4>
+    <h4 class="title margin-top-2">Upcoming</h4>
     {% if upcoming_sessions %}
     <table class="table table-striped">
         <thead>
@@ -109,10 +110,8 @@
     {% else %}
     <p class="text-muted">You have no upcoming classes. <a href="{% url 'weallcode_programs' %}">Find one now!</a></p>
     {% endif %}
-</section>
 
-<section class="margin-top-3">
-    <h4 class="title">Past</h4>
+    <h4 class="title margin-top-2">Past</h4>
     {% if past_sessions %}
     <table class="table table-striped">
         <thead>
@@ -134,8 +133,7 @@
     <p class="text-muted">You have not participated in any classes yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
     {% endif %}
 
-
-    <h4 class="title">Upcoming Mentor Meetings</h4>
+    <h4 class="title margin-top-2">Upcoming Mentor Meetings</h4>
     {% if upcoming_meetings %}
     <table class="table table-striped">
         <thead>
