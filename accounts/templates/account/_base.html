@@ -1,11 +1,5 @@
 {% extends "_base.html" %}
 
-{% block title %}
-{% block title_placeholder %}{% endblock %}
-{% endblock %}
-
-{% block body_class %}accounts{% endblock %}
-
 {% block subheader %}
 {% if user.is_authenticated %}
   <div class="sub-menu">
