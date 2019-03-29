@@ -1,7 +1,5 @@
 {% extends 'weallcode/_base.html' %}
 
-{% load static %}
-
 {% block title %}Programs | {{ block.super }}{% endblock %}
 
 {% block page-class %}progams{% endblock %}
@@ -20,9 +18,8 @@
 {% endblock subheader %}
 
 {% block content %}
-<section class="hero">
-  <img src="{% static 'weallcode/images/photos/hero-programs.png' %}" alt="">
-</section>
+
+{% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-programs.png" alt="programs" %}
 
 <section id="classes" class="padding-vertical-3">
   <div class="grid-container">
@@ -48,71 +45,13 @@
 
     <h2 class="title text-tertiary margin-bottom-2">Upcoming Classes</h2>
 
-    <div class="grid-x text-white margin-top-2">
-      <div class="cell medium-8 bg-dark-blue padding-2">
-        <h2>HTML 2.0</h2>
-        <p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>
-
-        <div class="grid-x">
-          <div class="cell medium-6">
-            <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
-            <ul class="list-plus">
-              <li>HTML 1.0</li>
-              <li>CSS 1.0</li>
-            </ul>
-          </div>
-          <div class="cell medium-6">
-            <h6 class="text-uppercase margin-top-1">Pathways</h6>
-            <ul class="list-plus">
-              <li>Front-end Development</li>
-              <li>Design</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="cell medium-4 bg-primary padding-2">
-        <h5 class="text-uppercase">March 24, 2019</h5>
-        <p>9 a.m. to 3 p.m.</p>
-
-        <h5 class="text-uppercase margin-top-2">The Nerdery</h5>
-        <p>1033 W Van Buren St, Floor 7, Chicago, IL 60607</p>
-
-        <button class="button secondary width-100 text-uppercase margin-top-1">Enroll Now</button>
-      </div>
-    </div>
-
-    <div class="grid-x text-white margin-top-2">
-      <div class="cell medium-8 bg-dark-blue padding-2">
-        <h2>Python 1.0</h2>
-        <p>Have you always wanted to try robotics? Do you think it would be cool to learn the coding to make actual robots move and groove?</p>
-
-        <div class="grid-x">
-          <div class="cell medium-6">
-            <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
-            <ul class="list-plus">
-              <li>HTML 1.0</li>
-              <li>CSS 1.0</li>
-            </ul>
-          </div>
-          <div class="cell medium-6">
-            <h6 class="text-uppercase margin-top-1">Pathways</h6>
-            <ul class="list-plus">
-              <li>Front-end Development</li>
-              <li>Design</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="cell medium-4 bg-primary padding-2">
-        <h5 class="text-uppercase">March 24, 2019</h5>
-        <p>9 a.m. to 3 p.m.</p>
-
-        <h5 class="text-uppercase margin-top-2">The Nerdery</h5>
-        <p>1033 W Van Buren St, Floor 7, Chicago, IL 60607</p>
-
-        <button class="button secondary width-100 text-uppercase margin-top-1">Enroll Now</button>
-      </div>
-    </div>
+    {% if sessions %}
+      {% for session in sessions %}
+        {% include "weallcode/snippets/class.html" with session=session %}
+      {% endfor %}
+    {% else %}
+      <p>There are no upcoming classes at this time. Please <a href="{% url 'weallcode_get_involved' %}#contact">contact us</a> for more information.</p>
+    {% endif %}
   </div>
 </section>
 
@@ -121,41 +60,7 @@
     <h2 class="title text-tertiary margin-bottom-2">Pathways</h2>
     <p>PLACEHOLDER CONTENT We All Code works hard to make sure kids learn in a safe and supportive environment. We could not do it alone either. Thanks to organization leaders, teachers, mentors and volunteers, we can help run relatively free classes that help kids and community. Something else about efforts together equalling success.</p>
 
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-2 text-white text-center">
-      <div class="cell padding-2 large-4 bg-gray-for-blue padding-vertical-3">
-        <div class="grid-x grid-margin-x grid-margin-y">
-          <svg class="cell medium-2 large-12 fill-white program-icon">
-            <use xlink:href="#svg-frontend"></use>
-          </svg>
-          <div class="cell medium-10 large-12 medium-text-left large-text-center">
-            <h4 class="text-uppercase padding-top-1">Front-end Development</h4>
-            <p>We All Code works hard to make sure kids learn in a safe.</p>
-          </div>
-        </div>
-      </div>
-      <div class="cell padding-2 large-4 bg-tertiary padding-vertical-3">
-        <div class="grid-x grid-margin-x grid-margin-y">
-          <svg class="cell medium-2 large-12 fill-white program-icon">
-            <use xlink:href="#svg-backend"></use>
-          </svg>
-          <div class="cell medium-10 large-12 medium-text-left large-text-center">
-            <h4 class="text-uppercase padding-top-1">Back-end Development</h4>
-            <p>We All Code works hard to make sure kids learn in a safe.</p>
-          </div>
-        </div>
-      </div>
-      <div class="cell padding-2 large-4 bg-primary padding-vertical-3">
-        <div class="grid-x grid-margin-x grid-margin-y">
-          <svg class="cell medium-2 large-12 fill-white program-icon">
-            <use xlink:href="#svg-design"></use>
-          </svg>
-          <div class="cell medium-10 large-12 medium-text-left large-text-center">
-            <h4 class="text-uppercase padding-top-1">Design &amp; Communication</h4>
-            <p>We All Code works hard to make sure kids learn in a safe.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-frontend" title_1="Front-end Development" content_1="We All Code works hard to make sure kids learn in a safe." svg_href_2="#svg-backend" title_2="Back-end Development" content_2="We All Code works hard to make sure kids learn in a safe." svg_href_3="#svg-design" title_3="Design &amp; Communication" content_3="We All Code works hard to make sure kids learn in a safe." %}
   </div>
 </section>
 
@@ -167,7 +72,7 @@
     <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-1 padding-horizontal-2">
       <div class="cell medium-6 large-7 padding-right-2">
         <h2>HTML 2.0</h2>
-        <p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>
+        <p>Description</p>
       </div>
       <div class="cell small-6 medium-3 large-2">
         <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
@@ -185,26 +90,6 @@
       </div>
     </div>
 
-    <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-1 padding-horizontal-2">
-      <div class="cell medium-6 large-7 padding-right-2">
-        <h2>HTML 2.0</h2>
-        <p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>
-      </div>
-      <div class="cell small-6 medium-3 large-2">
-        <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
-        <ul class="list-plus">
-          <li>HTML 1.0</li>
-          <li>CSS 1.0</li>
-        </ul>
-      </div>
-      <div class="cell small-6 medium-3">
-        <h6 class="text-uppercase margin-top-1">Pathways</h6>
-        <ul class="list-plus">
-          <li>Front-end Development</li>
-          <li>Design</li>
-        </ul>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -213,41 +98,7 @@
     <h2 class="title text-tertiary margin-bottom-2">Summer Camps</h2>
     <p>Week-long summer experiences offering students the chance to learn in-depth skills like project management, quality assurance, and social skills along with code.</p>
 
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-2 text-white text-center">
-      <div class="cell padding-2 large-4 bg-gray-for-blue padding-vertical-3">
-        <div class="grid-x grid-margin-x grid-margin-y">
-          <svg class="cell medium-2 large-12 fill-white program-icon">
-            <use xlink:href="#svg-management"></use>
-          </svg>
-          <div class="cell medium-10 large-12 medium-text-left large-text-center">
-            <h4 class="text-uppercase padding-top-1">Project Management</h4>
-            <p>We All Code works hard to make sure kids learn in a safe.</p>
-          </div>
-        </div>
-      </div>
-      <div class="cell padding-2 large-4 bg-tertiary padding-vertical-3">
-        <div class="grid-x grid-margin-x grid-margin-y">
-          <svg class="cell medium-2 large-12 fill-white program-icon">
-            <use xlink:href="#svg-backend"></use>
-          </svg>
-          <div class="cell medium-10 large-12 medium-text-left large-text-center">
-            <h4 class="text-uppercase padding-top-1">Quality Assurance</h4>
-            <p>We All Code works hard to make sure kids learn in a safe.</p>
-          </div>
-        </div>
-      </div>
-      <div class="cell padding-2 large-4 bg-primary padding-vertical-3">
-        <div class="grid-x grid-margin-x grid-margin-y">
-          <svg class="cell medium-2 large-12 fill-white program-icon">
-            <use xlink:href="#svg-high5"></use>
-          </svg>
-          <div class="cell medium-10 large-12 medium-text-left large-text-center">
-            <h4 class="text-uppercase padding-top-1">Socialization Skills</h4>
-            <p>We All Code works hard to make sure kids learn in a safe.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-management" title_1="Project Management" content_1="We All Code works hard to make sure kids learn in a safe." svg_href_2="#svg-backend" title_2="Quality Assurance" content_2="We All Code works hard to make sure kids learn in a safe." svg_href_3="#svg-high5" title_3="Socialization Skills" content_3="We All Code works hard to make sure kids learn in a safe." %}
   </div>
 </section>
 {% endblock content %}

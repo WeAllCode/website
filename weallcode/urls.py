@@ -42,7 +42,7 @@ urlpatterns = [
 
     path(
         'credits',
-        views.ProgramsView.as_view(),
+        views.CreditsView.as_view(),
         name='weallcode_credits',
     ),
 ]

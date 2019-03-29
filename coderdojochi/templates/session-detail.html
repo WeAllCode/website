@@ -42,15 +42,18 @@
   </div>
 </div>
 
+
 <section class="margin-top-3">
+    <h3 class="title text-primary">Enrollment</h3>
+
     {% if session.external_enrollment_url %}
-    <p><a href="{{ session.external_enrollment_url }}" class="button large">Enroll now</a></p>
+    <p><a href="{{ session.external_enrollment_url }}" class="button large secondary">Enroll now</a></p>
     {% else %}
     {% if user.is_authenticated %}
     {% if user.role == 'guardian' %}
     {% if students %}
     {% if spots_remaining > 0 %}
-    <h3 class="title text-primary">Enroll Student{% if students and students.count > 1 %}s{% endif %}</h3>
+    <p class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</p>
     {% else %}
     <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}#classes">find another upcoming class.</a></p>
     {% endif %}
@@ -84,15 +87,15 @@
     </table>
     <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True">Add another student</a></small>
     {% else %}
-    <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="button large">Enroll</a></p>
+    <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="button large secondary">Enroll</a></p>
     {% endif %}
     {% else %}
     {% if spots_remaining %}
     {% if mentor_signed_up %}
     <p>You are signed up to mentor this class.</p>
-    <p><a href="{{ session.get_sign_up_url }}" class="button tertiary">I can't make it...</a></p>
+    <p><a href="{{ session.get_sign_up_url }}" class="button large tertiary">I can't make it...</a></p>
     {% else %}
-    <p><a href="{{ session.get_sign_up_url }}" class="button large">Sign up now!</a></p>
+    <p><a href="{{ session.get_sign_up_url }}" class="button large secondary">Sign up now!</a></p>
     {% endif %}
     {% else %}
     {% if account in session.waitlist_mentors.all %}
@@ -119,7 +122,7 @@
     {% if spots_remaining < 1 %}
     <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}">find another upcoming class.</a></p>
     {% endif %}
-    <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="button large expanded">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
+    <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="button large secondary">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
     {% endif %}
     {% endif %}
 </section>
@@ -131,7 +134,7 @@
       <div class="cell small-4 medium-3 image">
         <a href="{% url 'mentor-detail' session.teacher.id %}"><img class="width-100 thumbnail" src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}"></a>
       </div>
-      <div class="cell small-8 medium-9 info">
+      <div class="cell small-8 medium-9 padding-top-1">
         <h4 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
         <p>{{ session.teacher.bio|truncatechars:120 }}</p>
         <p><a href="{% url 'mentor-detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
@@ -149,7 +152,7 @@
         <div class="cell small-4 medium-3">
           <a href="{% url 'mentor-detail' mentor.id %}">
             <img class="thumbnail width-100" src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" >
-            <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
+            <div class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</div>
           </a>
         </div>
         {% endif %}

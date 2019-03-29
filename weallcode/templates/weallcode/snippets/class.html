@@ -1,0 +1,46 @@
+<div class="grid-x text-white margin-top-2">
+  <div class="cell medium-8 bg-dark-blue padding-2">
+    <h2><a class="text-white" href="{{ session.get_absolute_url }}">{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</a></h2>
+    <p>{{ session.course.description|safe|truncatechars:280 }}</p>
+
+    <!-- <div class="grid-x">
+      <div class="cell medium-6">
+        <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
+        <ul class="list-plus">
+          <li>HTML 1.0</li>
+          <li>CSS 1.0</li>
+        </ul>
+      </div>
+      <div class="cell medium-6">
+        <h6 class="text-uppercase margin-top-1">Pathways</h6>
+        <ul class="list-plus">
+          <li>Front-end Development</li>
+          <li>Design</li>
+        </ul>
+      </div>
+    </div> -->
+  </div>
+  <div class="cell medium-4 bg-primary padding-2">
+    <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
+    <p>{% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}</p>
+
+    <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
+    <p>{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</p>
+
+    <a href="{{ session.get_absolute_url }}" class="button secondary width-100 text-uppercase margin-top-1">
+      {% if user.is_authenticated and user.role == 'mentor' %}
+        {% if session.mentor_capacity and session.get_mentor_orders.count >= session.mentor_capacity %}
+          Join Waitlist
+        {% else %}
+          Volunteer
+        {% endif %}
+      {% else %}
+        {% if session.get_current_students.count < session.capacity %}
+          Learn more
+        {% else %}
+          Join Waitlist
+        {% endif %}
+      {% endif %}
+    </a>
+  </div>
+</div>
