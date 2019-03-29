@@ -49,7 +49,7 @@
 
         <div class="grid-x grid-margin-x">
             <div class="cell small-4 medium-2">
-                <img class="avatar thumbnail" src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}">
+                <img class="avatar thumbnail" src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" alt="">
             </div>
             <div class="cell small-8 medium-4">
                 {% if mentor.avatar and not mentor.avatar_approved %}
