@@ -3,8 +3,8 @@
   "model": "sites.site",
   "pk": 1,
   "fields": {
-    "domain": "coderdojochi.org",
-    "name": "CoderDojoChi"
+    "domain": "weallcode.org",
+    "name": "We All Code"
   }
 }
 ]

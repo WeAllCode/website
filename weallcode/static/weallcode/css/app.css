@@ -52,9 +52,13 @@ body {
 .bg-gray-for-white {    background-color: var(--gray-4-white) !important; }
 .bg-gray-for-blue {     background-color: var(--gray-4-blue) !important; }
 
+.margin-half {              margin-top: 0.5rem; margin-bottom: 0.5rem; margin-left: 0.5rem; margin-right: 0.5rem; }
 .margin-vertical-half {     margin-top: 0.5rem; margin-bottom: 0.5rem; }
 .margin-horizontal-half {   margin-left: 0.5rem; margin-right: 0.5rem; }
-.margin-half {              margin-top: 0.5rem; margin-bottom: 0.5rem; margin-left: 0.5rem; margin-right: 0.5rem; }
+.margin-top-half {          margin-top: 0.5rem; }
+.margin-right-half {        margin-right: 0.5rem; }
+.margin-bottom-half {       margin-bottom: 0.5rem; }
+.margin-left-half {         margin-left: 0.5rem; }
 
 small {
   font-size: 75%;

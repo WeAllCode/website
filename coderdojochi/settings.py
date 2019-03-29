@@ -12,11 +12,10 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-from django.urls import reverse_lazy
-
 import dj_database_url
 import django_heroku
 import raven
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -116,8 +115,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'weallcode/templates/'),
             os.path.join(BASE_DIR, 'accounts/templates/'),
+            os.path.join(BASE_DIR, 'weallcode/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/'),
             os.path.join(BASE_DIR, 'coderdojochi/templates/dashboard/'),
             os.path.join(BASE_DIR, 'coderdojochi/emailtemplates/'),
@@ -208,8 +207,8 @@ if DEBUG:
     # Extra places for collectstatic to find static files.
     STATICFILES_DIRS = [
         os.path.join(PROJECT_ROOT, 'static'),
-        os.path.join(BASE_DIR, 'weallcode/static'),
         os.path.join(BASE_DIR, 'accounts/static'),
+        os.path.join(BASE_DIR, 'weallcode/static'),
     ]
 
     # Media files

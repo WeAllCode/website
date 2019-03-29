@@ -5,6 +5,15 @@ from collections import Counter
 from datetime import date, timedelta
 from functools import reduce
 
+import arrow
+from coderdojochi.forms import (CDCModelForm, ContactForm, DonationForm,
+                                GuardianForm, MentorForm, StudentForm)
+from coderdojochi.models import (Donation, Equipment, EquipmentType, Guardian,
+                                 Meeting, MeetingOrder, Mentor, MentorOrder,
+                                 Order, PartnerPasswordAccess, Session,
+                                 Student)
+from coderdojochi.util import email
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -20,28 +29,8 @@ from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-
-import arrow
-from dateutil.relativedelta import relativedelta
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
-
-from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-)
-from coderdojochi.util import email
 
 logger = logging.getLogger(__name__)
 
@@ -388,7 +377,7 @@ def mentor_reject_avatar(request, pk=None):
     mentor.save()
 
     email(
-        subject='Your CoderDojoChi avatar...',
+        subject='Your We All Code avatar...',
         template_name='class-announcement-mentor',
         merge_global_data={
             'site_url': settings.SITE_URL,
@@ -503,13 +492,13 @@ def donate(request, template_name="donate.html"):
     paypal_dict = {
         'business': settings.PAYPAL_BUSINESS_ID,
         'amount': '25',
-        'item_name': 'CoderDojoChi Donation',
+        'item_name': 'We All Code Donation',
         'cmd': '_donations',
         'lc': 'US',
         'invoice': '',
         'currency_code': 'USD',
         'no_note': '0',
-        'cn': 'Add a message for CoderDojoChi to read:',
+        'cn': 'Add a message for We All Code to read:',
         'no_shipping': '1',
         'address_override': '1',
         'first_name': '',
@@ -565,7 +554,7 @@ def contact(request, template_name="contact.html"):
 
             if human:
                 email(
-                    subject=f"{request.POST['name']} | CoderDojoChi Contact Form",
+                    subject=f"{request.POST['name']} | We All Code Contact Form",
                     recipients=[settings.CONTACT_EMAIL],
                     reply_to=[f"{request.POST['name']}<{request.POST['email']}>"],
                     template_name='contact-email',
@@ -1203,7 +1192,7 @@ def session_announce_mentors(request, pk):
             }
 
         email(
-            subject='New CoderDojoChi class date announced! Come mentor!',
+            subject='New We All Code class date announced! Come mentor!',
             template_name='class-announcement-mentor',
             merge_data=merge_data,
             merge_global_data=merge_global_data,
@@ -1275,7 +1264,7 @@ def session_announce_guardians(request, pk):
             }
 
         email(
-            subject='New CoderDojoChi class date announced!',
+            subject='New We All Code class date announced!',
             template_name='class-announcement-guardian',
             merge_data=merge_data,
             merge_global_data=merge_global_data,

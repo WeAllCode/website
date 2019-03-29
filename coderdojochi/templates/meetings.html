@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% load static %}
 
-{% block title %}Meetings{% endblock %}
+{% block title %}Meetings | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-meetings{% endblock %}
 
@@ -16,7 +16,7 @@
     <div class="col-md-12">
         <h1 class="title">Meetings</h1>
 
-        <p>Here are a list of upcoming meetings. Meetings provide an opportunity for volunteers to collaborate on coding projects, as well as prepare for upcoming CoderDojoChi classes.</p>
+        <p>Here are a list of upcoming meetings. Meetings provide an opportunity for volunteers to collaborate on coding projects, as well as prepare for upcoming We All Code classes.</p>
 
         <p>We look forward to seeing you soon!</p>
     </div>

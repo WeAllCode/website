@@ -119,11 +119,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='student',
             name='consent',
-            field=models.BooleanField(default=False, help_text='I hereby give consent for the student signed up above to participate in CoderDojoChi.', verbose_name='General Consent'),
+            field=models.BooleanField(default=False, help_text='I hereby give consent for the student signed up above to participate in We All Code.', verbose_name='General Consent'),
         ),
         migrations.AlterField(
             model_name='student',
             name='photo_release',
-            field=models.BooleanField(default=False, help_text="I hereby give permission to CoderDojoChi to use the student's image and/or likeness in promotional materials.", verbose_name='Photo Consent'),
+            field=models.BooleanField(default=False, help_text="I hereby give permission to We All Code to use the student's image and/or likeness in promotional materials.", verbose_name='Photo Consent'),
         ),
     ]

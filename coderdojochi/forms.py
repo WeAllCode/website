@@ -1,15 +1,14 @@
 import re
 
+import html5.forms.widgets as html5_widgets
+from coderdojochi.models import (CDCUser, Donation, Guardian, Mentor,
+                                 RaceEthnicity, Session, Student)
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
 from django.forms import FileField, Form, ModelForm, ValidationError
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-
-import html5.forms.widgets as html5_widgets
-
-from coderdojochi.models import CDCUser, Donation, Guardian, Mentor, RaceEthnicity, Session, Student
 
 SCHOOL_TYPE_CHOICES = (
     ("Public", "Public"),
@@ -388,7 +387,7 @@ class StudentForm(CDCModelForm):
             }
         ),
         label=(
-            'I hereby give permission to CoderDojoChi to use the '
+            'I hereby give permission to We All Code to use the '
             'student\'s image and/or likeness in promotional materials.'
         ),
     )
@@ -400,7 +399,7 @@ class StudentForm(CDCModelForm):
             }
         ),
         label=(
-            'I hereby give consent for the student signed up above to participate in CoderDojoChi as per the '
+            'I hereby give consent for the student signed up above to participate in We All Code as per the '
             f"<a href=\"{{ reverse('privacy') }}\">terms</a>."
         ),
     )

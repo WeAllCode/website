@@ -1,12 +1,11 @@
 import logging
 
+from anymail.exceptions import AnymailAPIError
+from anymail.message import AnymailMessage
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
-
-from anymail.exceptions import AnymailAPIError
-from anymail.message import AnymailMessage
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +52,7 @@ def email(
     msg = AnymailMessage(
         subject=subject,
         body=body,
-        from_email=f"CoderDojoChi<{settings.DEFAULT_FROM_EMAIL}>",
+        from_email=f"We All Code<{settings.DEFAULT_FROM_EMAIL}>",
         to=recipients,
         reply_to=reply_to,
         merge_data=merge_data,

@@ -1,14 +1,12 @@
 import datetime
 
+import arrow
+from coderdojochi.models import MentorOrder, Order, Session
+from coderdojochi.util import email
 from django.conf import settings
 from django.core.mail import get_connection
 from django.utils import timezone
-
-import arrow
 from django_cron import CronJobBase, Schedule
-
-from coderdojochi.models import MentorOrder, Order, Session
-from coderdojochi.util import email
 
 
 class SendReminders(CronJobBase):
@@ -118,7 +116,7 @@ class SendReminders(CronJobBase):
             }
 
         email(
-            subject='Your CoderDojoChi is coming up!',
+            subject='Your class is coming up!',
             template_name='class-reminder-guardian-24-hour',
             merge_data=merge_data,
             recipients=recipients,
@@ -164,7 +162,7 @@ class SendReminders(CronJobBase):
                 }
 
             email(
-                subject='Your CoderDojoChi class is in less than a week!',
+                subject='Your We All Code class is in less than a week!',
                 template_name='class-reminder-mentor-one-week',
                 merge_data=merge_data,
                 recipients=recipients,
@@ -205,7 +203,7 @@ class SendReminders(CronJobBase):
                 }
 
             email(
-                subject='Your CoderDojoChi class is tomorrow!',
+                subject='Your We All Code class is tomorrow!',
                 template_name='class-reminder-mentor-24-hour',
                 merge_data=merge_data,
                 recipients=recipients,

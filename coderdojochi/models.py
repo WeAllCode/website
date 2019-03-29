@@ -9,7 +9,6 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
-
 from stdimage.models import StdImageField
 
 ROLE_CHOICES = (
@@ -262,7 +261,7 @@ class Student(models.Model):
     photo_release = models.BooleanField(
         'Photo Consent',
         help_text=(
-            'I hereby give permission to CoderDojoChi to use '
+            'I hereby give permission to We All Code to use '
             'the student\'s image and/or likeness in promotional materials.'
         ),
         default=False,
@@ -271,7 +270,7 @@ class Student(models.Model):
         'General Consent',
         help_text=(
             'I hereby give consent for the student signed up '
-            'above to participate in CoderDojoChi.'
+            'above to participate in We All Code.'
         ),
         default=False,
     )

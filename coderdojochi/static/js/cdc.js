@@ -1,5 +1,5 @@
 /**
-CoderDojoChi.org Global JS
+weallcode.org Global JS
 
 @class global
 @namespace CDC

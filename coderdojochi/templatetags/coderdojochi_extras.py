@@ -1,10 +1,9 @@
 import re
 
+from coderdojochi.models import Order
 from django import template
 from django.template import Template
 from django.urls import reverse
-
-from coderdojochi.models import Order
 
 register = template.Library()
 
@@ -41,7 +40,7 @@ def student_register_link(context, student, session):
     button_href = f'href={url}'
 
     if orders.count():
-        button_modifier = "btn-cdc-danger"
+        button_modifier = "tertiary"
         button_msg = "Can't make it"
 
     elif (
@@ -111,7 +110,7 @@ def student_register_link(context, student, session):
             )
 
     form = (
-        f"<{button_tag} {button_href} class='btn-cdc btn-cdc-sm {button_modifier}' {button_additional_attributes}>"
+        f"<{button_tag} {button_href} class='button small {button_modifier}' {button_additional_attributes}>"
         f"{button_msg}"
         f"</{button_tag}>"
     )

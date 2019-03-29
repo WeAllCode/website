@@ -4,6 +4,14 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
+import arrow
+from coderdojochi.forms import (CDCModelForm, ContactForm, DonationForm,
+                                GuardianForm, MentorForm, StudentForm)
+from coderdojochi.models import (Donation, Equipment, EquipmentType, Guardian,
+                                 Meeting, MeetingOrder, Mentor, MentorOrder,
+                                 Order, PartnerPasswordAccess, Session,
+                                 Student)
+from coderdojochi.util import email
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -21,27 +29,8 @@ from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, View
-
-import arrow
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
-
-from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-)
-from coderdojochi.util import email
 
 logger = logging.getLogger(__name__)
 
@@ -289,13 +278,13 @@ class CalendarView(View):
         )
         cal = Calendar()
 
-        cal['prodid'] = '-//CoderDojoChi//coderdojochi.org//'
+        cal['prodid'] = '-//We All Code//weallcode.org//'
         cal['version'] = '2.0'
         cal['calscale'] = 'GREGORIAN'
 
         event = Event()
 
-        event['uid'] = f"{self.event_type.upper()}{event_obj.id:04}@coderdojochi.org"
+        event['uid'] = f"{self.event_type.upper()}{event_obj.id:04}@weallcode.org"
         event['summary'] = self.get_summary(request, event_obj)
         event['dtstart'] = self.get_dtstart(request, event_obj)
         event['dtend'] = self.get_dtend(request, event_obj)
@@ -317,7 +306,7 @@ class CalendarView(View):
 
         cal.add_component(event)
 
-        event_slug = "coderdojochi-{event_type}_{date}".format(
+        event_slug = "weallcode-{event_type}_{date}".format(
             event_type=self.event_type.lower(),
             date=arrow.get(
                 event_obj.start_date
