@@ -14,37 +14,9 @@
 
 {% block contained_content %}
 
-<h3 class="title text-primary">Class Details</h3>
+<h3 class="title text-primary">Class Details & Enrollment</h3>
 
-<div class="grid-x text-white margin-top-2">
-  <div class="cell medium-8 bg-dark-blue padding-2">
-    <h2>{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</h2>
-    <p>{{ session.course.description|safe }}</p>
-    {% if session.additional_info %}
-      <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
-    {% endif %}
-  </div>
-  <div class="cell medium-4 bg-primary padding-2">
-    <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
-    <p>
-      {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}<br>
-      <i class="fa fa-calendar"></i> <a class="text-white" href="{{ session.get_calendar_url }}">Add to your calendar</a>
-    </p>
-
-    <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
-    <p><a target="_blank" class="static-map text-white" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
-
-    <h5 class="text-uppercase margin-top-2">Who</h5>
-    {% if session.gender_limitation %}<p><strong>This class is limited to {{ session.gender_limitation }}s only.</strong></p>{% endif %}
-    <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s {% else %}Anyone{% endif %} between {{ session.min_age_limitation|default:"7" }} and {{ session.max_age_limitation|default:"17" }} of age. No computer skills required.</p>
-
-    <h5 class="text-uppercase margin-top-2"><a class="text-white" href="{% url 'faqs' %}">Read the FAQs.</a></h5>
-  </div>
-</div>
-
-
-<section class="margin-top-3">
-    <h3 class="title text-primary">Enrollment</h3>
+<section class="margin-top-2">
 
     {% if session.external_enrollment_url %}
     <p><a href="{{ session.external_enrollment_url }}" class="button large secondary">Enroll now</a></p>
@@ -126,6 +98,32 @@
     {% endif %}
     {% endif %}
 </section>
+
+<div class="grid-x text-white margin-top-2">
+  <div class="cell medium-8 bg-dark-blue padding-2">
+    <h2>{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</h2>
+    <p>{{ session.course.description|safe }}</p>
+    {% if session.additional_info %}
+      <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
+    {% endif %}
+  </div>
+  <div class="cell medium-4 bg-primary padding-2">
+    <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
+    <p>
+      {% if account and user.role == 'mentor' %}{{ session.mentor_start_date|time }}{% else %}{{ session.start_date|time }}{% endif %} to {% if account and user.role == 'mentor' %}{{ session.mentor_end_date|time }}{% else %}{{ session.end_date|time }}{% endif %}<br>
+      <i class="fa fa-calendar"></i> <a class="text-white" href="{{ session.get_calendar_url }}">Add to your calendar</a>
+    </p>
+
+    <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
+    <p><a target="_blank" class="static-map text-white" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+
+    <h5 class="text-uppercase margin-top-2">Who</h5>
+    {% if session.gender_limitation %}<p><strong>This class is limited to {{ session.gender_limitation }}s only.</strong></p>{% endif %}
+    <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s {% else %}Anyone{% endif %} between {{ session.min_age_limitation|default:"7" }} and {{ session.max_age_limitation|default:"17" }} of age. No computer skills required.</p>
+
+    <h5 class="text-uppercase margin-top-2"><a class="text-white" href="{% url 'faqs' %}">Read the FAQs.</a></h5>
+  </div>
+</div>
 
 <section class="margin-top-3">
   {% if session.teacher %}
