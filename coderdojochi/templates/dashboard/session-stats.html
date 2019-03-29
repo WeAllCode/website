@@ -2,7 +2,7 @@
 
 {% load i18n coderdojochi_extras %}
 
-{% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }}{% endblock %}
+{% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }} | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-cdc-admin{% endblock %}
 
@@ -56,39 +56,29 @@
 
 <div class="container">
     <ol class="breadcrumb">
-        <li><a href="{% url 'cdc-admin' %}">CoderDojoChi Admin</a></li>
+        <li><a href="{% url 'cdc-admin' %}">We All Code Admin</a></li>
         <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
         <li class="active">Class Stats</li>
     </ol>
     {% if session.get_current_orders.count %}
-    <div class="row">
 
-        <div class="col-md-12">
-            <div class="col-xs-12 panel panel-default">
-                <h3 class="title">Attendance:</h3>
-                <h2 class="title">{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
-                        {{ attendance_percentage }}%
-                    </div>
-                </div>
+              <h3 class="title">Attendance:</h3>
+              <h2 class="title">{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
+              <div class="progress">
+                  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
+                      {{ attendance_percentage }}%
+                  </div>
+              </div>
 
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="col-xs-12 panel panel-default">
-                <h3 class="title">Average Age: <b>{{ average_age }}</b></h3>
-                <div id="age_chart" style="height: 400px;"></div>
-            </div>
+    <div class="grid-x">
+        <div class="cell medium-6">
+            <h3 class="title">Average Age: <b>{{ average_age }}</b></h3>
+            <div id="age_chart" style="height: 400px;"></div>
         </div>
 
-        <div class="col-md-6">
-            <div class="col-xs-12 panel panel-default">
-                <h3 class="title">Genders:</h3>
-                <div id="gender_chart" style="height: 400px;"></div>
-            </div>
+        <div class="cell medium-6">
+            <h3 class="title">Genders:</h3>
+            <div id="gender_chart" style="height: 400px;"></div>
         </div>
     </div>
     {% endif %}

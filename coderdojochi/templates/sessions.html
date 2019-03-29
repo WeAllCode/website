@@ -2,7 +2,7 @@
 
 {% load static i18n coderdojochi_extras %}
 
-{% block title %}Upcoming Classes{% endblock %}
+{% block title %}Upcoming Classes | {{ block.super }}{% endblock %}
 
 {% block extra_meta %}
 <meta property="og:url" content="{{ SITE_URL }}{{ request.get_full_path }}">
@@ -14,7 +14,7 @@
 {% block contained_content %}
 <div class="container">
     <h1 class="title">Upcoming Classes</h1>
-    <p>Thanks for checking out CoderDojoChi. We're thrilled that you're interested.</p>
+    <p>Thanks for checking out We All Code. We're thrilled that you're interested.</p>
 
     <p>We offer several classes throughout the year, please take a moment to read about them below and sign up!</p>
 

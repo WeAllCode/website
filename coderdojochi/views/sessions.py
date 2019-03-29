@@ -4,6 +4,17 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
+import arrow
+from coderdojochi.forms import (CDCModelForm, ContactForm, DonationForm,
+                                GuardianForm, MentorForm, StudentForm)
+from coderdojochi.mixins import RoleRedirectMixin
+from coderdojochi.models import (Donation, Equipment, EquipmentType, Guardian,
+                                 Meeting, MeetingOrder, Mentor, MentorOrder,
+                                 Order, PartnerPasswordAccess, Session,
+                                 Student)
+from coderdojochi.util import email
+from coderdojochi.views.general import CalendarView
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -21,30 +32,8 @@ from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import RedirectView, TemplateView, View
-
-import arrow
-from dateutil.relativedelta import relativedelta
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
-
-from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
-from coderdojochi.mixins import RoleRedirectMixin
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-)
-from coderdojochi.util import email
-from coderdojochi.views.general import CalendarView
 
 logger = logging.getLogger(__name__)
 
@@ -515,7 +504,7 @@ class SessionCalendarView(CalendarView):
     event_class = Session
 
     def get_summary(self, request, event_obj):
-        return f"CoderDojoChi: {event_obj.course.code} - {event_obj.course.title}"
+        return f"We All Code: {event_obj.course.code} - {event_obj.course.title}"
 
     def get_dtstart(self, request, event_obj):
         dtstart = f"{arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')}Z"

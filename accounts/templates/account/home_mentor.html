@@ -1,7 +1,7 @@
 {% extends "account/_base.html" %}
 {% load bootstrap3 humanize coderdojochi_extras %}
 
-{% block title %}My Account{% endblock %}
+{% block title %}My Account | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-account{% endblock %}
 
@@ -109,8 +109,9 @@
     {% else %}
     <p class="text-muted">You have no upcoming classes. <a href="{% url 'weallcode_programs' %}">Find one now!</a></p>
     {% endif %}
+</section>
 
-
+<section class="margin-top-3">
     <h4 class="title">Past</h4>
     {% if past_sessions %}
     <table class="table table-striped">

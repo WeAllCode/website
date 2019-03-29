@@ -1,28 +1,23 @@
 {% extends "_base.html" %}
 {% load humanize %}
 
-{% block title %}My Dojo{% endblock %}
+{% block title %}My Dojo | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-mentors{% endblock %}
 
-{% block concontained_contenttent %}
+{% block contained_content %}
+<h1 class="title">Meet Our Mentors <a href="{% url 'account_signup' %}" class="button">Join us now!</a></h1>
 
-<div class="container">
-
-    <h1 class="title">Meet Our Mentors <a href="{% url 'account_signup' %}" class="button">Join us now!</a></h1>
-
-    <div class="row mentors">
-        {% for mentor in mentors %}
-            {% if mentor.is_public == True %}
-        <div class="col-xs-12 col-sm-4 col-md-3">
-            <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
-                <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
-                <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
-            </a>
-        </div>
-            {% endif %}
-        {% endfor %}
+<div class="grid-x mentors">
+    {% for mentor in mentors %}
+        {% if mentor.is_public == True %}
+    <div class="cell small-4">
+        <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
+            <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}">
+            <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
+        </a>
     </div>
+        {% endif %}
+    {% endfor %}
 </div>
-
 {% endblock %}

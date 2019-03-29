@@ -4,6 +4,17 @@ import operator
 from collections import Counter
 from datetime import date, timedelta
 
+import arrow
+from coderdojochi.forms import (CDCForm, CDCModelForm, ContactForm,
+                                DonationForm, GuardianForm, MentorForm,
+                                SignupForm, StudentForm)
+from coderdojochi.mixins import RoleRedirectMixin
+from coderdojochi.models import (Donation, Equipment, EquipmentType, Guardian,
+                                 Meeting, MeetingOrder, Mentor, MentorOrder,
+                                 Order, PartnerPasswordAccess, Session,
+                                 Student)
+from coderdojochi.util import email
+from coderdojochi.views.general import CalendarView
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -20,39 +31,10 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, ListView, RedirectView, TemplateView, View
-
-import arrow
+from django.views.generic import (DetailView, ListView, RedirectView,
+                                  TemplateView, View)
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
-
-from coderdojochi.forms import (
-    CDCForm,
-    CDCModelForm,
-    ContactForm,
-    DonationForm,
-    GuardianForm,
-    MentorForm,
-    SignupForm,
-    StudentForm,
-)
-from coderdojochi.mixins import RoleRedirectMixin
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-)
-from coderdojochi.util import email
-from coderdojochi.views.general import CalendarView
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +122,7 @@ class MeetingCalendarView(CalendarView):
     def get_summary(self, request, event_obj):
         event_name = f"{event_obj.meeting_type.code} - " if event_obj.meeting_type.code else ''
         event_name += event_obj.meeting_type.title
-        return f"CoderDojoChi: {event_name}"
+        return f"We All Code: {event_name}"
 
     def get_dtstart(self, request, event_obj):
         return arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')

@@ -2,7 +2,7 @@
 
 {% load i18n bootstrap3 static %}
 
-{% block title %}{{ student.first_name }} {{ student.last_name }}{% endblock %}
+{% block title %}{{ student.first_name }} {{ student.last_name }} | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-student-detail{% endblock %}
 

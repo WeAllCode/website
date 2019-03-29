@@ -1,17 +1,15 @@
 from email.mime.image import MIMEImage
 
+import arrow
+from coderdojochi.models import Donation, Mentor
+from coderdojochi.util import email
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
-
-import arrow
 from paypal.standard.ipn.signals import valid_ipn_received
 from paypal.standard.models import ST_PP_COMPLETED
-
-from coderdojochi.models import Donation, Mentor
-from coderdojochi.util import email
 
 
 @receiver(pre_save, sender=Mentor)
@@ -72,12 +70,12 @@ def donate_callback(sender, **kwargs):
             }
 
             email(
-                subject='Donations Receipt from CoderDojoChi',
+                subject='Donations Receipt from We All Code',
                 template_name='donation-receipt',
                 merge_global_data=merge_global_data,
                 recipients=[donation.email],
                 bcc=[settings.CONTACT_EMAIL],
-                preheader="Your generous donation is what makes CoderDojoChi possible.",
+                preheader="Your generous donation is what makes We All Code possible.",
             )
 
             donation.receipt_sent = True

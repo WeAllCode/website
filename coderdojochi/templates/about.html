@@ -2,18 +2,18 @@
 
 {% load i18n %}
 
-{% block title %}About{% endblock %}
+{% block title %}About | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-about{% endblock %}
 
 {% block contained_content %}
 <div class="container">
-    <h1 class="title">{% trans "About CoderDojoChi" %}</h1>
+    <h1 class="title">{% trans "About We All Code" %}</h1>
     <div class="row">
-        <p>CoderDojoChi is a volunteer not for profit that teaches web, game, and app development to youth ages 7 to 17.</p>
+        <p>We All Code is a volunteer not for profit that teaches web, game, and app development to youth ages 7 to 17.</p>
         <p>Our mission is to create a fun, collaborative environment to explore <abbr title="STEM is an acronym referring to the academic disciplines of science, technology, engineering, and mathematics.">STEM</abbr>. Through challenging play, youth can build memorable experiences with mentors. All classes are 100% free to attend thanks to your generous <a title="Donate now" href="{% url 'donate' %}">donations</a>.</p>
-        <p>Ali Karbassi founded CoderDojoChi in 2013. It has grown to more than {{ mentor_count }} active mentors teaching over {{ students_served_count }} students. We host twice monthly workshops with dozens of youth, and reach hundreds of families across the Greater Chicago area.</p>
-        <p>CoderDojoChi is an 501(c)(3) tax-exempt nonprofit organization in the United States.</p>
+        <p>Ali Karbassi founded We All Code in 2013. It has grown to more than {{ mentor_count }} active mentors teaching over {{ students_served_count }} students. We host twice monthly workshops with dozens of youth, and reach hundreds of families across the Greater Chicago area.</p>
+        <p>We All Code is an 501(c)(3) tax-exempt nonprofit organization in the United States.</p>
     </div>
     <div class="row">
         <div class="col-sm-6">
