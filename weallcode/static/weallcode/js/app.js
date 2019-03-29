@@ -1,22 +1,47 @@
 $(document).foundation()
 
-$(document).ready(function() {
-  $('a[href*="#"]').click(function(e) {
-    const parts = $(this).attr('href').split('#');
-    const path = parts[0];
+$(document).ready(function () {
 
-    if (parts.length === 1 || path !== window.location.pathname) return;
+  // Accessible smooth scroll
+  // From https://css-tricks.com/smooth-scrolling-accessibility/
+  function filterPath(string) {
+    return string
+      .replace(/^\//, '')
+      .replace(/(index|default).[a-zA-Z]{3,4}$/, '')
+      .replace(/\/$/, '');
+  }
 
-    e.preventDefault();
-
-    const id = parts[1];
-
-    $([document.documentElement, document.body]).animate({
-      scrollTop: $('#' + id).offset().top
-    }, 1500);
+  var locationPath = filterPath(location.pathname);
+  $('a[href*="#"]:not([href="#"])').each(function () {
+    var thisPath = filterPath(this.pathname) || locationPath;
+    var hash = this.hash;
+    if ($("#" + hash.replace(/#/, '')).length) {
+      if (locationPath == thisPath && (location.hostname == this.hostname || !this.hostname) && this.hash.replace(/#/, '')) {
+        var $target = $(hash),
+          target = this.hash;
+        if (target) {
+          $(this).click(function (event) {
+            event.preventDefault();
+            $('html, body').animate({
+              scrollTop: $target.offset().top
+            }, 1000, function () {
+              location.hash = target;
+              $target.focus();
+              if ($target.is(":focus")) { //checking if the target was focused
+                return false;
+              } else {
+                $target.attr('tabindex', '-1'); //Adding tabindex for elements not focusable
+                $target.focus(); //Setting focus
+              };
+            });
+          });
+        }
+      }
+    }
   });
 
-  $('.mobile-nav-trigger').click(function() {
+  // Nav toggler
+  $('.mobile-nav-trigger').click(function () {
     $('.mobile-nav').toggleClass('hide');
     $('.main-logo').toggleClass('show');
   });
