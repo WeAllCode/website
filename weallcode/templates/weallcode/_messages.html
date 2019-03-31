@@ -1,5 +1,5 @@
 {% for message in messages %}
-  <div class="margin-vertical-2 callout
+  <div class="callout
     {% if message.tags %}
       {% if message.tags == 'error' %}alert{% else %}{{ message.tags }}{% endif %}
     {% else %}warning{% endif %}" role="alert">
