@@ -45,4 +45,8 @@ $(document).ready(function () {
     $('.mobile-nav').toggleClass('hide');
     $('.main-logo').toggleClass('show');
   });
+
+  $('[data-toggler]').click(function() {
+    $($(this).data('toggler')).toggleClass($(this).data('toggle-class'));
+  });
 });

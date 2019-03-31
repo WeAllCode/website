@@ -1,6 +1,7 @@
-from django.views.generic import TemplateView
-from coderdojochi.models import Session
+from coderdojochi.models import Mentor, Session
+from django.db.models import Count
 from django.utils import timezone
+from django.views.generic import TemplateView
 
 
 class HomeView(TemplateView):
@@ -35,6 +36,31 @@ class ProgramsView(TemplateView):
 
 class TeamView(TemplateView):
     template_name = "weallcode/team.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        all_volunteers = Mentor.objects.select_related('user').filter(
+            is_active=True,
+            is_public=True,
+            background_check=True,
+            avatar_approved=True,
+        ).annotate(
+            session_count=Count('mentororder')
+        ).order_by('-user__role', '-session_count')
+
+        mentors = []
+        volunteers = []
+
+        for volunteer in all_volunteers:
+            if volunteer.session_count >= 10:
+                mentors += [volunteer]
+            else:
+                volunteers += [volunteer]
+
+        context['mentors'] = mentors
+        context['top_volunteers'] = volunteers[0:8]
+        context['other_volunteers'] = volunteers[8:]
 
 
 class GetInvolvedView(TemplateView):

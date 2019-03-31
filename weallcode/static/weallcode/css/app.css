@@ -149,10 +149,11 @@ ul.list-plus li {
 }
 
 @media screen and (min-width: 40em) {
-  .medium-padding-horizontal-3 {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
+  .medium-padding-horizontal-3 {  padding-left: 3rem; padding-right: 3rem; }
+  .medium-padding-vertical-3 {    padding-top: 3rem; padding-bottom: 3rem; }
+}
+@media screen and (min-width: 64em) {
+  .large-padding-vertical-4 {    padding-top: 4rem; padding-bottom: 4rem; }
 }
 
 .aside-title {
@@ -453,15 +454,15 @@ footer small span {
 
 /* Page: Home */
 
-body.home .main-logo {
+/* body.home .main-logo {
   display: none;
-}
+} */
 body.home .main-logo.show {
   display: block;
 }
 
 body.home .hero-logo {
-  width: 50%;
+  max-width: 75%;
   margin: 0 auto;
   display: block;
 }

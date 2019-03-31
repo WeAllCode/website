@@ -8,8 +8,18 @@
 
 {% block subheader %}
 <section class="padding-vertical-3">
-  <div class="grid-container">
-    <img class="hero-logo" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="">
+  <div class="grid-container text-center text-white padding-vertical-3">
+    <div class="grid-x">
+      <div class="cell medium-4 medium-offset-1">
+        <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
+      </div>
+      <div class="cell medium-2 padding-vertical-3">
+        <div class="medium-padding-vertical-3 large-padding-vertical-4">is now</div>
+      </div>
+      <div class="cell medium-4">
+        <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
+      </div>
+    </div>
   </div>
 </section>
 {% endblock subheader %}
@@ -21,7 +31,7 @@
       <div class="grid-x grid-padding-x padding-bottom-1">
         <div class="medium-6 cell">
           <div class="binary-drop-left">
-            <img class="width-100 margin-bottom-1" src="https://www.fillmurray.com/300/200" alt="That's your opinion man">
+            <img class="width-100 margin-bottom-1" src="{% static 'weallcode/images/photos/real-coding-skills.jpg' %}" alt="after class photo">
           </div>
         </div>
         <div class="medium-6 cell">
@@ -56,7 +66,7 @@
           <a href="{% url 'weallcode_programs' %}" class="button large">See All Programs</a>
         </div>
         <div class="cell medium-5">
-          <img class="width-100" src="https://www.fillmurray.com/500/500" alt="Bill Murray peering through">
+          <img class="width-100" src="{% static 'weallcode/images/photos/mentor-ratio.jpg' %}" alt="mentor and student">
         </div>
       </div>
     </div>

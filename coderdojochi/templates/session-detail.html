@@ -148,10 +148,7 @@
       {% for mentor in active_mentors %}
         {% if mentor.is_public == True %}
         <div class="cell small-4 medium-3">
-          <a href="{% url 'mentor-detail' mentor.id %}">
-            <img class="thumbnail width-100" src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" >
-            <div class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</div>
-          </a>
+          {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.user.first_name+mentor.user.last_name image=mentor.avatar.thumbnail.url %}
         </div>
         {% endif %}
       {% endfor %}
