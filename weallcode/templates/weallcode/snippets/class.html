@@ -1,6 +1,9 @@
 <div class="grid-x text-white margin-top-2">
   <div class="cell medium-8 bg-dark-blue padding-2">
-    <h2><a class="text-white" href="{{ session.get_absolute_url }}">{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</a></h2>
+    <a class="text-white" href="{{ session.get_absolute_url }}">
+      <h2>{{ session.course.code }}</h2>
+      <h4>{{ session.course.title }}</h4>
+    </a>
     <p>{{ session.course.description|safe|truncatechars:280 }}</p>
 
     <!-- <div class="grid-x">

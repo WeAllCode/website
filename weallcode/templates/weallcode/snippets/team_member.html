@@ -1,0 +1,30 @@
+{% load static %}
+
+<div class="text-center height-100 {% if is_on_dark %}bg-white{% else %}bg-dark-blue{% endif %}">
+  <div class="position-relative">
+    <img class="width-100" src="{% if image %}{{ image }}{% elif static_image %}{% static static_image %}{% else %}https://www.fillmurray.com/300/200{% endif %}" alt="{{ name }}">
+    {% if label %}
+    <div class="bottom-label bg-primary text-white">
+      <strong>{{ label }}</strong>{% if sublabel %}<br><small>{{ sublabel }}</small>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="padding-vertical-2">
+    {% if is_small %}
+      <h6 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h6>
+    {% else %}
+      <h4 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h4>
+    {% endif %}
+
+    {% if title %}
+      <div class="line width-25 bg-{{ color|default:"secondary" }} margin-vertical-half"></div>
+
+      <div class="text-uppercase text-grey-for-white">
+        {% if is_small %}<small>{% endif %}
+        {{ title }}
+        {% if is_small %}</small>{% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
