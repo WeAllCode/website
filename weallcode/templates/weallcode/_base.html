@@ -45,6 +45,11 @@
     </header>
 
     {% block messages %}
+      {% if messages %}
+        <section class="grid-container margin-vertical-3">
+          {% include 'weallcode/_messages.html' %}
+        </section>
+      {% endif %}
     {% endblock %}
 
     {% block content %}

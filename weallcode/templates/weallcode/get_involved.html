@@ -152,10 +152,7 @@
   </div>
 </section>
 
-
-<section class="hero">
-  <img src="{% static 'weallcode/images/backgrounds/map.png' %}" alt="map">
-</section>
+{% include "weallcode/snippets/hero_image.html" with src="weallcode/images/backgrounds/map.png" alt="map" %}
 
 <!-- Contact -->
 <section id="contact" class="padding-vertical-3">
@@ -176,11 +173,13 @@
       </div>
     </div>
 
-    <form method="POST" class="grid-x grid-padding-x margin-vertical-3">
+    <form id="contact-form" method="POST" action="{% url 'weallcode_contact' %}#contact-form">
       {% csrf_token %}
-      {{ form|safe }}
-      <div class="cell text-center">
-        <button type="submit" class="button padding-horizontal-3">Submit</button>
+      <div class="grid-x grid-padding-x margin-vertical-3">
+        {{ form.as_grid|safe }}
+        <div class="cell text-center">
+          <button type="submit" class="button padding-horizontal-3">Submit</button>
+        </div>
       </div>
     </form>
 

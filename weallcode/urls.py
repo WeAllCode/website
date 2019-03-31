@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     path(
         '',
@@ -32,6 +31,12 @@ urlpatterns = [
         'get-involved',
         views.GetInvolvedView.as_view(),
         name='weallcode_get_involved',
+    ),
+
+    path(
+        'contact',
+        views.ContactView.as_view(),
+        name='weallcode_contact',
     ),
 
     path(

@@ -109,6 +109,10 @@ ul.list-plus li {
   padding-left: 1.5em;
 }
 
+.errorlist {
+  color: var(--code-red);
+}
+
 .title {
   font-family: 'Bungee', cursive;
 }

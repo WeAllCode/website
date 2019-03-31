@@ -4,7 +4,7 @@ from django.forms import Form
 
 
 class GridForm(Form):
-    def to_grid(self):
+    def as_grid(self):
         return ''.join([self.field_html(f[0], f[1]) for f in self.widths])
 
     def field_html(self, field_name, field_classes):

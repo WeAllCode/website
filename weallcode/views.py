@@ -1,11 +1,12 @@
+from coderdojochi.models import Mentor, Session
+from coderdojochi.util import email
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Count
+from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import TemplateView
-
 from weallcode.forms import ContactForm
-
-from coderdojochi.models import Mentor, Session
 
 
 class HomeView(TemplateView):
@@ -68,11 +69,11 @@ class TeamView(TemplateView):
         return context
 
 
-class GetInvolvedView(TemplateView):
-    template_name = "weallcode/get_involved.html"
+class ContactView(TemplateView):
+    template_name = "weallcode/contact.html"
 
     def get_context_data(self):
-        return { "form": ContactForm().to_grid() }
+        return { "form": ContactForm() }
 
     def post(self, request, **kwargs):
         if request.POST['human']:
@@ -81,15 +82,16 @@ class GetInvolvedView(TemplateView):
         form = ContactForm(request.POST)
 
         if form.is_valid():
-            # email(
-            #     subject=f"{request.POST['name']} | We All Code Contact Form",
-            #     recipients=[settings.CONTACT_EMAIL],
-            #     reply_to=[f"{request.POST['name']}<{request.POST['email']}>"],
-            #     template_name='contact-email',
-            #     merge_global_data={
-            #         'message': request.POST['message'],
-            #     },
-            # )
+            email(
+                subject=f"{request.POST['name']} | We All Code Contact Form",
+                recipients=[settings.CONTACT_EMAIL],
+                reply_to=[f"{request.POST['name']}<{request.POST['email']}>"],
+                template_name='contact-email',
+                merge_global_data={
+                    'interest': request.POST['interest'],
+                    'message': request.POST['message']
+                },
+            )
 
             messages.success(
                 request,
@@ -100,7 +102,14 @@ class GetInvolvedView(TemplateView):
         else:
             messages.error(request, "There was an error. Please try again.")
 
-        self.get_context_data(**kwargs)['form'] = form.to_grid()
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+
+        return render(request, self.template_name, context)
+
+
+class GetInvolvedView(ContactView):
+    template_name = "weallcode/get_involved.html"
 
 
 class PrivacyView(TemplateView):
