@@ -157,7 +157,7 @@
   <img src="{% static 'weallcode/images/backgrounds/map.png' %}" alt="map">
 </section>
 
-<!-- Volunteer -->
+<!-- Contact -->
 <section id="contact" class="padding-vertical-3">
   <div class="grid-container">
     <div class="grid-x">
@@ -176,37 +176,14 @@
       </div>
     </div>
 
-    <form class="grid-x grid-padding-x margin-vertical-3">
-      <div class="cell medium-6">
-        <label for="fullname">Full Name</label>
-        <input type="text" id="fullname" name="fullname" />
-      </div>
-      <div class="cell medium-6">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" placeholder="email@example.com" />
-      </div>
-      <div class="cell medium-6">
-        <label for="topic">Topic of Interest</label>
-        <select id="topic" name="topic">
-          <option value="volunteer">Volunteer</option>
-          <option value="donate">Donate</option>
-          <option value="sponsort">Sponsor</option>
-          <option value="collaborate">Collaborate</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div class="cell medium-6">
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" name="phone" placeholder="+1 555 555-5555" />
-      </div>
-      <div class="cell">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="Enter your message"></textarea>
-      </div>
+    <form method="POST" class="grid-x grid-padding-x margin-vertical-3">
+      {% csrf_token %}
+      {{ form|safe }}
       <div class="cell text-center">
         <button type="submit" class="button padding-horizontal-3">Submit</button>
       </div>
     </form>
+
   </div>
 </section>
 
