@@ -108,7 +108,7 @@
         </tbody>
     </table>
     {% else %}
-    <p class="text-muted">You have no upcoming classes. <a href="{% url 'weallcode_programs' %}">Find one now!</a></p>
+    <p class="text-muted">You have no upcoming classes. <a href="{% url 'weallcode_programs' %}#classes">Find one now!</a></p>
     {% endif %}
 
     <h4 class="title margin-top-2">Past</h4>
@@ -130,7 +130,7 @@
         </tbody>
     </table>
     {% else %}
-    <p class="text-muted">You have not participated in any classes yet. <a href="{% url 'sessions' %}">Find one now!</a></p>
+    <p class="text-muted">You have not participated in any classes yet. <a href="{% url 'weallcode_programs' %}#classes">Find one now!</a></p>
     {% endif %}
 
     <h4 class="title margin-top-2">Upcoming Mentor Meetings</h4>

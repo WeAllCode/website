@@ -454,9 +454,6 @@ footer small span {
 
 /* Page: Home */
 
-/* body.home .main-logo {
-  display: none;
-} */
 body.home .main-logo.show {
   display: block;
 }
