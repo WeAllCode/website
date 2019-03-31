@@ -9,7 +9,6 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
-
 from stdimage.models import StdImageField
 
 ROLE_CHOICES = (
@@ -136,7 +135,7 @@ class Mentor(models.Model):
         return f"{self.user.first_name} {self.user.last_name}"
 
     def full_name(self):
-        return __str__()
+        return f"{self.user.first_name} {self.user.last_name}"
 
     def save(self, *args, **kwargs):
         if self.pk is not None:

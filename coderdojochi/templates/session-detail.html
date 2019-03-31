@@ -148,7 +148,7 @@
       {% for mentor in active_mentors %}
         {% if mentor.is_public == True %}
         <div class="cell small-4 medium-3">
-          {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.user.first_name+mentor.user.last_name image=mentor.avatar.thumbnail.url %}
+          {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name image=mentor.avatar.thumbnail.url %}
         </div>
         {% endif %}
       {% endfor %}
