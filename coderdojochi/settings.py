@@ -15,6 +15,7 @@ import os
 import dj_database_url
 import django_heroku
 import raven
+from django.contrib.staticfiles.storage import ManifestFilesMixin
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -248,7 +249,7 @@ else:
     # region http://stackoverflow.com/questions/10390244/
     from storages.backends.s3boto3 import S3Boto3Storage  # noqa E402
 
-    class StaticRootS3BotoStorage(S3Boto3Storage):
+    class StaticRootS3BotoStorage(ManifestFilesMixin, S3Boto3Storage):
         def __init__(self):
             super().__init__(location='static')
 
