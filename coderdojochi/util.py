@@ -13,13 +13,15 @@ logger = logging.getLogger(__name__)
 def email(
     subject,
     template_name,
+    attachments=[],
+    batch_size=500,
+    bcc=None,
     merge_data={},
     merge_global_data={},
-    recipients=[],
+    mixed_subtype=None,
     preheader=None,
-    bcc=None,
+    recipients=[],
     reply_to=None,
-    send=True
 ):
 
     if not (subject and template_name and recipients):
@@ -49,23 +51,29 @@ def email(
         if merge_field_format.format(key) in body:
             final_merge_global_data[key] = "" if val is None else str(val)
 
-    msg = AnymailMessage(
-        subject=subject,
-        body=body,
-        from_email=f"We All Code<{settings.DEFAULT_FROM_EMAIL}>",
-        to=recipients,
-        reply_to=reply_to,
-        merge_data=merge_data,
-        merge_global_data=final_merge_global_data,
-        esp_extra={
-            'merge_field_format': merge_field_format,
-            'categories': [template_name],
-        },
-    )
+    for recipients_batch in batches(recipients, batch_size):
+        msg = AnymailMessage(
+            subject=subject,
+            body=body,
+            from_email=f"We All Code<{settings.DEFAULT_FROM_EMAIL}>",
+            to=recipients_batch,
+            reply_to=reply_to,
+            merge_data=merge_data,
+            merge_global_data=final_merge_global_data,
+            esp_extra={
+                'merge_field_format': merge_field_format,
+                'categories': [template_name],
+            },
+        )
 
-    msg.content_subtype = "html"
+        msg.content_subtype = "html"
 
-    if send:
+        if mixed_subtype:
+            msg.mixed_subtype = mixed_subtype
+
+        for attachment in attachments:
+            msg.attach(attachment)
+
         try:
             msg.send()
         except Exception as e:
@@ -86,4 +94,7 @@ def email(
                 user.admin_notes = f"User '{send_attempt.reject_reason}' when checked on {timezone.now()}"
                 user.save()
 
-    return msg
+
+def batches(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
