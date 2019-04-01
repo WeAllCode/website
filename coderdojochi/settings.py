@@ -15,7 +15,6 @@ import os
 import dj_database_url
 import django_heroku
 import raven
-from django.contrib.staticfiles.storage import ManifestFilesMixin
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -248,14 +247,13 @@ else:
     # ------------------------------------------------------------------------------
     # region http://stackoverflow.com/questions/10390244/
     from storages.backends.s3boto3 import S3Boto3Storage  # noqa E402
+    from django.contrib.staticfiles.storage import ManifestFilesMixin
 
-    class StaticRootS3BotoStorage(ManifestFilesMixin, S3Boto3Storage):
-        def __init__(self):
-            super().__init__(location='static')
+    class CustomS3Storage(ManifestFilesMixin, S3Boto3Storage):
+        pass
 
-    class MediaRootS3BotoStorage(S3Boto3Storage):
-        def __init__(self):
-            super().__init__(location='media', file_overwrite=False)
+    StaticRootS3BotoStorage = lambda: CustomS3Storage(location='static')
+    MediaRootS3BotoStorage  = lambda: S3BotoStorage(location='media', file_overwrite=False)
 
     DEFAULT_FILE_STORAGE = 'coderdojochi.settings.MediaRootS3BotoStorage'
     MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
