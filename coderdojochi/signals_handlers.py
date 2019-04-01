@@ -26,7 +26,11 @@ def avatar_updated_handler(sender, instance, **kwargs):
     if original_mentor.avatar != instance.avatar:
         instance.avatar_approved = False
 
-        msg = email(
+        img = MIMEImage(instance.avatar.read())
+        img.add_header('Content-Id', 'avatar')
+        img.add_header("Content-Disposition", "inline", filename="avatar")
+
+        email(
             subject=f"{instance.user.first_name} {instance.user.last_name} | Mentor Avatar Changed",
             template_name='avatar-changed-mentor',
             merge_global_data={
@@ -38,18 +42,9 @@ def avatar_updated_handler(sender, instance, **kwargs):
             },
             recipients=[settings.CONTACT_EMAIL],
             preheader='Mentor Avatar Changed',
-            send=False
+            attachments=[img],
+            mixed_subtype='related',
         )
-
-        msg.mixed_subtype = 'related'
-
-        img = MIMEImage(instance.avatar.read())
-        img.add_header('Content-Id', 'avatar')
-        img.add_header("Content-Disposition", "inline", filename="avatar")
-
-        msg.attach(img)
-
-        msg.send()
 
 
 def donate_callback(sender, **kwargs):
