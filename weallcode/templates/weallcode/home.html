@@ -7,6 +7,13 @@
 {% block page-class %}home{% endblock %}
 
 {% block subheader %}
+
+{% if messages %}
+  <div class="grid-container padding-vertical-1">
+    {% include 'weallcode/_messages.html' %}
+  </div>
+{% endif %}
+
 <section class="padding-vertical-3">
   <div class="grid-container text-center text-white padding-vertical-3">
     <div class="grid-x">
@@ -23,6 +30,8 @@
   </div>
 </section>
 {% endblock subheader %}
+
+{% block messages %}{% endblock %}
 
 {% block content %}
   <!-- Impact -->
