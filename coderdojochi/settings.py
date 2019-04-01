@@ -267,7 +267,7 @@ else:
             content_autoclose.write(content.read())
 
             # Upload the object which will auto close the content_autoclose instance
-            super(CustomS3Boto3Storage, self)._save_content(obj, content_autoclose, parameters)
+            super(CustomS3Storage, self)._save_content(obj, content_autoclose, parameters)
 
             # Cleanup if this is fixed upstream our duplicate should always close
             if not content_autoclose.closed:
