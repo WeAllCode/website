@@ -246,7 +246,7 @@ else:
     # MEDIA
     # ------------------------------------------------------------------------------
     # region http://stackoverflow.com/questions/10390244/
-    from storages.backends.s3boto3 import S3Boto3Storage  # noqa E402
+    from storages.backends.s3boto3 import S3Boto3Storage, SpooledTemporaryFile  # noqa E402
     from django.contrib.staticfiles.storage import ManifestFilesMixin
 
     # Taken from an issue in django-storages:
