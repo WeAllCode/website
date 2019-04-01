@@ -7,6 +7,11 @@
 {% block page-class %}get-involved{% endblock %}
 
 {% block subheader %}
+
+{% if messages %}
+  {% include 'weallcode/_messages.html' %}
+{% endif %}
+
 <div class="sub-menu">
   <nav class="grid-container" role="navigation">
     <ul class="menu">
@@ -18,6 +23,8 @@
   </nav>
 </div>
 {% endblock subheader %}
+
+{% block messages %}{% endblock %}
 
 {% block content %}
 
@@ -173,15 +180,18 @@
       </div>
     </div>
 
-    <form id="contact-form" method="POST" action="{% url 'weallcode_contact' %}#contact-form">
-      {% csrf_token %}
-      <div class="grid-x grid-padding-x margin-vertical-3">
-        {{ form.as_grid|safe }}
-        <div class="cell text-center">
-          <button type="submit" class="button padding-horizontal-3">Submit</button>
+    <form id="contact-form" method="POST" action="{% url 'weallcode_get_involved' %}#contact-form">
+        {% csrf_token %}
+        <div class="grid-x grid-padding-x margin-vertical-3">
+          {% if messages %}
+            <div class="cell">{% include 'weallcode/_messages.html' %}</div>
+          {% endif %}
+          {{ form.as_grid|safe }}
+          <div class="cell text-center">
+            <button type="submit" class="button padding-horizontal-3">Submit</button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
 
   </div>
 </section>
