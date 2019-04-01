@@ -278,6 +278,7 @@ else:
 
     DEFAULT_FILE_STORAGE = 'coderdojochi.settings.MediaRootS3BotoStorage'
     MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
+    AWS_IS_GZIPPED = True
 
     # endregion
 
