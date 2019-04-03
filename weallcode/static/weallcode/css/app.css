@@ -233,6 +233,7 @@ ul.list-plus li {
 }
 
 .program-icon {
+  padding-left: 10px;
   max-height: 7rem;
   width: 100%;
 }
