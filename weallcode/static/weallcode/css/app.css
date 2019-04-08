@@ -153,11 +153,40 @@ ul.list-plus li {
   display: inline-block;
 }
 
+.overlap-bottom {
+  margin-bottom: -6rem;
+}
+
 .bg-binary {
   background-color: var(--all-yellow);
   background-image: url(../images/backgrounds/binary-repeatable.png);
   background-repeat: repeat;
   background-size: 10%;
+}
+
+.bg-kid-overlay {
+  position: relative;
+  background-color: var(--all-yellow);
+  background-image: url(../images/photos/hero-our-story.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-kid-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary);
+  opacity: 0.85;
+  z-index: 0;
+}
+
+.bg-kid-overlay > * {
+  z-index: 1;
+  position: relative;
 }
 
 @media screen and (min-width: 40em) {
