@@ -1,24 +1,6 @@
 $(document).foundation()
 
 $(document).ready(function () {
-
-  // Accessible smooth scroll
-  // From https://css-tricks.com/smooth-scrolling-accessibility/
-  function filterPath(string) {
-    return string
-      .replace(/^\//, '')
-      .replace(/(index|default).[a-zA-Z]{3,4}$/, '')
-      .replace(/\/$/, '');
-  }
-
-
-  function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
-
   var locationPath = filterPath(location.pathname);
 
   $('a[href*="#"]:not([href="#"])').each(function () {
@@ -59,5 +41,22 @@ $(document).ready(function () {
     $($(this).data('toggler')).toggleClass($(this).data('toggle-class'));
   });
 
-  $('.autoreveal').foundation('open');
+  $('.autoreveal').each(function () { $(this).foundation('open'); });
 });
+
+
+// Accessible smooth scroll
+// From https://css-tricks.com/smooth-scrolling-accessibility/
+function filterPath(string) {
+  return string
+    .replace(/^\//, '')
+    .replace(/(index|default).[a-zA-Z]{3,4}$/, '')
+    .replace(/\/$/, '');
+}
+
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}

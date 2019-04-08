@@ -29,7 +29,7 @@ class HomeView(TemplateView):
         if len(sessions) > 0:
             context['next_session'] = sessions[0]
 
-        context['show_intro'] = self.request.COOKIES.get('seen_intro', 'false') == 'false'
+        context['show_intro'] = self.request.COOKIES.get('has_seen_intro', 'false') == 'false'
 
         return context
 
