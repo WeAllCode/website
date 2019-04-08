@@ -11,7 +11,16 @@ $(document).ready(function () {
       .replace(/\/$/, '');
   }
 
+
+  function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
   var locationPath = filterPath(location.pathname);
+
   $('a[href*="#"]:not([href="#"])').each(function () {
     var thisPath = filterPath(this.pathname) || locationPath;
     var hash = this.hash;
@@ -46,7 +55,9 @@ $(document).ready(function () {
     $('.main-logo').toggleClass('show');
   });
 
-  $('[data-toggler]').click(function() {
+  $('[data-toggler]').click(function () {
     $($(this).data('toggler')).toggleClass($(this).data('toggle-class'));
   });
+
+  $('.autoreveal').foundation('open');
 });

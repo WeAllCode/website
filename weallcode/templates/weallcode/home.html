@@ -9,23 +9,13 @@
 <!--
 <section class="padding-vertical-3">
   <div class="grid-container text-center text-white padding-vertical-3">
-    <div class="grid-x">
-      <div class="cell medium-4 medium-offset-1">
-        <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
-      </div>
-      <div class="cell medium-2 padding-vertical-3">
-        <div class="medium-padding-vertical-3 large-padding-vertical-4">is now</div>
-      </div>
-      <div class="cell medium-4">
-        <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
-      </div>
-    </div>
+
   </div>
 </section> -->
 
 {% block content %}
 
-  <!--  -->
+  <!-- Hero -->
   <section class="padding-vertical-3 bg-kid-overlay">
     <div class="grid-container">
       <div class="grid-x grid-padding-x grid-padding-y padding-bottom-1">
@@ -46,8 +36,6 @@
                 <a href="{% url 'weallcode_programs' %}#classes"><small>View All Classes</small></a>
               </div>
             </div>
-          {% else %}
-            something!
           {% endif %}
         </div>
       </div>
@@ -179,4 +167,27 @@
     </div>
   </section>
   {% endcomment %}
+
+  <div class="reveal autoreveal text-center padding-vertical-2" id="introModal" aria-hidden="false" data-reveal>
+    <h6><strong>Hey Everybody! We have some exciting news…</strong></h6>
+
+    <div class="grid-x">
+      <div class="cell medium-5">
+        <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
+      </div>
+      <div class="cell medium-2 padding-vertical-2">
+        <div class="medium-padding-vertical-3 large-padding-vertical-4"><strong>is now</strong></div>
+      </div>
+      <div class="cell medium-5">
+        <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
+      </div>
+    </div>
+
+    <button class="button closer" data-close onclick="setCookie('seen_intro', 'true', 30)">
+      Let's Code!
+    </button>
+  </div>
+
+  {% if show_intro %}
+  {% endif %}
 {% endblock %}

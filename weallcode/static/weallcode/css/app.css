@@ -276,7 +276,6 @@ ul.list-plus li {
 }
 
 .small-container {
-  /* max-width: 48em; */
   margin: 0 auto;
 }
 
@@ -304,6 +303,17 @@ ul.list-plus li {
   width: 100%;
 }
 
+.reveal-overlay {
+  background-color: rgba(10,10,10,.85);
+}
+
+.reveal {
+  overflow: visible;
+}
+
+.reveal .closer {
+  margin-bottom: -5rem;
+}
 
 /* Kill Debug on Mobile */
 
