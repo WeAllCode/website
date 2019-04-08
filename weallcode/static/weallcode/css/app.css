@@ -60,6 +60,14 @@ body {
 .margin-bottom-half {       margin-bottom: 0.5rem; }
 .margin-left-half {         margin-left: 0.5rem; }
 
+.padding-half {              padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; }
+.padding-vertical-half {     padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.padding-horizontal-half {   padding-left: 0.5rem; padding-right: 0.5rem; }
+.padding-top-half {          padding-top: 0.5rem; }
+.padding-right-half {        padding-right: 0.5rem; }
+.padding-bottom-half {       padding-bottom: 0.5rem; }
+.padding-left-half {         padding-left: 0.5rem; }
+
 small {
   font-size: 75%;
 }
@@ -145,11 +153,40 @@ ul.list-plus li {
   display: inline-block;
 }
 
+.overlap-bottom {
+  margin-bottom: -6rem;
+}
+
 .bg-binary {
   background-color: var(--all-yellow);
   background-image: url(../images/backgrounds/binary-repeatable.png);
   background-repeat: repeat;
   background-size: 10%;
+}
+
+.bg-kid-overlay {
+  position: relative;
+  background-color: var(--all-yellow);
+  background-image: url(../images/photos/hero-our-story.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-kid-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary);
+  opacity: 0.85;
+  z-index: 0;
+}
+
+.bg-kid-overlay > * {
+  z-index: 1;
+  position: relative;
 }
 
 @media screen and (min-width: 40em) {
@@ -239,7 +276,6 @@ ul.list-plus li {
 }
 
 .small-container {
-  /* max-width: 48em; */
   margin: 0 auto;
 }
 
@@ -267,6 +303,17 @@ ul.list-plus li {
   width: 100%;
 }
 
+.reveal-overlay {
+  background-color: rgba(10,10,10,.85);
+}
+
+.reveal {
+  overflow: visible;
+}
+
+.reveal .closer {
+  margin-bottom: -5rem;
+}
 
 /* Kill Debug on Mobile */
 
@@ -355,7 +402,7 @@ html[data-whatintent='mouse'] .main-menu a:not(.button):hover,
   position: absolute;
   top: 3rem;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
   padding: 1.4rem;
 }
 

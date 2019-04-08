@@ -6,34 +6,44 @@
 
 {% block page-class %}home{% endblock %}
 
-{% block subheader %}
-
-{% if messages %}
-  <div class="grid-container padding-vertical-1">
-    {% include 'weallcode/_messages.html' %}
-  </div>
-{% endif %}
-
+<!--
 <section class="padding-vertical-3">
   <div class="grid-container text-center text-white padding-vertical-3">
-    <div class="grid-x">
-      <div class="cell medium-4 medium-offset-1">
-        <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
-      </div>
-      <div class="cell medium-2 padding-vertical-3">
-        <div class="medium-padding-vertical-3 large-padding-vertical-4">is now</div>
-      </div>
-      <div class="cell medium-4">
-        <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
-      </div>
-    </div>
-  </div>
-</section>
-{% endblock subheader %}
 
-{% block messages %}{% endblock %}
+  </div>
+</section> -->
 
 {% block content %}
+
+  <!-- Hero -->
+  <section class="padding-vertical-3 bg-kid-overlay">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x grid-padding-y padding-bottom-1">
+        <div class="cell medium-5">
+          <h1 class="title text-white">Let's explore your coding curiosity.</h1>
+        </div>
+        <div class="cell medium-4 medium-offset-3">
+          {% if next_session %}
+            <div class="bg-dark-blue text-center radius overlap-bottom">
+              <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Upcoming class</h6>
+              <div class="padding-1 padding-horizontal-2 bg-white">
+                <h4 class="text-blue text-uppercase text-primary"><strong>{{ next_session.course.code  }}</strong></h4>
+                <p><strong>{{ next_session.course.title }}</strong></p>
+                <div class="line bg-secondary width-25 margin-bottom-half"></div>
+                <div>{{ next_session.location.name }}<br>{{next_session.location.address}}</div>
+                <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
+                <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">Enroll Now</a>
+                <a href="{% url 'weallcode_programs' %}#classes"><small>View All Classes</small></a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-secondary padding-vertical-2"> </div>
+
   <!-- Impact -->
   <section class="margin-vertical-3">
     <div class="grid-container">
@@ -44,7 +54,7 @@
           </div>
         </div>
         <div class="medium-6 cell">
-          <h1 class="title text-primary">Real coding skills for every kid.</h1>
+          <h2 class="title text-primary">Real coding skills for every kid.</h2>
           <p>We help young people from 7-17 envision a future in STEM and gain the coding skills to make it real.</p>
           <a class="button secondary" href="{% url 'weallcode_programs' %}#courses">View Our Courses</a>
         </div>
@@ -155,4 +165,26 @@
       </div>
     </div>
   </section>
+
+  {% if show_intro %}
+    <div class="reveal autoreveal text-center padding-vertical-2" id="introModal" aria-hidden="false" data-reveal>
+      <h6><strong>Hey Everybody! We have some exciting news…</strong></h6>
+
+      <div class="grid-x">
+        <div class="cell medium-5">
+          <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
+        </div>
+        <div class="cell medium-2 padding-vertical-2">
+          <div class="medium-padding-vertical-3 large-padding-vertical-4"><strong>is now</strong></div>
+        </div>
+        <div class="cell medium-5">
+          <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
+        </div>
+      </div>
+
+      <button class="button closer" data-close onclick="setCookie('has_seen_intro', 'true', 30)">
+        Let's Code!
+      </button>
+    </div>
+  {% endif %}
 {% endblock %}
