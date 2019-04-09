@@ -318,8 +318,10 @@ ul.list-plus li {
   outline: none;
 }
 
-.reveal .closer {
-  margin-bottom: -7rem;
+@media screen and (min-width: 48em) {
+  .reveal .closer {
+    margin-bottom: -7rem;
+  }
 }
 
 /* Kill Debug on Mobile */
