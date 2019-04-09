@@ -103,6 +103,10 @@ h2 {
   line-height: 1.3em;
 }
 
+section {
+  outline: none;
+}
+
 ul.list-plus {
   margin: 0;
   padding: 0;
@@ -305,14 +309,17 @@ ul.list-plus li {
 
 .reveal-overlay {
   background-color: rgba(10,10,10,.85);
+  outline: none;
 }
 
 .reveal {
   overflow: visible;
+  border-bottom: 5px solid var(--all-yellow);
+  outline: none;
 }
 
 .reveal .closer {
-  margin-bottom: -5rem;
+  margin-bottom: -7rem;
 }
 
 /* Kill Debug on Mobile */
