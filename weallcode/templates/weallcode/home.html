@@ -15,14 +15,46 @@
 
 {% block content %}
 
+  {% if show_intro %}
+  <div class="reveal large autoreveal text-center" id="introModal" aria-hidden="false" data-reveal>
+    <div class="padding-2">
+      <h4><strong>Hey Everybody! We have some exciting news…</strong></h4>
+
+      <div class="grid-x grid-padding-y">
+        <div class="cell medium-5">
+          <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
+        </div>
+        <div class="cell medium-2">
+          <div class="medium-padding-vertical-3 large-padding-vertical-4">
+            <div class="medium-padding-vertical-3 large-padding-vertical-4">
+              <strong>is now</strong>
+            </div>
+          </div>
+        </div>
+        <div class="cell medium-5">
+          <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
+        </div>
+        <div class="cell medium-10 medium-offset-1">
+          <p>CoderDojoChi is known as the preeminent provider of free coding classes to Chicagoland youth, and we’ll be continuing our mission with an all new name and look!</p>
+        </div>
+      </div>
+
+      <button class="button large closer" data-close onclick="setCookie('has_seen_intro', 'true', 30)">
+        Let's Code!
+      </button>
+    </div>
+  </div>
+  {% endif %}
+
   <!-- Hero -->
   <section class="padding-vertical-3 bg-kid-overlay">
     <div class="grid-container">
       <div class="grid-x grid-padding-x grid-padding-y padding-bottom-1">
-        <div class="cell medium-5">
-          <h1 class="title text-white">Let's explore your coding curiosity.</h1>
+        <div class="cell medium-6 text-white">
+          <h1 class="title">Let's explore<br> your coding<br> curiosity.</h1>
+          <p>Our mission is to introduce a diverse group of children to the fun of coding by providing free educational resources and hands-on classes.</p>
         </div>
-        <div class="cell medium-4 medium-offset-3">
+        <div class="cell medium-5 medium-offset-1 large-4 large-offset-2">
           {% if next_session %}
             <div class="bg-dark-blue text-center radius overlap-bottom">
               <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Upcoming class</h6>
@@ -165,26 +197,4 @@
       </div>
     </div>
   </section>
-
-  {% if show_intro %}
-    <div class="reveal autoreveal text-center padding-vertical-2" id="introModal" aria-hidden="false" data-reveal>
-      <h6><strong>Hey Everybody! We have some exciting news…</strong></h6>
-
-      <div class="grid-x">
-        <div class="cell medium-5">
-          <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
-        </div>
-        <div class="cell medium-2 padding-vertical-2">
-          <div class="medium-padding-vertical-3 large-padding-vertical-4"><strong>is now</strong></div>
-        </div>
-        <div class="cell medium-5">
-          <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
-        </div>
-      </div>
-
-      <button class="button closer" data-close onclick="setCookie('has_seen_intro', 'true', 30)">
-        Let's Code!
-      </button>
-    </div>
-  {% endif %}
 {% endblock %}
