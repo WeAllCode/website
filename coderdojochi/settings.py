@@ -249,11 +249,11 @@ else:
     from storages.backends.s3boto3 import S3Boto3Storage, SpooledTemporaryFile  # noqa E402
     from django.contrib.staticfiles.storage import ManifestFilesMixin
 
-    ManifestFilesSafeMixin = lambda: CustomS3Storage(manifest_strict=False)
+    # ManifestFilesSafeMixin = lambda: ManifestFilesMixin(manifest_strict=False)
 
     # Taken from an issue in django-storages:
     # https://github.com/jschneier/django-storages/issues/382#issuecomment-377174808
-    class CustomS3Storage(ManifestFilesSafeMixin, S3Boto3Storage):
+    class CustomS3Storage(ManifestFilesMixin, S3Boto3Storage):
         def _save_content(self, obj, content, parameters):
             """
             We create a clone of the content file as when this is passed to boto3 it wrongly closes
