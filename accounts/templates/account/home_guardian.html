@@ -5,15 +5,6 @@
 
 {% block body_class %}page-dojo{% endblock %}
 
-{% block messages %}
-{% if not guardian.user.first_name %}
-    <div class="alert alert-warning">
-        <i class="fa fa-warning"></i> Please complete your profile information below.
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    </div>
-{% endif %}
-{% endblock %}
-
 {% block contained_content %}
 
 <section class="margin-top-3">

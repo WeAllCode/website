@@ -90,8 +90,8 @@ class TeamView(TemplateView):
         return context
 
 
-class ContactView(TemplateView):
-    template_name = "weallcode/contact.html"
+class GetInvolvedView(TemplateView):
+    template_name = "weallcode/get_involved.html"
 
     def get_context_data(self):
         return { "form": ContactForm() }
@@ -127,10 +127,6 @@ class ContactView(TemplateView):
         context['form'] = form
 
         return render(request, self.template_name, context)
-
-
-class GetInvolvedView(ContactView):
-    template_name = "weallcode/get_involved.html"
 
 
 class PrivacyView(TemplateView):

@@ -34,12 +34,6 @@ urlpatterns = [
     ),
 
     path(
-        'contact',
-        views.ContactView.as_view(),
-        name='weallcode_contact',
-    ),
-
-    path(
         'privacy',
         views.PrivacyView.as_view(),
         name='weallcode_privacy',
