@@ -2,7 +2,10 @@
 
 <div class="text-center height-100 {% if is_on_dark %}bg-white{% else %}bg-dark-blue{% endif %}">
   <div class="position-relative">
-    <img class="width-100" src="{% if image %}{{ image.url }}{% elif static_image %}{% static static_image %}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" alt="{{ name }}">
+    <div class="profile-image-wrapper">
+      <svg class="width-100 display-block bg-avatar" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
+      <img class="profile-image" src="{% if image %}{{ image.url }}{% elif static_image %}{% static static_image %}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" alt="{{ name }}">
+    </div>
     {% if label %}
     <div class="bottom-label bg-primary text-white">
       <strong>{{ label }}</strong>{% if sublabel %}<br><small>{{ sublabel }}</small>{% endif %}

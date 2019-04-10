@@ -193,6 +193,12 @@ ul.list-plus li {
   position: relative;
 }
 
+.bg-avatar {
+  background-image: url(https://gravatar.com/avatar/?s=283&d=mm);
+  background-size: cover;
+  background-position: center center;
+}
+
 @media screen and (min-width: 40em) {
   .medium-padding-horizontal-3 {  padding-left: 3rem; padding-right: 3rem; }
   .medium-padding-vertical-3 {    padding-top: 3rem; padding-bottom: 3rem; }
@@ -322,6 +328,21 @@ ul.list-plus li {
   .reveal .closer {
     margin-bottom: -7rem;
   }
+}
+
+.profile-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-image {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  margin-top: -50%;
+  left: 0;
+  right: 0;
+  display: block;
 }
 
 /* Kill Debug on Mobile */
