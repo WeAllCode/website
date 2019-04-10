@@ -19,7 +19,7 @@ class ContactForm(GridForm):
         ('interest', 'small-6'),
         ('phone', 'small-6'),
         ('message', 'small-12'),
-        ('human', 'hide'),
+        ('human', 'edih'),
     )
 
     human = forms.CharField(

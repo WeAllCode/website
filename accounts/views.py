@@ -9,41 +9,42 @@ from coderdojochi.forms import CDCModelForm, GuardianForm, MentorForm
 from coderdojochi.models import Guardian, MeetingOrder, Mentor, MentorOrder, Order, Student
 
 
+@method_decorator(login_required, name='dispatch')
 class AccountHomeView(TemplateView):
-    @method_decorator(login_required)
-    def get(self, request):
-        if not request.user.role:
-            if 'next' in request.GET:
+    def dispatch(self, *args, **kwargs):
+        if not self.request.user.role:
+            if 'next' in self.request.GET:
                 return redirect(
-                    f"{reverse('welcome')}?next={request.GET['next']}"
+                    f"{reverse('welcome')}?next={self.request.GET['next']}"
                 )
             else:
                 messages.warning(
-                    request,
-                    'Tell us a little about yourself before going on to your dojo.'
+                    self.request,
+                    'Tell us a little about yourself before going on account.'
                 )
             return redirect('welcome')
 
-        if request.user.role == 'mentor':
-            return self.my_account_mentor(request)
+        return super().dispatch(*args, **kwargs)
 
-        if request.user.role == 'guardian':
-            return self.my_account_guardian(request)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    # TODO: upcoming classes needs to be all upcoming classes with a choice to RSVP in dojo page
-    # TODO: upcoming meetings needs to be all upcoming meetings with a choice to RSVP in dojo page
-
-    def my_account_mentor(self, request, template_name='account/home_mentor.html'):
-        highlight = (
-            request.GET['highlight'] if 'highlight' in request.GET else False
+        context['highlight'] = (
+            self.request.GET['highlight'] if 'highlight' in self.request.GET else False
         )
 
-        context = {
-            'user': request.user,
-            'highlight': highlight,
-        }
+        context['user'] = self.request.user
 
-        mentor = get_object_or_404(Mentor, user=request.user)
+        if self.request.user.role == 'mentor':
+            return { **context, **self.get_context_data_for_mentor() }
+
+        if self.request.user.role == 'guardian':
+            return { **context, **self.get_context_data_for_guardian() }
+
+        return context
+
+    def get_context_data_for_mentor(self):
+        mentor = get_object_or_404(Mentor, user=self.request.user)
 
         orders = MentorOrder.objects.select_related().filter(
             is_active=True,
@@ -70,7 +71,7 @@ class AccountHomeView(TemplateView):
             meeting__end_date__gte=timezone.now()
         ).order_by('meeting__start_date')
 
-        context['account_complete'] = False
+        account_complete = False
 
         if (
             mentor.user.first_name and
@@ -79,68 +80,22 @@ class AccountHomeView(TemplateView):
             mentor.background_check and
             past_sessions.count() > 0
         ):
-            context['account_complete'] = True
+            account_complete = True
 
-        if request.method == 'POST':
-            form = MentorForm(
-                request.POST,
-                request.FILES,
-                instance=mentor
-            )
-
-            user_form = CDCModelForm(
-                request.POST,
-                request.FILES,
-                instance=mentor.user
-            )
-
-            if (
-                form.is_valid() and
-                user_form.is_valid()
-            ):
-                form.save()
-                user_form.save()
-                messages.success(
-                    request,
-                    'Profile information saved.'
-                )
-
-                return redirect('account_home')
-
-            else:
-                messages.error(
-                    request,
-                    'There was an error. Please try again.'
-                )
-
-        else:
-            form = MentorForm(instance=mentor)
-            user_form = CDCModelForm(instance=mentor.user)
-
-        context['mentor'] = mentor
-        context['upcoming_sessions'] = upcoming_sessions
-        context['upcoming_meetings'] = upcoming_meetings
-        context['past_sessions'] = past_sessions
-
-        context['mentor'] = mentor
-        context['form'] = form
-        context['user_form'] = user_form
-
-        return render(request, template_name, context)
-
-    def my_account_guardian(self, request, template_name='account/home_guardian.html'):
-        highlight = (
-            request.GET['highlight'] if 'highlight' in request.GET else False
-        )
-
-        context = {
-            'user': request.user,
-            'highlight': highlight,
+        return {
+            'mentor': mentor,
+            'orders': orders,
+            'upcoming_sessions': upcoming_sessions,
+            'past_sessions': upcoming_sessions,
+            'meeting_orders': meeting_orders,
+            'upcoming_meetings': upcoming_meetings,
+            'account_complete': account_complete
         }
 
+    def get_context_data_for_guardian(self):
         guardian = get_object_or_404(
             Guardian,
-            user=request.user
+            user=self.request.user
         )
 
         students = Student.objects.filter(
@@ -162,42 +117,119 @@ class AccountHomeView(TemplateView):
             session__end_date__lte=timezone.now(),
         ).order_by('session__start_date')
 
-        if request.method == 'POST':
-            form = GuardianForm(
-                request.POST,
-                instance=guardian
+        return {
+            'guardian': guardian,
+            'students': students,
+            'student_orders': student_orders,
+            'upcoming_orders': upcoming_orders,
+            'past_orders': past_orders,
+        }
+
+    def get(self, *args, **kwargs):
+        if self.request.user.role == 'mentor':
+            return self.get_for_mentor(**kwargs)
+
+        if self.request.user.role == 'guardian':
+            return self.get_for_guardian(**kwargs)
+
+    def get_for_mentor(self, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        context['form'] = MentorForm(instance=context['mentor'])
+        context['user_form'] = CDCModelForm(instance=context['mentor'].user)
+
+        return render(self.request, 'account/home_mentor.html', context)
+
+    def get_for_guardian(self, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        context['form'] = GuardianForm(instance=context['guardian'])
+        context['user_form'] = CDCModelForm(instance=context['guardian'].user)
+
+        return render(self.request, 'account/home_guardian.html', context)
+
+    def post(self, *args, **kwargs):
+        if self.request.user.role == 'mentor':
+            return self.post_for_mentor(**kwargs)
+
+        if self.request.user.role == 'guardian':
+            return self.post_for_guardian(**kwargs)
+
+
+    def post_for_mentor(self, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        mentor = context['mentor']
+
+        form = MentorForm(
+            self.request.POST,
+            self.request.FILES,
+            instance=mentor
+        )
+
+        user_form = CDCModelForm(
+            self.request.POST,
+            self.request.FILES,
+            instance=mentor.user
+        )
+
+        if (
+            form.is_valid() and
+            user_form.is_valid()
+        ):
+            form.save()
+            user_form.save()
+            messages.success(
+                self.request,
+                'Profile information saved.'
             )
 
-            user_form = CDCModelForm(
-                request.POST,
-                instance=guardian.user
-            )
-
-            if form.is_valid() and user_form.is_valid():
-                form.save()
-                user_form.save()
-                messages.success(
-                    request,
-                    'Profile information saved.'
-                )
-
-                return redirect('account_home')
-
-            else:
-                messages.error(
-                    request,
-                    'There was an error. Please try again.'
-                )
+            return redirect('account_home')
 
         else:
-            form = GuardianForm(instance=guardian)
-            user_form = CDCModelForm(instance=guardian.user)
+            messages.error(
+                self.request,
+                'There was an error. Please try again.'
+            )
 
-        context['students'] = students
-        context['upcoming_orders'] = upcoming_orders
-        context['past_orders'] = past_orders
-        context['guardian'] = guardian
         context['form'] = form
         context['user_form'] = user_form
 
-        return render(request, template_name, context)
+        return render(self.request, 'account/home_mentor.html', context)
+
+
+    def post_for_guardian(self, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        guardian = context['guardian']
+
+        form = GuardianForm(
+            self.request.POST,
+            instance=guardian
+        )
+
+        user_form = CDCModelForm(
+            self.request.POST,
+            instance=guardian.user
+        )
+
+        if form.is_valid() and user_form.is_valid():
+            form.save()
+            user_form.save()
+            messages.success(
+                self.request,
+                'Profile information saved.'
+            )
+
+            return redirect('account_home')
+
+        else:
+            messages.error(
+                self.request,
+                'There was an error. Please try again.'
+            )
+
+        context['form'] = form
+        context['user_form'] = user_form
+
+        return render(self.request, 'account/home_guardian.html', context)
