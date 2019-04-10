@@ -86,6 +86,11 @@ small {
   color: white;
 }
 
+/* Like hide but for bots */
+.edih {
+  display: none;
+}
+
 h1,
 h2,
 h3,
