@@ -49,12 +49,12 @@
 
         <div class="grid-x grid-margin-x">
             <div class="cell small-4 medium-2">
+                {% if mentor.avatar and not mentor.avatar_approved %}
+                    <small class="text-tertiary">Pending Approval</small>
+                {% endif %}
                 <img class="avatar thumbnail" src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" alt="">
             </div>
             <div class="cell small-8 medium-4">
-                {% if mentor.avatar and not mentor.avatar_approved %}
-                <div class="alert alert-warning text-center">Avatar Pending Approval</div>
-                {% endif %}
                 <input value="Change Avatar" id="id_avatar" name="avatar" title="Change Avatar" type="file">
 
                 {{ form.avatar.errors }}
