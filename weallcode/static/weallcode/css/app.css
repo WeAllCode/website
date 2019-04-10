@@ -171,7 +171,7 @@ ul.list-plus li {
 .bg-kid-overlay {
   position: relative;
   background-color: var(--all-yellow);
-  background-image: url(../images/photos/hero-our-story.jpg);
+  background-image: url(../images/photos/hero-our-story-small.jpg);
   background-repeat: no-repeat;
   background-size: cover;
 }

@@ -2,7 +2,7 @@
 
 <div class="text-center height-100 {% if is_on_dark %}bg-white{% else %}bg-dark-blue{% endif %}">
   <div class="position-relative">
-    <img class="width-100" src="{% if image %}{{ image }}{% elif static_image %}{% static static_image %}{% else %}https://www.fillmurray.com/300/200{% endif %}" alt="{{ name }}">
+    <img class="width-100" src="{% if image %}{{ image.url }}{% elif static_image %}{% static static_image %}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" alt="{{ name }}">
     {% if label %}
     <div class="bottom-label bg-primary text-white">
       <strong>{{ label }}</strong>{% if sublabel %}<br><small>{{ sublabel }}</small>{% endif %}
