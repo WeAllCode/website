@@ -336,13 +336,10 @@ ul.list-plus li {
 }
 
 .profile-image {
-  position: absolute;
   width: 100%;
-  top: 50%;
-  margin-top: -50%;
-  left: 0;
-  right: 0;
   display: block;
+  background-position: center center;
+  background-size: cover;
 }
 
 /* Kill Debug on Mobile */
