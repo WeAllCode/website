@@ -70,8 +70,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
     'django.contrib.humanize',
+
+    'django.contrib.sites',
+    'django.contrib.redirects',
 
     # vendor
 
@@ -106,6 +108,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
+
     'coderdojochi.middleware.HandleExceptionMiddleware',
 ]
 
@@ -275,8 +280,9 @@ else:
             if not content_autoclose.closed:
                 content_autoclose.close()
 
-    StaticRootS3BotoStorage = lambda: CustomS3Storage(location='static')
-    MediaRootS3BotoStorage  = lambda: S3Boto3Storage(location='media', file_overwrite=False)
+    def StaticRootS3BotoStorage(): return CustomS3Storage(location='static')
+
+    def MediaRootS3BotoStorage(): return S3Boto3Storage(location='media', file_overwrite=False)
 
     DEFAULT_FILE_STORAGE = 'coderdojochi.settings.MediaRootS3BotoStorage'
     MEDIA_URL = f'https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/'
