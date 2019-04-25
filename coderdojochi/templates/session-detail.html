@@ -2,15 +2,18 @@
 
 {% load static i18n coderdojochi_extras %}
 
-{% block title %}{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }} | {{ block.super }}{% endblock %}
+{% block title %}{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }} on {{ session.start_date|date }} | {{ block.super }}{% endblock %}
+{% block meta_facebook_title %}{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }} on {{ session.start_date|date }} | {{ block.super }}{% endblock %}
+{% block meta_twitter_title %}{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }} on {{ session.start_date|date }} | {{ block.super }}{% endblock %}
 
-{% block extra_meta %}
-<meta property="og:url" content="{{ SITE_URL }}{{ request.get_full_path }}">
-<meta property="og:title" content="Check out our upcoming class! {% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }}">
-{% endblock %}
+{% block meta_description %}{{ session.course.description|striptags|safe }}{% endblock %}
+{% block meta_facebook_description %}{{ session.course.description|striptags|safe }}{% endblock %}
+{% block meta_twitter_description %}{{ session.course.description|striptags|safe }}{% endblock %}
+
+{% comment %} {% block meta_facebook_image %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_image %}{% endblock %} {% endcomment %}
 
 {% block body_class %}page-class-detail{% endblock %}
-
 
 {% block contained_content %}
 

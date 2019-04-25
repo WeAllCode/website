@@ -2,12 +2,16 @@
 
 {% load i18n coderdojochi_extras %}
 
-{% block title %}{{ object.meeting_type.title }} | {{ block.super }}{% endblock %}
+{% block title %}{{ object.meeting_type.title }} on {{ object.start_date|date }} | {{ block.super }}{% endblock %}
+{% block meta_facebook_title %}{{ object.meeting_type.title }} on {{ object.start_date|date }} | {{ block.super }}{% endblock %}
+{% block meta_twitter_title %}{{ object.meeting_type.title }} on {{ object.start_date|date }} | {{ block.super }}{% endblock %}
 
-{% block extra_meta %}
-<meta property="og:url" content="{{ SITE_URL }}{{ object.get_absolute_url }}">
-<meta property="og:title" content="{{ object.start_date|date }} | {{ object.meeting_type.title }}">
-{% endblock %}
+{% block meta_description %}{{ object.meeting_type.description|striptags|safe }}{% endblock %}
+{% block meta_facebook_description %}{{ object.meeting_type.description|striptags|safe }}{% endblock %}
+{% block meta_twitter_description %}{{ object.meeting_type.description|striptags|safe }}{% endblock %}
+
+{% comment %} {% block meta_facebook_image %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_image %}{% endblock %} {% endcomment %}
 
 {% block body_class %}page-class-detail{% endblock %}
 

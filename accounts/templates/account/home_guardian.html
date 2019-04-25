@@ -2,6 +2,15 @@
 {% load bootstrap3 humanize coderdojochi_extras %}
 
 {% block title %}My Account | {{ block.super }}{% endblock %}
+{% block meta_facebook_title %}My Account | {{ block.super }}{% endblock %}
+{% block meta_twitter_title %}My Account | {{ block.super }}{% endblock %}
+
+{% comment %} {% block meta_description %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_facebook_description %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_description %}{% endblock %} {% endcomment %}
+
+{% comment %} {% block meta_facebook_image %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_image %}{% endblock %} {% endcomment %}
 
 {% block body_class %}page-dojo{% endblock %}
 

@@ -2,7 +2,16 @@
 
 {% load i18n %}
 
-{% block title %}Not Found | {{ block.super }}{% endblock %}
+{% block title %}Page Not Found (404) | {{ block.super }}{% endblock %}
+{% block meta_facebook_title %}Page Not Found (404) | {{ block.super }}{% endblock %}
+{% block meta_twitter_title %}Page Not Found (404) | {{ block.super }}{% endblock %}
+
+{% comment %} {% block meta_description %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_facebook_description %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_description %}{% endblock %} {% endcomment %}
+
+{% comment %} {% block meta_facebook_image %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_image %}{% endblock %} {% endcomment %}
 
 {% block body_class %}page-404{% endblock %}
 
