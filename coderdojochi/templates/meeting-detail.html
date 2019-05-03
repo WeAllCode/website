@@ -28,7 +28,7 @@
         <p><i class="fa fa-calendar"></i> <a href="{{ object.get_calendar_url }}">Add to your calendar</a></p>
 
         <h3 class="title">Where</h3>
-        <p><a target="_blank" class="static-map" href="//www.google.com/maps/preview?q={{ object.location.address }}, {{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}">{{ object.location.name }} {{ object.location.address }}<br>{{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}</a></p>
+        <p><a target="_blank" class="static-map" href="https://www.google.com/maps/preview?q={{ object.location.address }}, {{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}">{{ object.location.name }} {{ object.location.address }}<br>{{ object.location.city }}, {{ object.location.state }} {{ object.location.zip }}</a></p>
 
         {% if object.additional_info %}
         <h3 class="title">Additional Info</h3>

@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% load static i18n coderdojochi_extras %}
+{% load static i18n humanize coderdojochi_extras %}
 
 {% block title %}{% if session.course.code %}{{ session.course.code }}: {% endif %}{{ session.course.title }} | {{ block.super }}{% endblock %}
 
@@ -115,11 +115,20 @@
     </p>
 
     <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
-    <p><a target="_blank" class="static-map text-white" href="//www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+    <p><a target="_blank" class="static-map text-white" href="https://www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
 
     <h5 class="text-uppercase margin-top-2">Who</h5>
     {% if session.gender_limitation %}<p><strong>This class is limited to {{ session.gender_limitation }}s only.</strong></p>{% endif %}
-    <p>Free to attend! {% if session.gender_limitation %}{{ session.gender_limitation|title }}s {% else %}Anyone{% endif %} between {{ session.min_age_limitation|default:"7" }} and {{ session.max_age_limitation|default:"17" }} of age. No computer skills required.</p>
+    <p>{% if session.gender_limitation %} {{ session.gender_limitation|title }}s {% else %}Anyone{% endif %} between {{ session.min_age_limitation|default:"7" }} and {{ session.max_age_limitation|default:"17" }} of age. No computer skills required.</p>
+
+    <h5 class="text-uppercase margin-top-2">Cost</h5>
+    {% if session.min_cost or session.max_cost %}
+    <p>${{ session.min_cost | floatformat:-2 }} – ${{ session.max_cost | floatformat:-2 }}</p>
+    {% elif session.cost > 0 %}
+    <p>${{ session.cost | floatformat:-2 }}</p>
+    {% else %}
+    <p>Free to attend!</p>
+    {% endif %}
 
     <h5 class="text-uppercase margin-top-2"><a class="text-white" href="{% url 'faqs' %}">Read the FAQs.</a></h5>
   </div>

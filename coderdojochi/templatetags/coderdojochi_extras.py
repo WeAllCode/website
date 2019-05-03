@@ -1,9 +1,10 @@
 import re
 
-from coderdojochi.models import Order
 from django import template
 from django.template import Template
 from django.urls import reverse
+
+from coderdojochi.models import Order
 
 register = template.Library()
 

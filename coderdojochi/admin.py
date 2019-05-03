@@ -558,6 +558,46 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     view_on_site = False
 
+    fieldsets = (
+        (None, {
+            # 'classes': ('collapse',),
+            'fields': (
+                'course',
+                'location',
+                'start_date',
+                'end_date',
+                'mentor_start_date',
+                'mentor_end_date',
+                'capacity',
+                'mentor_capacity',
+                'teacher',
+                'is_active',
+                'is_public',
+            ),
+        }),
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': (
+                'cost',
+                'min_cost',
+                'max_cost',
+                'gender_limitation',
+                'min_age_limitation',
+                'max_age_limitation',
+                'external_enrollment_url',
+                'password',
+                'partner_message',
+                'additional_info',
+                'image_url',
+                'bg_image',
+                'announced_date_mentors',
+                'announced_date_guardians',
+                'mentors_week_reminder_sent',
+                'mentors_day_reminder_sent',
+            ),
+        }),
+    )
+
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 

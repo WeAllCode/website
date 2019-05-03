@@ -9,6 +9,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
+
 from stdimage.models import StdImageField
 
 ROLE_CHOICES = (
@@ -402,6 +403,9 @@ class Location(models.Model):
         max_length=20,
     )
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return self.name
 
@@ -417,6 +421,28 @@ class Session(models.Model):
         Course,
         on_delete=models.CASCADE,
     )
+
+    # Pricing
+    cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=0,
+    )
+
+    min_cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+
+    max_cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     mentor_start_date = models.DateTimeField()

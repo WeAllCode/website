@@ -5,15 +5,6 @@ from collections import Counter
 from datetime import date, timedelta
 from functools import reduce
 
-import arrow
-from coderdojochi.forms import (CDCModelForm, ContactForm, DonationForm,
-                                GuardianForm, MentorForm, StudentForm)
-from coderdojochi.models import (Donation, Equipment, EquipmentType, Guardian,
-                                 Meeting, MeetingOrder, Mentor, MentorOrder,
-                                 Order, PartnerPasswordAccess, Session,
-                                 Student)
-from coderdojochi.util import email
-from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -29,8 +20,28 @@ from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+
+import arrow
+from dateutil.relativedelta import relativedelta
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
+
+from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
+from coderdojochi.models import (
+    Donation,
+    Equipment,
+    EquipmentType,
+    Guardian,
+    Meeting,
+    MeetingOrder,
+    Mentor,
+    MentorOrder,
+    Order,
+    PartnerPasswordAccess,
+    Session,
+    Student,
+)
+from coderdojochi.util import email
 
 logger = logging.getLogger(__name__)
 

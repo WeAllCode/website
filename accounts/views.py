@@ -36,10 +36,10 @@ class AccountHomeView(TemplateView):
         context['user'] = self.request.user
 
         if self.request.user.role == 'mentor':
-            return { **context, **self.get_context_data_for_mentor() }
+            return {**context, **self.get_context_data_for_mentor()}
 
         if self.request.user.role == 'guardian':
-            return { **context, **self.get_context_data_for_guardian() }
+            return {**context, **self.get_context_data_for_guardian()}
 
         return context
 
@@ -155,7 +155,6 @@ class AccountHomeView(TemplateView):
         if self.request.user.role == 'guardian':
             return self.post_for_guardian(**kwargs)
 
-
     def post_for_mentor(self, **kwargs):
         context = self.get_context_data(**kwargs)
 
@@ -196,7 +195,6 @@ class AccountHomeView(TemplateView):
         context['user_form'] = user_form
 
         return render(self.request, 'account/home_mentor.html', context)
-
 
     def post_for_guardian(self, **kwargs):
         context = self.get_context_data(**kwargs)
