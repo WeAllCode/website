@@ -2,7 +2,16 @@
 
 {% load i18n %}
 
-{% block title %}Error | {{ block.super }}{% endblock %}
+{% block title %}Website Error | {{ block.super }}{% endblock %}
+{% block meta_facebook_title %}Website Error | {{ block.super }}{% endblock %}
+{% block meta_twitter_title %}Website Error | {{ block.super }}{% endblock %}
+
+{% block meta_description %}Whoops! Something went wrong. We're fixing it quickly!{% endblock %}
+{% block meta_facebook_description %}Whoops! Something went wrong. We're fixing it quickly!{% endblock %}
+{% block meta_twitter_description %}Whoops! Something went wrong. We're fixing it quickly!{% endblock %}
+
+{% comment %} {% block meta_facebook_image %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_image %}{% endblock %} {% endcomment %}
 
 {% block body_class %}page-500{% endblock %}
 

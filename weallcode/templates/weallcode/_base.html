@@ -7,18 +7,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta name="description" content="We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
-  <meta property="og:description" content="We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.">
-  <meta property="og:image" content="{% static 'weallcode/images/logo/square/logo-square.png' %}">
+  <meta name="description" content="{% block meta_description %}We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.{% endblock %}">
+
+  <!-- Facebook -->
+  <meta property="og:url" content="{{request.scheme}}://{{request.META.HTTP_HOST}}{{ request.get_full_path }}">
   <meta property="og:site_name" content="We All Code">
   <meta property="fb:app_id" content="1454178301519376">
+  <meta property="og:title" content="{% block meta_facebook_title %}We All Code{% endblock %}">
+  <meta property="og:description" content="{% block meta_facebook_description %}We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.{% endblock %}">
+  <meta property="og:image" content="{% block meta_facebook_image %}{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'weallcode/images/logo/square/logo-square.png' %}{% endblock %}">
 
-  {% block extra_meta %}
-  <meta property="og:url" content="{{ SITE_URL }}{{ request.get_full_path }}">
-  <meta property="og:title" content="We All Code">
-  {% endblock %}
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@weallcode">
+  <meta name="twitter:creator" content="@weallcode">
+  <meta name="twitter:title" content="{% block meta_twitter_title %}We All Code{% endblock %}">
+  <meta name="twitter:description" content="{% block meta_twitter_description %}We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.{% endblock %}">
+  <meta name="twitter:image" content="{% block meta_twitter_image %}{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'weallcode/images/photos/real-coding-skills.jpg' %}{% endblock %}">
 
-  <link rel="shortcut icon" type="image/png" href="{% static 'weallcode/images/favicon/favicon-64.png' %}" />
+  {% block extra_meta %}{% endblock %}
+
+  <link rel="shortcut icon" type="image/png" href="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'weallcode/images/favicon/favicon-64.png' %}" />
   <meta name="theme-color" content="#426cff">
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
@@ -34,7 +43,9 @@
   <!--[if IE]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
+  {% spaceless %}
   {% include 'weallcode/_svgs.html' %}
+  {% endspaceless %}
 
   <div class="app">
     <header class="bg-dark-blue">

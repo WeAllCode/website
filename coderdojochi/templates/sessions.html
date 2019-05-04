@@ -3,11 +3,15 @@
 {% load static i18n coderdojochi_extras %}
 
 {% block title %}Upcoming Classes | {{ block.super }}{% endblock %}
+{% block meta_facebook_title %}Upcoming Classes | {{ block.super }}{% endblock %}
+{% block meta_twitter_title %}Upcoming Classes | {{ block.super }}{% endblock %}
 
-{% block extra_meta %}
-<meta property="og:url" content="{{ SITE_URL }}{{ request.get_full_path }}">
-<meta property="og:title" content="Check out our upcoming classes!">
-{% endblock %}
+{% block meta_description %}Check out our upcoming classes.{% endblock %}
+{% block meta_facebook_description %}Check out our upcoming classes.{% endblock %}
+{% block meta_twitter_description %}Check out our upcoming classes.{% endblock %}
+
+{% comment %} {% block meta_facebook_image %}{% endblock %} {% endcomment %}
+{% comment %} {% block meta_twitter_image %}{% endblock %} {% endcomment %}
 
 {% block body_class %}page-classes{% endblock %}
 
@@ -18,7 +22,7 @@
 
     <p>We offer several classes throughout the year, please take a moment to read about them below and sign up!</p>
 
-    <p>If you'd like to participate in other ways, please consider <a href="{% url 'volunteer' %}">donating time</a> or <a href="{% url 'donate' %}">making a contribution to our nonprofit</a>.</p>
+    <p>If you'd like to participate in other ways, please consider <a href="{% url 'weallcode_get_involved' %}">donating time</a> or <a href="{% url 'donate' %}">making a contribution to our nonprofit</a>.</p>
 
     <p>We'll see you soon!</p>
 </div>
