@@ -7,19 +7,33 @@ from django.http import HttpResponse
 from django.urls import path
 from django.views import defaults
 from django.views.generic import RedirectView
+
 from loginas import views as loginas_views
 
 from . import old_views
 from .views.general import AboutView, HomeView, PrivacyView, WelcomeView
-from .views.meetings import (MeetingCalendarRedirectView, MeetingCalendarView,
-                             MeetingDetailRedirectView, MeetingDetailView,
-                             MeetingsView, meeting_announce, meeting_sign_up)
+from .views.meetings import (
+    MeetingCalendarRedirectView,
+    MeetingCalendarView,
+    MeetingDetailRedirectView,
+    MeetingDetailView,
+    MeetingsView,
+    meeting_announce,
+    meeting_sign_up,
+)
 from .views.profile import DojoMentorView
-from .views.sessions import (PasswordSessionRedirectView, PasswordSessionView,
-                             SessionCalendarRedirectView, SessionCalendarView,
-                             SessionDetailRedirectView, SessionDetailView,
-                             SessionSignUpRedirectView, SessionSignUpView,
-                             SessionsRedirectView, SessionsView)
+from .views.sessions import (
+    PasswordSessionRedirectView,
+    PasswordSessionView,
+    SessionCalendarRedirectView,
+    SessionCalendarView,
+    SessionDetailRedirectView,
+    SessionDetailView,
+    SessionSignUpRedirectView,
+    SessionSignUpView,
+    SessionsRedirectView,
+    SessionsView,
+)
 from .views.volunteer import VolunteerView
 
 admin.autodiscover()

@@ -7,10 +7,10 @@ from django.http import HttpResponseRedirect
 from django.test import Client, TestCase
 from django.urls import reverse
 
-# from coderdojochi.factories import CDCUserFactory
 from coderdojochi.factories import PartnerPasswordAccessFactory, SessionFactory
 from coderdojochi.models import PartnerPasswordAccess
 
+# from coderdojochi.factories import CDCUserFactory
 # from coderdojochi.views import session_detail
 
 

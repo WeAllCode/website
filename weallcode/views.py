@@ -1,12 +1,14 @@
-from coderdojochi.models import Mentor, Session
-from coderdojochi.util import email
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Count
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import TemplateView
+
 from weallcode.forms import ContactForm
+
+from coderdojochi.models import Mentor, Session
+from coderdojochi.util import email
 
 
 class HomeView(TemplateView):
@@ -94,7 +96,7 @@ class GetInvolvedView(TemplateView):
     template_name = "weallcode/get_involved.html"
 
     def get_context_data(self):
-        return { "form": ContactForm() }
+        return {"form": ContactForm()}
 
     def post(self, request, **kwargs):
         if request.POST['human']:
