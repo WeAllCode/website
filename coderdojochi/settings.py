@@ -94,7 +94,8 @@ INSTALLED_APPS = [
     'stdimage',
     'import_export',
     'django_nose',
-
+    'djstripe',
+    
     # apps
     'accounts',
     'coderdojochi',
@@ -305,6 +306,14 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 PAYPAL_RECEIVER_EMAIL = os.environ.get('PAYPAL_RECEIVER_EMAIL')
 PAYPAL_BUSINESS_ID = os.environ.get('PAYPAL_BUSINESS_ID')
 PAYPAL_TEST = os.environ.get('PAYPAL_TEST') == 'True'
+
+# Stripe
+STRIPE_LIVE_PUBLIC_KEY = os.environ.get('STRIPE_LIVE_PUBLIC_KEY', '')
+STRIPE_LIVE_SECRET_KEY = os.environ.get('STRIPE_LIVE_SECRET_KEY', '')
+STRIPE_TEST_PUBLIC_KEY = os.environ.get('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_TEST_SECRET_KEY = os.environ.get('STRIPE_TEST_SECRET_KEY')
+STRIPE_LIVE_MODE = os.environ.get('STRIPE_LIVE_MODE')
+DJSTRIPE_WEBHOOK_SECRET = os.environ.get('DJSTRIPE_WEBHOOK_SECRET')
 
 
 # django allauth

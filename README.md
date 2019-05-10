@@ -99,6 +99,13 @@ docker kill $(docker ps -q); docker-compose rm -f; docker volume rm $(docker vol
 docker-compose build
 ```
 
+### Adding a new django vendor app
+1. Update the pipfile
+2. run pipenv lock
+3. run docker-compose build
+
+
+
 [docker-mac]: https://www.docker.com/docker-mac
 [docker-windows]: https://www.docker.com/docker-windows
 [docker-toolbox]: https://www.docker.com/products/docker-toolbox

@@ -3,8 +3,18 @@ import logging
 import operator
 from collections import Counter
 from datetime import date, timedelta
+from decimal import *
 from functools import reduce
 
+import arrow
+from coderdojochi.forms import (CDCModelForm, ContactForm, DonationForm,
+                                GuardianForm, MentorForm, StudentForm)
+from coderdojochi.models import (Donation, Equipment, EquipmentType, Guardian,
+                                 Meeting, MeetingOrder, Mentor, MentorOrder,
+                                 Order, PartnerPasswordAccess, Session,
+                                 Student)
+from coderdojochi.util import email
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -20,28 +30,10 @@ from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-
-import arrow
-from dateutil.relativedelta import relativedelta
+# Stripe specific imports
+from djstripe.models import Charge
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
-
-from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-)
-from coderdojochi.util import email
 
 logger = logging.getLogger(__name__)
 
@@ -467,67 +459,23 @@ def student_detail(
 
 
 def donate(request, template_name="donate.html"):
-    if request.method == 'POST':
 
-        # if new donation form submit
-        if (
-            'first_name' in request.POST and
-            'last_name' in request.POST and
-            'email' in request.POST and
-            'amount' in request.POST
-        ):
-            donation = Donation(
-                first_name=request.POST['first_name'],
-                last_name=request.POST['last_name'],
-                email=request.POST['email'],
-                amount=request.POST['amount'],
-            )
+    return render(
+        request,
+        template_name
+    )
 
-            if 'referral_code' in request.POST and request.POST['referral_code']:
-                donation.referral_code = request.POST['referral_code']
 
-            donation.save()
+@csrf_exempt
+def donate_charge(request):
 
-            return HttpResponse(donation.id)
+    charge = Charge(
+        amount=Decimal(10.00),
+        currency='usd',
+        description='Donation Charge'
+    )
 
-        else:
-            return HttpResponse('fail')
-
-    referral_heading = None
-    referral_code = None
-    referral_disclaimer = None
-
-    if 'ref' in request.GET:
-        referral_code = request.GET['ref']
-
-    paypal_dict = {
-        'business': settings.PAYPAL_BUSINESS_ID,
-        'amount': '25',
-        'item_name': 'We All Code Donation',
-        'cmd': '_donations',
-        'lc': 'US',
-        'invoice': '',
-        'currency_code': 'USD',
-        'no_note': '0',
-        'cn': 'Add a message for We All Code to read:',
-        'no_shipping': '1',
-        'address_override': '1',
-        'first_name': '',
-        'last_name': '',
-        'notify_url': request.build_absolute_uri(reverse('paypal-ipn')),
-        'return_url': request.build_absolute_uri('return'),
-        'cancel_return': request.build_absolute_uri('cancel'),
-        'bn': 'PP-DonationsBF:btn_donateCC_LG.gif:NonHosted'
-    }
-
-    form = PayPalPaymentsForm(initial=paypal_dict)
-
-    return render(request, template_name, {
-        'form': form,
-        'referral_heading': referral_heading,
-        'referral_code': referral_code,
-        'referral_disclaimer': referral_disclaimer
-    })
+    return redirect('donate')
 
 
 @csrf_exempt
@@ -567,7 +515,8 @@ def contact(request, template_name="contact.html"):
                 email(
                     subject=f"{request.POST['name']} | We All Code Contact Form",
                     recipients=[settings.CONTACT_EMAIL],
-                    reply_to=[f"{request.POST['name']}<{request.POST['email']}>"],
+                    reply_to=[
+                        f"{request.POST['name']}<{request.POST['email']}>"],
                     template_name='contact-email',
                     merge_global_data={
                         'message': request.POST['message'],
@@ -788,7 +737,8 @@ def session_stats(request, pk, template_name="session-stats.html"):
     if current_orders_checked_in:
         student_ages = []
         for order in current_orders_checked_in:
-            student_ages.append(order.student.get_age(order.session.start_date))
+            student_ages.append(
+                order.student.get_age(order.session.start_date))
 
         average_age = (
             reduce(
