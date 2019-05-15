@@ -22,10 +22,16 @@
     "ENABLE_DEV_FIXTURES": {
       "required": true
     },
-    "PAYPAL_BUSINESS_ID": {
+    "STRIPE_LIVE_PUBLIC_KEY": {
       "required": true
     },
-    "PAYPAL_RECEIVER_EMAIL": {
+    "STRIPE_LIVE_SECRET_KEY": {
+      "required": true
+    },
+    "STRIPE_LIVE_MODE": {
+      "required": true
+    },
+    "DJSTRIPE_WEBHOOK_SECRET": {
       "required": true
     },
     "SECRET_KEY": {
