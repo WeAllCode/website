@@ -2,27 +2,18 @@
 
 {% load static %}
 
-{% block title %}{{ block.super }}{% endblock %}
-
 {% block page-class %}home{% endblock %}
-
-<!--
-<section class="padding-vertical-3">
-  <div class="grid-container text-center text-white padding-vertical-3">
-
-  </div>
-</section> -->
 
 {% block content %}
 
   {% if show_intro %}
   <div class="reveal large autoreveal text-center" id="introModal" aria-hidden="false" data-reveal>
     <div class="padding-2">
-      <h4><strong>Hey Everybody! We have some exciting news…</strong></h4>
+      <h4><strong>Hey Everybody! We have some exciting news...</strong></h4>
 
       <div class="grid-x grid-padding-y">
         <div class="cell medium-5">
-          <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="coderdojochi">
+          <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="CoderDojoChi">
         </div>
         <div class="cell medium-2">
           <div class="medium-padding-vertical-3 large-padding-vertical-4">
@@ -32,7 +23,7 @@
           </div>
         </div>
         <div class="cell medium-5">
-          <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="we all code">
+          <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/trim/logo-trim.png' %}" alt="We All Code">
         </div>
         <div class="cell medium-10 medium-offset-1">
           <p>CoderDojoChi is known as the preeminent provider of free coding classes to Chicagoland youth, and we’ll be continuing our mission with an all new name and look!</p>
@@ -65,7 +56,7 @@
                 <div>{{ next_session.location.name }}<br>{{next_session.location.address}}</div>
                 <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
                 <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">Enroll Now</a>
-                <a href="{% url 'weallcode_programs' %}#classes"><small>View All Classes</small></a>
+                <a href="{% url 'weallcode-programs' %}#classes"><small>View All Classes</small></a>
               </div>
             </div>
           {% endif %}
@@ -82,13 +73,13 @@
       <div class="grid-x grid-padding-x padding-bottom-1">
         <div class="medium-6 cell">
           <div class="binary-drop-left">
-            <img class="width-100 margin-bottom-1" src="{% static 'weallcode/images/photos/real-coding-skills.jpg' %}" alt="after class photo">
+            <img class="width-100 margin-bottom-1" src="{% static 'weallcode/images/photos/real-coding-skills.jpg' %}" alt="After class photo">
           </div>
         </div>
         <div class="medium-6 cell">
           <h2 class="title text-primary">Real coding skills for every kid.</h2>
           <p>We help young people from 7-17 envision a future in STEM and gain the coding skills to make it real.</p>
-          <a class="button secondary" href="{% url 'weallcode_programs' %}#courses">View Our Courses</a>
+          <a class="button secondary" href="{% url 'weallcode-programs' %}#courses">View Our Courses</a>
         </div>
       </div>
     </div>
@@ -114,7 +105,7 @@
         <div class="cell medium-7">
           <h2 class="title text-primary">Free coding programs for kids and teens.</h2>
           <p>We All Code lessons teach STEM through experience. With one mentor for every two students, kids can build confidence and get the attention they need to thrive.</p>
-          <a href="{% url 'weallcode_programs' %}" class="button large">See All Programs</a>
+          <a href="{% url 'weallcode-programs' %}" class="button large">See All Programs</a>
         </div>
         <div class="cell medium-5">
           <img class="width-100" src="{% static 'weallcode/images/photos/mentor-ratio.jpg' %}" alt="mentor and student">
@@ -133,9 +124,9 @@
         <div class="small-12 medium-6 large-4 cell margin-bottom-2">
           <div class="bg-white radius">
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Volunteers</h6>
-            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-volunteer.jpg' %}">
+            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-volunteer.jpg' %}" alt="">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode_get_involved' %}#volunteer">Volunteer</a>
+              <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#volunteer">Volunteer</a>
             </div>
           </div>
         </div>
@@ -144,9 +135,9 @@
         <div class="small-12 medium-6 large-4 cell margin-bottom-2">
           <div class="bg-white radius">
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Donors</h6>
-            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-donor.jpg' %}">
+            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-donor.jpg' %}" alt="">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-tertiary width-100 margin-top-1" href="{% url 'weallcode_get_involved' %}#donate">Donate</a>
+              <a class="button bg-tertiary width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#donate">Donate</a>
             </div>
           </div>
         </div>
@@ -155,9 +146,9 @@
         <div class="small-12 medium-6 large-4 cell margin-bottom-2">
           <div class="bg-white radius">
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Sponsors</h6>
-            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-sponsor.jpg' %}">
+            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-sponsor.jpg' %}" alt="">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode_get_involved' %}#sponsor">Sponsor</a>
+              <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#sponsor">Sponsor</a>
             </div>
           </div>
         </div>

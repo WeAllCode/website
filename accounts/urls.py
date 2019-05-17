@@ -1,14 +1,11 @@
 from django.conf.urls import include
 from django.urls import path
 
-from . import views
+from .views import AccountHomeView, LoginView, SignupView
 
 urlpatterns = [
-    path(
-        '',
-        views.AccountHomeView.as_view(),
-        name='account_home',
-    ),
-
+    path('', AccountHomeView.as_view(), name='account_home'),
+    path('login/', LoginView.as_view(), name='account_login'),
+    path('signup/', SignupView.as_view(), name='account_signup'),
     path('', include('allauth.urls')),
 ]

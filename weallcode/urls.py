@@ -1,47 +1,13 @@
 from django.urls import path
 
-from . import views
+from .views import CreditsView, GetInvolvedView, HomeView, OurStoryView, PrivacyView, ProgramsView, TeamView
 
 urlpatterns = [
-    path(
-        '',
-        views.HomeView.as_view(),
-        name='weallcode_home',
-    ),
-
-    path(
-        'our-story',
-        views.OurStoryView.as_view(),
-        name='weallcode_our_story',
-    ),
-
-    path(
-        'programs',
-        views.ProgramsView.as_view(),
-        name='weallcode_programs',
-    ),
-
-    path(
-        'team',
-        views.TeamView.as_view(),
-        name='weallcode_team',
-    ),
-
-    path(
-        'get-involved',
-        views.GetInvolvedView.as_view(),
-        name='weallcode_get_involved',
-    ),
-
-    path(
-        'privacy',
-        views.PrivacyView.as_view(),
-        name='weallcode_privacy',
-    ),
-
-    path(
-        'credits',
-        views.CreditsView.as_view(),
-        name='weallcode_credits',
-    ),
+    path('', HomeView.as_view(), name='weallcode-home'),
+    path('our-story/', OurStoryView.as_view(), name='weallcode-our-story'),
+    path('programs/', ProgramsView.as_view(), name='weallcode-programs'),
+    path('team/', TeamView.as_view(), name='weallcode-team'),
+    path('get-involved/', GetInvolvedView.as_view(), name='weallcode-get-involved'),
+    path('privacy/', PrivacyView.as_view(), name='weallcode-privacy'),
+    path('credits/', CreditsView.as_view(), name='weallcode-credits'),
 ]

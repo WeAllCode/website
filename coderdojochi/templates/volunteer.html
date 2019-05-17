@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+{% extends "coderdojochi/_base.html" %}
 {% load static i18n cache %}
 
 {% block title %}Volunteer | {{ block.super }}{% endblock %}
@@ -30,9 +30,9 @@
                 <div class="col-xs-12 col-sm-4 col-md-3">
                     <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
                         {% if mentor.avatar %}
-                            <img src="{{ mentor.avatar.thumbnail.url }}" width="175" height="175">
+                            <img src="{{ mentor.avatar.thumbnail.url }}" width="175" height="175" alt="Photo of {{ mentor.user.first_name }} {{ mentor.user.last_name }}">
                         {% else %}
-                            <img src="https://gravatar.com/avatar/?s=175&amp;d=mm" width="175" height="175">
+                            <img src="https://gravatar.com/avatar/?s=175&amp;d=mm" width="175" height="175" alt="">
                         {% endif %}
                         <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
                     </a>

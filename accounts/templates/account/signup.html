@@ -21,10 +21,10 @@
         </button>
     </form>
     <div class="cell medium-5 medium-offset-1 padding-top-1">
-        <a href="{% provider_login_url "google" %}" class="button secondary">
+        <a href="{% provider_login_url 'google' %}" class="button secondary">
             <i class="margin-right-1 fab fa-google"></i> {% trans "Sign up with Google" %} <i class="fas fa-chevron-right margin-left-1"></i>
         </a>
-        <a href="{% provider_login_url "facebook" method="js_sdk" %}" class="button secondary">
+        <a href="{% provider_login_url 'facebook' method='js_sdk' %}" class="button secondary">
             <i class="margin-right-1 fab fa-facebook"></i> Sign up with Facebook <i class="fas fa-chevron-right margin-left-1"></i>
         </a>
         <p><a href="{% url 'account_login' %}">{% trans "I already have an account" %}</a></p>
