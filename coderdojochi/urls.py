@@ -33,6 +33,9 @@ urlpatterns += [path('', include('weallcode.urls'))]
 # Accounts
 urlpatterns += [path('account/', include('accounts.urls'))]
 
+# Payments
+urlpatterns += [path('donate/', include('payments.urls'))]
+
 # Old General
 urlpatterns += [
     # /
@@ -55,25 +58,25 @@ urlpatterns += [
 ]
 
 # Donate / Donations
-urlpatterns += [
-    path('donate/', include([
-        # Donation
-        # /donate/
-        path('', old_views.donate, name='donate'),
+# urlpatterns += [
+#     path('donate/', include([
+#         # Donation
+#         # /donate/
+#         path('', old_views.donate, name='donate'),
 
-        # /donate/charge
-        path('charge/', old_views.donate_charge, name='donate-charge'),
+#         # /donate/charge
+#         path('charge/', old_views.donate_charge, name='donate-charge'),
 
-        # /donate/cancel/
-        path('cancel/', old_views.donate_cancel, name='donate-cancel'),
+#         # /donate/cancel/
+#         path('cancel/', old_views.donate_cancel, name='donate-cancel'),
 
-        # /donate/return/
-        path('return/', old_views.donate_return, name='donate-return'),
+#         # /donate/return/
+#         path('return/', old_views.donate_return, name='donate-return'),
 
-        # /donate/paypal/
-        path('paypal/', include('paypal.standard.ipn.urls')),
-    ])),
-]
+#         # /donate/paypal/
+#         path('paypal/', include('paypal.standard.ipn.urls')),
+#     ])),
+# ]
 
 # Login As
 urlpatterns += [
@@ -309,9 +312,9 @@ urlpatterns += [
 ]
 
 # Stripe
-urlpatterns += [
-    path('stripe/', include('djstripe.urls', namespace='djstripe')),
-]
+# urlpatterns += [
+#     path('stripe/', include('djstripe.urls', namespace='djstripe')),
+# ]
 
 # Media
 urlpatterns += static(

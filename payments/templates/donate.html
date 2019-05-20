@@ -9,11 +9,37 @@
 {% block contained_content %}
 
 <div class="container">
-  <div class="grid-container">
-    <h2 class="title">{% trans "Donate" %}</h2>
-    <form method="post" id="payment-form">
-      {% csrf_token %}
-      {{ form.as_p }}
+  <h2 class="title">{% trans "Donate" %}</h2>
+  <form action="/donate/charge/" method="post" id="payment-form">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="medium-12 cell">
+          <label>Name:
+            <input id="donor-name" name="donor-name" type="text" placeholder="First Name">
+          </label>
+        </div>
+      </div>
+      <div class="grid-x grid-padding-x">
+        <div class="medium-6 cell">
+          <label>Email:
+            <input id="donor-email" name="donor-email" type="email" placeholder="Email">
+          </label>
+        </div>
+        <div class="medium-6 cell">
+          <label>Phone:
+            <input id="donor-phone" name="donor-phone" type="text" placeholder="Phone Number">
+          </label>
+        </div>
+      </div>
+      <div class="grid-x grid-padding-x">
+        <div class="medium-12 cell">
+          <label>Amount: </label>
+        </div>
+        <div class="medium 12 cell input-group">
+          <span class="input-group-label">$</span>
+          <input id="donor-amount" name="donor-amount" class="input-group-field" type="text">
+        </div>
+      </div>
       <div class="grid-x grid-padding-x">
         <div class="form-row medium-12 cell">
           <label for="card-element">
@@ -30,9 +56,8 @@
           <button class="button margin-vertical-1">Submit Payment</button>
         </div>
       </div>
-  </div>
-</div>
-</form>
+    </div>
+  </form>
 </div>
 
 <div class="container">

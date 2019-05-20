@@ -10,7 +10,7 @@ import arrow
 from paypal.standard.ipn.signals import valid_ipn_received
 from paypal.standard.models import ST_PP_COMPLETED
 
-from coderdojochi.models import Donation, Mentor
+from coderdojochi.models import Mentor
 from coderdojochi.util import email
 
 
