@@ -26,4 +26,4 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     view_on_site = False
 
     def formatted_amount(self, obj):
-        return "$ %.2f" % (obj.amount / 100)
+        return "$ {:.2f}".format(obj.amount / 100)
