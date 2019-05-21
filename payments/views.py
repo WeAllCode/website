@@ -1,6 +1,7 @@
 from decimal import *
 
 import stripe
+from coderdojochi.models import CDCUser
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -43,10 +44,18 @@ class DonateView(FormView):
     def donation_is_registered_customer(self, email, name, amount):
 
         # Get the user from Donation model with email
-        user = Donation.objects.get(email=email)
+        user = Donation.objects.filter(email=email).first()
+
+        # Check if user exists in our Database
+        user_email_exists = CDCUser.objects.filter(email=email).exists()
+
+        # If the user exists attach it to customer
+        if user_email_exists:
+            customer = CDCUser.objects.get(email=email)
 
         # Save the donation to the model.
         donation = Donation(
+            customer=customer,
             email=user.email,
             name=user.name,
             amount=amount.pennies,
@@ -91,8 +100,19 @@ class DonateView(FormView):
                 description="We All Code Customer"
             )
 
+            # Check if user is authenticated
+            if self.request.user.is_authenticated:
+                customer = self.request.user
+
+            # Check if user exists in our Database
+            user_email_exists = CDCUser.objects.filter(email=email).exists()
+
+            if user_email_exists:
+                customer = CDCUser.objects.get(email=email)
+
             # Save the Donation to the model
             donation = Donation(
+                customer=customer,
                 email=stripe_customer.email,
                 amount=amount.pennies,
                 name=name,
