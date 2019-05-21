@@ -311,11 +311,6 @@ urlpatterns += [
     path('anymail/', include('anymail.urls')),
 ]
 
-# Stripe
-# urlpatterns += [
-#     path('stripe/', include('djstripe.urls', namespace='djstripe')),
-# ]
-
 # Media
 urlpatterns += static(
     settings.MEDIA_URL,

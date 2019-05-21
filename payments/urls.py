@@ -40,6 +40,6 @@ urlpatterns += [
 ]
 
 # Stripe specific
-urlpatterns += [
-    path('stripe/', include('djstripe.urls', namespace='djstripe')),
-]
+# urlpatterns += [
+#     path('stripe/', include('djstripe.urls', namespace='djstripe')),
+# ]

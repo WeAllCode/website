@@ -10,16 +10,17 @@ from django.views.generic.edit import FormView
 from .forms import DonateForm
 from .models import Donation
 
-# from djstripe.models import Customer
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class Amount:
+    # A class to format the amount.
+    # Params (amount)
     def __init__(self, amount):
         self.pennies = int(float(amount) * 100)
 
     def __str__(self):
+        # Format to dollars
         return "{:.2f}".format(self.pennies / 100)
 
 

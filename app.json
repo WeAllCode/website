@@ -31,9 +31,6 @@
     "STRIPE_LIVE_MODE": {
       "required": true
     },
-    "DJSTRIPE_WEBHOOK_SECRET": {
-      "required": true
-    },
     "SECRET_KEY": {
       "required": true
     },

@@ -93,7 +93,7 @@ INSTALLED_APPS = [
     'stdimage',
     'import_export',
     'django_nose',
-    'djstripe',
+    'stripe',
 
     # apps
     'accounts',
@@ -303,15 +303,9 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 
 # Stripe
-STRIPE_LIVE_PUBLIC_KEY = os.environ.get('STRIPE_LIVE_PUBLIC_KEY', '')
-STRIPE_LIVE_SECRET_KEY = os.environ.get('STRIPE_LIVE_SECRET_KEY', '')
-STRIPE_TEST_PUBLIC_KEY = os.environ.get('STRIPE_TEST_PUBLIC_KEY')
-STRIPE_TEST_SECRET_KEY = os.environ.get('STRIPE_TEST_SECRET_KEY')
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
 STRIPE_LIVE_MODE = os.environ.get('STRIPE_LIVE_MODE')
-DJSTRIPE_WEBHOOK_SECRET = os.environ.get('DJSTRIPE_WEBHOOK_SECRET')
-
-STRIPE_PUBLIC_KEY = STRIPE_TEST_PUBLIC_KEY if STRIPE_TEST_PUBLIC_KEY != '' else STRIPE_LIVE_PUBLIC_KEY
-STRIPE_SECRET_KEY = STRIPE_TEST_SECRET_KEY if STRIPE_TEST_SECRET_KEY != '' else STRIPE_LIVE_SECRET_KEY
 
 # django allauth
 LOGIN_REDIRECT_URL = '/account'
