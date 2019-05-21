@@ -18,7 +18,9 @@ class Amount:
     # A class to format the amount.
     # Params (amount)
     def __init__(self, amount):
-        self.pennies = int(float(amount) * 100)
+        self.pennies = float(amount)
+        self.pennies = round(self.pennies) * 100
+        self.pennies = int(self.pennies)
 
     def __str__(self):
         # Format to dollars
@@ -90,7 +92,7 @@ class DonateView(FormView):
 
     # A new customer is making a donation.
     def donation_is_new_customer(self, token, email, name, amount):
-
+        customer = None
         try:
             # Register him as a Stripe Customer first.
             stripe_customer = stripe.Customer.create(
