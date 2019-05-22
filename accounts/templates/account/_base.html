@@ -1,17 +1,20 @@
 {% extends "_base.html" %}
+{% load coderdojochi_extras %}
 
 {% block subheader %}
 {% if user.is_authenticated %}
-  <div class="sub-menu">
-    <nav class="grid-container" role="navigation">
-      <ul class="menu">
-        <li><a href="{% url 'account_logout' %}">Log Out</a></li>
-      </ul>
-    </nav>
-  </div>
+<div class="sub-menu">
+  <nav class="grid-container" role="navigation">
+    <ul class="menu">
+      <li class="{% menu_is_active 'account-payments' 'current' %}"><a href="{% url 'account-payments' %}">Payments</a>
+      </li>
+      <li><a href="{% url 'account_logout' %}">Log Out</a></li>
+    </ul>
+  </nav>
+</div>
 {% endif %}
 {% endblock subheader %}
 
 {% block contained_content %}
-  {% block content_placeholder %}{% endblock %}
+{% block content_placeholder %}{% endblock %}
 {% endblock %}

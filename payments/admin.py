@@ -11,6 +11,7 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     list_display = [
         'id',
+        'stripe_payment_id',
         'email',
         'formatted_amount',
     ]
@@ -22,6 +23,16 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     search_fields = [
         'email'
     ]
+
+    readonly_fields = (
+        'name',
+        'email',
+        'customer',
+        'stripe_customer_id',
+        'stripe_payment_id',
+        'amount',
+        'created_at',
+    )
 
     view_on_site = False
 

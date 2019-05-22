@@ -62,7 +62,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <p><a href="{% url 'welcome' %}?next={% url 'account_home' %}">Add another student</a></p>
+        <p><a href="{% url 'welcome' %}?next={% url 'account-home' %}">Add another student</a></p>
     {% else %}
     <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
     {% endif %}

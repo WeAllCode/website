@@ -1,0 +1,39 @@
+{% extends "account/_base.html" %}
+{% load humanize coderdojochi_extras %}
+
+{% block title %}Donations | {{ block.super }}{% endblock %}
+{% block meta_facebook_title %}My Account | {{ block.super }}{% endblock %}
+{% block meta_twitter_title %}My Account | {{ block.super }}{% endblock %}
+
+{% block body_class %}page-dojo{% endblock %}
+
+
+{% block contained_content %}
+
+<section class="margin-top-3">
+  <h2 class="title">Donations</h2>
+  {% if object_list %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Payment ID</th>
+        <th>Date</th>
+        <th style="text-align:right;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in object_list %}
+      <tr>
+        <td>{{ payment.id }}</td>
+        <td>{{ payment.created_at | date}}</td>
+        <td style="text-align:right;">${{ payment.get_formatted_amount | floatformat:2 | intcomma }}</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">You have no donations yet. <a href="{% url 'donate' %}">Donate now!</a></p>
+  {% endif %}
+</section>
+{% endblock %}

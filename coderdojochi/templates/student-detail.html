@@ -13,7 +13,7 @@
         {% csrf_token %}
         {% bootstrap_form form %}
         <button type="submit" class="button">Update</button>&nbsp;
-        <a href="{% url 'account_home' %}" class="button secondary">Cancel</a>
+        <a href="{% url 'account-home' %}" class="button secondary">Cancel</a>
     </form>
 
     <form action="." onsubmit="return confirm('Are you sure?')" method="post">
@@ -23,4 +23,3 @@
     </form>
 </div>
 {% endblock %}
-

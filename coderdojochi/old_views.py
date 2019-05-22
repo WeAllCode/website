@@ -181,7 +181,7 @@ def faqs(request, template_name="faqs.html"):
 #                 'Profile information saved.'
 #             )
 
-#             return redirect('account_home')
+#             return redirect('account-home')
 
 #         else:
 #             messages.error(
@@ -260,7 +260,7 @@ def faqs(request, template_name="faqs.html"):
 #                 'Profile information saved.'
 #             )
 
-#             return redirect('account_home')
+#             return redirect('account-home')
 
 #         else:
 #             messages.error(
@@ -410,12 +410,12 @@ def student_detail(
         try:
             student = Student.objects.get(id=student_id, is_active=True)
         except ObjectDoesNotExist:
-            return redirect('account_home')
+            return redirect('account-home')
 
         try:
             guardian = Guardian.objects.get(user=request.user, is_active=True)
         except ObjectDoesNotExist:
-            return redirect('account_home')
+            return redirect('account-home')
 
         if not student.guardian == guardian:
             access = False
@@ -425,7 +425,7 @@ def student_detail(
         access = False
 
     if not access:
-        return redirect('account_home')
+        return redirect('account-home')
         messages.error(
             request,
             'You do not have permissions to edit this student.'
@@ -439,13 +439,13 @@ def student_detail(
                 request,
                 f"Student \"{student.first_name} {student.last_name}\" Deleted."
             )
-            return redirect('account_home')
+            return redirect('account-home')
 
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             form.save()
             messages.success(request, 'Student Updated.')
-            return redirect('account_home')
+            return redirect('account-home')
 
     return render(
         request,
@@ -1035,7 +1035,7 @@ def session_donations(request, pk, template_name="session-donations.html"):
             request,
             'You do not have permission to access this page.'
         )
-        return redirect('account_home')
+        return redirect('account-home')
 
     session = get_object_or_404(Session, pk=pk)
 
@@ -1086,7 +1086,7 @@ def meeting_check_in(
             request,
             'You do not have permission to access this page.'
         )
-        return redirect('account_home')
+        return redirect('account-home')
 
     if request.method == 'POST':
         if 'order_id' in request.POST:

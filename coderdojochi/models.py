@@ -36,7 +36,7 @@ class CDCUser(AbstractUser):
         super(CDCUser, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('account_home')
+        return reverse('account-home')
 
 
 def generate_filename(instance, filename):

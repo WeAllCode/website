@@ -21,7 +21,10 @@ class Donation(models.Model):
     stripe_customer_id = models.CharField(
         max_length=350,
     )
-    amount = models.IntegerField()
+    stripe_payment_id = models.CharField(
+        max_length=350,
+    )
+    amount = models.PositiveIntegerField()
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
@@ -34,3 +37,6 @@ class Donation(models.Model):
 
     def get_absolute_url(self):
         return reverse("Donation_detail", kwargs={"pk": self.pk})
+
+    def get_formatted_amount(self):
+        return "{:.2f}".format(self.amount / 100)

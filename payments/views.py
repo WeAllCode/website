@@ -44,7 +44,7 @@ class DonateView(FormView):
 
     # An already registered customer is making a donation
     def donation_is_registered_customer(self, email, name, amount):
-
+        customer = None
         # Get the user from Donation model with email
         user = Donation.objects.filter(email=email).first()
 
@@ -54,16 +54,6 @@ class DonateView(FormView):
         # If the user exists attach it to customer
         if user_email_exists:
             customer = CDCUser.objects.get(email=email)
-
-        # Save the donation to the model.
-        donation = Donation(
-            customer=customer,
-            email=user.email,
-            name=user.name,
-            amount=amount.pennies,
-            stripe_customer_id=user.stripe_customer_id,
-        )
-        donation.save()
 
         try:
             # Charge the user on Stripe.
@@ -75,6 +65,17 @@ class DonateView(FormView):
                 receipt_email=user.email,
                 statement_descriptor='Donation to WeAllCode'
             )
+
+            # Save the donation to the model.
+            donation = Donation(
+                customer=customer,
+                email=user.email,
+                name=user.name,
+                amount=amount.pennies,
+                stripe_customer_id=user.stripe_customer_id,
+                stripe_payment_id=charge.id
+            )
+            donation.save()
 
             # On Charge success alert the user.
             messages.success(
@@ -112,16 +113,6 @@ class DonateView(FormView):
             if user_email_exists:
                 customer = CDCUser.objects.get(email=email)
 
-            # Save the Donation to the model
-            donation = Donation(
-                customer=customer,
-                email=stripe_customer.email,
-                amount=amount.pennies,
-                name=name,
-                stripe_customer_id=stripe_customer.id
-            )
-            donation.save()
-
             # Charge the user.
             charge = stripe.Charge.create(
                 amount=amount.pennies,
@@ -131,6 +122,17 @@ class DonateView(FormView):
                 receipt_email=email,
                 statement_descriptor='Donation to WeAllCode'
             )
+
+            # Save the Donation to the model
+            donation = Donation(
+                customer=customer,
+                email=stripe_customer.email,
+                amount=amount.pennies,
+                name=name,
+                stripe_customer_id=stripe_customer.id,
+                stripe_payment_id=charge.id
+            )
+            donation.save()
 
             messages.success(
                 self.request,

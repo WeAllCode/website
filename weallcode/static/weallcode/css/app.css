@@ -641,6 +641,10 @@ html[data-whatintent='mouse'] .main-menu a:not(.button):hover,
     padding-bottom: calc(1.2rem - 5px);
     border-bottom: 5px solid var(--black);
   }
+
+  .sub-menu .current {
+    border-bottom: 5px solid var(--black);
+  }
 }
 
 

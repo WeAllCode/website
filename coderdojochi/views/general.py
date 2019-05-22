@@ -107,7 +107,7 @@ class WelcomeView(TemplateView):
         ):
             mentor = get_object_or_404(Mentor, user=request.user)
             if mentor.user.first_name:
-                return redirect(next_url if next_url else 'account_home')
+                return redirect(next_url if next_url else 'account-home')
             kwargs['mentor'] = mentor
         return super(WelcomeView, self).dispatch(request, *args, **kwargs)
 
@@ -172,7 +172,7 @@ class WelcomeView(TemplateView):
                 if 'enroll' in request.GET:
                     next_url = f"{next_url}?enroll=True"
             else:
-                next_url = 'account_home' if isinstance(account, Mentor) else 'welcome'
+                next_url = 'account-home' if isinstance(account, Mentor) else 'welcome'
             return redirect(next_url)
 
         return render(request, self.template_name, {
@@ -240,7 +240,7 @@ class WelcomeView(TemplateView):
                     f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
                 )
             if not next_url:
-                next_url = reverse('account_home')
+                next_url = reverse('account-home')
         else:
             # check for next upcoming class
             next_class = Session.objects.filter(
