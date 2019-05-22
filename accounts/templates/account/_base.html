@@ -6,9 +6,12 @@
 <div class="sub-menu">
   <nav class="grid-container" role="navigation">
     <ul class="menu">
-      <li class="{% menu_is_active 'account-payments' 'current' %}"><a href="{% url 'account-payments' %}">Payments</a>
+      <li class="{% menu_is_active 'account-payments' 'current' %}">
+        <a href="{% url 'account-payments' %}">Payments</a>
       </li>
-      <li><a href="{% url 'account_logout' %}">Log Out</a></li>
+      <li>
+        <a href="{% url 'account_logout' %}">Log Out</a>
+      </li>
     </ul>
   </nav>
 </div>
