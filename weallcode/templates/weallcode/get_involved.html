@@ -9,7 +9,7 @@
 {% block subheader %}
 
 {% if messages %}
-  {% include 'weallcode/_messages.html' %}
+{% include 'weallcode/_messages.html' %}
 {% endif %}
 
 <div class="sub-menu">
@@ -36,7 +36,8 @@
     <div class="grid-x">
       <div class="cell large-8 padding-right-2">
         <h1 class="title text-tertiary margin-bottom-2">Get involved</h1>
-        <p>We All Code wouldn't exist without your support! Our teachers, volunteers, and sponsors make it possible for kids to explore their curiosity through coding.</p>
+        <p>We All Code wouldn't exist without your support! Our teachers, volunteers, and sponsors make it possible for
+          kids to explore their curiosity through coding.</p>
       </div>
       <div class="cell large-4 position-relative">
         <div class="aside-title">
@@ -54,7 +55,8 @@
     <div class="grid-x grid-padding-x margin-vertical-3">
       <div class="cell medium-6">
         <div class="binary-drop-left">
-          <img class="width-100" src="{% static 'weallcode/images/photos/make-a-difference.jpg' %}" alt="kid and mentor in class">
+          <img class="width-100" src="{% static 'weallcode/images/photos/make-a-difference.jpg' %}"
+            alt="kid and mentor in class">
         </div>
       </div>
       <div class="cell medium-6">
@@ -63,8 +65,10 @@
         <ul class="list-plus">
           <li class="margin-vertical-1"><strong>Free classes</strong> are open to kids across Chicago</li>
           <li class="margin-vertical-1"><strong>Highly-trained teachers and mentors</strong> teach coding skills</li>
-          <li class="margin-vertical-1">Students are encouraged to <strong>show what they know with real working projects</strong></li>
-          <li class="margin-vertical-1"><strong>Kids work collaboratively</strong>, respect their peers, and have fun</li>
+          <li class="margin-vertical-1">Students are encouraged to <strong>show what they know with real working
+              projects</strong></li>
+          <li class="margin-vertical-1"><strong>Kids work collaboratively</strong>, respect their peers, and have fun
+          </li>
         </ul>
       </div>
     </div>
@@ -82,10 +86,9 @@
     <div class="grid-x margin-vertical-3">
       <div class="cell medium-6 bg-white padding-2">
         <h2 class="title text-primary">Donate to make a difference</h2>
-        <p><strong>Your generous financial support makes coding accessible to kids across Chicago.</strong> Every donation makes a difference!</p>
-        <a href="https://www.patreon.com/weallcode">
-          <img src="{% static 'weallcode/images/patreon-button.png' %}" width="217" alt="become a patron">
-        </a>
+        <p><strong>Your generous financial support makes coding accessible to kids across Chicago.</strong> Every
+          donation makes a difference!</p>
+        <a class="button large" href="{% url 'donate' %}">Donate Now</a> <br>
       </div>
       <div class="cell medium-6 bg-dark-blue text-white padding-2">
         <div class="line bg-primary width-25 margin-bottom-3"></div>
@@ -107,7 +110,10 @@
   <div class="grid-container">
     <div class="text-white text-center">
       <h2 class="title">Sponsorship</h2>
-      <p class="medium-padding-horizontal-3">Help support us in our mission to <strong class="text-secondary">inspire, support, and teach kids STEM skills</strong> through corporate and organizational sponsorship. This can take many forms, and help provide even more opportunities to our kids. To get involved, email us at <a class="text-secondary" href="mailto:hello@weallcode.org">hello@weallcode.org</a>.</p>
+      <p class="medium-padding-horizontal-3">Help support us in our mission to <strong class="text-secondary">inspire,
+          support, and teach kids STEM skills</strong> through corporate and organizational sponsorship. This can take
+        many forms, and help provide even more opportunities to our kids. To get involved, email us at <a
+          class="text-secondary" href="mailto:hello@weallcode.org">hello@weallcode.org</a>.</p>
     </div>
 
     <div class="margin-top-2 grid-x grid-margin-x grid-margin-y text-black">
@@ -118,7 +124,8 @@
           </svg>
           <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
             <h4 class="text-uppercase text-primary font-bold">Volunteer</h4>
-            <p><strong>Volunteer as individuals or a group</strong> to help with classes, programs, or events that benefit kids.</p>
+            <p><strong>Volunteer as individuals or a group</strong> to help with classes, programs, or events that
+              benefit kids.</p>
           </div>
         </div>
       </div>
@@ -129,7 +136,8 @@
           </svg>
           <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
             <h4 class="text-uppercase text-primary font-bold">Locations</h4>
-            <p><strong>Provide locations for events or classes</strong> so kids around the city have access to education.</p>
+            <p><strong>Provide locations for events or classes</strong> so kids around the city have access to
+              education.</p>
           </div>
         </div>
       </div>
@@ -167,7 +175,10 @@
     <div class="grid-x">
       <div class="cell large-8 padding-right-2">
         <h1 class="title text-tertiary margin-bottom-2">Contact Us</h1>
-        <p><strong class="text-secondary">No matter the reason for contacting us, we care about you</strong> and connecting you with the information you need to get involved or learn more about us and what we are doing. If you prefer to email us, feel free to reach out at <a href="mailto:hello@weallcode.org" class="text-secondary">hello@weallcode.org</a></p>
+        <p><strong class="text-secondary">No matter the reason for contacting us, we care about you</strong> and
+          connecting you with the information you need to get involved or learn more about us and what we are doing. If
+          you prefer to email us, feel free to reach out at <a href="mailto:hello@weallcode.org"
+            class="text-secondary">hello@weallcode.org</a></p>
       </div>
       <div class="cell large-4 position-relative">
         <div class="aside-title bg-primary text-white">
@@ -181,17 +192,17 @@
     </div>
 
     <form id="contact-form" method="POST" action="{% url 'weallcode_get_involved' %}#contact-form">
-        {% csrf_token %}
-        <div class="grid-x grid-padding-x margin-vertical-3">
-          {% if messages %}
-            <div class="cell">{% include 'weallcode/_messages.html' %}</div>
-          {% endif %}
-          {{ form.as_grid|safe }}
-          <div class="cell text-center">
-            <button type="submit" class="button padding-horizontal-3">Submit</button>
-          </div>
+      {% csrf_token %}
+      <div class="grid-x grid-padding-x margin-vertical-3">
+        {% if messages %}
+        <div class="cell">{% include 'weallcode/_messages.html' %}</div>
+        {% endif %}
+        {{ form.as_grid|safe }}
+        <div class="cell text-center">
+          <button type="submit" class="button padding-horizontal-3">Submit</button>
         </div>
-      </form>
+      </div>
+    </form>
 
   </div>
 </section>
