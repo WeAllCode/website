@@ -38,8 +38,3 @@ urlpatterns += [
         # path('paypal/', include('paypal.standard.ipn.urls')),
     ])),
 ]
-
-# Stripe specific
-# urlpatterns += [
-#     path('stripe/', include('djstripe.urls', namespace='djstripe')),
-# ]

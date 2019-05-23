@@ -57,27 +57,6 @@ urlpatterns += [
     path('old/faqs/', old_views.faqs, name='faqs'),
 ]
 
-# Donate / Donations
-# urlpatterns += [
-#     path('donate/', include([
-#         # Donation
-#         # /donate/
-#         path('', old_views.donate, name='donate'),
-
-#         # /donate/charge
-#         path('charge/', old_views.donate_charge, name='donate-charge'),
-
-#         # /donate/cancel/
-#         path('cancel/', old_views.donate_cancel, name='donate-cancel'),
-
-#         # /donate/return/
-#         path('return/', old_views.donate_return, name='donate-return'),
-
-#         # /donate/paypal/
-#         path('paypal/', include('paypal.standard.ipn.urls')),
-#     ])),
-# ]
-
 # Login As
 urlpatterns += [
     path('dj-admin/', include('loginas.urls')),
