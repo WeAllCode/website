@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+{% extends "coderdojochi/_base.html" %}
 
 {% load i18n bootstrap3 %}
 
@@ -10,7 +10,7 @@
 <div class="container min-height contact">
     <div class="row">
 		<div class="col-sm-6">
-			<h1 class="title">{% trans "Contact Us" %}</h1>
+			<h1 class="title">Contact Us</h1>
 			<form method="post" action=".">
 				{% csrf_token %}
 				{% bootstrap_form form %}

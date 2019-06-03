@@ -1,37 +1,25 @@
-{% load static %}<!doctype html>
-<html class="no-js" lang="en" dir="ltr">
-<head>
+{% load static meta%}
+<!DOCTYPE html>
+<html lang="en">
+<head {% meta_namespaces %} class="no-js" dir="ltr">
+  {% include "meta/meta.html" %}
+
+  <title>{% if meta and meta.title %}{{ meta.title }}{% else %}{% block title %}We All Code{% endblock title %}{% endif %}</title>
+
+  <link rel="canonical" href="{{ SITE_PROTOCOL }}://{{ SITE_DOMAIN }}{{ request.get_full_path }}" />
+
   <meta charset="utf-8">
-  <title>{% block title %}We All Code{% endblock %}</title>
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta name="description" content="{% block meta_description %}We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.{% endblock %}">
-
-  <!-- Facebook -->
-  <meta property="og:url" content="{{request.scheme}}://{{request.META.HTTP_HOST}}{{ request.get_full_path }}">
-  <meta property="og:site_name" content="We All Code">
-  <meta property="fb:app_id" content="1454178301519376">
-  <meta property="og:title" content="{% block meta_facebook_title %}We All Code{% endblock %}">
-  <meta property="og:description" content="{% block meta_facebook_description %}We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.{% endblock %}">
-  <meta property="og:image" content="{% block meta_facebook_image %}{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'weallcode/images/logo/square/logo-square.png' %}{% endblock %}">
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@weallcode">
-  <meta name="twitter:creator" content="@weallcode">
-  <meta name="twitter:title" content="{% block meta_twitter_title %}We All Code{% endblock %}">
-  <meta name="twitter:description" content="{% block meta_twitter_description %}We All Code is volunteer run nonprofit organization that teaches web, game, and app development to youth ages 7 to 17 free of charge.{% endblock %}">
-  <meta name="twitter:image" content="{% block meta_twitter_image %}{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'weallcode/images/photos/real-coding-skills.jpg' %}{% endblock %}">
-
   {% block extra_meta %}{% endblock %}
 
-  <link rel="shortcut icon" type="image/png" href="{{request.scheme}}://{{request.META.HTTP_HOST}}{% static 'weallcode/images/favicon/favicon-64.png' %}" />
+  <link rel="shortcut icon" type="image/png" href="{% static 'weallcode/images/favicon/favicon-64.png' %}" />
   <meta name="theme-color" content="#426cff">
 
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans&display=swap">
   <link rel="stylesheet" href="{% static 'weallcode/css/foundation.min.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
 
@@ -41,7 +29,7 @@
 </head>
 <body class="{% block page-class %}{% endblock %}">
   <!--[if IE]>
-    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
 
   <div class="app">
@@ -69,9 +57,9 @@
     {% include 'weallcode/_footer.html' %}
   </div>
 
-  <script src="{% static 'weallcode/js/vendor/jquery.js' %}"></script>
-  <script src="{% static 'weallcode/js/vendor/what-input.js' %}"></script>
-  <script src="{% static 'weallcode/js/vendor/foundation.min.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.2.1/what-input.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.1/js/foundation.min.js"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
 
   {% block extra_script %}{% endblock %}

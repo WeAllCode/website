@@ -1,5 +1,9 @@
 from django import forms
+from django.conf import settings
+from django.contrib import messages
 from django.forms import Form
+
+from coderdojochi.util import email
 
 
 class GridForm(Form):
@@ -59,3 +63,17 @@ class ContactForm(GridForm):
         label='Message',
         widget=forms.Textarea(attrs={'placeholder': 'Enter your message'})
     )
+
+    def send_email(self):
+        # send email using the self.cleaned_data dictionary
+        data = self.cleaned_data
+        email(
+            subject=f"{data['name']} | We All Code Contact Form",
+            recipients=[settings.CONTACT_EMAIL],
+            reply_to=[f"{data['name']}<{data['email']}>"],
+            template_name='contact-email',
+            merge_global_data={
+                'interest': data['interest'],
+                'message': data['message']
+            },
+        )

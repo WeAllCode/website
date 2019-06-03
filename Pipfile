@@ -32,6 +32,7 @@ icalendar = "*"
 json-logging-py = "*"
 django-anymail = "*"
 raven = "*"
+django-meta = "*"
 
 [dev-packages]
 pylint = "*"
