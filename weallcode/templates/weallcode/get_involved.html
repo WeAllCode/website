@@ -178,17 +178,17 @@
       </div>
 
       <form id="contact-form" method="POST" action="{% url 'weallcode-get-involved' %}#contact-form">
-          {% csrf_token %}
-          <div class="grid-x grid-padding-x margin-vertical-3">
-            {% if messages %}
-              <div class="cell">{% include 'weallcode/_messages.html' %}</div>
-            {% endif %}
-            {{ form.as_grid|safe }}
-            <div class="cell text-center">
-              <button type="submit" class="button padding-horizontal-3">Submit</button>
-            </div>
+        {% csrf_token %}
+        <div class="grid-x grid-padding-x margin-vertical-3">
+          {% if messages %}
+            <div class="cell">{% include 'weallcode/_messages.html' %}</div>
+          {% endif %}
+          {{ form.as_grid|safe }}
+          <div class="cell text-center">
+            <button type="submit" class="button padding-horizontal-3">Submit</button>
           </div>
-        </form>
+        </div>
+      </form>
 
     </div>
   </section>
