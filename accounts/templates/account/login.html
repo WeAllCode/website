@@ -1,41 +1,50 @@
-{% extends "account/_base.html" %}
-{% load i18n bootstrap3 socialaccount %}
+{% extends "weallcode/_base.html" %}
+{% load static socialaccount %}
 
-{% block title_placeholder %}Login{% endblock %}
+{% block page-class %}page-login{% endblock %}
 
-{% block body_class %}page-login{% endblock %}
+{% block subheader %}
+  {% if messages %}
+    {% include 'weallcode/_messages.html' %}
+  {% endif %}
 
-{% block content_placeholder %}
-<h1 class="title">Login</h1>
+  <div class="sub-menu">
+    <nav class="grid-container" role="navigation">
+      <ul class="menu">
+        <li><a href="{% url 'weallcode-get-involved' %}#volunteer">Volunteer</a></li>
+        <li><a href="{% url 'weallcode-get-involved' %}#donate">Donate</a></li>
+        <li><a href="{% url 'weallcode-get-involved' %}#sponsorship">Sponsorship</a></li>
+        <li><a href="{% url 'weallcode-get-involved' %}#contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </div>
+{% endblock subheader %}
 
-<div class="grid-x margin-top-2">
-    <form action="{{ app_path }}" method="post" id="login-form" class="cell medium-6">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <input type="hidden" name="next" value="{{ next }}" />
-        <button class="button" type="submit">
-            {% trans 'Log in' %} <i class="fas fa-chevron-right margin-left-1"></i>
-        </button>
-    </form>
-    <div class="cell medium-5 medium-offset-1 padding-top-1">
-        <a href="{% provider_login_url "google" %}" class="button secondary">
-            <i class="margin-right-1 fab fa-google"></i> {% trans "Sign in with Google" %} <i class="fas fa-chevron-right margin-left-1"></i>
-        </a>
-        <a href="{% provider_login_url "facebook" method="js_sdk" %}" class="button secondary">
-            <i class="margin-right-1 fab fa-facebook"></i> {% trans "Sign in with Facebook" %} <i class="fas fa-chevron-right margin-left-1"></i>
-        </a>
-        <p>{% trans "Not yet a member" %}? <a href="{% url 'account_signup' %}">{% trans "Register now" %}</a>!</p>
-        <p>{% trans "Forgot your password" %}? <a href="{% url 'account_reset_password' %}">{% trans "Reset it" %}</a>!</p>
+{% block content %}
+
+    <div class="padding-vertical-3">
+        <div class="grid-container">
+            <h1 class="title">Login</h1>
+            <div class="grid-x grid-padding-x">
+                <form action="{{ app_path }}" method="post" id="login-form" class="cell medium-6">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    <button class="button" type="submit">Log in <i class="fas fa-chevron-right margin-left-1"></i>
+                    </button>
+                </form>
+                <div class="cell medium-5 medium-offset-1 padding-top-1">
+                    <a href="{% provider_login_url 'google' %}" class="button secondary">
+                        <i class="margin-right-1 fab fa-google"></i> Sign in with Google <i class="fas fa-chevron-right margin-left-1"></i>
+                    </a>
+                    <a href="{% provider_login_url 'facebook' method='js_sdk' %}" class="button secondary">
+                        <i class="margin-right-1 fab fa-facebook"></i> Sign in with Facebook <i class="fas fa-chevron-right margin-left-1"></i>
+                    </a>
+                    <p>Not yet a member? <a href="{% url 'account_signup' %}">Register now</a>!</p>
+                    <p>Forgot your password? <a href="{% url 'account_reset_password' %}">Reset it</a>!</p>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
-{% endblock %}
-
-
-{% block extra_script %}
-{% providers_media_js %}
-<script>
-    $(function() {
-        $('#id_username').focus();
-    });
-</script>
 {% endblock %}

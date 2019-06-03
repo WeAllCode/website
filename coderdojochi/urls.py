@@ -49,23 +49,69 @@ urlpatterns += [path('account/', include('accounts.urls'))]
 
 # Old General
 urlpatterns += [
-    # /
-    path('old/', HomeView.as_view(), name='home'),
 
-    # About
-    path('old/about/', AboutView.as_view(), name='about'),
+    path('old/', include([
+        # Home
+        path('', HomeView.as_view(), name='home'),
 
-    # Volunteer
-    path('old/volunteer/', VolunteerView.as_view(), name='volunteer'),
+        # About
+        path('about/', AboutView.as_view(), name='about'),
 
-    # Contact
-    path('old/contact/', old_views.contact, name='contact'),
+        # Volunteer
+        path('volunteer/', VolunteerView.as_view(), name='volunteer'),
 
-    # Privacy
-    path('old/privacy/', PrivacyView.as_view(), name='privacy'),
+        # Contact
+        path('contact/', old_views.contact, name='contact'),
 
-    # FAQs
-    path('old/faqs/', old_views.faqs, name='faqs'),
+        # Privacy
+        path('privacy/', PrivacyView.as_view(), name='privacy'),
+
+        # FAQs
+        path('faqs/', old_views.faqs, name='faqs'),
+
+
+        # Meetings
+        path('meetings/', include([
+            # Meetings
+            # /meetings/
+            path('', MeetingsView.as_view(), name='meetings'),
+
+            # Individual Meeting
+            # /meeting/ID/
+            path('<int:pk>/', MeetingDetailView.as_view(), name='meeting-detail'),
+
+            # /meeting/ID/announce/
+            path('<int:pk>/announce/', meeting_announce, name='meeting-announce'),
+
+            # Meeting sign up
+            # /meeting/ID/sign-up/
+            path('<int:pk>/register/', meeting_sign_up, name='meeting-register'),
+
+            # Meeting Calendar
+            # /meeting/ID/calendar/
+            path('<int:pk>/calendar/', MeetingCalendarView.as_view(), name='meeting-calendar'),
+        ])),
+
+        # TODO: Old redirects. Remove by July 2018
+        # Redirect /m/ID/ -> /meeting/ID/
+        path('m/<int:pk>/', MeetingDetailRedirectView.as_view()),
+
+        # TODO: Old redirects. Remove by July 2018
+        path('meeting/', include([
+            # Redirect /meeting/ID/ -> /meetings/ID/
+            path('<int:pk>/', MeetingDetailRedirectView.as_view()),
+
+            # Redirect /meeting/YYYY/MM/DD/SLUG/ID/ -> /meeting/ID/
+            path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', MeetingDetailRedirectView.as_view()),
+
+            # Redirect /meeting/ID/calendar/ -> /classes/ID/calendar/
+            path('<int:pk>/calendar/', MeetingCalendarRedirectView.as_view()),
+        ])),
+
+
+
+    ])),
+
 ]
 
 # Donate / Donations
@@ -248,42 +294,7 @@ urlpatterns += [
 
 # Meetings
 urlpatterns += [
-    path('meetings/', include([
-        # Meetings
-        # /meetings/
-        path('', MeetingsView.as_view(), name='meetings'),
 
-        # Individual Meeting
-        # /meeting/ID/
-        path('<int:pk>/', MeetingDetailView.as_view(), name='meeting-detail'),
-
-        # /meeting/ID/announce/
-        path('<int:pk>/announce/', meeting_announce, name='meeting-announce'),
-
-        # Meeting sign up
-        # /meeting/ID/sign-up/
-        path('<int:pk>/register/', meeting_sign_up, name='meeting-register'),
-
-        # Meeting Calendar
-        # /meeting/ID/calendar/
-        path('<int:pk>/calendar/', MeetingCalendarView.as_view(), name='meeting-calendar'),
-    ])),
-
-    # TODO: Old redirects. Remove by July 2018
-    # Redirect /m/ID/ -> /meeting/ID/
-    path('m/<int:pk>/', MeetingDetailRedirectView.as_view()),
-
-    # TODO: Old redirects. Remove by July 2018
-    path('meeting/', include([
-        # Redirect /meeting/ID/ -> /meetings/ID/
-        path('<int:pk>/', MeetingDetailRedirectView.as_view()),
-
-        # Redirect /meeting/YYYY/MM/DD/SLUG/ID/ -> /meeting/ID/
-        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', MeetingDetailRedirectView.as_view()),
-
-        # Redirect /meeting/ID/calendar/ -> /classes/ID/calendar/
-        path('<int:pk>/calendar/', MeetingCalendarRedirectView.as_view()),
-    ])),
 
 ]
 

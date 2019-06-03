@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-from django.urls import reverse_lazy
-
 import dj_database_url
 import django_heroku
 import raven
@@ -94,6 +92,7 @@ INSTALLED_APPS = [
     'stdimage',
     'import_export',
     'django_nose',
+    'meta',
 
     # apps
     'accounts',
@@ -299,6 +298,27 @@ AUTHENTICATION_BACKENDS = (
 )
 
 AUTH_USER_MODEL = 'coderdojochi.CDCUser'
+
+
+# Django Meta
+META_SITE_PROTOCOL = os.environ.get("META_SITE_PROTOCOL", "https")
+META_SITE_DOMAIN = os.environ.get("META_SITE_DOMAIN", "www.weallcode.org")
+META_SITE_NAME = SITE_NAME
+META_USE_OG_PROPERTIES = True
+META_USE_TWITTER_PROPERTIES = True
+META_USE_GOOGLEPLUS_PROPERTIES = False
+META_USE_TITLE_TAG = False
+META_TWITTER_SITE = os.environ.get("META_TWITTER_SITE", "@weallcode")
+META_FB_APPID = os.environ.get("META_SITE_DOMAIN", "1454178301519376")
+DEFAULT_META_DESCRIPTION = os.environ.get(
+    "DEFAULT_META_DESCRIPTION",
+    (
+        "We All Code is volunteer run nonprofit organization that teaches web, game, "
+        "and app development to youth ages 7 to 17 free of charge."
+    )
+)
+DEFAULT_META_KEYWORDS = os.environ.get("DEFAULT_META_KEYWORDS", "")
+DEFAULT_META_TITLE = os.environ.get("DEFAULT_META_TITLE", "")
 
 
 # Paypal

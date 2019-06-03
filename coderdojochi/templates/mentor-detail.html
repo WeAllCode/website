@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+{% extends "coderdojochi/_base.html" %}
 {% load humanize %}
 
 {% block title %}{{ mentor.user.first_name }} {{ mentor.user.last_name }} | {{ block.super }}{% endblock %}
@@ -22,7 +22,7 @@
     </div>
     <div class="dojo-profile">
         <div class="well well-sm">
-            <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&d=mm{% endif %}" width="283" height="283" class="avatar">
+            <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&d=mm{% endif %}" width="283" height="283" class="avatar" alt="Photo of {{ mentor.user.first_name }} {{ mentor.user.last_name }}">
             <h3 class="title">Joined: {{ mentor.user.date_joined|naturalday|capfirst }}</h3>
         </div>
         {% if user.is_staff %}

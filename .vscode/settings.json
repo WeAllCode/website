@@ -12,6 +12,7 @@
     "**/templates/*": "django-txt",
     "**/requirements{/**,*}.{txt,in}": "pip-requirements"
   },
+  "editor.defaultFormatter": "HookyQR.beautify",
   "emmet.includeLanguages": {
     "django-html": "html"
   },
