@@ -65,7 +65,7 @@
                 <div>{{ next_session.location.name }}<br>{{next_session.location.address}}</div>
                 <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
                 <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">Enroll Now</a>
-                <a href="{% url 'weallcode_programs' %}#classes"><small>View All Classes</small></a>
+                <a href="{% url 'weallcode-programs' %}#classes"><small>View All Classes</small></a>
               </div>
             </div>
           {% endif %}
@@ -88,7 +88,7 @@
         <div class="medium-6 cell">
           <h2 class="title text-primary">Real coding skills for every kid.</h2>
           <p>We help young people from 7-17 envision a future in STEM and gain the coding skills to make it real.</p>
-          <a class="button secondary" href="{% url 'weallcode_programs' %}#courses">View Our Courses</a>
+          <a class="button secondary" href="{% url 'weallcode-programs' %}#courses">View Our Courses</a>
         </div>
       </div>
     </div>
@@ -114,7 +114,7 @@
         <div class="cell medium-7">
           <h2 class="title text-primary">Free coding programs for kids and teens.</h2>
           <p>We All Code lessons teach STEM through experience. With one mentor for every two students, kids can build confidence and get the attention they need to thrive.</p>
-          <a href="{% url 'weallcode_programs' %}" class="button large">See All Programs</a>
+          <a href="{% url 'weallcode-programs' %}" class="button large">See All Programs</a>
         </div>
         <div class="cell medium-5">
           <img class="width-100" src="{% static 'weallcode/images/photos/mentor-ratio.jpg' %}" alt="mentor and student">
@@ -135,7 +135,7 @@
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Volunteers</h6>
             <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-volunteer.jpg' %}">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode_get_involved' %}#volunteer">Volunteer</a>
+              <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#volunteer">Volunteer</a>
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Donors</h6>
             <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-donor.jpg' %}">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-tertiary width-100 margin-top-1" href="{% url 'weallcode_get_involved' %}#donate">Donate</a>
+              <a class="button bg-tertiary width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#donate">Donate</a>
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Sponsors</h6>
             <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-sponsor.jpg' %}">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode_get_involved' %}#sponsor">Sponsor</a>
+              <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#sponsor">Sponsor</a>
             </div>
           </div>
         </div>

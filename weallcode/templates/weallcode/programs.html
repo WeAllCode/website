@@ -8,10 +8,10 @@
 <div class="sub-menu">
   <nav class="grid-container" role="navigation">
     <ul class="menu">
-      <li><a href="{% url 'weallcode_programs' %}#classes">Classes</a></li>
-      <li><a href="{% url 'weallcode_programs' %}#pathways">Pathways</a></li>
-      <li><a href="{% url 'weallcode_programs' %}#courses">Courses</a></li>
-      <li><a href="{% url 'weallcode_programs' %}#summer-camps">Summer Camps</a></li>
+      <li><a href="{% url 'weallcode-programs' %}#classes">Classes</a></li>
+      <li><a href="{% url 'weallcode-programs' %}#pathways">Pathways</a></li>
+      <li><a href="{% url 'weallcode-programs' %}#courses">Courses</a></li>
+      <li><a href="{% url 'weallcode-programs' %}#summer-camps">Summer Camps</a></li>
     </ul>
   </nav>
 </div>
@@ -51,7 +51,7 @@
         {% include "weallcode/snippets/class.html" with session=session %}
       {% endfor %}
     {% else %}
-      <p>There are no upcoming classes at this time. Please <a href="{% url 'weallcode_get_involved' %}#contact">contact us</a> for more information.</p>
+      <p>There are no upcoming classes at this time. Please <a href="{% url 'weallcode-get-involved' %}#contact">contact us</a> for more information.</p>
     {% endif %}
   </div>
 </section>
