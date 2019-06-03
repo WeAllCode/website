@@ -60,8 +60,9 @@
               <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Upcoming class</h6>
               <div class="padding-1 padding-horizontal-2 bg-white">
                 <h4 class="text-blue text-uppercase text-primary"><strong>{{ next_session.course.code  }}</strong></h4>
-                <p><strong>{{ next_session.course.title }}</strong></p>
-                <div class="line bg-secondary width-25 margin-bottom-half"></div>
+                <div><strong>{{ next_session.course.title }}</strong></div>
+                <div>{{ next_session.start_date|date }}</div>
+                <div class="line bg-secondary width-25 margin-vertical-half"></div>
                 <div>{{ next_session.location.name }}<br>{{next_session.location.address}}</div>
                 <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
                 <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">Enroll Now</a>

@@ -64,6 +64,9 @@ def email(
             esp_extra={
                 'merge_field_format': merge_field_format,
                 'categories': [template_name],
+                'asm': {
+                    'group_id': settings.DEFAULT_UNSUB_GROUP
+                }
             },
         )
 
@@ -94,6 +97,7 @@ def email(
                 user.is_active = False
                 user.admin_notes = f"User '{send_attempt.reject_reason}' when checked on {timezone.now()}"
                 user.save()
+
 
 
 def batches(l, n):

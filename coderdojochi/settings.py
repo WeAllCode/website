@@ -324,6 +324,7 @@ ANYMAIL = {
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
+DEFAULT_UNSUB_GROUP = os.environ.get('DEFAULT_UNSUB_GROUP')
 
 
 # Sentry
