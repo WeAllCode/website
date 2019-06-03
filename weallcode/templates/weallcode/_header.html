@@ -3,7 +3,7 @@
 <div class="grid-container">
   <div class="grid-x">
     <div class="cell auto medium-3">
-      <a href="{% url 'weallcode_home' %}">
+      <a href="{% url 'weallcode-home' %}">
         <img class="main-logo" src="{% static 'weallcode/images/logo/horizontal-combo/logo-horizontal-combo.svg' %}" alt="Navigate Home">
       </a>
     </div>
@@ -13,10 +13,10 @@
     <div class="cell show-for-medium medium-9">
       <nav class="padding-vertical-1" role="navigation" aria-label="navigation">
         <ul class="main-menu menu align-right">
-          <li><a class="{% if request.resolver_match.url_name == 'weallcode_our_story' %}current{% endif %}" href="{% url 'weallcode_our_story' %}">Our Story</a></li>
-          <li><a class="{% if request.resolver_match.url_name == 'weallcode_programs' %}current{% endif %}" href="{% url 'weallcode_programs' %}">Programs</a></li>
-          <li><a class="{% if request.resolver_match.url_name == 'weallcode_team' %}current{% endif %}" href="{% url 'weallcode_team' %}">Team</a></li>
-          <li><a class="button {% if request.resolver_match.url_name == 'weallcode_get_involved' %}current{% endif %}" href="{% url 'weallcode_get_involved' %}">Get Involved</a></li>
+          <li><a class="{% if request.resolver_match.url_name == 'weallcode-our-story' %}current{% endif %}" href="{% url 'weallcode-our-story' %}">Our Story</a></li>
+          <li><a class="{% if request.resolver_match.url_name == 'weallcode-programs' %}current{% endif %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
+          <li><a class="{% if request.resolver_match.url_name == 'weallcode-team' %}current{% endif %}" href="{% url 'weallcode-team' %}">Team</a></li>
+          <li><a class="button {% if request.resolver_match.url_name == 'weallcode-get-involved' %}current{% endif %}" href="{% url 'weallcode-get-involved' %}">Get Involved</a></li>
 
           {% if user.is_authenticated %}
           <li><a class="button secondary" href="{% url 'account_home' %}">Account</a></li>
@@ -30,12 +30,12 @@
 </div>
 
 <div class="mobile-nav hide">
-  <a class="{% if request.resolver_match.url_name == 'weallcode_our_story' %}current{% endif %}" href="{% url 'weallcode_our_story' %}">Our Story</a>
-  <a class="{% if request.resolver_match.url_name == 'weallcode_programs' %}current{% endif %}" href="{% url 'weallcode_programs' %}">Programs</a>
-  <a class="{% if request.resolver_match.url_name == 'weallcode_team' %}current{% endif %}" href="{% url 'weallcode_team' %}">Team</a>
+  <a class="{% if request.resolver_match.url_name == 'weallcode-our-story' %}current{% endif %}" href="{% url 'weallcode-our-story' %}">Our Story</a>
+  <a class="{% if request.resolver_match.url_name == 'weallcode-programs' %}current{% endif %}" href="{% url 'weallcode-programs' %}">Programs</a>
+  <a class="{% if request.resolver_match.url_name == 'weallcode-team' %}current{% endif %}" href="{% url 'weallcode-team' %}">Team</a>
 
   <div class="margin-top-1">
-    <a class="button {% if request.resolver_match.url_name == 'weallcode_get_involved' %}current{% endif %}" href="{% url 'weallcode_get_involved' %}">Get Involved</a>
+    <a class="button {% if request.resolver_match.url_name == 'weallcode-get-involved' %}current{% endif %}" href="{% url 'weallcode-get-involved' %}">Get Involved</a>
   </div>
   <div>
     {% if user.is_authenticated %}
