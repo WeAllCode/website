@@ -33,6 +33,9 @@
     },
     "SENDGRID_API_KEY": {
       "required": true
+    },
+    "SENDGRID_UNSUB_CLASSANNOUNCE": {
+      "required": true
     }
   },
   "formation": {
