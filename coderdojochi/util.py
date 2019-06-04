@@ -23,6 +23,7 @@ def email(
     preheader=None,
     recipients=[],
     reply_to=None,
+    unsub_group_id=None,
 ):
 
     if not (subject and template_name and recipients):
@@ -41,6 +42,7 @@ def email(
     merge_global_data['company_name'] = settings.SITE_NAME
     merge_global_data['site_url'] = settings.SITE_URL
     merge_global_data['preheader'] = preheader
+    merge_global_data['unsub_group_id'] = unsub_group_id
 
     body = render_to_string(f"{template_name}.html", merge_global_data)
 
@@ -52,6 +54,16 @@ def email(
         if merge_field_format.format(key) in body:
             final_merge_global_data[key] = "" if val is None else str(val)
 
+    esp_extra={
+        'merge_field_format': merge_field_format,
+        'categories': [template_name],
+    }
+
+    if unsub_group_id:
+        esp_extra['asm'] = {
+            'group_id': unsub_group_id,
+        }
+
     for recipients_batch in batches(recipients, batch_size):
         msg = AnymailMessage(
             subject=subject,
@@ -61,13 +73,7 @@ def email(
             reply_to=reply_to,
             merge_data=merge_data,
             merge_global_data=final_merge_global_data,
-            esp_extra={
-                'merge_field_format': merge_field_format,
-                'categories': [template_name],
-                'asm': {
-                    'group_id': settings.DEFAULT_UNSUB_GROUP
-                }
-            },
+            esp_extra=esp_extra,
         )
 
         msg.content_subtype = "html"

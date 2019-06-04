@@ -1209,6 +1209,7 @@ def session_announce_mentors(request, pk):
             merge_global_data=merge_global_data,
             recipients=recipients,
             preheader='Help us make a huge difference! A brand new class was just announced.',
+            unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
         )
 
         session_obj.announced_date_mentors = timezone.now()
@@ -1281,6 +1282,7 @@ def session_announce_guardians(request, pk):
             merge_global_data=merge_global_data,
             recipients=recipients,
             preheader="We're super excited to bring you another class date. Sign up to reserve your spot",
+            unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
         )
 
         session_obj.announced_date_guardians = timezone.now()

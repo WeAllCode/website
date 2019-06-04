@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 from weallcode.forms import ContactForm
 
 from coderdojochi.models import Mentor, Session
-from coderdojochi.util import email, marketing_email
+from coderdojochi.util import email
 
 
 class HomeView(TemplateView):
@@ -16,12 +16,6 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-
-        email(
-            subject=f"Hey There!",
-            template_name='hey',
-            recipients=['daniel.m.conrad@gmail.com'],
-        )
 
         sessions = Session.objects.filter(
             is_active=True,
