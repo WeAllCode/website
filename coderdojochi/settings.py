@@ -344,7 +344,7 @@ ANYMAIL = {
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
-UNSUB_CLASSANNOUNCE = int(os.environ.get('SENDGRID_UNSUB_CLASSANNOUNCE'))
+SENDGRID_UNSUB_CLASSANNOUNCE = int(os.environ.get('SENDGRID_UNSUB_CLASSANNOUNCE'))
 
 
 # Sentry
