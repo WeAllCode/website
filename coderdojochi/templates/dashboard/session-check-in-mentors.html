@@ -70,7 +70,9 @@
                     <thead>
                         <tr>
                             <th class="col-sm-1"></th>
-                            <th class="col-sm-4">Mentor Name</th>
+                            <th class="col-sm-2">Name</th>
+                            <th class="col-sm-2">Email</th>
+                            <th class="col-sm-2">Phone</th>
                             <th class="col-sm-1">Age</th>
                             <th class="col-sm-1">Gender</th>
                             {% if active_session %}<th class="text-right">Action</th>{% endif %}
@@ -84,6 +86,8 @@
                             <td class="vert-align">
                               <strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}
                             </td>
+                            <td class="vert-align">{{ order.mentor.user.email }}</td>
+                            <td class="vert-align">{{ order.mentor.phone }}</td>
                             <td class="vert-align">-</td>
                             <td class="vert-align">-</td>
                             {% if active_session %}
