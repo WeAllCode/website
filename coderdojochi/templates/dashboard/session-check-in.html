@@ -217,11 +217,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if order.alternate_guardian %}
-                                            -
-                                        {% else %}
-                                            {{ order.guardian.user.email }}
-                                        {% endif %}
+                                        {{ order.guardian.user.email }}
                                     </td>
                                     <td>
                                         {{ order.student.school_name }}
