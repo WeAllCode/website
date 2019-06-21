@@ -188,6 +188,7 @@
                                 <th class="col-sm-1 text-right">Age</th>
                                 <th class="col-sm-2">Guardian Name</th>
                                 <th class="col-sm-2">Guardian Email</th>
+                                <th class="col-sm-2">Guardian Phone</th>
                                 <th class="col-sm-3">School</th>
                                 <th class="col-sm-2 text-right">{% if not active_session %}Checkin Date{% endif %}</th>
                                 <th class="col-sm-1 text-right"><abbr title="Number Attended"># A</abbr></th>
@@ -218,6 +219,9 @@
                                     </td>
                                     <td>
                                         {{ order.guardian.user.email }}
+                                    </td>
+                                    <td>
+                                        {{ order.guardian.phone }}
                                     </td>
                                     <td>
                                         {{ order.student.school_name }}
