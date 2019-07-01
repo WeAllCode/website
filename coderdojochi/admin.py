@@ -484,6 +484,7 @@ class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = [
         'code',
         'title',
+        'course_type',
         'slug',
         'created_at',
         'updated_at',
@@ -491,6 +492,7 @@ class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     list_filter = [
         'code',
+        'course_type',
     ]
 
     ordering = [
