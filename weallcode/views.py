@@ -8,7 +8,7 @@ from django.views.generic import FormView, TemplateView
 
 from meta.views import MetadataMixin
 
-from coderdojochi.models import Mentor, Session
+from coderdojochi.models import Course, Mentor, Session
 
 from .forms import ContactForm
 
@@ -78,18 +78,69 @@ class ProgramsView(MetadataMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ProgramsView, self).get_context_data(**kwargs)
 
-        sessions = Session.objects.filter(
+        # WEEKEND CLASSES
+        weekend_classes = Session.objects.filter(
             is_active=True,
-            end_date__gte=timezone.now()
+            end_date__gte=timezone.now(),
+            course__course_type=Course.WEEKEND,
         ).order_by('start_date')
 
         if (
             not self.request.user.is_authenticated or
             not self.request.user.role == 'mentor'
         ):
-            sessions = sessions.filter(is_public=True)
+            weekend_classes = weekend_classes.filter(is_public=True)
 
-        context['sessions'] = sessions
+        context['weekend_classes'] = weekend_classes
+
+        # SUMMER CAMP CLASSES
+        summer_camp_classes = Session.objects.filter(
+            is_active=True,
+            end_date__gte=timezone.now(),
+            course__course_type=Course.CAMP,
+        ).order_by('start_date')
+
+        if (
+            not self.request.user.is_authenticated or
+            not self.request.user.role == 'mentor'
+        ):
+            summer_camp_classes = summer_camp_classes.filter(is_public=True)
+
+        context['summer_camp_classes'] = summer_camp_classes
+
+        return context
+
+
+class ProgramsSummerCampsView(MetadataMixin, TemplateView):
+    template_name = "weallcode/programs-summer-camps.html"
+    title = f"Summer Camps | {settings.SITE_NAME}"
+    description = (
+        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
+        "youth ages 7 to 17 free of charge."
+    )
+    image = "weallcode/images/photos/real-coding-skills.jpg"
+    twitter_card = "summary_large_image"
+    twitter_site = "@weallcode"
+    twitter_creator = "@weallcode"
+    url = reverse_lazy('weallcode-programs-summer-camps')
+
+    def get_context_data(self, **kwargs):
+        context = super(ProgramsSummerCampsView, self).get_context_data(**kwargs)
+
+        # SUMMER CAMP CLASSES
+        summer_camp_classes = Session.objects.filter(
+            is_active=True,
+            end_date__gte=timezone.now(),
+            course__course_type=Course.CAMP,
+        ).order_by('start_date')
+
+        if (
+            not self.request.user.is_authenticated or
+            not self.request.user.role == 'mentor'
+        ):
+            summer_camp_classes = summer_camp_classes.filter(is_public=True)
+
+        context['summer_camp_classes'] = summer_camp_classes
 
         return context
 

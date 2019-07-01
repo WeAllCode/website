@@ -4,11 +4,38 @@
   "pk": 1,
   "fields": {
     "code": "HTML 101",
+    "course_type": "WE",
     "title": "Choose Your Own Adventure",
     "slug": "choose-your-own-adventure",
     "description": "<p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>\r\n\r\n<p>By the end of the session, students will understand how the language HTML, CSS, and Javascript work together to build the web. Students will develop an understanding of how HTML is used to define the structure of web pages. In keeping with We All Code's philosophy of learning-by-doing, students will use their knowledge to hack together their own \"Choose Your Own Adventure\" game.</p>",
     "created_at": "2013-01-01T00:00:00-06:00",
     "updated_at": "2013-01-01T00:00:00-06:00"
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 2,
+  "fields": {
+    "code": "2020 Summer Camp #1",
+    "course_type": "CA",
+    "title": "Choose Your Own Adventure",
+    "slug": "choose-your-own-adventure",
+    "description": "<p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>\r\n\r\n<p>By the end of the session, students will understand how the language HTML, CSS, and Javascript work together to build the web. Students will develop an understanding of how HTML is used to define the structure of web pages. In keeping with We All Code's philosophy of learning-by-doing, students will use their knowledge to hack together their own \"Choose Your Own Adventure\" game.</p>",
+    "created_at": "2019-01-01T00:00:00-06:00",
+    "updated_at": "2019-01-01T00:00:00-06:00"
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 3,
+  "fields": {
+    "code": "2020 Summer Camp #2",
+    "course_type": "CA",
+    "title": "Build your own game in JS",
+    "slug": "build-your-own-game-in-js",
+    "description": "<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p><p>Students work side-by-side with professionals in the field of computer science during this intensive, five-day workshops.They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p><p>Every session provides students with an opportunity to take a hands-on approach to their projects.Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p><p>Only 20 Chicago youth will be in each cohort to allow a high level of individual mentor-to-student attention.</p><p>Tuition includes all camp workshops, equipment, and any materials needed.</p>",
+    "created_at": "2019-01-01T00:00:00-06:00",
+    "updated_at": "2019-01-01T00:00:00-06:00"
   }
 }
 ]

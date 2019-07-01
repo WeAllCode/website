@@ -346,10 +346,24 @@ class Student(models.Model):
 
 
 class Course(models.Model):
+    WEEKEND = 'WE'
+    CAMP = 'CA'
+
+    COURSE_TYPE_CHOICES = [
+        (WEEKEND, 'Weekend'),
+        (CAMP, 'Camp'),
+    ]
+
     code = models.CharField(
         max_length=255,
         blank=True,
         null=True,
+    )
+    course_type = models.CharField(
+        'type',
+        max_length=2,
+        choices=COURSE_TYPE_CHOICES,
+        default=WEEKEND,
     )
     title = models.CharField(
         max_length=255,
@@ -410,13 +424,15 @@ class Location(models.Model):
         return self.name
 
 
-GENDER_LIMITATION_CHOICES = (
-    ('male', 'Male'),
-    ('female', 'Female'),
-)
-
-
 class Session(models.Model):
+    MALE = 'male'
+    FEMALE = 'female'
+
+    GENDER_LIMITATION_CHOICES = (
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+    )
+
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
@@ -999,14 +1015,16 @@ class EquipmentType(models.Model):
         return self.name
 
 
-EQUIPTMENTCONDITIONS = (
-    ('working', 'Working'),
-    ('issue', 'Issue'),
-    ('unusable', 'Unusable'),
-)
-
-
 class Equipment(models.Model):
+    WORKING = 'working'
+    ISSUE = 'issue'
+    UNUSABLE = 'unusable'
+    EQUIPTMENTCONDITIONS = [
+        (WORKING, 'Working'),
+        (ISSUE, 'Issue'),
+        (UNUSABLE, 'Unusable'),
+    ]
+
     uuid = models.CharField(
         max_length=255,
         verbose_name="UUID",
