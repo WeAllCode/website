@@ -4,7 +4,7 @@
   "pk": 1,
   "fields": {
     "mentor": 1,
-    "session": 1,
+    "session": 2,
     "check_in": "2016-05-07T10:00:00-06:00",
     "affiliate": "",
     "order_number": "",
