@@ -277,10 +277,10 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
             return redirect(session_obj.get_absolute_url())
 
         if request.POST['waitlist'] == 'student':
-            account = Student.objects.get(id=request.POST['account'])
+            account = Student.objects.get(id=request.POST['account_id'])
             waitlist_attr = 'waitlist_students'
         else:
-            account = Guardian.objects.get(id=request.POST['account'])
+            account = Guardian.objects.get(id=request.POST['account_id'])
             waitlist_attr = 'waitlist_guardians'
 
         if request.POST['remove'] == 'true':
