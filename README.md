@@ -6,8 +6,8 @@ We, the community and staff, have been building a custom Django application to h
 
 1. Fork and clone this repository locally.
 1. Download and install Docker for [Mac][docker-mac] or [Windows][docker-windows].
-1. Navigate into the project directory via terminal and run `docker-compose build`.
 1. Create a new file names `.env` based on `.env.sample`. Create values for any instances of `REPLACEME`.
+1. Navigate into the project directory via terminal and run `docker-compose build`.
 1. Once complete, run `docker-compose up`.
 1. Load up your browser and go to http://127.0.0.1:8000.
 1. When you are done, you can stop the project via `ctrl+c`
