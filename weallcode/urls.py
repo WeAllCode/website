@@ -1,4 +1,5 @@
 from django.conf.urls import include
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 from django.views.generic import RedirectView
 
@@ -10,8 +11,13 @@ from .views import (
     PrivacyView,
     ProgramsSummerCampsView,
     ProgramsView,
+    StaticSitemapView,
     TeamView,
 )
+
+sitemaps = {
+    'static': StaticSitemapView,
+}
 
 urlpatterns = [
     path('', HomeView.as_view(), name='weallcode-home'),
@@ -27,4 +33,6 @@ urlpatterns = [
 
     # Redirect /summer-camps/ to /programs/summer-camps/
     path('summer-camps/', RedirectView.as_view(pattern_name='weallcode-programs-summer-camps')),
+
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]

@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from django.conf import settings
-from django.contrib import messages
+from django.contrib import messages, sitemaps
 from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
@@ -238,3 +240,18 @@ class CreditsView(MetadataMixin, TemplateView):
     twitter_site = "@weallcode"
     twitter_creator = "@weallcode"
     url = reverse_lazy('weallcode-credits')
+
+
+class StaticSitemapView(sitemaps.Sitemap):
+    priority = 0.5
+    changefreq = 'daily'
+
+    def items(self):
+        return ['weallcode-home', 'weallcode-our-story', 'weallcode-programs', 'weallcode-programs-summer-camps',
+                'weallcode-team', 'weallcode-get-involved', 'weallcode-privacy', 'weallcode-credits']
+
+    def location(self, item):
+        return reverse(item)
+
+    def lastmod(self, item):
+        return datetime.now()
