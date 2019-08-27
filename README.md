@@ -6,10 +6,11 @@ We, the community and staff, have been building a custom Django application to h
 
 1. Fork and clone this repository locally.
 1. Download and install Docker for [Mac][docker-mac] or [Windows][docker-windows].
-1. Create a new file names `.env` based on `.env.sample`. Create values for any instances of `REPLACEME`.
+1. Create a new file names `.env` based on `.env.sample`. Create values for any instances of `CHANGEME`.
 1. Run the following to get a random Django secret key.
+  
 ```sh
-python -c "import string,random; uni=string.ascii_letters+string.digits+string.punctuation; print repr(''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))]))"
+python -c "import string,random; uni=string.ascii_letters+string.digits+string.punctuation; print(repr(''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))])))"
 ```
 1. Enter the output inside the `.env` file.
 1. Navigate into the project directory via terminal and run `docker-compose build`.
