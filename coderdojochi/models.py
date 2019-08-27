@@ -479,10 +479,11 @@ class Session(models.Model):
         null=True,
         help_text="Basic HTML allowed"
     )
-    teacher = models.ForeignKey(
+    instructor = models.ForeignKey(
         Mentor,
-        related_name="session_teacher",
         on_delete=models.CASCADE,
+        related_name="session_instructor",
+        limit_choices_to={''}
     )
     waitlist_mentors = models.ManyToManyField(
         Mentor,

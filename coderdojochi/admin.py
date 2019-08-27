@@ -534,7 +534,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_select_related = [
         'course',
         'location',
-        'teacher',
+        'instructor',
     ]
 
     ordering = [
@@ -549,7 +549,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     autocomplete_fields = [
         'course',
         'location',
-        'teacher',
+        'instructor',
     ]
 
     search_fields = [
@@ -572,7 +572,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'mentor_end_date',
                 'capacity',
                 'mentor_capacity',
-                'teacher',
+                'instructor',
                 'is_active',
                 'is_public',
             ),
