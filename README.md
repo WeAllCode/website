@@ -14,8 +14,8 @@ python -c "import string,random; uni=string.ascii_letters+string.digits+string.p
 ```
 
 1. Enter the output inside the `.env` file for `SECRET_KEY`. Be sure to include the double quotes (`"`) around the key. It'll look like the following `SECRET_KEY="<unique-key-here>"`.
-1. Navigate into the project directory via terminal and run `docker-compose build`.
-1. Once complete, run `docker-compose up`.
+1. Navigate into the project directory via terminal and run `docker-compose build`
+1. Once complete, run `docker-compose up`
 1. Load up your browser and go to http://127.0.0.1:8000.
 1. When you are done, you can stop the project via `ctrl+c`
 
