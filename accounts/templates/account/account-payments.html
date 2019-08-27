@@ -16,7 +16,6 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Payment ID</th>
         <th>Date</th>
         <th style="text-align:right;">Amount</th>
       </tr>
@@ -24,11 +23,9 @@
     <tbody>
       {% for payment in object_list %}
       <tr>
-        <td>{{ payment.id }}</td>
-        <td>{{ payment.created_at | date}}</td>
+        <td>{{ payment.created_at }}</td>
         <td style="text-align:right;">${{ payment.get_formatted_amount | floatformat:2 | intcomma }}</td>
       </tr>
-
       {% endfor %}
     </tbody>
   </table>

@@ -10,9 +10,9 @@ class DonationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_per_page = 10
 
     list_display = [
-        'id',
         'stripe_payment_id',
         'email',
+        'customer',
         'formatted_amount',
     ]
 

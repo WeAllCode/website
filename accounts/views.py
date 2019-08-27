@@ -1,15 +1,17 @@
-from coderdojochi.forms import CDCModelForm, GuardianForm, MentorForm
-from coderdojochi.models import (Guardian, MeetingOrder, Mentor, MentorOrder,
-                                 Order, Student)
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
+
 from payments.models import Donation
+
+from coderdojochi.forms import CDCModelForm, GuardianForm, MentorForm
+from coderdojochi.models import Guardian, MeetingOrder, Mentor, MentorOrder, Order, Student
 
 User = get_user_model()
 
@@ -242,7 +244,8 @@ class AccountHomeView(TemplateView):
 class PaymentsView(ListView):
     model = Donation
     template_name = "account/account-payments.html"
-    # queryset = Donation.objects.filter(customer='ACME Publishing')
 
     def get_queryset(self):
-        return Donation.objects.filter(customer=self.request.user).order_by('-created_at')
+        return Donation.objects.filter(
+            Q(customer=self.request.user) | Q(email=self.request.user.email)
+        ).order_by('-created_at')
