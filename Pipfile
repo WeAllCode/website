@@ -34,6 +34,7 @@ json-logging-py = "*"
 django-anymail = "*"
 raven = "*"
 django-meta = "*"
+sqreen = "*"
 
 [dev-packages]
 pylint = "*"
