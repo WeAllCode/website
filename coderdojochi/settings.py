@@ -30,6 +30,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False) == 'True'
 
+# reCAPTCHA
+RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
+RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
+RECAPTCHA_REQUIRED_SCORE = os.environ.get('RECAPTCHA_REQUIRED_SCORE', 0.85)
+
 # SECURITY
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
@@ -47,8 +52,8 @@ if SECURE_SSL_REDIRECT:
     CSRF_COOKIE_HTTPONLY = True
     # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
-    # TODO: set this to 60 seconds first and then to 518400 once you prove the former works
-    SECURE_HSTS_SECONDS = 60
+    # set this to 60 seconds first and then to 518400 once you prove the former works
+    SECURE_HSTS_SECONDS = 518400
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
     SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', True) == 'True'
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
@@ -93,6 +98,7 @@ INSTALLED_APPS = [
     'import_export',
     'django_nose',
     'meta',
+    'captcha',
 
     # apps
     'accounts',
@@ -301,24 +307,24 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 
 # Django Meta
-META_SITE_PROTOCOL = os.environ.get("META_SITE_PROTOCOL", "https")
-META_SITE_DOMAIN = os.environ.get("META_SITE_DOMAIN", "www.weallcode.org")
+META_SITE_PROTOCOL = os.environ.get('META_SITE_PROTOCOL', 'https')
+META_SITE_DOMAIN = os.environ.get('META_SITE_DOMAIN', 'www.weallcode.org')
 META_SITE_NAME = SITE_NAME
 META_USE_OG_PROPERTIES = True
 META_USE_TWITTER_PROPERTIES = True
 META_USE_GOOGLEPLUS_PROPERTIES = False
 META_USE_TITLE_TAG = False
-META_TWITTER_SITE = os.environ.get("META_TWITTER_SITE", "@weallcode")
-META_FB_APPID = os.environ.get("META_SITE_DOMAIN", "1454178301519376")
+META_TWITTER_SITE = os.environ.get('META_TWITTER_SITE', '@weallcode')
+META_FB_APPID = os.environ.get('META_SITE_DOMAIN', '1454178301519376')
 DEFAULT_META_DESCRIPTION = os.environ.get(
-    "DEFAULT_META_DESCRIPTION",
+    'DEFAULT_META_DESCRIPTION',
     (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, "
-        "and app development to youth ages 7 to 17 free of charge."
+        'We All Code is volunteer run nonprofit organization that teaches web, game, '
+        'and app development to youth ages 7 to 17 free of charge.'
     )
 )
-DEFAULT_META_KEYWORDS = os.environ.get("DEFAULT_META_KEYWORDS", "")
-DEFAULT_META_TITLE = os.environ.get("DEFAULT_META_TITLE", "")
+DEFAULT_META_KEYWORDS = os.environ.get('DEFAULT_META_KEYWORDS', '')
+DEFAULT_META_TITLE = os.environ.get('DEFAULT_META_TITLE', '')
 
 
 # Paypal
@@ -341,7 +347,7 @@ SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapte
 ANYMAIL = {
     'SENDGRID_API_KEY': os.environ.get('SENDGRID_API_KEY'),
 }
-EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
 SENDGRID_UNSUB_CLASSANNOUNCE = int(os.environ.get('SENDGRID_UNSUB_CLASSANNOUNCE'))
