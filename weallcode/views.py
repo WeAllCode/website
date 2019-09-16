@@ -179,7 +179,8 @@ class TeamView(MetadataMixin, TemplateView):
             else:
                 volunteers += [volunteer]
 
-        context['mentors'] = mentors
+        context['top_mentors'] = mentors[0:8]
+        context['other_mentors'] = mentors[8:]
         context['top_volunteers'] = volunteers[0:8]
         context['other_volunteers'] = volunteers[8:]
         return context
