@@ -189,16 +189,27 @@
       </div>
 
       <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
-        {% for mentor in mentors %}
+        {% for mentor in top_mentors %}
           <div class="cell small-6 medium-3">
             {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
           </div>
         {% endfor %}
       </div>
+
+      <div class="mentor-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
+        {% for mentor in other_mentors %}
+          <div class="cell small-6 medium-3">
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if other_mentors %}
+      <div class="mentor-toggle text-center margin-vertical-2">
+        <button class="button secondary" data-toggler=".mentor-toggle" data-toggle-class="hide">See More Mentors</button>
+      </div>
+      {% endif %}
     </div>
-    <p class="text-center">
-      <a href="button tertiary" href="{% url 'weallcode-team' %}#all-mentors"></a>
-    </p>
   </section>
 
   <!-- Volunteers -->
@@ -220,16 +231,18 @@
       <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
         {% for volunteer in top_volunteers %}
           <div class="cell small-6 medium-3">
-            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name image=volunteer.avatar %}
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.avatar sublabel="classes" %}
           </div>
         {% endfor %}
       </div>
 
       <div class="volunteer-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
         {% for volunteer in other_volunteers %}
+          {% if volunteer.session_count %}
           <div class="cell small-6 medium-3">
-            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name image=volunteer.avatar %}
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.avatar sublabel="classes" %}
           </div>
+          {% endif %}
         {% endfor %}
       </div>
 
