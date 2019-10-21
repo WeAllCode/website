@@ -42,10 +42,14 @@ admin.autodiscover()
 urlpatterns = []
 
 # General Pages
-urlpatterns += [path('', include('weallcode.urls'))]
+urlpatterns += [
+    path('', include('weallcode.urls')),
+]
 
 # Accounts
-urlpatterns += [path('account/', include('accounts.urls'))]
+urlpatterns += [
+    path('account/', include('accounts.urls')),
+]
 
 # Old General
 urlpatterns += [
@@ -92,11 +96,11 @@ urlpatterns += [
             path('<int:pk>/calendar/', MeetingCalendarView.as_view(), name='meeting-calendar'),
         ])),
 
-        # TODO: Old redirects. Remove by July 2018
+        # FIXME: Old redirects. Remove by July 2018
         # Redirect /m/ID/ -> /meeting/ID/
         path('m/<int:pk>/', MeetingDetailRedirectView.as_view()),
 
-        # TODO: Old redirects. Remove by July 2018
+        # FIXME: Old redirects. Remove by July 2018
         path('meeting/', include([
             # Redirect /meeting/ID/ -> /meetings/ID/
             path('<int:pk>/', MeetingDetailRedirectView.as_view()),
@@ -107,8 +111,6 @@ urlpatterns += [
             # Redirect /meeting/ID/calendar/ -> /classes/ID/calendar/
             path('<int:pk>/calendar/', MeetingCalendarRedirectView.as_view()),
         ])),
-
-
 
     ])),
 
@@ -210,7 +212,7 @@ urlpatterns += [
         path('<int:pk>/sign-up/<int:student_id>/', SessionSignUpView.as_view(), name='session-sign-up'),
     ])),
 
-    # TODO: Old redirects. Remove by July 2018
+    # FIXME: Old redirects. Remove by July 2018
     path('class/', include([
         # Redirect /class/ -> /classes/
         path('', SessionsRedirectView.as_view()),
@@ -240,7 +242,7 @@ urlpatterns += [
         path('<int:pk>/calendar/', SessionCalendarRedirectView.as_view()),
     ])),
 
-    # TODO: Old redirects. Remove by July 2018
+    # FIXME: Old redirects. Remove by July 2018
     # Redirect /c/ID/ -> /class/ID/
     path('c/<int:pk>/', SessionDetailRedirectView.as_view()),
 ]
@@ -264,7 +266,7 @@ urlpatterns += [
         path('<int:pk>/approve-avatar/', old_views.mentor_approve_avatar, name='mentor-approve-avatar'),
     ])),
 
-    # TODO: Old redirects. Remove by July 2018
+    # FIXME: Old redirects. Remove by July 2018
     # Redirect /mentor/* -> /mentors/*
     path('mentor/', include([
         path('', RedirectView.as_view(pattern_name='mentors')),
@@ -294,7 +296,6 @@ urlpatterns += [
 
 # Meetings
 urlpatterns += [
-
 
 ]
 
