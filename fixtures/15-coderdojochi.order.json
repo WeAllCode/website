@@ -8,11 +8,12 @@
     "student": 1,
     "is_active": true,
     "ip": "",
+    "check_in": null,
     "alternate_guardian": "",
     "affiliate": "",
     "order_number": "",
-    "created_at": "2016-05-08T13:07:25.346-06:00",
-    "updated_at": "2016-05-08T13:07:25.346-06:00",
+    "created_at": "2016-05-08T19:07:25.346Z",
+    "updated_at": "2016-05-08T19:07:25.346Z",
     "week_reminder_sent": false,
     "day_reminder_sent": false
   }
@@ -26,12 +27,12 @@
     "student": 2,
     "is_active": false,
     "ip": "",
-    "check_in": "2016-05-07T13:07:35-06:00",
+    "check_in": "2016-05-07T19:07:35Z",
     "alternate_guardian": "",
     "affiliate": "",
     "order_number": "",
-    "created_at": "2016-05-08T13:07:41.042-06:00",
-    "updated_at": "2016-05-08T13:07:41.042-06:00",
+    "created_at": "2016-05-08T19:07:41.042Z",
+    "updated_at": "2016-05-08T19:07:41.042Z",
     "week_reminder_sent": false,
     "day_reminder_sent": false
   }
@@ -45,12 +46,12 @@
     "student": 3,
     "is_active": true,
     "ip": "",
-    "check_in": "2016-05-07T10:07:50-06:00",
+    "check_in": "2016-05-07T16:07:50Z",
     "alternate_guardian": "",
     "affiliate": "",
     "order_number": "",
-    "created_at": "2016-05-08T13:07:57.868-06:00",
-    "updated_at": "2016-05-08T13:07:57.868-06:00",
+    "created_at": "2016-05-08T19:07:57.868Z",
+    "updated_at": "2016-05-08T19:07:57.868Z",
     "week_reminder_sent": false,
     "day_reminder_sent": false
   }

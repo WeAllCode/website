@@ -5,15 +5,15 @@
   "fields": {
     "mentor": 1,
     "session": 2,
-    "check_in": "2016-05-07T10:00:00-06:00",
+    "is_active": true,
+    "ip": "",
+    "check_in": "2016-05-07T16:00:00Z",
     "affiliate": "",
     "order_number": "",
-    "ip": "",
+    "created_at": "2016-05-08T19:07:25.346Z",
+    "updated_at": "2016-05-08T19:07:25.346Z",
     "week_reminder_sent": true,
-    "day_reminder_sent": true,
-    "is_active": true,
-    "created_at": "2016-05-08T13:07:25.346-06:00",
-    "updated_at": "2016-05-08T13:07:25.346-06:00"
+    "day_reminder_sent": true
   }
 }
 ]
