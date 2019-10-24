@@ -549,7 +549,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     autocomplete_fields = [
         'course',
         'location',
-        'instructor',
+        # 'instructor',
     ]
 
     search_fields = [

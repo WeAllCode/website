@@ -142,10 +142,10 @@
     <h3 class="title text-secondary">About the instructor</h3>
     <div class="grid-x instructor grid-margin-x grid-margin-y margin-top-2">
       <div class="cell small-4 medium-3 image">
-        <a href="{% url 'mentor-detail' session.instructor.id %}"><img class="width-100 thumbnail" src="{% if session.instructor.avatar %}{{ session.instructor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}" alt="Photo of session.instructor.user.first_name }} {{ session.instructor.last_name }}"></a>
+        <a href="{% url 'mentor-detail' session.instructor.id %}"><img class="width-100 thumbnail" src="{% if session.instructor.avatar %}{{ session.instructor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}" alt="Photo of session.instructor }}"></a>
       </div>
       <div class="cell small-8 medium-9 padding-top-1">
-        <h4 class="subtitle">{{ session.instructor.user.first_name }} {{ session.instructor.last_name }}</h4>
+        <h4 class="subtitle">{{ session.instructor }}</h4>
         <p>{{ session.instructor.bio|truncatechars:120 }}</p>
         <p><a href="{% url 'mentor-detail' session.instructor.id %}">Learn more about {{ session.instructor.user.first_name }}.</a></p>
       </div>
