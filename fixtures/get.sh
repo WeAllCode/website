@@ -25,5 +25,5 @@ models=(
 
 for i in "${!models[@]}"
 do
-    heroku run --app production-wac python -W ignore manage.py dumpdata "${models[$i]}" --indent 2 -- > "`printf %02d $i`-${models[$i]}.json"
+    docker-compose run --rm app python -W ignore manage.py dumpdata "${models[$i]}" --indent 2 > "`printf %02d $i`-${models[$i]}.json"
 done

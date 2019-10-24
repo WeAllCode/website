@@ -1,7 +1,7 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from django.contrib.auth import get_user_model
 
-from coderdojochi.models import CDCUser
-
+User = get_user_model()
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
@@ -33,10 +33,10 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
             # email = sociallogin.account.extra_data['email'].lower()
             # email_address = EmailAddress.objects.get(email__iexact=email)
             email = sociallogin.account.extra_data['email'].lower()
-            user = CDCUser.objects.get(email__iexact=email)
+            user = User.objects.get(email__iexact=email)
 
         # if it does not, let allauth take care of this new social account
-        except CDCUser.DoesNotExist:
+        except User.DoesNotExist:
             return
 
         # if it does, connect this new social login to the existing user

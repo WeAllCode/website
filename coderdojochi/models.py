@@ -12,13 +12,14 @@ from django.utils.translation import ugettext as _
 
 from stdimage.models import StdImageField
 
-ROLE_CHOICES = (
-    ('mentor', 'mentor'),
-    ('guardian', 'guardian'),
-)
-
 
 class CDCUser(AbstractUser):
+
+    ROLE_CHOICES = (
+        ('mentor', 'mentor'),
+        ('guardian', 'guardian'),
+    )
+
     role = models.CharField(
         choices=ROLE_CHOICES,
         max_length=10,
@@ -54,8 +55,8 @@ class RaceEthnicity(models.Model):
     )
 
     class Meta:
-        verbose_name = _("race ethnicity")
-        verbose_name_plural = _("race ethnicities")
+        verbose_name = _("Race/Ethnicity")
+        verbose_name_plural = _("Race/Ethnicities")
 
     def __str__(self):
         return self.race_ethnicity
@@ -479,10 +480,11 @@ class Session(models.Model):
         null=True,
         help_text="Basic HTML allowed"
     )
-    teacher = models.ForeignKey(
+    instructor = models.ForeignKey(
         Mentor,
-        related_name="session_teacher",
         on_delete=models.CASCADE,
+        related_name="session_instructor",
+        limit_choices_to={'user__groups__name': "Instructor"},
     )
     waitlist_mentors = models.ManyToManyField(
         Mentor,

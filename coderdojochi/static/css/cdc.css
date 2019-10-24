@@ -15,16 +15,16 @@
 */
 .container,
 .row,
-.page-class-detail .teachers .teacher {
+.page-class-detail .instructors .instructor {
     zoom: 1;
 }
 
 .container:before,
 .row:before,
-.page-class-detail .teachers .teacher:before,
+.page-class-detail .instructors .instructor:before,
 .container:after,
 .row:after,
-.page-class-detail .teachers .teacher:after {
+.page-class-detail .instructors .instructor:after {
     display: block;
     overflow: hidden;
 
@@ -35,7 +35,7 @@
 
 .container:after,
 .row:after,
-.page-class-detail .teachers .teacher:after {
+.page-class-detail .instructors .instructor:after {
     clear: both;
 }
 
@@ -714,7 +714,7 @@ a.unstyled {
 }
 
 .row,
-.page-class-detail .teachers .teacher {
+.page-class-detail .instructors .instructor {
     margin: 10px 0;
 }
 
@@ -1627,18 +1627,18 @@ a.icon-action:hover {
     background: #F8F8F8;
 }
 
-.page-class-detail .teachers {
+.page-class-detail .instructors {
     overflow: hidden;
 
     margin-bottom: 40px;
 }
 
-.page-class-detail .teachers .teacher {
+.page-class-detail .instructors .instructor {
     margin: 0 0 10px 0;
 }
 
 @media (min-width: 768px) {
-    .page-class-detail .teachers .teacher .image {
+    .page-class-detail .instructors .instructor .image {
         float: left;
 
         width: 49.15254%;
@@ -1646,13 +1646,13 @@ a.icon-action:hover {
     }
 }
 
-.page-class-detail .teachers .teacher .image img {
+.page-class-detail .instructors .instructor .image img {
     width: 100%;
     height: auto;
 }
 
 @media (min-width: 768px) {
-    .page-class-detail .teachers .teacher .info {
+    .page-class-detail .instructors .instructor .info {
         float: right;
 
         width: 49.15254%;
@@ -1660,7 +1660,7 @@ a.icon-action:hover {
     }
 }
 
-.page-class-detail .teachers .teacher .info .subtitle {
+.page-class-detail .instructors .instructor .info .subtitle {
     margin: 0 0 30px;
 }
 

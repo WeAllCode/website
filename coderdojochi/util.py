@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -9,6 +10,8 @@ from anymail.exceptions import AnymailAPIError
 from anymail.message import AnymailMessage
 
 logger = logging.getLogger(__name__)
+
+User = get_user_model()
 
 
 def email(
@@ -98,12 +101,10 @@ def email(
                     f"user: {recipient}, {timezone.now()}"
                 )
 
-                from coderdojochi.models import CDCUser
-                user = CDCUser.objects.get(email=recipient)
+                user = User.objects.get(email=recipient)
                 user.is_active = False
                 user.admin_notes = f"User '{send_attempt.reject_reason}' when checked on {timezone.now()}"
                 user.save()
-
 
 
 def batches(l, n):
