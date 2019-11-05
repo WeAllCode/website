@@ -35,6 +35,7 @@ django-anymail = "*"
 raven = "*"
 django-meta = "*"
 sqreen = "*"
+stripe = "*"
 
 [dev-packages]
 pylint = "*"
