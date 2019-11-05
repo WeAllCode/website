@@ -48,7 +48,7 @@ class SessionFactory(factory.DjangoModelFactory):
     mentor_start_date = datetime.now(utc)
     mentor_end_date = datetime.now(utc)
     password = ''
-    teacher = factory.SubFactory(MentorFactory)
+    instructor = factory.SubFactory(MentorFactory)
 
     class Meta:
         model = Session

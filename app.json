@@ -36,6 +36,15 @@
     },
     "SENDGRID_API_KEY": {
       "required": true
+    },
+    "SENDGRID_UNSUB_CLASSANNOUNCE": {
+      "required": true
+    },
+    "RECAPTCHA_PUBLIC_KEY": {
+      "required": true
+    },
+    "RECAPTCHA_PRIVATE_KEY": {
+      "required": true
     }
   },
   "formation": {

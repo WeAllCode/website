@@ -1,5 +1,7 @@
-{% extends "_base.html" %}
-{% load coderdojochi_extras %}
+{% extends "coderdojochi/_base.html" %}
+
+{% comment %} Need to do title this way since allauth doesn't support django-meta {% endcomment %}
+{% block title %}{{ title_placeholder }} | {{ block.super }}{% endblock %}
 
 {% block subheader %}
 {% if user.is_authenticated %}

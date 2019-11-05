@@ -2,246 +2,259 @@
 
 {% load static %}
 
-{% block title %}Team | {{ block.super }}{% endblock %}
-
 {% block page-class %}team{% endblock %}
 
 {% block subheader %}
-<div class="sub-menu">
-  <nav class="grid-container" role="navigation">
-    <ul class="menu">
-      <li><a href="{% url 'weallcode_team' %}#leadership">Leadership</a></li>
-      <li><a href="{% url 'weallcode_team' %}#board">Board</a></li>
-      <li><a href="{% url 'weallcode_team' %}#associate-board">Associate Board</a></li>
-      <li><a href="{% url 'weallcode_team' %}#head-teachers">Head Teachers</a></li>
-      <li><a href="{% url 'weallcode_team' %}#mentors">Mentors</a></li>
-      <li><a href="{% url 'weallcode_team' %}#volunteers">Volunteers</a></li>
-    </ul>
-  </nav>
-</div>
+  <div class="sub-menu">
+    <nav class="grid-container" role="navigation">
+      <ul class="menu">
+        <li><a href="{% url 'weallcode-team' %}#leadership">Leadership</a></li>
+        <li><a href="{% url 'weallcode-team' %}#board">Board</a></li>
+        <li><a href="{% url 'weallcode-team' %}#associate-board">Associate Board</a></li>
+        <li><a href="{% url 'weallcode-team' %}#instructors">Instructors</a></li>
+        <li><a href="{% url 'weallcode-team' %}#mentors">Mentors</a></li>
+        <li><a href="{% url 'weallcode-team' %}#volunteers">Volunteers</a></li>
+      </ul>
+    </nav>
+  </div>
 {% endblock subheader %}
 
 {% block content %}
+  {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-team.jpg" alt="our team" %}
 
-{% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-team.jpg" alt="our team" %}
-
-<section class="padding-vertical-3">
-  <div class="grid-container">
-    <div class="grid-x">
-      <div class="cell large-7 text-center medium-text-left">
-        <h1 class="title text-tertiary margin-bottom-2">The Team</h1>
-        <p>Our dedicated team works hard to keep We All Code classes safe, supportive, and largely free. Our leaders, teachers, mentors, and volunteers work to help every child explore their kid creativity through coding.</p>
-      </div>
-      <div class="cell large-offset-1 large-4 position-relative">
-        <div class="aside-title">
-          <div>
-            <span class="text-tertiary display-inline-block">Team work </span>
-            <span class="text-tertiary display-inline-block">makes </span>
-            <span class="text-secondary display-inline-block">the dream </span>
-            <span class="text-white display-inline-block">work</span>
+  <section class="padding-vertical-3">
+    <div class="grid-container">
+      <div class="grid-x">
+        <div class="cell large-7 text-center medium-text-left">
+          <h1 class="title text-tertiary margin-bottom-2">The Team</h1>
+          <p>Our dedicated team works hard to keep We All Code classes safe, supportive, and largely free. Our leaders, instructors, mentors, and volunteers work to help every child explore their kid creativity through coding.</p>
+        </div>
+        <div class="cell large-offset-1 large-4 position-relative">
+          <div class="aside-title">
+            <div>
+              <span class="text-tertiary display-inline-block">Team work </span>
+              <span class="text-tertiary display-inline-block">makes </span>
+              <span class="text-secondary display-inline-block">the dream </span>
+              <span class="text-white display-inline-block">work</span>
+            </div>
+            <div class="line width-25 bg-primary margin-top-1"></div>
           </div>
-          <div class="line width-25 bg-primary margin-top-1"></div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Leadership -->
-<section id="leadership" class="bg-dark-blue text-center padding-vertical-3">
-  <div class="grid-container">
-    <div class="text-white">
-      <h2 class="title">Leadership</h2>
-      <p class="medium-padding-horizontal-3">Our full-time leadership staff works tirelessly toward one purpose: bringing STEM learning opportunities to every kid in Chicago and giving them the tools they need to excel.</p>
-    </div>
+  <!-- Leadership -->
+  <section id="leadership" class="bg-dark-blue text-center padding-vertical-3">
+    <div class="grid-container">
+      <div class="text-white">
+        <h2 class="title">Leadership</h2>
+        <p class="medium-padding-horizontal-3">Our full-time leadership staff works tirelessly toward one purpose: bringing STEM learning opportunities to every kid in Chicago and giving them the tools they need to excel.</p>
+      </div>
 
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
-      <div class="cell small-6">
-        {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Ali Karbassi" title="Founder, CEO of We All Code" color="secondary" static_image="weallcode/images/team/staff/ali-karbassi.jpg" %}
-      </div>
-      <div class="cell small-6">
-        {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Brian Pastor" title="Chief Operating Officer" color="secondary" static_image="weallcode/images/team/staff/brian-pastor.jpg" %}
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Board -->
-<section id="board" class="text-center padding-vertical-3 bg-light-gray">
-  <div class="grid-container">
-    <h2 class="title text-tertiary">Board</h2>
-    <p class="medium-padding-horizontal-3">Our dedicated board includes leaders from diverse backgrounds and fields across Chicago.</p>
-
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Ali Karbassi" static_image="weallcode/images/team/board/ali-karbassi.jpg" title="<strong>President</strong><br>CEO, We All Code" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Brett Kellgren" static_image="weallcode/images/team/board/brett-kellgren.jpg" title="<strong>Vice President</strong><br>Lead UI Developer, SpotHero" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="David Kam" static_image="weallcode/images/team/board/david-kam.jpg" title="<strong>Secretary</strong><br>MultiValue Software Engineer, Zumasys" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Adam Lurie" static_image="weallcode/images/team/board/adam-lurie.jpg" title="<strong>Treasurer</strong><br>Teacher, Barry Elementary" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Michael Cotter" static_image="weallcode/images/team/board/michael-cotter.jpg" title="<strong>Director</strong><br>Asst. Director of Program Development, Greater West Town Community Development Project" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Christopher Miller" static_image="weallcode/images/team/board/christopher-miller.jpg" title="<strong>Director</strong><br>Partner, MACCART Enterprises" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Cynthia Tao" static_image="weallcode/images/team/board/cynthia-tao.jpg" title="<strong>Director</strong><br>Retired, IBM" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Kimberly Richardson" static_image="weallcode/images/team/board/kimberly-richardson.jpg" title="<strong>Director</strong><br>Retired, Nonprofit Management" color="tertiary" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Kristin Berggren" static_image="weallcode/images/team/board/kristin-berggren.jpg" title="<strong>Director</strong><br>Creative Director, Sapient Razorfish" color="tertiary" %}
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Associate Board -->
-<section id="associate-board" class="text-center padding-vertical-3">
-  <div class="grid-container">
-    <h2 class="title text-primary">Associate Board</h2>
-    <p class="medium-padding-horizontal-3">Our Associate Board of young professionals fuels our big ideas and is dedicated to We All Code's growth.</p>
-
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Alexandra<br>Rodriguez-Beuerman" title="Chair of the Board" static_image="weallcode/images/team/associate-board/alexandra-rodriguez-beuerman.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Ovini Silva" title="Vice Chair of the Board" static_image="weallcode/images/team/associate-board/ovini-silva.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Matt Felz" title="Treasurer" static_image="weallcode/images/team/associate-board/matt-felz.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Jordan Polonsky" title="Secretary" static_image="weallcode/images/team/associate-board/jordan-polonsky.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Abril Vela" title="Director" static_image="weallcode/images/team/associate-board/abril-vela.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Daniel Conrad" title="Director" static_image="weallcode/images/team/associate-board/daniel-conrad.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Ignacio Martinez" title="Director" static_image="weallcode/images/team/associate-board/ignacio-martinez.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Ken Ballard" title="Director" static_image="weallcode/images/team/associate-board/ken-ballard.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Peter Binggeser" title="Director" static_image="weallcode/images/team/associate-board/peter-binggeser.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Saundra Castaneda" title="Director" static_image="weallcode/images/team/associate-board/saundra-castaneda.jpg" color="primary" %}
-      </div>
-      <div class="cell small-6 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name="Tatyana Shestopalova" title="Director" static_image="weallcode/images/team/associate-board/tatyana-shestopalova.jpg" color="primary" %}
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Head Teachers -->
-<section id="head-teachers" class="bg-dark-blue text-center padding-vertical-3">
-  <div class="grid-container">
-    <div class="text-white">
-      <h2 class="title">Head Teachers</h2>
-      <p class="medium-padding-horizontal-3">These highly-trained volunteers come from tech backgrounds and are skilled in creating a supportive, experiential learning environment to help every kid code.</p>
-    </div>
-
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Ali Karbassi" static_image="weallcode/images/team/teachers/ali-karbassi.jpg" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Brett Kellgren" static_image="weallcode/images/team/teachers/brett-kellgren.jpg" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="David Kam" static_image="weallcode/images/team/teachers/david-kam.jpg" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Adam Lurie" static_image="weallcode/images/team/teachers/adam-lurie.jpg" %}
-      </div>
-      <div class="cell small-6 medium-4">
-        {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Daniel Conrad" static_image="weallcode/images/team/teachers/daniel-conrad.jpg" %}
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Mentors -->
-<section id="mentors" class="padding-vertical-3 bg-light-gray">
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x">
-      <div class="cell medium-5">
-        <h2 class="title text-tertiary">Mentorship makes all the difference</h2>
-        <p>Our volunteer mentors help students feel supported as they learn to code. We're proud of our exceptional 2-to-1 mentor-to-student ratio, ensuring your kids will always have a friendly face to turn to with questions.</p>
-      </div>
-      <div class="cell medium-offset-1 medium-6">
-        <div class="binary-drop-right">
-          <img class="width-100" src="{% static 'weallcode/images/photos/mentoring.jpg' %}" alt="mentors">
+      <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
+        <div class="cell small-6">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Ali Karbassi" title="Founder, CEO of We All Code" color="secondary" static_image="weallcode/images/team/staff/ali-karbassi.jpg" %}
+        </div>
+        <div class="cell small-6">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Brian Pastor" title="Chief Operating Officer" color="secondary" static_image="weallcode/images/team/staff/brian-pastor.jpg" %}
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
-      {% for mentor in mentors %}
+  <!-- Board -->
+  <section id="board" class="text-center padding-vertical-3 bg-light-gray">
+    <div class="grid-container">
+      <h2 class="title text-tertiary">Board</h2>
+      <p class="medium-padding-horizontal-3">Our dedicated board includes leaders from diverse backgrounds and fields across Chicago.</p>
+
+      <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Ali Karbassi" static_image="weallcode/images/team/board/ali-karbassi.jpg" title="<strong>President</strong><br>CEO, We All Code" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Brett Kellgren" static_image="weallcode/images/team/board/brett-kellgren.jpg" title="<strong>Vice President</strong><br>Lead UI Developer, SpotHero" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="David Kam" static_image="weallcode/images/team/board/david-kam.jpg" title="<strong>Secretary</strong><br>MultiValue Software Engineer, Zumasys" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Adam Lurie" static_image="weallcode/images/team/board/adam-lurie.jpg" title="<strong>Treasurer</strong><br>Teacher, Barry Elementary" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Michael Cotter" static_image="weallcode/images/team/board/michael-cotter.jpg" title="<strong>Director</strong><br>Asst. Director of Program Development, Greater West Town Community Development Project" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Christopher Miller" static_image="weallcode/images/team/board/christopher-miller.jpg" title="<strong>Director</strong><br>Partner, MACCART Enterprises" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Cynthia Tao" static_image="weallcode/images/team/board/cynthia-tao.jpg" title="<strong>Director</strong><br>Retired, IBM" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Kimberly Richardson" static_image="weallcode/images/team/board/kimberly-richardson.jpg" title="<strong>Director</strong><br>Retired, Nonprofit Management" color="tertiary" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Kristin Berggren" static_image="weallcode/images/team/board/kristin-berggren.jpg" title="<strong>Director</strong><br>Creative Director, Sapient Razorfish" color="tertiary" %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Associate Board -->
+  <section id="associate-board" class="text-center padding-vertical-3">
+    <div class="grid-container">
+      <h2 class="title text-primary">Associate Board</h2>
+      <p class="medium-padding-horizontal-3">Our Associate Board of young professionals fuels our big ideas and is dedicated to We All Code's growth.</p>
+
+      <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
         <div class="cell small-6 medium-3">
-          {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Alexandra Rodriguez&#8209;Beuerman" title="Chair of the Board" static_image="weallcode/images/team/associate-board/alexandra-rodriguez-beuerman.jpg" color="primary" %}
         </div>
-      {% endfor %}
-    </div>
-  </div>
-  <p class="text-center">
-    <a href="button tertiary" href="{% url 'weallcode_team' %}#all-mentors"></a>
-  </p>
-</section>
-
-<!-- Volunteers -->
-<section id="volunteers" class="padding-vertical-3">
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x">
-      <div class="cell show-for-large large-6">
-        <div class="binary-drop-left">
-          <img class="width-100" src="{% static 'weallcode/images/photos/volunteering.jpg' %}" alt="volunteers">
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Ovini Silva" title="Vice Chair of the Board" static_image="weallcode/images/team/associate-board/ovini-silva.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Matt Felz" title="Treasurer" static_image="weallcode/images/team/associate-board/matt-felz.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Jordan Polonsky" title="Secretary" static_image="weallcode/images/team/associate-board/jordan-polonsky.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Daniel Conrad" title="Director" static_image="weallcode/images/team/associate-board/daniel-conrad.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Ignacio Martinez" title="Director" static_image="weallcode/images/team/associate-board/ignacio-martinez.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Ken Ballard" title="Director" static_image="weallcode/images/team/associate-board/ken-ballard.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Peter Binggeser" title="Director" static_image="weallcode/images/team/associate-board/peter-binggeser.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Saundra Castaneda" title="Director" static_image="weallcode/images/team/associate-board/saundra-castaneda.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Tatyana Shestopalova" title="Director" static_image="weallcode/images/team/associate-board/tatyana-shestopalova.jpg" color="primary" %}
+        </div>
+        <div class="cell small-6 medium-3">
+          {% include "weallcode/snippets/team_member.html" with is_small=True name="Abril Vela" title="Director" static_image="weallcode/images/team/associate-board/abril-vela.jpg" color="primary" %}
         </div>
       </div>
-      <div class="cell large-offset-1 large-5">
-        <h2 class="title text-primary">Volunteering for a better tomorrow</h2>
-        <p>Volunteers make our mission a reality! We rely on them to keep sessions running smoothly. Interested in volunteering?</p>
-        <a class="button large" href="{% url 'account_signup' %}">Join Us Now!</a>
+    </div>
+  </section>
+
+  <!-- Instructors -->
+  <section id="instructors" class="bg-dark-blue text-center padding-vertical-3">
+    <div class="grid-container">
+      <div class="text-white">
+        <h2 class="title">Instructors</h2>
+        <p class="medium-padding-horizontal-3">These highly-trained volunteers come from tech backgrounds and are skilled in creating a supportive, experiential learning environment to help every kid code.</p>
+      </div>
+
+      <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Ali Karbassi" static_image="weallcode/images/team/instructors/ali-karbassi.jpg" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="David Kam" static_image="weallcode/images/team/instructors/david-kam.jpg" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Daniel Conrad" static_image="weallcode/images/team/instructors/daniel-conrad.jpg" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Matthew Felz" static_image="weallcode/images/team/instructors/matthew-felz.jpg" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Keanan Koppenhaver" static_image="weallcode/images/team/instructors/keanan-koppenhaver.jpg" %}
+        </div>
+        <div class="cell small-6 medium-4">
+          {% include "weallcode/snippets/team_member.html" with is_on_dark=True name="Saba Jamalian" static_image="weallcode/images/team/instructors/saba-jamalian.jpg" %}
+        </div>
       </div>
     </div>
+  </section>
 
-    <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
-      {% for volunteer in top_volunteers %}
-        <div class="cell small-6 medium-3">
-          {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name image=volunteer.avatar %}
+  <!-- Mentors -->
+  <section id="mentors" class="padding-vertical-3 bg-light-gray">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="cell medium-5">
+          <h2 class="title text-tertiary">Mentorship makes all the difference</h2>
+          <p>Our volunteer mentors help students feel supported as they learn to code. We're proud of our exceptional 2-to-1 mentor-to-student ratio, ensuring your kids will always have a friendly face to turn to with questions.</p>
         </div>
-      {% endfor %}
-    </div>
-
-    <div class="volunteer-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
-      {% for volunteer in other_volunteers %}
-        <div class="cell small-6 medium-3">
-          {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name image=volunteer.avatar %}
+        <div class="cell medium-offset-1 medium-6">
+          <div class="binary-drop-right">
+            <img class="width-100" src="{% static 'weallcode/images/photos/mentoring.jpg' %}" alt="mentors">
+          </div>
         </div>
-      {% endfor %}
-    </div>
+      </div>
 
-    {% if other_volunteers %}
-    <div class="volunteer-toggle text-center margin-vertical-2">
-      <button class="button secondary" data-toggler=".volunteer-toggle" data-toggle-class="hide">See More Volunteers</button>
-    </div>
-    {% endif %}
+      <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
+        {% for mentor in top_mentors %}
+          <div class="cell small-6 medium-3">
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
+          </div>
+        {% endfor %}
+      </div>
 
-  </div>
-</section>
+      <div class="mentor-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
+        {% for mentor in other_mentors %}
+          <div class="cell small-6 medium-3">
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if other_mentors %}
+      <div class="mentor-toggle text-center margin-vertical-2">
+        <button class="button secondary" data-toggler=".mentor-toggle" data-toggle-class="hide">See More Mentors</button>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Volunteers -->
+  <section id="volunteers" class="padding-vertical-3">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="cell show-for-large large-6">
+          <div class="binary-drop-left">
+            <img class="width-100" src="{% static 'weallcode/images/photos/volunteering.jpg' %}" alt="volunteers">
+          </div>
+        </div>
+        <div class="cell large-offset-1 large-5">
+          <h2 class="title text-primary">Volunteering for a better tomorrow</h2>
+          <p>Volunteers make our mission a reality! We rely on them to keep sessions running smoothly. Interested in volunteering?</p>
+          <a class="button large" href="{% url 'account_signup' %}">Join Us Now!</a>
+        </div>
+      </div>
+
+      <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
+        {% for volunteer in top_volunteers %}
+          <div class="cell small-6 medium-3">
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.avatar sublabel="classes" %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="volunteer-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
+        {% for volunteer in other_volunteers %}
+          {% if volunteer.session_count %}
+          <div class="cell small-6 medium-3">
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.avatar sublabel="classes" %}
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if other_volunteers %}
+      <div class="volunteer-toggle text-center margin-vertical-2">
+        <button class="button secondary" data-toggler=".volunteer-toggle" data-toggle-class="hide">See More Volunteers</button>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
 {% endblock %}

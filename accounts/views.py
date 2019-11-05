@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -10,10 +11,40 @@ from django.views.generic.list import ListView
 
 from payments.models import Donation
 
+from allauth.account.views import LoginView as AllAuthLoginView
+from allauth.account.views import SignupView as AllAuthSignupView
+from meta.views import MetadataMixin
+
 from coderdojochi.forms import CDCModelForm, GuardianForm, MentorForm
 from coderdojochi.models import Guardian, MeetingOrder, Mentor, MentorOrder, Order, Student
 
 User = get_user_model()
+
+
+class SignupView(MetadataMixin, AllAuthSignupView):
+    template_name = 'account/signup.html'
+    title = f"Sign up | {settings.SITE_NAME}"
+    description = (
+        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
+        "youth ages 7 to 17 free of charge."
+    )
+    image = "weallcode/images/photos/real-coding-skills.jpg"
+    twitter_card = "summary_large_image"
+    twitter_site = "@weallcode"
+    twitter_creator = "@weallcode"
+
+
+class LoginView(MetadataMixin, AllAuthLoginView):
+    template_name = 'account/login.html'
+    title = f"Login | {settings.SITE_NAME}"
+    description = (
+        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
+        "youth ages 7 to 17 free of charge."
+    )
+    image = "weallcode/images/photos/real-coding-skills.jpg"
+    twitter_card = "summary_large_image"
+    twitter_site = "@weallcode"
+    twitter_creator = "@weallcode"
 
 
 @method_decorator(login_required, name='dispatch')

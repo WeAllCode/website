@@ -80,6 +80,7 @@ class SendReminders(CronJobBase):
             merge_data=merge_data,
             recipients=recipients,
             preheader='Your class is just a few days away!',
+            unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
         )
 
         for order in orders_within_a_week:
@@ -123,6 +124,7 @@ class SendReminders(CronJobBase):
             merge_data=merge_data,
             recipients=recipients,
             preheader='Your class is just hours away!',
+            unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
         )
 
         for order in orders_within_a_day:
@@ -169,6 +171,7 @@ class SendReminders(CronJobBase):
                 merge_data=merge_data,
                 recipients=recipients,
                 preheader='The class is just a few days away!',
+                unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
             )
 
             session.mentors_week_reminder_sent = True
@@ -210,6 +213,7 @@ class SendReminders(CronJobBase):
                 merge_data=merge_data,
                 recipients=recipients,
                 preheader='The class is just a few hours away!',
+                unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
             )
 
             session.mentors_day_reminder_sent = True

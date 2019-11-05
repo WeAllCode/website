@@ -1,0 +1,14 @@
+[
+{
+  "model": "coderdojochi.meetingtype",
+  "pk": 1,
+  "fields": {
+    "code": "",
+    "title": "Introductory Meeting",
+    "slug": "introductory-meeting",
+    "description": "<p>This will be an introduction meeting. We will be going over our progress, our future, and how you can help!</p>\r\n\r\n<p>Please bring something you want to write on.</p>\r\n\r\n<p>Do you like kids? Do you like helping kids learn? We All Code is the best of both: a free computer club for kids interested in learning how to code.</p>\r\n\r\n<p>Everybody is welcome! No technical skills necessary.</p>\r\n\r\n<p>If you are interested in helping out, please sign up and tell your friends! We are so excited for so many passionate people!</p>",
+    "created_at": "2013-01-01T06:00:00Z",
+    "updated_at": "2013-01-01T06:00:00Z"
+  }
+}
+]

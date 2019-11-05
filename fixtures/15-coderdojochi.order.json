@@ -1,0 +1,59 @@
+[
+{
+  "model": "coderdojochi.order",
+  "pk": 1,
+  "fields": {
+    "guardian": 1,
+    "session": 2,
+    "student": 1,
+    "is_active": true,
+    "ip": "",
+    "check_in": null,
+    "alternate_guardian": "",
+    "affiliate": "",
+    "order_number": "",
+    "created_at": "2016-05-08T19:07:25.346Z",
+    "updated_at": "2016-05-08T19:07:25.346Z",
+    "week_reminder_sent": false,
+    "day_reminder_sent": false
+  }
+},
+{
+  "model": "coderdojochi.order",
+  "pk": 2,
+  "fields": {
+    "guardian": 1,
+    "session": 2,
+    "student": 2,
+    "is_active": false,
+    "ip": "",
+    "check_in": "2016-05-07T19:07:35Z",
+    "alternate_guardian": "",
+    "affiliate": "",
+    "order_number": "",
+    "created_at": "2016-05-08T19:07:41.042Z",
+    "updated_at": "2016-05-08T19:07:41.042Z",
+    "week_reminder_sent": false,
+    "day_reminder_sent": false
+  }
+},
+{
+  "model": "coderdojochi.order",
+  "pk": 3,
+  "fields": {
+    "guardian": 1,
+    "session": 2,
+    "student": 3,
+    "is_active": true,
+    "ip": "",
+    "check_in": "2016-05-07T16:07:50Z",
+    "alternate_guardian": "",
+    "affiliate": "",
+    "order_number": "",
+    "created_at": "2016-05-08T19:07:57.868Z",
+    "updated_at": "2016-05-08T19:07:57.868Z",
+    "week_reminder_sent": false,
+    "day_reminder_sent": false
+  }
+}
+]

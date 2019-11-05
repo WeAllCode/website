@@ -154,7 +154,8 @@
                 <th rowspan="2" class="col-sm-2">Date</th>
                 <th rowspan="2" class="col-sm-1 text-right">S. Time</th>
                 <th rowspan="2" class="col-sm-1 text-right">E. Time</th>
-                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Class Name</th>
+                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Course</th>
+                <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Instructor</th>
                 <th rowspan="2" class="col-sm-3 hidden-xs hidden-sm">Location</th>
                 <th rowspan="2" class="hidden-xs hidden-sm"></th>
                 <th colspan="3" class="text-center">Students</th>
@@ -191,6 +192,7 @@
                 <td class="text-right">{{ session.start_date|time:"H:i" }}</td>
                 <td class="text-right">{{ session.end_date|time:"H:i" }}</td>
                 <td class="hidden-xs hidden-sm"><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
+                <td>{{ session.instructor }}</td>
                 <td class="hidden-xs hidden-sm">{{ session.location.name }}</td>
                 <td class="text-center hidden-xs hidden-sm">
                     {% if session.announced_date_guardians|yesno:'yes,no' == 'yes' %}

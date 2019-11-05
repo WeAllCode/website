@@ -9,7 +9,7 @@
 
     // Docker: Adds syntax highlighting, commands, hover tips, and linting
     // for Dockerfile and docker-compose files
-    "PeterJausovec.vscode-docker",
+    "ms-azuretools.vscode-docker",
 
     // IntelliSense for CSS class names in HTML
     "Zignd.html-css-class-completion",

@@ -22,13 +22,13 @@ def migrate(ctx):
 
 @task
 def load_fixtures(ctx):
-    if os.environ.get("ENABLE_DEV_FIXTURES", False):
+    if os.environ.get("ENABLE_DEV_FIXTURES"):
         ctx.run("python3 manage.py loaddata fixtures/*.json")
 
 
 @task
 def collect_static(ctx):
-    if not os.environ.get("DEBUG", False):
+    if not os.environ.get("DEBUG"):
         ctx.run("python3 manage.py collectstatic --no-input")
 
 

@@ -12,13 +12,14 @@ from django.utils.translation import ugettext as _
 
 from stdimage.models import StdImageField
 
-ROLE_CHOICES = (
-    ('mentor', 'mentor'),
-    ('guardian', 'guardian'),
-)
-
 
 class CDCUser(AbstractUser):
+
+    ROLE_CHOICES = (
+        ('mentor', 'mentor'),
+        ('guardian', 'guardian'),
+    )
+
     role = models.CharField(
         choices=ROLE_CHOICES,
         max_length=10,
@@ -54,8 +55,8 @@ class RaceEthnicity(models.Model):
     )
 
     class Meta:
-        verbose_name = _("race ethnicity")
-        verbose_name_plural = _("race ethnicities")
+        verbose_name = _("Race/Ethnicity")
+        verbose_name_plural = _("Race/Ethnicities")
 
     def __str__(self):
         return self.race_ethnicity
@@ -346,10 +347,24 @@ class Student(models.Model):
 
 
 class Course(models.Model):
+    WEEKEND = 'WE'
+    CAMP = 'CA'
+
+    COURSE_TYPE_CHOICES = [
+        (WEEKEND, 'Weekend'),
+        (CAMP, 'Camp'),
+    ]
+
     code = models.CharField(
         max_length=255,
         blank=True,
         null=True,
+    )
+    course_type = models.CharField(
+        'type',
+        max_length=2,
+        choices=COURSE_TYPE_CHOICES,
+        default=WEEKEND,
     )
     title = models.CharField(
         max_length=255,
@@ -410,13 +425,15 @@ class Location(models.Model):
         return self.name
 
 
-GENDER_LIMITATION_CHOICES = (
-    ('male', 'Male'),
-    ('female', 'Female'),
-)
-
-
 class Session(models.Model):
+    MALE = 'male'
+    FEMALE = 'female'
+
+    GENDER_LIMITATION_CHOICES = (
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+    )
+
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
@@ -463,10 +480,11 @@ class Session(models.Model):
         null=True,
         help_text="Basic HTML allowed"
     )
-    teacher = models.ForeignKey(
+    instructor = models.ForeignKey(
         Mentor,
-        related_name="session_teacher",
         on_delete=models.CASCADE,
+        related_name="session_instructor",
+        limit_choices_to={'user__groups__name': "Instructor"},
     )
     waitlist_mentors = models.ManyToManyField(
         Mentor,
@@ -999,14 +1017,16 @@ class EquipmentType(models.Model):
         return self.name
 
 
-EQUIPTMENTCONDITIONS = (
-    ('working', 'Working'),
-    ('issue', 'Issue'),
-    ('unusable', 'Unusable'),
-)
-
-
 class Equipment(models.Model):
+    WORKING = 'working'
+    ISSUE = 'issue'
+    UNUSABLE = 'unusable'
+    EQUIPTMENTCONDITIONS = [
+        (WORKING, 'Working'),
+        (ISSUE, 'Issue'),
+        (UNUSABLE, 'Unusable'),
+    ]
+
     uuid = models.CharField(
         max_length=255,
         verbose_name="UUID",

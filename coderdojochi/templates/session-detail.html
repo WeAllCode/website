@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+{% extends "coderdojochi/_base.html" %}
 
 {% load static i18n humanize coderdojochi_extras %}
 
@@ -30,7 +30,7 @@
     {% if spots_remaining > 0 %}
     <p class="subtitle">Enroll Student{% if students and students.count > 1 %}s{% endif %}</p>
     {% else %}
-    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}#classes">find another upcoming class.</a></p>
+    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode-programs' %}#classes">find another upcoming class.</a></p>
     {% endif %}
     <table class="students">
         <tbody>
@@ -95,7 +95,7 @@
     {% endif %}
     {% else %}
     {% if spots_remaining < 1 %}
-    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode_programs' %}">find another upcoming class.</a></p>
+    <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode-programs' %}">find another upcoming class.</a></p>
     {% endif %}
     <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="button large secondary">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
     {% endif %}
@@ -138,16 +138,16 @@
 </div>
 
 <section class="margin-top-3">
-  {% if session.teacher %}
-    <h3 class="title text-secondary">About the teacher</h3>
-    <div class="grid-x teacher grid-margin-x grid-margin-y margin-top-2">
+  {% if session.instructor %}
+    <h3 class="title text-secondary">About the instructor</h3>
+    <div class="grid-x instructor grid-margin-x grid-margin-y margin-top-2">
       <div class="cell small-4 medium-3 image">
-        <a href="{% url 'mentor-detail' session.teacher.id %}"><img class="width-100 thumbnail" src="{% if session.teacher.avatar %}{{ session.teacher.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}"></a>
+        <a href="{% url 'mentor-detail' session.instructor.id %}"><img class="width-100 thumbnail" src="{% if session.instructor.avatar %}{{ session.instructor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}" alt="Photo of session.instructor }}"></a>
       </div>
       <div class="cell small-8 medium-9 padding-top-1">
-        <h4 class="subtitle">{{ session.teacher.user.first_name }} {{ session.teacher.last_name }}</h4>
-        <p>{{ session.teacher.bio|truncatechars:120 }}</p>
-        <p><a href="{% url 'mentor-detail' session.teacher.id %}">Learn more about {{ session.teacher.user.first_name }}.</a></p>
+        <h4 class="subtitle">{{ session.instructor }}</h4>
+        <p>{{ session.instructor.bio|truncatechars:120 }}</p>
+        <p><a href="{% url 'mentor-detail' session.instructor.id %}">Learn more about {{ session.instructor.user.first_name }}.</a></p>
       </div>
     </div>
   {% endif %}
