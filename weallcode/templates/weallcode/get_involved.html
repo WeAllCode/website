@@ -5,23 +5,6 @@
 {% block page-class %}get-involved{% endblock %}
 
 {% block subheader %}
-<<<<<<< HEAD
-
-{% if messages %}
-{% include 'weallcode/_messages.html' %}
-{% endif %}
-
-<div class="sub-menu">
-  <nav class="grid-container" role="navigation">
-    <ul class="menu">
-      <li><a href="{% url 'weallcode_get_involved' %}#volunteer">Volunteer</a></li>
-      <li><a href="{% url 'weallcode_get_involved' %}#donate">Donate</a></li>
-      <li><a href="{% url 'weallcode_get_involved' %}#sponsorship">Sponsorship</a></li>
-      <li><a href="{% url 'weallcode_get_involved' %}#contact">Contact Us</a></li>
-    </ul>
-  </nav>
-</div>
-=======
   {% if messages %}
     {% include 'weallcode/_messages.html' %}
   {% endif %}
@@ -36,7 +19,6 @@
       </ul>
     </nav>
   </div>
->>>>>>> master
 {% endblock subheader %}
 
 {% block messages %}{% endblock %}
@@ -45,24 +27,6 @@
 
   {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-get-involved.jpg" alt="get involved" %}
 
-<<<<<<< HEAD
-<!-- Volunteer -->
-<section id="volunteer" class="padding-vertical-3">
-  <div class="grid-container">
-    <div class="grid-x">
-      <div class="cell large-8 padding-right-2">
-        <h1 class="title text-tertiary margin-bottom-2">Get involved</h1>
-        <p>We All Code wouldn't exist without your support! Our teachers, volunteers, and sponsors make it possible for
-          kids to explore their curiosity through coding.</p>
-      </div>
-      <div class="cell large-4 position-relative">
-        <div class="aside-title">
-          <div>
-            <span class="text-tertiary display-inline-block">Educate the </span>
-            <span class="text-tertiary display-inline-block">technology </span>
-            <span class="text-secondary display-inline-block">leaders of </span>
-            <span class="text-white display-inline-block">tomorrow</span>
-=======
   <!-- Volunteer -->
   <section id="volunteer" class="padding-vertical-3">
     <div class="grid-container">
@@ -80,50 +44,10 @@
               <span class="text-white display-inline-block">tomorrow</span>
             </div>
             <div class="line width-25 bg-primary margin-top-1"></div>
->>>>>>> master
           </div>
         </div>
       </div>
 
-<<<<<<< HEAD
-    <div class="grid-x grid-padding-x margin-vertical-3">
-      <div class="cell medium-6">
-        <div class="binary-drop-left">
-          <img class="width-100" src="{% static 'weallcode/images/photos/make-a-difference.jpg' %}"
-            alt="kid and mentor in class">
-        </div>
-      </div>
-      <div class="cell medium-6">
-        <h3 class="title text-tertiary margin-vertical-2">Make a difference</h3>
-
-        <ul class="list-plus">
-          <li class="margin-vertical-1"><strong>Free classes</strong> are open to kids across Chicago</li>
-          <li class="margin-vertical-1"><strong>Highly-trained teachers and mentors</strong> teach coding skills</li>
-          <li class="margin-vertical-1">Students are encouraged to <strong>show what they know with real working
-              projects</strong></li>
-          <li class="margin-vertical-1"><strong>Kids work collaboratively</strong>, respect their peers, and have fun
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="text-center">
-      <a class="button large" href="{% url 'account_signup' %}">Join Us Now!</a>
-    </div>
-  </div>
-</section>
-
-
-<!-- Donate -->
-<section id="donate" class="bg-binary padding-vertical-2">
-  <div class="grid-container">
-    <div class="grid-x margin-vertical-3">
-      <div class="cell medium-6 bg-white padding-2">
-        <h2 class="title text-primary">Donate to make a difference</h2>
-        <p><strong>Your generous financial support makes coding accessible to kids across Chicago.</strong> Every
-          donation makes a difference!</p>
-        <a class="button large" href="{% url 'donate' %}">Donate Now</a> <br>
-=======
       <div class="grid-x grid-padding-x margin-vertical-3">
         <div class="cell medium-6">
           <div class="binary-drop-left">
@@ -144,7 +68,6 @@
 
       <div class="text-center">
         <a class="button large" href="{% url 'account_signup' %}">Join Us Now!</a>
->>>>>>> master
       </div>
     </div>
   </section>
