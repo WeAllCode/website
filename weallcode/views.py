@@ -7,25 +7,28 @@ from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView
 from meta.views import MetadataMixin
 
 from .forms import ContactForm
 
 
-class WeAllCodeView(MetadataMixin, TemplateView):
+class WeAllCodeView(MetadataMixin, FormView):
     description = (
         "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
         "youth ages 7 to 17 free of charge."
     )
     image = "weallcode/images/photos/real-coding-skills.jpg"
-    patreon_donate_url = "https://www.patreon.com/weallcode"
-    paypal_donate_url = "https://www.paypal.com/fundraiser/charity/193426"
     twitter_card = "summary_large_image"
     twitter_creator = "@weallcode"
     twitter_site = "@weallcode"
 
-    donate_url = paypal_donate_url
+    def get_context_data(self, **kwargs):
+        return {
+            "donate_url": "https://www.paypal.com/fundraiser/charity/193426",
+            "paypal_donate_url": "https://www.paypal.com/fundraiser/charity/193426",
+            "patreon_donate_url": "https://www.patreon.com/weallcode",
+        }
 
 
 class HomeView(WeAllCodeView):
@@ -161,7 +164,7 @@ class TeamView(WeAllCodeView):
         return context
 
 
-class JoinUsView(MetadataMixin, FormView):
+class JoinUsView(WeAllCodeView):
     template_name = "weallcode/join_us.html"
     form_class = ContactForm
     title = f"Join Us | {settings.SITE_NAME}"
