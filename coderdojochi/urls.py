@@ -301,7 +301,8 @@ urlpatterns += [
 
 # robots.txt
 urlpatterns += [
-    path('robots.txt', lambda r: HttpResponse('User-agent: *\nDisallow:', content_type='text/plain'))
+    path('robots.txt', lambda r: HttpResponse('User-agent: *\nDisallow:\nSitemap: ' +
+         settings.SITE_URL + '/sitemap.xml', content_type='text/plain'))
 ]
 
 # Anymail
