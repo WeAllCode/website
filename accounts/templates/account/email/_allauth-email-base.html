@@ -1,9 +1,5 @@
 {% extends "_email-base.html" %}
 
-{% load static %}
-
-{% block header_image %}<a href="https://{{ current_site.domain }}"><img alt="" border="0" id="headerImage" src="{% static 'images/coderdojochi_600x300_transparent.png' %}"></a>{% endblock header_image %}
-
 {% block subject %}{% block child_subject %}{% endblock %}{% endblock %}
 {% block preheader %}{% block child_preheader %}{% endblock %}{% endblock %}
 {% block content %}{% block child_content %}{% endblock %}{% endblock %}
