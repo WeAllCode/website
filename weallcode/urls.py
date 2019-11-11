@@ -5,7 +5,7 @@ from django.views.generic import RedirectView
 
 from .views import (
     CreditsView,
-    GetInvolvedView,
+    JoinUsView,
     HomeView,
     OurStoryView,
     PrivacyView,
@@ -27,7 +27,7 @@ urlpatterns = [
         path('summer-camps/', ProgramsSummerCampsView.as_view(), name='weallcode-programs-summer-camps'),
     ])),
     path('team/', TeamView.as_view(), name='weallcode-team'),
-    path('get-involved/', GetInvolvedView.as_view(), name='weallcode-get-involved'),
+    path('join-us/', JoinUsView.as_view(), name='weallcode-join-us'),
     path('privacy/', PrivacyView.as_view(), name='weallcode-privacy'),
     path('credits/', CreditsView.as_view(), name='weallcode-credits'),
 

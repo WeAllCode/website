@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block page-class %}get-involved{% endblock %}
+{% block page-class %}join-us{% endblock %}
 
 {% block subheader %}
   {% if messages %}
@@ -12,10 +12,10 @@
   <div class="sub-menu">
     <nav class="grid-container" role="navigation">
       <ul class="menu">
-        <li><a href="{% url 'weallcode-get-involved' %}#volunteer">Volunteer</a></li>
-        <li><a href="{% url 'weallcode-get-involved' %}#donate">Donate</a></li>
-        <li><a href="{% url 'weallcode-get-involved' %}#sponsorship">Sponsorship</a></li>
-        <li><a href="{% url 'weallcode-get-involved' %}#contact">Contact Us</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#donate">Donate</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#sponsorship">Sponsorship</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#contact">Contact Us</a></li>
       </ul>
     </nav>
   </div>
@@ -25,14 +25,14 @@
 
 {% block content %}
 
-  {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-get-involved.jpg" alt="get involved" %}
+  {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-join-us.jpg" alt="join us" %}
 
   <!-- Volunteer -->
   <section id="volunteer" class="padding-vertical-3">
     <div class="grid-container">
       <div class="grid-x">
         <div class="cell large-8 padding-right-2">
-          <h1 class="title text-tertiary margin-bottom-2">Get involved</h1>
+          <h1 class="title text-tertiary margin-bottom-2">Join Us</h1>
           <p>We All Code wouldn't exist without your support! Our instructors, volunteers, and sponsors make it possible for kids to explore their curiosity through coding.</p>
         </div>
         <div class="cell large-4 position-relative">
@@ -67,7 +67,7 @@
       </div>
 
       <div class="text-center">
-        <a class="button large" href="{% url 'account_signup' %}">Join Us Now!</a>
+        <a class="button large" href="{% url 'account_signup' %}">Become a Volunteer</a>
       </div>
     </div>
   </section>
@@ -80,9 +80,8 @@
         <div class="cell medium-6 bg-white padding-2">
           <h2 class="title text-primary">Donate to make a difference</h2>
           <p><strong>Your generous financial support makes coding accessible to kids across Chicago.</strong> Every donation makes a difference!</p>
-          <a href="https://www.patreon.com/weallcode">
-            <img src="{% static 'weallcode/images/patreon-button.png' %}" width="217" alt="Become a patron.">
-          </a>
+          <a class="button primary text-white" href="{{ paypal_donate_url }}">Donate with PayPal</a>
+          <a class="button tertiary" href="{{ patreon_donate_url }}">Donate with Patreon</a>
         </div>
         <div class="cell medium-6 bg-dark-blue text-white padding-2">
           <div class="line bg-primary width-25 margin-bottom-3"></div>
@@ -177,7 +176,7 @@
         </div>
       </div>
 
-      <form id="contact-form" method="POST" action="{% url 'weallcode-get-involved' %}#contact-form">
+      <form id="contact-form" method="POST" action="{% url 'weallcode-join-us' %}#contact-form">
         {% csrf_token %}
         <div class="grid-x grid-padding-x margin-vertical-3">
           {% if messages %}

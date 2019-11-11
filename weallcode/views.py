@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from coderdojochi.models import Course, Mentor, Session
 from django.conf import settings
 from django.contrib import messages, sitemaps
 from django.db.models import Count
@@ -7,25 +8,29 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import FormView, TemplateView
-
 from meta.views import MetadataMixin
-
-from coderdojochi.models import Course, Mentor, Session
 
 from .forms import ContactForm
 
 
-class HomeView(MetadataMixin, TemplateView):
-    template_name = "weallcode/home.html"
-    title = "We All Code"
+class WeAllCodeView(MetadataMixin, TemplateView):
     description = (
         "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
         "youth ages 7 to 17 free of charge."
     )
     image = "weallcode/images/photos/real-coding-skills.jpg"
+    patreon_donate_url = "https://www.patreon.com/weallcode"
+    paypal_donate_url = "https://www.paypal.com/fundraiser/charity/193426"
     twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
     twitter_creator = "@weallcode"
+    twitter_site = "@weallcode"
+
+    donate_url = paypal_donate_url
+
+
+class HomeView(WeAllCodeView):
+    template_name = "weallcode/home.html"
+    title = "We All Code"
     url = reverse_lazy('weallcode-home')
 
     def get_context_data(self, **kwargs):
@@ -45,36 +50,20 @@ class HomeView(MetadataMixin, TemplateView):
         if len(sessions) > 0:
             context['next_session'] = sessions[0]
 
-        context['show_intro'] = self.request.COOKIES.get('has_seen_intro', 'false') == 'false'
+        context['show_gt_teaser'] = self.request.COOKIES.get('has_seen_gt_teaser', 'false') == 'false'
 
         return context
 
 
-class OurStoryView(MetadataMixin, TemplateView):
+class OurStoryView(WeAllCodeView):
     template_name = "weallcode/our_story.html"
     title = f"Our Story | {settings.SITE_NAME}"
-    description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
-    )
-    image = "weallcode/images/photos/real-coding-skills.jpg"
-    twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
-    twitter_creator = "@weallcode"
     url = reverse_lazy('weallcode-our-story')
 
 
-class ProgramsView(MetadataMixin, TemplateView):
+class ProgramsView(WeAllCodeView):
     template_name = "weallcode/programs.html"
     title = f"Programs | {settings.SITE_NAME}"
-    description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
-    )
-    image = "weallcode/images/photos/real-coding-skills.jpg"
-    twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
-    twitter_creator = "@weallcode"
     url = reverse_lazy('weallcode-programs')
 
     def get_context_data(self, **kwargs):
@@ -113,17 +102,9 @@ class ProgramsView(MetadataMixin, TemplateView):
         return context
 
 
-class ProgramsSummerCampsView(MetadataMixin, TemplateView):
+class ProgramsSummerCampsView(WeAllCodeView):
     template_name = "weallcode/programs-summer-camps.html"
     title = f"Summer Camps | {settings.SITE_NAME}"
-    description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
-    )
-    image = "weallcode/images/photos/real-coding-skills.jpg"
-    twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
-    twitter_creator = "@weallcode"
     url = reverse_lazy('weallcode-programs-summer-camps')
 
     def get_context_data(self, **kwargs):
@@ -147,17 +128,9 @@ class ProgramsSummerCampsView(MetadataMixin, TemplateView):
         return context
 
 
-class TeamView(MetadataMixin, TemplateView):
+class TeamView(WeAllCodeView):
     template_name = "weallcode/team.html"
     title = f"Team | {settings.SITE_NAME}"
-    description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
-    )
-    image = "weallcode/images/photos/real-coding-skills.jpg"
-    twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
-    twitter_creator = "@weallcode"
     url = reverse_lazy('weallcode-team')
 
     def get_context_data(self, **kwargs):
@@ -188,20 +161,12 @@ class TeamView(MetadataMixin, TemplateView):
         return context
 
 
-class GetInvolvedView(MetadataMixin, FormView):
-    template_name = "weallcode/get_involved.html"
+class JoinUsView(MetadataMixin, FormView):
+    template_name = "weallcode/join_us.html"
     form_class = ContactForm
-    title = f"Get Involved | {settings.SITE_NAME}"
-    description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
-    )
-    image = "weallcode/images/photos/real-coding-skills.jpg"
-    twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
-    twitter_creator = "@weallcode"
-    url = reverse_lazy('weallcode-get-involved')
-    success_url = reverse_lazy('weallcode-get-involved')
+    title = f"Join Us | {settings.SITE_NAME}"
+    url = reverse_lazy('weallcode-join-us')
+    success_url = reverse_lazy('weallcode-join-us')
 
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.
@@ -215,31 +180,15 @@ class GetInvolvedView(MetadataMixin, FormView):
         return super().form_valid(form)
 
 
-class PrivacyView(MetadataMixin, TemplateView):
+class PrivacyView(WeAllCodeView):
     template_name = "weallcode/privacy.html"
     title = f"Privacy & Terms | {settings.SITE_NAME}"
-    description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
-    )
-    image = "weallcode/images/photos/real-coding-skills.jpg"
-    twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
-    twitter_creator = "@weallcode"
     url = reverse_lazy('weallcode-privacy')
 
 
-class CreditsView(MetadataMixin, TemplateView):
+class CreditsView(WeAllCodeView):
     template_name = "weallcode/credits.html"
     title = f"Credits & Attributions | {settings.SITE_NAME}"
-    description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
-    )
-    image = "weallcode/images/photos/real-coding-skills.jpg"
-    twitter_card = "summary_large_image"
-    twitter_site = "@weallcode"
-    twitter_creator = "@weallcode"
     url = reverse_lazy('weallcode-credits')
 
 
@@ -249,7 +198,7 @@ class StaticSitemapView(sitemaps.Sitemap):
 
     def items(self):
         return ['weallcode-home', 'weallcode-our-story', 'weallcode-programs', 'weallcode-programs-summer-camps',
-                'weallcode-team', 'weallcode-get-involved', 'weallcode-privacy', 'weallcode-credits']
+                'weallcode-team', 'weallcode-join-us', 'weallcode-privacy', 'weallcode-credits']
 
     def location(self, item):
         return reverse(item)
