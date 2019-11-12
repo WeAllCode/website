@@ -336,9 +336,19 @@ ul.list-plus li {
   outline: none;
 }
 
-@media screen and (min-width: 48em) {
-  .reveal .closer {
+@media screen and (min-width: 40em) {
+  .reveal .bottom-closer {
     margin-bottom: -7rem;
+  }
+  .reveal i.top-closer {
+    font-size: 2rem;
+    position: absolute;
+    top: -1rem;
+    right: -1rem;
+    background: white;
+    border-radius: 20rem;
+    padding: 0.2rem;
+    cursor: pointer;
   }
 }
 

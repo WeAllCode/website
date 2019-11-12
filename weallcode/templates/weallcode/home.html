@@ -19,10 +19,14 @@
         </a>.
       </p>
 
-      <button class="button large closer" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)">
-        Let's Code!
+      <a href="{{ donate_url }}" class="button tertiary large bottom-closer" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)">
+        Donate Now!
+      </a>
+      <button class="button secondary large bottom-closer hide-for-medium" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)">
+        No Thanks
       </button>
     </div>
+    <i class="fas fa-times-circle top-closer show-for-medium" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)"></i>
   </div>
   {% endif %}
 
