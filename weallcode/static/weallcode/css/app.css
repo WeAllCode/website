@@ -130,6 +130,13 @@ ul.list-plus li {
   color: var(--code-red);
 }
 
+.teaser-image {
+  max-width: 400px;
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .title {
   font-family: 'Bungee', cursive;
 }
