@@ -25,8 +25,8 @@ class WeAllCodeView(MetadataMixin, FormView):
 
     def get_context_data(self, **kwargs):
         return {
-            "donate_url": "https://www.paypal.com/fundraiser/charity/193426",
-            "paypal_donate_url": "https://www.paypal.com/fundraiser/charity/193426",
+            "donate_url": "https://paypal.com/us/fundraiser/charity/193426",
+            "paypal_donate_url": "https://paypal.com/us/fundraiser/charity/193426",
             "patreon_donate_url": "https://www.patreon.com/weallcode",
         }
 
