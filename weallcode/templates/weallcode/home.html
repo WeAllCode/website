@@ -6,34 +6,27 @@
 
 {% block content %}
 
-  {% if show_intro %}
+  {% if show_gt_teaser %}
   <div class="reveal large autoreveal text-center" id="introModal" aria-hidden="false" data-reveal>
     <div class="padding-2">
-      <h4><strong>Hey Everybody! We have some exciting news...</strong></h4>
+      <img class="teaser-image padding-horizontal-3" src="{% static 'weallcode/images/giving-tuesday/logo.png' %}" alt="#GivingTuesday">
+      <img class="teaser-image padding-vertical-1" src="{% static 'weallcode/images/logo/logo-weallgive.png' %}" alt="We All Give">
+      <p>This year, We All Code will be participating in <a href="https://www.givingtuesday.org/">#GivingTuesday</a> on December 3rd!</p>
+      <p>
+        Keep an eye out for our campaign on Social Media, or
+        <a href="{{ donate_url }}" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)">
+          Donate Now
+        </a>.
+      </p>
 
-      <div class="grid-x grid-padding-y">
-        <div class="cell medium-5">
-          <img class="hero-logo dojo" src="{% static 'images/coderdojochi_600x300_transparent.png' %}" alt="CoderDojoChi">
-        </div>
-        <div class="cell medium-2">
-          <div class="medium-padding-vertical-3 large-padding-vertical-4">
-            <div class="medium-padding-vertical-3 large-padding-vertical-4">
-              <strong>is now</strong>
-            </div>
-          </div>
-        </div>
-        <div class="cell medium-5">
-          <img class="hero-logo weallcode margin-top-1" src="{% static 'weallcode/images/logo/logo-trim.png' %}" alt="We All Code">
-        </div>
-        <div class="cell medium-10 medium-offset-1">
-          <p>CoderDojoChi is known as the preeminent provider of free coding classes to Chicagoland youth, and we’ll be continuing our mission with an all new name and look!</p>
-        </div>
-      </div>
-
-      <button class="button large closer" data-close onclick="setCookie('has_seen_intro', 'true', 30)">
-        Let's Code!
+      <a href="{{ donate_url }}" class="button tertiary large bottom-closer" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)">
+        Donate Now!
+      </a>
+      <button class="button secondary large bottom-closer hide-for-medium" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)">
+        No Thanks
       </button>
     </div>
+    <i class="fas fa-times-circle top-closer show-for-medium" data-close onclick="setCookie('has_seen_gt_teaser', 'true', 30)"></i>
   </div>
   {% endif %}
 
@@ -115,19 +108,19 @@
     </div>
   </section>
 
-  <!-- Get Involved -->
+  <!-- Join Us -->
   <section class="padding-vertical-3 bg-dark-blue">
     <div class="grid-container">
-      <h3 class="title text-white text-center">Get Involved</h3>
+      <h3 class="title text-white text-center">Join Us</h3>
 
       <div class="grid-x grid-padding-x margin-vertical-3">
         <!-- Cell -->
         <div class="small-12 medium-6 large-4 cell margin-bottom-2">
           <div class="bg-white radius">
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Volunteers</h6>
-            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-volunteer.jpg' %}" alt="">
+            <img class="width-100" src="{% static 'weallcode/images/photos/join-us-volunteer.jpg' %}" alt="">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#volunteer">Volunteer</a>
+              <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a>
             </div>
           </div>
         </div>
@@ -136,9 +129,9 @@
         <div class="small-12 medium-6 large-4 cell margin-bottom-2">
           <div class="bg-white radius">
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Donors</h6>
-            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-donor.jpg' %}" alt="">
+            <img class="width-100" src="{% static 'weallcode/images/photos/join-us-donor.jpg' %}" alt="">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-tertiary width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#donate">Donate</a>
+              <a class="button bg-tertiary width-100 margin-top-1" href="{{ donate_url }}">Donate</a>
             </div>
           </div>
         </div>
@@ -147,9 +140,9 @@
         <div class="small-12 medium-6 large-4 cell margin-bottom-2">
           <div class="bg-white radius">
             <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Sponsors</h6>
-            <img class="width-100" src="{% static 'weallcode/images/photos/get-involved-sponsor.jpg' %}" alt="">
+            <img class="width-100" src="{% static 'weallcode/images/photos/join-us-sponsor.jpg' %}" alt="">
             <div class="padding-1 padding-horizontal-2 text-center">
-              <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode-get-involved' %}#sponsor">Sponsor</a>
+              <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#sponsor">Sponsor</a>
             </div>
           </div>
         </div>

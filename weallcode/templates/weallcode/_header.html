@@ -16,12 +16,13 @@
           <li><a class="{% if request.resolver_match.url_name == 'weallcode-our-story' %}current{% endif %}" href="{% url 'weallcode-our-story' %}">Our Story</a></li>
           <li><a class="{% if request.resolver_match.url_name == 'weallcode-programs' %}current{% endif %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
           <li><a class="{% if request.resolver_match.url_name == 'weallcode-team' %}current{% endif %}" href="{% url 'weallcode-team' %}">Team</a></li>
-          <li><a class="button {% if request.resolver_match.url_name == 'weallcode-get-involved' %}current{% endif %}" href="{% url 'weallcode-get-involved' %}">Get Involved</a></li>
+          <li><a class="{% if request.resolver_match.url_name == 'weallcode-join-us' %}current{% endif %}" href="{% url 'weallcode-join-us' %}">Join Us</a></li>
+          <li><a class="button tertiary" href="{{ donate_url }}">Donate</a></li>
 
           {% if user.is_authenticated %}
-          <li><a class="button secondary" href="{% url 'account_home' %}">Account</a></li>
+            <li><a class="button" href="{% url 'account_home' %}">Account</a></li>
           {% else %}
-          <li><a class="button secondary" href="{% url 'account_login' %}">Log In</a></li>
+            <li><a class="button" href="{% url 'account_login' %}">Log In</a></li>
           {% endif %}
         </ul>
       </nav>
@@ -33,15 +34,17 @@
   <a class="{% if request.resolver_match.url_name == 'weallcode-our-story' %}current{% endif %}" href="{% url 'weallcode-our-story' %}">Our Story</a>
   <a class="{% if request.resolver_match.url_name == 'weallcode-programs' %}current{% endif %}" href="{% url 'weallcode-programs' %}">Programs</a>
   <a class="{% if request.resolver_match.url_name == 'weallcode-team' %}current{% endif %}" href="{% url 'weallcode-team' %}">Team</a>
+  <a class="{% if request.resolver_match.url_name == 'weallcode-join-us' %}current{% endif %}" href="{% url 'weallcode-join-us' %}">Join Us</a>
 
   <div class="margin-top-1">
-    <a class="button {% if request.resolver_match.url_name == 'weallcode-get-involved' %}current{% endif %}" href="{% url 'weallcode-get-involved' %}">Get Involved</a>
+    <a class="button tertiary" href="{{ donate_url }}">Donate</a>
   </div>
+
   <div>
     {% if user.is_authenticated %}
-    <a class="button secondary" href="{% url 'account_home' %}">Account</a>
+      <a class="button" href="{% url 'account_home' %}">Account</a>
     {% else %}
-    <a class="button secondary" href="{% url 'account_login' %}">Log In</a>
+      <a class="button" href="{% url 'account_login' %}">Log In</a>
     {% endif %}
   </div>
 </div>
