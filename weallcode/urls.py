@@ -5,8 +5,8 @@ from django.views.generic import RedirectView
 
 from .views import (
     CreditsView,
-    JoinUsView,
     HomeView,
+    JoinUsView,
     OurStoryView,
     PrivacyView,
     ProgramsSummerCampsView,
@@ -31,8 +31,11 @@ urlpatterns = [
     path('privacy/', PrivacyView.as_view(), name='weallcode-privacy'),
     path('credits/', CreditsView.as_view(), name='weallcode-credits'),
 
-    # Redirect /summer-camps/ to /programs/summer-camps/
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
+    # Redirect /summer-camps/ to weallcode-programs-summer-camps
     path('summer-camps/', RedirectView.as_view(pattern_name='weallcode-programs-summer-camps')),
 
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    # Redirect /get-involved/ to weallcode-join-us
+    path('get-involved/', RedirectView.as_view(pattern_name='weallcode-join-us')),
 ]
