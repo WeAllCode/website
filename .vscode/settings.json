@@ -23,9 +23,9 @@
     "**/migrations/**",
   ],
   "python.linting.pylintEnabled": false,
-  "python.linting.pep8Enabled": true,
-  "python.linting.pep8Path": "pycodestyle",
-  "python.linting.pep8Args": [
+  "python.linting.pycodestyleEnabled": true,
+  "python.linting.pycodestylePath": "pycodestyle",
+  "python.linting.pycodestyleArgs": [
     "--max-line-length=120",
   ],
   "[python]": {

@@ -32,6 +32,11 @@ class DonateView(FormView):
     form_class = DonateForm
     success_url = reverse_lazy('donate')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stripe_public_key'] = settings.STRIPE_PUBLIC_KEY
+        return context
+
     # Populate the form is user is authenticated.
     def get_initial(self):
         initial = self.initial.copy()

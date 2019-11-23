@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+{% extends "coderdojochi/_base.html" %}
 
 {% load i18n %}
 
@@ -9,37 +9,11 @@
 {% block contained_content %}
 
 <div class="container">
-  <h2 class="title">{% trans "Donate" %}</h2>
-  <form action="/donate/charge/" method="post" id="payment-form">
-    <div class="grid-container">
-      <div class="grid-x grid-padding-x">
-        <div class="medium-12 cell">
-          <label>Name:
-            <input id="donor-name" name="donor-name" type="text" placeholder="First Name">
-          </label>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x">
-        <div class="medium-6 cell">
-          <label>Email:
-            <input id="donor-email" name="donor-email" type="email" placeholder="Email">
-          </label>
-        </div>
-        <div class="medium-6 cell">
-          <label>Phone:
-            <input id="donor-phone" name="donor-phone" type="text" placeholder="Phone Number">
-          </label>
-        </div>
-      </div>
-      <div class="grid-x grid-padding-x">
-        <div class="medium-12 cell">
-          <label>Amount: </label>
-        </div>
-        <div class="medium 12 cell input-group">
-          <span class="input-group-label">$</span>
-          <input id="donor-amount" name="donor-amount" class="input-group-field" type="text">
-        </div>
-      </div>
+  <div class="grid-container">
+    <h2 class="title">{% trans "Donate" %}</h2>
+    <form method="post" id="payment-form">
+      {% csrf_token %}
+      {{ form.as_p }}
       <div class="grid-x grid-padding-x">
         <div class="form-row medium-12 cell">
           <label for="card-element">
@@ -56,14 +30,13 @@
           <button class="button margin-vertical-1">Submit Payment</button>
         </div>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
 
 <div class="container">
-  <h2 class="title">{% trans "You can help!" %}</h2>
-  <p>We All Code is a registered non-profit organization supported entirely by...you! Please help us continue our
-    mission by donating a small amount to our cause. Thank you! </p>
+    <h2 class="title">You can help!</h2>
+    <p>We All Code is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
 
   {% if referral_disclaimer %}
   <p>{{ referral_disclaimer }}</p>
@@ -78,7 +51,7 @@
 <script src="https://js.stripe.com/v3/"></script>
 
 <script>
-  var stripe = Stripe('pk_test_T35wVvyi33b1NmWs6djRMdXJ');
+  var stripe = Stripe('{{ stripe_public_key }}');
 
   // Create an instance of Elements.
   var elements = stripe.elements();
