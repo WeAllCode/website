@@ -18,9 +18,7 @@ class Amount:
     # A class to format the amount.
     # Params (amount)
     def __init__(self, amount):
-        self.pennies = float(amount)
-        self.pennies = round(self.pennies) * 100
-        self.pennies = int(self.pennies)
+        self.pennies = int(float(amount * 100))
 
     def __str__(self):
         # Format to dollars
@@ -85,7 +83,7 @@ class DonateView(FormView):
             # On Charge success alert the user.
             messages.success(
                 self.request,
-                f"Thank you for your donation of <i>${ amount }</i>!"
+                f"Thank you for your donation of <strong>${ amount }</strong>!"
             )
 
             # On Charge error alert the user.

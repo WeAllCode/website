@@ -1,64 +1,49 @@
-{% extends "coderdojochi/_base.html" %}
-
-{% load i18n %}
-
-{% block title %}Donate | {{ block.super }}{% endblock %}
-
-{% block body_class %}page-donate{% endblock %}
-
-{% block contained_content %}
-
 <div class="container">
   <div class="grid-container">
-    <h1 class="title">{% trans "Donate" %}</h1>
-    <div class="grid-x">
-      <div class="medium-9 cell margin-top-2">
-        <h2 class="subtitle">You can help!</h2>
-        <p>We All Code is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
-      </div>
-    </div>
+    <h1 class="title text-center">Donate</h1>
+    <h2 class="subtitle text-center margin-top-0">You can help!</h2>
+    <p class="text-center">We All Code is a registered non-profit organization supported entirely by...you! Please help us continue our mission by donating a small amount to our cause. Thank you! </p>
     <form method="post" id="payment-form">
       {% csrf_token %}
       <div class="grid-x">
-        <div class="form-row medium-7 cell">
-          <label for="id_name">Name:</label>
-          {{ form.name }}
-        </div>
-        <div class="form-row medium-7 cell">
-          <label for="id_email">Email:</label>
-          {{ form.email }}
-        </div>
-        <div class="form-row medium-7 cell">
-          <label for="id_amount">Amount:</label>
-          <div class="input-group">
-            <span class="input-group-label">$</span>
-            {{ form.amount }}
+          <div class="medium-6 padding-1">
+            <label for="id_name">Name:</label>
+            {{ form.name }}
           </div>
-        </div>
+          <div class="medium-6 padding-1">
+            <label for="id_email">Email:</label>
+            {{ form.email }}
+          </div>
+          <div class="medium-6 padding-1">
+            <label for="id_amount">Amount:</label>
+            <div class="input-group">
+              <span class="input-group-label">$</span>
+              {{ form.amount }}
+            </div>
+          </div>
+          <div class="medium-6 padding-1">
+            <label for="card-element">
+              Credit or debit card:
+            </label>
+            <div id="card-element">
+              <!-- A Stripe Element will be inserted here. -->
+            </div>
+
+            <!-- Used to display form errors. -->
+            <div id="card-errors" role="alert"></div>
+          </div>
       </div>
       <div class="grid-x">
-        <div class="form-row medium-7 cell">
-          <label for="card-element">
-            Credit or debit card:
-          </label>
-          <div id="card-element">
-            <!-- A Stripe Element will be inserted here. -->
-          </div>
-
-          <!-- Used to display form errors. -->
-          <div id="card-errors" role="alert"></div>
-        </div>
         <div class="medium-12 cell">
-          <button class="button margin-vertical-1">Submit Payment</button>
+          <div class="text-center">
+            <button class="button margin-vertical-1">Submit Payment</button>
+          </div>
         </div>
       </div>
+    </form>
   </div>
 </div>
-</form>
-</div>
-{% endblock %}
 
-{% block extra_script %}
 <script src="https://js.stripe.com/v3/"></script>
 
 <script>
@@ -135,4 +120,3 @@
   }
 
 </script>
-{% endblock %}
