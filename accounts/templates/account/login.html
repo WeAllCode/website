@@ -37,7 +37,7 @@
                     <a href="{% provider_login_url 'google' %}" class="button secondary">
                         <i class="margin-right-1 fab fa-google"></i> Sign in with Google <i class="fas fa-chevron-right margin-left-1"></i>
                     </a>
-                    <a href="{% provider_login_url 'facebook' method='js_sdk' %}" class="button secondary">
+                    <a href="{% provider_login_url 'facebook' method='oauth2' %}" class="button secondary">
                         <i class="margin-right-1 fab fa-facebook"></i> Sign in with Facebook <i class="fas fa-chevron-right margin-left-1"></i>
                     </a>
                     <p>Not yet a member? <a href="{% url 'account_signup' %}">Register now</a>!</p>
