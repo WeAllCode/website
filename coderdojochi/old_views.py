@@ -604,7 +604,7 @@ def cdc_admin(request, template_name="admin.html"):
             request,
             'You do not have permission to access this page.'
         )
-        return redirect('sessions')
+        return redirect('weallcode-home')
 
     sessions = Session.objects.select_related().annotate(
         num_orders=Count(
@@ -733,7 +733,7 @@ def session_stats(request, pk, template_name="session-stats.html"):
             request,
             'You do not have permission to access this page.'
         )
-        return redirect('sessions')
+        return redirect('weallcode-home')
 
     session_obj = get_object_or_404(Session, pk=pk)
 
@@ -822,7 +822,7 @@ def session_check_in(request, pk, template_name="session-check-in.html"):
             'You do not have permission to access this page.'
         )
 
-        return redirect('sessions')
+        return redirect('weallcode-home')
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
@@ -974,7 +974,7 @@ def session_check_in_mentors(request, pk, template_name="session-check-in-mentor
             request,
             'You do not have permission to access this page.'
         )
-        return redirect('sessions')
+        return redirect('weallcode-home')
 
     if request.method == 'POST':
         if 'order_id' in request.POST:
