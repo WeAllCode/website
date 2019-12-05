@@ -11,10 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-import sqreen
 from raven.contrib.django.raven_compat.middleware.wsgi import Sentry
-
-sqreen.start()
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "coderdojochi.settings")
 
