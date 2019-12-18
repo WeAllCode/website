@@ -53,8 +53,6 @@ class HomeView(WeAllCodeView):
         if len(sessions) > 0:
             context['next_session'] = sessions[0]
 
-        context['show_gt_teaser'] = self.request.COOKIES.get('has_seen_gt_teaser', 'false') == 'false'
-
         return context
 
 
