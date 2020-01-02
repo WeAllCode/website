@@ -37,7 +37,7 @@
                 </div>
                 <div class="description">
                     <h4 class="title"><a href="{{ meeting.get_absolute_url }}">{% if meeting.meeting_type.code %}{{ meeting.meeting_type.code }}: {% endif%}{{ meeting.meeting_type.title }}</a></h4>
-                    <p>{{ meeting.meeting_type.description|safe|truncatechars:180 }}</p>
+                    <p>{{ meeting.meeting_type.description|safe|truncatechars_html:180 }}</p>
                 </div>
                 <div class="actions">
                     <p><a href="{{ meeting.get_absolute_url }}" class="button">Learn more.</a></p>

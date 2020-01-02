@@ -68,12 +68,12 @@ class DojoMentorView(TemplateView):
 
         upcoming_sessions = orders.filter(
             is_active=True,
-            session__end_date__gte=timezone.now()
+            session__start_date__gte=timezone.now()
         ).order_by('session__start_date')
 
         past_sessions = orders.filter(
             is_active=True,
-            session__end_date__lte=timezone.now()
+            session__start_date__lte=timezone.now()
         ).order_by('session__start_date')
 
         meeting_orders = MeetingOrder.objects.select_related().filter(

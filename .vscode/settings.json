@@ -12,21 +12,24 @@
     "**/templates/*": "django-txt",
     "**/requirements{/**,*}.{txt,in}": "pip-requirements"
   },
-  "editor.defaultFormatter": "HookyQR.beautify",
+  // "editor.defaultFormatter": "HookyQR.beautify",
   "emmet.includeLanguages": {
     "django-html": "html"
   },
-  "python.linting.enabled": true,
   "python.linting.ignorePatterns": [
     ".vscode/*.py",
     "**/site-packages/**/*.py",
     "**/migrations/**",
   ],
-  "python.linting.pylintEnabled": false,
   "python.linting.pycodestyleEnabled": true,
-  "python.linting.pycodestylePath": "pycodestyle",
+  // "python.linting.pycodestylePath": "pycodestyle",
   "python.linting.pycodestyleArgs": [
     "--max-line-length=120",
+  ],
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintArgs": [
+    "--disable=C0111", // missing docstring
+    "--load-plugins=pylint_django",
   ],
   "[python]": {
     "editor.rulers": [120],
@@ -47,4 +50,49 @@
     "editor.quickSuggestions": false,
     "editor.trimAutoWhitespace": false,
   },
+  "cSpell.words": [
+    "Boto",
+    "Ethnicities",
+    "Hmmss",
+    "PROTO",
+    "REFERER",
+    "Signup",
+    "UNSUB",
+    "YYYYMMDDTH",
+    "authed",
+    "coderdojochi",
+    "coderodojochi",
+    "dateutil",
+    "dtend",
+    "femal",
+    "femenino",
+    "ical",
+    "icalendar",
+    "loginas",
+    "masculino",
+    "nino",
+    "noqa",
+    "patreon",
+    "psycopg",
+    "strftime",
+    "strptime",
+    "strtobool",
+    "waitlist"
+  ],
+  "cSpell.enabledLanguageIds": [
+    "asciidoc",
+    "css",
+    "git-commit",
+    "html",
+    "javascript",
+    "json",
+    "jsonc",
+    "markdown",
+    "python",
+    "restructuredtext",
+    "text",
+    "yaml",
+    "yml"
+  ],
+
 }

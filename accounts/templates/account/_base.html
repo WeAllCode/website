@@ -1,7 +1,7 @@
 {% extends "coderdojochi/_base.html" %}
 
 {% comment %} Need to do title this way since allauth doesn't support django-meta {% endcomment %}
-{% block title %}{% block title_placeholder %} {% endblock %} | {{ block.super }}{% endblock %}
+{% block title %}{% block title_placeholder %}{% endblock %}{{ block.super }}{% endblock %}
 
 {% block subheader %}
 {% if user.is_authenticated %}

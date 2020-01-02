@@ -1,0 +1,33 @@
+{% extends "coderdojochi/_base.html" %}
+
+{% load i18n %}
+
+{% block title %}{{ session.course.title }} Sign Up | {{ block.super }}{% endblock %}
+
+{% block body_class %}page-class-sign-up{% endblock %}
+
+{% block contained_content %}
+<div class="container registration min-height">
+    {% if user_signed_up %}
+
+        <h1 class="title light"><strong>{{ student.first_name }} {{ student.last_name }}</strong> can no longer make it to the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
+
+        <form class="form" method="POST" action="">
+            {% csrf_token %}
+            <button class="button tertiary large">Yes, cancel</button>
+            <a href="{{ session.get_absolute_url }}" class="button large secondary">Nevermind</a>
+        </form>
+
+    {% else %}
+
+        <h1 class="title light">Enroll <strong>{{ student.first_name }} {{ student.last_name }}</strong> for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
+
+        <form class="form" method="POST" action="">
+            {% csrf_token %}
+            <button class="button large">Yes, I'm excited!</button>
+            <a href="{{ session.get_absolute_url }}" class="button large secondary">Nevermind</a>
+        </form>
+
+    {% endif %}
+</div>
+{% endblock %}

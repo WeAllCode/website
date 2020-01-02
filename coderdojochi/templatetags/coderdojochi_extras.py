@@ -46,8 +46,8 @@ def student_register_link(context, student, session):
 
     elif (
         not student.is_within_age_range(
-            session.min_age_limitation,
-            session.max_age_limitation,
+            session.minimum_age,
+            session.maximum_age,
             session.start_date
         ) or
         not student.is_within_gender_limitation(
@@ -60,8 +60,8 @@ def student_register_link(context, student, session):
 
         if (
             not student.is_within_age_range(
-                session.min_age_limitation,
-                session.max_age_limitation,
+                session.minimum_age,
+                session.maximum_age,
                 session.start_date
             ) and
             not student.is_within_gender_limitation(
@@ -70,8 +70,8 @@ def student_register_link(context, student, session):
         ):
             title = "Limited event."
             message = (
-                f"Sorry, this class is limited to {session.gender_limitation}s between {session.min_age_limitation} "
-                f"and {session.max_age_limitation} this time around."
+                f"Sorry, this class is limited to {session.gender_limitation}s between {session.minimum_age} "
+                f"and {session.maximum_age} this time around."
             )
 
             button_href = (
@@ -81,15 +81,15 @@ def student_register_link(context, student, session):
 
         elif (
             not student.is_within_age_range(
-                session.min_age_limitation,
-                session.max_age_limitation,
+                session.minimum_age,
+                session.maximum_age,
                 session.start_date
             )
         ):
             title = "Age-limited event."
             message = (
-                f"Sorry, this class is limited to student between ages {session.min_age_limitation} and "
-                f"{session.max_age_limitation} this time around."
+                f"Sorry, this class is limited to student between ages {session.minimum_age} and "
+                f"{session.maximum_age} this time around."
             )
             button_href = (
                 'data-trigger="hover" data-placement="top" data-toggle="popover" title="" '

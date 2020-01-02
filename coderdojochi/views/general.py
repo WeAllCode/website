@@ -57,7 +57,7 @@ class HomeView(TemplateView):
 
         upcoming_classes = Session.objects.filter(
             is_active=True,
-            end_date__gte=timezone.now(),
+            start_date__gte=timezone.now(),
         ).order_by('start_date')
 
         if (not self.request.user.is_authenticated or not self.request.user.role == 'mentor'):
@@ -80,7 +80,7 @@ class AboutView(TemplateView):
             is_public=True,
         ).count()
 
-        # Number of served students based on checkin counts
+        # Number of served students based on check-in counts
         context['students_served_count'] = Order.objects.exclude(
             is_active=False,
             check_in=None

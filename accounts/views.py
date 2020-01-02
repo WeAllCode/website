@@ -84,12 +84,12 @@ class AccountHomeView(TemplateView):
 
         upcoming_sessions = orders.filter(
             is_active=True,
-            session__end_date__gte=timezone.now()
+            session__start_date__gte=timezone.now()
         ).order_by('session__start_date')
 
         past_sessions = orders.filter(
             is_active=True,
-            session__end_date__lte=timezone.now()
+            session__start_date__lte=timezone.now()
         ).order_by('session__start_date')
 
         meeting_orders = MeetingOrder.objects.select_related().filter(
@@ -140,12 +140,12 @@ class AccountHomeView(TemplateView):
 
         upcoming_orders = student_orders.filter(
             is_active=True,
-            session__end_date__gte=timezone.now(),
+            session__start_date__gte=timezone.now(),
         ).order_by('session__start_date')
 
         past_orders = student_orders.filter(
             is_active=True,
-            session__end_date__lte=timezone.now(),
+            session__start_date__lte=timezone.now(),
         ).order_by('session__start_date')
 
         return {
@@ -169,7 +169,7 @@ class AccountHomeView(TemplateView):
         context['form'] = MentorForm(instance=context['mentor'])
         context['user_form'] = CDCModelForm(instance=context['mentor'].user)
 
-        return render(self.request, 'account/home_mentor.html', context)
+        return render(self.request, 'account/mentor/home.html', context)
 
     def get_for_guardian(self, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -177,7 +177,7 @@ class AccountHomeView(TemplateView):
         context['form'] = GuardianForm(instance=context['guardian'])
         context['user_form'] = CDCModelForm(instance=context['guardian'].user)
 
-        return render(self.request, 'account/home_guardian.html', context)
+        return render(self.request, 'account/guardian/home.html', context)
 
     def post(self, *args, **kwargs):
         if self.request.user.role == 'mentor':
@@ -225,7 +225,7 @@ class AccountHomeView(TemplateView):
         context['form'] = form
         context['user_form'] = user_form
 
-        return render(self.request, 'account/home_mentor.html', context)
+        return render(self.request, 'account/mentor/home.html', context)
 
     def post_for_guardian(self, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -261,4 +261,4 @@ class AccountHomeView(TemplateView):
         context['form'] = form
         context['user_form'] = user_form
 
-        return render(self.request, 'account/home_guardian.html', context)
+        return render(self.request, 'account/guardian/home.html', context)

@@ -11,13 +11,6 @@ import html5.forms.widgets as html5_widgets
 
 from coderdojochi.models import CDCUser, Donation, Guardian, Mentor, RaceEthnicity, Session, Student
 
-SCHOOL_TYPE_CHOICES = (
-    ("Public", "Public"),
-    ("Charter", "Charter"),
-    ("Private", "Private"),
-    ("Homeschool", "Homeschool")
-)
-
 
 class CDCForm(Form):
     # strip leading or trailing whitespace
@@ -285,6 +278,19 @@ class GuardianForm(CDCModelForm):
 
 
 class StudentForm(CDCModelForm):
+
+    PUBLIC = 'PU'
+    CHARTER = 'CH'
+    PRIVATE = 'PR'
+    HOMESCHOOL = 'HM'
+
+    SCHOOL_TYPE_CHOICES = [
+        (PUBLIC, "Public"),
+        (CHARTER, "Charter"),
+        (PRIVATE, "Private"),
+        (HOMESCHOOL, "Homeschool"),
+    ]
+
     first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={

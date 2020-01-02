@@ -18,7 +18,7 @@
             </p>
             {% else %}
                 {% if students %}
-                    <h4 class="title light">{{ students.count }} Student{% if students.count > 1 %}s{% endif %} Registered <i class="fas fa-check"></i></h4>
+                    <h4 class="title light">{{ students }} Student{{ students|pluralize }} Registered <i class="fas fa-check"></i></h4>
                     <h2 class="title text-primary">Register another student</h2>
                 {% else %}
                     <h2 class="title text-primary">Register your first student now</h2>

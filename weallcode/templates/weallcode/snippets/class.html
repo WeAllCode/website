@@ -4,7 +4,7 @@
       <h2>{{ session.course.code }}</h2>
       <h4>{{ session.course.title }}</h4>
     </a>
-    <p>{{ session.course.description|safe|truncatechars:280 }}</p>
+    <p>{{ session.course.description|safe|truncatechars_html:280 }}</p>
 
     <!-- <div class="grid-x">
       <div class="cell medium-6">
