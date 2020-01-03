@@ -479,28 +479,29 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
 @admin.register(Course)
 class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
-    list_per_page = 10
+    list_per_page = 50
 
     list_display = [
         'code',
         'title',
         'course_type',
-        'slug',
-        'created_at',
-        'updated_at',
+        'duration',
     ]
 
     list_filter = [
         'code',
         'course_type',
+        'duration',
     ]
 
     ordering = [
+        'code',
         'created_at',
     ]
 
     search_fields = [
-        'title'
+        'title',
+        'description',
     ]
 
     view_on_site = False
@@ -513,7 +514,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = [
         '_course',
         'start_date',
-        'end_date',
+        # 'end_date',
         'location',
         'capacity',
         'student_count_link',
@@ -567,9 +568,9 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'course',
                 'location',
                 'start_date',
-                'end_date',
-                'mentor_start_date',
-                'mentor_end_date',
+                # 'old_end_date',
+                # 'old_mentor_start_date',
+                # 'old_mentor_end_date',
                 'capacity',
                 'mentor_capacity',
                 'instructor',
@@ -577,19 +578,24 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'is_public',
             ),
         }),
+        ('Overrides', {
+            # 'classes': ('collapse',),
+            'fields': (
+                'override_minimum_age_limitation',
+                'override_maximum_age_limitation',
+                'gender_limitation',
+                'cost',
+                'minimum_cost',
+                'maximum_cost',
+            )
+        }),
         ('Advanced options', {
             'classes': ('collapse',),
             'fields': (
-                'cost',
-                'min_cost',
-                'max_cost',
-                'gender_limitation',
-                'min_age_limitation',
-                'max_age_limitation',
-                'external_enrollment_url',
                 'password',
                 'partner_message',
                 'additional_info',
+                'external_enrollment_url',
                 'image_url',
                 'bg_image',
                 'announced_date_mentors',

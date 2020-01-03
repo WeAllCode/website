@@ -1,4 +1,4 @@
-import datetime
+from datetime import timedelta
 
 from django.conf import settings
 from django.core.mail import get_connection
@@ -21,26 +21,26 @@ class SendReminders(CronJobBase):
         orders_within_a_week = Order.objects.filter(
             is_active=True,
             week_reminder_sent=False,
-            session__start_date__lte=(timezone.now() + datetime.timedelta(days=7)),
-            session__start_date__gte=(timezone.now() + datetime.timedelta(days=1)),
+            session__start_date__lte=(timezone.now() + timedelta(days=7)),
+            session__start_date__gte=(timezone.now() + timedelta(days=1)),
         )
         orders_within_a_day = Order.objects.filter(
             is_active=True,
             day_reminder_sent=False,
-            session__start_date__lte=(timezone.now() + datetime.timedelta(days=1)),
-            session__start_date__gte=(timezone.now() - datetime.timedelta(days=2)),
+            session__start_date__lte=(timezone.now() + timedelta(days=1)),
+            session__start_date__gte=(timezone.now() - timedelta(days=2)),
         )
         sessions_within_a_week = Session.objects.filter(
             is_active=True,
             mentors_week_reminder_sent=False,
-            start_date__lte=(timezone.now() + datetime.timedelta(days=7)),
-            start_date__gte=(timezone.now() + datetime.timedelta(days=1)),
+            start_date__lte=(timezone.now() + timedelta(days=7)),
+            start_date__gte=(timezone.now() + timedelta(days=1)),
         )
         sessions_within_a_day = Session.objects.filter(
             is_active=True,
             mentors_day_reminder_sent=False,
-            start_date__lte=(timezone.now() + datetime.timedelta(days=1)),
-            start_date__gte=(timezone.now() - datetime.timedelta(days=2)),
+            start_date__lte=(timezone.now() + timedelta(days=1)),
+            start_date__gte=(timezone.now() - timedelta(days=2)),
         )
 
         # Clear email send data

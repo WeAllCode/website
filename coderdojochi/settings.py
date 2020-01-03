@@ -317,14 +317,14 @@ META_USE_GOOGLEPLUS_PROPERTIES = False
 META_USE_TITLE_TAG = False
 META_TWITTER_SITE = os.environ.get('META_TWITTER_SITE', '@weallcode')
 META_FB_APPID = os.environ.get('META_SITE_DOMAIN', '1454178301519376')
-DEFAULT_META_DESCRIPTION = os.environ.get(
-    'DEFAULT_META_DESCRIPTION',
-    (
-        'We All Code is volunteer run nonprofit organization that teaches web, game, '
-        'and app development to youth ages 7 to 17 free of charge.'
-    )
-)
-DEFAULT_META_KEYWORDS = os.environ.get('DEFAULT_META_KEYWORDS', '')
+META_INCLUDE_KEYWORDS = os.environ.get('META_INCLUDE_KEYWORDS', [
+    'stem',
+    'code',
+    'coding',
+    'kids',
+    'chicago',
+    'chicago coding'
+])
 DEFAULT_META_TITLE = os.environ.get('DEFAULT_META_TITLE', '')
 
 

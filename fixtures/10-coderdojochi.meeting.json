@@ -3,6 +3,8 @@
   "model": "coderdojochi.meeting",
   "pk": 1,
   "fields": {
+    "created_at": "2013-01-01T06:00:00Z",
+    "updated_at": "2013-01-01T06:00:00Z",
     "meeting_type": 1,
     "additional_info": "",
     "start_date": "2020-02-02T00:00:00Z",
@@ -13,9 +15,7 @@
     "is_active": true,
     "image_url": "images/classes/0001.jpg",
     "bg_image": "",
-    "announced_date": "2020-02-01T06:00:00Z",
-    "created_at": "2013-01-01T06:00:00Z",
-    "updated_at": "2013-01-01T06:00:00Z"
+    "announced_date": "2020-02-01T06:00:00Z"
   }
 }
 ]

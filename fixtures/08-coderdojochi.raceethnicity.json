@@ -3,6 +3,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 1,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "American Indian/Alaska Native",
     "is_visible": true
   }
@@ -11,6 +13,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 2,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "Asian",
     "is_visible": true
   }
@@ -19,6 +23,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 3,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "Arab",
     "is_visible": true
   }
@@ -27,6 +33,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 4,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "Black/African American",
     "is_visible": true
   }
@@ -35,6 +43,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 5,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "Hispanic/Latino",
     "is_visible": true
   }
@@ -43,6 +53,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 6,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "Pacific Islander",
     "is_visible": true
   }
@@ -51,6 +63,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 7,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "White",
     "is_visible": true
   }
@@ -59,6 +73,8 @@
   "model": "coderdojochi.raceethnicity",
   "pk": 8,
   "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
     "race_ethnicity": "Not Listed",
     "is_visible": true
   }

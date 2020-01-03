@@ -128,7 +128,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
-            <h2 class="title text-left">Classes <span class="badge">{{ sessions.count }}</span></h2>
+            <h2 class="title text-left">Classes <span class="badge">{{ sessions|length }}</span></h2>
         </div>
         <div class="col-sm-6 text-right h2">
             <a href="{% url 'admin:coderdojochi_session_add' %}" class="button" role="button">Create New Session</a>
@@ -229,14 +229,14 @@
                 </td>
                 <td class="text-center">
                     {% if not session.external_enrollment_url %}
-                        {{ session.get_checked_in_mentor_orders.count|default:'-' }}
+                        {{ session.get_checked_in_mentor_orders|length|default:'-' }}
                     {% else %}
                         &times;
                     {% endif %}
                 </td>
                 <td class="text-center">
                     {% if not session.external_enrollment_url %}
-                        {{ session.get_mentor_orders.count|default:'-' }}
+                        {{ session.get_mentor_orders|length|default:'-' }}
                     {% else %}
                         &times;
                     {% endif %}
@@ -258,15 +258,6 @@
             </tr>
             {% endfor %}
         </tbody>
-        {% if sessions.count > 5 %}
-        <tfoot>
-            <tr>
-                <td colspan="100" class="text-center">
-                    <button class="button" type="button" data-toggle="collapse" data-target=".session-collapse">Show/Hide</button>
-                </td>
-            </tr>
-        </tfoot>
-        {% endif %}
     </table>
     {% else %}
     <p>No past sessions.</p>
@@ -276,7 +267,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
-            <h2 class="title text-left">Meetings <span class="badge">{{ meetings.count }}</span></h2>
+            <h2 class="title text-left">Meetings <span class="badge">{{ meetings|length }}</span></h2>
         </div>
         <div class="col-sm-6 text-right h2">
             <a href="{% url 'admin:coderdojochi_meeting_add' %}" class="button" role="button">Create New Meeting</a>

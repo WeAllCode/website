@@ -27,8 +27,15 @@ from dateutil.relativedelta import relativedelta
 from icalendar import Calendar, Event, vText
 from paypal.standard.forms import PayPalPaymentsForm
 
-from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
-from coderdojochi.mixins import RoleRedirectMixin
+from coderdojochi.forms import (
+    CDCModelForm,
+    ContactForm,
+    DonationForm,
+    GuardianForm,
+    MentorForm,
+    StudentForm,
+)
+from coderdojochi.mixins import RoleRedirectMixin, RoleTemplateMixin
 from coderdojochi.models import (
     Donation,
     Equipment,
@@ -143,7 +150,7 @@ class SessionsView(TemplateView):
 
         all_sessions = Session.objects.filter(
             is_active=True,
-            end_date__gte=now
+            start_date__gte=now
         ).order_by('start_date')
 
         if (
@@ -166,7 +173,7 @@ class SessionDetailRedirectView(RedirectView):
         return reverse('session-detail', args=(kwargs['pk'],))
 
 
-class SessionDetailView(RoleRedirectMixin, TemplateView):
+class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
     template_name = "session-detail.html"
 
     def dispatch(self, request, *args, **kwargs):
@@ -227,7 +234,7 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
 
         upcoming_classes = Session.objects.filter(
             is_active=True,
-            end_date__gte=timezone.now()
+            start_date__gte=timezone.now()
         ).order_by('start_date')
         context['upcoming_classes'] = upcoming_classes
 
@@ -288,8 +295,7 @@ class SessionDetailView(RoleRedirectMixin, TemplateView):
             session_obj.save()
             messages.success(
                 request,
-                'You have been removed from the waitlist. '
-                'Thanks for letting us know.'
+                'You have been removed from the waitlist. Thanks for letting us know.'
             )
         else:
             getattr(session_obj, waitlist_attr).add(account)
@@ -306,13 +312,15 @@ class SessionSignUpRedirectView(RedirectView):
         return reverse('session-sign-up', args=(kwargs['pk'],))
 
 
-class SessionSignUpView(RoleRedirectMixin, TemplateView):
+class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
     template_name = "session-sign-up.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+
         session_obj = get_object_or_404(Session, id=kwargs['pk'])
         kwargs['session_obj'] = session_obj
+
         if request.user.role == 'mentor':
             session_orders = MentorOrder.objects.filter(
                 session=session_obj,
@@ -322,23 +330,20 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
             kwargs['user_signed_up'] = session_orders.filter(
                 mentor=kwargs['mentor']
             ).exists()
+
         elif request.user.role == 'guardian':
             kwargs['guardian'] = get_object_or_404(Guardian, user=request.user)
             kwargs['student'] = get_object_or_404(Student, id=kwargs['student_id'])
             kwargs['user_signed_up'] = kwargs['student'].is_registered_for_session(session_obj)
 
         access_dict = self.check_access(request, *args, **kwargs)
+
         if access_dict.get('message'):
             if access_dict.get('redirect') == 'account_home':
-                messages.warning(
-                    request,
-                    access_dict['message']
-                )
+                messages.warning(request, access_dict['message'])
             else:
-                messages.error(
-                    request,
-                    access_dict['message']
-                )
+                messages.error(request, access_dict['message'])
+
             return redirect(access_dict['redirect'])
 
         return super(SessionSignUpView, self).dispatch(request, *args, **kwargs)
@@ -369,18 +374,13 @@ class SessionSignUpView(RoleRedirectMixin, TemplateView):
         return access_dict
 
     def student_limitations(self, student, session_obj, user_signed_up):
-        if not student.is_within_gender_limitation(
-            session_obj.gender_limitation
-        ):
+        if not student.is_within_gender_limitation(session_obj.gender_limitation):
             return f'Sorry, this class is limited to {session_obj.gender_limitation}s this time around.'
 
-        if not student.is_within_age_range(
-            session_obj.min_age_limitation,
-            session_obj.max_age_limitation
-        ):
+        if not student.is_within_age_range(session_obj.minimum_age, session_obj.maximum_age):
             return (
                 f"Sorry, this class is limited to students between ages "
-                f"{session_obj.min_age_limitation} and {session_obj.max_age_limitation}."
+                f"{session_obj.minimum_age} and {session_obj.maximum_age}."
             )
 
         if not user_signed_up and session_obj.capacity <= session_obj.get_current_students().count():

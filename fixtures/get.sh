@@ -1,7 +1,7 @@
 #/bin/env bash
 
 # To run:
-# bash ./get.sh
+# docker-compuse run --rm app bash ./fixtures/get.sh
 #
 
 models=(
@@ -25,5 +25,6 @@ models=(
 
 for i in "${!models[@]}"
 do
-    docker-compose run --rm app python -W ignore manage.py dumpdata "${models[$i]}" --indent 2 > "`printf %02d $i`-${models[$i]}.json"
+    echo "Exporting '${models[$i]}' to '`printf %02d $i`-${models[$i]}.json'"
+    python -W ignore manage.py dumpdata "${models[$i]}" --indent 2 > "fixtures/`printf %02d $i`-${models[$i]}.json"
 done

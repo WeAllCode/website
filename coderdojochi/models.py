@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -9,16 +10,18 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
-
 from stdimage.models import StdImageField
 
 
 class CDCUser(AbstractUser):
 
-    ROLE_CHOICES = (
-        ('mentor', 'mentor'),
-        ('guardian', 'guardian'),
-    )
+    MENTOR = 'mentor'
+    GUARDIAN = 'guardian'
+
+    ROLE_CHOICES = [
+        (MENTOR, 'mentor'),
+        (GUARDIAN, 'guardian'),
+    ]
 
     role = models.CharField(
         choices=ROLE_CHOICES,
@@ -46,10 +49,25 @@ def generate_filename(instance, filename):
     return f"avatar/{instance.user.username}{file_extension.lower()}"
 
 
-class RaceEthnicity(models.Model):
+class CommonInfo(models.Model):
+    # Auto create/update
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class RaceEthnicity(CommonInfo):
     race_ethnicity = models.CharField(
         max_length=255,
     )
+
     is_visible = models.BooleanField(
         default=False,
     )
@@ -62,30 +80,30 @@ class RaceEthnicity(models.Model):
         return self.race_ethnicity
 
 
-class Mentor(models.Model):
+class Mentor(CommonInfo):
+
     user = models.ForeignKey(
         CDCUser,
         on_delete=models.CASCADE,
     )
+
     bio = models.TextField(
         blank=True,
         null=True,
     )
+
     is_active = models.BooleanField(
         default=True,
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+
     background_check = models.BooleanField(
         default=False,
     )
+
     is_public = models.BooleanField(
         default=False,
     )
+
     avatar = StdImageField(
         upload_to=generate_filename,
         blank=True,
@@ -97,32 +115,39 @@ class Mentor(models.Model):
             }
         },
     )
+
     avatar_approved = models.BooleanField(
         default=False,
     )
+
     birthday = models.DateTimeField(
         blank=False,
         null=True,
     )
+
     gender = models.CharField(
         max_length=255,
         blank=False,
         null=True,
     )
+
     race_ethnicity = models.ManyToManyField(
         RaceEthnicity,
         blank=False,
     )
+
     work_place = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     phone = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     home_address = models.CharField(
         max_length=255,
         blank=True,
@@ -165,41 +190,41 @@ class Mentor(models.Model):
         return self.user.last_name
 
 
-class Guardian(models.Model):
+class Guardian(CommonInfo):
     user = models.ForeignKey(
         CDCUser,
         on_delete=models.CASCADE,
     )
+
     is_active = models.BooleanField(
         default=True,
     )
+
     phone = models.CharField(
         max_length=50,
         blank=True,
     )
+
     zip = models.CharField(
         max_length=20,
         blank=True,
         null=True,
     )
+
     birthday = models.DateTimeField(
         blank=False,
         null=True,
     )
+
     gender = models.CharField(
         max_length=255,
         blank=False,
         null=True,
     )
+
     race_ethnicity = models.ManyToManyField(
         RaceEthnicity,
         blank=False,
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
     )
 
     class Meta:
@@ -228,41 +253,51 @@ class Guardian(models.Model):
         )
 
 
-class Student(models.Model):
+class Student(CommonInfo):
     guardian = models.ForeignKey(
         Guardian,
         on_delete=models.CASCADE,
     )
+
     first_name = models.CharField(
         max_length=255,
     )
+
     last_name = models.CharField(
         max_length=255,
     )
+
     birthday = models.DateTimeField()
+
     gender = models.CharField(
         max_length=255,
     )
+
     race_ethnicity = models.ManyToManyField(
         RaceEthnicity,
         blank=True,
     )
+
     school_name = models.CharField(
         max_length=255,
         null=True,
     )
+
     school_type = models.CharField(
         max_length=255,
         null=True,
     )
+
     medical_conditions = models.TextField(
         blank=True,
         null=True,
     )
+
     medications = models.TextField(
         blank=True,
         null=True,
     )
+
     photo_release = models.BooleanField(
         'Photo Consent',
         help_text=(
@@ -271,6 +306,7 @@ class Student(models.Model):
         ),
         default=False,
     )
+
     consent = models.BooleanField(
         'General Consent',
         help_text=(
@@ -279,12 +315,7 @@ class Student(models.Model):
         ),
         default=False,
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+
     is_active = models.BooleanField(
         default=True,
     )
@@ -327,11 +358,11 @@ class Student(models.Model):
             return 'other'
     get_clean_gender.short_description = 'Clean Gender'
 
-    # returns True if the student age is between min_age and max_age
-    def is_within_age_range(self, min_age, max_age, date=timezone.now()):
+    # returns True if the student age is between minimum_age and maximum_age
+    def is_within_age_range(self, minimum_age, maximum_age, date=timezone.now()):
         age = self.get_age(date)
 
-        if age >= min_age and age <= max_age:
+        if age >= minimum_age and age <= maximum_age:
             return True
         else:
             return False
@@ -346,7 +377,7 @@ class Student(models.Model):
             return True
 
 
-class Course(models.Model):
+class Course(CommonInfo):
     WEEKEND = 'WE'
     CAMP = 'CA'
 
@@ -360,30 +391,49 @@ class Course(models.Model):
         blank=True,
         null=True,
     )
+
     course_type = models.CharField(
         'type',
         max_length=2,
         choices=COURSE_TYPE_CHOICES,
         default=WEEKEND,
     )
+
     title = models.CharField(
         max_length=255,
     )
+
     slug = models.SlugField(
         max_length=40,
         blank=True,
         null=True,
     )
+
     description = models.TextField(
         blank=True,
         null=True,
         help_text="Basic HTML allowed",
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
+
+    duration = models.DurationField(
+        default=timedelta(hours=3),
+        help_text="HH:MM:ss",
     )
-    updated_at = models.DateTimeField(
-        auto_now=True,
+
+    minimum_age = models.IntegerField(
+        default=7,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ],
+    )
+
+    maximum_age = models.IntegerField(
+        default=17,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ],
     )
 
     class Meta:
@@ -401,19 +451,24 @@ class Course(models.Model):
         super(Course, self).save(*args, **kwargs)
 
 
-class Location(models.Model):
+class Location(CommonInfo):
+
     name = models.CharField(
         max_length=255,
     )
+
     address = models.CharField(
         max_length=255,
     )
+
     city = models.CharField(
         max_length=255,
     )
+
     state = models.CharField(
         max_length=255,
     )
+
     zip = models.CharField(
         max_length=20,
     )
@@ -425,7 +480,7 @@ class Location(models.Model):
         return self.name
 
 
-class Session(models.Model):
+class Session(CommonInfo):
     MALE = 'male'
     FEMALE = 'female'
 
@@ -439,132 +494,166 @@ class Session(models.Model):
         on_delete=models.CASCADE,
     )
 
-    # Pricing
-    cost = models.DecimalField(
-        max_digits=6,
-        decimal_places=2,
-        default=0,
-    )
-
-    min_cost = models.DecimalField(
-        max_digits=6,
-        decimal_places=2,
-        blank=True,
-        null=True,
-    )
-
-    max_cost = models.DecimalField(
-        max_digits=6,
-        decimal_places=2,
-        blank=True,
-        null=True,
-    )
-
     start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    mentor_start_date = models.DateTimeField()
-    mentor_end_date = models.DateTimeField()
+
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
     )
+
     capacity = models.IntegerField(
         default=20,
     )
+
     mentor_capacity = models.IntegerField(
         blank=True,
         null=True,
     )
-    additional_info = models.TextField(
-        blank=True,
-        null=True,
-        help_text="Basic HTML allowed"
-    )
+
     instructor = models.ForeignKey(
         Mentor,
         on_delete=models.CASCADE,
         related_name="session_instructor",
         limit_choices_to={'user__groups__name': "Instructor"},
     )
+
+    # Pricing
+    cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+
+    minimum_cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+
+    maximum_cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+
+    additional_info = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed"
+    )
+
     waitlist_mentors = models.ManyToManyField(
         Mentor,
         blank=True,
         related_name="session_waitlist_mentors",
     )
+
     waitlist_students = models.ManyToManyField(
         Student,
         blank=True,
         related_name="session_waitlist_students",
     )
+
     external_enrollment_url = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         help_text="When provided, local enrollment is disabled.",
     )
+
     is_active = models.BooleanField(
         default=False,
         help_text="Session is active.",
     )
+
     is_public = models.BooleanField(
         default=False,
         help_text="Session is a public session.",
     )
+
     password = models.CharField(
         blank=True,
         max_length=255,
     )
+
     partner_message = models.TextField(
         blank=True,
     )
+
     announced_date_mentors = models.DateTimeField(
         blank=True,
         null=True,
     )
+
     announced_date_guardians = models.DateTimeField(
         blank=True,
         null=True,
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+
     image_url = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     bg_image = models.ImageField(
         blank=True,
         null=True,
     )
+
     mentors_week_reminder_sent = models.BooleanField(
         default=False,
     )
+
     mentors_day_reminder_sent = models.BooleanField(
         default=False,
     )
+
     gender_limitation = models.CharField(
+        help_text="Limits the class to be only one gender.",
         max_length=255,
         choices=GENDER_LIMITATION_CHOICES,
         blank=True,
         null=True,
     )
-    min_age_limitation = models.IntegerField(
-        default=7,
+
+    override_minimum_age_limitation = models.IntegerField(
+        "Min Age",
+        help_text="Only update this if different from the default.",
+        blank=True,
+        null=True,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(100)
         ],
     )
-    max_age_limitation = models.IntegerField(
-        default=17,
+
+    override_maximum_age_limitation = models.IntegerField(
+        "Max Age",
+        help_text="Only update this if different from the default.",
+        blank=True,
+        null=True,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(100)
         ],
+    )
+
+    # kept for older records
+    old_end_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    old_mentor_start_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    old_mentor_end_date = models.DateTimeField(
+        blank=True,
+        null=True,
     )
 
     class Meta:
@@ -666,31 +755,73 @@ class Session(models.Model):
     is_guardian_announced.short_description = "Is Announced"
     is_guardian_announced.admin_order_field = 'announced_date_guardians'
 
+    @property
+    def end_date(self):
+        # Some records have a defined record with the end date,
+        # rather than use the course's duration.
+        # We're keeping this for old records.
+        if self.old_end_date:
+            return self.old_end_date
 
-class MeetingType(models.Model):
+        return self.start_date + self.course.duration
+
+    @property
+    def mentor_start_date(self):
+        # Some records have a defined record with the mentor start date,
+        # rather than do the math.
+        # We're keeping this for old records.
+        if self.old_mentor_start_date:
+            return self.old_mentor_start_date
+
+        return self.start_date - timedelta(hours=1)
+
+    @property
+    def mentor_end_date(self):
+        # Some records have a defined record with the mentor start date,
+        # rather than do the math.
+        # We're keeping this for old records.
+        if self.old_mentor_end_date:
+            return self.old_mentor_end_date
+
+        return self.end_date + timedelta(hours=1)
+
+    @property
+    def minimum_age(self):
+        if self.override_minimum_age_limitation is not None:
+            return self.override_minimum_age_limitation
+
+        return self.course.minimum_age
+
+    @property
+    def maximum_age(self):
+        if self.override_maximum_age_limitation is not None:
+            return self.override_maximum_age_limitation
+
+        return self.course.maximum_age
+
+
+class MeetingType(CommonInfo):
+
     code = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     title = models.CharField(
         max_length=255,
     )
+
     slug = models.SlugField(
         max_length=40,
         blank=True,
         null=True,
     )
+
     description = models.TextField(
         blank=True,
         null=True,
         help_text="Basic HTML allowed",
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
     )
 
     class Meta:
@@ -708,58 +839,63 @@ class MeetingType(models.Model):
         super(MeetingType, self).save(*args, **kwargs)
 
 
-class Meeting(models.Model):
+class Meeting(CommonInfo):
+
     meeting_type = models.ForeignKey(
         MeetingType,
         on_delete=models.CASCADE,
     )
+
     additional_info = models.TextField(
         blank=True,
         null=True,
         help_text="Basic HTML allowed",
     )
+
     start_date = models.DateTimeField(
         blank=True,
         null=True,
     )
+
     end_date = models.DateTimeField(
         blank=True,
         null=True,
     )
+
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
     )
+
     external_enrollment_url = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         help_text="When provided, local enrollment is disabled.",
     )
+
     is_public = models.BooleanField(
         default=False,
     )
+
     is_active = models.BooleanField(
         default=False,
     )
+
     image_url = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     bg_image = models.ImageField(
         blank=True,
         null=True,
     )
+
     announced_date = models.DateTimeField(
         blank=True,
         null=True,
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
     )
 
     class Meta:
@@ -825,55 +961,60 @@ class Meeting(models.Model):
     get_mentor_count.short_description = 'Mentors'
 
 
-class Order(models.Model):
+class Order(CommonInfo):
+
     guardian = models.ForeignKey(
         Guardian,
         on_delete=models.CASCADE,
     )
+
     session = models.ForeignKey(
         Session,
         on_delete=models.CASCADE,
     )
+
     student = models.ForeignKey(
         Student,
         on_delete=models.CASCADE,
     )
+
     is_active = models.BooleanField(
         default=True,
     )
+
     ip = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     check_in = models.DateTimeField(
         blank=True,
         null=True,
     )
+
     alternate_guardian = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     affiliate = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     order_number = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+
     week_reminder_sent = models.BooleanField(
         default=False,
     )
+
     day_reminder_sent = models.BooleanField(
         default=False,
     )
@@ -898,46 +1039,49 @@ class Order(models.Model):
     get_student_gender.short_description = 'Gender'
 
 
-class MentorOrder(models.Model):
+class MentorOrder(CommonInfo):
+
     mentor = models.ForeignKey(
         Mentor,
         on_delete=models.CASCADE,
     )
+
     session = models.ForeignKey(
         Session,
         on_delete=models.CASCADE,
     )
+
     is_active = models.BooleanField(
         default=True,
     )
+
     ip = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     check_in = models.DateTimeField(
         blank=True,
         null=True,
     )
+
     affiliate = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     order_number = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+
     week_reminder_sent = models.BooleanField(
         default=False,
     )
+
     day_reminder_sent = models.BooleanField(
         default=False,
     )
@@ -954,46 +1098,49 @@ class MentorOrder(models.Model):
     is_checked_in.boolean = True
 
 
-class MeetingOrder(models.Model):
+class MeetingOrder(CommonInfo):
+
     mentor = models.ForeignKey(
         Mentor,
         on_delete=models.CASCADE,
     )
+
     meeting = models.ForeignKey(
         Meeting,
         on_delete=models.CASCADE,
     )
+
     is_active = models.BooleanField(
         default=True,
     )
+
     ip = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     check_in = models.DateTimeField(
         blank=True,
         null=True,
     )
+
     affiliate = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     order_number = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+
     week_reminder_sent = models.BooleanField(
         default=False,
     )
+
     day_reminder_sent = models.BooleanField(
         default=False,
     )
@@ -1010,18 +1157,23 @@ class MeetingOrder(models.Model):
     is_checked_in.boolean = True
 
 
-class EquipmentType(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False)
+class EquipmentType(CommonInfo):
+
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+        null=False,
+    )
 
     def __str__(self):
         return self.name
 
 
-class Equipment(models.Model):
+class Equipment(CommonInfo):
     WORKING = 'working'
     ISSUE = 'issue'
     UNUSABLE = 'unusable'
-    EQUIPTMENTCONDITIONS = [
+    EQUIPMENT_CONDITIONS = [
         (WORKING, 'Working'),
         (ISSUE, 'Issue'),
         (UNUSABLE, 'Unusable'),
@@ -1033,50 +1185,54 @@ class Equipment(models.Model):
         default='000-000-000-000',
         null=False,
     )
+
     equipment_type = models.ForeignKey(
         EquipmentType,
         on_delete=models.CASCADE,
     )
+
     make = models.CharField(
         max_length=255,
     )
+
     model = models.CharField(
         max_length=255,
     )
+
     asset_tag = models.CharField(
         max_length=255,
     )
-    aquisition_date = models.DateTimeField(
+
+    acquisition_date = models.DateTimeField(
         blank=True,
         null=True,
     )
+
     condition = models.CharField(
         max_length=255,
-        choices=EQUIPTMENTCONDITIONS,
+        choices=EQUIPMENT_CONDITIONS,
     )
+
     notes = models.TextField(
         blank=True,
         null=True,
     )
+
     last_system_update_check_in = models.DateTimeField(
         blank=True,
         null=True,
         verbose_name="Last Check In",
     )
+
     last_system_update = models.DateTimeField(
         blank=True,
         null=True,
         verbose_name="Last Update",
     )
+
     force_update_on_next_boot = models.BooleanField(
         default=False,
         verbose_name="Force Update",
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
     )
 
     class Meta:
@@ -1084,27 +1240,25 @@ class Equipment(models.Model):
         verbose_name_plural = _("equipment")
 
     def __str__(self):
-        return f"{self.equipment_type.name} | {self.make} {self.model} | {self.aquisition_date}"
+        return f"{self.equipment_type.name} | {self.make} {self.model} | {self.acquisition_date}"
 
 
-class EmailContent(models.Model):
+class EmailContent(CommonInfo):
+
     nickname = models.CharField(
         max_length=255,
     )
+
     subject = models.CharField(
         max_length=255,
     )
+
     body = models.TextField(
         blank=True,
         null=True,
         help_text="Basic HTML allowed",
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )
+
     is_active = models.BooleanField(
         default=True,
     )
@@ -1117,50 +1271,53 @@ class EmailContent(models.Model):
         return f"{self.nickname} | {self.subject}"
 
 
-class Donation(models.Model):
+class Donation(CommonInfo):
+
     user = models.ForeignKey(
         CDCUser,
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
+
     session = models.ForeignKey(
         Session,
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
+
     first_name = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     last_name = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     referral_code = models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
+
     email = models.EmailField(
         blank=True,
         null=True,
     )
+
     amount = models.IntegerField()
+
     is_verified = models.BooleanField(
         default=False,
     )
+
     receipt_sent = models.BooleanField(
         default=False,
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
     )
 
     class Meta:
@@ -1199,12 +1356,13 @@ class Donation(models.Model):
     get_email.short_description = 'Email'
 
 
-class PartnerPasswordAccess(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+class PartnerPasswordAccess(CommonInfo):
+
     user = models.ForeignKey(
         CDCUser,
         on_delete=models.CASCADE,
     )
+
     session = models.ForeignKey(
         Session,
         on_delete=models.CASCADE,

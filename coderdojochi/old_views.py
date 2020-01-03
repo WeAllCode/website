@@ -52,7 +52,7 @@ User = get_user_model()
 def home(request, template_name="home.html"):
     upcoming_classes = Session.objects.filter(
         is_active=True,
-        end_date__gte=timezone.now(),
+        start_date__gte=timezone.now(),
     ).order_by('start_date')
 
     if (
@@ -138,12 +138,12 @@ def faqs(request, template_name="faqs.html"):
 
 #     upcoming_sessions = orders.filter(
 #         is_active=True,
-#         session__end_date__gte=timezone.now()
+#         session__start_date__gte=timezone.now()
 #     ).order_by('session__start_date')
 
 #     past_sessions = orders.filter(
 #         is_active=True,
-#         session__end_date__lte=timezone.now()
+#         session_start_date__lte=timezone.now()
 #     ).order_by('session__start_date')
 
 #     meeting_orders = MeetingOrder.objects.select_related().filter(
@@ -243,12 +243,12 @@ def faqs(request, template_name="faqs.html"):
 
 #     upcoming_orders = student_orders.filter(
 #         is_active=True,
-#         session__end_date__gte=timezone.now(),
+#         session__start_date__gte=timezone.now(),
 #     ).order_by('session__start_date')
 
 #     past_orders = student_orders.filter(
 #         is_active=True,
-#         session__end_date__lte=timezone.now(),
+#         session__start_date__lte=timezone.now(),
 #     ).order_by('session__start_date')
 
 #     if request.method == 'POST':
@@ -622,7 +622,7 @@ def cdc_admin(request, template_name="admin.html"):
 
         is_future=Case(
             When(
-                end_date__gte=timezone.now(),
+                start_date__gte=timezone.now(),
                 then=1
             ),
             default=0,
@@ -1176,8 +1176,8 @@ def session_announce_mentors(request, pk):
             'class_start_time': arrow.get(session_obj.mentor_start_date).to('local').format('h:mma'),
             'class_end_date': arrow.get(session_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
             'class_end_time': arrow.get(session_obj.end_date).to('local').format('h:mma'),
-            'min_age_limitation': session_obj.min_age_limitation,
-            'max_age_limitation': session_obj.max_age_limitation,
+            'minimum_age': session_obj.minimum_age,
+            'maximum_age': session_obj.maximum_age,
             'class_location_name': session_obj.location.name,
             'class_location_address': session_obj.location.address,
             'class_location_city': session_obj.location.city,
@@ -1250,8 +1250,8 @@ def session_announce_guardians(request, pk):
             'class_start_time': arrow.get(session_obj.start_date).to('local').format('h:mma'),
             'class_end_date': arrow.get(session_obj.end_date).to('local').format('dddd, MMMM D, YYYY'),
             'class_end_time': arrow.get(session_obj.end_date).to('local').format('h:mma'),
-            'min_age_limitation': session_obj.min_age_limitation,
-            'max_age_limitation': session_obj.max_age_limitation,
+            'minimum_age': session_obj.minimum_age,
+            'maximum_age': session_obj.maximum_age,
             'class_location_name': session_obj.location.name,
             'class_location_address': session_obj.location.address,
             'class_location_city': session_obj.location.city,
@@ -1320,7 +1320,6 @@ def check_system(request):
         Session.objects.filter(
             is_active=True,
             start_date__lte=timezone.now(),
-            mentor_end_date__gte=timezone.now()
         ).count()
     ):
         runUpdate = False

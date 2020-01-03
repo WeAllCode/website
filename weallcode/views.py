@@ -1,19 +1,22 @@
 from datetime import datetime
 
-from coderdojochi.models import Course, Mentor, Session
 from django.conf import settings
 from django.contrib import messages, sitemaps
 from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
+
 from meta.views import MetadataMixin
+
+from coderdojochi.models import Course, Mentor, Session
 
 from .forms import ContactForm
 
 
-class WeAllCodeView(MetadataMixin, FormView):
+class DefaultMetaTags(MetadataMixin):
+    title = None
     description = (
         "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
         "youth ages 7 to 17 free of charge."
@@ -23,6 +26,8 @@ class WeAllCodeView(MetadataMixin, FormView):
     twitter_creator = "@weallcode"
     twitter_site = "@weallcode"
 
+
+class DefaultContext():
     def get_context_data(self, **kwargs):
         return {
             "donate_url": "https://paypal.com/us/fundraiser/charity/193426",
@@ -31,17 +36,16 @@ class WeAllCodeView(MetadataMixin, FormView):
         }
 
 
-class HomeView(WeAllCodeView):
+class HomeView(DefaultMetaTags, DefaultContext, TemplateView):
     template_name = "weallcode/home.html"
-    title = "We All Code"
     url = reverse_lazy('weallcode-home')
 
     def get_context_data(self, **kwargs):
-        context = super(HomeView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         sessions = Session.objects.filter(
             is_active=True,
-            end_date__gte=timezone.now()
+            start_date__gte=timezone.now()
         ).order_by('start_date')
 
         if (
@@ -56,24 +60,26 @@ class HomeView(WeAllCodeView):
         return context
 
 
-class OurStoryView(WeAllCodeView):
+class OurStoryView(DefaultMetaTags, DefaultContext, TemplateView):
     template_name = "weallcode/our_story.html"
-    title = f"Our Story | {settings.SITE_NAME}"
     url = reverse_lazy('weallcode-our-story')
 
+    title = f"Our Story | {settings.SITE_NAME}"
 
-class ProgramsView(WeAllCodeView):
+
+class ProgramsView(DefaultMetaTags, DefaultContext, TemplateView):
     template_name = "weallcode/programs.html"
-    title = f"Programs | {settings.SITE_NAME}"
     url = reverse_lazy('weallcode-programs')
 
+    title = f"Programs | {settings.SITE_NAME}"
+
     def get_context_data(self, **kwargs):
-        context = super(ProgramsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         # WEEKEND CLASSES
         weekend_classes = Session.objects.filter(
             is_active=True,
-            end_date__gte=timezone.now(),
+            start_date__gte=timezone.now(),
             course__course_type=Course.WEEKEND,
         ).order_by('start_date')
 
@@ -88,7 +94,7 @@ class ProgramsView(WeAllCodeView):
         # SUMMER CAMP CLASSES
         summer_camp_classes = Session.objects.filter(
             is_active=True,
-            end_date__gte=timezone.now(),
+            start_date__gte=timezone.now(),
             course__course_type=Course.CAMP,
         ).order_by('start_date')
 
@@ -103,18 +109,19 @@ class ProgramsView(WeAllCodeView):
         return context
 
 
-class ProgramsSummerCampsView(WeAllCodeView):
+class ProgramsSummerCampsView(DefaultMetaTags, DefaultContext, TemplateView):
     template_name = "weallcode/programs-summer-camps.html"
-    title = f"Summer Camps | {settings.SITE_NAME}"
     url = reverse_lazy('weallcode-programs-summer-camps')
 
+    title = f"Summer Camps | {settings.SITE_NAME}"
+
     def get_context_data(self, **kwargs):
-        context = super(ProgramsSummerCampsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         # SUMMER CAMP CLASSES
         summer_camp_classes = Session.objects.filter(
             is_active=True,
-            end_date__gte=timezone.now(),
+            start_date__gte=timezone.now(),
             course__course_type=Course.CAMP,
         ).order_by('start_date')
 
@@ -129,10 +136,11 @@ class ProgramsSummerCampsView(WeAllCodeView):
         return context
 
 
-class TeamView(WeAllCodeView):
+class TeamView(DefaultMetaTags, DefaultContext, TemplateView):
     template_name = "weallcode/team.html"
-    title = f"Team | {settings.SITE_NAME}"
     url = reverse_lazy('weallcode-team')
+
+    title = f"Team | {settings.SITE_NAME}"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -162,12 +170,13 @@ class TeamView(WeAllCodeView):
         return context
 
 
-class JoinUsView(WeAllCodeView):
+class JoinUsView(DefaultMetaTags, DefaultContext, FormView):
     template_name = "weallcode/join_us.html"
     form_class = ContactForm
-    title = f"Join Us | {settings.SITE_NAME}"
     url = reverse_lazy('weallcode-join-us')
     success_url = reverse_lazy('weallcode-join-us')
+
+    title = f"Join Us | {settings.SITE_NAME}"
 
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.
@@ -181,16 +190,18 @@ class JoinUsView(WeAllCodeView):
         return super().form_valid(form)
 
 
-class PrivacyView(WeAllCodeView):
+class PrivacyView(DefaultMetaTags, DefaultContext, TemplateView):
     template_name = "weallcode/privacy.html"
-    title = f"Privacy & Terms | {settings.SITE_NAME}"
     url = reverse_lazy('weallcode-privacy')
 
+    title = f"Privacy & Terms | {settings.SITE_NAME}"
 
-class CreditsView(WeAllCodeView):
+
+class CreditsView(DefaultMetaTags, DefaultContext, TemplateView):
     template_name = "weallcode/credits.html"
-    title = f"Credits & Attributions | {settings.SITE_NAME}"
     url = reverse_lazy('weallcode-credits')
+
+    title = f"Credits & Attributions | {settings.SITE_NAME}"
 
 
 class StaticSitemapView(sitemaps.Sitemap):
@@ -198,8 +209,16 @@ class StaticSitemapView(sitemaps.Sitemap):
     changefreq = 'daily'
 
     def items(self):
-        return ['weallcode-home', 'weallcode-our-story', 'weallcode-programs', 'weallcode-programs-summer-camps',
-                'weallcode-team', 'weallcode-join-us', 'weallcode-privacy', 'weallcode-credits']
+        return [
+            'weallcode-home',
+            'weallcode-our-story',
+            'weallcode-programs',
+            'weallcode-programs-summer-camps',
+            'weallcode-team',
+            'weallcode-join-us',
+            'weallcode-privacy',
+            'weallcode-credits',
+        ]
 
     def location(self, item):
         return reverse(item)

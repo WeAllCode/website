@@ -3,6 +3,8 @@
   "model": "coderdojochi.order",
   "pk": 1,
   "fields": {
+    "created_at": "2016-05-08T19:07:25.346Z",
+    "updated_at": "2016-05-08T19:07:25.346Z",
     "guardian": 1,
     "session": 2,
     "student": 1,
@@ -12,8 +14,6 @@
     "alternate_guardian": "",
     "affiliate": "",
     "order_number": "",
-    "created_at": "2016-05-08T19:07:25.346Z",
-    "updated_at": "2016-05-08T19:07:25.346Z",
     "week_reminder_sent": false,
     "day_reminder_sent": false
   }
@@ -22,6 +22,8 @@
   "model": "coderdojochi.order",
   "pk": 2,
   "fields": {
+    "created_at": "2016-05-08T19:07:41.042Z",
+    "updated_at": "2016-05-08T19:07:41.042Z",
     "guardian": 1,
     "session": 2,
     "student": 2,
@@ -31,8 +33,6 @@
     "alternate_guardian": "",
     "affiliate": "",
     "order_number": "",
-    "created_at": "2016-05-08T19:07:41.042Z",
-    "updated_at": "2016-05-08T19:07:41.042Z",
     "week_reminder_sent": false,
     "day_reminder_sent": false
   }
@@ -41,6 +41,8 @@
   "model": "coderdojochi.order",
   "pk": 3,
   "fields": {
+    "created_at": "2016-05-08T19:07:57.868Z",
+    "updated_at": "2016-05-08T19:07:57.868Z",
     "guardian": 1,
     "session": 2,
     "student": 3,
@@ -50,8 +52,6 @@
     "alternate_guardian": "",
     "affiliate": "",
     "order_number": "",
-    "created_at": "2016-05-08T19:07:57.868Z",
-    "updated_at": "2016-05-08T19:07:57.868Z",
     "week_reminder_sent": false,
     "day_reminder_sent": false
   }
