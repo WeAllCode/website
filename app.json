@@ -22,12 +22,6 @@
     "ENABLE_DEV_FIXTURES": {
       "required": true
     },
-    "PAYPAL_BUSINESS_ID": {
-      "required": true
-    },
-    "PAYPAL_RECEIVER_EMAIL": {
-      "required": true
-    },
     "SECRET_KEY": {
       "required": true
     },

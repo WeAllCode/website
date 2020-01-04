@@ -7,8 +7,6 @@ from django.dispatch import receiver
 from django.shortcuts import get_object_or_404
 
 import arrow
-from paypal.standard.ipn.signals import valid_ipn_received
-from paypal.standard.models import ST_PP_COMPLETED
 
 from coderdojochi.models import Donation, Mentor
 from coderdojochi.util import email
@@ -47,37 +45,3 @@ def avatar_updated_handler(sender, instance, **kwargs):
             attachments=[img],
             mixed_subtype='related',
         )
-
-
-def donate_callback(sender, **kwargs):
-    ipn_obj = sender
-
-    if ipn_obj.payment_status == ST_PP_COMPLETED:
-        donation = get_object_or_404(Donation, id=ipn_obj.invoice)
-        donation.is_verified = True
-
-        if not donation.receipt_sent:
-            merge_global_data = {
-                'first_name': donation.first_name,
-                'last_name': donation.last_name,
-                'email': donation.email,
-                'amount': f"${donation.amount:0,.2f}",
-                'transaction_date': arrow.get(donation.created_at).to('local').format('MMMM D, YYYY h:ss a'),
-                'transaction_id': donation.id,
-            }
-
-            email(
-                subject='Donations Receipt from We All Code',
-                template_name='donation-receipt',
-                merge_global_data=merge_global_data,
-                recipients=[donation.email],
-                bcc=[settings.CONTACT_EMAIL],
-                preheader="Your generous donation is what makes We All Code possible.",
-            )
-
-            donation.receipt_sent = True
-
-        donation.save()
-
-
-valid_ipn_received.connect(donate_callback)

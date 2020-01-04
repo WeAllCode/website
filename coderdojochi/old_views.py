@@ -24,7 +24,6 @@ from django.views.generic import TemplateView
 import arrow
 from dateutil.relativedelta import relativedelta
 from icalendar import Calendar, Event, vText
-from paypal.standard.forms import PayPalPaymentsForm
 
 from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
 from coderdojochi.models import (
@@ -464,93 +463,6 @@ def student_detail(
             'form': form
         }
     )
-
-
-def donate(request, template_name="donate.html"):
-    if request.method == 'POST':
-
-        # if new donation form submit
-        if (
-            'first_name' in request.POST and
-            'last_name' in request.POST and
-            'email' in request.POST and
-            'amount' in request.POST
-        ):
-            donation = Donation(
-                first_name=request.POST['first_name'],
-                last_name=request.POST['last_name'],
-                email=request.POST['email'],
-                amount=request.POST['amount'],
-            )
-
-            if 'referral_code' in request.POST and request.POST['referral_code']:
-                donation.referral_code = request.POST['referral_code']
-
-            donation.save()
-
-            return HttpResponse(donation.id)
-
-        else:
-            return HttpResponse('fail')
-
-    referral_heading = None
-    referral_code = None
-    referral_disclaimer = None
-
-    if 'ref' in request.GET:
-        referral_code = request.GET['ref']
-
-    paypal_dict = {
-        'business': settings.PAYPAL_BUSINESS_ID,
-        'amount': '25',
-        'item_name': 'We All Code Donation',
-        'cmd': '_donations',
-        'lc': 'US',
-        'invoice': '',
-        'currency_code': 'USD',
-        'no_note': '0',
-        'cn': 'Add a message for We All Code to read:',
-        'no_shipping': '1',
-        'address_override': '1',
-        'first_name': '',
-        'last_name': '',
-        'notify_url': request.build_absolute_uri(reverse('paypal-ipn')),
-        'return_url': request.build_absolute_uri('return'),
-        'cancel_return': request.build_absolute_uri('cancel'),
-        'bn': 'PP-DonationsBF:btn_donateCC_LG.gif:NonHosted'
-    }
-
-    form = PayPalPaymentsForm(initial=paypal_dict)
-
-    return render(request, template_name, {
-        'form': form,
-        'referral_heading': referral_heading,
-        'referral_code': referral_code,
-        'referral_disclaimer': referral_disclaimer
-    })
-
-
-@csrf_exempt
-def donate_cancel(request):
-    messages.error(
-        request,
-        (
-            f"Looks like you cancelled the donation process. "
-            f"Please feel free to <a href='{reverse('contact')}'>contact us</a> "
-            f"if you need any help."
-        )
-    )
-
-    return redirect('donate')
-
-
-@csrf_exempt
-def donate_return(request):
-    messages.success(
-        request,
-        'Your donation is being processed. You should receive a confirmation email shortly. Thanks again!'
-    )
-    return redirect('donate')
 
 
 def contact(request, template_name="contact.html"):

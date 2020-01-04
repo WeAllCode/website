@@ -23,9 +23,15 @@ from django.views.generic import TemplateView
 
 import arrow
 from icalendar import Calendar, Event, vText
-from paypal.standard.forms import PayPalPaymentsForm
 
-from coderdojochi.forms import CDCModelForm, ContactForm, DonationForm, GuardianForm, MentorForm, StudentForm
+from coderdojochi.forms import (
+    CDCModelForm,
+    ContactForm,
+    DonationForm,
+    GuardianForm,
+    MentorForm,
+    StudentForm,
+)
 from coderdojochi.models import (
     Donation,
     Equipment,
