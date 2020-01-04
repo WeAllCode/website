@@ -29,11 +29,15 @@ class DefaultMetaTags(MetadataMixin):
 
 class DefaultContext():
     def get_context_data(self, **kwargs):
-        return {
-            "donate_url": "https://paypal.com/us/fundraiser/charity/193426",
-            "paypal_donate_url": "https://paypal.com/us/fundraiser/charity/193426",
-            "patreon_donate_url": "https://www.patreon.com/weallcode",
-        }
+        context = super().get_context_data(**kwargs)
+
+        paypal_url = "https://paypal.com/us/fundraiser/charity/193426"
+
+        context["donate_url"] = paypal_url
+        context["paypal_donate_url"] = paypal_url
+        context["patreon_donate_url"] = "https://www.patreon.com/weallcode"
+
+        return context
 
 
 class HomeView(DefaultMetaTags, DefaultContext, TemplateView):

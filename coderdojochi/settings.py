@@ -94,7 +94,6 @@ INSTALLED_APPS = [
     'anymail',
     'html5',
     'loginas',
-    'paypal.standard.ipn',
     'stdimage',
     'import_export',
     'django_nose',
@@ -326,12 +325,6 @@ META_INCLUDE_KEYWORDS = os.environ.get('META_INCLUDE_KEYWORDS', [
     'chicago coding'
 ])
 DEFAULT_META_TITLE = os.environ.get('DEFAULT_META_TITLE', '')
-
-
-# Paypal
-PAYPAL_RECEIVER_EMAIL = os.environ.get('PAYPAL_RECEIVER_EMAIL')
-PAYPAL_BUSINESS_ID = os.environ.get('PAYPAL_BUSINESS_ID')
-PAYPAL_TEST = os.environ.get('PAYPAL_TEST') == 'True'
 
 
 # django allauth

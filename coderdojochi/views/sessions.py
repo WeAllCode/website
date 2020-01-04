@@ -25,7 +25,6 @@ from django.views.generic import RedirectView, TemplateView, View
 import arrow
 from dateutil.relativedelta import relativedelta
 from icalendar import Calendar, Event, vText
-from paypal.standard.forms import PayPalPaymentsForm
 
 from coderdojochi.forms import (
     CDCModelForm,

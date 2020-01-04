@@ -20,11 +20,16 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView, ListView, RedirectView, TemplateView, View
+from django.views.generic import (
+    DetailView,
+    ListView,
+    RedirectView,
+    TemplateView,
+    View,
+)
 
 import arrow
 from icalendar import Calendar, Event, vText
-from paypal.standard.forms import PayPalPaymentsForm
 
 from coderdojochi.forms import (
     CDCForm,
