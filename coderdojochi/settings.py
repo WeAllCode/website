@@ -14,7 +14,10 @@ import os
 
 import dj_database_url
 import django_heroku
+import environ
 import raven
+
+env = environ.Env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,20 +28,23 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env(
+    'SECRET_KEY',
+    default='!!!SET SECRET_KEY!!!',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False) == 'True'
+DEBUG = env.bool('DEBUG', default=False)
 
 # reCAPTCHA
-RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY', '')
-RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY', '')
-RECAPTCHA_REQUIRED_SCORE = os.environ.get('RECAPTCHA_REQUIRED_SCORE', 0.85)
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY', default='')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY', default='')
+RECAPTCHA_REQUIRED_SCORE = env('RECAPTCHA_REQUIRED_SCORE', default=0.85)
 
 # SECURITY
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
-SECURE_SSL_REDIRECT = os.environ.get('DJANGO_SECURE_SSL_REDIRECT', True) == 'True'
+SECURE_SSL_REDIRECT = env.bool('DJANGO_SECURE_SSL_REDIRECT', default=True)
 if SECURE_SSL_REDIRECT:
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -55,11 +61,11 @@ if SECURE_SSL_REDIRECT:
     # set this to 60 seconds first and then to 518400 once you prove the former works
     SECURE_HSTS_SECONDS = 518400
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', True) == 'True'
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
-    SECURE_HSTS_PRELOAD = os.environ.get('DJANGO_SECURE_HSTS_PRELOAD', True) == 'True'
+    SECURE_HSTS_PRELOAD = env.bool('DJANGO_SECURE_HSTS_PRELOAD', default=True)
     # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-    SECURE_CONTENT_TYPE_NOSNIFF = os.environ.get('DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', True) == 'True'
+    SECURE_CONTENT_TYPE_NOSNIFF = env.bool('DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', default=True)
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
     SECURE_BROWSER_XSS_FILTER = True
     # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
@@ -153,18 +159,8 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
-    }
-}
-
+DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -195,8 +191,8 @@ USE_L10N = True
 USE_TZ = True
 
 SITE_ID = 1
-SITE_NAME = os.environ.get('SITE_NAME')
-SITE_URL = os.environ.get('SITE_URL')
+SITE_NAME = env('SITE_NAME', default=None)
+SITE_URL = env('SITE_URL', default=None)
 
 # Change 'default' database configuration with $DATABASE_URL.
 DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
@@ -233,11 +229,11 @@ else:
     INSTALLED_APPS += ['storages']  # noqa F405
 
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_AUTO_CREATE_BUCKET = True
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
@@ -307,16 +303,16 @@ AUTH_USER_MODEL = 'coderdojochi.CDCUser'
 
 
 # Django Meta
-META_SITE_PROTOCOL = os.environ.get('META_SITE_PROTOCOL', 'https')
-META_SITE_DOMAIN = os.environ.get('META_SITE_DOMAIN', 'www.weallcode.org')
+META_SITE_PROTOCOL = env('META_SITE_PROTOCOL', default='https')
+META_SITE_DOMAIN = env('META_SITE_DOMAIN', default='www.weallcode.org')
 META_SITE_NAME = SITE_NAME
 META_USE_OG_PROPERTIES = True
 META_USE_TWITTER_PROPERTIES = True
 META_USE_GOOGLEPLUS_PROPERTIES = False
 META_USE_TITLE_TAG = False
-META_TWITTER_SITE = os.environ.get('META_TWITTER_SITE', '@weallcode')
-META_FB_APPID = os.environ.get('META_SITE_DOMAIN', '1454178301519376')
-META_INCLUDE_KEYWORDS = os.environ.get('META_INCLUDE_KEYWORDS', [
+META_TWITTER_SITE = env('META_TWITTER_SITE', default='@weallcode')
+META_FB_APPID = env('META_SITE_DOMAIN', default='1454178301519376')
+META_INCLUDE_KEYWORDS = env.list('META_INCLUDE_KEYWORDS', default=[
     'stem',
     'code',
     'coding',
@@ -324,7 +320,7 @@ META_INCLUDE_KEYWORDS = os.environ.get('META_INCLUDE_KEYWORDS', [
     'chicago',
     'chicago coding'
 ])
-DEFAULT_META_TITLE = os.environ.get('DEFAULT_META_TITLE', '')
+DEFAULT_META_TITLE = env('DEFAULT_META_TITLE', default='')
 
 
 # django allauth
@@ -339,16 +335,16 @@ SOCIALACCOUNT_ADAPTER = 'coderdojochi.social_account_adapter.SocialAccountAdapte
 
 # Email
 ANYMAIL = {
-    'SENDGRID_API_KEY': os.environ.get('SENDGRID_API_KEY'),
+    'SENDGRID_API_KEY': env('SENDGRID_API_KEY'),
 }
 EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
-SENDGRID_UNSUB_CLASSANNOUNCE = int(os.environ.get('SENDGRID_UNSUB_CLASSANNOUNCE'))
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+CONTACT_EMAIL = env('CONTACT_EMAIL')
+SENDGRID_UNSUB_CLASSANNOUNCE = env.int('SENDGRID_UNSUB_CLASSANNOUNCE')
 
 
 # Sentry
-SENTRY_DSN = os.environ.get('SENTRY_DSN', False)
+SENTRY_DSN = env.bool('SENTRY_DSN', default=False)
 INSTALLED_APPS += ['raven.contrib.django.raven_compat']
 
 if SENTRY_DSN:
