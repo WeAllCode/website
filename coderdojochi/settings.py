@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-import dj_database_url
 import django_heroku
 import environ
 import raven
@@ -159,8 +158,28 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-DATABASES = {"default": env.db("DATABASE_URL")}
+# DATABASES = {"default": env.db("DATABASE_URL")}
+POSTGRES_HOST = env('POSTGRES_HOST', default='')
+POSTGRES_PORT = env.int('POSTGRES_PORT', default=5432)
+POSTGRES_DB = env('POSTGRES_DB', default='')
+POSTGRES_USER = env('POSTGRES_USER', default='')
+POSTGRES_PASSWORD = env('POSTGRES_PASSWORD', default='')
+
+# Use DATABASE_URL other wise create connection string
+DATABASES = {
+    'default': env.db(
+        'DATABASE_URL',
+        default=f'postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
+    )
+}
+
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
+
+# Change 'default' database configuration with $DATABASE_URL.
+if not DEBUG:
+    DATABASES['default']['CONN_MAX_AGE'] = env.int('CONN_MAX_AGE', default=60)
+    DATABASES['default']['SSL_REQUIRE'] = env.bool('SSL_REQUIRE', default=True)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -193,9 +212,6 @@ USE_TZ = True
 SITE_ID = 1
 SITE_NAME = env('SITE_NAME', default=None)
 SITE_URL = env('SITE_URL', default=None)
-
-# Change 'default' database configuration with $DATABASE_URL.
-DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

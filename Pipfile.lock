@@ -232,7 +232,7 @@
         "et-xmlfile": {
             "hashes": [
                 "sha256:614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b",
-                "sha256:e465dc95c37d9e1905a940b7b87e13d7c60d83e38673519101fad2df0563233d"
+                "sha256:820bb57cd625d1da88014078a66c5c26267bda7a2234b7211c5d2bd15db5f6c7"
             ],
             "version": "==1.0.1"
         },
