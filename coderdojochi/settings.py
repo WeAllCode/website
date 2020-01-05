@@ -191,8 +191,8 @@ USE_L10N = True
 USE_TZ = True
 
 SITE_ID = 1
-SITE_NAME = env('SITE_NAME')
-SITE_URL = env('SITE_URL')
+SITE_NAME = env('SITE_NAME', default=None)
+SITE_URL = env('SITE_URL', default=None)
 
 # Change 'default' database configuration with $DATABASE_URL.
 DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
