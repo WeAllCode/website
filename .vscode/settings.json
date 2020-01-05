@@ -12,7 +12,6 @@
     "**/templates/*": "django-txt",
     "**/requirements{/**,*}.{txt,in}": "pip-requirements"
   },
-  // "editor.defaultFormatter": "HookyQR.beautify",
   "emmet.includeLanguages": {
     "django-html": "html"
   },
@@ -28,8 +27,11 @@
   ],
   "python.linting.pylintEnabled": true,
   "python.linting.pylintArgs": [
+    "--load-plugins",
+    "pylint_django",
     "--disable=C0111", // missing docstring
-    "--load-plugins=pylint_django",
+    "--enable=W0611", // Used when an imported module or variable is not used.
+    "--enable=W0614", // Used when an imported module or variable is not used from a ‘from X import *’ style import.
   ],
   "[python]": {
     "editor.rulers": [120],
@@ -50,5 +52,4 @@
     "editor.quickSuggestions": false,
     "editor.trimAutoWhitespace": false,
   },
-
 }
