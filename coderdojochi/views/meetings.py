@@ -57,7 +57,7 @@ from coderdojochi.models import (
     Student,
 )
 from coderdojochi.util import email
-from coderdojochi.views.general import CalendarView
+from coderdojochi.views.calendar import CalendarView
 
 logger = logging.getLogger(__name__)
 

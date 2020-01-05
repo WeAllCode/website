@@ -11,7 +11,6 @@ from django.views.generic import RedirectView
 from loginas import views as loginas_views
 
 from . import old_views
-from .views.general import AboutView, HomeView, PrivacyView, WelcomeView
 from .views.meetings import (
     MeetingCalendarRedirectView,
     MeetingCalendarView,
@@ -34,7 +33,7 @@ from .views.sessions import (
     SessionsRedirectView,
     SessionsView,
 )
-from .views.volunteer import VolunteerView
+from .views.welcome import WelcomeView
 
 admin.autodiscover()
 
@@ -55,24 +54,6 @@ urlpatterns += [
 urlpatterns += [
 
     path('old/', include([
-        # Home
-        path('', HomeView.as_view(), name='home'),
-
-        # About
-        path('about/', AboutView.as_view(), name='about'),
-
-        # Volunteer
-        path('volunteer/', VolunteerView.as_view(), name='volunteer'),
-
-        # Contact
-        path('contact/', old_views.contact, name='contact'),
-
-        # Privacy
-        path('privacy/', PrivacyView.as_view(), name='privacy'),
-
-        # FAQs
-        path('faqs/', old_views.faqs, name='faqs'),
-
 
         # Meetings
         path('meetings/', include([
@@ -94,22 +75,6 @@ urlpatterns += [
             # Meeting Calendar
             # /meeting/ID/calendar/
             path('<int:pk>/calendar/', MeetingCalendarView.as_view(), name='meeting-calendar'),
-        ])),
-
-        # FIXME: Old redirects. Remove by July 2018
-        # Redirect /m/ID/ -> /meeting/ID/
-        path('m/<int:pk>/', MeetingDetailRedirectView.as_view()),
-
-        # FIXME: Old redirects. Remove by July 2018
-        path('meeting/', include([
-            # Redirect /meeting/ID/ -> /meetings/ID/
-            path('<int:pk>/', MeetingDetailRedirectView.as_view()),
-
-            # Redirect /meeting/YYYY/MM/DD/SLUG/ID/ -> /meeting/ID/
-            path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', MeetingDetailRedirectView.as_view()),
-
-            # Redirect /meeting/ID/calendar/ -> /classes/ID/calendar/
-            path('<int:pk>/calendar/', MeetingCalendarRedirectView.as_view()),
         ])),
 
     ])),
@@ -194,39 +159,6 @@ urlpatterns += [
         path('<int:pk>/sign-up/<int:student_id>/', SessionSignUpView.as_view(), name='session-sign-up'),
     ])),
 
-    # FIXME: Old redirects. Remove by July 2018
-    path('class/', include([
-        # Redirect /class/ -> /classes/
-        path('', SessionsRedirectView.as_view()),
-
-        # Redirect /class/ID/ -> /classes/ID/
-        path('<int:pk>/', SessionDetailRedirectView.as_view()),
-
-        # Redirect /class/YYYY/MM/DD/SLUG/ID/ -> /classes/ID/
-        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/', SessionDetailRedirectView.as_view()),
-
-        # Redirect /class/YYYY/MM/DD/SLUG/ID/password/ -> /classes/ID/password/
-        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/password/', PasswordSessionRedirectView.as_view()),
-
-        # Redirect /class/YYYY/MM/DD/SLUG/ID/calendar/ -> /classes/ID/calendar/
-        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/calendar/', SessionCalendarRedirectView.as_view()),
-
-        # Redirect /class/YYYY/MM/DD/SLUG/ID/sign-up/ -> /classes/ID/sign-up/
-        path('<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/', SessionSignUpRedirectView.as_view()),
-
-        # Redirect /class/YYYY/MM/DD/SLUG/ID/sign-up/STUDENT-ID/ -> /classes/ID/sign-up/STUDENT-ID/
-        path(
-            '<int:year>/<int:month>/<int:day>/<slug:slug>/<int:pk>/sign-up/<int:student_id>/',
-            SessionSignUpRedirectView.as_view(),
-        ),
-
-        # Redirect /class/ID/calendar/ -> /classes/ID/calendar/
-        path('<int:pk>/calendar/', SessionCalendarRedirectView.as_view()),
-    ])),
-
-    # FIXME: Old redirects. Remove by July 2018
-    # Redirect /c/ID/ -> /class/ID/
-    path('c/<int:pk>/', SessionDetailRedirectView.as_view()),
 ]
 
 # Mentors
@@ -248,14 +180,6 @@ urlpatterns += [
         path('<int:pk>/approve-avatar/', old_views.mentor_approve_avatar, name='mentor-approve-avatar'),
     ])),
 
-    # FIXME: Old redirects. Remove by July 2018
-    # Redirect /mentor/* -> /mentors/*
-    path('mentor/', include([
-        path('', RedirectView.as_view(pattern_name='mentors')),
-        path('<int:pk>/', RedirectView.as_view(pattern_name='mentor-detail')),
-        path('<int:pk>/reject-avatar/', RedirectView.as_view(pattern_name='mentor-reject-avatar')),
-        path('<int:pk>/approve-avatar/', RedirectView.as_view(pattern_name='mentor-approve-avatar')),
-    ])),
 ]
 
 # Students
