@@ -1,7 +1,7 @@
 #/bin/env bash
 
 # To run:
-# docker-compuse run --rm app bash ./fixtures/get.sh
+# /usr/bin/time -p docker-compose run --rm app bash ./fixtures/get.sh && say "Done"
 #
 
 models=(

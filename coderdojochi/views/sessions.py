@@ -231,12 +231,6 @@ class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         session_obj = kwargs['session_obj']
         context['session'] = session_obj
 
-        upcoming_classes = Session.objects.filter(
-            is_active=True,
-            start_date__gte=timezone.now()
-        ).order_by('start_date')
-        context['upcoming_classes'] = upcoming_classes
-
         active_mentors = Mentor.objects.filter(
             id__in=MentorOrder.objects.filter(
                 session=session_obj,
@@ -268,7 +262,6 @@ class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                 )
             context['account'] = account
         else:
-            context['upcoming_classes'] = upcoming_classes.filter(is_public=True)
             context['spots_remaining'] = (
                 session_obj.capacity -
                 session_obj.get_current_students().count()

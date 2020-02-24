@@ -10,6 +10,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import formats, timezone
 from django.utils.translation import ugettext as _
+
 from stdimage.models import StdImageField
 
 
@@ -496,6 +497,11 @@ class Session(CommonInfo):
 
     start_date = models.DateTimeField()
 
+    release_date = models.DateTimeField(
+        blank=True,
+        help_text="The date guardians can sign up. If not set, the system will pick 1 week (Monday) from 'Start Date'.",
+    )
+
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
@@ -665,10 +671,23 @@ class Session(CommonInfo):
         return f"{self.course.title} | {date}"
 
     def save(self, *args, **kwargs):
+
+        # Set mentor capacity if not set
         if self.mentor_capacity is None:
             self.mentor_capacity = int(self.capacity / 2)
 
-        super(Session, self).save(*args, **kwargs)
+        # Set release date if not set
+        if self.release_date is None:
+            # Subtract 1 week
+            self.release_date = self.start_date - timedelta(weeks=1)
+
+            # If it's not on a monday, go to the previous monday
+            self.release_date -= timedelta(days=self.release_date.weekday())
+
+            # Set it to 9am of that day
+            self.release_date = self.release_date.replace(hour=9)
+
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('session-detail', args=[str(self.id)])
@@ -754,6 +773,9 @@ class Session(CommonInfo):
     is_guardian_announced.boolean = True
     is_guardian_announced.short_description = "Is Announced"
     is_guardian_announced.admin_order_field = 'announced_date_guardians'
+
+    def is_released(self, *args, **kwargs):
+        return self.release_date > timezone.now()
 
     @property
     def end_date(self):

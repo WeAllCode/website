@@ -514,7 +514,6 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = [
         '_course',
         'start_date',
-        # 'end_date',
         'location',
         'capacity',
         'student_count_link',
@@ -568,9 +567,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'course',
                 'location',
                 'start_date',
-                # 'old_end_date',
-                # 'old_mentor_start_date',
-                # 'old_mentor_end_date',
+                'release_date',
                 'capacity',
                 'mentor_capacity',
                 'instructor',
@@ -602,6 +599,9 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'announced_date_guardians',
                 'mentors_week_reminder_sent',
                 'mentors_day_reminder_sent',
+                # 'old_end_date',
+                # 'old_mentor_start_date',
+                # 'old_mentor_end_date',
             ),
         }),
     )

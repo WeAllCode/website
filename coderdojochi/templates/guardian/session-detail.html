@@ -31,6 +31,11 @@
 
         <p class="subtitle">There are currently no available spots for this class. Please enroll in an <a href="{% url 'weallcode-programs' %}">upcoming class.</a></p>
 
+      {% elif session.is_released %}
+
+        <p><span disabled class="button large secondary">Enroll</span></p>
+        <p>This class isn't available for sign up just yet. Registration will be available on {{ session.release_date }}</p>
+
       {% else %}
 
         {% if students %}
