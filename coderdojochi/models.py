@@ -380,10 +380,12 @@ class Student(CommonInfo):
 class Course(CommonInfo):
     WEEKEND = 'WE'
     CAMP = 'CA'
+    SPECIAL = 'SP'
 
     COURSE_TYPE_CHOICES = [
         (WEEKEND, 'Weekend'),
         (CAMP, 'Camp'),
+        (SPECIAL, 'Special'),
     ]
 
     code = models.CharField(
