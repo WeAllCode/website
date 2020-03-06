@@ -159,8 +159,26 @@ WSGI_APPLICATION = 'coderdojochi.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASE_URL = env("DATABASE_URL", default=False)
+if DATABASE_URL:
+    DATABASES = {"default": env.db()}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('POSTGRES_DB'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('POSTGRES_HOST'),
+            'PORT': os.environ.get('POSTGRES_PORT'),
+            }
+        }
+
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
+
+# Change 'default' database configuration with $DATABASE_URL.
+DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -193,9 +211,6 @@ USE_TZ = True
 SITE_ID = 1
 SITE_NAME = env('SITE_NAME', default=None)
 SITE_URL = env('SITE_URL', default=None)
-
-# Change 'default' database configuration with $DATABASE_URL.
-DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
