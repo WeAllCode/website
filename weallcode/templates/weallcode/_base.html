@@ -15,7 +15,16 @@
 
   {% block extra_meta %}{% endblock %}
 
-  <link rel="shortcut icon" type="image/png" href="{% static 'weallcode/images/favicon/favicon-64.png' %}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'weallcode/images/favicon/apple-touch-icon.png' %}?v=12">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'weallcode/images/favicon/favicon-32x32.png' %}?v=12">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'weallcode/images/favicon/favicon-16x16.png' %}?v=12">
+  <link rel="manifest" href="{% static 'weallcode/images/favicon/site.webmanifest' %}?v=12">
+  <link rel="mask-icon" href="{% static 'weallcode/images/favicon/safari-pinned-tab.svg' %}" color="#f6bb47?v=12">
+  <link rel="shortcut icon" href="{% static 'weallcode/images/favicon/favicon.ico' %}?v=12">
+  <meta name="apple-mobile-web-app-title" content="We All Code">
+  <meta name="application-name" content="We All Code">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-config" content="{% static 'weallcode/images/favicon/browserconfig.xml' %}?v=12">
   <meta name="theme-color" content="#426cff">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
@@ -40,11 +49,11 @@
     </header>
 
     {% block messages %}
-      {% if messages %}
-        <div class="grid-container padding-vertical-1">
-          {% include 'weallcode/_messages.html' %}
-        </div>
-      {% endif %}
+    {% if messages %}
+    <div class="grid-container padding-vertical-1">
+      {% include 'weallcode/_messages.html' %}
+    </div>
+    {% endif %}
     {% endblock %}
 
     {% block content %}
@@ -68,8 +77,15 @@
 
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
   <script>
-    window.ga = function () { ga.q.push(arguments) }; ga.q = []; ga.l = +new Date;
-    ga('create', 'UA-78618586-1', 'auto'); ga('set','transport','beacon'); ga('send', 'pageview')
+    window.ga = function () {
+      ga.q.push(arguments)
+    };
+    ga.q = [];
+    ga.l = +new Date;
+    ga('create', 'UA-78618586-1', 'auto');
+    ga('set', 'transport', 'beacon');
+    ga('send', 'pageview')
+
   </script>
   <script src="https://www.google-analytics.com/analytics.js" async defer></script>
 </body>
