@@ -251,38 +251,3 @@ if settings.DEBUG:
     if 'debug_toolbar' in settings.INSTALLED_APPS:
         import debug_toolbar
         urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns
-
-else:
-    from django.contrib.staticfiles.storage import staticfiles_storage
-    from django.contrib.staticfiles.views import serve
-
-    # favicon.ico
-    favicons = [
-        'favicon.ico',
-        'android-chrome-192x192.png',
-        'android-chrome-256x256.png',
-        'apple-touch-icon.png',
-        'browserconfig.xml',
-        'favicon-16x16.png',
-        'favicon-32x32.png',
-        'mstile-70x70.png',
-        'mstile-150x150.png',
-        'mstile-310x150.png',
-        'mstile-310x310.png',
-        'safari-pinned-tab.svg',
-        'site.webmanifest',
-    ]
-
-    for favicon in favicons:
-        urlpatterns += [
-            path(
-                favicon,
-                RedirectView.as_view(url=staticfiles_storage.url(favicon), permanent=False),
-                name=favicon
-            ),
-        ]
-
-    urlpatterns += static(
-        settings.STATIC_URL,
-        document_root=settings.STATIC_ROOT
-    )
