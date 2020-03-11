@@ -13,7 +13,7 @@
     <nav class="grid-container" role="navigation">
       <ul class="menu">
         <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
-        <li><a href="{% url 'weallcode-join-us' %}#donate">Donate</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#donate-form">Donate</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#sponsorship">Sponsorship</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#contact">Contact Us</a></li>
       </ul>
@@ -74,16 +74,16 @@
 
 
   <!-- Donate -->
-  <section id="donate" class="bg-binary padding-vertical-2">
+  <section id="donate-form" class="bg-binary padding-vertical-2">
     <div class="grid-container">
       <div class="grid-x margin-vertical-3">
-        <div class="cell medium-6 bg-white padding-2">
+        <div class="cell medium-8 bg-white padding-2">
           <h2 class="title text-primary">Donate to make a difference</h2>
           <p><strong>Your generous financial support makes coding accessible to kids across Chicago.</strong> Every donation makes a difference!</p>
-          <a class="button" href="{{ paypal_donate_url }}">Donate with PayPal</a>
-          <a class="button tertiary" href="{{ patreon_donate_url }}">Donate with Patreon</a>
+
+          <div id="cv-iframe-embed"></div>
         </div>
-        <div class="cell medium-6 bg-dark-blue text-white padding-2">
+        <div class="cell medium-4 bg-dark-blue text-white padding-2">
           <div class="line bg-primary width-25 margin-bottom-3"></div>
           <div class="text-huge text-uppercase text-bold line-height-1 margin-bottom-2">
             <div class="text-tertiary">Money should</div>
