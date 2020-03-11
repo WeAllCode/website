@@ -27,20 +27,7 @@ class DefaultMetaTags(MetadataMixin):
     twitter_site = "@weallcode"
 
 
-class DefaultContext():
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        paypal_url = "https://paypal.com/us/fundraiser/charity/193426"
-
-        context["donate_url"] = paypal_url
-        context["paypal_donate_url"] = paypal_url
-        context["patreon_donate_url"] = "https://www.patreon.com/weallcode"
-
-        return context
-
-
-class HomeView(DefaultMetaTags, DefaultContext, TemplateView):
+class HomeView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/home.html"
     url = reverse_lazy('weallcode-home')
 
@@ -64,14 +51,14 @@ class HomeView(DefaultMetaTags, DefaultContext, TemplateView):
         return context
 
 
-class OurStoryView(DefaultMetaTags, DefaultContext, TemplateView):
+class OurStoryView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/our_story.html"
     url = reverse_lazy('weallcode-our-story')
 
     title = f"Our Story | {settings.SITE_NAME}"
 
 
-class ProgramsView(DefaultMetaTags, DefaultContext, TemplateView):
+class ProgramsView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/programs.html"
     url = reverse_lazy('weallcode-programs')
 
@@ -113,7 +100,7 @@ class ProgramsView(DefaultMetaTags, DefaultContext, TemplateView):
         return context
 
 
-class ProgramsSummerCampsView(DefaultMetaTags, DefaultContext, TemplateView):
+class ProgramsSummerCampsView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/programs-summer-camps.html"
     url = reverse_lazy('weallcode-programs-summer-camps')
 
@@ -140,7 +127,7 @@ class ProgramsSummerCampsView(DefaultMetaTags, DefaultContext, TemplateView):
         return context
 
 
-class TeamView(DefaultMetaTags, DefaultContext, TemplateView):
+class TeamView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/team.html"
     url = reverse_lazy('weallcode-team')
 
@@ -174,7 +161,7 @@ class TeamView(DefaultMetaTags, DefaultContext, TemplateView):
         return context
 
 
-class JoinUsView(DefaultMetaTags, DefaultContext, FormView):
+class JoinUsView(DefaultMetaTags, FormView):
     template_name = "weallcode/join_us.html"
     form_class = ContactForm
     url = reverse_lazy('weallcode-join-us')
@@ -194,14 +181,14 @@ class JoinUsView(DefaultMetaTags, DefaultContext, FormView):
         return super().form_valid(form)
 
 
-class PrivacyView(DefaultMetaTags, DefaultContext, TemplateView):
+class PrivacyView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/privacy.html"
     url = reverse_lazy('weallcode-privacy')
 
     title = f"Privacy & Terms | {settings.SITE_NAME}"
 
 
-class CreditsView(DefaultMetaTags, DefaultContext, TemplateView):
+class CreditsView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/credits.html"
     url = reverse_lazy('weallcode-credits')
 

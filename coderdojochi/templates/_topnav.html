@@ -15,7 +15,7 @@
                 <li class="{% menu_is_active 'about' %}"><a href="{% url 'about' %}">About</a></li>
                 <li class="{% menu_is_active 'sessions' %}"><a href="{% url 'sessions' %}">Classes</a></li>
                 <li class="{% menu_is_active 'volunteer' %}"><a href="{% url 'volunteer' %}">Volunteer</a></li>
-                <li class="donate {% menu_is_active 'donate' %}"><a href="{% url 'donate' %}">Donate</a></li>
+                <li class="donate {% menu_is_active 'donate' %}"><a href="#donate">Donate</a></li>
 
                 {% if user.is_authenticated %}
                     <li class="{% menu_is_active 'account_home' %}"><a href="{% url 'account_home' %}">My Dojo</a></li>
