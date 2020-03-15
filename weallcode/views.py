@@ -234,10 +234,10 @@ class TeamView(DefaultMetaTags, TemplateView):
             else:
                 volunteers += [volunteer]
 
-        context['top_mentors'] = mentors[0:8]
-        context['other_mentors'] = mentors[8:]
-        context['top_volunteers'] = volunteers[0:8]
-        context['other_volunteers'] = volunteers[8:]
+        context['top_mentors'] = mentors
+        # context['other_mentors'] = mentors[8:]
+        context['top_volunteers'] = volunteers[0:16]
+        context['other_volunteers'] = volunteers[16:]
 
         return context
 

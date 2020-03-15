@@ -136,15 +136,15 @@
       {% endfor %}
     </div>
 
-    <div class="mentor-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
-      {% for mentor in other_mentors %}
-        <div class="cell small-6 medium-3">
-          {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
-        </div>
-      {% endfor %}
-    </div>
-
     {% if other_mentors %}
+      <div class="mentor-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
+        {% for mentor in other_mentors %}
+          <div class="cell small-6 medium-3">
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
+          </div>
+        {% endfor %}
+      </div>
+
       <div class="mentor-toggle text-center margin-vertical-2">
         <button class="button secondary" data-toggler=".mentor-toggle" data-toggle-class="hide">See More Mentors</button>
       </div>

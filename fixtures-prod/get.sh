@@ -1,7 +1,7 @@
 #/bin/env bash
 
 # To run:
-# /usr/bin/time ./get.sh
+# /usr/bin/time ./get.sh && say "I'm done."
 #
 
 models=(
@@ -21,6 +21,9 @@ models=(
     "coderdojochi.session"
     "coderdojochi.mentororder"
     "coderdojochi.order"
+    "weallcode.boardmember"
+    "weallcode.associateboardmember"
+    "weallcode.staffmember"
 )
 
 for i in "${!models[@]}"
