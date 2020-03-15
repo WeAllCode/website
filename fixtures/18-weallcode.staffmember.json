@@ -1,0 +1,11 @@
+[
+{
+  "model": "weallcode.staffmember",
+  "pk": 1,
+  "fields": {
+    "name": "Ali Karbassi",
+    "role": "Founder and CEO of We All Code",
+    "image": "staff/ali-karbassi.jpg"
+  }
+}
+]

@@ -23,6 +23,7 @@ models=(
     "coderdojochi.order"
     "weallcode.boardmember"
     "weallcode.associateboardmember"
+    "weallcode.staffmember"
 )
 
 for i in "${!models[@]}"
