@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib import messages, sitemaps
 from django.contrib.auth import get_user_model
 from django.db.models import Count
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import FormView, TemplateView
@@ -15,7 +14,7 @@ from meta.views import MetadataMixin
 from coderdojochi.models import Course, Mentor, Session
 
 from .forms import ContactForm
-from .models import AssociateBoardMember, BoardMember
+from .models import AssociateBoardMember, BoardMember, StaffMember
 
 User = get_user_model()
 
@@ -138,35 +137,14 @@ class TeamView(DefaultMetaTags, TemplateView):
 
     title = f"Team | {settings.SITE_NAME}"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    # Staff
+    def get_staff(self, context):
+        context['staff'] = StaffMember.objects.all()
 
-        mentors = Mentor.objects.select_related('user').filter(
-            is_active=True,
-            is_public=True,
-            background_check=True,
-            avatar_approved=True,
-        )
+        return context
 
-        all_volunteers = mentors.annotate(
-            session_count=Count('mentororder')
-        ).order_by('-user__role', '-session_count')
-
-        mentors = []
-        volunteers = []
-
-        for volunteer in all_volunteers:
-            if volunteer.session_count >= 10:
-                mentors += [volunteer]
-            else:
-                volunteers += [volunteer]
-
-        context['top_mentors'] = mentors[0:8]
-        context['other_mentors'] = mentors[8:]
-        context['top_volunteers'] = volunteers[0:8]
-        context['other_volunteers'] = volunteers[8:]
-
-        # Board
+    # Board Members
+    def get_board(self, context):
         board = BoardMember.objects.all()
 
         board_chair = board.filter(
@@ -197,7 +175,10 @@ class TeamView(DefaultMetaTags, TemplateView):
             board_directors,
         ))
 
-        # Associate Board
+        return context
+
+    # Associate Board Members
+    def get_associate_board(self, context):
         associate_board = AssociateBoardMember.objects.all()
 
         ab_chair = associate_board.filter(
@@ -228,14 +209,53 @@ class TeamView(DefaultMetaTags, TemplateView):
             ab_directors,
         ))
 
-        # Instructor
-        context['instructors'] = all_volunteers.filter(
+        return context
+
+    # Instructors
+    def get_instructors(self, context, volunteers):
+        context['instructors'] = volunteers.filter(
             user__groups__name__in=['Instructor'],
+        ).order_by('user__first_name')
+
+        return context
+
+    # Volunteers
+    def get_volunteers(self, context, volunteers):
+        all_volunteers = volunteers.annotate(
+            session_count=Count('mentororder')
+        ).order_by('-user__role', '-session_count')
+
+        mentors = []
+        volunteers = []
+
+        for volunteer in all_volunteers:
+            if volunteer.session_count >= 10:
+                mentors += [volunteer]
+            else:
+                volunteers += [volunteer]
+
+        context['top_mentors'] = mentors[0:8]
+        context['other_mentors'] = mentors[8:]
+        context['top_volunteers'] = volunteers[0:8]
+        context['other_volunteers'] = volunteers[8:]
+
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        volunteers = Mentor.objects.select_related('user').filter(
+            is_active=True,
+            is_public=True,
+            background_check=True,
+            avatar_approved=True,
         )
 
-        # User.objects.select_related('mentor').filter(
-        #     groups__name__in=['Instructor'],
-        # ).order_by('first_name')
+        context = self.get_staff(context)
+        context = self.get_board(context)
+        context = self.get_associate_board(context)
+        context = self.get_instructors(context, volunteers)
+        context = self.get_volunteers(context, volunteers)
 
         return context
 

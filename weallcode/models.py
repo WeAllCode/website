@@ -18,6 +18,30 @@ ROLE_CHOICES = [
 ]
 
 
+class StaffMember(models.Model):
+
+    name = models.CharField(
+        max_length=255,
+    )
+
+    role = models.CharField(
+        max_length=255,
+    )
+
+    image = models.ImageField(
+        upload_to='staff/',
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = _("Staff Member")
+        verbose_name_plural = _("Staff Members")
+
+    def __str__(self):
+        return self.name
+
+
 class BoardMember(models.Model):
 
     name = models.CharField(
