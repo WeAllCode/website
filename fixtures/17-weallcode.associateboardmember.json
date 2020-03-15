@@ -1,0 +1,145 @@
+[
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 1,
+  "fields": {
+    "name": "Alexandra Rodriguez-Beuerman",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/alexandra-rodriguez-beuerman-94990a59/",
+    "image": "associate-board/alexandra-rodriguez-beuerman.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 2,
+  "fields": {
+    "name": "Anna Kronauer",
+    "role": "Treasurer",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/annabkronauer/",
+    "image": "associate-board/anna-kronauer.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 3,
+  "fields": {
+    "name": "Brendan McLaughlin",
+    "role": "Vice Chair",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/brendan-mclaughlin-864b3413/",
+    "image": "associate-board/brendan-mclaughlin.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 4,
+  "fields": {
+    "name": "Carolyn Potts",
+    "role": "Chair",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/carolyn-potts-b416a41b/",
+    "image": "associate-board/carolyn-potts.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 5,
+  "fields": {
+    "name": "Claire Lipskey",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/clairelipskey/",
+    "image": "associate-board/claire-lipskey.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 6,
+  "fields": {
+    "name": "Daniel Conrad",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/danielmconrad/",
+    "image": "associate-board/daniel-conrad.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 7,
+  "fields": {
+    "name": "Jordan Polonsky",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/jordanpolonsky/",
+    "image": "associate-board/jordan-polonsky.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 8,
+  "fields": {
+    "name": "Joseph Fowler",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/joseph-fowler/",
+    "image": "associate-board/joseph-fowler.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 9,
+  "fields": {
+    "name": "Katherine Evans",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/katherineeevans/",
+    "image": "associate-board/katherine-evans.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 10,
+  "fields": {
+    "name": "Linda Ramos",
+    "role": "Secretary",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/ltramos7/",
+    "image": "associate-board/linda-ramos.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 11,
+  "fields": {
+    "name": "Matthew Felz",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/matthew-felz-53025940/",
+    "image": "associate-board/matt-felz.jpg"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 12,
+  "fields": {
+    "name": "Stelios Constantinides",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/sconstantinides/",
+    "image": "associate-board/stelios-constantinides.png"
+  }
+},
+{
+  "model": "weallcode.associateboardmember",
+  "pk": 13,
+  "fields": {
+    "name": "Tatyana Shestopalova",
+    "role": "Director",
+    "description": null,
+    "linkedin": "https://www.linkedin.com/in/tatyanashestopalova/",
+    "image": "associate-board/tatyana-shestopalova.jpg"
+  }
+}
+]

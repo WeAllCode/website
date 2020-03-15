@@ -3,8 +3,8 @@
   "model": "coderdojochi.cdcuser",
   "pk": 1,
   "fields": {
-    "password": "pbkdf2_sha256$150000$DK1OCnEJ5TSo$nstx4xX9583QaRr7OG6E2ITH44VLq3ioYgQKX57QPBk=",
-    "last_login": "2019-10-23T19:45:43.166Z",
+    "password": "pbkdf2_sha256$180000$pzOxiyt4JP4t$28iw2Ts2JVSK7ZcWdCbIUbGtlNPnCo8XfmKpv7mlQ14=",
+    "last_login": "2020-03-15T02:20:32.521Z",
     "is_superuser": true,
     "username": "test_admin",
     "first_name": "Ali",

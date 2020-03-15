@@ -9,6 +9,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import formats, timezone
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from stdimage.models import StdImageField
 
@@ -29,10 +30,15 @@ class CDCUser(AbstractUser):
         blank=True,
         null=True,
     )
+
     admin_notes = models.TextField(
         blank=True,
         null=True,
     )
+
+    @cached_property
+    def name(self):
+        return f"{self.first_name} {self.last_name}"
 
     def save(self, *args, **kwargs):
         if self.pk is None:

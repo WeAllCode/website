@@ -1,7 +1,9 @@
 from datetime import datetime
+from itertools import chain
 
 from django.conf import settings
 from django.contrib import messages, sitemaps
+from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
@@ -13,6 +15,9 @@ from meta.views import MetadataMixin
 from coderdojochi.models import Course, Mentor, Session
 
 from .forms import ContactForm
+from .models import AssociateBoardMember, BoardMember
+
+User = get_user_model()
 
 
 class DefaultMetaTags(MetadataMixin):
@@ -136,12 +141,14 @@ class TeamView(DefaultMetaTags, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        all_volunteers = Mentor.objects.select_related('user').filter(
+        mentors = Mentor.objects.select_related('user').filter(
             is_active=True,
             is_public=True,
             background_check=True,
             avatar_approved=True,
-        ).annotate(
+        )
+
+        all_volunteers = mentors.annotate(
             session_count=Count('mentororder')
         ).order_by('-user__role', '-session_count')
 
@@ -158,6 +165,78 @@ class TeamView(DefaultMetaTags, TemplateView):
         context['other_mentors'] = mentors[8:]
         context['top_volunteers'] = volunteers[0:8]
         context['other_volunteers'] = volunteers[8:]
+
+        # Board
+        board = BoardMember.objects.all()
+
+        board_chair = board.filter(
+            role='Chair'
+        )
+
+        board_vice_chair = board.filter(
+            role='Vice Chair'
+        )
+
+        board_treasurer = board.filter(
+            role='Treasurer'
+        )
+
+        board_secretary = board.filter(
+            role='Secretary'
+        )
+
+        board_directors = board.filter(
+            role='Director'
+        ).order_by('name')
+
+        context['board'] = list(chain(
+            board_chair,
+            board_vice_chair,
+            board_treasurer,
+            board_secretary,
+            board_directors,
+        ))
+
+        # Associate Board
+        associate_board = AssociateBoardMember.objects.all()
+
+        ab_chair = associate_board.filter(
+            role='Chair'
+        )
+
+        ab_vice_chair = associate_board.filter(
+            role='Vice Chair'
+        )
+
+        ab_treasurer = associate_board.filter(
+            role='Treasurer'
+        )
+
+        ab_secretary = associate_board.filter(
+            role='Secretary'
+        )
+
+        ab_directors = associate_board.filter(
+            role='Director'
+        ).order_by('name')
+
+        context['associate_board'] = list(chain(
+            ab_chair,
+            ab_vice_chair,
+            ab_treasurer,
+            ab_secretary,
+            ab_directors,
+        ))
+
+        # Instructor
+        context['instructors'] = all_volunteers.filter(
+            user__groups__name__in=['Instructor'],
+        )
+
+        # User.objects.select_related('mentor').filter(
+        #     groups__name__in=['Instructor'],
+        # ).order_by('first_name')
+
         return context
 
 
