@@ -1,7 +1,7 @@
 #/bin/env bash
 
 # To run:
-# docker-compuse run --rm app bash ./fixtures/get.sh
+# docker-compose run --rm app bash ./fixtures/get.sh
 #
 
 models=(
@@ -21,6 +21,9 @@ models=(
     "coderdojochi.session"
     "coderdojochi.mentororder"
     "coderdojochi.order"
+    "weallcode.boardmember"
+    "weallcode.associateboardmember"
+    "weallcode.staffmember"
 )
 
 for i in "${!models[@]}"

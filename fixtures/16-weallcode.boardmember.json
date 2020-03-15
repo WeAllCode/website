@@ -1,0 +1,57 @@
+[
+{
+  "model": "weallcode.boardmember",
+  "pk": 1,
+  "fields": {
+    "name": "Dave Hoover",
+    "role": "Chair",
+    "description": "Founder & CEO, Red Squirrel Technologies",
+    "linkedin": "https://www.linkedin.com/in/redsquirrel/",
+    "image": "board/dave-hoover.jpg"
+  }
+},
+{
+  "model": "weallcode.boardmember",
+  "pk": 2,
+  "fields": {
+    "name": "Christy Lyons",
+    "role": "Vice Chair",
+    "description": "CEO & Principal Consultant, 4 Point Consulting",
+    "linkedin": "https://www.linkedin.com/in/christynlyons/",
+    "image": "board/christy-lyons.jpg"
+  }
+},
+{
+  "model": "weallcode.boardmember",
+  "pk": 3,
+  "fields": {
+    "name": "Michael Cotter",
+    "role": "Secretary",
+    "description": "Asst. Director of Program Development, GWTP",
+    "linkedin": "https://www.linkedin.com/in/michael-cotter-mpp-3a3a805/",
+    "image": "board/michael-cotter.jpg"
+  }
+},
+{
+  "model": "weallcode.boardmember",
+  "pk": 4,
+  "fields": {
+    "name": "Jose A. Duarte",
+    "role": "Treasurer",
+    "description": "Founder & Principal, Blackwood Group LLC",
+    "linkedin": "https://www.linkedin.com/in/jose-duarte-94469612/",
+    "image": "board/jose-duarte.jpg"
+  }
+},
+{
+  "model": "weallcode.boardmember",
+  "pk": 5,
+  "fields": {
+    "name": "Ali Karbassi",
+    "role": "Director",
+    "description": "Founder & CEO, We All Code",
+    "linkedin": "https://www.linkedin.com/in/karbassi/",
+    "image": "board/ali-karbassi.jpg"
+  }
+}
+]
