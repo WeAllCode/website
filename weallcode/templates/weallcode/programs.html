@@ -48,7 +48,10 @@
           {% include "weallcode/snippets/class.html" with session=session %}
         {% endfor %}
       {% else %}
-        <p>There are no upcoming classes at this time. Please <a href="{% url 'weallcode-join-us' %}#contact">contact us</a> for more information.</p>
+        <p class="text-left">Due to the growing concern and new cases of the COVID-19 outbreak, We All Code has decided to postpone our upcoming classes in March. Your health and safety are our top priority, and with today's news, we do not want to put anyone in harm's way by hosting large gatherings.</p>
+
+        <p><a href="https://mailchi.mp/weallcode/looking-after-the-we-all-code-community">Read our message from the CEO</a></p>
+        <p><a class="button bg-tertiary margin-top-1" href="http://eepurl.com/gp2aS5">Sign up for our newsletter.</a></p>
       {% endif %}
     </div>
   </section>
