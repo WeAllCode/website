@@ -22,7 +22,6 @@ class SlackNotification:
             **self.DEFAULT_PAYLOAD,
             **self.payload
         })
-        print(res.content)
 
         if res.status_code != requests.codes.ok:
             logger.error({
