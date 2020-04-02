@@ -12,7 +12,6 @@ class SlackNotification:
         "channel": settings.SLACK_ALERTS_CHANNEL,
         "text": "IMPLEMENT_ME"
     }
-    STATIC_PREFIX = f"{settings.META_SITE_PROTOCOL}://{settings.META_SITE_DOMAIN}{settings.STATIC_URL}"
 
     def __init__(self):
         self.payload = DEFAULT_PAYLOAD
