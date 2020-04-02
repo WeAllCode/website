@@ -13,6 +13,9 @@ from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from stdimage.models import StdImageField
 
+from .notifications import (NewMentorBgCheckNotification,
+                            NewMentorNotification, NewMentorOrderNotification)
+
 
 class CDCUser(AbstractUser):
 
@@ -171,12 +174,19 @@ class Mentor(CommonInfo):
         return f"{self.user.first_name} {self.user.last_name}"
 
     def save(self, *args, **kwargs):
-        if self.pk is not None:
+        if self.pk is None:
+            NewMentorNotification(self).send()
+        else:
             orig = Mentor.objects.get(pk=self.pk)
             if orig.avatar != self.avatar:
                 self.avatar_approved = False
 
+            if self.background_check == True and orig.background_check != self.background_check:
+                NewMentorBgCheckNotification(self).send()
+
+
         super(Mentor, self).save(*args, **kwargs)
+
 
     def get_approve_avatar_url(self):
         return reverse('mentor-approve-avatar', args=[str(self.id)])
@@ -1103,7 +1113,14 @@ class MentorOrder(CommonInfo):
 
     def is_checked_in(self):
         return self.check_in is not None
+
     is_checked_in.boolean = True
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            NewMentorOrderNotification(self).send()
+
+        super(MentorOrder, self).save(*args, **kwargs)
 
 
 class MeetingOrder(CommonInfo):
