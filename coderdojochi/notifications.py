@@ -84,11 +84,11 @@ class NewMentorOrderNotification(SlackNotification):
                     "fields": [
                         {
                             "type": "mrkdwn",
-                            "text": f"*Name*: \n{name}"
+                            "text": f"*Name*: \n{name}\n"
                         },
                         {
                             "type": "mrkdwn",
-                            "text": f"*Email*: \n{email}"
+                            "text": f"*Email*: \n{email}\n"
                         },
                         {
                             "type": "mrkdwn",
