@@ -277,7 +277,7 @@ ul.list-plus li {
 
   .binary-drop-left::before {
     right: 1rem;
-    left: 0rem;
+    left: 0;
   }
 
   .binary-drop-right::before {
@@ -313,7 +313,6 @@ ul.list-plus li {
   padding: 0.3rem 0.5rem;
   line-height: 0.83em;
   text-transform: uppercase;
-  position: absolute;
 }
 
 .hero {
@@ -513,7 +512,6 @@ footer {
   background-color: var(--black);
   color: var(--white);
   padding: 3em 0;
-  font-size: 0.83em;
 }
 
 footer nav {
@@ -542,10 +540,11 @@ html[data-whatintent='mouse'] footer a:hover {
   color: white;
 }
 
-footer nav a.group-link {
+footer nav .group-link {
   font-weight: 600;
   color: white;
   padding: 0.4em 0;
+  margin-bottom: auto;
 }
 
 footer small span {
