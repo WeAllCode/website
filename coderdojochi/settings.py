@@ -15,7 +15,8 @@ import os
 import dj_database_url
 import django_heroku
 import environ
-import raven
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
 
@@ -362,66 +363,16 @@ SENDGRID_UNSUB_CLASSANNOUNCE = env.int('SENDGRID_UNSUB_CLASSANNOUNCE')
 SLACK_WEBHOOK_URL = env('SLACK_WEBHOOK_URL')
 SLACK_ALERTS_CHANNEL = env('SLACK_ALERTS_CHANNEL', default=None)
 
-
 # Sentry
-SENTRY_DSN = env.bool('SENTRY_DSN', default=False)
-INSTALLED_APPS += ['raven.contrib.django.raven_compat']
+SENTRY_DSN = env('SENTRY_DSN')
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    integrations=[DjangoIntegration()],
 
-if SENTRY_DSN:
-    import logging
-
-    MIDDLEWARE = [
-        'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
-        'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
-    ] + MIDDLEWARE
-
-    RAVEN_CONFIG = {
-        'dsn': SENTRY_DSN,
-    }
-
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': True,
-        'root': {
-            'level': 'WARNING',
-            'handlers': ['sentry'],
-        },
-        'formatters': {
-            'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s '
-                          '%(process)d %(thread)d %(message)s'
-            },
-        },
-        'handlers': {
-            'sentry': {
-                'level': 'INFO',
-                'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-                'tags': {'custom-tag': 'x'},
-            },
-            'console': {
-                'level': 'DEBUG',
-                'class': 'logging.StreamHandler',
-                'formatter': 'verbose'
-            }
-        },
-        'loggers': {
-            'django.db.backends': {
-                'level': 'ERROR',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'raven': {
-                'level': 'DEBUG',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'sentry.errors': {
-                'level': 'DEBUG',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-        },
-    }
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
 
 
 # Debug toolbar

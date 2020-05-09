@@ -4,7 +4,7 @@ import traceback
 from django.conf import settings
 from django.shortcuts import render
 
-from urllib3.exceptions import HTTPError
+from sentry_sdk import last_event_id
 
 logger = logging.getLogger(__name__)
 
@@ -22,4 +22,7 @@ class HandleExceptionMiddleware:
         if settings.DEBUG:
             raise exception
 
-        return render(request, '500.html')
+        return render(request, "500.html", {
+            'sentry_event_id': last_event_id(),
+            'SENTRY_DSN': settings.SENTRY_DSN,
+        }, status=500)

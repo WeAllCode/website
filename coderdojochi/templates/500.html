@@ -16,7 +16,17 @@
 {% block body_class %}page-500{% endblock %}
 
 {% block contained_content %}
-<h1 class="title">ERROR 500</h1>
+<h1 class="title">Server Error</h1>
 <p>Whoops! Something went wrong :(</p>
 <p>We are aware of the issue and are already working on a fix.</p>
+
+<script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" integrity="sha384-wF7Jc4ZlWVxe/L8Ji3hOIBeTgo/HwFuaeEfjGmS3EXAG7Y+7Kjjr91gJpJtr+PAT" crossorigin="anonymous"></script>
+
+{% if sentry_event_id %}
+<script>
+  Sentry.init({ dsn: '{{ SENTRY_DSN }}' });
+  Sentry.showReportDialog({ eventId: '{{ sentry_event_id }}' });
+</script>
+{% endif %}
+
 {% endblock %}

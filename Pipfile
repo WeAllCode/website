@@ -31,9 +31,9 @@ factory_boy = "*"
 icalendar = "*"
 json-logging-py = "*"
 django-anymail = "*"
-raven = "*"
 django-meta = "*"
 django-environ = "*"
+sentry-sdk = "==0.14.3"
 
 [dev-packages]
 pylint = "*"
