@@ -292,6 +292,13 @@ class JoinUsView(DefaultMetaTags, FormView):
         return super().form_valid(form)
 
 
+class AssociateBoardView(DefaultMetaTags, TemplateView):
+    template_name = "weallcode/associate_board.html"
+    url = reverse_lazy('weallcode-associate-board')
+
+    title = f"Join our Associate Board | {settings.SITE_NAME}"
+
+
 class PrivacyView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/privacy.html"
     url = reverse_lazy('weallcode-privacy')
