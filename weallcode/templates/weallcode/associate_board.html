@@ -1,0 +1,182 @@
+{% extends 'weallcode/_base.html' %}
+
+{% load static %}
+
+{% block page-class %}join-us{% endblock %}
+
+{% block subheader %}
+  {% if messages %}
+    {% include 'weallcode/_messages.html' %}
+  {% endif %}
+
+  <div class="sub-menu">
+    <nav class="grid-container" role="navigation">
+      <ul class="menu">
+        <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
+        <li class="active"><a href="{% url 'weallcode-associate-board' %}">Associate Board</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#donate-form">Donate</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#sponsorship">Sponsorship</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </div>
+{% endblock subheader %}
+
+{% block messages %}{% endblock %}
+
+{% block content %}
+
+  {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-associate-board.jpg" alt="Associate Board" %}
+
+  <!-- Introduction -->
+  <section id="introduction" class="padding-top-3">
+    <div class="grid-container">
+      <div class="grid-x margin-bottom-2">
+        <div class="cell large-8 padding-right-2">
+          <h1 class="title text-tertiary">Associate Board</h1>
+          <p>Joining the We All Code's Associate Board is an exciting opportunity for early- to mid-career professionals who want to contribute their time, talent, and treasure to the We All Code's mission, while building professional networks and enhancing leadership skills.</p>
+        </div>
+        <div class="cell large-4 position-relative">
+          <div class="aside-title">
+            <div>
+              <span class="text-tertiary display-inline-block">Educate the </span>
+              <span class="text-tertiary display-inline-block">technology </span>
+              <span class="text-secondary display-inline-block">leaders of </span>
+              <span class="text-white display-inline-block">tomorrow</span>
+            </div>
+            <div class="line width-25 bg-primary margin-top-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-x grid-padding-x margin-vertical-2">
+        <div class="cell medium-8">
+          <h3 class="title text-primary">Overview</h3>
+
+          <p>The Associate Board provides an excellent opportunity for interested volunteers at an early stage of their careers to contribute to We All Code mission on many levels (devoting time, treasure, talent) while building professional networks and enhancing leadership skills.</p>
+
+          <p>The work of the Associate Board will focus on the following guiding principles:</p>
+
+          <ol class="list-plus">
+            <li>Elevate the presence of We All Code to young professionals across the Chicago communities and enhance visibility for our programs;</li>
+            <li>Raise funds and engage new potential donor-communities to support the development, and mentoring, of future leaders; and</li>
+            <li>Create opportunities outside of the organization for engagement with young students.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-team.jpg" alt="Associate Board" %}
+
+  <!-- More Introduction -->
+  <section id="more-information" class="padding-top-3">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x margin-bottom-3">
+        <div class="cell medium-6">
+          <h3 class="title text-primary">Benefits of an Associate Board Membership</h3>
+
+          <ul class="list-plus">
+            <li>Friend-raising and networking experience</li>
+            <li>Leadership development experience and mentoring with the Board of Directors</li>
+            <li>Mentoring opportunities</li>
+            <li>Name recognition on Board invitations (when appropriate)</li>
+            <li>Recognized in the Annual Report</li>
+            <li>Opportunities to enjoy special privileges such as behind-the-scenes tours and previews of new programs and initiatives</li>
+          </ul>
+        </div>
+        <div class="cell medium-6">
+          <div class="binary-drop-right">
+            <img class="width-100" src="{% static 'weallcode/images/photos/volunteering-2.jpg' %}" alt="Photo of student and mentor in class.">
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-x grid-padding-x margin-bottom-3">
+
+        <div class="cell medium-8">
+          <h3 class="title text-primary">Membership Requirements</h3>
+
+          <ul class="list-plus">
+            <li>Commit to building students of courage, confidence and character, who make the world a better place and be passionate about developing future leaders.</li>
+            <li>Personally donate $250 (give) and work to bring in additional $500 (get) through personal/professional networks throughout the year.</li>
+            <li>Be an enthusiastic advocate for the mission of We All Code, especially among Chicago's young professional community.</li>
+            <li>Attend at least 75% of scheduled meetings, though attendance at all meetings is strongly encouraged.</li>
+            <li>Join an Associate Board committee.</li>
+            <li>Support fundraising events. This would include at least two of the following:
+              <ul class="list-plus">
+                <li>Secure monetary or in-kind donations.</li>
+                <li>Purchase at least one ticket and attend the event(s)</li>
+                <li>Make a personal financial donation towards the event if unable to attend</li>
+                <li>Purchase raffle tickets, silent auction items, etc. (if applicable)</li>
+              </ul>
+            </li>
+            <li>Engage personal and professional networks and/or companies to support the organization at-large and Associate Board-specific events.</li>
+            <li>Commit to building students of courage, confidence and character, who make the world a better place and be passionate about developing future leaders.</li>
+          </ul>
+
+          <p>The Associate Board currently consists of approximately 15 members. We aspire to grow while keeping membership limited. Our target members are professionals, entrepreneurs, and civic leaders in the first 5-10 years of their careers. Membership on the Associate Board is open to anyone who is passionate about We All Code's mission and interested in supporting the work we do.</p>
+        </div>
+      </div>
+
+      <div class="grid-x grid-padding-x margin-bottom-2">
+        <div class="cell medium-8">
+          <h3 class="title text-primary">Fundraising Goal</h3>
+
+          <p>Each year, the Associate Board works with its liaison(s) from the Board of Directors to establish a fundraising goal for the fall event in addition to the Associate Board give/get requirements.</p>
+        </div>
+      </div>
+
+      <div class="grid-x grid-padding-x margin-bottom-2">
+        <div class="cell medium-6">
+          <h3 class="title text-primary margin-bottom-2">Associate Board Committees</h3>
+
+          <p><strong>Outreach</strong> - The Associate Board Outreach Committee works to increase the reach of We All Code and the Associate Board, build a network/pipeline, and ensure that multiple dimensions of We All Code are represented.</p>
+
+          <p><strong>Fundraising</strong> - The Associate Board Fundraising Committee uses creativity and connections, with a We All Code focus, to lead the annual fall event. This Committee focuses on leading the full Associate Board through the process of securing sponsorships, selling tickets, securing silent auction items, and creating an event that is engaging and communicates We All Code’s mission.</p>
+
+          <p><strong>Volunteer</strong> - The Associate Board Volunteer Committee works to create opportunities that engage the Associate Board members with the mission of the organization in a hands-on, meaningful way that also creates social interaction with each other.</p>
+
+          <h3 class="title text-primary margin-vertical-2">Questions?</h3>
+
+          <p>Please contact us at <a href="mailto:hello@weallcode.org">hello@weallcode.org</a> for any questions or more information.</p>
+
+        </div>
+        <div class="cell medium-6">
+          <div class="binary-drop-right">
+            <img class="width-100" src="{% static 'weallcode/images/photos/volunteering-3-small.jpg' %}" alt="Photo of student and mentor in class.">
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center margin-bottom-2">
+        <a class="button large" href="{% url 'weallcode-associate-board' %}#form">Apply to the Associate Board</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section id="form" class="bg-binary padding-vertical-2">
+    <div class="grid-container">
+      <div class="grid-x margin-vertical-3">
+        <div class="cell medium-8 bg-white">
+          <h2 class="title text-primary padding-horizontal-2 padding-top-2">Apply to join the Associate Board</h2>
+          <p class="padding-horizontal-2"><strong>Your generous financial support makes coding accessible to kids across Chicago.</strong> Every donation makes a difference!</p>
+
+          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScKzZFNOjjsuRDtEw8VsR98_8MSq38SoyGDdlmfh1ibFJLOcw/viewform?embedded=true" width="640" height="1000" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        </div>
+        <div class="cell medium-4 bg-dark-blue text-white padding-2">
+          <div class="line bg-primary width-25 margin-bottom-3"></div>
+          <div class="text-huge text-uppercase text-bold line-height-1 margin-bottom-2">
+            <div class="text-tertiary">Money should</div>
+            <div class="text-tertiary">never be a barrier</div>
+            <div class="text-secondary">for kids</div>
+            <div>to learn code</div>
+          </div>
+          <p>Our classes are <strong>FREE</strong> whenever possible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
