@@ -14,15 +14,39 @@ class StaffMemberAdmin(admin.ModelAdmin):
         'member_image',
         'name',
         'role',
+        'is_active',
+    ]
+
+    list_filter = [
+        'is_active',
+        'role',
     ]
 
     readonly_fields = [
         'member_image',
+        'created_at',
+        'updated_at',
     ]
 
     ordering = [
         'name'
     ]
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'role',
+                'description',
+                'linkedin',
+                'image',
+                'member_image',
+                'is_active',
+                'created_at',
+                'updated_at',
+            ),
+        }),
+    )
 
 
 @admin.register(BoardMember)
@@ -35,15 +59,39 @@ class BoardMemberAdmin(admin.ModelAdmin):
         'member_image',
         'name',
         'role',
+        'is_active',
+    ]
+
+    list_filter = [
+        'is_active',
+        'role',
     ]
 
     readonly_fields = [
         'member_image',
+        'created_at',
+        'updated_at',
     ]
 
     ordering = [
         'name'
     ]
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'role',
+                'description',
+                'linkedin',
+                'image',
+                'member_image',
+                'is_active',
+                'created_at',
+                'updated_at',
+            ),
+        }),
+    )
 
 
 @admin.register(AssociateBoardMember)
@@ -57,12 +105,36 @@ class AssociateBoardMemberAdmin(admin.ModelAdmin):
         'member_image',
         'name',
         'role',
+        'is_active',
+    ]
+
+    list_filter = [
+        'is_active',
+        'role',
     ]
 
     readonly_fields = [
         'member_image',
+        'created_at',
+        'updated_at',
     ]
 
     ordering = [
         'name'
     ]
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'name',
+                'role',
+                'description',
+                'linkedin',
+                'image',
+                'member_image',
+                'is_active',
+                'created_at',
+                'updated_at',
+            ),
+        }),
+    )

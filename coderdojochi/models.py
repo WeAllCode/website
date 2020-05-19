@@ -11,10 +11,14 @@ from django.urls import reverse
 from django.utils import formats, timezone
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
+
 from stdimage.models import StdImageField
 
-from .notifications import (NewMentorBgCheckNotification,
-                            NewMentorNotification, NewMentorOrderNotification)
+from .notifications import (
+    NewMentorBgCheckNotification,
+    NewMentorNotification,
+    NewMentorOrderNotification,
+)
 
 
 class CDCUser(AbstractUser):
@@ -181,12 +185,10 @@ class Mentor(CommonInfo):
             if orig.avatar != self.avatar:
                 self.avatar_approved = False
 
-            if self.background_check == True and orig.background_check != self.background_check:
+            if self.background_check is True and orig.background_check != self.background_check:
                 NewMentorBgCheckNotification(self).send()
 
-
         super(Mentor, self).save(*args, **kwargs)
-
 
     def get_approve_avatar_url(self):
         return reverse('mentor-approve-avatar', args=[str(self.id)])
