@@ -7,6 +7,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/alexandra-rodriguez-beuerman-94990a59/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/alexandra-rodriguez-beuerman.jpg"
   }
 },
@@ -18,6 +21,9 @@
     "role": "Treasurer",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/annabkronauer/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/anna-kronauer.jpg"
   }
 },
@@ -29,6 +35,9 @@
     "role": "Vice Chair",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/brendan-mclaughlin-864b3413/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/brendan-mclaughlin.jpg"
   }
 },
@@ -40,6 +49,9 @@
     "role": "Chair",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/carolyn-potts-b416a41b/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/carolyn-potts.jpg"
   }
 },
@@ -51,6 +63,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/clairelipskey/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/claire-lipskey.jpg"
   }
 },
@@ -62,6 +77,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/danielmconrad/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/daniel-conrad.jpg"
   }
 },
@@ -73,6 +91,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/jordanpolonsky/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/jordan-polonsky.jpg"
   }
 },
@@ -84,6 +105,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/joseph-fowler/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/joseph-fowler.jpg"
   }
 },
@@ -95,6 +119,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/katherineeevans/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/katherine-evans.jpg"
   }
 },
@@ -106,6 +133,9 @@
     "role": "Secretary",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/ltramos7/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/linda-ramos.jpg"
   }
 },
@@ -117,6 +147,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/matthew-felz-53025940/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/matt-felz.jpg"
   }
 },
@@ -128,6 +161,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/sconstantinides/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/stelios-constantinides.png"
   }
 },
@@ -139,6 +175,9 @@
     "role": "Director",
     "description": null,
     "linkedin": "https://www.linkedin.com/in/tatyanashestopalova/",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T20:40:00Z",
     "image": "associate-board/tatyana-shestopalova.jpg"
   }
 }

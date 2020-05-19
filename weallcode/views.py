@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 from itertools import chain
 
@@ -151,74 +152,54 @@ class TeamView(DefaultMetaTags, TemplateView):
 
     # Staff
     def get_staff(self, context):
-        context['staff'] = StaffMember.objects.all()
+        context['staff'] = StaffMember.objects.filter(
+            is_active=True,
+        )
 
         return context
 
     # Board Members
     def get_board(self, context):
-        board = BoardMember.objects.all()
-
-        board_chair = board.filter(
-            role='Chair'
+        board = BoardMember.objects.filter(
+            is_active=True,
         )
 
-        board_vice_chair = board.filter(
-            role='Vice Chair'
-        )
+        # NOTE: We're splitting and reordering them manually since the website requires a specific order.
+        roles = defaultdict(list)
 
-        board_treasurer = board.filter(
-            role='Treasurer'
-        )
+        for person in board:
+            roles[person.role].append(person)
 
-        board_secretary = board.filter(
-            role='Secretary'
-        )
-
-        board_directors = board.filter(
-            role='Director'
-        ).order_by('name')
-
+        # The correct order
         context['board'] = list(chain(
-            board_chair,
-            board_vice_chair,
-            board_treasurer,
-            board_secretary,
-            board_directors,
+            roles['Chair'],
+            roles['Vice Chair'],
+            roles['Treasurer'],
+            roles['Secretary'],
+            roles['Director'],
         ))
 
         return context
 
     # Associate Board Members
     def get_associate_board(self, context):
-        associate_board = AssociateBoardMember.objects.all()
-
-        ab_chair = associate_board.filter(
-            role='Chair'
-        )
-
-        ab_vice_chair = associate_board.filter(
-            role='Vice Chair'
-        )
-
-        ab_treasurer = associate_board.filter(
-            role='Treasurer'
-        )
-
-        ab_secretary = associate_board.filter(
-            role='Secretary'
-        )
-
-        ab_directors = associate_board.filter(
-            role='Director'
+        associate_board = AssociateBoardMember.objects.filter(
+            is_active=True,
         ).order_by('name')
 
+        # NOTE: We're splitting and reordering them manually since the website requires a specific order.
+        roles = defaultdict(list)
+
+        for person in associate_board:
+            roles[person.role].append(person)
+
+        # The correct order
         context['associate_board'] = list(chain(
-            ab_chair,
-            ab_vice_chair,
-            ab_treasurer,
-            ab_secretary,
-            ab_directors,
+            roles['Chair'],
+            roles['Vice Chair'],
+            roles['Treasurer'],
+            roles['Secretary'],
+            roles['Director'],
         ))
 
         return context
