@@ -47,10 +47,13 @@ class CalendarView(View):
         event['dtend'] = self.get_dtend(request, event_obj)
         event['dtstamp'] = event['dtstart'][:-1]
 
-        location = (
-            f"{event_obj.location.name}, {event_obj.location.address}, "
-            f"{event_obj.location.city}, {event_obj.location.state}, {event_obj.location.zip}"
-        )
+        if event_obj.location.address:
+            location = (
+                f"{event_obj.location.name}, {event_obj.location.address}, "
+                f"{event_obj.location.city}, {event_obj.location.state}, {event_obj.location.zip}"
+            )
+        else:
+            location = f"{event_obj.location.name}"
 
         event['location'] = vText(location)
 

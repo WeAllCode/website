@@ -24,5 +24,18 @@
     "state": "IL",
     "zip": "60647"
   }
+},
+{
+  "model": "coderdojochi.location",
+  "pk": 3,
+  "fields": {
+    "created_at": "2020-05-29T18:28:42.875Z",
+    "updated_at": "2020-05-29T18:28:42.875Z",
+    "name": "Online",
+    "address": null,
+    "city": null,
+    "state": null,
+    "zip": null
+  }
 }
 ]
