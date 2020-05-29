@@ -1,13 +1,14 @@
 #/bin/env bash
 
 # To run:
-# docker-compose run --rm app bash ./fixtures/get.sh
+# /usr/bin/time docker-compose run --rm app bash ./fixtures/get.sh && say "I'm done."
 #
 
 models=(
     "sites.site"
     "auth.group"
     "socialaccount.socialapp"
+    "redirects.redirect"
     "coderdojochi.cdcuser"
     "coderdojochi.course"
     "coderdojochi.equipmenttype"

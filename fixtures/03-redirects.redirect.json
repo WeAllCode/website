@@ -1,0 +1,92 @@
+[
+{
+  "model": "redirects.redirect",
+  "pk": 1,
+  "fields": {
+    "site": 1,
+    "old_path": "/dojo/",
+    "new_path": "/account/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 2,
+  "fields": {
+    "site": 1,
+    "old_path": "/about/",
+    "new_path": "/our-story/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 3,
+  "fields": {
+    "site": 1,
+    "old_path": "/info/",
+    "new_path": "/our-story/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 4,
+  "fields": {
+    "site": 1,
+    "old_path": "/contact/",
+    "new_path": "/get-involved#contact"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 5,
+  "fields": {
+    "site": 1,
+    "old_path": "/volunteer/",
+    "new_path": "/get-involved/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 6,
+  "fields": {
+    "site": 1,
+    "old_path": "/accounts/signup/",
+    "new_path": "/account/signup/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 7,
+  "fields": {
+    "site": 1,
+    "old_path": "/accounts/login/",
+    "new_path": "/account/login/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 8,
+  "fields": {
+    "site": 1,
+    "old_path": "/summer-camp/",
+    "new_path": "/summer-camps/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 9,
+  "fields": {
+    "site": 1,
+    "old_path": "/associate-board/",
+    "new_path": "/join-us/associate-board/"
+  }
+},
+{
+  "model": "redirects.redirect",
+  "pk": 10,
+  "fields": {
+    "site": 1,
+    "old_path": "/ab/",
+    "new_path": "/join-us/associate-board/"
+  }
+}
+]

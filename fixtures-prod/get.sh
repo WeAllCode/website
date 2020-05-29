@@ -8,6 +8,7 @@ models=(
     "sites.site"
     "auth.group"
     "socialaccount.socialapp"
+    "redirects.redirect"
     "coderdojochi.cdcuser"
     "coderdojochi.course"
     "coderdojochi.equipmenttype"

@@ -28,8 +28,10 @@ urlpatterns = [
         path('summer-camps/', ProgramsSummerCampsView.as_view(), name='weallcode-programs-summer-camps'),
     ])),
     path('team/', TeamView.as_view(), name='weallcode-team'),
-    path('join-us/', JoinUsView.as_view(), name='weallcode-join-us'),
-    path('associate-board/', AssociateBoardView.as_view(), name='weallcode-associate-board'),
+    path('join-us/', include([
+        path('', JoinUsView.as_view(), name='weallcode-join-us'),
+        path('associate-board/', AssociateBoardView.as_view(), name='weallcode-associate-board'),
+    ])),
     path('privacy/', PrivacyView.as_view(), name='weallcode-privacy'),
     path('credits/', CreditsView.as_view(), name='weallcode-credits'),
 
