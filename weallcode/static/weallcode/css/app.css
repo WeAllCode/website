@@ -540,13 +540,13 @@ ul.list-plus li {
 }
 
 html[data-whatintent="mouse"] .main-menu a:not(.button):hover,
-.main-menu a.current:not(.button) {
+.main-menu a.active:not(.button) {
   margin-bottom: -16px;
   padding-bottom: 22px;
   border-bottom: 5px solid var(--white);
 }
 
-.main-menu a.current:not(.button) {
+.main-menu a.active:not(.button) {
   border-bottom: 5px solid var(--secondary);
 }
 

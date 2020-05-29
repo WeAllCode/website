@@ -1,5 +1,4 @@
-{% load account static %}
-
+{% load account active static %}
 <div class="grid-container">
   <div class="grid-x">
     <div class="cell auto medium-3">
@@ -13,10 +12,10 @@
     <div class="cell show-for-medium medium-9">
       <nav class="padding-vertical-1" role="navigation" aria-label="navigation">
         <ul class="main-menu menu align-right">
-          <li><a class="{% if request.resolver_match.url_name == 'weallcode-our-story' %}current{% endif %}" href="{% url 'weallcode-our-story' %}">Our Story</a></li>
-          <li><a class="{% if request.resolver_match.url_name == 'weallcode-programs' %}current{% endif %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
-          <li><a class="{% if request.resolver_match.url_name == 'weallcode-team' %}current{% endif %}" href="{% url 'weallcode-team' %}">Team</a></li>
-          <li><a class="{% if request.resolver_match.url_name == 'weallcode-join-us' %}current{% endif %}" href="{% url 'weallcode-join-us' %}">Join Us</a></li>
+          <li><a class="{% active 'weallcode-our-story' %}" href="{% url 'weallcode-our-story' %}">Our Story</a></li>
+          <li><a class="{% active 'weallcode-programs' %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
+          <li><a class="{% active 'weallcode-team' %}" href="{% url 'weallcode-team' %}">Team</a></li>
+          <li><a class="{% active 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a></li>
           <li><a class="button tertiary" href="#donate">Donate</a></li>
 
           {% if user.is_authenticated %}
@@ -31,10 +30,10 @@
 </div>
 
 <div class="mobile-nav hide">
-  <a class="{% if request.resolver_match.url_name == 'weallcode-our-story' %}current{% endif %}" href="{% url 'weallcode-our-story' %}">Our Story</a>
-  <a class="{% if request.resolver_match.url_name == 'weallcode-programs' %}current{% endif %}" href="{% url 'weallcode-programs' %}">Programs</a>
-  <a class="{% if request.resolver_match.url_name == 'weallcode-team' %}current{% endif %}" href="{% url 'weallcode-team' %}">Team</a>
-  <a class="{% if request.resolver_match.url_name == 'weallcode-join-us' %}current{% endif %}" href="{% url 'weallcode-join-us' %}">Join Us</a>
+  <a class="{% active 'weallcode-our-story' %}" href="{% url 'weallcode-our-story' %}">Our Story</a>
+  <a class="{% active 'weallcode-programs' %}" href="{% url 'weallcode-programs' %}">Programs</a>
+  <a class="{% active 'weallcode-team' %}" href="{% url 'weallcode-team' %}">Team</a>
+  <a class="{% active 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a>
 
   <div class="margin-top-1">
     <a class="button tertiary" href="#donate">Donate</a>

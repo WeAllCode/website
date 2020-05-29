@@ -34,6 +34,7 @@ django-anymail = "*"
 django-meta = "*"
 django-environ = "*"
 sentry-sdk = "==0.14.3"
+django-fullurl = "*"
 
 [dev-packages]
 pylint = "*"
