@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 
+    'fullurl',
     'bootstrap3',
     'django_cleanup',
     'anymail',
