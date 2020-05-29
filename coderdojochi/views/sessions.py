@@ -355,7 +355,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                 access_dict = {
                     'message': (
                         f"You cannot sign up for a class until you <a href="
-                        f"\"https://app.verifiedvolunteers.com/promoorder/6a34f727-3728-4f1a-b80b-7eb3265a3b93\""
+                        f"\"https://app.sterlingvolunteers.com/promoorder/3df76c55-9961-46e1-8e5f-f6b38e2ec4dc\""
                         f" target=\"_blank\">fill out the background search form</a>."
                     ),
                     'redirect': request.META.get('HTTP_REFERER', '/dojo')
