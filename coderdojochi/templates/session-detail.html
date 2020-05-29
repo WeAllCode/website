@@ -52,7 +52,11 @@
 
 
     <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
+    {% if session.location.address %}
     <p><a target="_blank" class="static-map text-white" href="https://www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+    {% else %}
+    <p>Details will be emailed prior to class.</p>
+    {% endif %}
 
 
     <h5 class="text-uppercase margin-top-2">Who</h5>

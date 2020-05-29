@@ -478,18 +478,26 @@ class Location(CommonInfo):
     )
 
     address = models.CharField(
+        blank=True,
+        null=True,
         max_length=255,
     )
 
     city = models.CharField(
+        blank=True,
+        null=True,
         max_length=255,
     )
 
     state = models.CharField(
-        max_length=255,
+        blank=True,
+        null=True,
+        max_length=2,
     )
 
     zip = models.CharField(
+        blank=True,
+        null=True,
         max_length=20,
     )
 
