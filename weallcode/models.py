@@ -8,6 +8,7 @@ VICE_CHAIR = 'Vice Chair'
 SECRETARY = 'Secretary'
 TREASURER = 'Treasurer'
 DIRECTOR = 'Director'
+PRESIDENT = 'President'
 
 ROLE_CHOICES = [
     (CHAIR, 'Chair'),
@@ -15,6 +16,7 @@ ROLE_CHOICES = [
     (SECRETARY, 'Secretary'),
     (TREASURER, 'Treasurer'),
     (DIRECTOR, 'Director'),
+    (PRESIDENT, 'President'),
 ]
 
 
