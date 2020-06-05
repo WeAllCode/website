@@ -33,17 +33,18 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:c774003dc13d6de74b5e19d2b84d625da4456e64bd97f44baa1fcf40d808d29a"
+                "sha256:5df1f3f84587b4d812f6f178031119b80920822b459bbb70ad49f431128655dc",
+                "sha256:d19fb5b7f27c29a7a036e36888e9584132e2f8edfa6ef906ea5a712e3e29962c"
             ],
             "index": "pypi",
-            "version": "==1.13.19"
+            "version": "==1.13.24"
         },
         "botocore": {
             "hashes": [
-                "sha256:5cb537e7a4cf2d59a2a8dfbbc8e14ec3bc5b640eb81a1bf3bb0523c0a75e6b1b",
-                "sha256:7b8b1f082665c8670b9aa70143ee527c5d04939fe027a63ac5958359be20ccb0"
+                "sha256:17bc71415186efb86a25dd674f78064cdd85139485967d5a0741c7b83d62cf5b",
+                "sha256:e44b11b1c47c06b0f6524b0ff1fa1cae5ddea4eb06f359e4a9730e8e881b397a"
             ],
-            "version": "==1.16.19"
+            "version": "==1.16.24"
         },
         "certifi": {
             "hashes": [
@@ -81,11 +82,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:051ba55d42daa3eeda3944a8e4df2bc96d4c62f94316dea217248a22563c3621",
-                "sha256:9aaa6a09678e1b8f0d98a948c56482eac3e3dd2ddbfb8de70a868135ef3b5e01"
+                "sha256:5052b34b34b3425233c682e0e11d658fd6efd587d11335a0203d827224ada8f2",
+                "sha256:e1630333248c9b3d4e38f02093a26f1e07b271ca896d73097457996e0fae12e8"
             ],
             "index": "pypi",
-            "version": "==3.0.6"
+            "version": "==3.0.7"
         },
         "django-allauth": {
             "hashes": [
@@ -180,10 +181,10 @@
         },
         "django-import-export": {
             "hashes": [
-                "sha256:28784ba1754850059f3612c1b233c87f4c8658e01870c22e9d9d66ae7af1f41e"
+                "sha256:83be410caca8c1b78585677c0fd7ae0e4de5dd5507ad3cea815fbcd29323f448"
             ],
             "index": "pypi",
-            "version": "==2.1.0"
+            "version": "==2.2.0"
         },
         "django-loginas": {
             "hashes": [
@@ -592,10 +593,10 @@
         },
         "autopep8": {
             "hashes": [
-                "sha256:152fd8fe47d02082be86e05001ec23d6f420086db56b17fc883f3f965fb34954"
+                "sha256:60fd8c4341bab59963dafd5d2a566e94f547e660b9b396f772afe67d8481dbf0"
             ],
             "index": "pypi",
-            "version": "==1.5.2"
+            "version": "==1.5.3"
         },
         "isort": {
             "hashes": [
