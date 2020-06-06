@@ -214,13 +214,13 @@
           {% if session.announced_date_mentors %}
             <li class="text-muted list-group-item">Announced to mentors on:<br><b>{{ session.announced_date_mentors|date:'F j, Y \a\t g:i a' }}</b></li>
           {% else %}
-            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='button tertiary' href='{% url 'session-announce-mentors' session.id %}'>Announce mentors</a>" data-html="true">Announce to mentors</a></li>
+            <li class="list-group-item"><a href="{% url 'session-announce-mentors' session.id %}" onclick="return confirm('Are you sure you want to email all mentors?')">Announce to mentors</a></li>
           {% endif %}
 
           {% if session.announced_date_guardians %}
             <li class="text-muted list-group-item">Announced to guardians on:<br><b>{{ session.announced_date_guardians|date:'F j, Y \a\t g:i a' }}</b></li>
           {% else %}
-            <li class="list-group-item"><a href="#" onclick="event.preventDefault()" data-toggle="popover" title="Announce Session?" data-content="<a class='button tertiary' href='{% url 'session-announce-guardians' session.id %}'>Announce guardians</a>" data-html="true">Announce to guardians</a></li>
+            <li class="list-group-item"><a href="{% url 'session-announce-guardians' session.id %}" onclick="return confirm('Are you sure you want to email all guardians?')">Announce to guardians</a></li>
           {% endif %}
 
           <li class="list-group-item"><a href="{% url 'student-check-in' session.id %}">Check-in Students</a></li>
