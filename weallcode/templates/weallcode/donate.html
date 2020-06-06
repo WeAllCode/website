@@ -1,8 +1,8 @@
 {% extends 'weallcode/_base.html' %}
 
-{% load static active %}
+{% load static %}
 
-{% block page-class %}join-us{% endblock %}
+{% block page-class %}donate{% endblock %}
 
 {% block subheader %}
   {% if messages %}
@@ -13,8 +13,8 @@
     <nav class="grid-container" role="navigation">
       <ul class="menu">
         <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
-        <li><a href="{% url 'weallcode-associate-board' %}" class="active">Associate Board</a></li>
-        <li><a href="{% url 'weallcode-donate' %}">Donate</a></li>
+        <li><a href="{% url 'weallcode-associate-board' %}">Associate Board</a></li>
+        <li><a href="{% url 'weallcode-donate' %}" class="active">Donate</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#sponsorship">Sponsorship</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#contact">Contact Us</a></li>
       </ul>
@@ -33,8 +33,8 @@
     <div class="grid-container">
       <div class="grid-x margin-bottom-2">
         <div class="cell large-8 padding-right-2">
-          <h1 class="title text-tertiary">Associate Board</h1>
-          <p>Joining We All Code's Associate Board is an exciting opportunity for early- to mid-career professionals who want to contribute their time, talent, and treasure to We All Code's mission, while building professional networks and enhancing leadership skills.</p>
+          <h1 class="title text-tertiary">Support We All Code</h1>
+          <p>Development of Django is supported by an independent foundation established as a 501(c)(3) non-profit. Like most open-source foundations, the goal of the Django Foundation is to promote, support, and advance the Django web framework.</p>
         </div>
         <div class="cell large-4 position-relative">
           <div class="aside-title">
@@ -51,17 +51,60 @@
 
       <div class="grid-x grid-padding-x margin-vertical-2">
         <div class="cell medium-8">
-          <h3 class="title text-primary">Overview</h3>
+          <h2 class="title text-primary" id="how-to-donate">How do I donate?</h2>
 
-          <p>The Associate Board provides an excellent opportunity for interested volunteers at an early stage in their careers to contribute to We All Code's mission on many levels (devoting time, treasure, talent) while building professional networks and enhancing leadership skills.</p>
+          <p>We accept donations via card or Bitcoin on our <a href="https://www.djangoproject.com/fundraising/">fundraising page</a>.</p>
 
-          <p>The work of the Associate Board will focus on the following guiding principles:</p>
+          <p>You can also mail a check made out to We All Code to:</p>
 
-          <ol class="list-plus">
-            <li>Elevate the presence of We All Code across Chicago and enhance visibility for our programs;</li>
-            <li>Raise funds and engage new potential donors to support the development of future leaders; and</li>
-            <li>Create opportunities outside of the organization for engagement with young students.</li>
-          </ol>
+          <address>
+          We All Code<br>
+          3432 W Diversey Ave<br>
+          Chicago IL 60647-1221<br>
+          </address>
+
+          <p>If you send a donation by mail, please indicate if you need a receipt and, if so, where to send it.</p>
+
+          <p>We can also accept other payment options, please <a href="mailto:hello@weallcode.org">contact us</a> for details.</p>
+
+          <h2>Are there other ways to give?</h2>
+
+          <p>Yes, here are a couple:</p>
+
+          <h3 id="benevity-giving">Benevity Workplace Giving Program</h3>
+
+          <p>We All Code is pleased to be a participant in the <strong><a href="http://www.benevity.com" target="_blank" >Benevity Workplace Giving Program</a></strong>. When your employer becomes a member of the Benevity community, you are able to make donations to We All Code via payroll deduction. Many employers offer a matching contribution as well, increasing the amount that We All Code receives from your donation.</p>
+
+          <p>Benevity is available to employers in any country, and works with your company’s payroll department for ease of use from set up to payments.</p>
+
+          <p>Check with your employer to see if they participate in Benevity, or visit the <a href="http://www.benevity.com" target="_blank" >Benevity</a> site to find out more if your employer is not yet part of the Benevity program.</p>
+
+          <h3 id="amazon-smile">Amazon Smile</h3>
+
+          <p>We All Code is a recipient for <a href="https://smile.amazon.com/ch/46-4988098" target="_blank" >Amazon Smile</a>. When you shop at Amazon, you can nominate for 0.5% of the purchase price of your eligible AmazonSmile purchases to be donated to We All Code.</p>
+
+          <h2 id="donation-usage">How will my donation be used?</h2>
+
+          <!-- TODO: Fill this out -->
+          <p>Fill this out</p>
+
+          <h2 id="corporate-donations">Do you accept donations from companies/corporations?</h2>
+
+          <p>Yes. We also have a corporate sponsorship program. <a href="/contact/foundation/">Get in touch</a> if you'd like to know more.</p>
+
+          <h2 id="specific-feature">Can I choose a specific feature or project to support?</h2>
+
+          <p>No: we don't allow donors to directly sponsor specific features.</p>
+
+          <p>However, we may be able to connect you to a Django developer who you can hire to work on a specific feature. Please <a href="/contact/foundation/">get in touch</a> if this sounds like something you'd like to pursue.</p>
+
+          <h2 id="tax-deductible">Is my donation tax deductible?</h2>
+
+          <p>We All Code is a non-profit corporation; we have tax-exempt status under IRC 501(c)(3). This means that donations are tax-deductible for US citizens; donors outside of the United States should consult a tax advisor.</p>
+
+          <h2 id="donation-alternatives">How can I donate if Stripe won't process my payment?</h2>
+
+          <p>Please <a href="mailto:fundraising@djangoproject.com">get in touch</a> with us, and we'll figure something out that works for you.</p>
         </div>
       </div>
     </div>

@@ -204,6 +204,10 @@ section {
   outline: none;
 }
 
+address {
+  margin-bottom: 1rem;
+}
+
 ul.list-plus {
   margin: 0;
   padding: 0;
@@ -611,6 +615,7 @@ html[data-whatintent="mouse"] .main-menu a:not(.button):hover,
   }
 
   html[data-whatintent="mouse"] .sub-menu a:hover,
+  .sub-menu .active,
   .sub-menu .active a {
     padding-bottom: calc(1.2rem - 5px);
     border-bottom: 5px solid var(--black);

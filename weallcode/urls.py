@@ -6,6 +6,7 @@ from django.views.generic import RedirectView
 from .views import (
     AssociateBoardView,
     CreditsView,
+    DonateView,
     HomeView,
     JoinUsView,
     OurStoryView,
@@ -32,6 +33,7 @@ urlpatterns = [
         path('', JoinUsView.as_view(), name='weallcode-join-us'),
         path('associate-board/', AssociateBoardView.as_view(), name='weallcode-associate-board'),
     ])),
+    path('donate/', DonateView.as_view(), name='weallcode-donate'),
     path('privacy/', PrivacyView.as_view(), name='weallcode-privacy'),
     path('credits/', CreditsView.as_view(), name='weallcode-credits'),
 

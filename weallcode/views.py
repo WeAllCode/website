@@ -2,6 +2,7 @@ from collections import defaultdict
 from datetime import datetime
 from itertools import chain
 
+from coderdojochi.models import Course, Mentor, Session
 from django.conf import settings
 from django.contrib import messages, sitemaps
 from django.contrib.auth import get_user_model
@@ -10,11 +11,8 @@ from django.http import HttpResponseNotFound
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import FormView, TemplateView
-
 from meta.views import MetadataMixin
 from sentry_sdk import capture_message
-
-from coderdojochi.models import Course, Mentor, Session
 
 from .forms import ContactForm
 from .models import AssociateBoardMember, BoardMember, StaffMember
@@ -278,6 +276,13 @@ class AssociateBoardView(DefaultMetaTags, TemplateView):
     url = reverse_lazy('weallcode-associate-board')
 
     title = f"Join our Associate Board | {settings.SITE_NAME}"
+
+
+class DonateView(DefaultMetaTags, TemplateView):
+    template_name = "weallcode/donate.html"
+    url = reverse_lazy('weallcode-donate')
+
+    title = f"Support We All Code | {settings.SITE_NAME}"
 
 
 class PrivacyView(DefaultMetaTags, TemplateView):
