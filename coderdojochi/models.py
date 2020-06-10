@@ -1068,7 +1068,6 @@ class Order(CommonInfo):
 
 
 class MentorOrder(CommonInfo):
-
     mentor = models.ForeignKey(
         Mentor,
         on_delete=models.CASCADE,
@@ -1127,7 +1126,9 @@ class MentorOrder(CommonInfo):
     is_checked_in.boolean = True
 
     def save(self, *args, **kwargs):
-        if self.pk is None:
+        num_orders = MentorOrder.objects.filter(mentor__id=self.mentor.id).count()
+
+        if self.pk is None and num_orders == 0:
             NewMentorOrderNotification(self).send()
 
         super(MentorOrder, self).save(*args, **kwargs)
