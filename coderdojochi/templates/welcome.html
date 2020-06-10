@@ -4,6 +4,10 @@
 
 {% block title %}{{ class.title }} Sign Up | {{ block.super }}{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/js-datepicker@5.14.2/dist/datepicker.min.css">
+{% endblock %}
+
 {% block body_class %}page-welcome{% endblock %}
 
 {% block contained_content %}
@@ -69,4 +73,34 @@
         </div>
     {% endif %}
 </section>
+{% endblock %}
+
+{% block extra_script %}
+<script src="https://unpkg.com/js-datepicker@5.14.2/dist/datepicker.min.js"></script>
+
+<script>
+
+// Test whether a new date input falls back to a text input
+var testElement = document.createElement('input');
+
+try {
+  testElement.type = 'date';
+} catch (e) {
+  console.log(e.description);
+}
+
+// If it does, run the code inside the if () {} block
+if (testElement.type === 'text') {
+    var $birthday = document.querySelector("#id_birthday");
+    var picker = datepicker('#id_birthday', {
+        disableMobile: true,
+        startDate: new Date($birthday.attributes['max'].value),
+        minDate: new Date($birthday.attributes['min'].value),
+        maxDate: new Date($birthday.attributes['max'].value),
+        formatter: (input, date, instance) => {
+            input.value = date.toLocaleDateString('en-US')
+        }
+    });
+}
+</script>
 {% endblock %}

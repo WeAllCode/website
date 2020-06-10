@@ -1,15 +1,26 @@
 import re
+from datetime import timedelta
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
 from django.forms import FileField, Form, ModelForm, ValidationError
+from django.utils import dateformat, timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 import html5.forms.widgets as html5_widgets
+from dateutil.relativedelta import relativedelta
 
-from coderdojochi.models import CDCUser, Donation, Guardian, Mentor, RaceEthnicity, Session, Student
+from coderdojochi.models import (
+    CDCUser,
+    Donation,
+    Guardian,
+    Mentor,
+    RaceEthnicity,
+    Session,
+    Student,
+)
 
 
 class CDCForm(Form):
@@ -295,60 +306,62 @@ class StudentForm(CDCModelForm):
         widget=forms.TextInput(
             attrs={
                 'placeholder': 'Jane',
-                'class': 'form-control'
-            }
+                'class': 'form-control',
+            },
         ),
-        label='First Name'
+        label='First Name',
     )
 
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 'placeholder': 'Doe',
-                'class': 'form-control'
-            }
+                'class': 'form-control',
+            },
         ),
-        label='Last Name'
+        label='Last Name',
     )
 
     gender = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 'placeholder': '',
-                'class': 'form-control'
-            }
+                'class': 'form-control',
+            },
         ),
-        label='Gender'
+        label='Gender',
     )
 
     school_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control'
-            }
+                'class': 'form-control',
+            },
         ),
         label='School Name',
-        required=False
+        required=False,
     )
 
     school_type = forms.ChoiceField(
         widget=forms.RadioSelect,
         choices=SCHOOL_TYPE_CHOICES,
-        required=False
+        required=False,
     )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
         queryset=RaceEthnicity.objects.filter(is_visible=True),
-        required=False
+        required=False,
     )
 
     birthday = forms.CharField(
         widget=html5_widgets.DateInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'min': dateformat.format(timezone.now() - relativedelta(years=18), "Y-m-d"),
+                'max': dateformat.format(timezone.now() - relativedelta(years=5), "Y-m-d"),
             }
-        )
+        ),
     )
 
     medications = forms.CharField(
@@ -356,7 +369,7 @@ class StudentForm(CDCModelForm):
             attrs={
                 'placeholder': 'List any medications currently being taken.',
                 'class': 'form-control hidden',
-                'rows': 5
+                'rows': 5,
             }
         ),
         label=format_html(
@@ -364,9 +377,9 @@ class StudentForm(CDCModelForm):
             "Medications",
             mark_safe(
                 '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'
-            )
+            ),
         ),
-        required=False
+        required=False,
     )
 
     medical_conditions = forms.CharField(
@@ -374,24 +387,24 @@ class StudentForm(CDCModelForm):
             attrs={
                 'placeholder': 'List any medical conditions.',
                 'class': 'form-control hidden',
-                'rows': 5
-            }
+                'rows': 5,
+            },
         ),
         label=format_html(
             "{0} {1}",
             "Medical Conditions",
             mark_safe(
                 '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'
-            )
+            ),
         ),
-        required=False
+        required=False,
     )
 
     photo_release = forms.BooleanField(
         widget=forms.CheckboxInput(
             attrs={
-                'required': 'required'
-            }
+                'required': 'required',
+            },
         ),
         label=(
             'I hereby give permission to We All Code to use the '
@@ -402,8 +415,8 @@ class StudentForm(CDCModelForm):
     consent = forms.BooleanField(
         widget=forms.CheckboxInput(
             attrs={
-                'required': 'required'
-            }
+                'required': 'required',
+            },
         ),
         label=(
             'I hereby give consent for the student signed up above to participate in We All Code as per the '
