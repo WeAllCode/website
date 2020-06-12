@@ -53,6 +53,7 @@ class WelcomeView(TemplateView):
         if mentor:
             account = mentor
             context['form'] = MentorForm(instance=account)
+
         if role == 'guardian':
             guardian = get_object_or_404(Guardian, user=user)
             account = guardian

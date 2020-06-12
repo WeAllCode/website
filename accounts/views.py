@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
+from django.views.generic import DetailView, FormView, TemplateView
 
 from allauth.account.views import LoginView as AllAuthLoginView
 from allauth.account.views import SignupView as AllAuthSignupView
@@ -262,3 +262,28 @@ class AccountHomeView(TemplateView):
         context['user_form'] = user_form
 
         return render(self.request, 'account/guardian/home.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+class BackgroundCheckView(TemplateView):
+    template_name = "onboarding/background-check.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        mentor = get_object_or_404(Mentor, user=self.request.user)
+        context['mentor'] = mentor
+
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class BackgroundCheckStartedView(TemplateView):
+    template_name = "onboarding/background-check-started.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        mentor = get_object_or_404(Mentor, user=self.request.user)
+        context['mentor'] = mentor
+
+        return context
