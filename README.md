@@ -8,7 +8,7 @@ We, the community and staff, have been building a custom Django application to h
 1. Download and install Docker for [Mac][docker-mac] or [Windows][docker-windows].
 1. Create a new file names `.env` based on `.env.sample`.
 1. Run the following to get a random Django secret key.
-  
+
 ```sh
 python -c "import string,random; uni=string.ascii_letters+string.digits+string.punctuation; print(repr(''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))])))"
 ```
@@ -28,6 +28,13 @@ python -c "import string,random; uni=string.ascii_letters+string.digits+string.p
 ```txt
 username: admin@sink.sendgrid.net
 password: admin
+```
+
+#### Mentor
+
+```txt
+username: mentor@sink.sendgrid.net
+password: mentor
 ```
 
 #### Guardian
