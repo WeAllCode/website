@@ -25,7 +25,7 @@
   "model": "coderdojochi.cdcuser",
   "pk": 2,
   "fields": {
-    "password": "pbkdf2_sha256$24000$zLpXwy8Z8pvn$JZW267fmmrqJqNnoLMocbGkeRDtq4FlJjFyMnj3op3U=",
+    "password": "pbkdf2_sha256$180000$WY1JcWz9KnYL$z7EGcskpYzNYnSRFLy9V3SctD9/4FBj7WrB7nahV/tE=",
     "last_login": "2013-01-01T06:00:00Z",
     "is_superuser": false,
     "username": "test_guardian",
@@ -45,7 +45,7 @@
   "model": "coderdojochi.cdcuser",
   "pk": 3,
   "fields": {
-    "password": "pbkdf2_sha256$180000$xXqp4mUdUayV$vPI6xHKU5ykh2aQ9cguRZ9UDeqnmJIPj+1+7Wb5XkqQ=",
+    "password": "pbkdf2_sha256$180000$7kNf3Qo2GNy5$lW+k3O3gaZL1dio7+MUUbF+hl8zwfSCO3yOYibqzkIo=",
     "last_login": "2013-01-01T06:00:00Z",
     "is_superuser": false,
     "username": "test_mentor",
