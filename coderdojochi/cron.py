@@ -72,6 +72,8 @@ class SendReminders(CronJobBase):
                 'microdata_start_date': arrow.get(order.session.start_date).to('local').isoformat(),
                 'microdata_end_date': arrow.get(order.session.end_date).to('local').isoformat(),
                 'order_id': order.id,
+                'online_video_link': order.session.online_video_link,
+                'online_video_description': order.session.online_video_description,
             }
 
         email(
@@ -116,6 +118,8 @@ class SendReminders(CronJobBase):
                 'microdata_start_date': arrow.get(order.session.start_date).to('local').isoformat(),
                 'microdata_end_date': arrow.get(order.session.end_date).to('local').isoformat(),
                 'order_id': order.id,
+                'online_video_link': order.session.online_video_link,
+                'online_video_description': order.session.online_video_description,
             }
 
         email(
@@ -163,6 +167,8 @@ class SendReminders(CronJobBase):
                     'microdata_start_date': arrow.get(order.session.start_date).to('local').isoformat(),
                     'microdata_end_date': arrow.get(order.session.end_date).to('local').isoformat(),
                     'order_id': order.id,
+                    'online_video_link': order.session.online_video_link,
+                    'online_video_description': order.session.online_video_description,
                 }
 
             email(
@@ -205,6 +211,8 @@ class SendReminders(CronJobBase):
                     'microdata_start_date': arrow.get(order.session.start_date).to('local').isoformat(),
                     'microdata_end_date': arrow.get(order.session.end_date).to('local').isoformat(),
                     'order_id': order.id,
+                    'online_video_link': order.session.online_video_link,
+                    'online_video_description': order.session.online_video_description,
                 }
 
             email(
