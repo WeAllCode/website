@@ -45,7 +45,7 @@
   "model": "coderdojochi.cdcuser",
   "pk": 3,
   "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+    "password": "pbkdf2_sha256$180000$xXqp4mUdUayV$vPI6xHKU5ykh2aQ9cguRZ9UDeqnmJIPj+1+7Wb5XkqQ=",
     "last_login": "2013-01-01T06:00:00Z",
     "is_superuser": false,
     "username": "test_mentor",
