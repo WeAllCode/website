@@ -670,6 +670,20 @@ class Session(CommonInfo):
         ],
     )
 
+    online_video_link = models.URLField(
+        "Online Video Link",
+        help_text="Zoom link with password.",
+        blank=True,
+        null=True,
+    )
+
+    online_video_description = models.TextField(
+        "Online Video Description",
+        help_text="Information on how to connect to the video call. Basic HTML allowed.",
+        blank=True,
+        null=True,
+    )
+
     # kept for older records
     old_end_date = models.DateTimeField(
         blank=True,
