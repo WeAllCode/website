@@ -62,7 +62,6 @@ def session_confirm_mentor(request, session_obj, order):
     merge_global_data = {
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
-        'order_id': order.id,
         'class_code': session_obj.course.code,
         'class_title': session_obj.course.title,
         'class_description': session_obj.course.description,
@@ -80,6 +79,9 @@ def session_confirm_mentor(request, session_obj, order):
         'class_calendar_url': f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
         'microdata_start_date': arrow.get(session_obj.mentor_start_date).to('local').isoformat(),
         'microdata_end_date': arrow.get(session_obj.mentor_end_date).to('local').isoformat(),
+        'order_id': order.id,
+        'online_video_link': session_obj.online_video_link,
+        'online_video_description': session_obj.online_video_description,
     }
 
     email(
@@ -99,7 +101,6 @@ def session_confirm_guardian(request, session_obj, order, student):
         'last_name': request.user.last_name,
         'student_first_name': student.first_name,
         'student_last_name': student.last_name,
-        'order_id': order.id,
         'class_code': session_obj.course.code,
         'class_title': session_obj.course.title,
         'class_description': session_obj.course.description,
@@ -117,6 +118,9 @@ def session_confirm_guardian(request, session_obj, order, student):
         'class_calendar_url': session_obj.get_calendar_url(),
         'microdata_start_date': arrow.get(session_obj.start_date).to('local').isoformat(),
         'microdata_end_date': arrow.get(session_obj.end_date).to('local').isoformat(),
+        'order_id': order.id,
+        'online_video_link': session_obj.online_video_link,
+        'online_video_description': session_obj.online_video_description,
     }
 
     email(

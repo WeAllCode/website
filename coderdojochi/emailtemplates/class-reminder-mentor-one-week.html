@@ -143,8 +143,12 @@
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                           <tr>
                             <td align="left" style="font-family: Arial, sans-serif; color: #333333; font-size: 16px;">
-                            {% if class_location_name %}*|class_location_name|*{% endif %}
-                            {% if class_location_address %}<br>*|class_location_address|*<br>*|class_location_city|*, *|class_location_state|* *|class_location_zip|*{% endif %}
+                              {% if online_video_link %}
+                                <p>*|online_video_description|*</p>
+                              {% else %}
+                                {% if class_location_name %}*|class_location_name|*{% endif %}
+                                {% if class_location_address %}<br>*|class_location_address|*<br>*|class_location_city|*, *|class_location_state|* *|class_location_zip|*{% endif %}
+                              {% endif %}
                             </td>
                           </tr>
                         </table>

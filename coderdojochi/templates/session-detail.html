@@ -41,6 +41,19 @@
     {% if session.additional_info %}
       <p>Additional Info:<br>{{ session.additional_info|safe }}</p>
     {% endif %}
+
+    {% if session.online_video_link %}
+      <p><strong>This will be a live online class via Zoom.</strong></p>
+
+      <h3>Technical Requirements</h3>
+      <p><strong>Computer:</strong> PC (Windows XP or newer), Mac (OSX 10.7 or newer), or Chromebook with at least a 2GHz processor and 2GB of RAM (4GB of RAM is recommended).</p>
+
+      <p><strong>Internet:</strong> At least 1.2Mbps download and 600Kbps upload speeds. Go to <a href="https://fast.com/" target="_blank">fast.com</a> to check your speed.</p>
+
+      <p><strong>Webcam:</strong> Many laptops have an integrated webcam.</p>
+
+      <p><strong>Microphone and Speakers:</strong> We highly recommend headphones with a built-in microphone, however any microphone and speakers will work in a quiet room.</p>
+    {% endif %}
   </div>
 
   <div class="cell medium-4 bg-primary padding-2">

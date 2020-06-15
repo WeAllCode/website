@@ -587,6 +587,8 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'cost',
                 'minimum_cost',
                 'maximum_cost',
+                'online_video_link',
+                'online_video_description',
             )
         }),
         ('Advanced options', {
