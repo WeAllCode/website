@@ -156,6 +156,9 @@ class MeetingCalendarView(CalendarView):
     def get_description(self, event_obj):
         return strip_tags(event_obj.meeting_type.description)
 
+    def get_location(self, request, event_obj):
+        pass
+
 
 def meeting_sign_up(request, pk, template_name="meeting-sign-up.html"):
     meeting_obj = get_object_or_404(Meeting, pk=pk)

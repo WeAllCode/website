@@ -1,5 +1,3 @@
-import logging
-
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -7,8 +5,6 @@ from django.views.generic import View
 
 import arrow
 from icalendar import Calendar, Event, vText
-
-logger = logging.getLogger(__name__)
 
 
 class CalendarView(View):
@@ -26,6 +22,9 @@ class CalendarView(View):
         raise NotImplementedError
 
     def get_description(self, event_obj):
+        raise NotImplementedError
+
+    def get_location(self, request, event_obj):
         raise NotImplementedError
 
     def get(self, request, *args, **kwargs):
@@ -46,17 +45,7 @@ class CalendarView(View):
         event['dtstart'] = self.get_dtstart(request, event_obj)
         event['dtend'] = self.get_dtend(request, event_obj)
         event['dtstamp'] = event['dtstart'][:-1]
-
-        if event_obj.location.address:
-            location = (
-                f"{event_obj.location.name}, {event_obj.location.address}, "
-                f"{event_obj.location.city}, {event_obj.location.state}, {event_obj.location.zip}"
-            )
-        else:
-            location = f"{event_obj.location.name}"
-
-        event['location'] = vText(location)
-
+        event['location'] = vText(self.get_location(request, event_obj))
         event['url'] = f"{settings.SITE_URL}{event_obj.get_absolute_url()}"
         event['description'] = self.get_description(event_obj)
 
