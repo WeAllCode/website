@@ -1,54 +1,22 @@
-import calendar
 import logging
-import operator
-from collections import Counter
-from datetime import date, timedelta
+from datetime import date
 
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.mail import EmailMultiAlternatives, get_connection
-from django.db.models import Case, Count, IntegerField, When
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.utils.functional import cached_property
 from django.utils.html import strip_tags
-from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import RedirectView, TemplateView, View
+from django.views.generic import RedirectView, TemplateView
 
 import arrow
-from dateutil.relativedelta import relativedelta
-from icalendar import Calendar, Event, vText
-
-from coderdojochi.forms import (
-    CDCModelForm,
-    ContactForm,
-    DonationForm,
-    GuardianForm,
-    MentorForm,
-    StudentForm,
-)
 from coderdojochi.mixins import RoleRedirectMixin, RoleTemplateMixin
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-)
+from coderdojochi.models import (Guardian, Mentor, MentorOrder, Order,
+                                 PartnerPasswordAccess, Session, Student)
 from coderdojochi.util import email
 from coderdojochi.views.calendar import CalendarView
 
@@ -156,10 +124,7 @@ class SessionsView(TemplateView):
             start_date__gte=now
         ).order_by('start_date')
 
-        if (
-            not self.request.user.is_authenticated or
-            not self.request.user.role == 'mentor'
-        ):
+        if not self.request.user.is_authenticated or not self.request.user.role == 'mentor':
             all_sessions = all_sessions.filter(is_public=True)
 
         context['all_sessions'] = all_sessions
@@ -424,10 +389,10 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
             messages.success(request, 'Thanks for letting us know!')
         else:
+            ip = request.META['REMOTE_ADDR']
+
             if not settings.DEBUG:
                 ip = request.META['HTTP_X_FORWARDED_FOR'] or request.META['REMOTE_ADDR']
-            else:
-                ip = request.META['REMOTE_ADDR']
 
             if mentor:
                 order, created = MentorOrder.objects.get_or_create(
@@ -536,3 +501,49 @@ class SessionCalendarView(CalendarView):
 
     def get_description(self, event_obj):
         return strip_tags(event_obj.course.description)
+
+    def get_location(self, request, event_obj):
+
+        # Set default location to the name of the location
+        location = f"{event_obj.location.name}"
+
+        # If user has a ticket with us, show online link
+        if event_obj.online_video_link and self.request.user.is_authenticated:
+            if self.request.user.role == 'mentor':
+                try:
+                    mentor = Mentor.objects.get(user=self.request.user)
+                    mentor_signed_up = MentorOrder.objects.filter(
+                        session=event_obj,
+                        is_active=True,
+                        mentor=mentor
+                    ).exists()
+
+                    if mentor_signed_up:
+                        location = event_obj.online_video_link
+
+                except Mentor.DoesNotExist:
+                    pass
+
+            elif self.request.user.role == 'guardian':
+                try:
+                    guardian = Guardian.objects.get(user=self.request.user)
+                    students = guardian.get_students()
+                    students_signed_up = Order.objects.filter(
+                        session=event_obj,
+                        is_active=True,
+                        student__in=students,
+                    ).exists()
+
+                    if students_signed_up:
+                        location = event_obj.online_video_link
+
+                except Guardian.DoesNotExist:
+                    pass
+
+        elif event_obj.location.address:
+            location = (
+                f"{event_obj.location.name}, {event_obj.location.address}, "
+                f"{event_obj.location.city}, {event_obj.location.state}, {event_obj.location.zip}"
+            )
+
+        return location
