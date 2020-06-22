@@ -733,7 +733,6 @@ body.home .free-programs {
 
 .newsletter-signup-subtitle {
   font-family: var(--font-subtitle);
-  color: var(--black);
   font-weight: normal;
   text-align: center;
 }
@@ -743,6 +742,6 @@ body.home .free-programs {
   margin: 0 auto;
 }
 
-.newsletter-signup-form input {
+.newsletter-signup-form .button {
   width: 100%;
 }
