@@ -19,7 +19,12 @@ body {
   --white: #ffffff;
   --light-gray: #eaeaea;
 
-  font-family: "Open Sans", sans-serif;
+  /* Font */
+  --font-title: "Bungee", cursive;
+  --font-subtitle: "Poppins", sans-serif;
+  --font-base: "Open Sans", sans-serif;
+
+  font-family: var(--font-base);
 }
 
 .text-primary {
@@ -709,4 +714,34 @@ body.home .free-programs {
 
 /* Large only */
 @media screen and (min-width: 64em) and (max-width: 74.9375em) {
+}
+
+/* Newsletter Signup */
+.newsletter-signup {
+  padding-right: 0.9375rem;
+  padding-left: 0.9375rem;
+  max-width: 62.5rem;
+  margin: 0 auto;
+}
+
+.newsletter-signup-title {
+  font-family: var(--font-title);
+  color: var(--tertiary);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.newsletter-signup-subtitle {
+  font-family: var(--font-subtitle);
+  font-weight: normal;
+  text-align: center;
+}
+
+.newsletter-signup-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.newsletter-signup-form .button {
+  width: 100%;
 }
