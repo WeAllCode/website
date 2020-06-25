@@ -717,31 +717,31 @@ body.home .free-programs {
 }
 
 /* Newsletter Signup */
-.newsletter-signup {
+.learn-more-signup {
   padding-right: 0.9375rem;
   padding-left: 0.9375rem;
   max-width: 62.5rem;
   margin: 0 auto;
 }
 
-.newsletter-signup-title {
+.learn-more-signup-title {
   font-family: var(--font-title);
   color: var(--tertiary);
   text-transform: uppercase;
   text-align: center;
 }
 
-.newsletter-signup-subtitle {
+.learn-more-signup-subtitle {
   font-family: var(--font-subtitle);
   font-weight: normal;
   text-align: center;
 }
 
-.newsletter-signup-form {
+.learn-more-signup-form {
   max-width: 500px;
   margin: 0 auto;
 }
 
-.newsletter-signup-form .button {
+.learn-more-signup-form .button {
   width: 100%;
 }
