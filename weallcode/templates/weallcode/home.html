@@ -5,189 +5,189 @@
 {% block page-class %}home{% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="padding-vertical-3 bg-kid-overlay">
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x grid-padding-y padding-bottom-1">
-      <div class="cell medium-6 text-white">
-        <h1 class="title">Let's explore<br> your coding<br> curiosity.</h1>
-        <p>Our mission is to introduce a diverse group of children to the fun of coding by providing free educational resources and hands-on classes.</p>
-      </div>
-      <div class="cell medium-5 medium-offset-1 large-4 large-offset-2">
-        {% if next_session %}
-        <div class="bg-dark-blue text-center radius overlap-bottom">
-          <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Upcoming class</h6>
-          <div class="padding-1 padding-horizontal-2 bg-white">
-            <h4 class="text-blue text-uppercase text-primary"><a href="{{ next_session.get_absolute_url }}"><strong>{{ next_session.course.code  }}</strong></a></h4>
-            <div><strong>{{ next_session.course.title }}</strong></div>
-            <div>{{ next_session.start_date|date }}</div>
-            <div class="line bg-secondary width-25 margin-vertical-half"></div>
-            <div>{{ next_session.location.name }}</div>
-            {% if next_session.location.address %}
-            <div>{{ next_session.location.address }}</div>
-            <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
-            {% endif %}
-            <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">Enroll Now</a>
-            <a href="{% url 'weallcode-programs' %}#classes"><small>View All Classes</small></a>
-          </div>
+  <!-- Hero -->
+  <section class="padding-vertical-3 bg-kid-overlay">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x grid-padding-y padding-bottom-1">
+        <div class="cell medium-6 text-white">
+          <h1 class="title">Let's explore<br> your coding<br> curiosity.</h1>
+          <p>Our mission is to introduce a diverse group of children to the fun of coding by providing free educational resources and hands-on classes.</p>
         </div>
-        {% else %}
-        <div class="bg-dark-blue text-center radius overlap-bottom">
-          <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Update about COVID-19</h6>
-          <div class="padding-1 padding-horizontal-2 bg-white">
-            <div class="text-left">Due to the growing concern and new cases of the COVID-19 outbreak, We All Code has decided to postpone our upcoming classes. Your health and safety are our top priority, and with today's news, we do not want to put anyone in harm's way by hosting large gatherings.</div>
-            <div class="line bg-secondary width-25 margin-vertical-half"></div>
-            <div><a href="https://mailchi.mp/weallcode/looking-after-the-we-all-code-community"><small>Read our message from the CEO</small></a></div>
-            <a class="button bg-tertiary width-100 margin-top-1" href="http://eepurl.com/gp2aS5">Sign up for our newsletter.</a>
+        <div class="cell medium-5 medium-offset-1 large-4 large-offset-2">
+          {% if next_session %}
+          <div class="bg-dark-blue text-center radius overlap-bottom">
+            <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Upcoming class</h6>
+            <div class="padding-1 padding-horizontal-2 bg-white">
+              <h4 class="text-blue text-uppercase text-primary"><a href="{{ next_session.get_absolute_url }}"><strong>{{ next_session.course.code  }}</strong></a></h4>
+              <div><strong>{{ next_session.course.title }}</strong></div>
+              <div>{{ next_session.start_date|date }}</div>
+              <div class="line bg-secondary width-25 margin-vertical-half"></div>
+              <div>{{ next_session.location.name }}</div>
+              {% if next_session.location.address %}
+              <div>{{ next_session.location.address }}</div>
+              <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
+              {% endif %}
+              <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">Enroll Now</a>
+              <a href="{% url 'weallcode-programs' %}#classes"><small>View All Classes</small></a>
+            </div>
           </div>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Newsletter -->
-<section class="padding-vertical-2 bg-binary">
-  <div class="learn-more-signup">
-    <h2 class="learn-more-signup-title">Weekly Newsletter</h2>
-    <p class="learn-more-signup-subtitle">Stay up to date on our class schedule, upcoming courses, and useful resources.</p>
-
-    <div class="learn-more-signup-form">
-      <form action="https://weallcode.us2.list-manage.com/subscribe/post?u=1cf2aba5bf83d6c4ff8bdda35&amp;id=57426673d0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-        <div>
-          <div class="mc-field-group">
-            <label for="mce-EMAIL">Email Address </label>
-            <input type="email" value="" name="EMAIL" class="required email" placeholder="awesome.parent@gmail.com" id="mce-EMAIL">
+          {% else %}
+          <div class="bg-dark-blue text-center radius overlap-bottom">
+            <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Update about COVID-19</h6>
+            <div class="padding-1 padding-horizontal-2 bg-white">
+              <div class="text-left">Due to the growing concern and new cases of the COVID-19 outbreak, We All Code has decided to postpone our upcoming classes. Your health and safety are our top priority, and with today's news, we do not want to put anyone in harm's way by hosting large gatherings.</div>
+              <div class="line bg-secondary width-25 margin-vertical-half"></div>
+              <div><a href="https://mailchi.mp/weallcode/looking-after-the-we-all-code-community"><small>Read our message from the CEO</small></a></div>
+              <a class="button bg-tertiary width-100 margin-top-1" href="http://eepurl.com/gp2aS5">Sign up for our newsletter.</a>
+            </div>
           </div>
-
-          <div id="mce-responses" class="clear">
-            <div class="response" id="mce-error-response" style="display:none"></div>
-            <div class="response" id="mce-success-response" style="display:none"></div>
-          </div>
-
-          <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_1cf2aba5bf83d6c4ff8bdda35_57426673d0" tabindex="-1" value=""></div>
-
-          <div class="clear">
-            <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
-
-<!-- Impact -->
-<section class="margin-vertical-3">
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x padding-bottom-1">
-      <div class="medium-6 cell">
-        <div class="binary-drop-left">
-          <img class="width-100 margin-bottom-1" src="{% static 'weallcode/images/photos/real-coding-skills.jpg' %}" alt="After class photo">
-        </div>
-      </div>
-      <div class="medium-6 cell">
-        <h2 class="title text-primary">Real coding skills for every kid.</h2>
-        <p>We help young people from 7-17 envision a future in STEM and gain the coding skills to make it real.</p>
-        <a class="button secondary" href="{% url 'weallcode-programs' %}#courses">View Our Courses</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Core Values -->
-<section class="margin-bottom-3">
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x">
-      <div class="small-6 small-offset-3">
-        <h2 class="title text-tertiary text-center">Core Values</h2>
-      </div>
-    </div>
-
-    {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-intellectual" title_1="Open Mind" content_1="We emphasize fast-paced, experiential learning in an engaging and iterative format." svg_href_2="#svg-respect" title_2="Support" content_2="Our close 2:1 student-to-mentor ratio ensures every kid gets the support they need." svg_href_3="#svg-smile" title_3="Respect" content_3="Our teaching style is collaborative, respectful, teamwork-focused, and fun." %}
-  </div>
-</section>
-
-<!-- Free Programs -->
-<section class="padding-vertical-3 bg-binary">
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x">
-      <div class="cell medium-7">
-        <h2 class="title text-primary">Free coding programs for kids and teens.</h2>
-        <p>We All Code lessons teach STEM through experience. With one mentor for every two students, kids can build confidence and get the attention they need to thrive.</p>
-        <a href="{% url 'weallcode-programs' %}" class="button large">See All Programs</a>
-      </div>
-      <div class="cell medium-5">
-        <img class="width-100" src="{% static 'weallcode/images/photos/mentor-ratio.jpg' %}" alt="mentor and student">
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Join Us -->
-<section class="padding-vertical-3 bg-dark-blue">
-  <div class="grid-container">
-    <h3 class="title text-white text-center">Join Us</h3>
-
-    <div class="grid-x grid-padding-x margin-vertical-3">
-      <!-- Cell -->
-      <div class="small-12 medium-6 large-4 cell margin-bottom-2">
-        <div class="bg-white radius">
-          <h6 class="text-uppercase padding-1 margin-0">Volunteers</h6>
-          <img class="width-100" src="{% static 'weallcode/images/photos/join-us-volunteer.jpg' %}" alt="">
-          <div class="padding-1 padding-horizontal-2 text-center">
-            <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cell -->
-      <div class="small-12 medium-6 large-4 cell margin-bottom-2">
-        <div class="bg-white radius">
-          <h6 class="text-uppercase padding-1 margin-0">Donors</h6>
-          <img class="width-100" src="{% static 'weallcode/images/photos/join-us-donor.jpg' %}" alt="">
-          <div class="padding-1 padding-horizontal-2 text-center">
-            <a class="button bg-tertiary width-100 margin-top-1" href="#donate">Donate</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cell -->
-      <div class="small-12 medium-6 large-4 cell margin-bottom-2">
-        <div class="bg-white radius">
-          <h6 class="text-uppercase padding-1 margin-0">Sponsors</h6>
-          <img class="width-100" src="{% static 'weallcode/images/photos/join-us-sponsor.jpg' %}" alt="">
-          <div class="padding-1 padding-horizontal-2 text-center">
-            <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#sponsorship">Sponsor</a>
-          </div>
+          {% endif %}
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="grid-x grid-padding-x">
-      <div class="cell small-4 medium-auto margin-bottom-2">
-        <img class="width-100" src="{% static 'weallcode/images/supporters/activecampaign.png' %}" alt="Active Campaign">
-      </div>
-      <div class="cell small-4 medium-auto margin-bottom-2">
-        <img class="width-100" src="{% static 'weallcode/images/supporters/cme-group-foundation.png' %}" alt="CME Group Foundation">
-      </div>
-      <div class="cell small-4 medium-auto margin-bottom-2">
-        <img class="width-100" src="{% static 'weallcode/images/supporters/mind-hand.png' %}" alt="Mind+Hand">
-      </div>
-      <div class="cell small-4 medium-auto margin-bottom-2">
-        <img class="width-100" src="{% static 'weallcode/images/supporters/spothero.png' %}" alt="SpotHero">
-      </div>
-      <div class="cell small-4 medium-auto margin-bottom-2">
-        <img class="width-100" src="{% static 'weallcode/images/supporters/the-nerdery.png' %}" alt="Nerdery">
-      </div>
-      <div class="cell small-4 medium-auto margin-bottom-2">
-        <img class="width-100" src="{% static 'weallcode/images/supporters/west-town.png' %}" alt="West Town">
-      </div>
-      <div class="cell small-4 medium-auto margin-bottom-2">
-        <img class="width-100" src="{% static 'weallcode/images/supporters/wyzant.png' %}" alt="Wyzant">
+  <!-- Newsletter -->
+  <section class="padding-vertical-2 bg-binary">
+    <div class="learn-more-signup">
+      <h2 class="learn-more-signup-title">Weekly Newsletter</h2>
+      <p class="learn-more-signup-subtitle">Stay up to date on our class schedule, upcoming courses, and useful resources.</p>
+
+      <div class="learn-more-signup-form">
+        <form action="https://weallcode.us2.list-manage.com/subscribe/post?u=1cf2aba5bf83d6c4ff8bdda35&amp;id=57426673d0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+          <div>
+            <div class="mc-field-group">
+              <label for="mce-EMAIL">Email Address </label>
+              <input type="email" value="" name="EMAIL" class="required email" placeholder="awesome.parent@gmail.com" id="mce-EMAIL">
+            </div>
+
+            <div id="mce-responses" class="clear">
+              <div class="response" id="mce-error-response" style="display:none"></div>
+              <div class="response" id="mce-success-response" style="display:none"></div>
+            </div>
+
+            <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+            <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_1cf2aba5bf83d6c4ff8bdda35_57426673d0" tabindex="-1" value=""></div>
+
+            <div class="clear">
+              <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </div>
+          </div>
+        </form>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- Impact -->
+  <section class="margin-vertical-3">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x padding-bottom-1">
+        <div class="medium-6 cell">
+          <div class="binary-drop-left">
+            <img class="width-100 margin-bottom-1" src="{% static 'weallcode/images/photos/real-coding-skills.jpg' %}" alt="After class photo">
+          </div>
+        </div>
+        <div class="medium-6 cell">
+          <h2 class="title text-primary">Real coding skills for every kid.</h2>
+          <p>We help young people from 7-17 envision a future in STEM and gain the coding skills to make it real.</p>
+          <a class="button secondary" href="{% url 'weallcode-programs' %}#courses">View Our Courses</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="margin-bottom-3">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="small-6 small-offset-3">
+          <h2 class="title text-tertiary text-center">Core Values</h2>
+        </div>
+      </div>
+
+      {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-intellectual" title_1="Open Mind" content_1="We emphasize fast-paced, experiential learning in an engaging and iterative format." svg_href_2="#svg-respect" title_2="Support" content_2="Our close 2:1 student-to-mentor ratio ensures every kid gets the support they need." svg_href_3="#svg-smile" title_3="Respect" content_3="Our teaching style is collaborative, respectful, teamwork-focused, and fun." %}
+    </div>
+  </section>
+
+  <!-- Free Programs -->
+  <section class="padding-vertical-3 bg-binary">
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="cell medium-7">
+          <h2 class="title text-primary">Free coding programs for kids and teens.</h2>
+          <p>We All Code lessons teach STEM through experience. With one mentor for every two students, kids can build confidence and get the attention they need to thrive.</p>
+          <a href="{% url 'weallcode-programs' %}" class="button large">See All Programs</a>
+        </div>
+        <div class="cell medium-5">
+          <img class="width-100" src="{% static 'weallcode/images/photos/mentor-ratio.jpg' %}" alt="mentor and student">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Join Us -->
+  <section class="padding-vertical-3 bg-dark-blue">
+    <div class="grid-container">
+      <h3 class="title text-white text-center">Join Us</h3>
+
+      <div class="grid-x grid-padding-x margin-vertical-3">
+        <!-- Cell -->
+        <div class="small-12 medium-6 large-4 cell margin-bottom-2">
+          <div class="bg-white radius">
+            <h6 class="text-uppercase padding-1 margin-0">Volunteers</h6>
+            <img class="width-100" src="{% static 'weallcode/images/photos/join-us-volunteer.jpg' %}" alt="">
+            <div class="padding-1 padding-horizontal-2 text-center">
+              <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cell -->
+        <div class="small-12 medium-6 large-4 cell margin-bottom-2">
+          <div class="bg-white radius">
+            <h6 class="text-uppercase padding-1 margin-0">Donors</h6>
+            <img class="width-100" src="{% static 'weallcode/images/photos/join-us-donor.jpg' %}" alt="">
+            <div class="padding-1 padding-horizontal-2 text-center">
+              <a class="button bg-tertiary width-100 margin-top-1" href="#donate">Donate</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cell -->
+        <div class="small-12 medium-6 large-4 cell margin-bottom-2">
+          <div class="bg-white radius">
+            <h6 class="text-uppercase padding-1 margin-0">Sponsors</h6>
+            <img class="width-100" src="{% static 'weallcode/images/photos/join-us-sponsor.jpg' %}" alt="">
+            <div class="padding-1 padding-horizontal-2 text-center">
+              <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#sponsorship">Sponsor</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-x grid-padding-x">
+        <div class="cell small-4 medium-auto margin-bottom-2">
+          <img class="width-100" src="{% static 'weallcode/images/supporters/activecampaign.png' %}" alt="Active Campaign">
+        </div>
+        <div class="cell small-4 medium-auto margin-bottom-2">
+          <img class="width-100" src="{% static 'weallcode/images/supporters/cme-group-foundation.png' %}" alt="CME Group Foundation">
+        </div>
+        <div class="cell small-4 medium-auto margin-bottom-2">
+          <img class="width-100" src="{% static 'weallcode/images/supporters/mind-hand.png' %}" alt="Mind+Hand">
+        </div>
+        <div class="cell small-4 medium-auto margin-bottom-2">
+          <img class="width-100" src="{% static 'weallcode/images/supporters/spothero.png' %}" alt="SpotHero">
+        </div>
+        <div class="cell small-4 medium-auto margin-bottom-2">
+          <img class="width-100" src="{% static 'weallcode/images/supporters/the-nerdery.png' %}" alt="Nerdery">
+        </div>
+        <div class="cell small-4 medium-auto margin-bottom-2">
+          <img class="width-100" src="{% static 'weallcode/images/supporters/west-town.png' %}" alt="West Town">
+        </div>
+        <div class="cell small-4 medium-auto margin-bottom-2">
+          <img class="width-100" src="{% static 'weallcode/images/supporters/wyzant.png' %}" alt="Wyzant">
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
