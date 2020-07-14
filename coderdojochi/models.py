@@ -1,7 +1,6 @@
 import os
 from datetime import timedelta
 
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -673,6 +672,22 @@ class Session(CommonInfo):
     online_video_link = models.URLField(
         "Online Video Link",
         help_text="Zoom link with password.",
+        blank=True,
+        null=True,
+    )
+
+    online_video_meeting_id = models.CharField(
+        "Online Video Meeting ID",
+        help_text="XXX XXXX XXXX",
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+
+    online_video_meeting_password = models.CharField(
+        "Online Video Meeting Password",
+        help_text="Plain text password shared by Zoom",
+        max_length=255,
         blank=True,
         null=True,
     )

@@ -1,7 +1,6 @@
 import logging
 from datetime import date
 
-from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -14,9 +13,18 @@ from django.utils.html import strip_tags
 from django.views.generic import RedirectView, TemplateView
 
 import arrow
+from dateutil.relativedelta import relativedelta
+
 from coderdojochi.mixins import RoleRedirectMixin, RoleTemplateMixin
-from coderdojochi.models import (Guardian, Mentor, MentorOrder, Order,
-                                 PartnerPasswordAccess, Session, Student)
+from coderdojochi.models import (
+    Guardian,
+    Mentor,
+    MentorOrder,
+    Order,
+    PartnerPasswordAccess,
+    Session,
+    Student,
+)
 from coderdojochi.util import email
 from coderdojochi.views.calendar import CalendarView
 
@@ -317,15 +325,17 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         return super(SessionSignUpView, self).dispatch(request, *args, **kwargs)
 
     def check_access(self, request, *args, **kwargs):
+
+        bg_check_link = "https://app.sterlingvolunteers.com/promoorder/3df76c55-9961-46e1-8e5f-f6b38e2ec4dc"
+
         access_dict = {}
         # Returns a message and redirect url if not working as dict
         if kwargs.get('mentor'):
             if not kwargs['mentor'].background_check:
                 access_dict = {
                     'message': (
-                        f"You cannot sign up for a class until you <a href="
-                        f"\"https://app.sterlingvolunteers.com/promoorder/3df76c55-9961-46e1-8e5f-f6b38e2ec4dc\""
-                        f" target=\"_blank\">fill out the background search form</a>."
+                        "You cannot sign up for a class until you "
+                        "<a href=\"{bg_check_link}\" target=\"_blank\">fill out the background search form</a>."
                     ),
                     'redirect': request.META.get('HTTP_REFERER', '/dojo')
                 }

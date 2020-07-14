@@ -559,8 +559,6 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     date_hierarchy = 'start_date'
 
-    view_on_site = False
-
     fieldsets = (
         (None, {
             # 'classes': ('collapse',),
@@ -588,7 +586,9 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'minimum_cost',
                 'maximum_cost',
                 'online_video_link',
-                'online_video_description',
+                'online_video_meeting_id',
+                'online_video_meeting_password',
+                # 'online_video_description',
             )
         }),
         ('Advanced options', {
@@ -932,7 +932,6 @@ class MeetingAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     date_hierarchy = 'start_date'
-    view_on_site = False
 
     def view_on_site(self, obj):
         return obj.get_absolute_url()

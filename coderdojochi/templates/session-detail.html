@@ -32,7 +32,7 @@
 
 </section>
 
-<div class="grid-x text-white margin-top-2">
+<div class="class-info-box grid-x text-white margin-top-2">
 
   <div class="cell medium-8 bg-dark-blue padding-2">
     <h2>{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</h2>
@@ -68,7 +68,7 @@
     {% if session.location.address %}
     <p><a target="_blank" class="static-map text-white" href="https://www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
     {% else %}
-    <p>Details will be emailed prior to class.</p>
+    <p>Details will be shared once you sign up.</p>
     {% endif %}
 
 
