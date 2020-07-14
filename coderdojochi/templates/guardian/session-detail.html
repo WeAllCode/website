@@ -87,7 +87,7 @@
     {% endif %}
 </section>
 
-<div class="grid-x text-white margin-top-2">
+<div class="class-info-box grid-x text-white margin-top-2">
   <div class="cell medium-8 bg-dark-blue padding-2">
     <h2>{% if session.course.code %}{{ session.course.code }}: {% endif%}{{ session.course.title }}</h2>
     <p>{{ session.course.description|safe }}</p>
@@ -107,6 +107,14 @@
       <p><strong>Webcam:</strong> Many laptops have an integrated webcam.</p>
 
       <p><strong>Microphone and Speakers:</strong> We highly recommend headphones with a built-in microphone, however any microphone and speakers will work in a quiet room.</p>
+
+      <h3>How To Join Online Class</h3>
+      <p>About 10 minutes before class time, click the following link to join.</p>
+      <p><a href="{{ session.online_video_link }}">{{ session.online_video_link }}</a></p>
+
+      <p><strong>Meeting ID:</strong> {{ session.online_video_meeting_id }}<br>
+      <strong>Password:</strong> {{ session.online_video_meeting_password }}</p>
+
     {% endif %}
   </div>
   <div class="cell medium-4 bg-primary padding-2">
@@ -120,9 +128,16 @@
 
     <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
     {% if session.location.address %}
+
     <p><a target="_blank" class="static-map text-white" href="https://www.google.com/maps/preview?q={{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}">{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</a></p>
+
     {% else %}
-    <p>Details will be emailed prior to class.</p>
+
+    <p><a href="{{ session.online_video_link }}" class="text-white text-underline">Join Zoom Meeting</a></p>
+
+    <p>Meeting ID: {{ session.online_video_meeting_id }}<br>
+    Password: {{ session.online_video_meeting_password }}</p>
+
     {% endif %}
 
 

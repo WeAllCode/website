@@ -20,7 +20,8 @@
     "**/site-packages/**/*.py",
     "**/migrations/**"
   ],
-  "python.linting.pycodestyleEnabled": true,
+  "python.linting.enabled": true,
+  "python.linting.pycodestyleEnabled": false,
   "python.linting.pycodestylePath": "pycodestyle",
   "python.linting.pycodestyleArgs": ["--max-line-length=120"],
   "python.linting.pylintEnabled": true,
@@ -28,9 +29,8 @@
     "--max-line-length=120",
     "--disable=C0111", // missing docstring
     "--enable=W0611", // Used when an imported module or variable is not used.
-    "--enable=W0614", // Used when an imported module or variable is not used from a ‘from X import *’ style import.
-    "--load-plugins",
-    "pylint_django"
+    "--enable=W0614", // Used when an imported module or variable is not used from a 'from X import *' style import.
+    "--load-plugins=pylint_django"
   ],
   "[python]": {
     "editor.rulers": [120],

@@ -745,3 +745,18 @@ body.home .free-programs {
 .learn-more-signup-form .button {
   width: 100%;
 }
+
+/* Fix link on specific background colors */
+
+main .bg-dark-blue a,
+main .bg-primary a {
+  color: var(--white);
+  border-bottom: 1px solid var(--white);
+}
+
+main .bg-dark-blue a:focus,
+main .bg-dark-blue a:hover,
+main .bg-bg-primary a:focus,
+main .bg-bg-primary a:hover {
+  border-bottom-width: 3px;
+}
