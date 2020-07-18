@@ -20,13 +20,7 @@ from django.utils.functional import cached_property
 from django.utils.html import strip_tags
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import (
-    DetailView,
-    ListView,
-    RedirectView,
-    TemplateView,
-    View,
-)
+from django.views.generic import DetailView, ListView, TemplateView, View
 
 import arrow
 from icalendar import Calendar, Event, vText
@@ -83,11 +77,6 @@ class MeetingsView(ListView):
         return objects
 
 
-class MeetingDetailRedirectView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('meeting-detail', args=(kwargs['pk'],))
-
-
 class MeetingDetailView(DetailView):
     model = Meeting
     template_name = "meeting-detail.html"
@@ -130,11 +119,6 @@ class MeetingDetailView(DetailView):
             ).exists()
 
         return context
-
-
-class MeetingCalendarRedirectView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('meeting-calendar', args=(kwargs['pk'],))
 
 
 class MeetingCalendarView(CalendarView):
