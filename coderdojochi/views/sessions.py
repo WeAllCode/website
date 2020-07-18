@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import TemplateView
 
 import arrow
 from dateutil.relativedelta import relativedelta
@@ -106,47 +106,6 @@ def session_confirm_guardian(request, session_obj, order, student):
         recipients=[request.user.email],
         preheader='Magical wizards have generated this confirmation. All thanks to the mystical power of coding.',
     )
-
-
-class SessionsRedirectView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('sessions')
-
-
-class SessionsView(TemplateView):
-    template_name = "sessions.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(SessionsView, self).get_context_data(**kwargs)
-        now = timezone.now()
-        year = int(kwargs.get('year')) if kwargs.get('year') else now.year
-        month = int(kwargs.get('month')) if kwargs.get('month') else now.month
-        calendar_date = date(day=1, month=month, year=year)
-
-        context['calendar_date'] = calendar_date
-        context['prev_date'] = calendar_date - relativedelta(months=1)
-        context['next_date'] = calendar_date + relativedelta(months=1)
-
-        all_sessions = Session.objects.filter(
-            is_active=True,
-            start_date__gte=now
-        ).order_by('start_date')
-
-        if not self.request.user.is_authenticated or not self.request.user.role == 'mentor':
-            all_sessions = all_sessions.filter(is_public=True)
-
-        context['all_sessions'] = all_sessions
-        context['sessions'] = all_sessions.filter(
-            start_date__year=year,
-            start_date__month=month
-        ).order_by('start_date')
-
-        return context
-
-
-class SessionDetailRedirectView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('session-detail', args=(kwargs['pk'],))
 
 
 class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
@@ -281,11 +240,6 @@ class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                 'Added to waitlist successfully.'
             )
         return redirect(session_obj.get_absolute_url())
-
-
-class SessionSignUpRedirectView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('session-sign-up', args=(kwargs['pk'],))
 
 
 class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
@@ -430,11 +384,6 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         return redirect(session_obj.get_absolute_url())
 
 
-class PasswordSessionRedirectView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('session-password', args=(kwargs['pk'],))
-
-
 class PasswordSessionView(TemplateView):
     template_name = 'session-partner-password.html'
 
@@ -480,11 +429,6 @@ class PasswordSessionView(TemplateView):
             )
 
         return redirect(session_obj)
-
-
-class SessionCalendarRedirectView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse('session-calendar', args=(kwargs['pk'],))
 
 
 class SessionCalendarView(CalendarView):

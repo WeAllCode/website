@@ -12,9 +12,7 @@ from loginas import views as loginas_views
 
 from . import old_views
 from .views.meetings import (
-    MeetingCalendarRedirectView,
     MeetingCalendarView,
-    MeetingDetailRedirectView,
     MeetingDetailView,
     MeetingsView,
     meeting_announce,
@@ -22,16 +20,10 @@ from .views.meetings import (
 )
 from .views.profile import DojoMentorView
 from .views.sessions import (
-    PasswordSessionRedirectView,
     PasswordSessionView,
-    SessionCalendarRedirectView,
     SessionCalendarView,
-    SessionDetailRedirectView,
     SessionDetailView,
-    SessionSignUpRedirectView,
-    SessionSignUpView,
-    SessionsRedirectView,
-    SessionsView,
+    SessionSignUpView
 )
 from .views.welcome import WelcomeView
 
@@ -130,7 +122,7 @@ urlpatterns += [
     path('classes/', include([
         # Classes
         # /classes/
-        path('', SessionsView.as_view(), name='sessions'),
+        path('', RedirectView.as_view(pattern_name='weallcode-programs'), name='sessions'),
 
         # Individual Class
         # /classes/ID/
