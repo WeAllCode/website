@@ -489,6 +489,7 @@ class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     list_filter = [
+        'is_active',
         'code',
         'course_type',
         'duration',
@@ -548,8 +549,8 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     autocomplete_fields = [
-        'course',
-        'location',
+        # 'course',
+        # 'location',
         # 'instructor',
     ]
 

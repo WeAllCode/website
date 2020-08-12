@@ -455,6 +455,10 @@ class Course(CommonInfo):
         ],
     )
 
+    is_active = models.BooleanField(
+        default=True,
+    )
+
     class Meta:
         verbose_name = _("course")
         verbose_name_plural = _("courses")
@@ -500,6 +504,10 @@ class Location(CommonInfo):
         max_length=20,
     )
 
+    is_active = models.BooleanField(
+        default=True,
+    )
+
     class Meta:
         ordering = ['-id']
 
@@ -519,6 +527,7 @@ class Session(CommonInfo):
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
+        limit_choices_to={'is_active': True},
     )
 
     start_date = models.DateTimeField()
@@ -526,6 +535,7 @@ class Session(CommonInfo):
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
+        limit_choices_to={'is_active': True},
     )
 
     capacity = models.IntegerField(
