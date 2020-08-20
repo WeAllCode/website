@@ -2,11 +2,9 @@ import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from anymail.exceptions import AnymailAPIError
 from anymail.message import AnymailMessage
 
 logger = logging.getLogger(__name__)
@@ -40,12 +38,12 @@ def email(
     if bcc not in [False, None] and not isinstance(bcc, list):
         raise TypeError("recipients must be a list")
 
-    merge_global_data['subject'] = subject
-    merge_global_data['current_year'] = timezone.now().year
-    merge_global_data['company_name'] = settings.SITE_NAME
-    merge_global_data['site_url'] = settings.SITE_URL
-    merge_global_data['preheader'] = preheader
-    merge_global_data['unsub_group_id'] = unsub_group_id
+    merge_global_data["subject"] = subject
+    merge_global_data["current_year"] = timezone.now().year
+    merge_global_data["company_name"] = settings.SITE_NAME
+    merge_global_data["site_url"] = settings.SITE_URL
+    merge_global_data["preheader"] = preheader
+    merge_global_data["unsub_group_id"] = unsub_group_id
 
     body = render_to_string(f"{template_name}.html", merge_global_data)
 
@@ -57,14 +55,14 @@ def email(
         if merge_field_format.format(key) in body:
             final_merge_global_data[key] = "" if val is None else str(val)
 
-    esp_extra={
-        'merge_field_format': merge_field_format,
-        'categories': [template_name],
+    esp_extra = {
+        "merge_field_format": merge_field_format,
+        "categories": [template_name],
     }
 
     if unsub_group_id:
-        esp_extra['asm'] = {
-            'group_id': unsub_group_id,
+        esp_extra["asm"] = {
+            "group_id": unsub_group_id,
         }
 
     for recipients_batch in batches(recipients, batch_size):
@@ -96,10 +94,8 @@ def email(
 
         for recipient in msg.anymail_status.recipients.keys():
             send_attempt = msg.anymail_status.recipients[recipient]
-            if send_attempt.status not in ['queued', 'sent']:
-                logger.error(
-                    f"user: {recipient}, {timezone.now()}"
-                )
+            if send_attempt.status not in ["queued", "sent"]:
+                logger.error(f"user: {recipient}, {timezone.now()}")
 
                 user = User.objects.get(email=recipient)
                 user.is_active = False
@@ -109,4 +105,4 @@ def email(
 
 def batches(l, n):
     for i in range(0, len(l), n):
-        yield l[i:i + n]
+        yield l[i : i + n]

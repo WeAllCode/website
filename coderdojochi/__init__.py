@@ -1,1 +1,1 @@
-default_app_config = 'coderdojochi.apps.CoderDojoChiConfig'
+default_app_config = "coderdojochi.apps.CoderDojoChiConfig"

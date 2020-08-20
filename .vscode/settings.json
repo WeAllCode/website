@@ -20,6 +20,7 @@
     "**/site-packages/**/*.py",
     "**/migrations/**"
   ],
+  "python.sortImports.args": ["--settings-path=${workspaceFolder}/setup.cfg"],
   "python.linting.enabled": true,
   "python.linting.pycodestyleEnabled": false,
   "python.linting.pycodestylePath": "pycodestyle",
@@ -35,9 +36,12 @@
   "[python]": {
     "editor.rulers": [120],
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      // it was `"source.organizeImports": true` in my first version of this post,
+      // see below comment for explanation.
+      "source.organizeImports.python": true
     }
   },
+
   "[git-commit]": {
     "editor.rulers": [72]
   },

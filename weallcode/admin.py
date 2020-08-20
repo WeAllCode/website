@@ -8,44 +8,46 @@ from .models import AssociateBoardMember, BoardMember, StaffMember
 class StaffMemberAdmin(admin.ModelAdmin):
     def member_image(self, obj):
         return format_html(f'<img src="{obj.image.url}" width="100">')
+
     member_image.allow_tags = True
 
     list_display = [
-        'member_image',
-        'name',
-        'role',
-        'is_active',
+        "member_image",
+        "name",
+        "role",
+        "is_active",
     ]
 
     list_filter = [
-        'is_active',
-        'role',
+        "is_active",
+        "role",
     ]
 
     readonly_fields = [
-        'member_image',
-        'created_at',
-        'updated_at',
+        "member_image",
+        "created_at",
+        "updated_at",
     ]
 
-    ordering = [
-        'name'
-    ]
+    ordering = ["name"]
 
     fieldsets = (
-        (None, {
-            'fields': (
-                'name',
-                'role',
-                'description',
-                'linkedin',
-                'image',
-                'member_image',
-                'is_active',
-                'created_at',
-                'updated_at',
-            ),
-        }),
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "role",
+                    "description",
+                    "linkedin",
+                    "image",
+                    "member_image",
+                    "is_active",
+                    "created_at",
+                    "updated_at",
+                ),
+            },
+        ),
     )
 
 
@@ -53,88 +55,91 @@ class StaffMemberAdmin(admin.ModelAdmin):
 class BoardMemberAdmin(admin.ModelAdmin):
     def member_image(self, obj):
         return format_html(f'<img src="{obj.image.url}" width="100">')
+
     member_image.allow_tags = True
 
     list_display = [
-        'member_image',
-        'name',
-        'role',
-        'is_active',
+        "member_image",
+        "name",
+        "role",
+        "is_active",
     ]
 
     list_filter = [
-        'is_active',
-        'role',
+        "is_active",
+        "role",
     ]
 
     readonly_fields = [
-        'member_image',
-        'created_at',
-        'updated_at',
+        "member_image",
+        "created_at",
+        "updated_at",
     ]
 
-    ordering = [
-        'name'
-    ]
+    ordering = ["name"]
 
     fieldsets = (
-        (None, {
-            'fields': (
-                'name',
-                'role',
-                'description',
-                'linkedin',
-                'image',
-                'member_image',
-                'is_active',
-                'created_at',
-                'updated_at',
-            ),
-        }),
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "role",
+                    "description",
+                    "linkedin",
+                    "image",
+                    "member_image",
+                    "is_active",
+                    "created_at",
+                    "updated_at",
+                ),
+            },
+        ),
     )
 
 
 @admin.register(AssociateBoardMember)
 class AssociateBoardMemberAdmin(admin.ModelAdmin):
-
     def member_image(self, obj):
         return format_html(f'<img src="{obj.image.url}" width="100">')
+
     member_image.allow_tags = True
 
     list_display = [
-        'member_image',
-        'name',
-        'role',
-        'is_active',
+        "member_image",
+        "name",
+        "role",
+        "is_active",
     ]
 
     list_filter = [
-        'is_active',
-        'role',
+        "is_active",
+        "role",
     ]
 
     readonly_fields = [
-        'member_image',
-        'created_at',
-        'updated_at',
+        "member_image",
+        "created_at",
+        "updated_at",
     ]
 
-    ordering = [
-        'name'
-    ]
+    ordering = ["name"]
 
     fieldsets = (
-        (None, {
-            'fields': (
-                'name',
-                'role',
-                'description',
-                'linkedin',
-                'image',
-                'member_image',
-                'is_active',
-                'created_at',
-                'updated_at',
-            ),
-        }),
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "role",
+                    "description",
+                    "linkedin",
+                    "image",
+                    "member_image",
+                    "is_active",
+                    "created_at",
+                    "updated_at",
+                ),
+            },
+        ),
     )

@@ -22,7 +22,6 @@ class HandleExceptionMiddleware:
         if settings.DEBUG:
             raise exception
 
-        return render(request, "500.html", {
-            'sentry_event_id': last_event_id(),
-            'SENTRY_DSN': settings.SENTRY_DSN,
-        }, status=500)
+        return render(
+            request, "500.html", {"sentry_event_id": last_event_id(), "SENTRY_DSN": settings.SENTRY_DSN,}, status=500
+        )

@@ -17,9 +17,9 @@ class CourseFactory(factory.DjangoModelFactory):
 class LocationFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"Test Location {n}")
     address = factory.Sequence(lambda n: f"{n} Street")
-    city = 'Chicago'
-    state = 'IL'
-    zip = '60605'
+    city = "Chicago"
+    state = "IL"
+    zip = "60605"
 
     class Meta:
         model = Location
@@ -47,7 +47,7 @@ class SessionFactory(factory.DjangoModelFactory):
     end_date = datetime.now(utc)
     mentor_start_date = datetime.now(utc)
     mentor_end_date = datetime.now(utc)
-    password = ''
+    password = ""
     instructor = factory.SubFactory(MentorFactory)
 
     class Meta:

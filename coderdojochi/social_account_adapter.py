@@ -1,7 +1,9 @@
-from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth import get_user_model
 
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+
 User = get_user_model()
+
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
@@ -24,7 +26,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         # e.g. facebook accounts
         # with mobile numbers only, but allauth takes care of this case
         # so just ignore it
-        if 'email' not in sociallogin.account.extra_data:
+        if "email" not in sociallogin.account.extra_data:
             return
 
         # check if given email address already exists.
@@ -32,7 +34,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         try:
             # email = sociallogin.account.extra_data['email'].lower()
             # email_address = EmailAddress.objects.get(email__iexact=email)
-            email = sociallogin.account.extra_data['email'].lower()
+            email = sociallogin.account.extra_data["email"].lower()
             user = User.objects.get(email__iexact=email)
 
         # if it does not, let allauth take care of this new social account
