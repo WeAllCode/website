@@ -577,6 +577,14 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'is_public',
             ),
         }),
+        ('Zoom', {
+            'fields': (
+                'online_video_link',
+                'online_video_meeting_id',
+                'online_video_meeting_password',
+                # 'online_video_description',
+            ),
+        }),
         ('Overrides', {
             # 'classes': ('collapse',),
             'fields': (
@@ -586,10 +594,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 'cost',
                 'minimum_cost',
                 'maximum_cost',
-                'online_video_link',
-                'online_video_meeting_id',
-                'online_video_meeting_password',
-                # 'online_video_description',
+
             )
         }),
         ('Advanced options', {
