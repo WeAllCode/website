@@ -1,3 +1,4 @@
+# Custom- build Django application -An amazing work, for We All Code
 # Custom-build Django application for We All Code
 
 We, the community and staff, have been building a custom Django application to handle out many parts of our organization.
