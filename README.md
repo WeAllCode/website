@@ -58,7 +58,7 @@ To setup the main respository as `upstream`, you can add a new remote called `up
 git remote add upstream https://github.com/coderdojochi/coderdojochi
 ```
 
-### Update local code from `upsteam`
+### Update local code from `upstream`
 
 To grab the latest code from the main repo (named `upstream`), run the following.
 
