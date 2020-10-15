@@ -31,9 +31,6 @@
     "SENDGRID_UNSUB_CLASSANNOUNCE": {
       "required": true
     },
-    "SENTRY_DSN": {
-      "required": true
-    },
     "SLACK_WEBHOOK_URL": {
       "required": true
     },
