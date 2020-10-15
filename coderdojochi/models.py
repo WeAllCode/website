@@ -5,6 +5,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models.fields import EmailField
+from django.forms.models import modelformset_factory
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import formats, timezone
@@ -242,6 +244,11 @@ class Guardian(CommonInfo):
     race_ethnicity = models.ManyToManyField(
         RaceEthnicity,
         blank=False,
+    )
+
+    alternative_email = models.EmailField(
+        blank=True,
+        null=True,
     )
 
     class Meta:

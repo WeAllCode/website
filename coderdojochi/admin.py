@@ -269,6 +269,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         'user__username',
         'user__email',
         'phone',
+        'alternative_email',
     ]
 
     readonly_fields = [
