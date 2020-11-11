@@ -33,7 +33,7 @@ json-logging-py = "*"
 django-anymail = "*"
 django-meta = "*"
 django-environ = "*"
-sentry-sdk = "==0.14.3"
+sentry-sdk = "*"
 django-fullurl = "*"
 
 [dev-packages]
