@@ -23,7 +23,7 @@ from coderdojochi.models import (
 
 class SignupView(MetadataMixin, AllAuthSignupView):
     template_name = "account/signup.html"
-    title = f"Sign up | We All Code"
+    title = "Sign up | We All Code"
     description = (
         "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
         "youth ages 7 to 17 free of charge."
@@ -36,7 +36,7 @@ class SignupView(MetadataMixin, AllAuthSignupView):
 
 class LoginView(MetadataMixin, AllAuthLoginView):
     template_name = "account/login.html"
-    title = f"Login | We All Code"
+    title = "Login | We All Code"
     description = (
         "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
         "youth ages 7 to 17 free of charge."
@@ -48,7 +48,9 @@ class LoginView(MetadataMixin, AllAuthLoginView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AccountHomeView(TemplateView):
+class AccountHomeView(MetadataMixin, TemplateView):
+    title = "My Account | We All Code"
+    
     def dispatch(self, *args, **kwargs):
         if not self.request.user.role:
             if "next" in self.request.GET:
