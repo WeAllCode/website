@@ -16,8 +16,7 @@
           <li><a class="{% active 'weallcode-programs' %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
           <li><a class="{% active 'weallcode-team' %}" href="{% url 'weallcode-team' %}">Team</a></li>
           <li><a class="{% active 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a></li>
-          <li><a class="button tertiary" href="#donate">Donate</a></li>
-
+          <li><a class="button tertiary" href="javascript:donsPlus.openWidget();">Donate</a></li>
           {% if user.is_authenticated %}
             <li><a class="button" href="{% url 'account_home' %}">Account</a></li>
           {% else %}
@@ -36,7 +35,7 @@
   <a class="{% active 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a>
 
   <div class="margin-top-1">
-    <a class="button tertiary" href="#donate">Donate</a>
+    <a class="button tertiary" href="javascript:donsPlus.openWidget();">Donate</a>
   </div>
 
   <div>
