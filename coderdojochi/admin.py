@@ -513,61 +513,57 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     date_hierarchy = "start_date"
 
     fieldsets = (
-        (
-            None,
-            {
-                # 'classes': ('collapse',),
-                "fields": (
-                    "course",
-                    "location",
-                    "start_date",
-                    # 'old_end_date',
-                    # 'old_mentor_start_date',
-                    # 'old_mentor_end_date',
-                    "capacity",
-                    "mentor_capacity",
-                    "instructor",
-                    "is_active",
-                    "is_public",
-                ),
-            },
-        ),
-        (
-            "Overrides",
-            {
-                # 'classes': ('collapse',),
-                "fields": (
-                    "override_minimum_age_limitation",
-                    "override_maximum_age_limitation",
-                    "gender_limitation",
-                    "cost",
-                    "minimum_cost",
-                    "maximum_cost",
-                    "online_video_link",
-                    "online_video_meeting_id",
-                    "online_video_meeting_password",
-                    # 'online_video_description',
-                )
-            },
-        ),
-        (
-            "Advanced options",
-            {
-                "classes": ("collapse",),
-                "fields": (
-                    "password",
-                    "partner_message",
-                    "additional_info",
-                    "external_enrollment_url",
-                    "image_url",
-                    "bg_image",
-                    "announced_date_mentors",
-                    "announced_date_guardians",
-                    "mentors_week_reminder_sent",
-                    "mentors_day_reminder_sent",
-                ),
-            },
-        ),
+        (None, {
+            # 'classes': ('collapse',),
+            'fields': (
+                'course',
+                'location',
+                'start_date',
+                # 'old_end_date',
+                # 'old_mentor_start_date',
+                # 'old_mentor_end_date',
+                'capacity',
+                'mentor_capacity',
+                'instructor',
+                'is_active',
+                'is_public',
+            ),
+        }),
+        ('Zoom', {
+            'fields': (
+                'online_video_link',
+                'online_video_meeting_id',
+                'online_video_meeting_password',
+                # 'online_video_description',
+            ),
+        }),
+        ('Overrides', {
+            # 'classes': ('collapse',),
+            'fields': (
+                'override_minimum_age_limitation',
+                'override_maximum_age_limitation',
+                'gender_limitation',
+                'cost',
+                'minimum_cost',
+                'maximum_cost',
+
+            )
+        }),
+        ('Advanced options', {
+            'classes': ('collapse',),
+            'fields': (
+                'password',
+                'partner_message',
+                'additional_info',
+                'external_enrollment_url',
+                'image_url',
+                'bg_image',
+                'announced_date_mentors',
+                'announced_date_guardians',
+                'mentors_week_reminder_sent',
+                'mentors_day_reminder_sent',
+            ),
+        }),
     )
 
     def view_on_site(self, obj):

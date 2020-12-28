@@ -9,7 +9,6 @@
     "pranaygp.vscode-css-peek",
     "mkaufman.htmlhint",
     "ecmel.vscode-html-css",
-    "ms-vscode-remote.vscode-remote-extensionpack",
-    "pkosta2005.heroku-command"
+    "ms-vscode-remote.vscode-remote-extensionpack"
   ]
 }
