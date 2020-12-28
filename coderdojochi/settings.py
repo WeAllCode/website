@@ -211,7 +211,7 @@ USE_L10N = True
 USE_TZ = True
 
 SITE_ID = 1
-SITE_NAME = env('SITE_NAME', default=None)
+SITE_NAME = env('SITE_NAME', default='We All Code')
 SITE_URL = env('SITE_URL', default=None)
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
