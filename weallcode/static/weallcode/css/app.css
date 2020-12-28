@@ -1,4 +1,4 @@
-body {
+:root {
   /* Primary */
   --we-blue: #426cff;
   --primary: #426cff;
@@ -23,7 +23,13 @@ body {
   --font-title: "Bungee", cursive;
   --font-subtitle: "Poppins", sans-serif;
   --font-base: "Open Sans", sans-serif;
+}
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   font-family: var(--font-base);
 }
 

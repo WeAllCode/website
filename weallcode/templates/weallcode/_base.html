@@ -40,17 +40,6 @@
 
   {% block extra_style %}{% endblock %}
   {% block extra_head %}{% endblock %}
-
-
-  <!-- Start CauseVox Embed Code -->
-  <script type="text/javascript" src="https://js.causevox.com/v3"></script>
-  <script type="text/javascript">
-    causevox.CONFIG = {
-      app_id : 'vMa2qWGZxqke176B',
-      campaign_id : 'JjbZ7kEJgmW9pa3D'
-    };
-  </script>
-  <!-- End CauseVox Embed Code -->
 </head>
 <body class="{% block page-class %}{% endblock %}">
   <!--[if IE]>
@@ -87,10 +76,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.2.1/what-input.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.1/js/foundation.min.js"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/seamless-scroll-polyfill@1.0.0/dist/es5/seamless.auto-polyfill.min.js" data-seamless></script>
 
   {% block extra_script %}{% endblock %}
   {% block extra_body %}{% endblock %}
 
+  <script src="https://donsplus.com/embed/donsplus.js?org=e4ec89b0-3a4a-11eb-a446-c3ba623037fb"></script>
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
   <script>
     window.ga = function () {
@@ -100,10 +91,8 @@
     ga.l = +new Date;
     ga('create', 'UA-78618586-1', 'auto');
     ga('set', 'transport', 'beacon');
-    ga('send', 'pageview')
-
+    ga('send', 'pageview');
   </script>
   <script src="https://www.google-analytics.com/analytics.js" async defer></script>
-  <script src="https://donsplus.com/embed/donsplus.js?org=e4ec89b0-3a4a-11eb-a446-c3ba623037fb"></script>
 </body>
 </html>
