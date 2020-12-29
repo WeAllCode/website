@@ -11,12 +11,19 @@ from allauth.account.views import SignupView as AllAuthSignupView
 from meta.views import MetadataMixin
 
 from coderdojochi.forms import CDCModelForm, GuardianForm, MentorForm
-from coderdojochi.models import Guardian, MeetingOrder, Mentor, MentorOrder, Order, Student
+from coderdojochi.models import (
+    Guardian,
+    MeetingOrder,
+    Mentor,
+    MentorOrder,
+    Order,
+    Student,
+)
 
 
 class SignupView(MetadataMixin, AllAuthSignupView):
     template_name = "account/signup.html"
-    title = f"Sign up | {settings.SITE_NAME}"
+    title = "Sign up | We All Code"
     description = (
         "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
         "youth ages 7 to 17 free of charge."
@@ -29,7 +36,7 @@ class SignupView(MetadataMixin, AllAuthSignupView):
 
 class LoginView(MetadataMixin, AllAuthLoginView):
     template_name = "account/login.html"
-    title = f"Login | {settings.SITE_NAME}"
+    title = "Login | We All Code"
     description = (
         "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
         "youth ages 7 to 17 free of charge."
@@ -41,13 +48,18 @@ class LoginView(MetadataMixin, AllAuthLoginView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AccountHomeView(TemplateView):
+class AccountHomeView(MetadataMixin, TemplateView):
+    title = "My Account | We All Code"
+
     def dispatch(self, *args, **kwargs):
         if not self.request.user.role:
             if "next" in self.request.GET:
                 return redirect(f"{reverse('welcome')}?next={self.request.GET['next']}")
             else:
-                messages.warning(self.request, "Tell us a little about yourself before going on account.")
+                messages.warning(
+                    self.request,
+                    "Tell us a little about yourself before going on account.",
+                )
             return redirect("welcome")
 
         return super().dispatch(*args, **kwargs)
@@ -55,7 +67,9 @@ class AccountHomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["highlight"] = self.request.GET["highlight"] if "highlight" in self.request.GET else False
+        context["highlight"] = (
+            self.request.GET["highlight"] if "highlight" in self.request.GET else False
+        )
 
         context["user"] = self.request.user
 
@@ -70,20 +84,24 @@ class AccountHomeView(TemplateView):
     def get_context_data_for_mentor(self):
         mentor = get_object_or_404(Mentor, user=self.request.user)
 
-        orders = MentorOrder.objects.select_related().filter(is_active=True, mentor=mentor,)
-
-        upcoming_sessions = orders.filter(is_active=True, session__start_date__gte=timezone.now()).order_by(
-            "session__start_date"
+        orders = MentorOrder.objects.select_related().filter(
+            is_active=True, mentor=mentor,
         )
 
-        past_sessions = orders.filter(is_active=True, session__start_date__lte=timezone.now()).order_by(
-            "session__start_date"
-        )
+        upcoming_sessions = orders.filter(
+            is_active=True, session__start_date__gte=timezone.now()
+        ).order_by("session__start_date")
+
+        past_sessions = orders.filter(
+            is_active=True, session__start_date__lte=timezone.now()
+        ).order_by("session__start_date")
 
         meeting_orders = MeetingOrder.objects.select_related().filter(mentor=mentor)
 
         upcoming_meetings = meeting_orders.filter(
-            is_active=True, meeting__is_public=True, meeting__end_date__gte=timezone.now()
+            is_active=True,
+            meeting__is_public=True,
+            meeting__end_date__gte=timezone.now(),
         ).order_by("meeting__start_date")
 
         account_complete = False
@@ -114,13 +132,13 @@ class AccountHomeView(TemplateView):
 
         student_orders = Order.objects.filter(student__in=students,)
 
-        upcoming_orders = student_orders.filter(is_active=True, session__start_date__gte=timezone.now(),).order_by(
-            "session__start_date"
-        )
+        upcoming_orders = student_orders.filter(
+            is_active=True, session__start_date__gte=timezone.now(),
+        ).order_by("session__start_date")
 
-        past_orders = student_orders.filter(is_active=True, session__start_date__lte=timezone.now(),).order_by(
-            "session__start_date"
-        )
+        past_orders = student_orders.filter(
+            is_active=True, session__start_date__lte=timezone.now(),
+        ).order_by("session__start_date")
 
         return {
             "guardian": guardian,
@@ -167,7 +185,9 @@ class AccountHomeView(TemplateView):
 
         form = MentorForm(self.request.POST, self.request.FILES, instance=mentor)
 
-        user_form = CDCModelForm(self.request.POST, self.request.FILES, instance=mentor.user)
+        user_form = CDCModelForm(
+            self.request.POST, self.request.FILES, instance=mentor.user
+        )
 
         if form.is_valid() and user_form.is_valid():
             form.save()
