@@ -350,7 +350,10 @@ def session_check_in(request, pk, template_name="session-check-in.html"):
     session = get_object_or_404(Session, pk=pk)
 
     # Active Session
-    active_session = True if timezone.now() < session.end_date else False
+    if timezone.now() < session.end_date:
+        active_session = True
+    else:
+        active_session = False
 
     # get the orders
     orders = (
@@ -396,7 +399,10 @@ def session_check_in(request, pk, template_name="session-check-in.html"):
     # )
 
     # Average Age
-    average_age = int(round(sum(ages) / float(len(ages)))) if orders and ages else 0
+    if orders and ages:
+        average_age = int(round(sum(ages) / float(len(ages))))
+    else:
+        average_age = 0
 
     return render(
         request,
@@ -439,7 +445,10 @@ def session_check_in_mentors(request, pk, template_name="session-check-in-mentor
     session = get_object_or_404(Session, pk=pk)
 
     # Active Session
-    active_session = True if timezone.now() < session.end_date else False
+    if timezone.now() < session.end_date:
+        active_session = True
+    else:
+        active_session = False
 
     # get the orders
     orders = MentorOrder.objects.select_related().filter(session_id=pk)

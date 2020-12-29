@@ -59,7 +59,10 @@ class AccountHomeView(MetadataMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["highlight"] = self.request.GET["highlight"] if "highlight" in self.request.GET else False
+        if "highlight" in self.request.GET:
+            context["highlight"] = self.request.GET["highlight"]
+        else:
+            context["highlight"] = False
 
         context["user"] = self.request.user
 

@@ -70,7 +70,11 @@ def student_register_link(context, student, session):
             )
 
         elif not student.is_within_gender_limitation(session.gender_limitation):
-            title = "{gender}-only event.".format(gender="Girls" if session.gender_limitation == "female" else "Boys")
+            if session.gender_limitation == "female":
+                title = "Girls-only event."
+            else:
+                title = "Boys-only event."
+
             message = f"Sorry, this class is limited to {session.gender_limitation}s this time around."
             button_href = (
                 'data-trigger="hover" data-placement="top" data-toggle="popover" title="" '
@@ -98,4 +102,7 @@ def menu_is_active(context, pattern_or_urlname, css_class="active"):
     except NoReverseMatch:
         pattern = pattern_or_urlname
 
-    return css_class if re.search(pattern, context["request"].path) else ""
+    if re.search(pattern, context["request"].path):
+        return css_class
+    else:
+        return ""

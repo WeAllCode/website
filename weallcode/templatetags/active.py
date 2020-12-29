@@ -13,4 +13,7 @@ def active(context, pattern_or_urlname, css_class="active"):
     except NoReverseMatch:
         pattern = pattern_or_urlname
 
-    return css_class if re.search(pattern, context["request"].path) else ""
+    if re.search(pattern, context["request"].path):
+        return css_class
+    else:
+        return ""

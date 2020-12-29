@@ -25,8 +25,13 @@ class WelcomeView(TemplateView):
         # Check for redirect condition on mentor, otherwise pass as kwarg
         if getattr(request.user, "role", False) == "mentor" and request.method == "GET":
             mentor = get_object_or_404(Mentor, user=request.user)
+
             if mentor.user.first_name:
-                return redirect(next_url if next_url else "account_home")
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect("account_home")
+
             kwargs["mentor"] = mentor
         return super().dispatch(request, *args, **kwargs)
 
@@ -91,7 +96,10 @@ class WelcomeView(TemplateView):
                 if "enroll" in request.GET:
                     next_url = f"{next_url}?enroll=True"
             else:
-                next_url = "account_home" if isinstance(account, Mentor) else "welcome"
+                if isinstance(account, Mentor):
+                    next_url = "account_home"
+                else:
+                    next_url = "welcome"
             return redirect(next_url)
 
         return render(
@@ -135,7 +143,10 @@ class WelcomeView(TemplateView):
 
         merge_global_data = {"user": user.username, "first_name": user.first_name, "last_name": user.last_name}
 
-        next_url = f"?next={next_url}" if next_url else None
+        if next_url:
+            next_url = f"?next={next_url}"
+        else:
+            next_url = None
 
         if role == "mentor":
             # check for next upcoming meeting

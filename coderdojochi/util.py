@@ -53,7 +53,10 @@ def email(
     final_merge_global_data = {}
     for key, val in merge_global_data.items():
         if merge_field_format.format(key) in body:
-            final_merge_global_data[key] = "" if val is None else str(val)
+            if val is None:
+                final_merge_global_data[key] = ""
+            else:
+                final_merge_global_data[key] = str(val)
 
     esp_extra = {
         "merge_field_format": merge_field_format,

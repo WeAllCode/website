@@ -82,7 +82,11 @@ class MeetingCalendarView(CalendarView):
     event_class = Meeting
 
     def get_summary(self, request, event_obj):
-        event_name = f"{event_obj.meeting_type.code} - " if event_obj.meeting_type.code else ""
+        if event_obj.meeting_type.code:
+            event_name = f"{event_obj.meeting_type.code} - "
+        else:
+            event_name = ""
+
         event_name += event_obj.meeting_type.title
         return f"We All Code: {event_name}"
 
@@ -107,7 +111,10 @@ def meeting_sign_up(request, pk, template_name="meeting-sign-up.html"):
     meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, is_active=True)
 
     user_meeting_order = meeting_orders.filter(mentor=mentor)
-    user_signed_up = True if user_meeting_order.count() else False
+    if user_meeting_order.count():
+        user_signed_up = True
+    else:
+        user_signed_up = False
 
     if request.method == "POST":
 
