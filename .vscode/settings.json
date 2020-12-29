@@ -15,12 +15,20 @@
   "emmet.includeLanguages": {
     "django-html": "html"
   },
+  "beautify.language": {
+    "js": {
+      "type": ["javascript", "json", "jsonc"],
+      "filename": [".jshintrc", ".jsbeautifyrc"]
+    },
+    "css": ["css", "less", "scss"],
+    "html": ["htm", "html", "django-html"]
+  },
+  "python.formatting.provider": "black",
   "python.linting.ignorePatterns": [
     ".vscode/*.py",
     "**/site-packages/**/*.py",
     "**/migrations/**"
   ],
-  "python.sortImports.args": ["--settings-path=${workspaceFolder}/setup.cfg"],
   "python.linting.enabled": true,
   "python.linting.pycodestyleEnabled": false,
   "python.linting.pycodestylePath": "pycodestyle",
@@ -36,12 +44,18 @@
   "[python]": {
     "editor.rulers": [120],
     "editor.codeActionsOnSave": {
-      // it was `"source.organizeImports": true` in my first version of this post,
-      // see below comment for explanation.
-      "source.organizeImports.python": true
+      "source.organizeImports": true,
+      "source.fixAll": true
     }
   },
-
+  "[django-html]": {
+    "editor.defaultFormatter": "HookyQR.beautify",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
+    }
+  },
   "[git-commit]": {
     "editor.rulers": [72]
   },

@@ -11,14 +11,7 @@ from allauth.account.views import SignupView as AllAuthSignupView
 from meta.views import MetadataMixin
 
 from coderdojochi.forms import CDCModelForm, GuardianForm, MentorForm
-from coderdojochi.models import (
-    Guardian,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    Student,
-)
+from coderdojochi.models import Guardian, MeetingOrder, Mentor, MentorOrder, Order, Student
 
 
 class SignupView(MetadataMixin, AllAuthSignupView):
@@ -57,8 +50,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
                 return redirect(f"{reverse('welcome')}?next={self.request.GET['next']}")
             else:
                 messages.warning(
-                    self.request,
-                    "Tell us a little about yourself before going on account.",
+                    self.request, "Tell us a little about yourself before going on account.",
                 )
             return redirect("welcome")
 
@@ -67,9 +59,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["highlight"] = (
-            self.request.GET["highlight"] if "highlight" in self.request.GET else False
-        )
+        context["highlight"] = self.request.GET["highlight"] if "highlight" in self.request.GET else False
 
         context["user"] = self.request.user
 
@@ -84,24 +74,20 @@ class AccountHomeView(MetadataMixin, TemplateView):
     def get_context_data_for_mentor(self):
         mentor = get_object_or_404(Mentor, user=self.request.user)
 
-        orders = MentorOrder.objects.select_related().filter(
-            is_active=True, mentor=mentor,
+        orders = MentorOrder.objects.select_related().filter(is_active=True, mentor=mentor,)
+
+        upcoming_sessions = orders.filter(is_active=True, session__start_date__gte=timezone.now()).order_by(
+            "session__start_date"
         )
 
-        upcoming_sessions = orders.filter(
-            is_active=True, session__start_date__gte=timezone.now()
-        ).order_by("session__start_date")
-
-        past_sessions = orders.filter(
-            is_active=True, session__start_date__lte=timezone.now()
-        ).order_by("session__start_date")
+        past_sessions = orders.filter(is_active=True, session__start_date__lte=timezone.now()).order_by(
+            "session__start_date"
+        )
 
         meeting_orders = MeetingOrder.objects.select_related().filter(mentor=mentor)
 
         upcoming_meetings = meeting_orders.filter(
-            is_active=True,
-            meeting__is_public=True,
-            meeting__end_date__gte=timezone.now(),
+            is_active=True, meeting__is_public=True, meeting__end_date__gte=timezone.now(),
         ).order_by("meeting__start_date")
 
         account_complete = False
@@ -132,13 +118,13 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
         student_orders = Order.objects.filter(student__in=students,)
 
-        upcoming_orders = student_orders.filter(
-            is_active=True, session__start_date__gte=timezone.now(),
-        ).order_by("session__start_date")
+        upcoming_orders = student_orders.filter(is_active=True, session__start_date__gte=timezone.now(),).order_by(
+            "session__start_date"
+        )
 
-        past_orders = student_orders.filter(
-            is_active=True, session__start_date__lte=timezone.now(),
-        ).order_by("session__start_date")
+        past_orders = student_orders.filter(is_active=True, session__start_date__lte=timezone.now(),).order_by(
+            "session__start_date"
+        )
 
         return {
             "guardian": guardian,
@@ -185,9 +171,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
         form = MentorForm(self.request.POST, self.request.FILES, instance=mentor)
 
-        user_form = CDCModelForm(
-            self.request.POST, self.request.FILES, instance=mentor.user
-        )
+        user_form = CDCModelForm(self.request.POST, self.request.FILES, instance=mentor.user)
 
         if form.is_valid() and user_form.is_valid():
             form.save()

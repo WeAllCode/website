@@ -193,8 +193,8 @@ USE_L10N = True
 USE_TZ = True
 
 SITE_ID = 1
-SITE_NAME = 'We All Code'
-SITE_URL = env('SITE_URL', default=None)
+SITE_NAME = "We All Code"
+SITE_URL = env("SITE_URL", default=None)
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -310,17 +310,12 @@ META_USE_OG_PROPERTIES = True
 META_USE_TWITTER_PROPERTIES = True
 META_USE_SCHEMAORG_PROPERTIES = True
 # META_USE_TITLE_TAG = True
-META_TWITTER_SITE = env('META_TWITTER_SITE', default='@weallcode')
-META_FB_APPID = env('META_SITE_DOMAIN', default='1454178301519376')
-META_INCLUDE_KEYWORDS = env.list('META_INCLUDE_KEYWORDS', default=[
-    'stem',
-    'code',
-    'coding',
-    'kids',
-    'chicago',
-    'chicago coding'
-])
-DEFAULT_META_TITLE = env('DEFAULT_META_TITLE', default='')
+META_TWITTER_SITE = env("META_TWITTER_SITE", default="@weallcode")
+META_FB_APPID = env("META_SITE_DOMAIN", default="1454178301519376")
+META_INCLUDE_KEYWORDS = env.list(
+    "META_INCLUDE_KEYWORDS", default=["stem", "code", "coding", "kids", "chicago", "chicago coding"]
+)
+DEFAULT_META_TITLE = env("DEFAULT_META_TITLE", default="")
 
 
 # django allauth

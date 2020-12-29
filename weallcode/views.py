@@ -26,10 +26,7 @@ def page_not_found_view(*args, **kwargs):
     capture_message("Page not found!", level="error")
 
     return render(
-        request,
-        "404.html",
-        {"sentry_event_id": last_event_id(), "SENTRY_DSN": settings.SENTRY_DSN,},
-        status=404,
+        request, "404.html", {"sentry_event_id": last_event_id(), "SENTRY_DSN": settings.SENTRY_DSN,}, status=404,
     )
 
 
@@ -52,14 +49,9 @@ class HomeView(DefaultMetaTags, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        sessions = Session.objects.filter(
-            is_active=True, start_date__gte=timezone.now()
-        ).order_by("start_date")
+        sessions = Session.objects.filter(is_active=True, start_date__gte=timezone.now()).order_by("start_date")
 
-        if (
-            not self.request.user.is_authenticated
-            or not self.request.user.role == "mentor"
-        ):
+        if not self.request.user.is_authenticated or not self.request.user.role == "mentor":
             sessions = sessions.filter(is_public=True)
 
         if len(sessions) > 0:
@@ -86,30 +78,20 @@ class ProgramsView(DefaultMetaTags, TemplateView):
 
         # WEEKEND CLASSES
         weekend_classes = Session.objects.filter(
-            is_active=True,
-            start_date__gte=timezone.now(),
-            course__course_type=Course.WEEKEND,
+            is_active=True, start_date__gte=timezone.now(), course__course_type=Course.WEEKEND,
         ).order_by("start_date")
 
-        if (
-            not self.request.user.is_authenticated
-            or not self.request.user.role == "mentor"
-        ):
+        if not self.request.user.is_authenticated or not self.request.user.role == "mentor":
             weekend_classes = weekend_classes.filter(is_public=True)
 
         context["weekend_classes"] = weekend_classes
 
         # SUMMER CAMP CLASSES
         summer_camp_classes = Session.objects.filter(
-            is_active=True,
-            start_date__gte=timezone.now(),
-            course__course_type=Course.CAMP,
+            is_active=True, start_date__gte=timezone.now(), course__course_type=Course.CAMP,
         ).order_by("start_date")
 
-        if (
-            not self.request.user.is_authenticated
-            or not self.request.user.role == "mentor"
-        ):
+        if not self.request.user.is_authenticated or not self.request.user.role == "mentor":
             summer_camp_classes = summer_camp_classes.filter(is_public=True)
 
         context["summer_camp_classes"] = summer_camp_classes
@@ -128,15 +110,10 @@ class ProgramsSummerCampsView(DefaultMetaTags, TemplateView):
 
         # SUMMER CAMP CLASSES
         summer_camp_classes = Session.objects.filter(
-            is_active=True,
-            start_date__gte=timezone.now(),
-            course__course_type=Course.CAMP,
+            is_active=True, start_date__gte=timezone.now(), course__course_type=Course.CAMP,
         ).order_by("start_date")
 
-        if (
-            not self.request.user.is_authenticated
-            or not self.request.user.role == "mentor"
-        ):
+        if not self.request.user.is_authenticated or not self.request.user.role == "mentor":
             summer_camp_classes = summer_camp_classes.filter(is_public=True)
 
         context["summer_camp_classes"] = summer_camp_classes
@@ -168,22 +145,14 @@ class TeamView(DefaultMetaTags, TemplateView):
 
         # The correct order
         context["board"] = list(
-            chain(
-                roles["Chair"],
-                roles["Vice Chair"],
-                roles["Treasurer"],
-                roles["Secretary"],
-                roles["Director"],
-            )
+            chain(roles["Chair"], roles["Vice Chair"], roles["Treasurer"], roles["Secretary"], roles["Director"],)
         )
 
         return context
 
     # Associate Board Members
     def get_associate_board(self, context):
-        associate_board = AssociateBoardMember.objects.filter(is_active=True,).order_by(
-            "name"
-        )
+        associate_board = AssociateBoardMember.objects.filter(is_active=True,).order_by("name")
 
         # NOTE: We're splitting and reordering them manually since the website requires a specific order.
         roles = defaultdict(list)
@@ -193,30 +162,22 @@ class TeamView(DefaultMetaTags, TemplateView):
 
         # The correct order
         context["associate_board"] = list(
-            chain(
-                roles["Chair"],
-                roles["Vice Chair"],
-                roles["Treasurer"],
-                roles["Secretary"],
-                roles["Director"],
-            )
+            chain(roles["Chair"], roles["Vice Chair"], roles["Treasurer"], roles["Secretary"], roles["Director"],)
         )
 
         return context
 
     # Instructors
     def get_instructors(self, context, volunteers):
-        context["instructors"] = volunteers.filter(
-            user__groups__name__in=["Instructor"],
-        ).order_by("user__first_name")
+        context["instructors"] = volunteers.filter(user__groups__name__in=["Instructor"],).order_by("user__first_name")
 
         return context
 
     # Volunteers
     def get_volunteers(self, context, volunteers):
-        all_volunteers = volunteers.annotate(
-            session_count=Count("mentororder")
-        ).order_by("-user__role", "-session_count")
+        all_volunteers = volunteers.annotate(session_count=Count("mentororder")).order_by(
+            "-user__role", "-session_count"
+        )
 
         mentors = []
         volunteers = []
@@ -263,8 +224,7 @@ class JoinUsView(DefaultMetaTags, FormView):
         # It should return an HttpResponse.
         form.send_email()
         messages.success(
-            self.request,
-            "Thank you for contacting us! We will respond as soon as possible.",
+            self.request, "Thank you for contacting us! We will respond as soon as possible.",
         )
 
         return super().form_valid(form)
