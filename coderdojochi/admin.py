@@ -12,7 +12,7 @@ from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin, ImportExportMixin
 from import_export.fields import Field
 
-from coderdojochi.models import (
+from .models import (
     Course,
     Donation,
     Equipment,

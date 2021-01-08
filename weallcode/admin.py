@@ -38,6 +38,7 @@ class StaffMemberAdmin(admin.ModelAdmin):
                 "fields": (
                     "name",
                     "role",
+                    "join_date",
                     "description",
                     "linkedin",
                     "image",
@@ -85,6 +86,7 @@ class BoardMemberAdmin(admin.ModelAdmin):
                 "fields": (
                     "name",
                     "role",
+                    "join_date",
                     "description",
                     "linkedin",
                     "image",
@@ -109,6 +111,7 @@ class AssociateBoardMemberAdmin(admin.ModelAdmin):
         "member_image",
         "name",
         "role",
+        "join_date",
         "is_active",
     ]
 
@@ -132,6 +135,7 @@ class AssociateBoardMemberAdmin(admin.ModelAdmin):
                 "fields": (
                     "name",
                     "role",
+                    "join_date",
                     "description",
                     "linkedin",
                     "image",

@@ -8,9 +8,18 @@ from django.views import defaults
 from django.views.generic import RedirectView
 
 from . import old_views
-from .views.meetings import MeetingCalendarView, MeetingDetailView, MeetingsView, meeting_announce, meeting_sign_up
-from .views.sessions import PasswordSessionView, SessionCalendarView, SessionDetailView, SessionSignUpView
-from .views.welcome import WelcomeView
+from .views import (  # SessionDetailView,
+    MeetingCalendarView,
+    MeetingDetailView,
+    MeetingsView,
+    PasswordSessionView,
+    SessionCalendarView,
+    SessionDetailView,
+    SessionSignUpView,
+    WelcomeView,
+    meeting_announce,
+    meeting_sign_up,
+)
 
 admin.autodiscover()
 

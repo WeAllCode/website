@@ -279,7 +279,7 @@ def session_stats(request, pk, template_name="session-stats.html"):
 
     if students_checked_in:
         attendance_percentage = round(
-            (float(current_orders_checked_in.count()) / float(session_obj.get_current_students().count())) * 100
+            (float(current_orders_checked_in.count()) / float(session_obj.get_active_student_count())) * 100
         )
 
     else:
