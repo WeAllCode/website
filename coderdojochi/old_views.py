@@ -67,31 +67,6 @@ def volunteer(request, template_name="volunteer.html"):
     return render(request, template_name, {"mentors": mentors, "upcoming_meetings": upcoming_meetings})
 
 
-def mentors(request, template_name="mentors.html"):
-    mentors = Mentor.objects.filter(
-        is_active=True, is_public=True, background_check=True, avatar_approved=True,
-    ).order_by("user__date_joined")
-
-    # mentors = Mentor.objects.filter(
-    #     is_active=True,
-    #     is_public=True
-    # ).order_by('user__date_joined')
-
-    return render(request, template_name, {"mentors": mentors})
-
-
-def mentor_detail(request, pk=None, template_name="mentor-detail.html"):
-
-    mentor = get_object_or_404(Mentor, id=pk)
-
-    if not mentor.is_public:
-        messages.error(request, "Invalid mentor ID.")
-
-        return redirect("mentors")
-
-    return render(request, template_name, {"mentor": mentor})
-
-
 @login_required
 def mentor_approve_avatar(request, pk=None):
     mentor = get_object_or_404(Mentor, id=pk)

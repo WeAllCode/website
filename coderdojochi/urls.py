@@ -20,6 +20,7 @@ from .views import (  # SessionDetailView,
     meeting_announce,
     meeting_sign_up,
 )
+from .views.mentor import MentorDetailView, MentorListView
 
 admin.autodiscover()
 
@@ -170,9 +171,9 @@ urlpatterns += [
             [
                 # Mentors
                 # /
-                path("", old_views.mentors, name="mentors"),
+                path("", MentorListView.as_view(), name="mentors"),
                 # /ID/
-                path("<int:pk>/", old_views.mentor_detail, name="mentor-detail"),
+                path("<int:pk>/", MentorDetailView.as_view(), name="mentor-detail"),
                 # /ID/reject-avatar/
                 path("<int:pk>/reject-avatar/", old_views.mentor_reject_avatar, name="mentor-reject-avatar"),
                 # /ID/approve-avatar/
