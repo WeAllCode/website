@@ -9,15 +9,13 @@
 <h1 class="title">Meet Our Mentors <a href="{% url 'account_signup' %}" class="button">Become a Volunteer</a></h1>
 
 <div class="grid-x mentors">
-    {% for mentor in mentors %}
-        {% if mentor.is_public == True %}
+    {% for mentor in object_list %}
     <div class="cell small-4">
         <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
             <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" alt="Photo of {{ mentor.user.first_name }} {{ mentor.user.last_name }}">
             <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
         </a>
     </div>
-        {% endif %}
     {% endfor %}
 </div>
 {% endblock %}
