@@ -124,8 +124,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
-
-    'coderdojochi.middleware.HandleExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'coderdojochi.urls'
