@@ -70,5 +70,5 @@ class ContactForm(forms.Form):
             recipients=[settings.CONTACT_EMAIL],
             reply_to=[f"{data['name']}<{data['email']}>"],
             template_name="contact-email",
-            merge_global_data={"interest": data["interest"], "message": data["message"],},
+            merge_global_data={"interest": data["interest"], "message": data["message"], "phone": data["phone"],},
         )

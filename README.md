@@ -19,7 +19,7 @@ python -c "import string,random; uni=string.ascii_letters+string.digits+string.p
 1. Load up your browser and go to http://127.0.0.1:8000.
 1. When you are done, you can stop the project via `ctrl+c`
 
-**Note:** Docker for Mac requires OSX Yosemite 10.10.3 or above. Docker for Windows requires Microsoft Windows 10 Professional or Enterprise 64-bit. For previous versions download [Docker Toolbox][docker-toolbox].
+**Note:** Docker for Mac requires OSX Yosemite 10.10.3 or above. Docker for Windows requires Microsoft Windows 10 Professional, Enterprise 64-bit, Windows 10 Home (version 1903 or higher w/WSL 2). For previous versions download [Docker Toolbox][docker-toolbox].
 
 ### Debugging Accounts
 
@@ -55,10 +55,10 @@ After the initial project setup, you will only need to run `docker-compose up --
 To setup the main respository as `upstream`, you can add a new remote called `upstream`.
 
 ```console
-git remote add upstream https://github.com/coderdojochi/coderdojochi
+git remote add upstream https://github.com/WeAllCode/website.git
 ```
 
-### Update local code from `upsteam`
+### Update local code from `upstream`
 
 To grab the latest code from the main repo (named `upstream`), run the following.
 
@@ -73,8 +73,8 @@ git merge upstream/master master
 Create a new branch based off of `upstream`'s `master` branch.
 
 ```console
-git fetch upsteam --prune
-git checkout -b feature/a-good-name upsteam/master
+git fetch upstream --prune
+git checkout -b feature/a-good-name upstream/master
 git push -u origin feature/a-good-name
 ```
 
