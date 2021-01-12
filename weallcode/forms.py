@@ -94,5 +94,6 @@ class ContactForm(forms.Form):
             merge_global_data={
                 'interest': data['interest'],
                 'message': data['message'],
+                'phone': data['phone'],
             },
         )
