@@ -8,10 +8,10 @@
 {% block contained_content %}
 
 <div class="container">
-    <ol class="breadcrumb">
+    <ul class="breadcrumbs">
         <li><a href="{% url 'mentors' %}">All Mentors</a></li>
         <li class="active">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</li>
-    </ol>
+    </ul>
 </div>
 
 

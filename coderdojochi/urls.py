@@ -20,7 +20,7 @@ from .views import (  # SessionDetailView,
     meeting_announce,
     meeting_sign_up,
 )
-from .views.mentor import MentorDetailView, MentorListView
+from .views.public import MentorDetailView, MentorListView
 
 admin.autodiscover()
 
