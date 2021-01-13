@@ -314,7 +314,7 @@ class StudentForm(CDCModelForm):
         ),
         label=(
             "I hereby give consent for the student signed up above to participate in We All Code as per the "
-            f"<a href=\"{{ reverse('privacy') }}\">terms</a>."
+            f"<a href=\"{{ reverse('weallcode-privacy') }}\">terms</a>."
         ),
     )
 
