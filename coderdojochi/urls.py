@@ -229,9 +229,21 @@ if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
     urlpatterns += [
-        path("400/", defaults.bad_request, kwargs={"exception": Exception("Bad Request!")},),
-        path("403/", defaults.permission_denied, kwargs={"exception": Exception("Permission Denied")},),
-        path("404/", defaults.page_not_found, kwargs={"exception": Exception("Page not Found")},),
+        path(
+            "400/",
+            defaults.bad_request,
+            kwargs={"exception": Exception("Bad Request!")},
+        ),
+        path(
+            "403/",
+            defaults.permission_denied,
+            kwargs={"exception": Exception("Permission Denied")},
+        ),
+        path(
+            "404/",
+            defaults.page_not_found,
+            kwargs={"exception": Exception("Page not Found")},
+        ),
         path("500/", defaults.server_error),
     ]
 

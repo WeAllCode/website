@@ -26,7 +26,13 @@ def page_not_found_view(*args, **kwargs):
     capture_message("Page not found!", level="error")
 
     return render(
-        request, "404.html", {"sentry_event_id": last_event_id(), "SENTRY_DSN": settings.SENTRY_DSN,}, status=404,
+        request,
+        "404.html",
+        {
+            "sentry_event_id": last_event_id(),
+            "SENTRY_DSN": settings.SENTRY_DSN,
+        },
+        status=404,
     )
 
 
@@ -40,4 +46,3 @@ class DefaultMetaTags(MetadataMixin):
     twitter_card = "summary_large_image"
     twitter_creator = "@weallcode"
     twitter_site = "@weallcode"
-

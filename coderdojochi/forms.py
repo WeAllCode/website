@@ -201,25 +201,55 @@ class StudentForm(CDCModelForm):
     ]
 
     first_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Jane", "class": "form-control",},), label="First Name",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Jane",
+                "class": "form-control",
+            },
+        ),
+        label="First Name",
     )
 
     last_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Doe", "class": "form-control",},), label="Last Name",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Doe",
+                "class": "form-control",
+            },
+        ),
+        label="Last Name",
     )
 
     gender = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "", "class": "form-control",},), label="Gender",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+            },
+        ),
+        label="Gender",
     )
 
     school_name = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "form-control",},), label="School Name", required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+            },
+        ),
+        label="School Name",
+        required=False,
     )
 
-    school_type = forms.ChoiceField(widget=forms.RadioSelect, choices=SCHOOL_TYPE_CHOICES, required=False,)
+    school_type = forms.ChoiceField(
+        widget=forms.RadioSelect,
+        choices=SCHOOL_TYPE_CHOICES,
+        required=False,
+    )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, queryset=RaceEthnicity.objects.filter(is_visible=True), required=False,
+        widget=forms.CheckboxSelectMultiple,
+        queryset=RaceEthnicity.objects.filter(is_visible=True),
+        required=False,
     )
 
     birthday = forms.CharField(
@@ -250,7 +280,11 @@ class StudentForm(CDCModelForm):
 
     medical_conditions = forms.CharField(
         widget=forms.Textarea(
-            attrs={"placeholder": "List any medical conditions.", "class": "form-control hidden", "rows": 5,},
+            attrs={
+                "placeholder": "List any medical conditions.",
+                "class": "form-control hidden",
+                "rows": 5,
+            },
         ),
         label=format_html(
             "{0} {1}",
@@ -261,7 +295,11 @@ class StudentForm(CDCModelForm):
     )
 
     photo_release = forms.BooleanField(
-        widget=forms.CheckboxInput(attrs={"required": "required",},),
+        widget=forms.CheckboxInput(
+            attrs={
+                "required": "required",
+            },
+        ),
         label=(
             "I hereby give permission to We All Code to use the "
             "student's image and/or likeness in promotional materials."
@@ -269,7 +307,11 @@ class StudentForm(CDCModelForm):
     )
 
     consent = forms.BooleanField(
-        widget=forms.CheckboxInput(attrs={"required": "required",},),
+        widget=forms.CheckboxInput(
+            attrs={
+                "required": "required",
+            },
+        ),
         label=(
             "I hereby give consent for the student signed up above to participate in We All Code as per the "
             f"<a href=\"{{ reverse('privacy') }}\">terms</a>."

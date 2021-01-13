@@ -41,9 +41,15 @@ def test(ctx, app=""):
 
 @task
 def format(ctx):
+    ctx.run("pip install -qU black isort")
+    ctx.run("isort -m 3 --trailing-comma .")
+    ctx.run("black .")
+    # ctx.run("isort -m 3 --trailing-comma .")
+    # ctx.run("black .")
+    # ctx.run("black .")
     # ctx.run('autopep8 -iaarj4 --exclude="**/migrations/*" --max-line-length="120" .')
-    ctx.run("black .")
-    ctx.run("autoflake --in-place --recursive --exclude '*/migrations/*' --remove-all-unused-imports .")
-    ctx.run("isort -m 3 --trailing-comma .")
-    ctx.run("black .")
-    ctx.run("isort -m 3 --trailing-comma .")
+    # ctx.run("pip install -qU black autoflake isort")
+    # ctx.run("black --version")
+    # ctx.run(
+    #     "autoflake --in-place --recursive --exclude '*/migrations/*' --exclude '*/__init__.py' --remove-all-unused-imports ."
+    # )

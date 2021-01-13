@@ -157,7 +157,16 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         qs = super(MentorAdmin, self).get_queryset(request)
 
         # Count all orders that are marked as active
-        qs = qs.annotate(mentororder__count=Count(Case(When(mentororder__is_active=True, then=1,))))
+        qs = qs.annotate(
+            mentororder__count=Count(
+                Case(
+                    When(
+                        mentororder__is_active=True,
+                        then=1,
+                    )
+                )
+            )
+        )
         return qs
 
     def mentor_count_link(self, obj):
@@ -303,15 +312,42 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
 
 class StudentResource(resources.ModelResource):
-    first_name = Field(attribute="first_name", column_name="first_name",)
-    last_name = Field(attribute="last_name", column_name="last_name",)
-    guardian_email = Field(attribute="guardian_email", column_name="guardian_email",)
-    birthday = Field(attribute="birthday", column_name="birthday",)
-    gender = Field(attribute="gender", column_name="gender",)
-    school_name = Field(attribute="school_name", column_name="school_name",)
-    school_type = Field(attribute="school_type", column_name="school_type",)
-    photo_release = Field(attribute="photo_release", column_name="photo_release",)
-    consent = Field(attribute="consent", column_name="consent",)
+    first_name = Field(
+        attribute="first_name",
+        column_name="first_name",
+    )
+    last_name = Field(
+        attribute="last_name",
+        column_name="last_name",
+    )
+    guardian_email = Field(
+        attribute="guardian_email",
+        column_name="guardian_email",
+    )
+    birthday = Field(
+        attribute="birthday",
+        column_name="birthday",
+    )
+    gender = Field(
+        attribute="gender",
+        column_name="gender",
+    )
+    school_name = Field(
+        attribute="school_name",
+        column_name="school_name",
+    )
+    school_type = Field(
+        attribute="school_type",
+        column_name="school_type",
+    )
+    photo_release = Field(
+        attribute="photo_release",
+        column_name="photo_release",
+    )
+    consent = Field(
+        attribute="consent",
+        column_name="consent",
+    )
 
     def import_obj(self, obj, data, dry_run):
         guardian_email = data.get("guardian_email")
@@ -402,7 +438,16 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         qs = qs.select_related()
 
         # Count all orders that are marked as active
-        qs = qs.annotate(order__count=Count(Case(When(order__is_active=True, then=1,))))
+        qs = qs.annotate(
+            order__count=Count(
+                Case(
+                    When(
+                        order__is_active=True,
+                        then=1,
+                    )
+                )
+            )
+        )
         return qs
 
     def guardian_link(self, obj):

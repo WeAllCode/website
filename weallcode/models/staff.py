@@ -10,12 +10,17 @@ class StaffMemberManager(models.Manager):
 
 class StaffMember(CommonInfo):
 
-    role = models.CharField(max_length=255,)
+    role = models.CharField(
+        max_length=255,
+    )
 
-    image = models.ImageField(upload_to="staff/", blank=True, null=True,)
+    image = models.ImageField(
+        upload_to="staff/",
+        blank=True,
+        null=True,
+    )
 
     objects = StaffMemberManager()
 
     def __str__(self):
         return self.name
-

@@ -9,22 +9,54 @@ class Donation(CommonInfo):
     from .session import Session
     from .user import CDCUser
 
-    user = models.ForeignKey(CDCUser, blank=True, null=True, on_delete=models.CASCADE,)
-    session = models.ForeignKey(Session, blank=True, null=True, on_delete=models.CASCADE,)
-    first_name = models.CharField(max_length=255, blank=True, null=True,)
-    last_name = models.CharField(max_length=255, blank=True, null=True,)
-    referral_code = models.CharField(max_length=255, blank=True, null=True,)
-    email = models.EmailField(blank=True, null=True,)
+    user = models.ForeignKey(
+        CDCUser,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    session = models.ForeignKey(
+        Session,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    first_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    last_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    referral_code = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    email = models.EmailField(
+        blank=True,
+        null=True,
+    )
     amount = models.IntegerField()
-    is_verified = models.BooleanField(default=False,)
-    receipt_sent = models.BooleanField(default=False,)
+    is_verified = models.BooleanField(
+        default=False,
+    )
+    receipt_sent = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return f"{self.email} | ${self.amount}"
 
     def get_admin_url(self):
         content_type = ContentType.objects.get_for_model(self.__class__)
-        return reverse(f"admin:{content_type.app_label}_{content_type.model}_change", args=(self.id,),)
+        return reverse(
+            f"admin:{content_type.app_label}_{content_type.model}_change",
+            args=(self.id,),
+        )
 
     def get_first_name(self):
         if self.user:
@@ -49,4 +81,3 @@ class Donation(CommonInfo):
             return self.email
 
     get_email.short_description = "Email"
-

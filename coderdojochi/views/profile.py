@@ -30,7 +30,10 @@ class DojoMentorView(TemplateView):
         mentor = get_object_or_404(Mentor, user=self.request.user)
         context["mentor"] = mentor
 
-        orders = MentorOrder.objects.select_related().filter(is_active=True, mentor=context["mentor"],)
+        orders = MentorOrder.objects.select_related().filter(
+            is_active=True,
+            mentor=context["mentor"],
+        )
 
         # upcoming_sessions = orders.filter(is_active=True, session__start_date__gte=timezone.now()).order_by(
         #     "session__start_date"

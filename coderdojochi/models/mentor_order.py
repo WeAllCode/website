@@ -10,15 +10,42 @@ class MentorOrder(CommonInfo):
     from .mentor import Mentor
     from .session import Session
 
-    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE,)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE,)
-    is_active = models.BooleanField(default=True,)
-    ip = models.CharField(max_length=255, blank=True, null=True,)
-    check_in = models.DateTimeField(blank=True, null=True,)
-    affiliate = models.CharField(max_length=255, blank=True, null=True,)
-    order_number = models.CharField(max_length=255, blank=True, null=True,)
-    week_reminder_sent = models.BooleanField(default=False,)
-    day_reminder_sent = models.BooleanField(default=False,)
+    mentor = models.ForeignKey(
+        Mentor,
+        on_delete=models.CASCADE,
+    )
+    session = models.ForeignKey(
+        Session,
+        on_delete=models.CASCADE,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+    ip = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    affiliate = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    order_number = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    day_reminder_sent = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return f"{self.mentor.user.first_name} {self.mentor.user.last_name} | {self.session.course.title}"

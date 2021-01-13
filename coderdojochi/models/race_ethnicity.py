@@ -4,8 +4,12 @@ from .common import CommonInfo
 
 
 class RaceEthnicity(CommonInfo):
-    race_ethnicity = models.CharField(max_length=255,)
-    is_visible = models.BooleanField(default=False,)
+    race_ethnicity = models.CharField(
+        max_length=255,
+    )
+    is_visible = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         verbose_name = "Race/Ethnicity"

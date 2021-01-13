@@ -8,17 +8,51 @@ class Order(CommonInfo):
     from .session import Session
     from .student import Student
 
-    guardian = models.ForeignKey(Guardian, on_delete=models.CASCADE,)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE,)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,)
-    is_active = models.BooleanField(default=True,)
-    ip = models.CharField(max_length=255, blank=True, null=True,)
-    check_in = models.DateTimeField(blank=True, null=True,)
-    alternate_guardian = models.CharField(max_length=255, blank=True, null=True,)
-    affiliate = models.CharField(max_length=255, blank=True, null=True,)
-    order_number = models.CharField(max_length=255, blank=True, null=True,)
-    week_reminder_sent = models.BooleanField(default=False,)
-    day_reminder_sent = models.BooleanField(default=False,)
+    guardian = models.ForeignKey(
+        Guardian,
+        on_delete=models.CASCADE,
+    )
+    session = models.ForeignKey(
+        Session,
+        on_delete=models.CASCADE,
+    )
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+    ip = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    alternate_guardian = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    affiliate = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    order_number = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    day_reminder_sent = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return f"{self.student.first_name} {self.student.last_name} | {self.session.course.title}"
@@ -37,4 +71,3 @@ class Order(CommonInfo):
         return self.student.get_clean_gender().title()
 
     get_student_gender.short_description = "Gender"
-

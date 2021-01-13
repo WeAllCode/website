@@ -21,7 +21,9 @@ class TeamView(DefaultMetaTags, TemplateView):
 
     # Instructors
     def get_instructors(self, context, volunteers):
-        context["instructors"] = volunteers.filter(user__groups__name__in=["Instructor"],).order_by("user__first_name")
+        context["instructors"] = volunteers.filter(
+            user__groups__name__in=["Instructor"],
+        ).order_by("user__first_name")
 
         return context
 
@@ -51,7 +53,10 @@ class TeamView(DefaultMetaTags, TemplateView):
         context = super().get_context_data(**kwargs)
 
         volunteers = Mentor.objects.select_related("user").filter(
-            is_active=True, is_public=True, background_check=True, avatar_approved=True,
+            is_active=True,
+            is_public=True,
+            background_check=True,
+            avatar_approved=True,
         )
 
         context["staff"] = StaffMember.objects.all()
@@ -61,4 +66,3 @@ class TeamView(DefaultMetaTags, TemplateView):
         context = self.get_volunteers(context, volunteers)
 
         return context
-

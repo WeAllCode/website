@@ -19,21 +19,65 @@ def generate_filename(instance, filename):
 
 # TODO: Add MentorManager
 class Mentor(CommonInfo):
-    user = models.ForeignKey(CDCUser, on_delete=models.CASCADE,)
-    bio = models.TextField(blank=True, null=True,)
-    is_active = models.BooleanField(default=True,)
-    background_check = models.BooleanField(default=False,)
-    is_public = models.BooleanField(default=False,)
-    avatar = StdImageField(
-        upload_to=generate_filename, blank=True, variations={"thumbnail": {"width": 500, "height": 500, "crop": True,}},
+    user = models.ForeignKey(
+        CDCUser,
+        on_delete=models.CASCADE,
     )
-    avatar_approved = models.BooleanField(default=False,)
-    birthday = models.DateTimeField(blank=False, null=True,)
-    gender = models.CharField(max_length=255, blank=False, null=True,)
-    race_ethnicity = models.ManyToManyField(RaceEthnicity, blank=False,)
-    work_place = models.CharField(max_length=255, blank=True, null=True,)
-    phone = models.CharField(max_length=255, blank=True, null=True,)
-    home_address = models.CharField(max_length=255, blank=True, null=True,)
+    bio = models.TextField(
+        blank=True,
+        null=True,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+    background_check = models.BooleanField(
+        default=False,
+    )
+    is_public = models.BooleanField(
+        default=False,
+    )
+    avatar = StdImageField(
+        upload_to=generate_filename,
+        blank=True,
+        variations={
+            "thumbnail": {
+                "width": 500,
+                "height": 500,
+                "crop": True,
+            }
+        },
+    )
+    avatar_approved = models.BooleanField(
+        default=False,
+    )
+    birthday = models.DateTimeField(
+        blank=False,
+        null=True,
+    )
+    gender = models.CharField(
+        max_length=255,
+        blank=False,
+        null=True,
+    )
+    race_ethnicity = models.ManyToManyField(
+        RaceEthnicity,
+        blank=False,
+    )
+    work_place = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    home_address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -70,5 +114,3 @@ class Mentor(CommonInfo):
     @property
     def last_name(self):
         return self.user.last_name
-
-

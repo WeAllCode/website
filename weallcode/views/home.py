@@ -23,4 +23,3 @@ class HomeView(DefaultMetaTags, TemplateView):
             context["next_session"] = sessions[0]
 
         return context
-

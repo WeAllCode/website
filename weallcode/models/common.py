@@ -22,15 +22,39 @@ ROLE_CHOICES = [
 
 
 class CommonInfo(models.Model):
-    name = models.CharField(max_length=255,)
-    role = models.CharField(choices=ROLE_CHOICES, max_length=255, default=DIRECTOR,)
-    image = models.ImageField(upload_to="staff/", blank=True, null=True,)
-    description = models.CharField(max_length=255, blank=True, null=True,)
-    linkedin = models.URLField(max_length=200, blank=True, null=True,)
+    name = models.CharField(
+        max_length=255,
+    )
+    role = models.CharField(
+        choices=ROLE_CHOICES,
+        max_length=255,
+        default=DIRECTOR,
+    )
+    image = models.ImageField(
+        upload_to="staff/",
+        blank=True,
+        null=True,
+    )
+    description = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    linkedin = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
     join_date = models.DateField("Join Date", auto_now_add=True)
-    is_active = models.BooleanField(default=True,)
-    created_at = models.DateTimeField(auto_now_add=True,)
-    updated_at = models.DateTimeField(auto_now=True,)
+    is_active = models.BooleanField(
+        default=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         abstract = True

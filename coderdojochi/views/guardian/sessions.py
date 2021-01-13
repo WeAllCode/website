@@ -19,4 +19,3 @@ class SessionDetailView(DetailView):
         # context["spots_remaining"] = object.capacity - object.get_active_student_count()
 
         return context
-

@@ -25,7 +25,13 @@ def student_session_order_count(student, session):
 def student_register_link(context, student, session):
     orders = Order.objects.filter(student=student, session=session, is_active=True)
 
-    url = reverse("session-sign-up", kwargs={"pk": session.id, "student_id": student.id,})
+    url = reverse(
+        "session-sign-up",
+        kwargs={
+            "pk": session.id,
+            "student_id": student.id,
+        },
+    )
 
     button_tag = "a"
     button_modifier = ""

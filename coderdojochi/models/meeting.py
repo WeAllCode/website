@@ -8,10 +8,24 @@ from .mentor import Mentor
 
 
 class MeetingType(CommonInfo):
-    code = models.CharField(max_length=255, blank=True, null=True,)
-    title = models.CharField(max_length=255,)
-    slug = models.SlugField(max_length=40, blank=True, null=True,)
-    description = models.TextField(blank=True, null=True, help_text="Basic HTML allowed",)
+    code = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    title = models.CharField(
+        max_length=255,
+    )
+    slug = models.SlugField(
+        max_length=40,
+        blank=True,
+        null=True,
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
 
     def __str__(self):
         if self.code:
@@ -21,19 +35,52 @@ class MeetingType(CommonInfo):
 
 
 class Meeting(CommonInfo):
-    meeting_type = models.ForeignKey(MeetingType, on_delete=models.CASCADE,)
-    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed",)
-    start_date = models.DateTimeField(blank=True, null=True,)
-    end_date = models.DateTimeField(blank=True, null=True,)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE,)
-    external_enrollment_url = models.CharField(
-        max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.",
+    meeting_type = models.ForeignKey(
+        MeetingType,
+        on_delete=models.CASCADE,
     )
-    is_public = models.BooleanField(default=False,)
-    is_active = models.BooleanField(default=False,)
-    image_url = models.CharField(max_length=255, blank=True, null=True,)
-    bg_image = models.ImageField(blank=True, null=True,)
-    announced_date = models.DateTimeField(blank=True, null=True,)
+    additional_info = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
+    start_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    end_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.CASCADE,
+    )
+    external_enrollment_url = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="When provided, local enrollment is disabled.",
+    )
+    is_public = models.BooleanField(
+        default=False,
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    image_url = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    bg_image = models.ImageField(
+        blank=True,
+        null=True,
+    )
+    announced_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         date = formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
@@ -52,25 +99,35 @@ class Meeting(CommonInfo):
         if checked_in is not None:
             if checked_in:
                 orders = (
-                    MeetingOrder.objects.filter(is_active=True, meeting=self,)
-                    .exclude(check_in=None,)
+                    MeetingOrder.objects.filter(
+                        is_active=True,
+                        meeting=self,
+                    )
+                    .exclude(
+                        check_in=None,
+                    )
                     .order_by("mentor__user__last_name")
                 )
             else:
-                orders = MeetingOrder.objects.filter(is_active=True, meeting=self, check_in=None,).order_by(
-                    "mentor__user__last_name"
-                )
+                orders = MeetingOrder.objects.filter(
+                    is_active=True,
+                    meeting=self,
+                    check_in=None,
+                ).order_by("mentor__user__last_name")
 
         else:
             orders = MeetingOrder.objects.filter(is_active=True, meeting=self,).order_by(
-                "check_in", "mentor__user__last_name",
+                "check_in",
+                "mentor__user__last_name",
             )
 
         return orders
 
     def get_current_mentors(self):
         return Mentor.objects.filter(
-            id__in=MeetingOrder.objects.filter(is_active=True, meeting=self,).values("mentor__id",)
+            id__in=MeetingOrder.objects.filter(is_active=True, meeting=self,).values(
+                "mentor__id",
+            )
         )
 
     def get_mentor_count(self):
@@ -80,15 +137,42 @@ class Meeting(CommonInfo):
 
 
 class MeetingOrder(CommonInfo):
-    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE,)
-    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE,)
-    is_active = models.BooleanField(default=True,)
-    ip = models.CharField(max_length=255, blank=True, null=True,)
-    check_in = models.DateTimeField(blank=True, null=True,)
-    affiliate = models.CharField(max_length=255, blank=True, null=True,)
-    order_number = models.CharField(max_length=255, blank=True, null=True,)
-    week_reminder_sent = models.BooleanField(default=False,)
-    day_reminder_sent = models.BooleanField(default=False,)
+    mentor = models.ForeignKey(
+        Mentor,
+        on_delete=models.CASCADE,
+    )
+    meeting = models.ForeignKey(
+        Meeting,
+        on_delete=models.CASCADE,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+    ip = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    check_in = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    affiliate = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    order_number = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    day_reminder_sent = models.BooleanField(
+        default=False,
+    )
 
     def __str__(self):
         return f"{self.mentor.user.first_name} {self.mentor.user.last_name} | {self.meeting.meeting_type.title}"

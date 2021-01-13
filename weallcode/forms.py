@@ -17,14 +17,24 @@ class ContactForm(forms.Form):
         ("captcha", ""),
     )
 
-    captcha = ReCaptchaField(widget=ReCaptchaV3,)
+    captcha = ReCaptchaField(
+        widget=ReCaptchaV3,
+    )
 
-    name = forms.CharField(max_length=100, label="Full Name",)
+    name = forms.CharField(
+        max_length=100,
+        label="Full Name",
+    )
 
     email = forms.EmailField(
         max_length=200,
         label="Email Address",
-        widget=forms.TextInput(attrs={"type": "email", "placeholder": "email@example.com",},),
+        widget=forms.TextInput(
+            attrs={
+                "type": "email",
+                "placeholder": "email@example.com",
+            },
+        ),
     )
 
     interest = forms.ChoiceField(
@@ -42,13 +52,24 @@ class ContactForm(forms.Form):
         max_length=20,
         label="Phone Number",
         widget=forms.TextInput(
-            attrs={"type": "tel", "placeholder": "+1 555 555-5555", "minlength": "10", "maxlength": "20",},
+            attrs={
+                "type": "tel",
+                "placeholder": "+1 555 555-5555",
+                "minlength": "10",
+                "maxlength": "20",
+            },
         ),
     )
 
     message = forms.CharField(
         label="Message",
-        widget=forms.Textarea(attrs={"placeholder": "Enter your message", "minlength": 25, "maxlength": 500,},),
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "Enter your message",
+                "minlength": 25,
+                "maxlength": 500,
+            },
+        ),
     )
 
     def as_grid(self):
@@ -70,5 +91,9 @@ class ContactForm(forms.Form):
             recipients=[settings.CONTACT_EMAIL],
             reply_to=[f"{data['name']}<{data['email']}>"],
             template_name="contact-email",
-            merge_global_data={"interest": data["interest"], "message": data["message"], "phone": data["phone"],},
+            merge_global_data={
+                "interest": data["interest"],
+                "message": data["message"],
+                "phone": data["phone"],
+            },
         )

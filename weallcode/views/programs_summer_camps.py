@@ -15,7 +15,9 @@ class ProgramsSummerCampsView(DefaultMetaTags, TemplateView):
 
         # SUMMER CAMP CLASSES
         summer_camp_classes = Session.objects.filter(
-            is_active=True, start_date__gte=timezone.now(), course__course_type=Course.CAMP,
+            is_active=True,
+            start_date__gte=timezone.now(),
+            course__course_type=Course.CAMP,
         ).order_by("start_date")
 
         if not self.request.user.is_authenticated or not self.request.user.role == "mentor":

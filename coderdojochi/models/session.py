@@ -23,11 +23,24 @@ class Session(CommonInfo):
         (FEMALE, "Female"),
     )
 
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, limit_choices_to={"is_active": True},)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True},
+    )
     start_date = models.DateTimeField()
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, limit_choices_to={"is_active": True},)
-    capacity = models.IntegerField(default=20,)
-    mentor_capacity = models.IntegerField(blank=True, null=True,)
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True},
+    )
+    capacity = models.IntegerField(
+        default=20,
+    )
+    mentor_capacity = models.IntegerField(
+        blank=True,
+        null=True,
+    )
     instructor = models.ForeignKey(
         Mentor,
         on_delete=models.CASCADE,
@@ -36,28 +49,82 @@ class Session(CommonInfo):
     )
 
     # Pricing
-    cost = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True,)
-    minimum_cost = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True,)
-    maximum_cost = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True,)
+    cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+    minimum_cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+    maximum_cost = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
 
     # Extra
     additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    waitlist_mentors = models.ManyToManyField(Mentor, blank=True, related_name="session_waitlist_mentors",)
-    waitlist_students = models.ManyToManyField(Student, blank=True, related_name="session_waitlist_students",)
+    waitlist_mentors = models.ManyToManyField(
+        Mentor,
+        blank=True,
+        related_name="session_waitlist_mentors",
+    )
+    waitlist_students = models.ManyToManyField(
+        Student,
+        blank=True,
+        related_name="session_waitlist_students",
+    )
     external_enrollment_url = models.CharField(
-        max_length=255, blank=True, null=True, help_text="When provided, local enrollment is disabled.",
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="When provided, local enrollment is disabled.",
     )
 
-    is_active = models.BooleanField(default=False, help_text="Session is active.",)
-    is_public = models.BooleanField(default=False, help_text="Session is a public session.",)
-    password = models.CharField(blank=True, max_length=255,)
-    partner_message = models.TextField(blank=True,)
-    announced_date_mentors = models.DateTimeField(blank=True, null=True,)
-    announced_date_guardians = models.DateTimeField(blank=True, null=True,)
-    image_url = models.CharField(max_length=255, blank=True, null=True,)
-    bg_image = models.ImageField(blank=True, null=True,)
-    mentors_week_reminder_sent = models.BooleanField(default=False,)
-    mentors_day_reminder_sent = models.BooleanField(default=False,)
+    is_active = models.BooleanField(
+        default=False,
+        help_text="Session is active.",
+    )
+    is_public = models.BooleanField(
+        default=False,
+        help_text="Session is a public session.",
+    )
+    password = models.CharField(
+        blank=True,
+        max_length=255,
+    )
+    partner_message = models.TextField(
+        blank=True,
+    )
+    announced_date_mentors = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    announced_date_guardians = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    image_url = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    bg_image = models.ImageField(
+        blank=True,
+        null=True,
+    )
+    mentors_week_reminder_sent = models.BooleanField(
+        default=False,
+    )
+    mentors_day_reminder_sent = models.BooleanField(
+        default=False,
+    )
     gender_limitation = models.CharField(
         help_text="Limits the class to be only one gender.",
         max_length=255,
@@ -80,10 +147,17 @@ class Session(CommonInfo):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
     online_video_link = models.URLField(
-        "Online Video Link", help_text="Zoom link with password.", blank=True, null=True,
+        "Online Video Link",
+        help_text="Zoom link with password.",
+        blank=True,
+        null=True,
     )
     online_video_meeting_id = models.CharField(
-        "Online Video Meeting ID", help_text="XXX XXXX XXXX", max_length=255, blank=True, null=True,
+        "Online Video Meeting ID",
+        help_text="XXX XXXX XXXX",
+        max_length=255,
+        blank=True,
+        null=True,
     )
     online_video_meeting_password = models.CharField(
         "Online Video Meeting Password",
@@ -100,9 +174,18 @@ class Session(CommonInfo):
     )
 
     # kept for older records
-    old_end_date = models.DateTimeField(blank=True, null=True,)
-    old_mentor_start_date = models.DateTimeField(blank=True, null=True,)
-    old_mentor_end_date = models.DateTimeField(blank=True, null=True,)
+    old_end_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    old_mentor_start_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    old_mentor_end_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
 
     @property
     def end_date(self):
@@ -177,7 +260,10 @@ class Session(CommonInfo):
     def get_mentor_orders(self):
         from .mentor_order import MentorOrder
 
-        return MentorOrder.objects.filter(session=self, is_active=True,).order_by("mentor__user__last_name")
+        return MentorOrder.objects.filter(
+            session=self,
+            is_active=True,
+        ).order_by("mentor__user__last_name")
 
     def get_checked_in_mentor_orders(self):
         from .mentor_order import MentorOrder
@@ -225,8 +311,14 @@ class Session(CommonInfo):
 class PartnerPasswordAccess(CommonInfo):
     from .user import CDCUser
 
-    user = models.ForeignKey(CDCUser, on_delete=models.CASCADE,)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE,)
+    user = models.ForeignKey(
+        CDCUser,
+        on_delete=models.CASCADE,
+    )
+    session = models.ForeignKey(
+        Session,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         db_table = "partner_password_access"

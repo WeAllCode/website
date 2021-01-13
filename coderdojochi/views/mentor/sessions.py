@@ -14,4 +14,3 @@ class SessionDetailView(DetailView):
         mentor = get_object_or_404(Mentor, user=self.request.user)
 
         return context
-

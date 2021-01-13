@@ -9,4 +9,3 @@ class AssociateBoardView(DefaultMetaTags, TemplateView):
     url = reverse_lazy("weallcode-associate-board")
 
     title = f"Join our Associate Board | We All Code"
-

@@ -15,9 +15,17 @@ class CDCUser(AbstractUser):
         (GUARDIAN, "guardian"),
     ]
 
-    role = models.CharField(choices=ROLE_CHOICES, max_length=10, blank=True, null=True,)
+    role = models.CharField(
+        choices=ROLE_CHOICES,
+        max_length=10,
+        blank=True,
+        null=True,
+    )
 
-    admin_notes = models.TextField(blank=True, null=True,)
+    admin_notes = models.TextField(
+        blank=True,
+        null=True,
+    )
 
     @cached_property
     def name(self):

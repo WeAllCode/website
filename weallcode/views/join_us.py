@@ -19,8 +19,8 @@ class JoinUsView(DefaultMetaTags, FormView):
         # It should return an HttpResponse.
         form.send_email()
         messages.success(
-            self.request, "Thank you for contacting us! We will respond as soon as possible.",
+            self.request,
+            "Thank you for contacting us! We will respond as soon as possible.",
         )
 
         return super().form_valid(form)
-

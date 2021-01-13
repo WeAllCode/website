@@ -5,13 +5,23 @@ from .common import CommonInfo
 
 class EmailContent(CommonInfo):
 
-    nickname = models.CharField(max_length=255,)
+    nickname = models.CharField(
+        max_length=255,
+    )
 
-    subject = models.CharField(max_length=255,)
+    subject = models.CharField(
+        max_length=255,
+    )
 
-    body = models.TextField(blank=True, null=True, help_text="Basic HTML allowed",)
+    body = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
 
-    is_active = models.BooleanField(default=True,)
+    is_active = models.BooleanField(
+        default=True,
+    )
 
     class Meta:
         verbose_name = "email content"

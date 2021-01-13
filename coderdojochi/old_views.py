@@ -42,7 +42,10 @@ User = get_user_model()
 
 
 def home(request, template_name="home.html"):
-    upcoming_classes = Session.objects.filter(is_active=True, start_date__gte=timezone.now(),).order_by("start_date")
+    upcoming_classes = Session.objects.filter(
+        is_active=True,
+        start_date__gte=timezone.now(),
+    ).order_by("start_date")
 
     if not request.user.is_authenticated or not request.user.role == "mentor":
         upcoming_classes = upcoming_classes.filter(is_public=True)
@@ -55,7 +58,12 @@ def home(request, template_name="home.html"):
 def volunteer(request, template_name="volunteer.html"):
     mentors = (
         Mentor.objects.select_related("user")
-        .filter(is_active=True, is_public=True, background_check=True, avatar_approved=True,)
+        .filter(
+            is_active=True,
+            is_public=True,
+            background_check=True,
+            avatar_approved=True,
+        )
         .annotate(session_count=Count("mentororder"))
         .order_by("-user__role", "-session_count")
     )
@@ -114,7 +122,9 @@ def mentor_reject_avatar(request, pk=None):
     email(
         subject="Your We All Code avatar...",
         template_name="class-announcement-mentor",
-        merge_global_data={"site_url": settings.SITE_URL,},
+        merge_global_data={
+            "site_url": settings.SITE_URL,
+        },
         recipients=[mentor.user.email],
     )
 
@@ -183,7 +193,11 @@ def cdc_admin(request, template_name="admin.html"):
         .annotate(
             num_orders=Count("order"),
             num_attended=Count(Case(When(order__check_in__isnull=False, then=1))),
-            is_future=Case(When(start_date__gte=timezone.now(), then=1), default=0, output_field=IntegerField(),),
+            is_future=Case(
+                When(start_date__gte=timezone.now(), then=1),
+                default=0,
+                output_field=IntegerField(),
+            ),
         )
         .order_by("-start_date")
     )
@@ -193,7 +207,11 @@ def cdc_admin(request, template_name="admin.html"):
         .annotate(
             num_orders=Count("meetingorder"),
             num_attended=Count(Case(When(meetingorder__check_in__isnull=False, then=1))),
-            is_future=Case(When(end_date__gte=timezone.now(), then=1), default=0, output_field=IntegerField(),),
+            is_future=Case(
+                When(end_date__gte=timezone.now(), then=1),
+                default=0,
+                output_field=IntegerField(),
+            ),
         )
         .order_by("-start_date")
     )
@@ -516,7 +534,11 @@ def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html")
     return render(
         request,
         template_name,
-        {"active_orders": active_orders, "inactive_orders": inactive_orders, "checked_in": checked_in,},
+        {
+            "active_orders": active_orders,
+            "inactive_orders": inactive_orders,
+            "checked_in": checked_in,
+        },
     )
 
 
@@ -552,7 +574,10 @@ def session_announce_mentors(request, pk):
         recipients = []
 
         # send mentor announcements
-        mentors = Mentor.objects.filter(is_active=True, user__is_active=True,)
+        mentors = Mentor.objects.filter(
+            is_active=True,
+            user__is_active=True,
+        )
 
         for mentor in mentors:
             recipients.append(mentor.user.email)
@@ -613,7 +638,10 @@ def session_announce_guardians(request, pk):
         }
         recipients = []
 
-        guardians = Guardian.objects.filter(is_active=True, user__is_active=True,)
+        guardians = Guardian.objects.filter(
+            is_active=True,
+            user__is_active=True,
+        )
 
         for guardian in guardians:
             recipients.append(guardian.user.email)
@@ -655,7 +683,10 @@ def check_system(request):
     halfday = timedelta(hours=12)
     # halfday = timedelta(seconds=15)
 
-    if Session.objects.filter(is_active=True, start_date__lte=timezone.now(),).count():
+    if Session.objects.filter(
+        is_active=True,
+        start_date__lte=timezone.now(),
+    ).count():
         runUpdate = False
 
     # uuid is posted from the computer using a bash script

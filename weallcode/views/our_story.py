@@ -9,4 +9,3 @@ class OurStoryView(DefaultMetaTags, TemplateView):
     url = reverse_lazy("weallcode-our-story")
 
     title = f"Our Story | We All Code"
-

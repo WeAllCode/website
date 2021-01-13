@@ -203,7 +203,10 @@ def meeting_announce(request, pk):
             "meeting_calendar_url": f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}",
         }
 
-        mentors = Mentor.objects.filter(is_active=True, user__is_active=True,)
+        mentors = Mentor.objects.filter(
+            is_active=True,
+            user__is_active=True,
+        )
 
         recipients = []
         for mentor in mentors:

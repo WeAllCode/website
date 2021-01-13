@@ -301,7 +301,12 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             if mentor:
                 order = get_object_or_404(MentorOrder, mentor=mentor, session=session_obj)
             elif student:
-                order = get_object_or_404(Order, student=student, session=session_obj, is_active=True,)
+                order = get_object_or_404(
+                    Order,
+                    student=student,
+                    session=session_obj,
+                    is_active=True,
+                )
             order.is_active = False
             order.save()
 
@@ -313,9 +318,16 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                 ip = request.META["HTTP_X_FORWARDED_FOR"] or request.META["REMOTE_ADDR"]
 
             if mentor:
-                order, created = MentorOrder.objects.get_or_create(mentor=mentor, session=session_obj,)
+                order, created = MentorOrder.objects.get_or_create(
+                    mentor=mentor,
+                    session=session_obj,
+                )
             else:
-                order, created = Order.objects.get_or_create(guardian=guardian, student=student, session=session_obj,)
+                order, created = Order.objects.get_or_create(
+                    guardian=guardian,
+                    student=student,
+                    session=session_obj,
+                )
 
             order.ip = ip
             order.is_active = True
@@ -425,7 +437,9 @@ class SessionCalendarView(CalendarView):
                     guardian = Guardian.objects.get(user=self.request.user)
                     students = guardian.get_students()
                     students_signed_up = Order.objects.filter(
-                        session=event_obj, is_active=True, student__in=students,
+                        session=event_obj,
+                        is_active=True,
+                        student__in=students,
                     ).exists()
 
                     if students_signed_up:

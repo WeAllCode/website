@@ -8,16 +8,40 @@ from .race_ethnicity import RaceEthnicity
 class Student(CommonInfo):
     from .guardian import Guardian
 
-    guardian = models.ForeignKey(Guardian, on_delete=models.CASCADE,)
-    first_name = models.CharField(max_length=255,)
-    last_name = models.CharField(max_length=255,)
+    guardian = models.ForeignKey(
+        Guardian,
+        on_delete=models.CASCADE,
+    )
+    first_name = models.CharField(
+        max_length=255,
+    )
+    last_name = models.CharField(
+        max_length=255,
+    )
     birthday = models.DateTimeField()
-    gender = models.CharField(max_length=255,)
-    race_ethnicity = models.ManyToManyField(RaceEthnicity, blank=True,)
-    school_name = models.CharField(max_length=255, null=True,)
-    school_type = models.CharField(max_length=255, null=True,)
-    medical_conditions = models.TextField(blank=True, null=True,)
-    medications = models.TextField(blank=True, null=True,)
+    gender = models.CharField(
+        max_length=255,
+    )
+    race_ethnicity = models.ManyToManyField(
+        RaceEthnicity,
+        blank=True,
+    )
+    school_name = models.CharField(
+        max_length=255,
+        null=True,
+    )
+    school_type = models.CharField(
+        max_length=255,
+        null=True,
+    )
+    medical_conditions = models.TextField(
+        blank=True,
+        null=True,
+    )
+    medications = models.TextField(
+        blank=True,
+        null=True,
+    )
     photo_release = models.BooleanField(
         "Photo Consent",
         help_text=(
@@ -31,7 +55,9 @@ class Student(CommonInfo):
         help_text=("I hereby give consent for the student signed up " "above to participate in We All Code."),
         default=False,
     )
-    is_active = models.BooleanField(default=True,)
+    is_active = models.BooleanField(
+        default=True,
+    )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -41,7 +67,9 @@ class Student(CommonInfo):
 
         try:
             Order.objects.get(
-                is_active=True, student=self, session=session,
+                is_active=True,
+                student=self,
+                session=session,
             )
             is_registered = True
         except Exception:
@@ -84,4 +112,3 @@ class Student(CommonInfo):
                 return False
         else:
             return True
-
