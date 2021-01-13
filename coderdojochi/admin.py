@@ -514,7 +514,6 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     list_display = [
         "_course",
         "start_date",
-        # 'end_date',
         "location",
         "capacity",
         "student_count_link",
@@ -547,11 +546,11 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "waitlist_students",
     ]
 
-    autocomplete_fields = [
-        # 'course',
-        # 'location',
-        # 'instructor',
-    ]
+    # autocomplete_fields = [
+    #     'course',
+    #     'location',
+    #     'instructor',
+    # ]
 
     search_fields = ["start_date"]
 

@@ -381,16 +381,6 @@ def session_check_in(request, pk, template_name="session-check-in.html"):
 
     age_count = sorted(list(dict(list(Counter(ages).items())).items()), key=operator.itemgetter(0))
 
-    # age_count = sorted(
-    #     dict(
-    #         list(
-    #             Counter(ages).items()
-    #         )
-    #     ).items(),
-    #     key=operator.itemgetter(1),
-    #     reverse=True
-    # )
-
     # Average Age
     if orders and ages:
         average_age = int(round(sum(ages) / float(len(ages))))
