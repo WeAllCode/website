@@ -16,6 +16,6 @@ class SessionDetailView(DetailView):
         guardian = get_object_or_404(Guardian, user=self.request.user)
 
         context["students"] = guardian.get_students()
-        # context["spots_remaining"] = object.capacity - object.get_active_student_count()
+        context["spots_remaining"] = self.object.capacity - self.object.get_active_student_count()
 
         return context
