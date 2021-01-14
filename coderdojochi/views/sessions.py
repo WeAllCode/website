@@ -257,7 +257,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                 access_dict = {
                     "message": (
                         "You cannot sign up for a class until you "
-                        '<a href="{BG_CHECK_LINK}" target="_blank">fill out the background search form</a>.'
+                        f'<a href="{BG_CHECK_LINK}" target="_blank">fill out the background search form</a>.'
                     ),
                     "redirect": request.META.get("HTTP_REFERER", "/dojo"),
                 }
