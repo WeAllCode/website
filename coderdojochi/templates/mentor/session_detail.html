@@ -153,12 +153,14 @@
     <h3 class="title text-secondary">About the instructor</h3>
     <div class="grid-x instructor grid-margin-x grid-margin-y margin-top-2">
       <div class="cell small-4 medium-3 image">
-        <a href="{% url 'mentor-detail' session.instructor.id %}"><img class="width-100 thumbnail" src="{% if session.instructor.avatar %}{{ session.instructor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=320&d=mm{% endif %}" alt="Photo of session.instructor }}"></a>
+        <a href="{% url 'mentor-detail' object.instructor.id %}">
+          <img class="width-100 thumbnail" src="{{ object.instructor.get_avatar.thumbnail.url }}" alt="Photo of {{ object.instructor }}">
+        </a>
       </div>
       <div class="cell small-8 medium-9 padding-top-1">
         <h4 class="subtitle">{{ session.instructor }}</h4>
         <p>{{ session.instructor.bio|truncatechars_html:120 }}</p>
-        <p><a href="{% url 'mentor-detail' session.instructor.id %}">Learn more about {{ session.instructor.user.first_name }}.</a></p>
+        <p><a href="{% url 'mentor-detail' session.instructor.id %}">Learn more about {{ session.instructor.first_name }}.</a></p>
       </div>
     </div>
 </section>
@@ -171,7 +173,7 @@
       {% for mentor in active_mentors %}
         {% if mentor.is_public == True %}
         <div class="cell small-4 medium-3">
-          {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name image=mentor.avatar.thumbnail %}
+          {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name image=mentor.get_avatar.thumbnail %}
         </div>
         {% endif %}
       {% endfor %}

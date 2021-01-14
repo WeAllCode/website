@@ -44,7 +44,7 @@ class Mentor(CommonInfo):
                 "width": 500,
                 "height": 500,
                 "crop": True,
-            }
+            },
         },
     )
     avatar_approved = models.BooleanField(
@@ -80,10 +80,23 @@ class Mentor(CommonInfo):
     )
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return self.full_name
 
+    @property
+    def first_name(self):
+        return self.user.first_name
+
+    @property
+    def last_name(self):
+        return self.user.last_name
+
+    @property
     def full_name(self):
         return f"{self.user.first_name} {self.user.last_name}"
+
+    @property
+    def email(self):
+        return self.user.email
 
     def save(self, *args, **kwargs):
         if self.pk is None:
@@ -99,18 +112,67 @@ class Mentor(CommonInfo):
         super(Mentor, self).save(*args, **kwargs)
 
     def get_approve_avatar_url(self):
-        return reverse("mentor-approve-avatar", args=[str(self.id)])
+        return reverse(
+            "mentor-approve-avatar",
+            args=[
+                str(self.id),
+            ],
+        )
 
     def get_reject_avatar_url(self):
-        return reverse("mentor-reject-avatar", args=[str(self.id)])
+        return reverse(
+            "mentor-reject-avatar",
+            args=[
+                str(self.id),
+            ],
+        )
 
     def get_absolute_url(self):
-        return reverse("mentor-detail", args=[str(self.id)])
+        return reverse(
+            "mentor-detail",
+            args=[
+                str(self.id),
+            ],
+        )
 
-    @property
-    def first_name(self):
-        return self.user.first_name
+    def get_avatar(self):
+        if (
+            self.avatar
+            and self.avatar.storage.exists(self.avatar.name)
+            and self.avatar.storage.exists(self.avatar.thumbnail.name)
+        ):
+            return self.avatar
 
-    @property
-    def last_name(self):
-        return self.user.last_name
+        # Gravatar
+        import hashlib
+        from urllib.parse import urlencode
+
+        # https://en.gravatar.com/site/implement/images/
+
+        email = self.email.encode("utf-8").lower()
+        email_encoded = hashlib.md5(email).hexdigest()
+
+        thumbnail_params = urlencode(
+            {
+                "d": "mp",
+                "r": "g",
+                "s": str(320),
+            }
+        )
+        full_params = urlencode(
+            {
+                "d": "mp",
+                "r": "g",
+                "s": str(500),
+            }
+        )
+        slug_url = f"https://www.gravatar.com/avatar/{email_encoded}"
+
+        avatar = {
+            "url": f"{slug_url}?{full_params}",
+            "thumbnail": {
+                "url": f"{slug_url}?{thumbnail_params}",
+            },
+        }
+
+        return avatar

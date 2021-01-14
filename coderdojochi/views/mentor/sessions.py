@@ -6,7 +6,7 @@ from ...models import Mentor, MentorOrder, Session
 
 class SessionDetailView(DetailView):
     model = Session
-    template_name = "mentor/session-detail.html"
+    template_name = "mentor/session_detail.html"
 
     def get_context_data(self, **kwargs):
         session = self.object

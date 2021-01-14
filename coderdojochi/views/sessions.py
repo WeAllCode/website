@@ -112,7 +112,7 @@ class SessionDetailView(View):
 
 
 # class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
-#     template_name = "session-detail.html"
+#     template_name = "session_detail.html"
 
 #     def dispatch(self, request, *args, **kwargs):
 #         session_obj = get_object_or_404(Session, id=kwargs["pk"])

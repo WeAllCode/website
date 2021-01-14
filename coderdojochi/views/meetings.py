@@ -210,10 +210,10 @@ def meeting_announce(request, pk):
 
         recipients = []
         for mentor in mentors:
-            recipients.append(mentor.user.email)
-            merge_data[mentor.user.email] = {
-                "first_name": mentor.user.first_name,
-                "last_name": mentor.user.last_name,
+            recipients.append(mentor.email)
+            merge_data[mentor.email] = {
+                "first_name": mentor.first_name,
+                "last_name": mentor.last_name,
             }
 
         email(

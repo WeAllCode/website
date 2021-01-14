@@ -48,7 +48,7 @@ class MentorOrder(CommonInfo):
     )
 
     def __str__(self):
-        return f"{self.mentor.user.first_name} {self.mentor.user.last_name} | {self.session.course.title}"
+        return f"{self.mentor.full_name} | {self.session.course.title}"
 
     def is_checked_in(self):
         return self.check_in is not None

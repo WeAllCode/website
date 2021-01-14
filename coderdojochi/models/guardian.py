@@ -37,7 +37,7 @@ class Guardian(CommonInfo):
     )
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return self.full_name
 
     @property
     def first_name(self):
@@ -46,6 +46,10 @@ class Guardian(CommonInfo):
     @property
     def last_name(self):
         return self.user.last_name
+
+    @property
+    def full_name(self):
+        return f"{self.user.first_name} {self.user.last_name}"
 
     @property
     def email(self):

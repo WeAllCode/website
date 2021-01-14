@@ -1,7 +1,7 @@
 {% extends "coderdojochi/_base.html" %}
 {% load humanize %}
 
-{% block title %}{{ mentor.user.first_name }} {{ mentor.user.last_name }} | {{ block.super }}{% endblock %}
+{% block title %}{{ mentor.full_name }} | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-mentor-detail{% endblock %}
 
@@ -10,19 +10,19 @@
 <div class="container">
     <ul class="breadcrumbs">
         <li><a href="{% url 'mentors' %}">All Mentors</a></li>
-        <li class="active">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</li>
+        <li class="active">{{ mentor.full_name }}</li>
     </ul>
 </div>
 
 
 <div class="container">
     <div class="dojo-content">
-        <h1 class="title">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</h1>
+        <h1 class="title">{{ mentor.full_name }}</h1>
         <p>{{ mentor.bio }}</p>
     </div>
     <div class="dojo-profile">
         <div class="well well-sm">
-            <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&d=mm{% endif %}" width="283" height="283" class="avatar" alt="Photo of {{ mentor.user.first_name }} {{ mentor.user.last_name }}">
+            <img src="{{ mentor.get_avatar.thumbnail.url }}" width="283" height="283" class="avatar" alt="Photo of {{ mentor.full_name }}">
             <h3 class="title">Joined: {{ mentor.user.date_joined|naturalday|capfirst }}</h3>
         </div>
         {% if user.is_staff %}

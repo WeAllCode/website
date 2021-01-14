@@ -28,11 +28,11 @@ def avatar_updated_handler(sender, instance, **kwargs):
         img.add_header("Content-Disposition", "inline", filename="avatar")
 
         email(
-            subject=f"{instance.user.first_name} {instance.user.last_name} | Mentor Avatar Changed",
+            subject=f"{instance.full_name} | Mentor Avatar Changed",
             template_name="avatar-changed-mentor",
             merge_global_data={
-                "first_name": instance.user.first_name,
-                "last_name": instance.user.last_name,
+                "first_name": instance.first_name,
+                "last_name": instance.last_name,
                 "image": "avatar",
                 "approve_url": f"{settings.SITE_URL}{instance.get_approve_avatar_url()}",
                 "reject_url": f"{settings.SITE_URL}{instance.get_reject_avatar_url()}",

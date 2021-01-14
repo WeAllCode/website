@@ -52,8 +52,8 @@ class DojoMentorView(TemplateView):
         context["account_complete"] = False
 
         if (
-            mentor.user.first_name
-            and mentor.user.last_name
+            mentor.first_name
+            and mentor.last_name
             and mentor.avatar
             and mentor.background_check
             and past_sessions.count() > 0

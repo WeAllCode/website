@@ -159,7 +159,7 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="order_id" value="{{ order.id }}">
                                     <td>{{ forloop.counter|stringformat:"02d" }}</td>
-                                    <td><strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}</td>
+                                    <td><strong>{{ order.mentor.first_name }}</strong> {{ order.mentor.last_name }}</td>
                                     <td class="text-right">
                                         {% if not order.check_in %}
                                             <button class="button tiny">Check In</button>
@@ -198,7 +198,7 @@
                         {% for order in inactive_orders %}
                         <tr class="">
                             <td>{{ forloop.counter|stringformat:"02d" }}</td>
-                            <td><strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}</td>
+                            <td><strong>{{ order.mentor.first_name }}</strong> {{ order.mentor.last_name }}</td>
                             <td class="text-right">{{ order.updated_at }}</td>
                         </tr>
                         {% endfor %}

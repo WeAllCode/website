@@ -90,7 +90,7 @@ def mentor_approve_avatar(request, pk=None):
     if mentor.background_check:
         messages.success(
             request,
-            f"{mentor.user.first_name} {mentor.user.last_name}'s avatar approved and their account is now public.",
+            f"{mentor.full_name}'s avatar approved and their account is now public.",
         )
 
         return redirect(f"{reverse('mentors')}{mentor.id}")
@@ -98,10 +98,7 @@ def mentor_approve_avatar(request, pk=None):
     else:
         messages.success(
             request,
-            (
-                f"{mentor.user.first_name}{mentor.user.last_name}'s avatar approved but they have yet "
-                f"to fill out the 'background search' form."
-            ),
+            (f"{mentor.full_name}'s avatar approved but they have yet " f"to fill out the 'background search' form."),
         )
 
         return redirect("mentors")
@@ -125,13 +122,13 @@ def mentor_reject_avatar(request, pk=None):
         merge_global_data={
             "site_url": settings.SITE_URL,
         },
-        recipients=[mentor.user.email],
+        recipients=[mentor.email],
     )
 
     messages.warning(
         request,
         (
-            f"{mentor.user.first_name} {mentor.user.last_name}'s avatar rejected and their account "
+            f"{mentor.full_name}'s avatar rejected and their account "
             f"is no longer public. An email notice has been sent to the mentor."
         ),
     )
@@ -329,10 +326,7 @@ def session_check_in(request, pk, template_name="session-check-in.html"):
             else:
                 order.check_in = timezone.now()
 
-            if (
-                f"{order.guardian.user.first_name} {order.guardian.user.last_name}"
-                != request.POST["order_alternate_guardian"]
-            ):
+            if f"{order.guardian.full_name}" != request.POST["order_alternate_guardian"]:
                 order.alternate_guardian = request.POST["order_alternate_guardian"]
 
             order.save()
@@ -570,10 +564,10 @@ def session_announce_mentors(request, pk):
         )
 
         for mentor in mentors:
-            recipients.append(mentor.user.email)
-            merge_data[mentor.user.email] = {
-                "first_name": mentor.user.first_name,
-                "last_name": mentor.user.last_name,
+            recipients.append(mentor.email)
+            merge_data[mentor.email] = {
+                "first_name": mentor.first_name,
+                "last_name": mentor.last_name,
             }
 
         email(
@@ -634,10 +628,10 @@ def session_announce_guardians(request, pk):
         )
 
         for guardian in guardians:
-            recipients.append(guardian.user.email)
-            merge_data[guardian.user.email] = {
-                "first_name": guardian.user.first_name,
-                "last_name": guardian.user.last_name,
+            recipients.append(guardian.email)
+            merge_data[guardian.email] = {
+                "first_name": guardian.first_name,
+                "last_name": guardian.last_name,
             }
 
         email(

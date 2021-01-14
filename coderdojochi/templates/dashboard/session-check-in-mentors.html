@@ -86,9 +86,9 @@
                         <tr class="{% if order.check_in and active_session %}success{% endif %}">
                             <td>{{ forloop.counter|stringformat:"02d" }}</td>
                             <td>
-                              <strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}
+                              <strong>{{ order.mentor.first_name }}</strong> {{ order.mentor.last_name }}
                             </td>
-                            <td>{{ order.mentor.user.email }}</td>
+                            <td>{{ order.mentor.email }}</td>
                             <td>{{ order.mentor.phone }}</td>
                             <td>-</td>
                             <td>-</td>
@@ -145,8 +145,8 @@
                         {% for order in no_show_orders %}
                         <tr>
                             <td class="vert-align">{{ forloop.counter|stringformat:"02d" }}</td>
-                            <td class="vert-align"><strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}</td>
-                            <td class="vert-align">{{ order.mentor.user.email }}</td>
+                            <td class="vert-align"><strong>{{ order.mentor.first_name }}</strong> {{ order.mentor.last_name }}</td>
+                            <td class="vert-align">{{ order.mentor.email }}</td>
                             <td class="vert-align">{{ order.mentor.phone }}</td>
                             <td class="vert-align">-</td>
                             <td class="vert-align">-</td>
@@ -180,7 +180,7 @@
                         <tr>
                             <td>{{ forloop.counter|stringformat:"02d" }}</td>
                             <td>
-                              <strong>{{ order.mentor.user.first_name }}</strong> {{ order.mentor.user.last_name }}
+                              <strong>{{ order.mentor.first_name }}</strong> {{ order.mentor.last_name }}
                             </td>
                             <td>-</td>
                             <td>-</td>

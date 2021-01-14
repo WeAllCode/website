@@ -26,7 +26,7 @@ class WelcomeView(TemplateView):
         if getattr(request.user, "role", False) == "mentor" and request.method == "GET":
             mentor = get_object_or_404(Mentor, user=request.user)
 
-            if mentor.user.first_name:
+            if mentor.first_name:
                 if next_url:
                     return redirect(next_url)
                 else:
@@ -57,7 +57,7 @@ class WelcomeView(TemplateView):
                 context["add_student"] = True
                 context["form"] = StudentForm(initial={"guardian": guardian.pk})
 
-            if account.user.first_name and account.get_students():
+            if account.first_name and account.get_students():
                 context["students"] = account.get_students().count()
 
         context["account"] = account

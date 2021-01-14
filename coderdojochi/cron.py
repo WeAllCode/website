@@ -47,10 +47,10 @@ class SendReminders(CronJobBase):
         recipients = []
 
         for order in orders_within_a_week:
-            recipients.append(order.guardian.user.email)
-            merge_data[order.guardian.user.email] = {
-                "first_name": order.guardian.user.first_name,
-                "last_name": order.guardian.user.last_name,
+            recipients.append(order.guardian.email)
+            merge_data[order.guardian.email] = {
+                "first_name": order.guardian.first_name,
+                "last_name": order.guardian.last_name,
                 "student_first_name": order.student.first_name,
                 "student_last_name": order.student.last_name,
                 "class_code": order.session.course.code,
@@ -93,10 +93,10 @@ class SendReminders(CronJobBase):
         recipients = []
 
         for order in orders_within_a_day:
-            recipients.append(order.guardian.user.email)
-            merge_data[order.guardian.user.email] = {
-                "first_name": order.guardian.user.first_name,
-                "last_name": order.guardian.user.last_name,
+            recipients.append(order.guardian.email)
+            merge_data[order.guardian.email] = {
+                "first_name": order.guardian.first_name,
+                "last_name": order.guardian.last_name,
                 "student_first_name": order.student.first_name,
                 "student_last_name": order.student.last_name,
                 "class_code": order.session.course.code,
@@ -142,10 +142,10 @@ class SendReminders(CronJobBase):
             recipients = []
 
             for order in orders:
-                recipients.append(order.mentor.user.email)
-                merge_data[order.mentor.user.email] = {
-                    "first_name": order.mentor.user.first_name,
-                    "last_name": order.mentor.user.last_name,
+                recipients.append(order.mentor.email)
+                merge_data[order.mentor.email] = {
+                    "first_name": order.mentor.first_name,
+                    "last_name": order.mentor.last_name,
                     "class_code": order.session.course.code,
                     "class_title": order.session.course.title,
                     "class_description": order.session.course.description,
@@ -186,8 +186,8 @@ class SendReminders(CronJobBase):
             orders = MentorOrder.objects.filter(session=session)
 
             for order in orders:
-                recipients.append(order.mentor.user.email)
-                merge_data[order.mentor.user.email] = {
+                recipients.append(order.mentor.email)
+                merge_data[order.mentor.email] = {
                     "first_name": order.mentor.user.first_name,
                     "last_name": order.mentor.user.last_name,
                     "class_code": order.session.course.code,

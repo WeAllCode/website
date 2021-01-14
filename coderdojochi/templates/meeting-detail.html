@@ -47,8 +47,8 @@
       {% if mentor.is_public == True %}
       <div class="cell small-4">
         <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
-          <img src="{% if mentor.avatar %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=175&d=mm{% endif %}" width="175" height="175">
-          <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
+          <img src="{{ mentor.get_avatar.thumbnail.url }}" width="175" height="175">
+          <span class="caption text-center">{{ mentor.full_name }}</span>
         </a>
       </div>
       {% endif %}

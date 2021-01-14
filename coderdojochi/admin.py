@@ -454,8 +454,8 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return format_html(
             '<a href="{url}">{first} {last}</a>',
             url=reverse("admin:coderdojochi_guardian_change", args=(obj.guardian.id,)),
-            first=obj.guardian.user.first_name,
-            last=obj.guardian.user.last_name,
+            first=obj.guardian.first_name,
+            last=obj.guardian.last_name,
         )
 
     guardian_link.short_description = "Guardian"

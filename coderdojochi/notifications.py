@@ -29,8 +29,8 @@ class NewMentorNotification(SlackNotification):
                 {
                     "type": "section",
                     "fields": [
-                        {"type": "mrkdwn", "text": f"*Name*: \n{mentor.user.name}"},
-                        {"type": "mrkdwn", "text": f"*Email*: \n{mentor.user.email}"},
+                        {"type": "mrkdwn", "text": f"*Name*: \n{mentor.full_name}"},
+                        {"type": "mrkdwn", "text": f"*Email*: \n{mentor.email}"},
                     ],
                 },
             ]
@@ -39,8 +39,8 @@ class NewMentorNotification(SlackNotification):
 
 class NewMentorOrderNotification(SlackNotification):
     def __init__(self, mentor_order):
-        name = mentor_order.mentor.user.name
-        email = mentor_order.mentor.user.email
+        name = mentor_order.mentor.full_name
+        email = mentor_order.mentor.email
         location = mentor_order.session.location.name
         start_date = mentor_order.session.start_date.strftime("%Y-%m-%d")
 

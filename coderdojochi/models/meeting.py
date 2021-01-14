@@ -175,7 +175,7 @@ class MeetingOrder(CommonInfo):
     )
 
     def __str__(self):
-        return f"{self.mentor.user.first_name} {self.mentor.user.last_name} | {self.meeting.meeting_type.title}"
+        return f"{self.mentor.full_name} | {self.meeting.meeting_type.title}"
 
     def is_checked_in(self):
         return self.check_in is not None
