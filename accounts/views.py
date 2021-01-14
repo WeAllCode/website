@@ -114,7 +114,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
             "mentor": mentor,
             "orders": orders,
             "upcoming_sessions": upcoming_sessions,
-            "past_sessions": upcoming_sessions,
+            "past_sessions": past_sessions,
             "meeting_orders": meeting_orders,
             "upcoming_meetings": upcoming_meetings,
             "account_complete": account_complete,
