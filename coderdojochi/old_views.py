@@ -127,10 +127,7 @@ def mentor_reject_avatar(request, pk=None):
 
     messages.warning(
         request,
-        (
-            f"{mentor.full_name}'s avatar rejected and their account "
-            f"is no longer public. An email notice has been sent to the mentor."
-        ),
+        f"{mentor.full_name}'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor.",
     )
 
     return redirect("mentors")
