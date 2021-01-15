@@ -77,7 +77,7 @@ class SendReminders(CronJobBase):
 
         email(
             subject="Upcoming class reminder",
-            template_name="class-reminder-guardian-one-week",
+            template_name="class_reminder_guardian_one_week",
             merge_data=merge_data,
             recipients=recipients,
             preheader="Your class is just a few days away!",
