@@ -216,7 +216,7 @@ class SendReminders(CronJobBase):
 
             email(
                 subject="Your We All Code class is tomorrow!",
-                template_name="class-reminder-mentor-24-hour",
+                template_name="class_reminder_mentor_24_hour",
                 merge_data=merge_data,
                 recipients=recipients,
                 preheader="The class is just a few hours away!",
