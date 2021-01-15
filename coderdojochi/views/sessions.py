@@ -57,7 +57,7 @@ def session_confirm_mentor(request, session_obj, order):
         subject="Mentoring confirmation for {} class".format(
             arrow.get(session_obj.mentor_start_date).to("local").format("MMMM D"),
         ),
-        template_name="class-confirm-mentor",
+        template_name="class_confirm_mentor",
         merge_global_data=merge_global_data,
         recipients=[request.user.email],
         preheader="It's time to use your powers for good.",
