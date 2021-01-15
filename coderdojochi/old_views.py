@@ -134,7 +134,7 @@ def mentor_reject_avatar(request, pk=None):
 
 
 @login_required
-def student_detail(request, student_id=False, template_name="student-detail.html"):
+def student_detail(request, student_id=False, template_name="student_detail.html"):
     access = True
 
     if request.user.role == "guardian" and student_id:
