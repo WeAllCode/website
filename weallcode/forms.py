@@ -90,7 +90,7 @@ class ContactForm(forms.Form):
             subject=f"{data['name']} | We All Code Contact Form",
             recipients=[settings.CONTACT_EMAIL],
             reply_to=[f"{data['name']}<{data['email']}>"],
-            template_name="contact-email",
+            template_name="contact_email",
             merge_global_data={
                 "interest": data["interest"],
                 "message": data["message"],
