@@ -98,7 +98,7 @@ def mentor_approve_avatar(request, pk=None):
     else:
         messages.success(
             request,
-            (f"{mentor.full_name}'s avatar approved but they have yet " f"to fill out the 'background search' form."),
+            f"{mentor.full_name}'s avatar approved but they have yet to fill out the 'background search' form.",
         )
 
         return redirect("mentors")

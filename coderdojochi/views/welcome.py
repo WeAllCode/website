@@ -157,6 +157,7 @@ class WelcomeView(TemplateView):
                 merge_global_data[
                     "next_intro_meeting_calendar_url"
                 ] = f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
+
             if not next_url:
                 next_url = reverse("account_home")
         else:

@@ -30,8 +30,8 @@ class MeetingType(CommonInfo):
     def __str__(self):
         if self.code:
             return f"{self.code} | {self.title}"
-        else:
-            return f"{self.title}"
+
+        return f"{self.title}"
 
 
 class Meeting(CommonInfo):
