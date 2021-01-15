@@ -458,7 +458,7 @@ def session_check_in_mentors(request, pk, template_name="session_check_in_mentor
 
 @login_required
 @never_cache
-def session_donations(request, pk, template_name="session-donations.html"):
+def session_donations(request, pk, template_name="session_donations.html"):
 
     # TODO: we should really turn this into a decorator
     if not request.user.is_staff:
