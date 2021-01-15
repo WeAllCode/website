@@ -29,7 +29,7 @@ def avatar_updated_handler(sender, instance, **kwargs):
 
         email(
             subject=f"{instance.full_name} | Mentor Avatar Changed",
-            template_name="avatar-changed-mentor",
+            template_name="avatar_changed_mentor",
             merge_global_data={
                 "first_name": instance.first_name,
                 "last_name": instance.last_name,
