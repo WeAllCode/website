@@ -39,7 +39,7 @@ class MeetingsView(ListView):
 
 class MeetingDetailView(DetailView):
     model = Meeting
-    template_name = "meeting-detail.html"
+    template_name = "meeting_detail.html"
 
     def get_queryset(self):
         objects = self.model.objects.filter()
@@ -172,7 +172,7 @@ def meeting_sign_up(request, pk, template_name="meeting-sign-up.html"):
                 ),
             )
 
-        return redirect("meeting-detail", meeting_obj.id)
+        return redirect("meeting_detail", meeting_obj.id)
 
     return render(request, template_name, {"meeting": meeting_obj, "user_signed_up": user_signed_up})
 
