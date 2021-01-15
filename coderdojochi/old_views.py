@@ -488,7 +488,7 @@ def session_donations(request, pk, template_name="session-donations.html"):
 
 @login_required
 @never_cache
-def meeting_check_in(request, meeting_id, template_name="meeting-check-in.html"):
+def meeting_check_in(request, meeting_id, template_name="meeting_check_in.html"):
 
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
