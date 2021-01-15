@@ -118,7 +118,7 @@ def mentor_reject_avatar(request, pk=None):
 
     email(
         subject="Your We All Code avatar...",
-        template_name="class-announcement-mentor",
+        template_name="mentor_reject_avatar",
         merge_global_data={
             "site_url": settings.SITE_URL,
         },
@@ -569,7 +569,7 @@ def session_announce_mentors(request, pk):
 
         email(
             subject="New We All Code class date announced! Come mentor!",
-            template_name="class-announcement-mentor",
+            template_name="class_announcement_mentor",
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
