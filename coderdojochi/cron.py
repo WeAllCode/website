@@ -123,7 +123,7 @@ class SendReminders(CronJobBase):
 
         email(
             subject="Your class is coming up!",
-            template_name="class-reminder-guardian-24-hour",
+            template_name="class_reminder_guardian_24_hour",
             merge_data=merge_data,
             recipients=recipients,
             preheader="Your class is just hours away!",
