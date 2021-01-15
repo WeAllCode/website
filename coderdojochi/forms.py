@@ -5,9 +5,11 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
 from django.forms import FileField, Form, ModelForm, ValidationError
+from django.urls import reverse_lazy
 from django.utils import dateformat, timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.text import format_lazy
 
 import html5.forms.widgets as html5_widgets
 from dateutil.relativedelta import relativedelta
@@ -358,7 +360,7 @@ class StudentForm(CDCModelForm):
         widget=html5_widgets.DateInput(
             attrs={
                 'class': 'form-control',
-                'min': dateformat.format(timezone.now() - relativedelta(years=18), "Y-m-d"),
+                'min': dateformat.format(timezone.now() - relativedelta(years=19), "Y-m-d"),
                 'max': dateformat.format(timezone.now() - relativedelta(years=5), "Y-m-d"),
             }
         ),
@@ -418,9 +420,10 @@ class StudentForm(CDCModelForm):
                 'required': 'required',
             },
         ),
-        label=(
-            'I hereby give consent for the student signed up above to participate in We All Code as per the '
-            f"<a href=\"{{ reverse('privacy') }}\">terms</a>."
+        label=format_lazy(
+            "I hereby give consent for the student signed up above to participate in We All Code as per the "
+            '<a href="{0}">terms</a>.',
+            reverse_lazy("weallcode-privacy"),
         ),
     )
 
