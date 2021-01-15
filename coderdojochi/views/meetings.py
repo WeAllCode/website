@@ -163,7 +163,7 @@ def meeting_sign_up(request, pk, template_name="meeting-sign-up.html"):
 
             email(
                 subject="Upcoming mentor meeting confirmation",
-                template_name="meeting-confirm-mentor",
+                template_name="meeting_confirm_mentor",
                 merge_global_data=merge_global_data,
                 recipients=[request.user.email],
                 preheader=(
