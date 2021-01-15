@@ -103,7 +103,7 @@ class MeetingCalendarView(CalendarView):
         pass
 
 
-def meeting_sign_up(request, pk, template_name="meeting-sign-up.html"):
+def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
     meeting_obj = get_object_or_404(Meeting, pk=pk)
 
     mentor = get_object_or_404(Mentor, user=request.user)
