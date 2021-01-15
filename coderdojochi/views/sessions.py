@@ -344,7 +344,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
 
 class PasswordSessionView(TemplateView):
-    template_name = "session-partner-password.html"
+    template_name = "session_partner_password.html"
 
     def get_context_data(self, **kwargs):
         context = super(PasswordSessionView, self).get_context_data(**kwargs)
