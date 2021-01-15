@@ -216,7 +216,7 @@ class SessionDetailView(View):
 
 
 class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
-    template_name = "session-sign-up.html"
+    template_name = "session_sign_up.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
