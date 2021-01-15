@@ -218,7 +218,7 @@ def meeting_announce(request, pk):
 
         email(
             subject="New meeting announced!",
-            template_name="meeting-announcement-mentor",
+            template_name="meeting_announcement_mentor",
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
