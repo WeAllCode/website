@@ -172,7 +172,7 @@ class SendReminders(CronJobBase):
 
             email(
                 subject="Your We All Code class is in less than a week!",
-                template_name="class-reminder-mentor-one-week",
+                template_name="class_reminder_mentor_one_week",
                 merge_data=merge_data,
                 recipients=recipients,
                 preheader="The class is just a few days away!",
