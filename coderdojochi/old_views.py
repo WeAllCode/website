@@ -255,7 +255,7 @@ def cdc_admin(request, template_name="admin.html"):
 
 @login_required
 @never_cache
-def session_stats(request, pk, template_name="session-stats.html"):
+def session_stats(request, pk, template_name="session_stats.html"):
 
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
