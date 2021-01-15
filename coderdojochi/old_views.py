@@ -400,7 +400,7 @@ def session_check_in(request, pk, template_name="session-check-in.html"):
 
 @login_required
 @never_cache
-def session_check_in_mentors(request, pk, template_name="session-check-in-mentors.html"):
+def session_check_in_mentors(request, pk, template_name="session_check_in_mentors.html"):
 
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
