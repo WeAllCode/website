@@ -5,7 +5,7 @@ from .common import DefaultMetaTags
 
 
 class ProgramsSummerCampsView(DefaultMetaTags, TemplateView):
-    template_name = "weallcode/programs-summer-camps.html"
+    template_name = "weallcode/programs_summer_camps.html"
     url = reverse_lazy("weallcode-programs-summer-camps")
 
     title = f"Summer Camps | We All Code"
