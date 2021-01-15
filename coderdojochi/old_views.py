@@ -633,7 +633,7 @@ def session_announce_guardians(request, pk):
 
         email(
             subject="New We All Code class date announced!",
-            template_name="class-announcement-guardian",
+            template_name="class_announcement_guardian",
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
