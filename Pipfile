@@ -41,4 +41,4 @@ pylint = "*"
 "autopep8" = "*"
 
 [requires]
-python_version = "3.8.7"
+python_version = "3.9.1"
