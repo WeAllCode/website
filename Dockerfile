@@ -1,4 +1,4 @@
-FROM python:3.8.6
+FROM python:3.8.7
 
 # Force stdin, stdout and stderr to be totally unbuffered.
 ENV PYTHONUNBUFFERED 1
