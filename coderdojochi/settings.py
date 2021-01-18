@@ -76,14 +76,15 @@ if SECURE_SSL_REDIRECT:
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.humanize',
-
     'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django.contrib.admin',
+
     'django.contrib.redirects',
     'django.contrib.sitemaps',
 
@@ -96,8 +97,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 
-    'django.contrib.staticfiles',
-    'fullurl',
     'bootstrap3',
     'django_cleanup',
     'anymail',
