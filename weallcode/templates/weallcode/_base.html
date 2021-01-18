@@ -1,4 +1,4 @@
-{% load static meta fullurl %}
+{% load static meta %}
 <!DOCTYPE html>
 <html lang="en">
 <head {% meta_namespaces %} class="no-js" dir="ltr">
@@ -16,12 +16,6 @@
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="prefetch prerender" href="{% fullurl 'weallcode-home' %}">
-  <link rel="prefetch prerender" href="{% fullurl 'weallcode-our-story' %}">
-  <link rel="prefetch prerender" href="{% fullurl 'weallcode-programs' %}">
-  <link rel="prefetch prerender" href="{% fullurl 'weallcode-team' %}">
-  <link rel="prefetch prerender" href="{% fullurl 'weallcode-join-us' %}">
 
   {% block extra_meta %}{% endblock %}
 
