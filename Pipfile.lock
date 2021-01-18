@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "657c59f45970263cfd717b260ed8371493c6db60acd47734f33ee8b234492464"
+            "sha256": "84842747fab0a644870b8903829a70eeab5b2b0e89d7327b16a299fe49edfde8"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.8.6"
+            "python_version": "3.9.1"
         },
         "sources": [
             {
@@ -540,11 +540,11 @@
                 "crypto"
             ],
             "hashes": [
-                "sha256:5c2ff2eb27d7e342dfc3cafcc16412781f06db2690fbef81922b0172598f085b",
-                "sha256:7a2b271c6dac2fda9e0c33d176c4253faba2c6c6b3a99c7f28a32c3c97522779"
+                "sha256:a5c70a06e1f33d81ef25eecd50d50bd30e34de1ca8b2b9fa3fe0daaabcf69bf7",
+                "sha256:b70b15f89dc69b993d8a8d32c299032d5355c82f9b5b7e851d1a6d706dffe847"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==2.0.0"
+            "version": "==2.0.1"
         },
         "python-dateutil": {
             "hashes": [
