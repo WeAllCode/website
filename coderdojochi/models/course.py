@@ -51,7 +51,7 @@ class Course(CommonInfo):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
     maximum_age = models.IntegerField(
-        default=17,
+        default=18,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
     is_active = models.BooleanField(

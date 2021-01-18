@@ -22,7 +22,7 @@ class Guardian(CommonInfo):
         blank=True,
         null=True,
     )
-    birthday = models.DateTimeField(
+    birthday = models.DateField(
         blank=False,
         null=True,
     )

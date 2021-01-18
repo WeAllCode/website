@@ -18,7 +18,7 @@ class Student(CommonInfo):
     last_name = models.CharField(
         max_length=255,
     )
-    birthday = models.DateTimeField()
+    birthday = models.DateField()
     gender = models.CharField(
         max_length=255,
     )

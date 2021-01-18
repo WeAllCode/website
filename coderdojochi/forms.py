@@ -258,7 +258,7 @@ class StudentForm(CDCModelForm):
         widget=html5_widgets.DateInput(
             attrs={
                 "class": "form-control",
-                "min": dateformat.format(timezone.now() - relativedelta(years=18), "Y-m-d"),
+                "min": dateformat.format(timezone.now() - relativedelta(years=19), "Y-m-d"),
                 "max": dateformat.format(timezone.now() - relativedelta(years=5), "Y-m-d"),
             }
         ),

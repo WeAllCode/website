@@ -76,23 +76,22 @@ if SECURE_SSL_REDIRECT:
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.humanize",
     "django.contrib.sites",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "django.contrib.admin",
     "django.contrib.redirects",
     "django.contrib.sitemaps",
     # vendor
-    # allauth
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.google",
-    "fullurl",
     "bootstrap3",
     "django_cleanup",
     "anymail",
@@ -211,8 +210,6 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Allow all host headers
 ALLOWED_HOSTS = ["*"]
-
-INSTALLED_APPS += ["django.contrib.staticfiles"]
 
 if DEBUG:
     # Static files (CSS, JavaScript, Images)

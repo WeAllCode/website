@@ -1,226 +1,240 @@
 [
-  {
-    "model": "coderdojochi.course",
-    "pk": 1,
-    "fields": {
-      "created_at": "2015-02-04T03:53:49.878Z",
-      "updated_at": "2015-02-04T03:53:49.878Z",
-      "code": "HTML 101",
-      "course_type": "WE",
-      "title": "Choose Your Own Adventure",
-      "slug": "choose-your-own-adventure",
-      "description": "<p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>\r\n\r\n<p>By the end of the session, students will understand how the language HTML, CSS, and Javascript work together to build the web. Students will develop an understanding of how HTML is used to define the structure of web pages. In keeping with We All Code's philosophy of learning-by-doing, students will use their knowledge to hack together their own \"Choose Your Own Adventure\" game.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 2,
-    "fields": {
-      "created_at": "2015-02-04T05:32:40.285Z",
-      "updated_at": "2015-02-04T05:32:40.285Z",
-      "code": "RHoKJ",
-      "course_type": "WE",
-      "title": "Random Hacks of Kindness Junior",
-      "slug": "random-hacks-of-kindness-junior",
-      "description": "<p>On Saturday, February 28, from 9 am to 4 pm, teams of middle school kids will come to the Adler Planetarium to work alongside charities and web developers to design tools that address their community's issues. Random Hacks of Kindness Junior takes the model of <a href=\"http://www.rhok.org/\" target=\"_blank\">Random Hacks of Kindness</a> to help middle schoolers learn more about the needs of their community!</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 3,
-    "fields": {
-      "created_at": "2015-04-14T23:46:04.969Z",
-      "updated_at": "2017-04-10T23:07:46.177Z",
-      "code": "CSS 101",
-      "course_type": "WE",
-      "title": "Designing Your Adventure",
-      "slug": "designing-your-adventure",
-      "description": "<p>Have you mastered HTML? Are you ready to level up? Do you want to add more of your personality to your website?</p>\r\n\r\n<p>By the end of the session, students will understand how CSS enhances the look of the web. Students will develop an understanding of how to control the design and layout of web pages. In keeping with We All Code's philosophy of learning-by-doing, students will use their knowledge to style their own profile page.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 4,
-    "fields": {
-      "created_at": "2017-03-30T16:53:37.340Z",
-      "updated_at": "2017-04-10T23:07:51.518Z",
-      "code": "JS 101",
-      "course_type": "WE",
-      "title": "Drawing with Javascript",
-      "slug": "drawing-with-javascript",
-      "description": "<p>Ever wanted to start building your own game but didn't know where to start? Ever thought it would be cool to have a computer draw a picture or create an animation for you?</p>\r\n\r\n<p>By the end of the session, students will have the understanding of Canvas using the Javascript programming language. Students will learn how to break down tasks and objects to understand how they are built.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 9,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 5,
-    "fields": {
-      "created_at": "2017-06-13T19:00:05.651Z",
-      "updated_at": "2019-07-01T22:43:55.946Z",
-      "code": "CAMP",
-      "course_type": "CA",
-      "title": "Summer Camp",
-      "slug": "summer-camp",
-      "description": "<p>We All Code is excited to announce our 2017 coding summer camp! Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five day workshop</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a hands-on approach to their projects. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 6,
-    "fields": {
-      "created_at": "2018-06-26T17:24:58.640Z",
-      "updated_at": "2019-07-01T22:43:14.905Z",
-      "code": "Camp #1",
-      "course_type": "CA",
-      "title": "Web Development & Design",
-      "slug": "web-development-design",
-      "description": "<p><strong>Monday, July 9 to Friday, July 13 from 9 am to 2 pm for ages 7\u201312.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 7,
-    "fields": {
-      "created_at": "2018-06-26T17:29:18.035Z",
-      "updated_at": "2019-07-01T22:43:21.779Z",
-      "code": "Camp #2",
-      "course_type": "CA",
-      "title": "Mobile App Development",
-      "slug": "mobile-app-development",
-      "description": "<p><strong>Monday, July 16 to Friday, July 20 from 9 am to 2 pm for ages 10-17.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 8,
-    "fields": {
-      "created_at": "2018-06-26T17:31:17.366Z",
-      "updated_at": "2019-07-01T22:43:31.055Z",
-      "code": "Camp #3",
-      "course_type": "CA",
-      "title": "Game Development with Javascript",
-      "slug": "game-development-with-javascript",
-      "description": "<p><strong>Monday, July 23 to Friday, July 27 from 9 am to 2 pm for ages 12 and older.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 9,
-    "fields": {
-      "created_at": "2018-06-26T17:33:03.365Z",
-      "updated_at": "2019-07-01T22:43:38.809Z",
-      "code": "Camp #4",
-      "course_type": "CA",
-      "title": "Game Development with Javascript",
-      "slug": "game-development-with-javascript",
-      "description": "<p><strong>Monday, July 30 to Friday, August 3 from 9 am to 2 pm for ages 12 and older.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 10,
-    "fields": {
-      "created_at": "2018-09-01T19:38:20.619Z",
-      "updated_at": "2018-09-01T19:44:54.865Z",
-      "code": "PY 101",
-      "course_type": "WE",
-      "title": "Robotics with Python",
-      "slug": "robotics-with-python",
-      "description": "<p>Have you always wanted to try robotics? Do you think it would be cool to learn the coding to make actual robots move and groove?</p>\n\n<p>By the end of the session, students will have a basic understanding of the Python programming language and how to use it to \"drive\" their robots. Students and guardians can even learn together so you can talk about your robot adventures for days to come!</p>",
-      "duration": "03:00:00",
-      "minimum_age": 9,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 11,
-    "fields": {
-      "created_at": "2019-03-18T03:13:59.519Z",
-      "updated_at": "2019-07-01T22:44:21.554Z",
-      "code": "CAMP 2019",
-      "course_type": "CA",
-      "title": "Game Development with Javascript",
-      "slug": "game-development-with-javascript",
-      "description": "<p><strong>Monday, July 8 to Friday, July 12 from 9 am to 2 pm for students entering grades 6 to 8.</strong></p>\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:info@coderdojochi.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">info@coderdojochi.org</a>.</p>\r\n<h3><strong>FAQs</strong> </h3>\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:info@coderdojochi.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">info@coderdojochi.org</a>.</p>\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>\r\n<p><br></p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 12,
-    "fields": {
-      "created_at": "2019-04-30T18:13:23.732Z",
-      "updated_at": "2019-07-01T22:44:39.386Z",
-      "code": "CAMP 2019",
-      "course_type": "CA",
-      "title": "Choose Your Own Adventure (HTML + CSS)",
-      "slug": "choose-your-own-adventure-html-css",
-      "description": "<p><strong>Monday, July 15 to Friday, July 19 from 9 am to 2 pm for students entering grades 3-5.</strong></p>\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h3><strong>FAQs</strong> </h3>\r\n\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 13,
-    "fields": {
-      "created_at": "2019-04-30T18:17:13.966Z",
-      "updated_at": "2019-07-01T22:44:42.743Z",
-      "code": "CAMP 2019",
-      "course_type": "CA",
-      "title": "Game Development with Unity",
-      "slug": "game-development-with-unity",
-      "description": "<p><strong>Monday, July 29 to Friday, August 2 from 9 am to 2 pm for grades 9-12.</strong></p>\r\n\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h3><strong>FAQs</strong> </h3>\r\n\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
-  },
-  {
-    "model": "coderdojochi.course",
-    "pk": 14,
-    "fields": {
-      "created_at": "2019-04-30T18:18:36.928Z",
-      "updated_at": "2019-07-01T22:44:45.522Z",
-      "code": "CAMP 2019",
-      "course_type": "CA",
-      "title": "Game Development with Javascript",
-      "slug": "game-development-with-javascript",
-      "description": "<p><strong>Monday, July 22 to Friday, July 26 from 9 am to 2 pm for students entering grades 6-8.</strong></p>\r\n\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another\u2019s work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h3><strong>FAQs</strong> </h3>\r\n\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>",
-      "duration": "03:00:00",
-      "minimum_age": 7,
-      "maximum_age": 17
-    }
+{
+  "model": "coderdojochi.course",
+  "pk": 1,
+  "fields": {
+    "created_at": "2015-02-04T03:53:49.878Z",
+    "updated_at": "2015-02-04T03:53:49.878Z",
+    "code": "HTML 101",
+    "course_type": "WE",
+    "title": "Choose Your Own Adventure",
+    "slug": "choose-your-own-adventure",
+    "description": "<p>Think HTML and CSS are something you'd find in alphabet soup? Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos? Eager to learn and ready to build?</p>\r\n\r\n<p>By the end of the session, students will understand how the language HTML, CSS, and Javascript work together to build the web. Students will develop an understanding of how HTML is used to define the structure of web pages. In keeping with We All Code's philosophy of learning-by-doing, students will use their knowledge to hack together their own \"Choose Your Own Adventure\" game.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 18,
+    "is_active": true
   }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 2,
+  "fields": {
+    "created_at": "2015-02-04T05:32:40.285Z",
+    "updated_at": "2015-02-04T05:32:40.285Z",
+    "code": "RHoKJ",
+    "course_type": "WE",
+    "title": "Random Hacks of Kindness Junior",
+    "slug": "random-hacks-of-kindness-junior",
+    "description": "<p>On Saturday, February 28, from 9 am to 4 pm, teams of middle school kids will come to the Adler Planetarium to work alongside charities and web developers to design tools that address their community's issues. Random Hacks of Kindness Junior takes the model of <a href=\"http://www.rhok.org/\" target=\"_blank\">Random Hacks of Kindness</a> to help middle schoolers learn more about the needs of their community!</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 18,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 3,
+  "fields": {
+    "created_at": "2015-04-14T23:46:04.969Z",
+    "updated_at": "2017-04-10T23:07:46.177Z",
+    "code": "CSS 101",
+    "course_type": "WE",
+    "title": "Designing Your Adventure",
+    "slug": "designing-your-adventure",
+    "description": "<p>Have you mastered HTML? Are you ready to level up? Do you want to add more of your personality to your website?</p>\r\n\r\n<p>By the end of the session, students will understand how CSS enhances the look of the web. Students will develop an understanding of how to control the design and layout of web pages. In keeping with We All Code's philosophy of learning-by-doing, students will use their knowledge to style their own profile page.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 18,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 4,
+  "fields": {
+    "created_at": "2017-03-30T16:53:37.340Z",
+    "updated_at": "2017-04-10T23:07:51.518Z",
+    "code": "JS 101",
+    "course_type": "WE",
+    "title": "Drawing with Javascript",
+    "slug": "drawing-with-javascript",
+    "description": "<p>Ever wanted to start building your own game but didn't know where to start? Ever thought it would be cool to have a computer draw a picture or create an animation for you?</p>\r\n\r\n<p>By the end of the session, students will have the understanding of Canvas using the Javascript programming language. Students will learn how to break down tasks and objects to understand how they are built.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 9,
+    "maximum_age": 18,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 5,
+  "fields": {
+    "created_at": "2017-06-13T19:00:05.651Z",
+    "updated_at": "2019-07-01T22:43:55.946Z",
+    "code": "CAMP",
+    "course_type": "CA",
+    "title": "Summer Camp",
+    "slug": "summer-camp",
+    "description": "<p>We All Code is excited to announce our 2017 coding summer camp! Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five day workshop</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a hands-on approach to their projects. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 6,
+  "fields": {
+    "created_at": "2018-06-26T17:24:58.640Z",
+    "updated_at": "2019-07-01T22:43:14.905Z",
+    "code": "Camp #1",
+    "course_type": "CA",
+    "title": "Web Development & Design",
+    "slug": "web-development-design",
+    "description": "<p><strong>Monday, July 9 to Friday, July 13 from 9 am to 2 pm for ages 7–12.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 7,
+  "fields": {
+    "created_at": "2018-06-26T17:29:18.035Z",
+    "updated_at": "2019-07-01T22:43:21.779Z",
+    "code": "Camp #2",
+    "course_type": "CA",
+    "title": "Mobile App Development",
+    "slug": "mobile-app-development",
+    "description": "<p><strong>Monday, July 16 to Friday, July 20 from 9 am to 2 pm for ages 10-17.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 8,
+  "fields": {
+    "created_at": "2018-06-26T17:31:17.366Z",
+    "updated_at": "2019-07-01T22:43:31.055Z",
+    "code": "Camp #3",
+    "course_type": "CA",
+    "title": "Game Development with Javascript",
+    "slug": "game-development-with-javascript",
+    "description": "<p><strong>Monday, July 23 to Friday, July 27 from 9 am to 2 pm for ages 12 and older.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 9,
+  "fields": {
+    "created_at": "2018-06-26T17:33:03.365Z",
+    "updated_at": "2019-07-01T22:43:38.809Z",
+    "code": "Camp #4",
+    "course_type": "CA",
+    "title": "Game Development with Javascript",
+    "slug": "game-development-with-javascript",
+    "description": "<p><strong>Monday, July 30 to Friday, August 3 from 9 am to 2 pm for ages 12 and older.</strong>\r\n<p>Campers learn the fundamentals of web technologies to create, code, and produce their own project-based website. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops and any equipment needed.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 10,
+  "fields": {
+    "created_at": "2018-09-01T19:38:20.619Z",
+    "updated_at": "2018-09-01T19:44:54.865Z",
+    "code": "PY 101",
+    "course_type": "WE",
+    "title": "Robotics with Python",
+    "slug": "robotics-with-python",
+    "description": "<p>Have you always wanted to try robotics? Do you think it would be cool to learn the coding to make actual robots move and groove?</p>\n\n<p>By the end of the session, students will have a basic understanding of the Python programming language and how to use it to \"drive\" their robots. Students and guardians can even learn together so you can talk about your robot adventures for days to come!</p>",
+    "duration": "03:00:00",
+    "minimum_age": 9,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 11,
+  "fields": {
+    "created_at": "2019-03-18T03:13:59.519Z",
+    "updated_at": "2019-07-01T22:44:21.554Z",
+    "code": "CAMP 2019",
+    "course_type": "CA",
+    "title": "Game Development with Javascript",
+    "slug": "game-development-with-javascript",
+    "description": "<p><strong>Monday, July 8 to Friday, July 12 from 9 am to 2 pm for students entering grades 6 to 8.</strong></p>\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:info@coderdojochi.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">info@coderdojochi.org</a>.</p>\r\n<h3><strong>FAQs</strong> </h3>\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:info@coderdojochi.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">info@coderdojochi.org</a>.</p>\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>\r\n<p><br></p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 12,
+  "fields": {
+    "created_at": "2019-04-30T18:13:23.732Z",
+    "updated_at": "2019-07-01T22:44:39.386Z",
+    "code": "CAMP 2019",
+    "course_type": "CA",
+    "title": "Choose Your Own Adventure (HTML + CSS)",
+    "slug": "choose-your-own-adventure-html-css",
+    "description": "<p><strong>Monday, July 15 to Friday, July 19 from 9 am to 2 pm for students entering grades 3-5.</strong></p>\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h3><strong>FAQs</strong> </h3>\r\n\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 13,
+  "fields": {
+    "created_at": "2019-04-30T18:17:13.966Z",
+    "updated_at": "2019-07-01T22:44:42.743Z",
+    "code": "CAMP 2019",
+    "course_type": "CA",
+    "title": "Game Development with Unity",
+    "slug": "game-development-with-unity",
+    "description": "<p><strong>Monday, July 29 to Friday, August 2 from 9 am to 2 pm for grades 9-12.</strong></p>\r\n\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h3><strong>FAQs</strong> </h3>\r\n\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 14,
+  "fields": {
+    "created_at": "2019-04-30T18:18:36.928Z",
+    "updated_at": "2019-07-01T22:44:45.522Z",
+    "code": "CAMP 2019",
+    "course_type": "CA",
+    "title": "Game Development with Javascript",
+    "slug": "game-development-with-javascript",
+    "description": "<p><strong>Monday, July 22 to Friday, July 26 from 9 am to 2 pm for students entering grades 6-8.</strong></p>\r\n\r\n\r\n<p><strong>We All Code is excited to announce our 2019 coding summer camp</strong>! Campers learn the fundamentals of web technologies to create, code, and produce their own project. Camp ends with a special showcase presentation for family and friends.</p>\r\n\r\n<p><strong>Students work side-by-side with professionals</strong> in the field of computer science during this <strong>intensive, five-day workshops</strong>. They will learn not only the fundamentals of web technologies but will also experience how a real-world project moves through its lifecycle.</p>\r\n\r\n<p>Every session provides students with an opportunity to take a <strong>hands-on approach to their projects</strong>. Working closely with mentors allows plenty of room for discussion and reflection on one another's work, ultimately presenting to peers, guests, family, and friends.</p>\r\n\r\n<p><strong>Only 20 Chicago youth</strong> will be in each cohort to allow a high level of individual mentor-to-student attention.</p>\r\n\r\n<p>Tuition includes all camp workshops, equipment, and any materials needed.</p>\r\n<h3><strong>Volunteer</strong></h3>\r\n\r\n<p>Want to help out? We pay our qualified teachers. Please reach out to <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h3><strong>FAQs</strong> </h3>\r\n\r\n<h4><strong>What can I bring to the event?</strong></h4>\r\n<p>Bring a <strong>packed lunch</strong> and an excitement to learn! We will be having a blast learning how to code.</p>\r\n\r\n<h4><strong>How can I contact the organizer with any questions?</strong></h4>\r\n<p>You can contact us directly at <a href=\"mailto:hello@weallcode.org\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">hello@weallcode.org</a>.</p>\r\n\r\n<h4><strong>Do I have to bring my printed ticket to the event?</strong></h4>\r\n<p>No, you don't.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 7,
+    "maximum_age": 17,
+    "is_active": true
+  }
+}
 ]

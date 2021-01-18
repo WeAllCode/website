@@ -50,7 +50,7 @@ class Mentor(CommonInfo):
     avatar_approved = models.BooleanField(
         default=False,
     )
-    birthday = models.DateTimeField(
+    birthday = models.DateField(
         blank=False,
         null=True,
     )

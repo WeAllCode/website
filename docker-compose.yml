@@ -14,7 +14,7 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:12.2-alpine
+    image: postgres:12.5-alpine
     environment:
       POSTGRES_PASSWORD: mysecretpassword
     container_name: dojo-v1-db

@@ -39,4 +39,4 @@ django-fullurl = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.8.6"
+python_version = "3.9.1"
