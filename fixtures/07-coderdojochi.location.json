@@ -9,7 +9,8 @@
     "address": "30 West Monroe St, 12th Floor",
     "city": "Chicago",
     "state": "IL",
-    "zip": "60603"
+    "zip": "60603",
+    "is_active": true
   }
 },
 {
@@ -22,7 +23,8 @@
     "address": "3432 W Diversey Ave",
     "city": "Chicago",
     "state": "IL",
-    "zip": "60647"
+    "zip": "60647",
+    "is_active": true
   }
 },
 {
@@ -35,7 +37,8 @@
     "address": null,
     "city": null,
     "state": null,
-    "zip": null
+    "zip": null,
+    "is_active": true
   }
 }
 ]

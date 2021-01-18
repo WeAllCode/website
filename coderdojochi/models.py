@@ -132,7 +132,7 @@ class Mentor(CommonInfo):
         default=False,
     )
 
-    birthday = models.DateTimeField(
+    birthday = models.DateField(
         blank=False,
         null=True,
     )
@@ -228,7 +228,7 @@ class Guardian(CommonInfo):
         null=True,
     )
 
-    birthday = models.DateTimeField(
+    birthday = models.DateField(
         blank=False,
         null=True,
     )
@@ -284,7 +284,7 @@ class Student(CommonInfo):
         max_length=255,
     )
 
-    birthday = models.DateTimeField()
+    birthday = models.DateField()
 
     gender = models.CharField(
         max_length=255,
@@ -448,7 +448,7 @@ class Course(CommonInfo):
     )
 
     maximum_age = models.IntegerField(
-        default=17,
+        default=18,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(100)
