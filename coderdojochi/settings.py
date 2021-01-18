@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 
+    'django.contrib.staticfiles',
     'fullurl',
     'bootstrap3',
     'django_cleanup',
@@ -217,8 +218,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
-
-INSTALLED_APPS += ['django.contrib.staticfiles']
 
 if DEBUG:
     # Static files (CSS, JavaScript, Images)
