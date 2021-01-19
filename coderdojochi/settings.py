@@ -107,6 +107,7 @@ INSTALLED_APPS = [
     'django_nose',
     'meta',
     'captcha',
+    'django_cron',
 
     # apps
     'accounts',
@@ -124,6 +125,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
+]
+
+CRON_CLASSES = [
+    'coderdojochi.cron.SendReminders',
 ]
 
 ROOT_URLCONF = 'coderdojochi.urls'
