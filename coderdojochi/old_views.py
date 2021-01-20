@@ -164,7 +164,7 @@ def student_detail(request, student_id=False, template_name="student_detail.html
         if "delete" in request.POST:
             student.is_active = False
             student.save()
-            messages.success(request, f'Student "{student.first_name} {student.last_name}" Deleted.')
+            messages.success(request, f'Student "{student.full_name}" Deleted.')
             return redirect("account_home")
 
         form = StudentForm(request.POST, instance=student)

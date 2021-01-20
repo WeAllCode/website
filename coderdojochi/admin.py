@@ -452,10 +452,9 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     def guardian_link(self, obj):
         return format_html(
-            '<a href="{url}">{first} {last}</a>',
+            '<a href="{url}">{name}</a>',
             url=reverse("admin:coderdojochi_guardian_change", args=(obj.guardian.id,)),
-            first=obj.guardian.first_name,
-            last=obj.guardian.last_name,
+            name=obj.guardian.full_name,
         )
 
     guardian_link.short_description = "Guardian"

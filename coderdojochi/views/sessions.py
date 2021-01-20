@@ -93,7 +93,7 @@ def session_confirm_guardian(request, session_obj, order, student):
     }
 
     email(
-        subject=f"Upcoming class confirmation for {student.first_name} {student.last_name}",
+        subject=f"Upcoming class confirmation for {student.full_name}",
         template_name="class_confirm_guardian",
         merge_global_data=merge_global_data,
         recipients=[request.user.email],
