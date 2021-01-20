@@ -1,0 +1,189 @@
+{% extends "_email_base.html" %}
+
+{% block content %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td bgcolor="#ffffff" align="center" style="padding: 15px;">
+      <!--[if (gte mso 9)|(IE)]>
+      <table align="center" border="0" cellspacing="0" cellpadding="0" width="500">
+      <tr>
+      <td align="center" valign="top" width="500">
+      <![endif]-->
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="responsive-table">
+        <tr>
+          <td>
+            <!-- COPY -->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="center" style="font-size: 32px; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">New class date announced!</td>
+              </tr>
+              <tr>
+                <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+                  <p>*|first_name|*, we just announced a brand new class! We&rsquo;d love if you come and help us teach some bright minds.</p>
+
+                  <p>Since you have a profile already, *|first_name|*, all you have to do is enroll in the class. How awesome is that?</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <!--[if (gte mso 9)|(IE)]>
+      </td>
+      </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+    <tr>
+    <td bgcolor="#ffffff" align="center" style="padding: 15px;">
+      <!--[if (gte mso 9)|(IE)]>
+      <table align="center" border="0" cellspacing="0" cellpadding="0" width="500">
+      <tr>
+      <td align="center" valign="top" width="500">
+      <![endif]-->
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="responsive-table">
+        <tr>
+          <td>
+            <!-- COPY -->
+            <h1>
+              <span style="font-size:20px;">Class Information</span>
+            </h1>
+
+            {% if class_additional_info %}<div>*|class_additional_info|*</div>{% endif %}
+
+            <table border="0" cellpadding="1" cellspacing="1" style="width:500px;">
+              <tbody>
+                <tr>
+                  <td style="width: 100px">
+                    <span style="font-size:16px;">
+                      <strong>Course Title</strong>
+                    </span>
+                  </td>
+                  <td>
+                    <p>
+                      <span style="font-size:16px;">*|class_title|*</span>
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 100px">
+                    <span style="font-size:16px;">
+                      <strong>Who</strong>
+                    </span>
+                  </td>
+                  <td>
+                    <p>
+                      <span style="font-size:16px;">Free to attend!
+                        <strong>Anyone between *|minimum_age|* and *|maximum_age|* of age</strong>.
+                        No computer skills required.</span>
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 100px">
+                    <span style="font-size:16px;">
+                      <strong>When</strong>
+                    </span>
+                  </td>
+                  <td>
+                    <p>
+                      <span style="font-size:16px;">*|class_start_date|* *|class_start_time|* to *|class_end_time|*</span> <span style="font-size:10px;">(<a draggable="false" href="*|class_calendar_url|*">Add to your calendar</a>)</span>
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 100px">
+                    <span style="font-size:16px;">
+                      <strong>Where</strong>
+                    </span>
+                  </td>
+                  <td>
+                    <span style="font-size:16px;">
+                      {% if class_location_name %}*|class_location_name|*{% endif %}
+                      {% if class_location_address %}<br>*|class_location_address|*<br>*|class_location_city|*, *|class_location_state|* *|class_location_zip|*{% endif %}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <!--[if (gte mso 9)|(IE)]>
+      </td>
+      </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="#ffffff" align="center" style="padding: 15px;">
+      <!--[if (gte mso 9)|(IE)]>
+      <table align="center" border="0" cellspacing="0" cellpadding="0" width="500">
+      <tr>
+      <td align="center" valign="top" width="500">
+      <![endif]-->
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="responsive-table">
+        <tr>
+          <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="center">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td align="center" style="padding-top: 25px;" class="padding">
+                        <table border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
+                          <tr>
+                            <td align="center" style="border-radius: 3px;" bgcolor="#86C447"><a href="*|class_url|*" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: 700; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; border-radius: 3px; padding: 15px 25px; border: 1px solid #86C447; display: inline-block;" class="mobile-button">MENTOR NOW &rarr;</a></td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <!--[if (gte mso 9)|(IE)]>
+      </td>
+      </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="#ffffff" align="center" style="padding: 15px;">
+      <!--[if (gte mso 9)|(IE)]>
+      <table align="center" border="0" cellspacing="0" cellpadding="0" width="500">
+      <tr>
+      <td align="center" valign="top" width="500">
+      <![endif]-->
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="responsive-table">
+        <tr>
+          <td>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="left" style="padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+                  <p>If you can&rsquo;t make it, be sure to share this with your best friends, online and offline!</p>
+
+                  <p>We look forward to seeing you.</p>
+
+                  <p>The We All Code Team</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <!--[if (gte mso 9)|(IE)]>
+      </td>
+      </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+</table>
+{% endblock %}

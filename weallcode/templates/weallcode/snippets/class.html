@@ -47,7 +47,7 @@
           Volunteer
         {% endif %}
       {% else %}
-        {% if session.get_current_students.count < session.capacity %}
+        {% if session.get_active_student_count < session.capacity %}
           Learn more
         {% else %}
           Join Waitlist

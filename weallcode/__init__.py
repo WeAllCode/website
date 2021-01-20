@@ -1,1 +1,1 @@
-default_app_config = 'weallcode.apps.WeAllCodeConfig'
+default_app_config = "weallcode.apps.WeAllCodeConfig"

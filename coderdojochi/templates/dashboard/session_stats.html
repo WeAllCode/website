@@ -1,0 +1,124 @@
+{% extends "coderdojochi/_base.html" %}
+
+{% load i18n coderdojochi_extras %}
+
+{% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }} | {{ block.super }}{% endblock %}
+
+{% block body_class %}page-cdc-admin{% endblock %}
+
+{% block topnav %}{% endblock %}
+
+{% block contained_content %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var gender_data = google.visualization.arrayToDataTable([
+      ['Gender', 'Students'],
+      {% for key, value in gender_count %}
+      ['{{ key.title }}', {{ value }}],
+      {% endfor %}
+    ]);
+
+    var gender_options = {
+      legend: {
+        position: 'bottom',
+      },
+      // pieSliceText: 'label',
+      // title: 'Genders of Registered Students',
+      // pieStartAngle: 100,
+    };
+
+    var gender_chart = new google.visualization.PieChart(document.getElementById('gender_chart'));
+    gender_chart.draw(gender_data, gender_options);
+
+    var age_data = google.visualization.arrayToDataTable([
+      ['Age', 'Students'],
+      {% for key, value in age_count %}
+      ['{{ key }}', {{ value }}],
+      {% endfor %}
+    ]);
+
+    var age_options = {
+      legend: {
+        position: 'bottom',
+      },
+      // pieSliceText: 'label',
+      // title: 'Genders of Registered Students',
+      // pieStartAngle: 100,
+    };
+
+    var age_chart = new google.visualization.PieChart(document.getElementById('age_chart'));
+    age_chart.draw(age_data, age_options);
+  }
+</script>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="{% url 'cdc-admin' %}">We All Code Admin</a></li>
+        <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
+        <li class="active">Class Stats</li>
+    </ol>
+    {% if session.get_current_orders.count %}
+
+              <h3 class="title">Attendance:</h3>
+              <h2 class="title">{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
+              <div class="progress">
+                  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
+                      {{ attendance_percentage }}%
+                  </div>
+              </div>
+
+    <div class="grid-x">
+        <div class="cell medium-6">
+            <h3 class="title">Average Age: <b>{{ average_age }}</b></h3>
+            <div id="age_chart" style="height: 400px;"></div>
+        </div>
+
+        <div class="cell medium-6">
+            <h3 class="title">Genders:</h3>
+            <div id="gender_chart" style="height: 400px;"></div>
+        </div>
+    </div>
+    {% endif %}
+    <h3 class="title">All Students</h3>
+    <table class="table table-striped">
+        {% if session.get_current_orders %}
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Chaperone</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Checked In</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in session.get_current_orders %}
+                <tr {% if not order.check_in %}class="text-muted"{% endif %}>
+                    <form method="post" action=".">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <td>{{ order.student.last_name }}, {{ order.student.first_name }}</td>
+                        <td>{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.full_name }}{% endif %}</td>
+                        <td>{{ order.student | student_age:session.start_date }}</td>
+                        <td>{{ order.student.gender }}</td>
+                        {% if order.check_in %}
+                        <td>{{ order.check_in|time }}</td>
+                        {% else %}
+                        <td>Did not attend</td>
+                        {% endif %}
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        {% else %}
+            <p><em>No students have been checked into this class yet.</em></p>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}
+
+
+{% block footer_base %}{% endblock %}

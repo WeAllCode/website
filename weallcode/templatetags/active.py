@@ -7,10 +7,13 @@ register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def active(context, pattern_or_urlname, css_class='active'):
+def active(context, pattern_or_urlname, css_class="active"):
     try:
-        pattern = '^' + reverse(pattern_or_urlname)
+        pattern = "^" + reverse(pattern_or_urlname)
     except NoReverseMatch:
         pattern = pattern_or_urlname
 
-    return css_class if re.search(pattern, context['request'].path) else ''
+    if re.search(pattern, context["request"].path):
+        return css_class
+    else:
+        return ""

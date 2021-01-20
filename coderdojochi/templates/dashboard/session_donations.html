@@ -1,0 +1,70 @@
+{% extends "_admin_base.html" %}
+
+{% load i18n bootstrap3 %}
+
+{% block title %}We All Code Admin - Session Donations{% endblock %}
+
+{% block topnav %}
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'cdc-admin' %}">We All Code Admin</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a class="pull-right" href="{% url 'admin:index' %}">Django Admin</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Donations
+                </div>
+                <div class="panel-body">
+                    <form method="post" action="." class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <input class="button" type="submit" value="{% trans 'Add New' %}" />
+                    </form>
+                    <hr>
+                    {% if donations %}
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for donation in donations %}
+                            <tr>
+                                <td>{{ donation.get_last_name }}, {{ donation.get_first_name }}</td>
+                                <td><a href="{{ donation.get_admin_url }}">{{ donation.created_at|date }}</a></td>
+                                <td>${{ donation.amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="text-muted">No donations yet for this session.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

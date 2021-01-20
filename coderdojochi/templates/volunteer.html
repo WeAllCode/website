@@ -29,12 +29,8 @@
                 {% for mentor in mentors %}
                 <div class="col-xs-12 col-sm-4 col-md-3">
                     <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
-                        {% if mentor.avatar %}
-                            <img src="{{ mentor.avatar.thumbnail.url }}" width="175" height="175" alt="Photo of {{ mentor.user.first_name }} {{ mentor.user.last_name }}">
-                        {% else %}
-                            <img src="https://gravatar.com/avatar/?s=175&amp;d=mm" width="175" height="175" alt="">
-                        {% endif %}
-                        <span class="caption text-center">{{ mentor.user.first_name }} {{ mentor.user.last_name }}</span>
+                        <img src="{{ mentor.get_avatar.thumbnail.url }}" width="175" height="175" alt="Photo of {{ mentor.full_name }}">
+                        <span class="caption text-center">{{ mentor.full_name }}</span>
                     </a>
                 </div>
                 {% endfor %}

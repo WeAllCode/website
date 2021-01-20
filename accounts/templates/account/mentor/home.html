@@ -9,12 +9,12 @@
 
 <section>
     <h1 class="title text-primary">
-        Hello {% if mentor.user.first_name %}{{ mentor.user.first_name }}{% else %}there friend{% endif %}!
+        Hello {% if mentor.first_name %}{{ mentor.first_name }}{% else %}there friend{% endif %}!
     </h1>
     <p>We're super excited to have you join our ranks. Before you come to your first mentor session, we need to take care of a few things.</p>
 
     <ol>
-        {% if not mentor.user.first_name or not mentor.user.last_name %}
+        {% if not mentor.first_name or not mentor.last_name %}
         <li><a href="#id_first_name">Enter full name</a>.</li>
         {% endif %}
 
@@ -50,7 +50,7 @@
                 {% if mentor.avatar and not mentor.avatar_approved %}
                     <small class="text-tertiary">Pending Approval</small>
                 {% endif %}
-                <img class="avatar thumbnail" src="{% if mentor.avatar.thumbnail %}{{ mentor.avatar.thumbnail.url }}{% else %}https://gravatar.com/avatar/?s=283&amp;d=mm{% endif %}" alt="">
+                <img class="avatar thumbnail" src="{{ mentor.get_avatar.thumbnail.url }}" alt="">
             </div>
             <div class="cell small-8 medium-4">
                 <input value="Change Avatar" id="id_avatar" name="avatar" title="Change Avatar" type="file">

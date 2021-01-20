@@ -1,0 +1,5 @@
+{% extends "_email_base.html" %}
+
+{% block subject %}{% block child_subject %}{% endblock %}{% endblock %}
+{% block preheader %}{% block child_preheader %}{% endblock %}{% endblock %}
+{% block content %}{% block child_content %}{% endblock %}{% endblock %}

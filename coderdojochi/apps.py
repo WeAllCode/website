@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class CoderDojoChiConfig(AppConfig):
-    name = 'coderdojochi'
+    name = "coderdojochi"
     verbose_name = "CoderDojoChi"
 
     def ready(self):

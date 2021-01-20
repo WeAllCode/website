@@ -15,6 +15,15 @@
   "emmet.includeLanguages": {
     "django-html": "html"
   },
+  "beautify.language": {
+    "js": {
+      "type": ["javascript", "json", "jsonc"],
+      "filename": [".jshintrc", ".jsbeautifyrc"]
+    },
+    "css": ["css", "less", "scss"],
+    "html": ["htm", "html", "django-html"]
+  },
+  "python.formatting.provider": "black",
   "python.linting.ignorePatterns": [
     ".vscode/*.py",
     "**/site-packages/**/*.py",
@@ -32,10 +41,20 @@
     "--enable=W0614", // Used when an imported module or variable is not used from a 'from X import *' style import.
     "--load-plugins=pylint_django"
   ],
+  "python.autoComplete.extraPaths": ["./"],
   "[python]": {
     "editor.rulers": [120],
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": true,
+      "source.fixAll": true
+    }
+  },
+  "[django-html]": {
+    "editor.defaultFormatter": "HookyQR.beautify",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
     }
   },
   "[git-commit]": {
@@ -50,5 +69,8 @@
     "editor.wordWrap": "on",
     "editor.quickSuggestions": false,
     "editor.trimAutoWhitespace": false
-  }
+  },
+  "python.analysis.extraPaths": [
+    "./"
+  ]
 }
