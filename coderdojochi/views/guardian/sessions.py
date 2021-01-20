@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 
-from ...models import Guardian, Session
+from ...models import Guardian, Mentor, MentorOrder, Session
 
 
 class SessionDetailView(DetailView):
@@ -14,5 +14,8 @@ class SessionDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["students"] = guardian.get_students()
         context["spots_remaining"] = self.object.capacity - self.object.get_active_student_count()
+        context["active_mentors"] = Mentor.objects.filter(
+            id__in=MentorOrder.objects.filter(session=self.object, is_active=True).values("mentor__id")
+        )
 
         return context
