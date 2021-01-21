@@ -754,15 +754,15 @@ body.home .free-programs {
 
 /* Fix link on specific background colors */
 
-main .bg-dark-blue a,
-main .bg-primary a {
+.class-info-box .bg-dark-blue a:not(.button),
+.class-info-box .bg-primary a:not(.button) {
   color: var(--white);
   border-bottom: 1px solid var(--white);
 }
 
-main .bg-dark-blue a:focus,
-main .bg-dark-blue a:hover,
-main .bg-bg-primary a:focus,
-main .bg-bg-primary a:hover {
+.class-info-box .bg-dark-blue a:not(.button):focus,
+.class-info-box .bg-dark-blue a:not(.button):hover,
+.class-info-box .bg-bg-primary a:not(.button):focus,
+.class-info-box .bg-bg-primary a:not(.button):hover {
   border-bottom-width: 3px;
 }
