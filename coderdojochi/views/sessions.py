@@ -103,12 +103,37 @@ def session_confirm_guardian(request, session_obj, order, student):
 
 class SessionDetailView(View):
     def get(self, request, *args, **kwargs):
+        pk = kwargs["pk"]
+        session = get_object_or_404(Session, id=pk)
+
+        if session.password and not self.validate_partner_session_access(request, pk):
+            return redirect(reverse("session-password", kwargs=kwargs))
+
         if request.user.is_authenticated:
             if request.user.role == "mentor":
                 return mentor.SessionDetailView.as_view()(request, *args, **kwargs)
             else:
                 return guardian.SessionDetailView.as_view()(request, *args, **kwargs)
         return public.SessionDetailView.as_view()(request, *args, **kwargs)
+
+    def validate_partner_session_access(self, request, pk):
+        authed_sessions = request.session.get("authed_partner_sessions")
+
+        if authed_sessions and pk in authed_sessions:
+            if request.user.is_authenticated:
+                PartnerPasswordAccess.objects.get_or_create(session_id=pk, user=request.user)
+            return True
+
+        if request.user.is_authenticated:
+            try:
+                PartnerPasswordAccess.objects.get(session_id=pk, user_id=request.user.id)
+            except PartnerPasswordAccess.DoesNotExist:
+                return False
+            else:
+                return True
+
+        else:
+            return False
 
 
 # class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
