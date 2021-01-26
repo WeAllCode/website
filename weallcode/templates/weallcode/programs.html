@@ -18,174 +18,176 @@
 {% block content %}
   {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-programs.jpg" alt="programs" %}
 
-  <main id="classes" class="padding-vertical-3">
-    <div class="grid-container">
-      <div class="grid-x margin-bottom-3">
-        <div class="cell large-8 padding-right-2">
-          <h1 class="title text-tertiary margin-bottom-2">Programs</h1>
-          <p>We All Code Programs are built on our single-day, interactive <strong>Classes</strong>. During these 3-to-5 hour weekend sessions, kids learn about one specific coding topic, like HTML 1.0.</p>
-          <p>Classes progress in skill level and can be combined to create full <strong>Courses</strong> in HTML, CSS, Python, and Javascript. </p>
-        </div>
-        <div class="cell large-4 position-relative">
-          <div class="aside-title">
-            <div>
-              <span class="text-tertiary display-inline-block">Step by step </span>
-              <span class="text-tertiary display-inline-block">instruction.</span>
+  <main id="main">
+    <section id="classes" class="padding-vertical-3">
+      <div class="grid-container">
+        <div class="grid-x margin-bottom-3">
+          <div class="cell large-8 padding-right-2">
+            <h1 class="title text-tertiary margin-bottom-2">Programs</h1>
+            <p>We All Code Programs are built on our single-day, interactive <strong>Classes</strong>. During these 3-to-5 hour weekend sessions, kids learn about one specific coding topic, like HTML 1.0.</p>
+            <p>Classes progress in skill level and can be combined to create full <strong>Courses</strong> in HTML, CSS, Python, and Javascript. </p>
+          </div>
+          <div class="cell large-4 position-relative">
+            <div class="aside-title">
+              <div>
+                <span class="text-tertiary display-inline-block">Step by step </span>
+                <span class="text-tertiary display-inline-block">instruction.</span>
+              </div>
+              <div>
+                <span class="text-secondary display-inline-block">A whole lot </span>
+                <span class="text-white display-inline-block">of fun!</span>
+              </div>
+              <div class="line width-25 bg-primary margin-top-1"></div>
             </div>
-            <div>
-              <span class="text-secondary display-inline-block">A whole lot </span>
-              <span class="text-white display-inline-block">of fun!</span>
-            </div>
-            <div class="line width-25 bg-primary margin-top-1"></div>
           </div>
         </div>
+
+        <h2 class="title text-tertiary margin-bottom-2">Upcoming Classes</h2>
+
+        {% if weekend_classes %}
+          {% for session in weekend_classes %}
+            {% include "weallcode/snippets/class.html" with session=session %}
+          {% endfor %}
+        {% else %}
+          <div class="grid-x bg-dark-blue text-white padding-2"><p class="h4">We All Code strives to provide every child the chance to excel in one of the emerging fields of STEM. Over the next few weeks, the team is hard at work planning classes for 2021. We are excited to continue offering classes that are diverse, experiential, and spark curiosity in every student. Please check back for program details at the start of the new year!</p></div>
+        {% endif %}
       </div>
+    </section>
 
-      <h2 class="title text-tertiary margin-bottom-2">Upcoming Classes</h2>
+    <section id="summer-camps" class="padding-vertical-3 margin-bottom-2">
+      <div class="grid-container">
+        <h2 class="title text-tertiary margin-bottom-2">Summer Camps</h2>
+        <p>During these week-long summer experiences, kids get the chance to practice in-depth skills like project management, quality assurance, and teamwork while tackling a coding project.</p>
 
-      {% if weekend_classes %}
-        {% for session in weekend_classes %}
-          {% include "weallcode/snippets/class.html" with session=session %}
-        {% endfor %}
-      {% else %}
-        <div class="grid-x bg-dark-blue text-white padding-2"><p class="h4">We All Code strives to provide every child the chance to excel in one of the emerging fields of STEM. Over the next few weeks, the team is hard at work planning classes for 2021. We are excited to continue offering classes that are diverse, experiential, and spark curiosity in every student. Please check back for program details at the start of the new year!</p></div>
-      {% endif %}
-    </div>
+        {% if summer_camp_classes %}
+          {% for session in summer_camp_classes %}
+            {% include "weallcode/snippets/class.html" with session=session %}
+          {% endfor %}
+        {% else %}
+          <p>There are no upcoming summer camps at this time. Please <a href="{% url 'weallcode-join-us' %}#contact">contact us</a> for more information.</p>
+        {% endif %}
+
+        {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-management" title_1="Project Management" content_1="Kids learn to manage the moving parts of a project." svg_href_2="#svg-backend" title_2="Quality Assurance" content_2="We teach kids the right way to complete a project." svg_href_3="#svg-high5" title_3="Socialization Skills" content_3="Kids spend the week completing a project in teams and making new friends." %}
+      </div>
+    </section>
+
+    <section id="pathways" class="padding-vertical-3">
+      <div class="grid-container">
+        <h2 class="title text-tertiary margin-bottom-2">Pathways</h2>
+        <p>Pathways help kids envision a future in STEM by building real-world skills that go beyond coding. They’ll learn Front-End Development, Back-End Development, or Design & Communication in a safe, supportive, and experiential environment.</p>
+
+        {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-frontend" title_1="Front-end Development" content_1="Learn how HTML, CSS, and JavaScript work together to build beautiful sites." svg_href_2="#svg-backend" title_2="Back-end Development" content_2="Learn how coding languages like Java and Python can power everything from robots to the internet." svg_href_3="#svg-design" title_3="Design &amp; Communication" content_3="Learn how real coders design websites, manage projects and communicate." %}
+      </div>
+    </section>
+
+    <section id="courses" class="padding-vertical-3">
+      <div class="grid-container">
+        <h2 class="title text-tertiary margin-bottom-2">Courses</h2>
+
+        <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
+          <div class="cell medium-6 large-7 padding-right-2">
+            <h2>HTML 101</h2>
+            <h4>Choose Your Own Adventure</h4>
+          </div>
+          <div class="cell small-6 medium-3 large-2">
+            <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
+            <ul class="list-plus">
+              <li>None</li>
+            </ul>
+          </div>
+          <div class="cell small-6 medium-3">
+            <h6 class="text-uppercase margin-top-1">Pathways</h6>
+            <ul class="list-plus">
+              <li>Front-end Development</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <div class="line bg-primary width-50 margin-vertical-2"></div>
+            <p><strong>Ages</strong>: Open to everyone</p>
+            <p>Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos?</p>
+            <p>In this course, students will develop an understanding of how HTML is used to define the structure of web pages, then use their knowledge to hack together their own &quot;Choose Your Own Adventure&quot; game.</p>
+            <p>By the end of the course, students will understand how the language HTML, CSS, and Javascript come together.</p>
+          </div>
+        </div>
+
+        <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
+          <div class="cell medium-6 large-7 padding-right-2">
+            <h2>CSS 101</h2>
+            <h4>Designing Your Adventure</h4>
+          </div>
+          <div class="cell small-6 medium-3 large-2">
+            <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
+            <ul class="list-plus">
+              <li>HTML 101</li>
+            </ul>
+          </div>
+          <div class="cell small-6 medium-3">
+            <h6 class="text-uppercase margin-top-1">Pathways</h6>
+            <ul class="list-plus">
+              <li>Front-end Development</li>
+              <li>Design</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <div class="line bg-secondary width-50 margin-vertical-2"></div>
+            <p><strong>Ages</strong>: Open to everyone</p>
+            <p>Mastered HTML and ready to add some personality to your website?</p>
+            <p>In this course, students will develop an understanding of how to control the design and layout of web pages, then use their knowledge to style their own profile page. By the end of the course, students will understand how CSS enhances the look of the web.</p>
+          </div>
+        </div>
+
+        <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
+          <div class="cell medium-6 large-7 padding-right-2">
+            <h2>JS 101</h2>
+            <h4>Drawing with Javascript</h4>
+          </div>
+          <div class="cell small-6 medium-3 large-2">
+            <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
+            <ul class="list-plus">
+              <li>None</li>
+            </ul>
+          </div>
+          <div class="cell small-6 medium-3">
+            <h6 class="text-uppercase margin-top-1">Pathways</h6>
+            <ul class="list-plus">
+              <li>Front-end Development</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <div class="line bg-tertiary width-50 margin-vertical-2"></div>
+            <p><strong>Ages</strong> 10+ or <strong>Grade</strong> 5+</p>
+            <p>Ever wanted to start building your own game but didn't know where to start? Ever thought it would be cool to draw or animate using the computer?</p>
+            <p>In this course, students will learn how to break down tasks and objects to understand how they are built. By the end of the course, students will understand how to use the Javascript programming language in Canvas.</p>
+          </div>
+        </div>
+
+        <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
+          <div class="cell medium-6 large-7 padding-right-2">
+            <h2>PY 101</h2>
+            <h4>Robotics with Python</h4>
+          </div>
+          <div class="cell small-6 medium-3 large-2">
+            <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
+            <ul class="list-plus">
+              <li>None</li>
+            </ul>
+          </div>
+          <div class="cell small-6 medium-3">
+            <h6 class="text-uppercase margin-top-1">Pathways</h6>
+            <ul class="list-plus">
+              <li>Back-end Development</li>
+            </ul>
+          </div>
+          <div class="cell">
+            <div class="line bg-gray-for-blue width-50 margin-vertical-2"></div>
+            <p><strong>Ages</strong> 10+ or <strong>Grade</strong> 5+</p>
+            <p>Want to learn what makes robotics work?</p>
+            <p>In this course, students and their guardians will gain a basic understanding of the Python programming language and how to use it to "drive" their robots.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
   </main>
-
-  <section id="summer-camps" class="padding-vertical-3 margin-bottom-2">
-    <div class="grid-container">
-      <h2 class="title text-tertiary margin-bottom-2">Summer Camps</h2>
-      <p>During these week-long summer experiences, kids get the chance to practice in-depth skills like project management, quality assurance, and teamwork while tackling a coding project.</p>
-
-      {% if summer_camp_classes %}
-        {% for session in summer_camp_classes %}
-          {% include "weallcode/snippets/class.html" with session=session %}
-        {% endfor %}
-      {% else %}
-        <p>There are no upcoming summer camps at this time. Please <a href="{% url 'weallcode-join-us' %}#contact">contact us</a> for more information.</p>
-      {% endif %}
-
-      {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-management" title_1="Project Management" content_1="Kids learn to manage the moving parts of a project." svg_href_2="#svg-backend" title_2="Quality Assurance" content_2="We teach kids the right way to complete a project." svg_href_3="#svg-high5" title_3="Socialization Skills" content_3="Kids spend the week completing a project in teams and making new friends." %}
-    </div>
-  </section>
-
-  <section id="pathways" class="padding-vertical-3">
-    <div class="grid-container">
-      <h2 class="title text-tertiary margin-bottom-2">Pathways</h2>
-      <p>Pathways help kids envision a future in STEM by building real-world skills that go beyond coding. They’ll learn Front-End Development, Back-End Development, or Design & Communication in a safe, supportive, and experiential environment.</p>
-
-      {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-frontend" title_1="Front-end Development" content_1="Learn how HTML, CSS, and JavaScript work together to build beautiful sites." svg_href_2="#svg-backend" title_2="Back-end Development" content_2="Learn how coding languages like Java and Python can power everything from robots to the internet." svg_href_3="#svg-design" title_3="Design &amp; Communication" content_3="Learn how real coders design websites, manage projects and communicate." %}
-    </div>
-  </section>
-
-  <section id="courses" class="padding-vertical-3">
-    <div class="grid-container">
-      <h2 class="title text-tertiary margin-bottom-2">Courses</h2>
-
-      <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
-        <div class="cell medium-6 large-7 padding-right-2">
-          <h2>HTML 101</h2>
-          <h4>Choose Your Own Adventure</h4>
-        </div>
-        <div class="cell small-6 medium-3 large-2">
-          <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
-          <ul class="list-plus">
-            <li>None</li>
-          </ul>
-        </div>
-        <div class="cell small-6 medium-3">
-          <h6 class="text-uppercase margin-top-1">Pathways</h6>
-          <ul class="list-plus">
-            <li>Front-end Development</li>
-          </ul>
-        </div>
-        <div class="cell">
-          <div class="line bg-primary width-50 margin-vertical-2"></div>
-          <p><strong>Ages</strong>: Open to everyone</p>
-          <p>Ever wonder how the web can deliver everything from Minecraft maps to YouTube Videos?</p>
-          <p>In this course, students will develop an understanding of how HTML is used to define the structure of web pages, then use their knowledge to hack together their own &quot;Choose Your Own Adventure&quot; game.</p>
-          <p>By the end of the course, students will understand how the language HTML, CSS, and Javascript come together.</p>
-        </div>
-      </div>
-
-      <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
-        <div class="cell medium-6 large-7 padding-right-2">
-          <h2>CSS 101</h2>
-          <h4>Designing Your Adventure</h4>
-        </div>
-        <div class="cell small-6 medium-3 large-2">
-          <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
-          <ul class="list-plus">
-            <li>HTML 101</li>
-          </ul>
-        </div>
-        <div class="cell small-6 medium-3">
-          <h6 class="text-uppercase margin-top-1">Pathways</h6>
-          <ul class="list-plus">
-            <li>Front-end Development</li>
-            <li>Design</li>
-          </ul>
-        </div>
-        <div class="cell">
-          <div class="line bg-secondary width-50 margin-vertical-2"></div>
-          <p><strong>Ages</strong>: Open to everyone</p>
-          <p>Mastered HTML and ready to add some personality to your website?</p>
-          <p>In this course, students will develop an understanding of how to control the design and layout of web pages, then use their knowledge to style their own profile page. By the end of the course, students will understand how CSS enhances the look of the web.</p>
-        </div>
-      </div>
-
-      <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
-        <div class="cell medium-6 large-7 padding-right-2">
-          <h2>JS 101</h2>
-          <h4>Drawing with Javascript</h4>
-        </div>
-        <div class="cell small-6 medium-3 large-2">
-          <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
-          <ul class="list-plus">
-            <li>None</li>
-          </ul>
-        </div>
-        <div class="cell small-6 medium-3">
-          <h6 class="text-uppercase margin-top-1">Pathways</h6>
-          <ul class="list-plus">
-            <li>Front-end Development</li>
-          </ul>
-        </div>
-        <div class="cell">
-          <div class="line bg-tertiary width-50 margin-vertical-2"></div>
-          <p><strong>Ages</strong> 10+ or <strong>Grade</strong> 5+</p>
-          <p>Ever wanted to start building your own game but didn't know where to start? Ever thought it would be cool to draw or animate using the computer?</p>
-          <p>In this course, students will learn how to break down tasks and objects to understand how they are built. By the end of the course, students will understand how to use the Javascript programming language in Canvas.</p>
-        </div>
-      </div>
-
-      <div class="grid-x bg-dark-blue text-white margin-top-2 padding-vertical-2 padding-horizontal-2">
-        <div class="cell medium-6 large-7 padding-right-2">
-          <h2>PY 101</h2>
-          <h4>Robotics with Python</h4>
-        </div>
-        <div class="cell small-6 medium-3 large-2">
-          <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
-          <ul class="list-plus">
-            <li>None</li>
-          </ul>
-        </div>
-        <div class="cell small-6 medium-3">
-          <h6 class="text-uppercase margin-top-1">Pathways</h6>
-          <ul class="list-plus">
-            <li>Back-end Development</li>
-          </ul>
-        </div>
-        <div class="cell">
-          <div class="line bg-gray-for-blue width-50 margin-vertical-2"></div>
-          <p><strong>Ages</strong> 10+ or <strong>Grade</strong> 5+</p>
-          <p>Want to learn what makes robotics work?</p>
-          <p>In this course, students and their guardians will gain a basic understanding of the Python programming language and how to use it to "drive" their robots.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
 
 {% endblock content %}

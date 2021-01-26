@@ -18,20 +18,22 @@
 {% block content %}
   {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-programs.jpg" alt="programs" %}
 
-  <section id="summer-camps" class="padding-vertical-3 margin-bottom-2">
-    <div class="grid-container">
-      <h2 class="title text-tertiary margin-bottom-2">Summer Camps</h2>
-      <p>During these week-long summer experiences, kids get the chance to practice in-depth skills like project management, quality assurance, and teamwork while tackling a coding project.</p>
+  <main id="main">
+    <section id="summer-camps" class="padding-vertical-3 margin-bottom-2">
+      <div class="grid-container">
+        <h2 class="title text-tertiary margin-bottom-2">Summer Camps</h2>
+        <p>During these week-long summer experiences, kids get the chance to practice in-depth skills like project management, quality assurance, and teamwork while tackling a coding project.</p>
 
-      {% if summer_camp_classes %}
-        {% for session in summer_camp_classes %}
-          {% include "weallcode/snippets/class.html" with session=session %}
-        {% endfor %}
-      {% else %}
-        <p>There are no upcoming summer camps at this time. Please <a href="{% url 'weallcode-join-us' %}#contact">contact us</a> for more information.</p>
-      {% endif %}
+        {% if summer_camp_classes %}
+          {% for session in summer_camp_classes %}
+            {% include "weallcode/snippets/class.html" with session=session %}
+          {% endfor %}
+        {% else %}
+          <p>There are no upcoming summer camps at this time. Please <a href="{% url 'weallcode-join-us' %}#contact">contact us</a> for more information.</p>
+        {% endif %}
 
-      {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-management" title_1="Project Management" content_1="Kids learn to manage the moving parts of a project." svg_href_2="#svg-backend" title_2="Quality Assurance" content_2="We teach kids the right way to complete a project." svg_href_3="#svg-high5" title_3="Socialization Skills" content_3="Kids spend the week completing a project in teams and making new friends." %}
-    </div>
-  </section>
+        {% include "weallcode/snippets/posters.html" with svg_href_1="#svg-management" title_1="Project Management" content_1="Kids learn to manage the moving parts of a project." svg_href_2="#svg-backend" title_2="Quality Assurance" content_2="We teach kids the right way to complete a project." svg_href_3="#svg-high5" title_3="Socialization Skills" content_3="Kids spend the week completing a project in teams and making new friends." %}
+      </div>
+    </section>
+  </main>
 {% endblock content %}

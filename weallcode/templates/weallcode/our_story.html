@@ -21,293 +21,295 @@
 {% block content %}
   {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-our-story.jpg" alt="our story" %}
 
-  <!-- Vision -->
-  <section id="vision" class="padding-vertical-3">
-    <div class="grid-container">
-      <div class="grid-x">
-        <div class="cell large-8 padding-right-2">
-          <h1 class="title text-tertiary margin-bottom-2">About us</h1>
-          <p>We All Code was founded in 2013 as CoderDojoChi. Our founder, Ali Karbassi, built We All Code from the ground up in an effort to eliminate the barriers keeping girls and underserved youth from learning STEM skills.</p>
-        </div>
-        <div class="cell large-4 position-relative">
-        <div class="aside-title">
-            <div>
-              <span class="text-tertiary display-inline-block">Eliminating </span>
-              <span class="text-tertiary display-inline-block">barriers </span>
-              <span class="text-secondary display-inline-block">for all kids </span>
-              <span class="text-white display-inline-block">learning code</span>
+  <main id="main">
+    <!-- Vision -->
+    <section id="vision" class="padding-vertical-3">
+      <div class="grid-container">
+        <div class="grid-x">
+          <div class="cell large-8 padding-right-2">
+            <h1 class="title text-tertiary margin-bottom-2">About us</h1>
+            <p>We All Code was founded in 2013 as CoderDojoChi. Our founder, Ali Karbassi, built We All Code from the ground up in an effort to eliminate the barriers keeping girls and underserved youth from learning STEM skills.</p>
+          </div>
+          <div class="cell large-4 position-relative">
+          <div class="aside-title">
+              <div>
+                <span class="text-tertiary display-inline-block">Eliminating </span>
+                <span class="text-tertiary display-inline-block">barriers </span>
+                <span class="text-secondary display-inline-block">for all kids </span>
+                <span class="text-white display-inline-block">learning code</span>
+              </div>
+              <div class="line width-25 bg-primary margin-top-1"></div>
             </div>
-            <div class="line width-25 bg-primary margin-top-1"></div>
+          </div>
+        </div>
+
+        <div class="grid-x grid-padding-x margin-vertical-3">
+          <div class="cell medium-6">
+            <div class="binary-drop-left">
+              <img class="width-100" src="{% static 'weallcode/images/photos/benefits.jpg' %}" alt="after class photo">
+            </div>
+          </div>
+          <div class="cell medium-6">
+            <h3 class="title text-tertiary margin-vertical-2">Benefits</h3>
+
+            <ul class="list-plus">
+              <li class="margin-vertical-1"><strong>Free classes</strong> are open to kids across Chicago</li>
+              <li class="margin-vertical-1"><strong>Highly-trained instructors and mentors</strong> teach coding skills</li>
+              <li class="margin-vertical-1">Students are encouraged to <strong>show what they know with real working projects</strong></li>
+              <li class="margin-vertical-1"><strong>Kids work collaboratively</strong>, respect their peers, and have fun</li>
+            </ul>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="grid-x grid-padding-x margin-vertical-3">
-        <div class="cell medium-6">
-          <div class="binary-drop-left">
-            <img class="width-100" src="{% static 'weallcode/images/photos/benefits.jpg' %}" alt="after class photo">
-          </div>
-        </div>
-        <div class="cell medium-6">
-          <h3 class="title text-tertiary margin-vertical-2">Benefits</h3>
+    <!-- Mission -->
+    <section id="mission" class="bg-dark-blue text-white padding-vertical-3">
+      <div class="grid-container">
+        <h2 class="title margin-bottom-2 text-center">Mission</h2>
 
-          <ul class="list-plus">
-            <li class="margin-vertical-1"><strong>Free classes</strong> are open to kids across Chicago</li>
-            <li class="margin-vertical-1"><strong>Highly-trained instructors and mentors</strong> teach coding skills</li>
-            <li class="margin-vertical-1">Students are encouraged to <strong>show what they know with real working projects</strong></li>
-            <li class="margin-vertical-1"><strong>Kids work collaboratively</strong>, respect their peers, and have fun</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+        <p>We All Code exists because <strong class="text-secondary">we believe every kid deserves to excel</strong> in one of the emerging fields of STEM, whether they choose to pursue more education or go straight into careers in computer science. Our mission is to <strong class="text-secondary">inspire, support, and teach</strong> these skills to help them be successful.</p>
 
-  <!-- Mission -->
-  <section id="mission" class="bg-dark-blue text-white padding-vertical-3">
-    <div class="grid-container">
-      <h2 class="title margin-bottom-2 text-center">Mission</h2>
-
-      <p>We All Code exists because <strong class="text-secondary">we believe every kid deserves to excel</strong> in one of the emerging fields of STEM, whether they choose to pursue more education or go straight into careers in computer science. Our mission is to <strong class="text-secondary">inspire, support, and teach</strong> these skills to help them be successful.</p>
-
-      <div class="margin-top-2 grid-x grid-margin-x grid-margin-y text-black">
-        <div class="cell medium-6 padding-1 bg-white">
-          <div class="grid-x">
-            <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
-              <use xlink:href="#svg-budget"></use>
-            </svg>
-            <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-              <h4 class="text-uppercase text-primary font-bold">Prosperity</h4>
-              <p>STEM fields <strong>out-earn all other fields by 12-30%</strong>.</p>
+        <div class="margin-top-2 grid-x grid-margin-x grid-margin-y text-black">
+          <div class="cell medium-6 padding-1 bg-white">
+            <div class="grid-x">
+              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+                <use xlink:href="#svg-budget"></use>
+              </svg>
+              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
+                <h4 class="text-uppercase text-primary font-bold">Prosperity</h4>
+                <p>STEM fields <strong>out-earn all other fields by 12-30%</strong>.</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="cell medium-6 padding-1 bg-white">
-          <div class="grid-x">
-            <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
-              <use xlink:href="#svg-parenting"></use>
-            </svg>
-            <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-              <h4 class="text-uppercase text-primary font-bold">Gender Equality</h4>
-              <p><strong>Women only make up 28% of the workforce</strong> in the fields of science and engineering.</p>
+          <div class="cell medium-6 padding-1 bg-white">
+            <div class="grid-x">
+              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+                <use xlink:href="#svg-parenting"></use>
+              </svg>
+              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
+                <h4 class="text-uppercase text-primary font-bold">Gender Equality</h4>
+                <p><strong>Women only make up 28% of the workforce</strong> in the fields of science and engineering.</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="cell medium-6 padding-1 bg-white">
-          <div class="grid-x">
-            <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
-              <use xlink:href="#svg-success"></use>
-            </svg>
-            <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-              <h4 class="text-uppercase text-primary font-bold">Ethnic Diversity</h4>
-              <p><strong>Latinx, African Americans, and Native Americans average 2.7%</strong> of the STEM degrees earned.</p>
+          <div class="cell medium-6 padding-1 bg-white">
+            <div class="grid-x">
+              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+                <use xlink:href="#svg-success"></use>
+              </svg>
+              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
+                <h4 class="text-uppercase text-primary font-bold">Ethnic Diversity</h4>
+                <p><strong>Latinx, African Americans, and Native Americans average 2.7%</strong> of the STEM degrees earned.</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="cell medium-6 padding-1 bg-white">
-          <div class="grid-x">
-            <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
-              <use xlink:href="#svg-growth"></use>
-            </svg>
-            <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-              <h4 class="text-uppercase text-primary font-bold">Opportunity</h4>
-              <p><strong>STEM-related jobs grew three times</strong> the rate of non-STEM jobs between 2000 and 2010.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Offerings -->
-  <section id="offerings" class="padding-vertical-3">
-    <div class="grid-container">
-      <div class="grid-x grid-padding-x">
-        <div class="cell medium-6">
-          <h2 class="title text-tertiary margin-bottom-2">What we offer</h2>
-          <p>We All Code offers <strong>classes, courses, and camps at every level</strong> to help kids get excited about coding.</p>
-          <p>Our lessons are fast-paced, experiential, and <strong>build the confidence kids need</strong> to put their skills to use.</p>
-          <p>Students <strong>learn from highly-trained instructors</strong> and benefit from the support of volunteer mentors. Our <strong>2 students to 1 mentor ratio</strong> means all kids get the attention they need to thrive.</p>
-        </div>
-        <div class="cell medium-5 medium-offset-1">
-          <div class="binary-drop-right">
-            <img class="width-100" src="{% static 'weallcode/images/photos/offerings.jpg' %}" alt="two students">
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-2 text-white text-center">
-        <div class="cell padding-2 large-4 bg-gray-for-blue padding-vertical-3">
-          <div class="grid-x grid-margin-x grid-margin-y">
-            <svg class="cell medium-2 large-12 fill-white program-icon">
-              <use xlink:href="#svg-classes"></use>
-            </svg>
-            <div class="cell medium-10 large-12 medium-text-left large-text-center">
-              <h4 class="text-uppercase padding-top-1">Classes</h4>
-              <p>Classes are the foundation of We All Code's programming. During these 3-to-5 hour weekend sessions, kids learn about one specific coding topic, like HTML, at a particular level. </p>
-            </div>
-          </div>
-        </div>
-        <div class="cell padding-2 large-4 bg-tertiary padding-vertical-3">
-          <div class="grid-x grid-margin-x grid-margin-y">
-            <svg class="cell medium-2 large-12 fill-white program-icon">
-              <use xlink:href="#svg-courses"></use>
-            </svg>
-            <div class="cell medium-10 large-12 medium-text-left large-text-center">
-              <h4 class="text-uppercase padding-top-1">Courses</h4>
-              <p>Courses combine 3 classes to help kids build proficiency in HTML, CSS, JavaScript, and Python over the course of several weeks.</p>
-            </div>
-          </div>
-        </div>
-        <div class="cell padding-2 large-4 bg-primary padding-vertical-3">
-          <div class="grid-x grid-margin-x grid-margin-y">
-            <svg class="cell medium-2 large-12 fill-white program-icon">
-              <use xlink:href="#svg-camps"></use>
-            </svg>
-            <div class="cell medium-10 large-12 medium-text-left large-text-center">
-              <h4 class="text-uppercase padding-top-1">Camps</h4>
-              <p>Week-long summer experiences offering students the chance to learn in-depth skills like project management, quality assurance, and social skills along with code.</p>
+          <div class="cell medium-6 padding-1 bg-white">
+            <div class="grid-x">
+              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+                <use xlink:href="#svg-growth"></use>
+              </svg>
+              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
+                <h4 class="text-uppercase text-primary font-bold">Opportunity</h4>
+                <p><strong>STEM-related jobs grew three times</strong> the rate of non-STEM jobs between 2000 and 2010.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <p class="text-center margin-top-3">
-        <a class="button tertiary" href="{% url 'weallcode-programs' %}">See All Programs</a>
-      </p>
-    </div>
-  </section>
-
-
-  <section class="bg-binary padding-vertical-2 bg-gray-for-white">
-    <div class="grid-container">
-      <div class="grid-x margin-vertical-3">
-        <div class="cell medium-6 bg-white padding-2">
-          <h2 class="title text-tertiary">Ages 7 to 17</h2>
-          <p><strong>We All Code is open to all kids ages 7 to 17 with a focus toward kids from underserved areas.</strong> That means girls and boys from every neighborhood are welcome.</p>
-
-          <h5 class="title text-tertiary margin-top-2">We also welcome</h5>
-          <ul class="list-plus">
-            <li><strong>Parents</strong> who want to take part alongside their kids</li>
-            <li><strong>Volunteers</strong> from every field (not just developers!)</li>
-            <li><strong>Donors</strong> who want to make a difference in the future of STEM learning</li>
-          </ul>
-        </div>
-        <div class="cell medium-6 bg-dark-blue text-white padding-2">
-          <div class="line bg-primary width-25 margin-bottom-3"></div>
-          <div class="text-huge text-uppercase text-bold line-height-1 margin-bottom-2">
-            <div class="text-tertiary">Money should</div>
-            <div class="text-tertiary">never be a barrier</div>
-            <div class="text-secondary">for kids</div>
-            <div>to learn code</div>
+    <!-- Offerings -->
+    <section id="offerings" class="padding-vertical-3">
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="cell medium-6">
+            <h2 class="title text-tertiary margin-bottom-2">What we offer</h2>
+            <p>We All Code offers <strong>classes, courses, and camps at every level</strong> to help kids get excited about coding.</p>
+            <p>Our lessons are fast-paced, experiential, and <strong>build the confidence kids need</strong> to put their skills to use.</p>
+            <p>Students <strong>learn from highly-trained instructors</strong> and benefit from the support of volunteer mentors. Our <strong>2 students to 1 mentor ratio</strong> means all kids get the attention they need to thrive.</p>
           </div>
-          <p>Our classes are <strong>FREE</strong> whenever possible.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Approach -->
-  <section id="approach" class="padding-vertical-3">
-    <div class="grid-container">
-      <div class="text-center">
-        <h2 class="title text-tertiary margin-bottom-2">Our Approach</h2>
-
-        <div>
-          <p><strong>We All Code teaches real, solid coding skills as a basis for a future in STEM.</strong></p>
-          <p>Highly-trained instructors guide our classes while mentors work closely with students. </p>
-          <p><strong>Kids get excited about coding</strong> when we make it relevant and encourage them to show what they know, solve problems, and explore possibilities.</p>
-        </div>
-      </div>
-
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-2 text-white text-center">
-        <div class="cell padding-2 large-4 bg-gray-for-blue padding-vertical-3">
-          <div class="grid-x grid-margin-x grid-margin-y">
-            <svg class="cell medium-2 large-12 fill-white program-icon">
-              <use xlink:href="#svg-i-do"></use>
-            </svg>
-            <div class="cell medium-10 large-12 medium-text-left large-text-center">
-              <h4 class="text-uppercase padding-top-1">I Do</h4>
-              <p>Instructors demonstrates a skill to the students</p>
+          <div class="cell medium-5 medium-offset-1">
+            <div class="binary-drop-right">
+              <img class="width-100" src="{% static 'weallcode/images/photos/offerings.jpg' %}" alt="two students">
             </div>
           </div>
         </div>
-        <div class="cell padding-2 large-4 bg-tertiary padding-vertical-3">
-          <div class="grid-x grid-margin-x grid-margin-y">
-            <svg class="cell medium-2 large-12 fill-white program-icon">
-              <use xlink:href="#svg-we-do"></use>
-            </svg>
-            <div class="cell medium-10 large-12 medium-text-left large-text-center">
-              <h4 class="text-uppercase padding-top-1">We Do</h4>
-              <p>Students and instructors practice the skill together</p>
+
+        <div class="grid-x grid-margin-x grid-margin-y margin-top-2 text-white text-center">
+          <div class="cell padding-2 large-4 bg-gray-for-blue padding-vertical-3">
+            <div class="grid-x grid-margin-x grid-margin-y">
+              <svg class="cell medium-2 large-12 fill-white program-icon">
+                <use xlink:href="#svg-classes"></use>
+              </svg>
+              <div class="cell medium-10 large-12 medium-text-left large-text-center">
+                <h4 class="text-uppercase padding-top-1">Classes</h4>
+                <p>Classes are the foundation of We All Code's programming. During these 3-to-5 hour weekend sessions, kids learn about one specific coding topic, like HTML, at a particular level. </p>
+              </div>
+            </div>
+          </div>
+          <div class="cell padding-2 large-4 bg-tertiary padding-vertical-3">
+            <div class="grid-x grid-margin-x grid-margin-y">
+              <svg class="cell medium-2 large-12 fill-white program-icon">
+                <use xlink:href="#svg-courses"></use>
+              </svg>
+              <div class="cell medium-10 large-12 medium-text-left large-text-center">
+                <h4 class="text-uppercase padding-top-1">Courses</h4>
+                <p>Courses combine 3 classes to help kids build proficiency in HTML, CSS, JavaScript, and Python over the course of several weeks.</p>
+              </div>
+            </div>
+          </div>
+          <div class="cell padding-2 large-4 bg-primary padding-vertical-3">
+            <div class="grid-x grid-margin-x grid-margin-y">
+              <svg class="cell medium-2 large-12 fill-white program-icon">
+                <use xlink:href="#svg-camps"></use>
+              </svg>
+              <div class="cell medium-10 large-12 medium-text-left large-text-center">
+                <h4 class="text-uppercase padding-top-1">Camps</h4>
+                <p>Week-long summer experiences offering students the chance to learn in-depth skills like project management, quality assurance, and social skills along with code.</p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="cell padding-2 large-4 bg-primary padding-vertical-3">
-          <div class="grid-x grid-margin-x grid-margin-y">
-            <svg class="cell medium-2 large-12 fill-white program-icon">
-              <use xlink:href="#svg-you-do"></use>
-            </svg>
-            <div class="cell medium-10 large-12 medium-text-left large-text-center">
-              <h4 class="text-uppercase padding-top-1">You Do</h4>
-              <p>Students show what they know by applying the skill</p>
+
+        <p class="text-center margin-top-3">
+          <a class="button tertiary" href="{% url 'weallcode-programs' %}">See All Programs</a>
+        </p>
+      </div>
+    </section>
+
+
+    <section class="bg-binary padding-vertical-2 bg-gray-for-white">
+      <div class="grid-container">
+        <div class="grid-x margin-vertical-3">
+          <div class="cell medium-6 bg-white padding-2">
+            <h2 class="title text-tertiary">Ages 7 to 17</h2>
+            <p><strong>We All Code is open to all kids ages 7 to 17 with a focus toward kids from underserved areas.</strong> That means girls and boys from every neighborhood are welcome.</p>
+
+            <h5 class="title text-tertiary margin-top-2">We also welcome</h5>
+            <ul class="list-plus">
+              <li><strong>Parents</strong> who want to take part alongside their kids</li>
+              <li><strong>Volunteers</strong> from every field (not just developers!)</li>
+              <li><strong>Donors</strong> who want to make a difference in the future of STEM learning</li>
+            </ul>
+          </div>
+          <div class="cell medium-6 bg-dark-blue text-white padding-2">
+            <div class="line bg-primary width-25 margin-bottom-3"></div>
+            <div class="text-huge text-uppercase text-bold line-height-1 margin-bottom-2">
+              <div class="text-tertiary">Money should</div>
+              <div class="text-tertiary">never be a barrier</div>
+              <div class="text-secondary">for kids</div>
+              <div>to learn code</div>
+            </div>
+            <p>Our classes are <strong>FREE</strong> whenever possible.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Approach -->
+    <section id="approach" class="padding-vertical-3">
+      <div class="grid-container">
+        <div class="text-center">
+          <h2 class="title text-tertiary margin-bottom-2">Our Approach</h2>
+
+          <div>
+            <p><strong>We All Code teaches real, solid coding skills as a basis for a future in STEM.</strong></p>
+            <p>Highly-trained instructors guide our classes while mentors work closely with students. </p>
+            <p><strong>Kids get excited about coding</strong> when we make it relevant and encourage them to show what they know, solve problems, and explore possibilities.</p>
+          </div>
+        </div>
+
+        <div class="grid-x grid-margin-x grid-margin-y margin-top-2 text-white text-center">
+          <div class="cell padding-2 large-4 bg-gray-for-blue padding-vertical-3">
+            <div class="grid-x grid-margin-x grid-margin-y">
+              <svg class="cell medium-2 large-12 fill-white program-icon">
+                <use xlink:href="#svg-i-do"></use>
+              </svg>
+              <div class="cell medium-10 large-12 medium-text-left large-text-center">
+                <h4 class="text-uppercase padding-top-1">I Do</h4>
+                <p>Instructors demonstrates a skill to the students</p>
+              </div>
+            </div>
+          </div>
+          <div class="cell padding-2 large-4 bg-tertiary padding-vertical-3">
+            <div class="grid-x grid-margin-x grid-margin-y">
+              <svg class="cell medium-2 large-12 fill-white program-icon">
+                <use xlink:href="#svg-we-do"></use>
+              </svg>
+              <div class="cell medium-10 large-12 medium-text-left large-text-center">
+                <h4 class="text-uppercase padding-top-1">We Do</h4>
+                <p>Students and instructors practice the skill together</p>
+              </div>
+            </div>
+          </div>
+          <div class="cell padding-2 large-4 bg-primary padding-vertical-3">
+            <div class="grid-x grid-margin-x grid-margin-y">
+              <svg class="cell medium-2 large-12 fill-white program-icon">
+                <use xlink:href="#svg-you-do"></use>
+              </svg>
+              <div class="cell medium-10 large-12 medium-text-left large-text-center">
+                <h4 class="text-uppercase padding-top-1">You Do</h4>
+                <p>Students show what they know by applying the skill</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Results -->
-  <section id="results" class="bg-dark-blue text-white padding-vertical-3">
-    <div class="grid-container">
-      <h2 class="title margin-bottom-2 text-center">The Results</h2>
+    <!-- Results -->
+    <section id="results" class="bg-dark-blue text-white padding-vertical-3">
+      <div class="grid-container">
+        <h2 class="title margin-bottom-2 text-center">The Results</h2>
 
-      <p class=" text-center">
-        We All Code fosters a supportive community centered around the betterment of its students and
-        their communities through education and outreach. But you don't have to take our word for it; <br>
-        <strong class="text-secondary">hear directly from our students, volunteers, and sponsors.</strong>
-      </p>
+        <p class=" text-center">
+          We All Code fosters a supportive community centered around the betterment of its students and
+          their communities through education and outreach. But you don't have to take our word for it; <br>
+          <strong class="text-secondary">hear directly from our students, volunteers, and sponsors.</strong>
+        </p>
 
-      <div class="text-uppercase">
-        <div class="grid-x margin-top-3 text-center">
-          <div class="cell medium-4 large-3 padding-bottom-2 medium-text-right">
-            <div class="text-white text-gigantic"><strong>42%</strong></div>
-            <div class="text-secondary">of students</div>
-            <div class="text-secondary">are female</div>
-            <div class="line bg-secondary width-25 margin-top-2 align-right large-show"></div>
+        <div class="text-uppercase">
+          <div class="grid-x margin-top-3 text-center">
+            <div class="cell medium-4 large-3 padding-bottom-2 medium-text-right">
+              <div class="text-white text-gigantic"><strong>42%</strong></div>
+              <div class="text-secondary">of students</div>
+              <div class="text-secondary">are female</div>
+              <div class="line bg-secondary width-25 margin-top-2 align-right large-show"></div>
+            </div>
+            <div class="cell medium-7 medium-offset-1">
+              <img class="width-100" src="{% static 'weallcode/images/photos/results-students.jpg' %}" alt="student">
+            </div>
           </div>
-          <div class="cell medium-7 medium-offset-1">
-            <img class="width-100" src="{% static 'weallcode/images/photos/results-students.jpg' %}" alt="student">
+
+          <div class="grid-x margin-top-3 text-center">
+            <div class="cell medium-4 large-3 padding-bottom-2 medium-text-right">
+              <div class="text-white text-gigantic"><strong>170</strong></div>
+              <div class="text-tertiary">mentors</div>
+              <div class="text-tertiary">volunteer</div>
+              <div class="text-tertiary">per year</div>
+              <div class="line bg-tertiary width-25 margin-top-2 align-right large-show"></div>
+            </div>
+            <div class="cell medium-7 medium-offset-1">
+              <img class="width-100" src="{% static 'weallcode/images/photos/results-volunteers.jpg' %}" alt="volunteers">
+            </div>
           </div>
+
+          <div class="grid-x margin-top-3 text-center">
+            <div class="cell medium-4 large-3 padding-bottom-2 medium-text-right">
+              <div class="text-white text-gigantic"><strong>20+</strong></div>
+              <div class="text-primary">sponsors</div>
+              <div class="text-primary">have hosted</div>
+              <div class="text-primary">a class</div>
+              <div class="line bg-primary width-25 margin-top-2 align-right large-show"></div>
+            </div>
+            <div class="cell medium-7 medium-offset-1">
+              <img class="width-100" src="{% static 'weallcode/images/photos/results-donors.jpg' %}" alt="donors">
+            </div>
+          </div>
+
         </div>
-
-        <div class="grid-x margin-top-3 text-center">
-          <div class="cell medium-4 large-3 padding-bottom-2 medium-text-right">
-            <div class="text-white text-gigantic"><strong>170</strong></div>
-            <div class="text-tertiary">mentors</div>
-            <div class="text-tertiary">volunteer</div>
-            <div class="text-tertiary">per year</div>
-            <div class="line bg-tertiary width-25 margin-top-2 align-right large-show"></div>
-          </div>
-          <div class="cell medium-7 medium-offset-1">
-            <img class="width-100" src="{% static 'weallcode/images/photos/results-volunteers.jpg' %}" alt="volunteers">
-          </div>
-        </div>
-
-        <div class="grid-x margin-top-3 text-center">
-          <div class="cell medium-4 large-3 padding-bottom-2 medium-text-right">
-            <div class="text-white text-gigantic"><strong>20+</strong></div>
-            <div class="text-primary">sponsors</div>
-            <div class="text-primary">have hosted</div>
-            <div class="text-primary">a class</div>
-            <div class="line bg-primary width-25 margin-top-2 align-right large-show"></div>
-          </div>
-          <div class="cell medium-7 medium-offset-1">
-            <img class="width-100" src="{% static 'weallcode/images/photos/results-donors.jpg' %}" alt="donors">
-          </div>
-        </div>
-
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 {% endblock %}
