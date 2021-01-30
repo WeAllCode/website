@@ -499,6 +499,8 @@ class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "description",
     ]
 
+    filter_horizontal = ["prerequisite"]
+
     prepopulated_fields = {
         "slug": ("title",),
     }

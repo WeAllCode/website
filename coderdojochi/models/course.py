@@ -58,6 +58,8 @@ class Course(CommonInfo):
         default=True,
     )
 
+    prerequisite = models.ManyToManyField("self", symmetrical=False, blank=True, limit_choices_to={"is_active": True})
+
     def __str__(self):
         if self.code:
             return f"{self.code} | {self.title}"
