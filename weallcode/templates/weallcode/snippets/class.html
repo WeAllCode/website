@@ -10,7 +10,7 @@
     <div class="grid-x">
       <div class="cell medium-6">
         <h6 class="text-uppercase margin-top-1">Prerequisites</h6>
-        <ul class="list-plus inline-list">
+        <ul class="list-plus">
           {% for prerequisite in session.course.prerequisite.all %}
             <li>{{prerequisite.code}}</li>
           {% endfor %}
