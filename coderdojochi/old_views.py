@@ -118,7 +118,7 @@ def mentor_reject_avatar(request, pk=None):
 
     email(
         subject="Your We All Code avatar...",
-        template_name="mentor_reject_avatar",
+        template_name="avatar_rejected_mentor",
         merge_global_data={
             "site_url": settings.SITE_URL,
         },
