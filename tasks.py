@@ -6,9 +6,6 @@ env = environ.Env()
 
 @task
 def release(ctx):
-    if env.bool("DEBUG", default=False):
-        format(ctx)
-
     collect_static(ctx)
     migrate(ctx)
     load_fixtures(ctx)
@@ -39,11 +36,3 @@ def collect_static(ctx):
 @task(help={"app": "Specific app to run tests on. Defaults to all apps."})
 def test(ctx, app=""):
     ctx.run(f"python3 manage.py test {app}")
-    format(ctx)
-
-
-@task
-def format(ctx):
-    ctx.run("pip install -qU black isort")
-    ctx.run("isort -m 3 --trailing-comma .")
-    ctx.run("black .")
