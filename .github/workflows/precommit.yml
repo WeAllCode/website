@@ -1,0 +1,17 @@
+name: Pre-commit
+
+on: [pull_request]
+
+jobs:
+  format:
+    name: Check format
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Check format
+        uses: lgeiger/black-action@v1.0.1
