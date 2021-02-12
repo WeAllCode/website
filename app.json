@@ -3,7 +3,8 @@
   "scripts": {},
   "env": {
     "POETRY_VERSION": {
-      "default": "1.1.4"
+      "description": "Poetry Version",
+      "value": "1.1.4"
     },
     "CONTACT_EMAIL": {
       "required": true
