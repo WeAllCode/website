@@ -1,4 +1,4 @@
-name: Pre-commit
+name: Format
 
 on: [pull_request]
 
@@ -16,4 +16,8 @@ jobs:
       - name: Check format
         uses: lgeiger/black-action@v1.0.1
         with:
-          args: ". --check"
+          args: "."
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply black format changes
