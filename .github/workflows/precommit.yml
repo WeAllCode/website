@@ -15,3 +15,5 @@ jobs:
 
       - name: Check format
         uses: lgeiger/black-action@v1.0.1
+        with:
+          args: "."
