@@ -1,23 +1,48 @@
+# name: Format
+
+# on: [pull_request]
+
+# jobs:
+#   format:
+#     name: Check format
+
+#     runs-on: ubuntu-latest
+#     strategy:
+#       max-parallel: 4
+
+#     steps:
+#       - uses: actions/checkout@v1
+
+#       - name: Check format
+#         uses: lgeiger/black-action@v1.0.1
+#         with:
+#           args: "."
+
+#       - uses: stefanzweifel/git-auto-commit-action@v4
+#         with:
+#           commit_message: Apply black format changes
+
 name: Format
-
-on: [pull_request]
-
+on: [push, pull_request]
 jobs:
-  format:
-    name: Check format
-
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: Check format
-        uses: lgeiger/black-action@v1.0.1
-        with:
-          args: "."
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Apply black format changes
+  name: runner / black
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+    - name: Check files using the black formatter
+      uses: lgeiger/black-action@v1
+      id: action_black
+      with:
+        args: "."
+    - name: Create Pull Request
+      if: steps.action_black.outputs.is_formatted == 'true'
+      uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        title: "Format Python code with psf/black push"
+        commit-message: ":art: Format Python code with psf/black"
+        body: |
+          There appear to be some python formatting errors in ${{ github.sha }}. This pull request
+          uses the [psf/black](https://github.com/psf/black) formatter to fix these issues.
+        base: ${{ github.head_ref }} # Creates pull request onto pull request or commit branch
+        branch: actions/black
