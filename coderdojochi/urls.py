@@ -187,7 +187,7 @@ urlpatterns += [
 urlpatterns += [
     # Student
     # /student/ID/
-    path("students/<int:student_id>/", old_views.student_detail, name="student-detail"),
+            path("students/<int:student_id>/", old_views.student_detail, name="student-detail"),
 ]
 
 # Dojo
