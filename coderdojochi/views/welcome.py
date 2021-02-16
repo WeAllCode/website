@@ -160,6 +160,14 @@ class WelcomeView(TemplateView):
 
             if not next_url:
                 next_url = reverse("account_home")
+
+            email(
+                subject="Welcome!",
+                template_name=f"welcome_mentor",
+                merge_global_data=merge_global_data,
+                recipients=[user.email],
+                preheader="Welcome to We All Code! Let's get started..",
+            )
         else:
             # check for next upcoming class
             next_class = Session.objects.filter(is_active=True).order_by("start_date").first()
@@ -171,12 +179,12 @@ class WelcomeView(TemplateView):
             if not next_url:
                 next_url = reverse("welcome")
 
-        email(
-            subject="Welcome!",
-            template_name=f"welcome_{role}",
-            merge_global_data=merge_global_data,
-            recipients=[user.email],
-            preheader="Your adventure awaits!",
-        )
+            email(
+                subject="Welcome!",
+                template_name=f"welcome_guardian",
+                merge_global_data=merge_global_data,
+                recipients=[user.email],
+                preheader="Your adventure awaits!",
+            )
 
         return redirect(next_url)
