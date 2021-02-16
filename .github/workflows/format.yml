@@ -1,0 +1,29 @@
+name: Format
+on: [pull_request]
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Install Black
+        run: pip install --upgrade --no-cache-dir black
+
+      - name: Run black check
+        run: black --check .
+
+      - name: Apply black formatting if black found formatting errors
+        if: failure()
+        run: |
+          black .
+
+      - name: Commit black formatting results
+        if: failure()
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ":art: Format Python code with psf/black push"
