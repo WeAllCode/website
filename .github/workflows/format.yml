@@ -6,12 +6,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: black
-        uses: lgeiger/black-action@master
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
         with:
-          args: ". --check"
+          python-version: 3.9
 
-      - name: Apply black formatting if reviewdog found formatting errors
+      - name: Install Black
+        run: pip install --upgrade --no-cache-dir black
+
+      - name: Run black check
+        run: black --check .
+
+      - name: Apply black formatting if black found formatting errors
         if: failure()
         run: |
           black .
