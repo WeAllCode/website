@@ -9,7 +9,7 @@ jobs:
       - name: black
         uses: lgeiger/black-action@master
         with:
-          args: .
+          args: ". --check"
 
       - name: Apply black formatting if reviewdog found formatting errors
         if: failure()
