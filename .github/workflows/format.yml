@@ -1,19 +1,16 @@
 name: Format
-on: [push, pull_request]
+on: [pull_request]
 jobs:
-  format:
-    name: Check format
+  linter_name:
+    name: runner / black formatter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Check files using the black formatter
-        uses: rickstaa/action-black@v1
-        id: action_black
+      - uses: reviewdog/action-black@v1
         with:
-          black_args: "."
-      - name: Annotate diff changes using reviewdog
-        if: steps.action_black.outputs.is_formatted == 'true'
-        uses: reviewdog/action-suggester@v1
-        with:
-          tool_name: blackfmt
-          level: "error"
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check, github-check].
+          reporter: github-pr-check
+          # Change reporter level if you need.
+          # GitHub Status Check won't become failure with a warning.
+          level: warning
