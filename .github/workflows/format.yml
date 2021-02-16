@@ -12,12 +12,12 @@ jobs:
           args: .
 
       - name: Apply black formatting if reviewdog found formatting errors
-        if: "${{ failure() }}"
+        if: failure()
         run: |
           black .
 
       - name: Commit black formatting results
-        if: "${{ failure() }}"
+        if: failure()
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ":art: Format Python code with psf/black push"
