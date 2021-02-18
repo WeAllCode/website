@@ -1,4 +1,6 @@
-{% load account active static %}
+{% load static %}
+{% load account %}
+{% load active_link_tags %}
 <div class="grid-container">
   <div class="grid-x">
     <div class="cell auto medium-3">
@@ -12,10 +14,10 @@
     <div class="cell show-for-medium medium-9">
       <nav class="padding-vertical-1" role="navigation" aria-label="navigation">
         <ul class="main-menu menu align-right">
-          <li><a class="{% active 'weallcode-our-story' %}" href="{% url 'weallcode-our-story' %}">Our Story</a></li>
-          <li><a class="{% active 'weallcode-programs' %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
-          <li><a class="{% active 'weallcode-team' %}" href="{% url 'weallcode-team' %}">Team</a></li>
-          <li><a class="{% active 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a></li>
+          <li><a class="{% active_link 'weallcode-our-story' %}" href="{% url 'weallcode-our-story' %}">Our Story</a></li>
+          <li><a class="{% active_link 'weallcode-programs' %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
+          <li><a class="{% active_link 'weallcode-team' %}" href="{% url 'weallcode-team' %}">Team</a></li>
+          <li><a class="{% active_link 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a></li>
           <li><a class="button tertiary" href="javascript:donsPlus.openWidget();">Donate</a></li>
           {% if user.is_authenticated %}
             <li><a class="button" href="{% url 'account_home' %}">Account</a></li>
@@ -29,10 +31,10 @@
 </div>
 
 <div class="mobile-nav hide">
-  <a class="{% active 'weallcode-our-story' %}" href="{% url 'weallcode-our-story' %}">Our Story</a>
-  <a class="{% active 'weallcode-programs' %}" href="{% url 'weallcode-programs' %}">Programs</a>
-  <a class="{% active 'weallcode-team' %}" href="{% url 'weallcode-team' %}">Team</a>
-  <a class="{% active 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a>
+  <a class="{% active_link 'weallcode-our-story' %}" href="{% url 'weallcode-our-story' %}">Our Story</a>
+  <a class="{% active_link 'weallcode-programs' %}" href="{% url 'weallcode-programs' %}">Programs</a>
+  <a class="{% active_link 'weallcode-team' %}" href="{% url 'weallcode-team' %}">Team</a>
+  <a class="{% active_link 'weallcode-join-us' %}" href="{% url 'weallcode-join-us' %}">Join Us</a>
 
   <div class="margin-top-1">
     <a class="button tertiary" href="javascript:donsPlus.openWidget();">Donate</a>
