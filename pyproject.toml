@@ -1,3 +1,4 @@
+[tool]
 [tool.isort]
 line_length = 120
 multi_line_output = 3
@@ -30,3 +31,47 @@ exclude = '''
 
 )
 '''
+
+[tool.poetry]
+name = "we-all-code"
+description = ""
+version = "0.0.0"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/weallcode/website"
+homepage = "https://github.com/weallcode/website"
+authors = ["Ali Karbassi <ali@weallcode.org>"]
+
+[tool.poetry.dependencies]
+python = "3.9.1"
+arrow = "^0.17.0"
+boto3 = "^1.17.6"
+Django = "^3.1.6"
+django-allauth = "^0.44.0"
+django-anymail = "^8.2"
+django-appconf = "^1.0.4"
+django-bootstrap3 = "^14.2.0"
+django-cleanup = "^5.1.0"
+django-common-helpers = "^0.9.2"
+django-cron = "^0.5.1"
+django-debug-toolbar = "^3.2"
+django-environ = "^0.4.5"
+django-fullurl = "^1.1"
+django-heroku = "^0.3.1"
+django-html5 = "^1.0.0"
+django-import-export = "^2.5.0"
+django-loginas = "^0.3.9"
+django-meta = "^2.0.0"
+django-nose = "^1.4.7"
+django-recaptcha = "^2.0.6"
+django-stdimage = "^5.1.1"
+django-storages = "^1.11.1"
+factory-boy = "^3.2.0"
+gunicorn = "^20.0.4"
+icalendar = "^4.0.7"
+invoke = "^1.5.0"
+json-logging-py = "^0.2"
+mock = "^4.0.3"
+Pillow = "^8.1.0"
+psycopg2-binary = "^2.8.6"
+sentry-sdk = "^0.20.0"
