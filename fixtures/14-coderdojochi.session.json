@@ -127,6 +127,7 @@
   "pk": 4,
   "fields": {
     "created_at": "2000-01-01T06:00:00Z",
+    "updated_at": "2000-01-01T06:00:00Z",
     "course": 4,
     "start_date": "2021-04-04T15:00:00Z",
     "location": 3,
@@ -167,6 +168,7 @@
   "pk": 5,
   "fields": {
     "created_at": "2000-01-01T06:00:00Z",
+    "updated_at": "2000-01-01T06:00:00Z",
     "course": 15,
     "start_date": "2021-05-05T16:00:00Z",
     "location": 3,
