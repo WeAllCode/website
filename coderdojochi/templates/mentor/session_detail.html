@@ -166,6 +166,22 @@
 </section>
 {% endif %}
 
+{% if session.assistant.count %}
+<section class="margin-top-3">
+  <h3 class="title text-secondary">Meet the assistants</h3>
+  <div class="grid-x mentors grid-margin-x grid-margin-y">
+    {% for assistant in session.assistant.all %}
+      {% if assistant.is_public == True %}
+      <div class="cell small-4 medium-3">
+        {% include "weallcode/snippets/team_member.html" with is_small=True name=assistant.full_name image=assistant.get_avatar.thumbnail %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+
 {% if active_mentors %}
 <section class="margin-top-3">
     <h3 class="title text-secondary">Meet the mentors</h3>

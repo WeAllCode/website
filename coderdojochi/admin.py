@@ -541,8 +541,9 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     filter_horizontal = [
-        "waitlist_mentors",
-        "waitlist_students",
+        # "waitlist_mentors",
+        # "waitlist_students",
+        "assistant",
     ]
 
     # autocomplete_fields = [
@@ -570,6 +571,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                     "capacity",
                     "mentor_capacity",
                     "instructor",
+                    "assistant",
                     "is_active",
                     "is_public",
                 ),

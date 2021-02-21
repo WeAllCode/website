@@ -80,5 +80,13 @@
     "name": "Instructor",
     "permissions": []
   }
+},
+{
+  "model": "auth.group",
+  "pk": 5,
+  "fields": {
+    "name": "Assistant",
+    "permissions": []
+  }
 }
 ]

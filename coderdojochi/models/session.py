@@ -45,7 +45,28 @@ class Session(CommonInfo):
         Mentor,
         on_delete=models.CASCADE,
         related_name="session_instructor",
-        limit_choices_to={"user__groups__name": "Instructor"},
+        limit_choices_to={
+            "user__groups__name": "Instructor",
+            "is_active": True,
+            "user__is_active": True,
+            "background_check": True,
+            "avatar_approved": True,
+        },
+        help_text="A mentor with 'Instructor' role, is active (user and mentor), background check passed, and avatar approved."
+    )
+
+    assistant = models.ManyToManyField(
+        Mentor,
+        blank=True,
+        related_name="session_assistant",
+        limit_choices_to={
+            "user__groups__name": "Assistant",
+            "is_active": True,
+            "user__is_active": True,
+            "background_check": True,
+            "avatar_approved": True,
+        },
+        help_text="A mentor with 'Assistant' role, is active (user and mentor), background check passed, and avatar approved."
     )
 
     # Pricing
