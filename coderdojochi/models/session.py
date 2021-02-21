@@ -52,7 +52,7 @@ class Session(CommonInfo):
             "background_check": True,
             "avatar_approved": True,
         },
-        help_text="A mentor with 'Instructor' role, is active (user and mentor), background check passed, and avatar approved."
+        help_text="A mentor with 'Instructor' role, is active (user and mentor), background check passed, and avatar approved.",
     )
 
     assistant = models.ManyToManyField(
@@ -66,7 +66,7 @@ class Session(CommonInfo):
             "background_check": True,
             "avatar_approved": True,
         },
-        help_text="A mentor with 'Assistant' role, is active (user and mentor), background check passed, and avatar approved."
+        help_text="A mentor with 'Assistant' role, is active (user and mentor), background check passed, and avatar approved.",
     )
 
     # Pricing
