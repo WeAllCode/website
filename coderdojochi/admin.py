@@ -150,6 +150,10 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "user",
     ]
 
+    filter_horizontal = [
+        "race_ethnicity",
+    ]
+
     def view_on_site(self, obj):
         return obj.get_absolute_url()
 
@@ -275,6 +279,10 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     autocomplete_fields = [
         "user",
+    ]
+
+    filter_horizontal = [
+        "race_ethnicity",
     ]
 
     date_hierarchy = "created_at"
