@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls.base import reverse
-from django.utils import formats
+from django.utils import formats, timezone
 from django.utils.functional import cached_property
 
 from .common import CommonInfo
@@ -306,6 +306,21 @@ class Session(CommonInfo):
             return self.mentor_capacity
         else:
             return int(self.capacity / 2)
+
+    def get_course_prerequisites_needed(self, student):
+        from .order import Order
+
+        student_previous_orders = Order.objects.filter(
+            student=student,
+            session__start_date__lt=timezone.now(),
+            session__course__id__in=self.course.prerequisite.values_list("id"),
+        ).exclude(check_in=None)
+
+        student_prerequisites_needed = self.course.prerequisite.exclude(
+            id__in=student_previous_orders.values("session__course__id")
+        ).distinct("id")
+
+        return student_prerequisites_needed
 
 
 class PartnerPasswordAccess(CommonInfo):

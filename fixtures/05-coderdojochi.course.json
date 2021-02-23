@@ -13,7 +13,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 18,
-    "is_active": true
+    "is_active": true,
+    "prerequisite": []
   }
 },
 {
@@ -30,7 +31,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 18,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -47,7 +49,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 18,
-    "is_active": true
+    "is_active": true,
+    "prerequisite": []
   }
 },
 {
@@ -56,7 +59,7 @@
   "fields": {
     "created_at": "2017-03-30T16:53:37.340Z",
     "updated_at": "2017-04-10T23:07:51.518Z",
-    "code": "JS 101",
+    "code": "JS 1",
     "course_type": "WE",
     "title": "Drawing with Javascript",
     "slug": "drawing-with-javascript",
@@ -64,7 +67,8 @@
     "duration": "03:00:00",
     "minimum_age": 9,
     "maximum_age": 18,
-    "is_active": true
+    "is_active": true,
+    "prerequisite": []
   }
 },
 {
@@ -81,7 +85,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -98,7 +103,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -115,7 +121,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -132,7 +139,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -149,7 +157,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -166,7 +175,8 @@
     "duration": "03:00:00",
     "minimum_age": 9,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": true,
+    "prerequisite": []
   }
 },
 {
@@ -183,7 +193,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -200,7 +211,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -217,7 +229,8 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
   }
 },
 {
@@ -234,7 +247,28 @@
     "duration": "03:00:00",
     "minimum_age": 7,
     "maximum_age": 17,
-    "is_active": true
+    "is_active": false,
+    "prerequisite": []
+  }
+},
+{
+  "model": "coderdojochi.course",
+  "pk": 15,
+  "fields": {
+    "created_at": "2021-02-18T04:07:02.925Z",
+    "updated_at": "2021-02-18T04:07:02.925Z",
+    "code": "JS 2",
+    "course_type": "WE",
+    "title": "Advanced Drawing With Javascript",
+    "slug": "advanced-drawing-javascript",
+    "description": "<p>Ever wanted to start building your own game but didn't know where to start? Ever thought it would be cool to have a computer draw a picture or create an animation for you?</p>\r\n\r\n<p>By the end of the session, students will have the understanding of Canvas using the Javascript programming language. Students will learn how to break down tasks and objects to understand how they are built.</p>",
+    "duration": "03:00:00",
+    "minimum_age": 10,
+    "maximum_age": 18,
+    "is_active": true,
+    "prerequisite": [
+      4
+    ]
   }
 }
 ]

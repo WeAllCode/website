@@ -115,6 +115,18 @@
       <strong>Password:</strong> {{ object.online_video_meeting_password }}</p>
 
     {% endif %}
+    {% if object.course.prerequisite.all.count > 0 %}
+    <div class="grid-x">
+      <div class="cell medium-6">
+        <h6 class="text-uppercase margin-top-1">Prerequisites</h6>
+        <ul class="list-plus">
+          {% for prerequisite in object.course.prerequisite.all %}
+            <li>{{prerequisite.code}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
   </div>
 
   <div class="cell medium-4 bg-primary padding-2">

@@ -6,22 +6,25 @@
     </a>
     <p>{{ session.course.description|safe|truncatechars_html:280 }}</p>
 
-    <!-- <div class="grid-x">
+    {% if session.course.prerequisite.all.count > 0 %}
+    <div class="grid-x">
       <div class="cell medium-6">
-        <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
+        <h6 class="text-uppercase margin-top-1">Prerequisites</h6>
         <ul class="list-plus">
-          <li>HTML 1.0</li>
-          <li>CSS 1.0</li>
+          {% for prerequisite in session.course.prerequisite.all %}
+            <li>{{prerequisite.code}}</li>
+          {% endfor %}
         </ul>
       </div>
-      <div class="cell medium-6">
+      <!-- <div class="cell medium-6">
         <h6 class="text-uppercase margin-top-1">Pathways</h6>
         <ul class="list-plus">
           <li>Front-end Development</li>
           <li>Design</li>
         </ul>
-      </div>
-    </div> -->
+      </div> -->
+    </div>
+    {% endif %}
   </div>
   <div class="cell medium-4 bg-primary padding-2">
     <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
