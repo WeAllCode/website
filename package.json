@@ -1,0 +1,23 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "We, the community and staff, have been building a custom Django application to handle out many parts of our organization.",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karbassi/weallcode-website.git"
+  },
+  "keywords": [],
+  "author": "Ali Karbassi <ali@karbassi.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/karbassi/weallcode-website/issues"
+  },
+  "homepage": "https://github.com/karbassi/weallcode-website#readme",
+  "devDependencies": {
+    "cypress": "^6.5.0"
+  }
+}
