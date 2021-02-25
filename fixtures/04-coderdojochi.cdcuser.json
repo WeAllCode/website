@@ -1897,7 +1897,7 @@
     "date_joined": "2013-01-01T06:00:00Z",
     "role": "mentor",
     "admin_notes": "",
-    "groups": [],
+    "groups": [5],
     "user_permissions": []
   }
 },
@@ -1977,7 +1977,7 @@
     "date_joined": "2013-01-01T06:00:00Z",
     "role": "mentor",
     "admin_notes": "",
-    "groups": [],
+    "groups": [5],
     "user_permissions": []
   }
 },
