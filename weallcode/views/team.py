@@ -59,7 +59,7 @@ class TeamView(DefaultMetaTags, TemplateView):
             avatar_approved=True,
         )
 
-        context["staff"] = StaffMember.objects.all()
+        context["staff"] = StaffMember.objects.get_sorted()
         context["board"] = BoardMember.objects.get_sorted()
         context["associate_board"] = AssociateBoardMember.objects.get_sorted()
         context = self.get_instructors(context, volunteers)

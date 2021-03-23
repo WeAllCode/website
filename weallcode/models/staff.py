@@ -7,6 +7,19 @@ class StaffMemberManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
 
+    def get_sorted(self):
+        """
+        Reordering by role.
+        """
+        return (
+            self.get_queryset()
+            .filter(
+                is_active=True,
+                departure_date__isnull=True,
+            )
+            .order_by("join_date", "name")
+        )
+
 
 class StaffMember(CommonInfo):
 

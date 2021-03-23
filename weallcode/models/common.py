@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import date
 from itertools import chain
 
 from django.db import models
@@ -45,7 +46,8 @@ class CommonInfo(models.Model):
         blank=True,
         null=True,
     )
-    join_date = models.DateField("Join Date", auto_now_add=True)
+    join_date = models.DateField("Join Date", default=date.today)
+    departure_date = models.DateField("Departure Date", null=True, blank=True)
     is_active = models.BooleanField(
         default=True,
     )
@@ -71,4 +73,8 @@ class CommonBoardMemberManager(models.Manager):
 
         roles = [CHAIR, VICE_CHAIR, TREASURER, SECRETARY, DIRECTOR]
         order = Case(*[When(role=role, then=pos) for pos, role in enumerate(roles)])
-        return self.get_queryset().filter(role__in=roles).order_by(order, "join_date", "name")
+        return (
+            self.get_queryset()
+            .filter(is_active=True, departure_date__isnull=True, role__in=roles)
+            .order_by(order, "join_date", "name")
+        )

@@ -67,11 +67,41 @@
     "role": "Director",
     "description": "Founder & CEO, We All Code",
     "linkedin": "https://www.linkedin.com/in/karbassi/",
-    "join_date": "2020-01-01",
+    "join_date": "2014-01-01",
     "is_active": true,
     "created_at": "2020-05-18T20:40:00Z",
     "updated_at": "2020-05-18T21:48:56.906Z",
     "image": "board/ali-karbassi.jpg"
+  }
+},
+{
+  "model": "weallcode.boardmember",
+  "pk": 6,
+  "fields": {
+    "name": "David Lewis",
+    "role": "Director",
+    "description": "Managing Partner, Circumspect Capital",
+    "linkedin": "https://www.linkedin.com/in/david-lewis-4389761/",
+    "join_date": "2020-11-01",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T21:48:56.906Z",
+    "image": "board/david-lewis.jpg"
+  }
+},
+{
+  "model": "weallcode.boardmember",
+  "pk": 7,
+  "fields": {
+    "name": "John Cain",
+    "role": "Director",
+    "description": "",
+    "linkedin": "https://www.linkedin.com/in/john-cain-a74285/",
+    "join_date": "2021-01-01",
+    "is_active": true,
+    "created_at": "2020-05-18T20:40:00Z",
+    "updated_at": "2020-05-18T21:48:56.906Z",
+    "image": "board/john-cain.jpg"
   }
 }
 ]

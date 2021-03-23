@@ -39,6 +39,7 @@ class StaffMemberAdmin(admin.ModelAdmin):
                     "name",
                     "role",
                     "join_date",
+                    "departure_date",
                     "description",
                     "linkedin",
                     "image",
@@ -63,6 +64,7 @@ class BoardMemberAdmin(admin.ModelAdmin):
         "member_image",
         "name",
         "role",
+        "join_date",
         "is_active",
     ]
 
@@ -87,6 +89,7 @@ class BoardMemberAdmin(admin.ModelAdmin):
                     "name",
                     "role",
                     "join_date",
+                    "departure_date",
                     "description",
                     "linkedin",
                     "image",
@@ -136,6 +139,7 @@ class AssociateBoardMemberAdmin(admin.ModelAdmin):
                     "name",
                     "role",
                     "join_date",
+                    "departure_date",
                     "description",
                     "linkedin",
                     "image",
