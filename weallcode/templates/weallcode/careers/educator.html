@@ -1,0 +1,153 @@
+{% extends 'weallcode/_base.html' %}
+
+{% load static %}
+
+{% block page-class %}join-us{% endblock %}
+
+{% block subheader %}
+  {% if messages %}
+    {% include 'weallcode/_messages.html' %}
+  {% endif %}
+
+  <div class="sub-menu">
+    <nav class="grid-container" role="navigation">
+      <ul class="menu">
+        <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
+        <li><a href="{% url 'weallcode-associate-board' %}">Associate Board</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#donate">Donate</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#sponsorship">Sponsorship</a></li>
+        <li class="active"><a href="{% url 'weallcode-careers' %}">Careers</a></li>
+        <li><a href="{% url 'weallcode-join-us' %}#contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </div>
+{% endblock subheader %}
+
+{% block messages %}{% endblock %}
+
+{% block content %}
+
+  {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-associate-board.jpg" alt="Associate Board" %}
+
+  <main id="main">
+    <!-- Introduction -->
+    <section id="introduction" class="padding-top-3">
+      <div class="grid-container">
+        <div class="grid-x margin-bottom-2">
+          <div class="cell large-8 padding-right-2">
+            <h1 class="title text-tertiary">Coding/STEM Educator</h1>
+            <p></p>
+          </div>
+{% comment %}
+          <div class="cell large-4 position-relative">
+            <div class="aside-title">
+              <div>
+                <span class="text-tertiary display-inline-block">Make a</span>
+                <span class="text-tertiary display-inline-block">difference </span>
+                <span class="text-secondary display-inline-block">in the</span>
+                <span class="text-white display-inline-block">world</span>
+              </div>
+              <div class="line width-25 bg-primary margin-top-1"></div>
+            </div>
+          </div>
+{% endcomment %}
+        </div>
+
+        <div class="grid-x grid-padding-x margin-vertical-2">
+          <div class="cell medium-7">
+            <h2 class="h3" id="organization-overview">Organization Overview</h2>
+            <p>We All Code is a 501(c)3 nonprofit organization dedicated to sparking curiosity in coding among kids aged 7 to 17, with a particular focus on girls, students of color, and underserved students. Our mission is to introduce a diverse group of children to the fun of coding by providing free educational resources and hands-on classes. We envision a world where all children have an equal opportunity to ignite their curiosity through coding.</p>
+
+            <h2 class="h3" id="position-overview">Position Overview</h2>
+            <p>The Coding/STEM Educator is a key member of the We All Code staff and is integral in the growth and maintenance of the organization. The Educator will be responsible for implementing and teaching various STEM curricula to 7-17 year olds both virtually and, when it is safe, in-person in Chicago. They will help We All Code design and teach computer science, coding, robotics, and engineering to students who, without our classes, would not have access to high-quality STEM programming. The Educator will have the knowledge and passion to write additional curricula for classes. They will have a desire to expose Chicago’s youth to the opportunities and careers that exist within the STEM fields.</p>
+            <p>The ideal candidate is familiar with coding languages and the STEM field, passionate about education, and excited to inspire students to learn STEM. They must be eager, energized, and motivated by We All Code's mission.</p>
+            <p>This position is contracted part-time with the possibility of being full time in the future. Expected 15 to 20 hours a week.</p>
+            <h2 class="h3" id="duties-responsibilities">Duties & Responsibilities</h2>
+            <ul>
+              <li>Plan, prepare, and deliver instructional activities to students designed to expose them to various areas of Computer Science and STEM</li>
+              <li>Inspire students to ask questions, find a passion for the STEM field, and seek additional information and educational opportunities</li>
+              <li>Develop specific STEM curriculum with various classes that could entail game programming, app programming, logic and critical thinking. Courses should be developmentally appropriate and engaging</li>
+              <li>Must have critical thinking and troubleshooting skills</li>
+              <li>Must have strong technology skills</li>
+              <li>Must demonstrate a high level of patience for volunteer mentors assisting with class as well as students at various educational levels</li>
+              <li>Must have a high degree of flexibility</li>
+              <li>Must have excellent communication skills, both oral and written</li>
+              <li>Effectively manage the classroom by implementing discipline, time management, and organization consistent with We All Code</li>
+            </ul>
+          </div>
+
+          <div class="cell medium-5">
+            <div class="binary-drop-right">
+              <img class="width-100" src="{% static 'weallcode/images/photos/volunteering-2.jpg' %}" alt="Photo of student and mentor in class.">
+            </div>
+          </div>
+
+          <div class="cell medium-7">
+            <h2 class="h3" id="qualifications">Qualifications</h2>
+            <ul>
+              <li>Bachelor’s degree required.</li>
+              <li>Minimum 1 year of experience engaging with learners in formal or informal settings</li>
+              <li>Some experience designing learning experiences (programming, lessons, etc.)</li>
+              <li>At least 1 year of experience engaging with youth, students, teens and/or adults in pursuit of broad or specific learning outcomes</li>
+              <li>Excellent written and oral communication skills</li>
+              <li>Must be available to work a flexible schedule – Many of our classes take place after school in the 3-5 pm hours, on the weekend, or during school hours.</li>
+              <li>Experience with coding languages, for example: HTML, CSS, Python, Javascript, Unity. Not all required.</li>
+              <li>Must live in the Chicagoland area</li>
+              <li>Strong belief that all students, regardless of their backgrounds, have the potential to succeed</li>
+              <li>A deep commitment to We All Code’s mission</li>
+              <li>Experience working with diverse populations. Commitment to cultural sensitivity and respect for differences</li>
+              <li>Excellent facilitator with the ability to motivate, direct, and teach people as well as collaborate and interact with others effectively and productively</li>
+              <li>The ability to work well both independently and within a team</li>
+              <li>Positive attitude and strong work ethic. Ability to constantly find joy in the successes and challenges of our work. Ability to demonstrate that joy towards students, families, and teammates.</li>
+              <li>Ability to pass a background check</li>
+              <li>A valid driver’s license is preferred</li>
+            </ul>
+
+            <h3 class="h4" id="bonus">Bonus</h3>
+            <ul>
+              <li>Has a Master’s degree</li>
+              <li>Holds Educational licensure in Illinois</li>
+              <li>Is bilingual; fluent in Spanish</li>
+              <li>Has extensive teaching experience</li>
+              <li>Up-to-date with CPR certification</li>
+              <li>Has prior experience working with Chicago Youth</li>
+              <li>Is interested in being in an inclusive environment; we strongly value the diversity of our team</li>
+              <li>Is interested in being in an environment that values work-life balance.</li>
+            </ul>
+
+          </div>
+
+          <div class="cell medium-5">
+            <div class="binary-drop-right">
+              <img class="width-100" src="{% static 'weallcode/images/photos/volunteering-3-small.jpg' %}" alt="Photo of student and mentor in class.">
+            </div>
+          </div>
+
+          <div class="cell medium-7">
+            <p>We All Code is an equal opportunity employer and seeks to employ qualified individuals based on individual merit. We All Code does not discriminate against any individual with respect to the terms and conditions of employment based on that individual’s race, sex, age, religion, color, national origin, disability, genetic information, marital status, veteran status, sexual orientation, gender identity or expression, housing status, or any other non-merit factor protected under state, local or federal laws. Equal Employment Opportunity applies to all personnel actions such as recruiting, hiring, compensation, benefits, promotions, training, transfer, termination, and opportunities for training. We All Code is committed to a fair and equitable workplace where everyone is a respected and valued member of the team.</p>
+
+            <h3 class="h4">Compensation and Benefits</h3>
+
+            <ul>
+              <li>Health insurance provided for full-time positions</li>
+              <li>401K (no matching) for full-time positions</li>
+              <li>Equipment provided</li>
+              <li>All software provided</li>
+              <li>Flexible working hours</li>
+              <li>Remote until further notice, based in the Chicago-area.</li>
+            </ul>
+
+            <h2 class="h3" id="apply">How to apply</h2>
+            <p>To apply for the position, please send a cover letter, résumé, LinkedIn URL, and two code samples (or GitHub profile link) to <a href="mailto:careers@weallcode.org">careers@weallcode.org</a>. Our selection committee will review the materials and follow up with you regarding the hiring process. For all other questions related to the position or to We All Code, please reach out to <a href="mailto:hello@weallcode.org">hello@weallcode.org</a>.</p>
+            <p>For volunteer opportunities, please visit <a href="{% url 'weallcode-join-us' %}#volunteer">our volunteer page</a>.</p>
+
+            <h2 class="h3" id="other-positions">Other Positions</h2>
+            <p><a href="{% url 'weallcode-careers' %}">See all available positions.</a></p>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+{% endblock %}
