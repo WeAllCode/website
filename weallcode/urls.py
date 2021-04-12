@@ -3,8 +3,11 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 from django.views.generic import RedirectView
 
-from .views import (
+from weallcode.views import (
     AssociateBoardView,
+    CareersEducatorView,
+    CareersOperationsView,
+    CareersView,
     CreditsView,
     HomeView,
     JoinUsView,
@@ -39,6 +42,17 @@ urlpatterns = [
             [
                 path("", JoinUsView.as_view(), name="weallcode-join-us"),
                 path("associate-board/", AssociateBoardView.as_view(), name="weallcode-associate-board"),
+                path("careers/", RedirectView.as_view(pattern_name="weallcode-careers")),
+            ]
+        ),
+    ),
+    path(
+        "careers/",
+        include(
+            [
+                path("", CareersView.as_view(), name="weallcode-careers"),
+                path("operations/", CareersOperationsView.as_view(), name="weallcode-careers-operations"),
+                path("educator/", CareersEducatorView.as_view(), name="weallcode-careers-educator"),
             ]
         ),
     ),
