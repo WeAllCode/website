@@ -16,7 +16,11 @@ def subtract(value, arg):
 
 @register.simple_tag(takes_context=False)
 def student_session_order_count(student, session):
-    orders_count = Order.objects.filter(student=student, session=session).count()
+    orders_count = Order.objects.filter(
+        student=student,
+        session=session,
+        is_active=True,
+    ).count()
 
     return orders_count
 

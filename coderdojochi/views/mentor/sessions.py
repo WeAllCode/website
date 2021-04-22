@@ -20,11 +20,14 @@ class SessionDetailView(DetailView):
 
         context = super().get_context_data(**kwargs)
         context["mentor_signed_up"] = session_orders.exists()
-        context["spots_remaining"] = session.get_mentor_capacity() - session_orders.count()
+        context["spots_remaining"] = session.mentor_capacity - session_orders.count()
         context["account"] = mentor
 
         context["active_mentors"] = Mentor.objects.filter(
-            id__in=MentorOrder.objects.filter(session=self.object, is_active=True).values("mentor__id")
+            id__in=MentorOrder.objects.filter(
+                session=self.object,
+                is_active=True,
+            ).values("mentor__id")
         )
 
         return context

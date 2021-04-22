@@ -257,8 +257,17 @@ class Session(CommonInfo):
         return f"{self.course.title} | {date}"
 
     def save(self, *args, **kwargs):
+
+        # Mentor Capacity Check
         if self.mentor_capacity is None:
             self.mentor_capacity = int(self.capacity / 2)
+
+        if self.mentor_capacity < 0:
+            self.mentor_capacity = 0
+
+        # Capacity check
+        if self.capacity < 0:
+            self.capacity = 0
 
         super(Session, self).save(*args, **kwargs)
 
@@ -321,12 +330,6 @@ class Session(CommonInfo):
         from .order import Order
 
         return Order.objects.filter(is_active=True, session=self).exclude(check_in=None).values("student")
-
-    def get_mentor_capacity(self):
-        if self.mentor_capacity:
-            return self.mentor_capacity
-        else:
-            return int(self.capacity / 2)
 
 
 class PartnerPasswordAccess(CommonInfo):

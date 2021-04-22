@@ -22,68 +22,50 @@
 
   {% if object.external_enrollment_url %}
 
-  <p><a href="{{ object.external_enrollment_url }}" class="button large secondary">Enroll now</a></p>
+    <p><a href="{{ object.external_enrollment_url }}" class="button large secondary">Enroll now</a></p>
 
   {% else %}
 
-  {% if spots_remaining < 1 %}
+      {% if students %}
 
-  <p class="subtitle">There are currently no available spots for this class. Please enroll in an <a href="{% url 'weallcode-programs' %}">upcoming class.</a></p>
+        {% if spots_remaining > 0 %}
 
-  {% else %}
+          <p class="subtitle">Enroll Student{{ students|pluralize }}</p>
 
-  {% if students %}
+        {% else %}
 
-  {% if spots_remaining > 0 %}
+          <p class="subtitle">There are currently no available spots for this class. Please join the waitlist below and/or <a href="{% url 'weallcode-programs' %}#classes">find another upcoming class.</a></p>
 
-  <p class="subtitle">Enroll Student{{ students|pluralize }}</p>
+        {% endif %}
 
-  {% else %}
+        <table class="students">
+          <tbody>
+            {% for student in students %}
+            <tr>
+              <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
+              <td class="text-right">
+                {% student_session_order_count student=student session=session as student_is_enrolled %}
+                {% if spots_remaining > 0 or student_is_enrolled %}
+                  {% student_register_link student session %}
+                {% else %}
+                  <a href="#" class="button small disabled" disabled="disabled">Enroll</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
 
-  <p class="subtitle">There are currently no available spots for this class. Please join the waitlist below and/or <a href="{% url 'weallcode-programs' %}#classes">find another upcoming class.</a></p>
+        <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True">Add another student</a></small>
 
-  {% endif %}
+      {% else %}
 
-  <table class="students">
-    <tbody>
-      {% for student in students %}
-      <tr>
-        <td>{{ student.first_name }} {{ student.last_name|slice:":1" }}</td>
-        <td class="text-right">
-          {% student_session_order_count student=student session=session as student_is_enrolled %}
-          {% if spots_remaining > 0 or student_is_enrolled %}
-          {% student_register_link student session %}
-          {% else %}
-          <form action="" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="waitlist" value="student">
-            <input type="hidden" name="account_id" value="{{ student.id }}">
-            {% if student in object.waitlist_students.all %}
-            <input type="hidden" name="remove" value="true">
-            <button class="button tertiary small">Remove from Waitlist</button>
-            {% else %}
-            <input type="hidden" name="remove" value="false">
-            <button class="button secondary small">Add to Waitlist</button>
-            {% endif %}
-          </form>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="button large secondary">Enroll</a></p>
 
-  <small class="add-another"><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True">Add another student</a></small>
+      {% endif %}
 
-  {% else %}
+    {% endif %}
 
-  <p><a href="{% url 'welcome' %}?next={{ request.path }}&enroll=True" class="button large secondary">Enroll</a></p>
-
-  {% endif %}
-
-  {% endif %}
-
-  {% endif %}
 </section>
 
 <div class="class-info-box grid-x text-white margin-top-2">
@@ -187,11 +169,11 @@
   <h3 class="title text-secondary">Meet the assistants</h3>
   <div class="grid-x mentors grid-margin-x grid-margin-y">
     {% for assistant in session.assistant.all %}
-      {% if assistant.is_public == True %}
-      <div class="cell small-4 medium-3">
-        {% include "weallcode/snippets/team_member.html" with is_small=True name=assistant.full_name image=assistant.get_avatar.thumbnail %}
-      </div>
-      {% endif %}
+    {% if assistant.is_public == True %}
+    <div class="cell small-4 medium-3">
+      {% include "weallcode/snippets/team_member.html" with is_small=True name=assistant.full_name image=assistant.get_avatar.thumbnail %}
+    </div>
+    {% endif %}
     {% endfor %}
   </div>
 </section>
