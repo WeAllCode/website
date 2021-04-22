@@ -24,39 +24,15 @@
     {% if session.external_enrollment_url %}
       <p><a href="{{ session.external_enrollment_url }}" class="button large secondary">Enroll now</a></p>
     {% else %}
-      {% if user.is_authenticated %}
-        {% if spots_remaining %}
-          {% if mentor_signed_up %}
-            <p>You are signed up to mentor this class.</p>
-            <p><a href="{{ session.get_sign_up_url }}" class="button large tertiary">I can't make it...</a></p>
-          {% else %}
-            <p><a href="{{ session.get_sign_up_url }}" class="button large secondary">Sign up now!</a></p>
-          {% endif %}
-        {% else %}
-          {% if account in session.waitlist_mentors.all %}
-            <p>You are currently on the waitlist for this class. We will contact you ASAP if a spot becomes available.</p>
-          {% else %}
-            <p>There are currently no available mentor spots for this class.</p>
-          {% endif %}
-
-          <form action="" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="waitlist" value="mentor">
-              <input type="hidden" name="account_id" value="{{ account.id }}">
-              {% if account in session.waitlist_mentors.all %}
-              <input type="hidden" name="remove" value="true">
-              <button class="button small tertiary">Remove from waitlist</button>
-              {% else %}
-              <input type="hidden" name="remove" value="false">
-              <button class="button small secondary">Add me to waitlist</button>
-              {% endif %}
-          </form>
-        {% endif %}
+      {% if mentor_signed_up %}
+        <p>You are signed up to mentor this class.</p>
+        <p><a href="{{ session.get_sign_up_url }}" class="button large tertiary">I can't make it...</a></p>
       {% else %}
-        {% if spots_remaining < 1 %}
-          <p class="subtitle">There are currently no available spots for this class.  Please join the waitlist below and/or <a href="{% url 'weallcode-programs' %}">find another upcoming class.</a></p>
+        {% if spots_remaining %}
+           <p><a href="{{ session.get_sign_up_url }}" class="button large secondary">Sign up now!</a></p>
+        {% else %}
+          <p>There are currently no available mentor spots for this class. Check back for our next session.</p>
         {% endif %}
-        <p><a href="{% url 'account_signup' %}?next={{ session.get_absolute_url }}{% if spots_remaining > 0 %}&enroll=True{% endif %}" class="button large secondary">{% if spots_remaining > 0 %}Enroll now{% else %}Join Waitlist{% endif %}</a></p>
       {% endif %}
     {% endif %}
 </section>
@@ -203,7 +179,7 @@
     {% if user.role == 'mentor' %}
       <ul class="center-block well well-sm well-admin list-group list-unstyled">
           <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
-          <li class="list-group-item">Mentors: <b>{{ session.get_mentor_orders.count }} / {{ session.get_mentor_capacity }}</b></li>
+          <li class="list-group-item">Mentors: <b>{{ session.get_mentor_orders.count }} / {{ session.mentor_capacity }}</b></li>
       </ul>
     {% endif %}
 
