@@ -29,16 +29,16 @@
     "user": 3,
     "bio": "",
     "is_active": true,
-    "background_check": false,
-    "is_public": false,
+    "background_check": true,
+    "is_public": true,
     "avatar": "",
-    "avatar_approved": false,
-    "birthday": null,
-    "gender": null,
+    "avatar_approved": true,
+    "birthday": "1988-01-01",
+    "gender": "male",
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "race_ethnicity": [2]
   }
 },
 {

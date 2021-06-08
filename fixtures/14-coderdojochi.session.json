@@ -9,7 +9,7 @@
       "start_date": "2022-01-01T16:00:00Z",
       "location": 3,
       "capacity": 20,
-      "mentor_capacity": 10,
+      "mentor_capacity": 1,
       "instructor": 1,
       "cost": "0.00",
       "minimum_cost": null,
