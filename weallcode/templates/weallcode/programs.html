@@ -19,9 +19,9 @@
   {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-programs.jpg" alt="programs" %}
 
   <main id="main">
-    <section id="classes" class="padding-vertical-3">
+    <section class="margin-vertical-3">
       <div class="grid-container">
-        <div class="grid-x margin-bottom-3">
+        <div class="grid-x">
           <div class="cell large-8 padding-right-2">
             <h1 class="title text-tertiary margin-bottom-2">Programs</h1>
             <p>We All Code Programs are built on our single-day, interactive <strong>Classes</strong>. During these 3-to-5 hour weekend sessions, kids learn about one specific coding topic, like HTML 1.0.</p>
@@ -41,7 +41,11 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
+    <section id="classes">
+      <div class="grid-container">
         <h2 class="title text-tertiary margin-bottom-2">Upcoming Classes</h2>
 
         {% if weekend_classes %}
