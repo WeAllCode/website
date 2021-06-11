@@ -38,8 +38,7 @@ class Session(CommonInfo):
         default=20,
     )
     mentor_capacity = models.IntegerField(
-        blank=True,
-        null=True,
+        default=10,
     )
     instructor = models.ForeignKey(
         Mentor,

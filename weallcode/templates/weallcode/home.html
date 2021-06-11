@@ -27,7 +27,24 @@
                 <div>{{ next_session.location.address }}</div>
                 <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
                 {% endif %}
-                <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">Enroll Now</a>
+
+                <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">
+                  {% if user.is_authenticated and user.role == 'mentor' %}
+                    {% if next_session.mentor_capacity and next_session.get_mentor_orders.count >= next_session.mentor_capacity %}
+                      Class Full
+                    {% else %}
+                      Volunteer
+                    {% endif %}
+                  {% else %}
+                    {% if next_session.get_active_student_count < next_session.capacity %}
+                      Sign up
+                    {% else %}
+                      Class Full
+                    {% endif %}
+                  {% endif %}
+                </a>
+
+
                 <a href="{% url 'weallcode-programs' %}#classes"><small>View All Classes</small></a>
               </div>
             </div>

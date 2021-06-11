@@ -42,15 +42,15 @@
     <a href="{{ session.get_absolute_url }}" class="button secondary width-100 text-uppercase margin-top-1">
       {% if user.is_authenticated and user.role == 'mentor' %}
         {% if session.mentor_capacity and session.get_mentor_orders.count >= session.mentor_capacity %}
-          Join Waitlist
+          Class Full
         {% else %}
           Volunteer
         {% endif %}
       {% else %}
         {% if session.get_active_student_count < session.capacity %}
-          Learn more
+          Sign up
         {% else %}
-          Join Waitlist
+          Class Full
         {% endif %}
       {% endif %}
     </a>
