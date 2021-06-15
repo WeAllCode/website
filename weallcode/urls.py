@@ -66,3 +66,12 @@ urlpatterns = [
 ]
 
 handler404 = "weallcode.views.page_not_found_view"
+
+# Sentry Testing
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
+urlpatterns += [
+    path("test--sentry/", trigger_error),
+]
