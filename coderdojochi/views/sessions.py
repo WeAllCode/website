@@ -136,109 +136,6 @@ class SessionDetailView(View):
             return False
 
 
-# class SessionDetailView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
-#     template_name = "session_detail.html"
-
-#     def dispatch(self, request, *args, **kwargs):
-#         session_obj = get_object_or_404(Session, id=kwargs["pk"])
-
-#         if request.method == "GET":
-#             if session_obj.password and not self.validate_partner_session_access(self.request, kwargs["pk"]):
-#                 return redirect(reverse("session-password", kwargs=kwargs))
-
-#             if request.user.is_authenticated and request.user.role:
-#                 if "enroll" in request.GET or "enroll" in kwargs:
-#                     return self.enroll_redirect(request, session_obj)
-
-#         # kwargs["session_obj"] = session_obj
-#         return super(SessionDetailView, self).dispatch(request, *args, **kwargs)
-
-#     def enroll_redirect(self, request, session_obj):
-#         if request.user.role == "mentor":
-#             return redirect("session-sign-up", pk=session_obj.id)
-
-#         guardian = get_object_or_404(Guardian, user=request.user)
-#         student = get_object_or_404(Student, guardian=guardian, id=(int(request.GET["student"])))
-
-#         if student:
-#             return redirect("session-sign-up", pk=session_obj.id, student_id=student.id)
-
-#         return redirect(f"{reverse('welcome')}?next={session_obj.get_absolute_url()}&enroll=True")
-
-#     def validate_partner_session_access(self, request, pk):
-#         authed_sessions = request.session.get("authed_partner_sessions")
-
-#         if authed_sessions and pk in authed_sessions:
-#             if request.user.is_authenticated:
-#                 PartnerPasswordAccess.objects.get_or_create(session_id=pk, user=request.user)
-#             return True
-
-#         if request.user.is_authenticated:
-#             try:
-#                 PartnerPasswordAccess.objects.get(session_id=pk, user_id=request.user.id)
-#             except PartnerPasswordAccess.DoesNotExist:
-#                 return False
-#             else:
-#                 return True
-
-#         else:
-#             return False
-
-#     def get_context_data(self, **kwargs):
-#         print(kwargs["session_obj"].__dict__)
-#         context = super(SessionDetailView, self).get_context_data(**kwargs)
-#         session_obj = kwargs["session_obj"]
-#         context["session"] = session_obj
-
-#         upcoming_classes = Session.objects.filter(is_active=True, start_date__gte=timezone.now()).order_by("start_date")
-#         context["upcoming_classes"] = upcoming_classes
-
-#         active_mentors = Mentor.objects.filter(
-#             id__in=MentorOrder.objects.filter(session=session_obj, is_active=True).values("mentor__id")
-#         )
-#         context["active_mentors"] = active_mentors
-
-#         if self.request.user.is_authenticated:
-#             if self.request.user.role == "mentor":
-#                 account = get_object_or_404(Mentor, user=self.request.user)
-#                 session_orders = MentorOrder.objects.filter(session=session_obj, is_active=True,)
-#                 context["mentor_signed_up"] = session_orders.filter(mentor=account).exists()
-
-#                 context["spots_remaining"] = session_obj.get_mentor_capacity() - session_orders.count()
-#             else:
-#                 account = get_object_or_404(Guardian, user=self.request.user)
-#                 context["students"] = account.get_students()
-#                 context["spots_remaining"] = session_obj.capacity - session_obj.get_active_student_count()
-#             context["account"] = account
-#         else:
-#             context["upcoming_classes"] = upcoming_classes.filter(is_public=True)
-#             context["spots_remaining"] = session_obj.capacity - session_obj.objects.get_active_student_count()
-
-#         return context
-
-#     def post(self, request, *args, **kwargs):
-#         session_obj = kwargs["session_obj"]
-#         if "waitlist" not in request.POST:
-#             messages.error(request, "Invalid request, please try again.")
-#             return redirect(session_obj.get_absolute_url())
-
-#         if request.POST["waitlist"] == "student":
-#             account = Student.objects.get(id=request.POST["account_id"])
-#             waitlist_attr = "waitlist_students"
-#         else:
-#             account = Guardian.objects.get(id=request.POST["account_id"])
-#             waitlist_attr = "waitlist_guardians"
-
-#         if request.POST["remove"] == "true":
-#             getattr(session_obj, waitlist_attr).remove(account)
-#             session_obj.save()
-#             messages.success(request, "You have been removed from the waitlist. Thanks for letting us know.")
-#         else:
-#             getattr(session_obj, waitlist_attr).add(account)
-#             session_obj.save()
-#             messages.success(request, "Added to waitlist successfully.")
-#         return redirect(session_obj.get_absolute_url())
-
 
 class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
     template_name = "session_sign_up.html"
@@ -253,6 +150,8 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             session_orders = MentorOrder.objects.filter(session=session_obj, is_active=True)
             kwargs["mentor"] = get_object_or_404(Mentor, user=request.user)
             kwargs["user_signed_up"] = session_orders.filter(mentor=kwargs["mentor"]).exists()
+
+            kwargs["spots_remaining"] = session_obj.mentor_capacity - session_orders.count()
 
         elif request.user.role == "guardian":
             kwargs["guardian"] = get_object_or_404(Guardian, user=request.user)
@@ -285,6 +184,15 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                         f'<a href="{BG_CHECK_LINK}" target="_blank">fill out the background search form</a>.'
                     ),
                     "redirect": request.META.get("HTTP_REFERER", "/dojo"),
+                }
+            
+            # Check to make sure there is a spot open to sign up
+            if kwargs["spots_remaining"] <= 0:
+                access_dict = {
+                    "message": (
+                        "There are no slots open to mentor. Please check another class."
+                    ),
+                    "redirect": request.META.get("HTTP_REFERER", kwargs["session_obj"].get_absolute_url()),
                 }
 
         if kwargs.get("student"):
@@ -364,6 +272,25 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                 session_confirm_guardian(request, session_obj, order, student)
 
         return redirect(session_obj.get_absolute_url())
+
+class SessionCancelView(View):
+    def get(self, request, *args, **kwargs):
+        pk = kwargs["pk"]
+        session = get_object_or_404(Session, id=pk)
+
+        # TODO: Do we need to check for this?
+        # if session.password and not self.validate_partner_session_access(request, pk):
+        #     return redirect(reverse("session-password", kwargs=kwargs))
+
+        if request.user.is_authenticated:
+            if request.user.role == "mentor":
+                return mentor.SessionCancelView.as_view()(request, *args, **kwargs)
+            else:
+                return guardian.SessionCancelView.as_view()(request, *args, **kwargs)
+                
+        return redirect(session.get_absolute_url())
+    
+
 
 
 class PasswordSessionView(TemplateView):

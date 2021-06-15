@@ -276,6 +276,9 @@ class Session(CommonInfo):
     def get_sign_up_url(self):
         return reverse("session-sign-up", args=[str(self.id)])
 
+    def get_cancel_url(self):
+        return reverse("session-cancel", args=[str(self.id)])
+
     def get_calendar_url(self):
         return reverse("session-calendar", args=[str(self.id)])
 

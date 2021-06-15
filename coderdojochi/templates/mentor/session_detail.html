@@ -26,7 +26,7 @@
     {% else %}
       {% if mentor_signed_up %}
         <p>You are signed up to mentor this class.</p>
-        <p><a href="{{ session.get_sign_up_url }}" class="button large tertiary">I can't make it...</a></p>
+        <p><a href="{{ session.get_cancel_url }}" class="button large tertiary">I can't make it...</a></p>
       {% else %}
         {% if spots_remaining %}
            <p><a href="{{ session.get_sign_up_url }}" class="button large secondary">Sign up now!</a></p>

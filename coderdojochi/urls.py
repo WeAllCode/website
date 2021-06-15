@@ -16,6 +16,7 @@ from .views import (  # SessionDetailView,
     SessionCalendarView,
     SessionDetailView,
     SessionSignUpView,
+    SessionCancelView,
     WelcomeView,
     meeting_announce,
     meeting_sign_up,
@@ -156,6 +157,12 @@ urlpatterns += [
                 path("<int:pk>/sign-up/", SessionSignUpView.as_view(), name="session-sign-up"),
                 # /classes/ID/sign-up/STUDENT-ID/
                 path("<int:pk>/sign-up/<int:student_id>/", SessionSignUpView.as_view(), name="session-sign-up"),
+
+                # Cancel session
+                # /classes/ID/cancel/
+                path("<int:pk>/cancel/", SessionCancelView.as_view(), name="session-cancel"),
+                # /classes/ID/cancel/STUDENT-ID/
+                path("<int:pk>/cancel/<int:student_id>/", SessionCancelView.as_view(), name="session-cancel"),
             ]
         ),
     ),

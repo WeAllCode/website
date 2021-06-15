@@ -8,26 +8,14 @@
 
 {% block contained_content %}
 <div class="container registration min-height">
-    {% if user_signed_up %}
 
-        <h1 class="title light">I can no longer volunteer for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.mentor_start_date|date }}</strong> from <strong>{{ session.mentor_start_date|time }}</strong> to <strong>{{ session.mentor_end_date|time }}</strong>.</h1>
+    <h1 class="title light">Sign up to mentor for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.mentor_start_date|date }}</strong> from <strong>{{ session.mentor_start_date|time }}</strong> to <strong>{{ session.mentor_end_date|time }}</strong>.</h1>
 
-        <form class="form" method="POST" action="">
-            {% csrf_token %}
-            <button class="button tertiary large">Yes, cancel</button>
-            <a href="{{ session.get_absolute_url }}" class="button large secondary">Nevermind</a>
-        </form>
+    <form class="form" method="POST" action="">
+        {% csrf_token %}
+        <button class="button large">Yes, I'm excited!</button>
+        <a href="{{ session.get_absolute_url }}" class="button large secondary">Nevermind</a>
+    </form>
 
-    {% else %}
-
-        <h1 class="title light">Sign up to mentor for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.mentor_start_date|date }}</strong> from <strong>{{ session.mentor_start_date|time }}</strong> to <strong>{{ session.mentor_end_date|time }}</strong>.</h1>
-
-        <form class="form" method="POST" action="">
-            {% csrf_token %}
-            <button class="button large">Yes, I'm excited!</button>
-            <a href="{{ session.get_absolute_url }}" class="button large secondary">Nevermind</a>
-        </form>
-
-    {% endif %}
 </div>
 {% endblock %}

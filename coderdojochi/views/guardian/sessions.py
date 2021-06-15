@@ -19,3 +19,6 @@ class SessionDetailView(DetailView):
         )
 
         return context
+
+class SessionCancelView(DetailView):
+    pass
