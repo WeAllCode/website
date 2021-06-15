@@ -71,6 +71,7 @@ handler404 = "weallcode.views.page_not_found_view"
 def trigger_error(request):
     division_by_zero = 1 / 0
 
+
 urlpatterns += [
-    path('test--sentry/', trigger_error),
+    path("test--sentry/", trigger_error),
 ]
