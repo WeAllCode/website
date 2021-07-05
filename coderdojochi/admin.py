@@ -507,9 +507,9 @@ class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "description",
     ]
 
-    prepopulated_fields = {
-        "slug": ("title",),
-    }
+    # prepopulated_fields = {
+    #     "slug": ("title",),
+    # }
 
     view_on_site = False
 

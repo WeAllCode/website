@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     "django_nose",
     "meta",
     "captcha",
+    "salesforce",
     # apps
     "accounts",
     "coderdojochi",
@@ -172,6 +173,18 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 # Change 'default' database configuration with $DATABASE_URL.
 DATABASES["default"].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
+
+# Adding Salesforce Database
+DATABASES["salesforce"] = {
+    "ENGINE": "salesforce.backend",
+    "CONSUMER_KEY": os.environ.get("SALESFORCE_KEY"),
+    "CONSUMER_SECRET": os.environ.get("SALESFORCE_SECRET"),
+    "USER": os.environ.get("SALESFORCE_USER"),
+    "PASSWORD": os.environ.get("SALESFORCE_PASSWORD"),
+    "HOST": os.environ.get("SALESFORCE_HOST"),
+}
+
+DATABASE_ROUTERS = ["salesforce.router.ModelRouter"]
 
 
 # Password validation
