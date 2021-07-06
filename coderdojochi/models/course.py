@@ -94,11 +94,13 @@ class Course(salesforce.models.SalesforceModel):
         default=timedelta(hours=3),
         help_text="HH:MM:ss",
     )
+    
     # TODO: update db_column
     minimum_age = salesforce.models.IntegerField(
         default=7,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
+
     # TODO: update db_column
     maximum_age = salesforce.models.IntegerField(
         default=18,
