@@ -1,40 +1,46 @@
-from django.db import models
+# from django.db import models
 
 from .common import CommonInfo
 from .race_ethnicity import RaceEthnicity
 from .user import CDCUser
+import salesforce
 
-
-class Guardian(CommonInfo):
-    user = models.ForeignKey(
+class Guardian(salesforce.models.SalesforceModel):
+    # class Guardian(CommonInfo)
+    user = salesforce.models.ForeignKey(
         CDCUser,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
     )
-    is_active = models.BooleanField(
+    is_active = salesforce.models.BooleanField(
+        db_column="Active__c",
         default=True,
     )
-    phone = models.CharField(
+    phone = salesforce.models.CharField(
+        db_column="Phone",
         max_length=50,
         blank=True,
     )
-    zip = models.CharField(
-        max_length=20,
-        blank=True,
-        null=True,
-    )
-    birthday = models.DateField(
+    #what is zip
+    # address = salesforce.models.Fore(
+    #     max_length=20,
+    #     blank=True,
+    #     null=True,
+    # )
+    birthday = salesforce.models.DateField(
+        db_column="Birthdate",
         blank=False,
         null=True,
     )
-    gender = models.CharField(
+    gender = salesforce.models.CharField(
+        db_column="Gender__c",
         max_length=255,
         blank=False,
         null=True,
     )
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
-        blank=False,
-    )
+    #race_ethnicity = models.ManyToManyField(
+    #     RaceEthnicity,
+    #     blank=False,
+    # )
 
     def __str__(self):
         return self.full_name

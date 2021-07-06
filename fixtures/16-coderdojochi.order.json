@@ -3,8 +3,6 @@
   "model": "coderdojochi.order",
   "pk": 1,
   "fields": {
-    "created_at": "2016-05-08T19:07:25.346Z",
-    "updated_at": "2016-05-08T19:07:25.346Z",
     "guardian": 1,
     "session": 2,
     "student": 1,
@@ -22,8 +20,6 @@
   "model": "coderdojochi.order",
   "pk": 2,
   "fields": {
-    "created_at": "2016-05-08T19:07:41.042Z",
-    "updated_at": "2016-05-08T19:07:41.042Z",
     "guardian": 1,
     "session": 2,
     "student": 2,
@@ -41,8 +37,6 @@
   "model": "coderdojochi.order",
   "pk": 3,
   "fields": {
-    "created_at": "2016-05-08T19:07:57.868Z",
-    "updated_at": "2016-05-08T19:07:57.868Z",
     "guardian": 1,
     "session": 2,
     "student": 3,

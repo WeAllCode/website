@@ -1,56 +1,60 @@
-from django.db import models
+# from django.db import models
 
 from .common import CommonInfo
+import salesforce
 
-
-class Order(CommonInfo):
+class Order(salesforce.models.SalesforceModel):
+    # Order(CommonInfo)
     from .guardian import Guardian
     from .session import Session
     from .student import Student
 
-    guardian = models.ForeignKey(
+    guardian = salesforce.models.ForeignKey(
         Guardian,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
     )
-    session = models.ForeignKey(
+    session = salesforce.models.ForeignKey(
         Session,
-        on_delete=models.CASCADE,
+        db_column="hed__Course_Offering__c",
+        on_delete=salesforce.models.PROTECT,
     )
-    student = models.ForeignKey(
+    student = salesforce.models.ForeignKey(
         Student,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
+        db_column="Contact"
     )
-    is_active = models.BooleanField(
+    is_active = salesforce.models.BooleanField(
         default=True,
     )
-    ip = models.CharField(
+    ip = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    check_in = models.DateTimeField(
+    check_in = salesforce.models.DateTimeField(
         blank=True,
         null=True,
+        db_column="Check_in__c",
     )
-    alternate_guardian = models.CharField(
+    alternate_guardian = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    affiliate = models.CharField(
+    affiliate = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    order_number = models.CharField(
+    order_number = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    week_reminder_sent = models.BooleanField(
+    week_reminder_sent = salesforce.models.BooleanField(
         default=False,
     )
-    day_reminder_sent = models.BooleanField(
+    day_reminder_sent = salesforce.models.BooleanField(
         default=False,
     )
 

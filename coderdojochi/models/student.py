@@ -1,62 +1,76 @@
-from django.db import models
+# from django.db import models
 from django.utils import timezone
+
+import salesforce
 
 from .common import CommonInfo
 from .race_ethnicity import RaceEthnicity
 
 
-class Student(CommonInfo):
+class Student(salesforce.models.SalesforceModel):
     from .guardian import Guardian
 
-    guardian = models.ForeignKey(
+    guardian = salesforce.models.ForeignKey(
         Guardian,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
     )
-    first_name = models.CharField(
+    first_name = salesforce.models.CharField(
+        db_column = "FirstName",
         max_length=255,
     )
-    last_name = models.CharField(
+    last_name = salesforce.models.CharField(
+        db_column="LastName",
         max_length=255,
     )
-    birthday = models.DateField()
-    gender = models.CharField(
+    birthday = salesforce.models.DateField(
+        db_column = "Birthdate"
+    )
+    gender = salesforce.models.CharField(
+        db_column="Gender__c",
         max_length=255,
     )
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
+    # race_ethnicity = salesforce.models.ManyToManyField(
+    #     RaceEthnicity,
+    #     # db_column = "hed__Race__c",
+    #     blank=True,
+    # )
+    # race_ethnicity = models.ManyToManyField(
+    #     RaceEthnicity,
+    #     blank=True,
+    # )
+    school_name = salesforce.models.CharField(
+        max_length=255,
+        null=True,
+    )
+    school_type = salesforce.models.CharField(
+        max_length=255,
+        null=True,
+    )
+    medical_conditions = salesforce.models.TextField(
+        db_column="Medical__c",
         blank=True,
-    )
-    school_name = models.CharField(
-        max_length=255,
         null=True,
     )
-    school_type = models.CharField(
-        max_length=255,
-        null=True,
-    )
-    medical_conditions = models.TextField(
+    medications = salesforce.models.TextField(
+        db_column='Medications__c',
         blank=True,
         null=True,
     )
-    medications = models.TextField(
-        blank=True,
-        null=True,
-    )
-    photo_release = models.BooleanField(
+    photo_release = salesforce.models.BooleanField(
         "Photo Consent",
         help_text=(
             "I hereby give permission to We All Code to use "
             "the student's image and/or likeness in promotional materials."
         ),
-        default=False,
+        db_column="Photo_Release__c",
     )
-    consent = models.BooleanField(
+    consent = salesforce.models.BooleanField(
         "General Consent",
         help_text=("I hereby give consent for the student signed up " "above to participate in We All Code."),
-        default=False,
+        db_column="Consent__c",
     )
-    is_active = models.BooleanField(
-        default=True,
+    is_active = salesforce.models.BooleanField(
+        db_column="Active__c",
     )
 
     def __str__(self):

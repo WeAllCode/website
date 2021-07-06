@@ -110,8 +110,8 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "last_name",
         "user_link",
         "mentor_count_link",
-        "created_at",
-        "updated_at",
+        # "created_at",
+        # "updated_at",
         "is_active",
         "is_public",
         "background_check",
@@ -130,10 +130,10 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     ordering = [
-        "-created_at",
+        # "-created_at",
     ]
 
-    date_hierarchy = "created_at"
+    # date_hierarchy = "created_at"
 
     search_fields = [
         "user__first_name",
@@ -151,7 +151,7 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     filter_horizontal = [
-        "race_ethnicity",
+        # "race_ethnicity",
     ]
 
     def view_on_site(self, obj):
@@ -253,12 +253,12 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "last_name",
         "student_count_link",
         "user_link",
-        "created_at",
-        "updated_at",
+        # "created_at",
+        # "updated_at",
     ]
 
     list_filter = [
-        "zip",
+        # "zip",
     ]
 
     list_select_related = [
@@ -282,10 +282,10 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     filter_horizontal = [
-        "race_ethnicity",
+        # "race_ethnicity",
     ]
 
-    date_hierarchy = "created_at"
+    # date_hierarchy = "created_at"
 
     view_on_site = False
 
@@ -410,7 +410,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     filter_horizontal = [
-        "race_ethnicity",
+        # "race_ethnicity",
     ]
 
     ordering = [
@@ -428,7 +428,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "guardian",
     ]
 
-    date_hierarchy = "created_at"
+    # date_hierarchy = "created_at"
 
     view_on_site = False
 
@@ -499,7 +499,7 @@ class CourseAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     ordering = [
         "code",
-        "created_at",
+        # "created_at",
     ]
 
     search_fields = [
@@ -551,7 +551,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     filter_horizontal = [
         # "waitlist_mentors",
         # "waitlist_students",
-        "assistant",
+        # "assistant",
     ]
 
     # autocomplete_fields = [
@@ -687,7 +687,7 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "get_student_age",
         "get_guardian_link",
         "get_session_link",
-        "_created_at",
+        # "_created_at",
         "is_checked_in",
         "is_active",
     ]
@@ -710,7 +710,7 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     ordering = [
-        "created_at",
+        # "created_at",
     ]
 
     autocomplete_fields = [
@@ -719,7 +719,7 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "student",
     ]
 
-    date_hierarchy = "created_at"
+    # date_hierarchy = "created_at"
 
     view_on_site = False
 
@@ -755,10 +755,10 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 
     get_session_link.short_description = "Session"
 
-    def _created_at(self, obj):
-        return obj.created_at.strftime("%m/%d/%y %H:%M")
+    # def _created_at(self, obj):
+    #     return obj.created_at.strftime("%m/%d/%y %H:%M")
 
-    _created_at.short_description = "Created At"
+    # _created_at.short_description = "Created At"
 
 
 def mentor_check_in(modeladmin, request, queryset):
@@ -787,8 +787,8 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "is_active",
         "week_reminder_sent",
         "day_reminder_sent",
-        "created_at",
-        "updated_at",
+        # "created_at",
+        # "updated_at",
     ]
 
     list_display_links = [
@@ -807,7 +807,7 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     ordering = [
-        "created_at",
+        # "created_at",
     ]
 
     search_fields = [
@@ -829,7 +829,7 @@ class MentorOrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         mentor_check_out,
     ]
 
-    date_hierarchy = "created_at"
+    # date_hierarchy = "created_at"
     view_on_site = False
 
 

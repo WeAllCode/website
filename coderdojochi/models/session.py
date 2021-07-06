@@ -1,15 +1,14 @@
 from datetime import timedelta
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
 from django.urls.base import reverse
 from django.utils import formats
 from django.utils.functional import cached_property
-
+import salesforce
 from .common import CommonInfo
 
 
-class Session(CommonInfo):
+class Session(salesforce.models.SalesforceModel):
     from .course import Course
     from .location import Location
     from .mentor import Mentor
@@ -23,26 +22,32 @@ class Session(CommonInfo):
         (FEMALE, "Female"),
     )
 
-    course = models.ForeignKey(
+    course = salesforce.models.ForeignKey(
         Course,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
+        db_column = "hed__Course__c",
         limit_choices_to={"is_active": True},
     )
-    start_date = models.DateTimeField()
-    location = models.ForeignKey(
+
+    start_date = salesforce.models.DateTimeField(
+        db_column="hed__Start_Date__c"
+    )
+
+    location = salesforce.models.ForeignKey(
         Location,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
         limit_choices_to={"is_active": True},
     )
-    capacity = models.IntegerField(
+    capacity = salesforce.models.IntegerField(
+        db_column = "hed__Capacity__c",
         default=20,
     )
-    mentor_capacity = models.IntegerField(
+    mentor_capacity = salesforce.models.IntegerField(
         default=10,
     )
-    instructor = models.ForeignKey(
+    instructor = salesforce.models.ForeignKey(
         Mentor,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
         related_name="session_instructor",
         limit_choices_to={
             "user__groups__name": "Instructor",
@@ -51,12 +56,14 @@ class Session(CommonInfo):
             "background_check": True,
             "avatar_approved": True,
         },
+        db_column = "hed__Faculty__c",
         help_text="A mentor with 'Instructor' role, is active (user and mentor), background check passed, and avatar approved.",
     )
 
-    assistant = models.ManyToManyField(
+    assistant = salesforce.models.ForeignKey(
         Mentor,
         blank=True,
+        null=True,
         related_name="session_assistant",
         limit_choices_to={
             "user__groups__name": "Assistant",
@@ -65,23 +72,24 @@ class Session(CommonInfo):
             "background_check": True,
             "avatar_approved": True,
         },
+        on_delete = salesforce.models.PROTECT,
         help_text="A mentor with 'Assistant' role, is active (user and mentor), background check passed, and avatar approved.",
     )
 
     # Pricing
-    cost = models.DecimalField(
+    cost = salesforce.models.DecimalField(
         max_digits=6,
         decimal_places=2,
         blank=True,
         null=True,
     )
-    minimum_cost = models.DecimalField(
+    minimum_cost = salesforce.models.DecimalField(
         max_digits=6,
         decimal_places=2,
         blank=True,
         null=True,
     )
-    maximum_cost = models.DecimalField(
+    maximum_cost = salesforce.models.DecimalField(
         max_digits=6,
         decimal_places=2,
         blank=True,
@@ -89,104 +97,104 @@ class Session(CommonInfo):
     )
 
     # Extra
-    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
-    waitlist_mentors = models.ManyToManyField(
-        Mentor,
-        blank=True,
-        related_name="session_waitlist_mentors",
-    )
-    waitlist_students = models.ManyToManyField(
-        Student,
-        blank=True,
-        related_name="session_waitlist_students",
-    )
-    external_enrollment_url = models.CharField(
+    additional_info = salesforce.models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    # waitlist_mentors = salesforce.models.ManyToManyField(
+    #     Mentor,
+    #     blank=True,
+    #     related_name="session_waitlist_mentors",
+    # )
+    # waitlist_students = salesforce.models.ManyToManyField(
+    #     Student,
+    #     blank=True,
+    #     related_name="session_waitlist_students",
+    # )
+    external_enrollment_url = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
         help_text="When provided, local enrollment is disabled.",
     )
 
-    is_active = models.BooleanField(
+    is_active = salesforce.models.BooleanField(
         default=False,
         help_text="Session is active.",
     )
-    is_public = models.BooleanField(
+    is_public = salesforce.models.BooleanField(
         default=False,
         help_text="Session is a public session.",
     )
-    password = models.CharField(
+    password = salesforce.models.CharField(
         blank=True,
         max_length=255,
     )
-    partner_message = models.TextField(
+    partner_message = salesforce.models.TextField(
         blank=True,
     )
-    announced_date_mentors = models.DateTimeField(
-        blank=True,
-        null=True,
-    )
-    announced_date_guardians = models.DateTimeField(
+    announced_date_mentors = salesforce.models.DateTimeField(
         blank=True,
         null=True,
     )
-    image_url = models.CharField(
+    announced_date_guardians =salesforce.models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+    image_url = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    bg_image = models.ImageField(
-        blank=True,
-        null=True,
-    )
-    mentors_week_reminder_sent = models.BooleanField(
+    # bg_image = salesforce.models.ImageField(
+    #     blank=True,
+    #     null=True,
+    # )
+    mentors_week_reminder_sent =salesforce.models.BooleanField(
         default=False,
     )
-    mentors_day_reminder_sent = models.BooleanField(
+    mentors_day_reminder_sent = salesforce.models.BooleanField(
         default=False,
     )
-    gender_limitation = models.CharField(
+    gender_limitation = salesforce.models.CharField(
         help_text="Limits the class to be only one gender.",
         max_length=255,
         choices=GENDER_LIMITATION_CHOICES,
         blank=True,
         null=True,
     )
-    override_minimum_age_limitation = models.IntegerField(
+    override_minimum_age_limitation = salesforce.models.IntegerField(
         "Min Age",
         help_text="Only update this if different from the default.",
         blank=True,
         null=True,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    override_maximum_age_limitation = models.IntegerField(
+    override_maximum_age_limitation = salesforce.models.IntegerField(
         "Max Age",
         help_text="Only update this if different from the default.",
         blank=True,
         null=True,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    online_video_link = models.URLField(
+    online_video_link = salesforce.models.URLField(
         "Online Video Link",
         help_text="Zoom link with password.",
         blank=True,
         null=True,
     )
-    online_video_meeting_id = models.CharField(
+    online_video_meeting_id = salesforce.models.CharField(
         "Online Video Meeting ID",
         help_text="XXX XXXX XXXX",
         max_length=255,
         blank=True,
         null=True,
     )
-    online_video_meeting_password = models.CharField(
+    online_video_meeting_password = salesforce.models.CharField(
         "Online Video Meeting Password",
         help_text="Plain text password shared by Zoom",
         max_length=255,
         blank=True,
         null=True,
     )
-    online_video_description = models.TextField(
+    online_video_description = salesforce.models.TextField(
         "Online Video Description",
         help_text="Information on how to connect to the video call. Basic HTML allowed.",
         blank=True,
@@ -194,18 +202,22 @@ class Session(CommonInfo):
     )
 
     # kept for older records
-    old_end_date = models.DateTimeField(
+    old_end_date = salesforce.models.DateTimeField(
         blank=True,
         null=True,
     )
-    old_mentor_start_date = models.DateTimeField(
+    old_mentor_start_date = salesforce.models.DateTimeField(
         blank=True,
         null=True,
     )
-    old_mentor_end_date = models.DateTimeField(
+
+    old_mentor_end_date = salesforce.models.DateTimeField(
         blank=True,
         null=True,
     )
+
+    class Meta:
+        db_table = "hed__Course_Offering__c"
 
     @property
     def end_date(self):
@@ -333,6 +345,7 @@ class Session(CommonInfo):
 
 class PartnerPasswordAccess(CommonInfo):
     from .user import CDCUser
+    from django.db import models
 
     user = models.ForeignKey(
         CDCUser,

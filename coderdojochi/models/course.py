@@ -64,18 +64,18 @@ class Course(salesforce.models.SalesforceModel):
     #     null=True,
     # )
 
-    course_type = models.CharField(
+    course_type = salesforce.models.CharField(
         "type",
         max_length=2,
         choices=COURSE_TYPE_CHOICES,
         default=WEEKEND,
     )
 
-    # slug = models.SlugField(
-    #     max_length=40,
-    #     blank=True,
-    #     null=True,
-    # )
+    slug = models.SlugField(
+        max_length=40,
+        blank=True,
+        null=True,
+    )
 
     description = salesforce.models.TextField(
         db_column="hed__Extended_Description__c",
@@ -90,11 +90,12 @@ class Course(salesforce.models.SalesforceModel):
     # )
 
     # TODO: update db_column
-    duration = salesforce.models.DurationField(
+    duration = salesforce.models.TimeField(
         default=timedelta(hours=3),
+        db_column = "hed__Credit_Hours__c",
         help_text="HH:MM:ss",
     )
-    
+
     # TODO: update db_column
     minimum_age = salesforce.models.IntegerField(
         default=7,
@@ -113,12 +114,14 @@ class Course(salesforce.models.SalesforceModel):
 
     # Auto create/update
     # TODO: update db_column
-    created_at = models.DateTimeField(
+    created_at = salesforce.models.DateTimeField(
+        # db_column='CreatedDate',
         auto_now_add=True,
     )
 
     # TODO: update db_column
-    updated_at = models.DateTimeField(
+    updated_at = salesforce.models.DateTimeField(
+        # db_column='LastModifiedDate',
         auto_now=True,
     )
 

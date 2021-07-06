@@ -10,6 +10,7 @@ from .common import CommonInfo
 from .race_ethnicity import RaceEthnicity
 from .user import CDCUser
 
+import salesforce
 
 def generate_filename(instance, filename):
     # file will be uploaded to MEDIA_ROOT/avatar/<username>
@@ -18,16 +19,20 @@ def generate_filename(instance, filename):
 
 
 # TODO: Add MentorManager
-class Mentor(CommonInfo):
-    user = models.ForeignKey(
+class Mentor(salesforce.models.SalesforceModel):
+    # Mentor(CommonInfo)
+    user = salesforce.models.ForeignKey(
         CDCUser,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
     )
-    bio = models.TextField(
+    bio = salesforce.models.TextField(
         blank=True,
         null=True,
+        db_column="Description"
     )
-    is_active = models.BooleanField(
+    
+    is_active = salesforce.models.BooleanField(
+        db_column="Active__c",
         default=True,
     )
     background_check = models.BooleanField(
@@ -50,33 +55,39 @@ class Mentor(CommonInfo):
     avatar_approved = models.BooleanField(
         default=False,
     )
-    birthday = models.DateField(
+    birthday = salesforce.models.DateField(
         blank=False,
         null=True,
+        db_column="Birthdate",
     )
-    gender = models.CharField(
+    gender = salesforce.models.CharField(
         max_length=255,
         blank=False,
         null=True,
+        db_column="Gender__c",
     )
+    #Many to Many field in salesforce?
     race_ethnicity = models.ManyToManyField(
         RaceEthnicity,
         blank=False,
     )
-    work_place = models.CharField(
+    work_place = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
+        db_column="GW_Volunteers__Volunteer_Organization__c",
     )
-    phone = models.CharField(
+    phone = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
+        db_column="Phone",
     )
-    home_address = models.CharField(
+    home_address = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
+        db_column="npe01__Home_Address__c",
     )
 
     def __str__(self):
