@@ -7,8 +7,8 @@ env = environ.Env()
 @task
 def release(ctx):
     collect_static(ctx)
-    migrate(ctx)
-    load_fixtures(ctx)
+    #migrate(ctx)
+    #load_fixtures(ctx)
 
 
 @task(help={"port": "Port to use when serving traffic. Defaults to $PORT."})

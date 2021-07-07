@@ -126,42 +126,43 @@ class MentorForm(CDCModelForm):
 
     class Meta:
         model = Mentor
-        fields = ("bio", "avatar", "gender", "race_ethnicity", "birthday", "phone", "home_address", "work_place")
+        #"avatar", 
+        fields = ("bio", "gender", "race_ethnicity", "birthday", "phone", "home_address", "work_place")
 
-    def clean_avatar(self):
-        avatar = self.cleaned_data["avatar"]
+    # def clean_avatar(self):
+    #     avatar = self.cleaned_data["avatar"]
 
-        if avatar is None:
-            return avatar
+    #     if avatar is None:
+    #         return avatar
 
-        try:
-            w, h = get_image_dimensions(avatar)
+    #     try:
+    #         w, h = get_image_dimensions(avatar)
 
-            # validate dimensions
-            max_width = max_height = 1000
-            if w > max_width or h > max_height:
-                raise forms.ValidationError(f"Please use an image that is {max_width} x {max_height}px or smaller.")
+    #         # validate dimensions
+    #         max_width = max_height = 1000
+    #         if w > max_width or h > max_height:
+    #             raise forms.ValidationError(f"Please use an image that is {max_width} x {max_height}px or smaller.")
 
-            min_width = min_height = 500
-            if w < min_width or h < min_height:
-                raise forms.ValidationError(f"Please use an image that is {min_width} x {min_height}px or larger.")
+    #         min_width = min_height = 500
+    #         if w < min_width or h < min_height:
+    #             raise forms.ValidationError(f"Please use an image that is {min_width} x {min_height}px or larger.")
 
-            # validate content type
-            main, sub = avatar.content_type.split("/")
-            if not (main == "image" and sub in ["jpeg", "pjpeg", "gif", "png"]):
-                raise forms.ValidationError("Please use a JPEG, GIF or PNG image.")
+    #         # validate content type
+    #         main, sub = avatar.content_type.split("/")
+    #         if not (main == "image" and sub in ["jpeg", "pjpeg", "gif", "png"]):
+    #             raise forms.ValidationError("Please use a JPEG, GIF or PNG image.")
 
-            # validate file size
-            if len(avatar) > (2000 * 1024):
-                raise forms.ValidationError("Avatar file size may not exceed 2MB.")
+    #         # validate file size
+    #         if len(avatar) > (2000 * 1024):
+    #             raise forms.ValidationError("Avatar file size may not exceed 2MB.")
 
-        except AttributeError:
-            """
-            Handles case when we are updating the user profile
-            and do not supply a new avatar
-            """
+    #     except AttributeError:
+    #         """
+    #         Handles case when we are updating the user profile
+    #         and do not supply a new avatar
+    #         """
 
-        return avatar
+    #     return avatar
 
 
 class GuardianForm(CDCModelForm):

@@ -1,61 +1,82 @@
-from django.db import models
+# from django.db import models
 
 from .common import CommonInfo
+import salesforce
 
-
-class Order(CommonInfo):
+class Order(salesforce.models.SalesforceModel):
+    # Order(CommonInfo)
     from .guardian import Guardian
     from .session import Session
     from .student import Student
 
-    guardian = models.ForeignKey(
-        Guardian,
-        on_delete=models.CASCADE,
-    )
-    session = models.ForeignKey(
+    # guardian = salesforce.models.ForeignKey(
+    #     Guardian,
+    #     on_delete=salesforce.models.PROTECT,
+
+    # )
+    CURRENT = "current"
+    FORMER = "former"
+
+    STATUS_CHOICES = [
+        (CURRENT, "current"),
+        (FORMER, "former"),
+    ]
+
+    session = salesforce.models.ForeignKey(
         Session,
-        on_delete=models.CASCADE,
+        db_column="hed__Course_Offering__c",
+        on_delete=salesforce.models.PROTECT,
     )
-    student = models.ForeignKey(
+    student = salesforce.models.ForeignKey(
         Student,
-        on_delete=models.CASCADE,
+        on_delete=salesforce.models.PROTECT,
+        db_column="hed__Contact__c"
     )
-    is_active = models.BooleanField(
-        default=True,
+    is_active = salesforce.models.CharField(
+        choices=STATUS_CHOICES,
+        max_length=255,
+        blank=True,
+        null=True,
+        db_column="hed__Status__c",
     )
-    ip = models.CharField(
+    ip = salesforce.models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_column="IP__c",
+    )
+    check_in = salesforce.models.DateTimeField(
+        blank=True,
+        null=True,
+        db_column="Check_in__c",
+    )
+    # alternate_guardian = salesforce.models.CharField(
+    #     max_length=255,
+    #     blank=True,
+    #     null=True,
+    # )
+    affiliate = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    check_in = models.DateTimeField(
-        blank=True,
-        null=True,
-    )
-    alternate_guardian = models.CharField(
+    order_number = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
     )
-    affiliate = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-    )
-    order_number = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-    )
-    week_reminder_sent = models.BooleanField(
+    week_reminder_sent = salesforce.models.BooleanField(
         default=False,
     )
-    day_reminder_sent = models.BooleanField(
+    day_reminder_sent = salesforce.models.BooleanField(
         default=False,
     )
 
     def __str__(self):
         return f"{self.student.full_name} | {self.session.course.title}"
+
+    class Meta:
+        db_table = "hed__Course_Enrollment__c"
 
     def is_checked_in(self):
         return self.check_in is not None
