@@ -1,6 +1,6 @@
 import os
 
-from django.db import models
+#from django.db import models
 from django.urls import reverse
 
 from stdimage.models import StdImageField
@@ -23,7 +23,7 @@ class Mentor(salesforce.models.SalesforceModel):
     # Mentor(CommonInfo)
     user = salesforce.models.ForeignKey(
         CDCUser,
-        on_delete=models.PROTECT,
+        on_delete=salesforce.models.PROTECT,
     )
     bio = salesforce.models.TextField(
         blank=True,
@@ -35,26 +35,26 @@ class Mentor(salesforce.models.SalesforceModel):
         db_column="Active__c",
         default=True,
     )
-    background_check = models.BooleanField(
+    background_check = salesforce.models.BooleanField(
         default=False,
     )
-    is_public = models.BooleanField(
+    is_public = salesforce.models.BooleanField(
         default=False,
     )
-    avatar = StdImageField(
-        upload_to=generate_filename,
-        blank=True,
-        variations={
-            "thumbnail": {
-                "width": 500,
-                "height": 500,
-                "crop": True,
-            },
-        },
-    )
-    avatar_approved = models.BooleanField(
-        default=False,
-    )
+    # avatar = StdImageField(
+    #     upload_to=generate_filename,
+    #     blank=True,
+    #     variations={
+    #         "thumbnail": {
+    #             "width": 500,
+    #             "height": 500,
+    #             "crop": True,
+    #         },
+    #     },
+    # )
+    # avatar_approved = models.BooleanField(
+    #     default=False,
+    # )
     birthday = salesforce.models.DateField(
         blank=False,
         null=True,
@@ -67,10 +67,10 @@ class Mentor(salesforce.models.SalesforceModel):
         db_column="Gender__c",
     )
     #Many to Many field in salesforce?
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
-        blank=False,
-    )
+    # race_ethnicity = models.ManyToManyField(
+    #     RaceEthnicity,
+    #     blank=False,
+    # )
     work_place = salesforce.models.CharField(
         max_length=255,
         blank=True,
@@ -92,6 +92,9 @@ class Mentor(salesforce.models.SalesforceModel):
 
     def __str__(self):
         return self.full_name
+
+    class Meta:
+        db_table = "Contact"
 
     @property
     def first_name(self):

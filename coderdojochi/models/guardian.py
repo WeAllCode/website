@@ -44,7 +44,8 @@ class Guardian(salesforce.models.SalesforceModel):
 
     def __str__(self):
         return self.full_name
-
+    class Meta:
+        db_table = "Contact"
     @property
     def first_name(self):
         return self.user.first_name

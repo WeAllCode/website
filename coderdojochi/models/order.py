@@ -9,10 +9,19 @@ class Order(salesforce.models.SalesforceModel):
     from .session import Session
     from .student import Student
 
-    guardian = salesforce.models.ForeignKey(
-        Guardian,
-        on_delete=salesforce.models.PROTECT,
-    )
+    # guardian = salesforce.models.ForeignKey(
+    #     Guardian,
+    #     on_delete=salesforce.models.PROTECT,
+
+    # )
+    CURRENT = "current"
+    FORMER = "former"
+
+    STATUS_CHOICES = [
+        (CURRENT, "current"),
+        (FORMER, "former"),
+    ]
+
     session = salesforce.models.ForeignKey(
         Session,
         db_column="hed__Course_Offering__c",
@@ -21,26 +30,31 @@ class Order(salesforce.models.SalesforceModel):
     student = salesforce.models.ForeignKey(
         Student,
         on_delete=salesforce.models.PROTECT,
-        db_column="Contact"
+        db_column="hed__Contact__c"
     )
-    is_active = salesforce.models.BooleanField(
-        default=True,
+    is_active = salesforce.models.CharField(
+        choices=STATUS_CHOICES,
+        max_length=255,
+        blank=True,
+        null=True,
+        db_column="hed__Status__c",
     )
     ip = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
+        db_column="IP__c",
     )
     check_in = salesforce.models.DateTimeField(
         blank=True,
         null=True,
         db_column="Check_in__c",
     )
-    alternate_guardian = salesforce.models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-    )
+    # alternate_guardian = salesforce.models.CharField(
+    #     max_length=255,
+    #     blank=True,
+    #     null=True,
+    # )
     affiliate = salesforce.models.CharField(
         max_length=255,
         blank=True,
@@ -60,6 +74,9 @@ class Order(salesforce.models.SalesforceModel):
 
     def __str__(self):
         return f"{self.student.full_name} | {self.session.course.title}"
+
+    class Meta:
+        db_table = "hed__Course_Enrollment__c"
 
     def is_checked_in(self):
         return self.check_in is not None

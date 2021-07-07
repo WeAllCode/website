@@ -107,7 +107,7 @@ INSTALLED_APPS = [
     # apps
     "accounts",
     "coderdojochi",
-    "weallcode",
+    "weallcode",    
 ]
 
 MIDDLEWARE = [

@@ -115,14 +115,14 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "is_active",
         "is_public",
         "background_check",
-        "avatar_approved",
+        # "avatar_approved",
     ]
 
     list_filter = [
         "is_active",
         "is_public",
         "background_check",
-        "avatar_approved",
+        # "avatar_approved",
     ]
 
     list_select_related = [
@@ -714,7 +714,7 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     autocomplete_fields = [
-        "guardian",
+        # "guardian",
         "session",
         "student",
     ]

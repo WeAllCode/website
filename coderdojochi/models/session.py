@@ -29,12 +29,13 @@ class Session(salesforce.models.SalesforceModel):
         limit_choices_to={"is_active": True},
     )
 
-    start_date = salesforce.models.DateTimeField(
+    start_date = salesforce.models.DateField(
         db_column="hed__Start_Date__c"
     )
 
     location = salesforce.models.ForeignKey(
         Location,
+        db_column = "hed__Facility__c",
         on_delete=salesforce.models.PROTECT,
         limit_choices_to={"is_active": True},
     )
@@ -43,6 +44,7 @@ class Session(salesforce.models.SalesforceModel):
         default=20,
     )
     mentor_capacity = salesforce.models.IntegerField(
+        db_column = "Mentor_Capacity__c",
         default=10,
     )
     instructor = salesforce.models.ForeignKey(
@@ -74,6 +76,7 @@ class Session(salesforce.models.SalesforceModel):
         },
         on_delete = salesforce.models.PROTECT,
         help_text="A mentor with 'Assistant' role, is active (user and mentor), background check passed, and avatar approved.",
+        db_column="Assistant_Mentor__c",
     )
 
     # Pricing
@@ -82,22 +85,25 @@ class Session(salesforce.models.SalesforceModel):
         decimal_places=2,
         blank=True,
         null=True,
+        db_column="Cost__c",
     )
     minimum_cost = salesforce.models.DecimalField(
         max_digits=6,
         decimal_places=2,
         blank=True,
         null=True,
+        db_column="Minimum_Cost__c"
     )
     maximum_cost = salesforce.models.DecimalField(
         max_digits=6,
         decimal_places=2,
         blank=True,
         null=True,
+        db_column="Maximum_Cost__c"
     )
 
     # Extra
-    additional_info = salesforce.models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    additional_info = salesforce.models.TextField(blank=True, null=True, help_text="Basic HTML allowed",db_column="Additional_Information__c",)
     # waitlist_mentors = salesforce.models.ManyToManyField(
     #     Mentor,
     #     blank=True,
@@ -113,45 +119,51 @@ class Session(salesforce.models.SalesforceModel):
         blank=True,
         null=True,
         help_text="When provided, local enrollment is disabled.",
+        db_column="External_Enrollment_URL__c",
     )
 
     is_active = salesforce.models.BooleanField(
-        default=False,
         help_text="Session is active.",
+        db_column="Active__c",
     )
     is_public = salesforce.models.BooleanField(
-        default=False,
         help_text="Session is a public session.",
+        db_column="Public__c"
     )
     password = salesforce.models.CharField(
         blank=True,
         max_length=255,
+        db_column="Password__c",
     )
     partner_message = salesforce.models.TextField(
         blank=True,
+        db_column="Partner_Message__c"
     )
     announced_date_mentors = salesforce.models.DateTimeField(
         blank=True,
         null=True,
+        db_column="Announce_Date_Mentors__c",
     )
     announced_date_guardians =salesforce.models.DateTimeField(
         blank=True,
         null=True,
+        db_column="Announced_Date_Guardians__c",
     )
     image_url = salesforce.models.CharField(
         max_length=255,
         blank=True,
         null=True,
+        db_column="Image_URL__c",
     )
     # bg_image = salesforce.models.ImageField(
     #     blank=True,
     #     null=True,
     # )
     mentors_week_reminder_sent =salesforce.models.BooleanField(
-        default=False,
+        db_column="Mentor_Week_Reminder_Sent__c",
     )
     mentors_day_reminder_sent = salesforce.models.BooleanField(
-        default=False,
+        db_column="Mentor_Day_Reminder_Sent__c",
     )
     gender_limitation = salesforce.models.CharField(
         help_text="Limits the class to be only one gender.",
@@ -159,26 +171,28 @@ class Session(salesforce.models.SalesforceModel):
         choices=GENDER_LIMITATION_CHOICES,
         blank=True,
         null=True,
+        db_column="Gender_Limitation__c",
     )
-    override_minimum_age_limitation = salesforce.models.IntegerField(
-        "Min Age",
-        help_text="Only update this if different from the default.",
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
-    )
-    override_maximum_age_limitation = salesforce.models.IntegerField(
-        "Max Age",
-        help_text="Only update this if different from the default.",
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
-    )
+    # override_minimum_age_limitation = salesforce.models.IntegerField(
+    #     "Min Age",
+    #     help_text="Only update this if different from the default.",
+    #     blank=True,
+    #     null=True,
+    #     validators=[MinValueValidator(0), MaxValueValidator(100)],
+    # )
+    # override_maximum_age_limitation = salesforce.models.IntegerField(
+    #     "Max Age",
+    #     help_text="Only update this if different from the default.",
+    #     blank=True,
+    #     null=True,
+    #     validators=[MinValueValidator(0), MaxValueValidator(100)],
+    # )
     online_video_link = salesforce.models.URLField(
         "Online Video Link",
         help_text="Zoom link with password.",
         blank=True,
         null=True,
+        db_column="Online_Video_Link__c"
     )
     online_video_meeting_id = salesforce.models.CharField(
         "Online Video Meeting ID",
@@ -186,6 +200,7 @@ class Session(salesforce.models.SalesforceModel):
         max_length=255,
         blank=True,
         null=True,
+        db_column="Online_Video_Meeting_Id__c",
     )
     online_video_meeting_password = salesforce.models.CharField(
         "Online Video Meeting Password",
@@ -193,27 +208,32 @@ class Session(salesforce.models.SalesforceModel):
         max_length=255,
         blank=True,
         null=True,
+        db_column="Online_Video_Meeting_Password__c"
     )
     online_video_description = salesforce.models.TextField(
         "Online Video Description",
         help_text="Information on how to connect to the video call. Basic HTML allowed.",
         blank=True,
         null=True,
+        db_column="Online_Video_Description__c"
     )
 
     # kept for older records
     old_end_date = salesforce.models.DateTimeField(
         blank=True,
         null=True,
+        db_column="Old_End_Date__c",
     )
     old_mentor_start_date = salesforce.models.DateTimeField(
         blank=True,
         null=True,
+        db_column="Old_Mentor_Start__c",
     )
 
     old_mentor_end_date = salesforce.models.DateTimeField(
         blank=True,
         null=True,
+        db_column="Old_Mentor_End_Date__c"
     )
 
     class Meta:

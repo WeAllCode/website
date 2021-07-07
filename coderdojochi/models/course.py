@@ -1,12 +1,11 @@
 from datetime import timedelta
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+#from django.db import models
 
 import salesforce
 
 from .common import CommonInfo
-
 
 class Course(salesforce.models.SalesforceModel):
     # class Course(CommonInfo):
@@ -69,13 +68,14 @@ class Course(salesforce.models.SalesforceModel):
         max_length=2,
         choices=COURSE_TYPE_CHOICES,
         default=WEEKEND,
+        db_column="Course_Type__c",
     )
 
-    slug = models.SlugField(
-        max_length=40,
-        blank=True,
-        null=True,
-    )
+    # slug = models.SlugField(
+    #     max_length=40,
+    #     blank=True,
+    #     null=True,
+    # )
 
     description = salesforce.models.TextField(
         db_column="hed__Extended_Description__c",
@@ -92,36 +92,38 @@ class Course(salesforce.models.SalesforceModel):
     # TODO: update db_column
     duration = salesforce.models.TimeField(
         default=timedelta(hours=3),
-        db_column = "hed__Credit_Hours__c",
-        help_text="HH:MM:ss",
+        help_text="HH:MM:ss", 
+        db_column="Duration__c",
     )
 
     # TODO: update db_column
     minimum_age = salesforce.models.IntegerField(
         default=7,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
+        db_column="Minimum_Age__c"
     )
 
     # TODO: update db_column
     maximum_age = salesforce.models.IntegerField(
         default=18,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
+        db_column="Maximum_Age__c"
     )
     # TODO: update db_column
     is_active = salesforce.models.BooleanField(
-        default=True,
+        db_column="Active__c",
     )
 
     # Auto create/update
     # TODO: update db_column
     created_at = salesforce.models.DateTimeField(
-        # db_column='CreatedDate',
+        db_column='CreatedDate',
         auto_now_add=True,
     )
 
     # TODO: update db_column
     updated_at = salesforce.models.DateTimeField(
-        # db_column='LastModifiedDate',
+        db_column='LastModifiedDate',
         auto_now=True,
     )
 
@@ -130,3 +132,6 @@ class Course(salesforce.models.SalesforceModel):
             return f"{self.code} | {self.title}"
 
         return f"{self.title}"
+
+    class Meta:
+        db_table = "hed__Course__c"

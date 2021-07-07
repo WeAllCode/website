@@ -3,7 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
-
+import salesforce
 
 class CDCUser(AbstractUser):
 
