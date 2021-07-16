@@ -72,7 +72,7 @@ describe("Signup User", () => {
     cy.get(":nth-child(5) > .control-label").click();
 
     cy.get("#id_gender").type(gender);
-    cy.get("#id_race_ethnicity").select([`${ethnicity}`]);;
+    cy.get(`#id_race_ethnicity > :nth-child(${ethnicity}) > label`).click();
 
     cy.get("#id_school_name").type("Example School");
     cy.get("#id_school_type > :nth-child(1) > label").click();
