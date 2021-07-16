@@ -1,0 +1,17 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cypress open",
+    "test": "cypress run"
+  },
+  "keywords": [],
+  "author": "Ali Karbassi <ali@karbassi.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^7.7.0",
+    "faker": "^5.5.3"
+  }
+}
