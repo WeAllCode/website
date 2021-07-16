@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-const faker = require("faker");
-
 describe("Login User", () => {
   it("login invalid user with error", () => {
     cy.visit("/account/login/");
@@ -49,22 +47,5 @@ describe("Logout User", () => {
     cy.location().should((loc) => {
       expect(loc.pathname).to.eq("/");
     });
-  });
-});
-
-describe("Signup User", () => {
-  it("signup invalid user with error", () => {
-    const first_name = faker.name.firstName();
-    const last_name = faker.name.lastName();
-    const email = faker.internet.email();
-    const password = faker.internet.password();
-
-    cy.visit("/account/signup/");
-    cy.get("#id_email").type(email);
-    cy.get("#id_first_name").type(first_name);
-    cy.get("#id_last_name").type(last_name);
-    cy.get("#id_password1").type(password);
-    cy.get("#id_password2").type(password);
-    cy.get("main form").submit();
   });
 });
