@@ -2,7 +2,7 @@
 
 describe("Signup for Classes", () => {
     it("Mentor Signup", () => {
-        
+
         cy.visit("/account/login")
         cy.get("#id_login").type("gregoriofs+mentor@uchicago.edu")
         cy.get("#id_password").type("mentor")
@@ -43,7 +43,7 @@ describe("Signup for Classes", () => {
         cy.get(".padding-vertical-1 > .callout > strong").should("have.text","Well done!")
     })
 
-    it("Nevermid Button Test", () => {
+    it("Nevermind Button Test", () => {
         cy.visit("/account/login")
         cy.get("#id_login").type("gregoriofs+guardian@uchicago.edu")
         cy.get("#id_password").type("guardian")
@@ -87,6 +87,6 @@ describe("Signup for Classes", () => {
         cy.get("#id_medical_conditions").type("None")
         cy.contains("Update").click()
         cy.get(".padding-vertical-1 > .callout > strong").should("have.text","Well done!")
-        
+
     })
 })

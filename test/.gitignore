@@ -1,6 +1,15 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/node,typescript
-# Edit at https://www.toptal.com/developers/gitignore?templates=node,typescript
+# Created by https://www.toptal.com/developers/gitignore/api/node,cypressio
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,cypressio
+
+### CypressIO ###
+# gitignore template for the CypressIO, browser test framework
+# website: https://www.cypress.io/
+
+cypress/results/*
+cypress/reports/*
+cypress/screenshots/*
+cypress/videos/*
 
 ### Node ###
 # Logs
@@ -122,8 +131,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-#!! ERROR: typescript is undefined. Use list command to see defined gitignore types !!#
-
-# End of https://www.toptal.com/developers/gitignore/api/node,typescript
-
-cypress/videos/
+# End of https://www.toptal.com/developers/gitignore/api/node,cypressio
