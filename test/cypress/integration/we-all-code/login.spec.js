@@ -11,7 +11,7 @@ describe("Login User", () => {
 
   it("login valid guardian user", () => {
     cy.visit("/account/login/");
-    cy.get("#id_login").type("guardian@sink.sendgrid.net");
+    cy.get("#id_login").type("gregoriofs+guardian@uchicago.edu");
     cy.get("#id_password").type("guardian");
     cy.get("#login-form").submit();
 
@@ -22,7 +22,7 @@ describe("Login User", () => {
 
   it("login valid volunteer user", () => {
     cy.visit("/account/login/");
-    cy.get("#id_login").type("mentor@sink.sendgrid.net");
+    cy.get("#id_login").type("gregoriofs+mentor@uchicago.edu");
     cy.get("#id_password").type("mentor");
     cy.get("#login-form").submit();
     cy.location().should((loc) => {
@@ -32,7 +32,7 @@ describe("Login User", () => {
 
   it("login valid admin user", () => {
     cy.visit("/account/login/");
-    cy.get("#id_login").type("admin@sink.sendgrid.net");
+    cy.get("#id_login").type("gregoriofs+admin@uchicago.edu");
     cy.get("#id_password").type("admin");
     cy.get("#login-form").submit();
     cy.location().should((loc) => {
