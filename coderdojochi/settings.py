@@ -386,7 +386,7 @@ if DEBUG:
         "TAG": "div",
         "ENABLE_STACKTRACES": True,
         "RENDER_PANELS": False,
-        "SHOW_COLLAPSED": True
+        "SHOW_COLLAPSED": True,
     }
 
 
