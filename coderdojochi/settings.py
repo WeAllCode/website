@@ -385,6 +385,8 @@ if DEBUG:
         "SHOW_TOOLBAR_CALLBACK": custom_show_toolbar,
         "TAG": "div",
         "ENABLE_STACKTRACES": True,
+        "RENDER_PANELS": False,
+        "SHOW_COLLAPSED": True,
     }
 
 
