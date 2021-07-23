@@ -410,7 +410,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     filter_horizontal = [
-        "race_ethnicity",
+        # "race_ethnicity",
     ]
 
     ordering = [

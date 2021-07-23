@@ -10,6 +10,14 @@ from .race_ethnicity import RaceEthnicity
 class Student(CommonInfo):
     from .guardian import Guardian
 
+    HISPANIC = "Hispanic"
+    NOT_HISPANIC = "Not Hispanic"
+
+    ETHNICITY = [
+        (HISPANIC, "Hispanic"),
+        (NOT_HISPANIC, "Not Hispanic"),
+    ]
+
     guardian = models.ForeignKey(
         Guardian,
         on_delete=models.CASCADE,
@@ -24,9 +32,14 @@ class Student(CommonInfo):
     gender = models.CharField(
         max_length=255,
     )
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
-        blank=True,
+    ethnicity = models.CharField(
+        choices=ETHNICITY,
+        max_length=255,
+        default="",
+    )
+    race = models.CharField(
+        max_length=255,
+        default="",
     )
     school_name = models.CharField(
         max_length=255,
@@ -121,37 +134,40 @@ class Student(CommonInfo):
 
     def save(self, *args, **kwargs):
         sf = salesforce_login()
-        query = "SELECT Id FROM hed__Course__c WHERE Name = {} and hed__Course_ID__c = {}"
-        formatted = format_soql(query, self.title, self.code)
-        results = sf.query(formatted)
-        num_courses = results['totalSize']
+        query = "SELECT Id FROM Contact WHERE FirstName = {} and LastName = {}"
+        formatted_query = format_soql(query, self.first_name, self.last_name)
+        contacts = sf.query(formatted_query)
+        num_contacts = contacts["totalSize"]
 
-        if not num_courses:
-            sf.hed__Course__c.create(
+        if not num_contacts:
+            sf.Contact.create(
                 {
-                    "first_name": self.first_name,
-                    "last_name": self.last_name,
-                    "Birthdate": self.birthday,
-                    "hed__Gender__c	": self.gender,
-                    "hed__Description__c": self.gender,
-                    "hed__Account__c":"0017h00000ZfotKAAR",
-                    "Duration__c":  self.duration.__str__(),
-                    "Minimum_Age__c": self.minimum_age,
-                    "Maximum_Age__c": self.maximum_age,
+                    "FirstName": self.first_name,
+                    "LastName": self.last_name,
+                    "Birthdate": self.birthday.__str__(),
+                    "Gender__c": self.gender,
+                    "hed__Race__c": self.race,
+                    "hed__Ethnicity__c": self.ethnicity,
+                    "School_Name__c	": self.school_name,
+                    "School_Type__c": self.school_type,
+                    "Medical__c": self.medical_conditions,
+                    "Medications__c": self.medications,
                 }
             )
         else:
-            id = results['records'][0]["Id"]
-            sf.hed__Course__c.update(
+            id = contacts["records"][0]["Id"]
+            sf.Contact.update(
                 id,
                 {
-                    "Name": self.title,
-                    "Active__c": self.is_active,
-                    "hed__Course_ID__c": self.code,
-                    "Course_Type__c": self.course_type,
-                    "hed__Description__c": self.description,
-                    "Duration__c": self.duration.__str__(),
-                    "Minimum_Age__c": self.minimum_age,
-                    "Maximum_Age__c": self.maximum_age,
+                    "FirstName": self.first_name,
+                    "LastName": self.last_name,
+                    "Birthdate": self.birthday.__str__(),
+                    "Gender__c": self.gender,
+                    "hed__Race__c": self.race,
+                    "hed__Ethnicity__c": self.ethnicity,
+                    "School_Name__c	": self.school_name,
+                    "School_Type__c": self.school_type,
+                    "Medical__c": self.medical_conditions,
+                    "Medications__c": self.medications,
                 },
             )
