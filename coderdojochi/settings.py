@@ -389,6 +389,12 @@ if DEBUG:
         "SHOW_COLLAPSED": True,
     }
 
+# Salesforce login
+
+SALESFORCE_USER = os.environ.get("SALESFORCE_USER")
+SALESFORCE_PASSWORD = os.environ.get("SALESFORCE_PASSWORD")
+SALESFORCE_TOKEN = os.environ.get("SALESFORCE_TOKEN")
+
 
 # Activate Django-Heroku.
 django_heroku.settings(locals(), staticfiles=False)

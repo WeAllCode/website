@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
 
-from .common import CommonInfo
+from simple_salesforce import format_soql
+
+from .common import CommonInfo, salesforce_login
 from .race_ethnicity import RaceEthnicity
 
 
@@ -116,3 +118,40 @@ class Student(CommonInfo):
                 return False
         else:
             return True
+
+    def save(self, *args, **kwargs):
+        sf = salesforce_login()
+        query = "SELECT Id FROM hed__Course__c WHERE Name = {} and hed__Course_ID__c = {}"
+        formatted = format_soql(query, self.title, self.code)
+        results = sf.query(formatted)
+        num_courses = results['totalSize']
+
+        if not num_courses:
+            sf.hed__Course__c.create(
+                {
+                    "first_name": self.first_name,
+                    "last_name": self.last_name,
+                    "Birthdate": self.birthday,
+                    "hed__Gender__c	": self.gender,
+                    "hed__Description__c": self.gender,
+                    "hed__Account__c":"0017h00000ZfotKAAR",
+                    "Duration__c":  self.duration.__str__(),
+                    "Minimum_Age__c": self.minimum_age,
+                    "Maximum_Age__c": self.maximum_age,
+                }
+            )
+        else:
+            id = results['records'][0]["Id"]
+            sf.hed__Course__c.update(
+                id,
+                {
+                    "Name": self.title,
+                    "Active__c": self.is_active,
+                    "hed__Course_ID__c": self.code,
+                    "Course_Type__c": self.course_type,
+                    "hed__Description__c": self.description,
+                    "Duration__c": self.duration.__str__(),
+                    "Minimum_Age__c": self.minimum_age,
+                    "Maximum_Age__c": self.maximum_age,
+                },
+            )
