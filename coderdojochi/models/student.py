@@ -32,15 +32,12 @@ class Student(CommonInfo):
     gender = models.CharField(
         max_length=255,
     )
-    ethnicity = models.CharField(
-        choices=ETHNICITY,
-        max_length=255,
-        default="",
+
+    race_ethnicity = models.ManyToManyField(
+        RaceEthnicity,
+        blank=True,
     )
-    race = models.CharField(
-        max_length=255,
-        default="",
-    )
+
     school_name = models.CharField(
         max_length=255,
         null=True,
@@ -134,11 +131,13 @@ class Student(CommonInfo):
 
     def save(self, *args, **kwargs):
         sf = salesforce_login()
+        # TODO: Check for parent and guardian relationship
         query = "SELECT Id FROM Contact WHERE FirstName = {} and LastName = {}"
         formatted_query = format_soql(query, self.first_name, self.last_name)
         contacts = sf.query(formatted_query)
         num_contacts = contacts["totalSize"]
 
+        # TODO: Use upsert to create a new contact
         if not num_contacts:
             sf.Contact.create(
                 {
@@ -171,3 +170,6 @@ class Student(CommonInfo):
                     "Medications__c": self.medications,
                 },
             )
+
+        print(f"{self.first_name} {self.last_name} has been saved to SF")
+        super(Student).save(*args, **kwargs)

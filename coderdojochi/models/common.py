@@ -27,11 +27,3 @@ def salesforce_login():
         security_token=settings.SALESFORCE_TOKEN,
         domain="cs201",
     )
-
-
-# Salesforce(
-#     username=SF_USERNAME,
-#     password=SF_PASSWORD,
-#     security_token=SF_SECURITY_TOKEN,
-#     domain="cs201",
-# )
