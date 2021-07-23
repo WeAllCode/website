@@ -124,7 +124,7 @@ class Student(CommonInfo):
         query = "SELECT Id FROM hed__Course__c WHERE Name = {} and hed__Course_ID__c = {}"
         formatted = format_soql(query, self.title, self.code)
         results = sf.query(formatted)
-        num_courses = results['totalSize']
+        num_courses = results["totalSize"]
 
         if not num_courses:
             sf.hed__Course__c.create(
@@ -134,14 +134,14 @@ class Student(CommonInfo):
                     "Birthdate": self.birthday,
                     "hed__Gender__c	": self.gender,
                     "hed__Description__c": self.gender,
-                    "hed__Account__c":"0017h00000ZfotKAAR",
-                    "Duration__c":  self.duration.__str__(),
+                    "hed__Account__c": "0017h00000ZfotKAAR",
+                    "Duration__c": self.duration.__str__(),
                     "Minimum_Age__c": self.minimum_age,
                     "Maximum_Age__c": self.maximum_age,
                 }
             )
         else:
-            id = results['records'][0]["Id"]
+            id = results["records"][0]["Id"]
             sf.hed__Course__c.update(
                 id,
                 {

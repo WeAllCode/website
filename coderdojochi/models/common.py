@@ -25,7 +25,7 @@ def salesforce_login():
         username=settings.SALESFORCE_USER,
         password=settings.SALESFORCE_PASSWORD,
         security_token=settings.SALESFORCE_TOKEN,
-        domain="cs201"
+        domain="cs201",
     )
 
 
