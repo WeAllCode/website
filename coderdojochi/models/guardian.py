@@ -1,11 +1,35 @@
 from django.db import models
 
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 from .race_ethnicity import RaceEthnicity
 from .user import CDCUser
 
 
 class Guardian(CommonInfo):
+    HISPANIC = "Hispanic"
+    NOT_HISPANIC = "Not Hispanic"
+
+    ETHNICITY = [
+        (HISPANIC, "Hispanic"),
+        (NOT_HISPANIC, "Not Hispanic"),
+    ]
+
+    WHITE = "White"
+    BLACK = "Black"
+    ASIAN = "Asian"
+    AMERICAN_INDIAN = "American Indian"
+    NATIVE_HAWAIIN = "Native Hawaiin"
+    MIDDLE_EASTERN = "Middle Eastern"
+
+    RACES = [
+        (WHITE, "White"),
+        (BLACK, "Black"),
+        (ASIAN, "Asian"),
+        (AMERICAN_INDIAN, "American Indian"),
+        (NATIVE_HAWAIIN, "Native Hawaiin"),
+        (MIDDLE_EASTERN, "Middle Eastern"),
+    ]
+
     user = models.ForeignKey(
         CDCUser,
         on_delete=models.CASCADE,
@@ -31,9 +55,15 @@ class Guardian(CommonInfo):
         blank=False,
         null=True,
     )
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
-        blank=False,
+    ethnicity = models.CharField(
+        choices=ETHNICITY,
+        max_length=12,
+        default="",
+    )
+    race = models.CharField(
+        choices=RACES,
+        max_length=15,
+        default="",
     )
 
     def __str__(self):
@@ -61,4 +91,23 @@ class Guardian(CommonInfo):
         return Student.objects.filter(
             guardian=self,
             is_active=True,
+        )
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+        obj = Salesforce()
+
+        obj.update_contact(
+            first_name=self.first_name,
+            last_name=self.last_name,
+            birthdate=self.birthday,
+            gender=self.gender,
+            race=self.race,
+            ethnicity=self.ethnicity,
+            role="guardian",
+            active=self.is_active,
+            zip=self.zip,
+            phone=self.phone,
         )

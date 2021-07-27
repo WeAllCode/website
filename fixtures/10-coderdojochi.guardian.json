@@ -11,7 +11,8 @@
     "zip": "60650",
     "birthday": null,
     "gender": null,
-    "race_ethnicity": []
+    "ethnicity":[],
+    "race" : []
   }
 }
 ]

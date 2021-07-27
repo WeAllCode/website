@@ -6,7 +6,7 @@ from django.urls import reverse
 from stdimage.models import StdImageField
 
 from ..notifications import NewMentorBgCheckNotification, NewMentorNotification, NewMentorOrderNotification
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 from .race_ethnicity import RaceEthnicity
 from .user import CDCUser
 
@@ -19,6 +19,30 @@ def generate_filename(instance, filename):
 
 # TODO: Add MentorManager
 class Mentor(CommonInfo):
+    HISPANIC = "Hispanic"
+    NOT_HISPANIC = "Not Hispanic"
+
+    ETHNICITY = [
+        (HISPANIC, "Hispanic"),
+        (NOT_HISPANIC, "Not Hispanic"),
+    ]
+
+    WHITE = "White"
+    BLACK = "Black"
+    ASIAN = "Asian"
+    AMERICAN_INDIAN = "American Indian"
+    NATIVE_HAWAIIN = "Native Hawaiin"
+    MIDDLE_EASTERN = "Middle Eastern"
+
+    RACES = [
+        (WHITE, "White"),
+        (BLACK, "Black"),
+        (ASIAN, "Asian"),
+        (AMERICAN_INDIAN, "American Indian"),
+        (NATIVE_HAWAIIN, "Native Hawaiin"),
+        (MIDDLE_EASTERN, "Middle Eastern"),
+    ]
+
     user = models.ForeignKey(
         CDCUser,
         on_delete=models.CASCADE,
@@ -30,9 +54,11 @@ class Mentor(CommonInfo):
     is_active = models.BooleanField(
         default=True,
     )
+    # Add background check field
     background_check = models.BooleanField(
         default=False,
     )
+    # Add ispublic field
     is_public = models.BooleanField(
         default=False,
     )
@@ -59,9 +85,15 @@ class Mentor(CommonInfo):
         blank=False,
         null=True,
     )
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
-        blank=False,
+    ethnicity = models.CharField(
+        choices=ETHNICITY,
+        max_length=12,
+        default="",
+    )
+    race = models.CharField(
+        choices=RACES,
+        max_length=15,
+        default="",
     )
     work_place = models.CharField(
         max_length=255,
@@ -176,3 +208,20 @@ class Mentor(CommonInfo):
         }
 
         return avatar
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        obj = Salesforce()
+
+        obj.update_contact(
+            first_name=self.first_name,
+            last_name=self.last_name,
+            birthdate=self.birthday,
+            gender=self.gender,
+            race=self.race,
+            ethnicity=self.ethnicity,
+            role="mentor",
+            active=self.is_active,
+            work_place=self.work_place,
+        )

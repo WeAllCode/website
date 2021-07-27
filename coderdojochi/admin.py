@@ -151,7 +151,7 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     filter_horizontal = [
-        "race_ethnicity",
+        # "race_ethnicity",
     ]
 
     def view_on_site(self, obj):
@@ -282,7 +282,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     filter_horizontal = [
-        "race_ethnicity",
+        # "race_ethnicity",
     ]
 
     date_hierarchy = "created_at"

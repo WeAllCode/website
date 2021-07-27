@@ -17,11 +17,11 @@
     "created_at": "2016-05-08T13:05:21.112",
     "updated_at": "2016-05-08T13:05:21.112",
     "is_active": true,
-    "race_ethnicity": [
-      3,
-      4,
-      5,
-      6
+    "race": [
+      5
+    ],
+    "ethnicity": [
+      1
     ]
   }
 },
@@ -43,8 +43,11 @@
     "created_at": "2016-05-08T13:05:51.103",
     "updated_at": "2016-05-08T13:05:54.813",
     "is_active": true,
-    "race_ethnicity": [
-      2
+    "race": [
+      1
+    ],
+    "ethnicity": [
+      1
     ]
   }
 },
@@ -66,8 +69,11 @@
     "created_at": "2016-05-08T13:06:25.378",
     "updated_at": "2016-05-08T13:06:31.135",
     "is_active": true,
-    "race_ethnicity": [
-      4
+    "race": [
+      3
+    ],
+    "ethnicity": [
+      2
     ]
   }
 },
@@ -89,8 +95,11 @@
     "created_at": "2016-05-08T13:07:00.193",
     "updated_at": "2016-05-08T13:07:00.193",
     "is_active": true,
-    "race_ethnicity": [
-      7
+    "race": [
+      2
+    ],
+    "ethnicity": [
+      1
     ]
   }
 }

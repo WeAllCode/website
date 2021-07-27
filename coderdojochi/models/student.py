@@ -1,10 +1,11 @@
 from django.db import models
 from django.utils import timezone
 
-from simple_salesforce import format_soql
+# from simple_salesforce import format_soql
 
-from .common import CommonInfo, salesforce_login
-from .race_ethnicity import RaceEthnicity
+from .common import CommonInfo, Salesforce
+
+# from .race_ethnicity import RaceEthnicity
 
 
 class Student(CommonInfo):
@@ -16,6 +17,22 @@ class Student(CommonInfo):
     ETHNICITY = [
         (HISPANIC, "Hispanic"),
         (NOT_HISPANIC, "Not Hispanic"),
+    ]
+
+    WHITE = "White"
+    BLACK = "Black"
+    ASIAN = "Asian"
+    AMERICAN_INDIAN = "American Indian"
+    NATIVE_HAWAIIN = "Native Hawaiin"
+    MIDDLE_EASTERN = "Middle Eastern"
+
+    RACES = [
+        (WHITE, "White"),
+        (BLACK, "Black"),
+        (ASIAN, "Asian"),
+        (AMERICAN_INDIAN, "American Indian"),
+        (NATIVE_HAWAIIN, "Native Hawaiin"),
+        (MIDDLE_EASTERN, "Middle Eastern"),
     ]
 
     guardian = models.ForeignKey(
@@ -33,9 +50,15 @@ class Student(CommonInfo):
         max_length=255,
     )
 
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
-        blank=True,
+    ethnicity = models.CharField(
+        choices=ETHNICITY,
+        max_length=12,
+        default="",
+    )
+    race = models.CharField(
+        choices=RACES,
+        max_length=15,
+        default="",
     )
 
     school_name = models.CharField(
@@ -130,46 +153,24 @@ class Student(CommonInfo):
             return True
 
     def save(self, *args, **kwargs):
-        sf = salesforce_login()
-        # TODO: Check for parent and guardian relationship
-        query = "SELECT Id FROM Contact WHERE FirstName = {} and LastName = {}"
-        formatted_query = format_soql(query, self.first_name, self.last_name)
-        contacts = sf.query(formatted_query)
-        num_contacts = contacts["totalSize"]
+        # How to get self.guardian first and last name for querying
+        super().save(*args, **kwargs)
 
-        # TODO: Use upsert to create a new contact
-        if not num_contacts:
-            sf.Contact.create(
-                {
-                    "FirstName": self.first_name,
-                    "LastName": self.last_name,
-                    "Birthdate": self.birthday.__str__(),
-                    "Gender__c": self.gender,
-                    "hed__Race__c": self.race,
-                    "hed__Ethnicity__c": self.ethnicity,
-                    "School_Name__c	": self.school_name,
-                    "School_Type__c": self.school_type,
-                    "Medical__c": self.medical_conditions,
-                    "Medications__c": self.medications,
-                }
-            )
-        else:
-            id = contacts["records"][0]["Id"]
-            sf.Contact.update(
-                id,
-                {
-                    "FirstName": self.first_name,
-                    "LastName": self.last_name,
-                    "Birthdate": self.birthday.__str__(),
-                    "Gender__c": self.gender,
-                    "hed__Race__c": self.race,
-                    "hed__Ethnicity__c": self.ethnicity,
-                    "School_Name__c	": self.school_name,
-                    "School_Type__c": self.school_type,
-                    "Medical__c": self.medical_conditions,
-                    "Medications__c": self.medications,
-                },
-            )
+        obj = Salesforce()
+
+        obj.update_contact(
+            first_name=self.first_name,
+            last_name=self.last_name,
+            birthdate=self.birthday,
+            gender=self.gender,
+            race=self.race,
+            ethnicity=self.ethnicity,
+            role="student",
+            active=self.is_active,
+            school_name=self.school_name,
+            school_type=self.school_type,
+            medical=self.medical_conditions,
+            medications=self.medications,
+        )
 
         print(f"{self.first_name} {self.last_name} has been saved to SF")
-        super(Student).save(*args, **kwargs)
