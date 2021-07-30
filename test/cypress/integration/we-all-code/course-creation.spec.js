@@ -16,15 +16,15 @@ describe("Create a course through admin", () => {
         cy.get('#id_password').type('admin');
         cy.contains('Log in').click();
 
-        const title = faker.lorem.word(6);
-        const code = `${title}${faker.datatype.number()}`;
+        const title = faker.lorem.word(9);
+        const code = `${title}${faker.datatype.number(1000)}`;
         const duration = `0${faker.datatype.number({min: 1, max: 4})}:00:00`;
         const description = faker.lorem.words(10);
         const minAge = faker.datatype.number({min: 7, max: 10});
         const maxAge = minAge + 8;
 
         cy.get('#id_code').type(code);
-        cy.get('#id_title').type(title);
+        cy.get('#id_title').type(`${title}`);
         cy.get('#id_description').type(description);
         cy.get('#id_duration').clear().type(duration);
         cy.get('#id_minimum_age').clear().type(minAge);

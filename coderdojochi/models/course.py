@@ -5,6 +5,10 @@ from django.db import models
 
 
 from .common import CommonInfo, Salesforce
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+
 
 
 class Course(CommonInfo):
@@ -64,15 +68,11 @@ class Course(CommonInfo):
             return f"{self.code} | {self.title}"
 
         return f"{self.title}"
+    
 
     def save(self, *args, **kwargs):
-        print("===============================================fsfs=f=====================")
+        
         super().save(*args, **kwargs)
-
-        if self.id is not None:
-            self.id = f"External_Id__c/{self.id}"
-
-        print(self.id)
 
         sf = Salesforce()
 
@@ -86,3 +86,7 @@ class Course(CommonInfo):
             minimum_age=self.minimum_age,
             maximum_age=self.maximum_age,
         )
+
+@receiver(pre_save, sender=Course)
+def Course_pre_save_receiver(sender, instance, **kwargs):
+    pass

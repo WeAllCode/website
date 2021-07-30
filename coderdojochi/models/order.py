@@ -1,6 +1,6 @@
 from django.db import models
 
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 
 
 class Order(CommonInfo):
@@ -71,3 +71,20 @@ class Order(CommonInfo):
         return self.student.get_clean_gender().title()
 
     get_student_gender.short_description = "Gender"
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        sf.create_order(
+            session=self.session,
+            guardian=self.guardian,
+            main_contact=self.student,
+            active=self.is_active,
+            ip=self.ip,
+            check_in=self.check_in,
+            ext_id=self.id,
+            alternate_guardian=self.alternate_guardian,
+        )

@@ -97,17 +97,20 @@ class Guardian(CommonInfo):
 
         super().save(*args, **kwargs)
 
-        obj = Salesforce()
+        sf = Salesforce()
 
-        obj.update_contact(
-            first_name=self.first_name,
-            last_name=self.last_name,
-            birthdate=self.birthday,
-            gender=self.gender,
-            race=self.race,
-            ethnicity=self.ethnicity,
-            role="guardian",
-            active=self.is_active,
-            zip=self.zip,
-            phone=self.phone,
-        )
+        if self.birthday and self.zip:
+            sf.upsert_contact(
+                first_name=self.first_name,
+                last_name=self.last_name,
+                birthdate=self.birthday,
+                gender=self.gender,
+                email=self.email,
+                race=self.race,
+                ethnicity=self.ethnicity,
+                role="guardian",
+                active=self.is_active,
+                zip_code=self.zip.replace('-',''),
+                phone=self.phone,
+                ext_id=self.id,
+            )

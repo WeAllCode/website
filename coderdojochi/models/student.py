@@ -158,7 +158,7 @@ class Student(CommonInfo):
 
         obj = Salesforce()
 
-        obj.update_contact(
+        obj.upsert_contact(
             first_name=self.first_name,
             last_name=self.last_name,
             birthdate=self.birthday,
@@ -166,11 +166,20 @@ class Student(CommonInfo):
             race=self.race,
             ethnicity=self.ethnicity,
             role="student",
+            parent=self.guardian,
             active=self.is_active,
             school_name=self.school_name,
             school_type=self.school_type,
             medical=self.medical_conditions,
             medications=self.medications,
+            ext_id=self.id,
+        )
+
+        obj.create_relationship(
+            parent_first_name=self.guardian.first_name,
+            parent_last_name=self.guardian.last_name,
+            child_first_name=self.first_name,
+            child_last_name=self.last_name,
         )
 
         print(f"{self.first_name} {self.last_name} has been saved to SF")

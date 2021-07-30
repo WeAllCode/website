@@ -210,18 +210,22 @@ class Mentor(CommonInfo):
         return avatar
 
     def save(self, *args, **kwargs):
+
         super().save(*args, **kwargs)
 
-        obj = Salesforce()
+        sf = Salesforce()
 
-        obj.update_contact(
-            first_name=self.first_name,
-            last_name=self.last_name,
-            birthdate=self.birthday,
-            gender=self.gender,
-            race=self.race,
-            ethnicity=self.ethnicity,
-            role="mentor",
-            active=self.is_active,
-            work_place=self.work_place,
-        )
+        if self.birthday:
+            sf.upsert_contact(
+                first_name=self.first_name,
+                last_name=self.last_name,
+                birthdate=self.birthday,
+                gender=self.gender,
+                email=self.email,
+                race=self.race,
+                ethnicity=self.ethnicity,
+                role="mentor",
+                active=self.is_active,
+                work_place=self.work_place,
+                ext_id=self.id,
+            )

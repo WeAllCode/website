@@ -3,7 +3,7 @@ import os
 from django.db import models
 
 from ..notifications import NewMentorOrderNotification
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 
 
 class MentorOrder(CommonInfo):
@@ -62,3 +62,15 @@ class MentorOrder(CommonInfo):
             NewMentorOrderNotification(self).send()
 
         super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        sf.create_order(
+            session=self.session,
+            main_contact=self.mentor,
+            active=self.is_active,
+            ip=self.ip,
+            check_in=self.check_in,
+            ext_id=self.id,
+            affiliate=self.affiliate,
+        )

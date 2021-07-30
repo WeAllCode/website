@@ -20,6 +20,7 @@ function randomPerson(
     zip: faker.address.zipCode(),
     ethnicity: faker.datatype.number({ min: 0, max: 1 }),
     password: faker.internet.password(),
+    school:`${faker.lorem.word(7)} School`,
     birthday: format(
       faker.date.between(birthday_min, birthday_max),
       "yyyy-MM-dd"
@@ -52,7 +53,7 @@ describe("Create Parent Account", () => {
   it("fill out parent information", function () {
     const student = randomPerson("2005-01-01", "2013-01-01");
     const parent = randomPerson();
-
+  
     cy.get(".medium-offset-2 > p > .button").click();
 
     // Parents
@@ -71,7 +72,7 @@ describe("Create Parent Account", () => {
     cy.get("#id_gender").type(student.gender);
     cy.get('#id_race').select(race[student.race]);
     cy.get('#id_ethnicity').select(ethnicity[student.ethnicity]);
-    cy.get('#id_school_name').type('Example School');
+    cy.get('#id_school_name').type(student.school);
     cy.get('#id_school_type_0').check();
     cy.get(':nth-child(8) > .control-label').click();
     cy.get('#id_medical_conditions').click();
