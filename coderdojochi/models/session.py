@@ -1,12 +1,14 @@
 from datetime import timedelta
-
+from tasks import start
+import random
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls.base import reverse
 from django.utils import formats
 from django.utils.functional import cached_property
+from requests.sessions import session
 
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 
 
 class Session(CommonInfo):
@@ -27,6 +29,11 @@ class Session(CommonInfo):
         Course,
         on_delete=models.CASCADE,
         limit_choices_to={"is_active": True},
+    )
+    title = models.TextField(
+        blank=True, 
+        null=True,
+        default="",
     )
     start_date = models.DateTimeField()
     location = models.ForeignKey(
@@ -330,6 +337,45 @@ class Session(CommonInfo):
 
         return Order.objects.filter(is_active=True, session=self).exclude(check_in=None).values("student")
 
+    def save(self, *args, **kwargs):
+
+        rand_num = random.randrange(1000)
+ 
+        self.title = f"{self.course.title} Offering: {rand_num}"
+
+        super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        # first_assistant = None
+
+        # print("SElff assistan all")
+        print(self.assistant.all())
+        # for assist in self.assistant.all():
+        #     print("Assistants")
+        #     print(assist)
+        # # print("Printed")
+        # print("Assistant type")
+        # print(type(self.assistant))
+
+        sf.create_session(
+            course=self.course,
+            title = self.title,
+            start_datetime=self.start_date,
+            location=self.location,
+            capacity=self.capacity,
+            mentor_capacity=self.mentor_capacity,
+            mentor=self.instructor,
+            ext_id=self.id,
+            # assistant=self.assistant,
+            online_link = self.online_video_link,
+            video_meeting_id = self.online_video_meeting_id,
+            meeting_password = self.online_video_meeting_password,
+            cost=self.cost,
+            minimum_cost=self.minimum_cost,
+            maximum_cost=self.maximum_cost,
+            additional_info=self.additional_info,
+        )
 
 class PartnerPasswordAccess(CommonInfo):
     from .user import CDCUser

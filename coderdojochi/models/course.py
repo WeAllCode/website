@@ -3,7 +3,12 @@ from datetime import timedelta
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from .common import CommonInfo
+
+from .common import CommonInfo, Salesforce
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+
 
 
 class Course(CommonInfo):
@@ -63,3 +68,21 @@ class Course(CommonInfo):
             return f"{self.code} | {self.title}"
 
         return f"{self.title}"
+    
+
+    def save(self, *args, **kwargs):
+        
+        super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        sf.upsert_course(
+            name=self.title,
+            active=self.is_active,
+            course_id=self.code,
+            course_type=self.course_type,
+            description=self.description,
+            duration=self.duration,
+            minimum_age=self.minimum_age,
+            maximum_age=self.maximum_age,
+        )

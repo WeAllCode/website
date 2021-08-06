@@ -17,7 +17,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -38,7 +39,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": [2]
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -59,7 +61,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -80,7 +83,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -101,7 +105,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -122,7 +127,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -143,7 +149,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -164,7 +171,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -185,7 +193,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -206,7 +215,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -227,7 +237,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -248,7 +259,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -269,7 +281,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -290,7 +303,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -311,7 +325,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -332,7 +347,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -353,7 +369,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -374,7 +391,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -395,7 +413,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -416,7 +435,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -437,7 +457,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -458,7 +479,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -479,7 +501,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -500,7 +523,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -521,7 +545,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -542,7 +567,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -563,7 +589,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -584,7 +611,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -605,7 +633,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -626,7 +655,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -647,7 +677,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -668,7 +699,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -689,7 +721,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -710,7 +743,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -731,7 +765,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -752,7 +787,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -773,7 +809,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -794,7 +831,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -815,7 +853,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -836,7 +875,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -857,7 +897,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -878,7 +919,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -899,7 +941,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -920,7 +963,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -941,7 +985,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -962,7 +1007,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -983,7 +1029,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1004,7 +1051,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1025,7 +1073,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1046,7 +1095,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1067,7 +1117,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1088,7 +1139,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1109,7 +1161,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1130,7 +1183,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1151,7 +1205,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1172,7 +1227,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1193,7 +1249,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1214,7 +1271,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1235,7 +1293,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1256,7 +1315,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1277,7 +1337,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1298,7 +1359,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1319,7 +1381,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1340,7 +1403,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1361,7 +1425,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1382,7 +1447,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1403,7 +1469,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1424,7 +1491,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1445,7 +1513,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1466,7 +1535,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1487,7 +1557,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1508,7 +1579,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1529,7 +1601,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1550,7 +1623,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1571,7 +1645,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1592,7 +1667,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1613,7 +1689,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1634,7 +1711,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1655,7 +1733,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1676,7 +1755,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1697,7 +1777,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1718,7 +1799,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1739,7 +1821,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1760,7 +1843,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1781,7 +1865,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1802,7 +1887,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1823,7 +1909,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1844,7 +1931,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1865,7 +1953,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1886,7 +1975,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1907,7 +1997,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1928,7 +2019,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1949,7 +2041,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1970,7 +2063,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": [4,7]
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -1991,7 +2085,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -2012,7 +2107,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -2033,7 +2129,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -2054,7 +2151,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": [1,7]
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -2075,7 +2173,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 },
 {
@@ -2096,7 +2195,8 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": []
+    "ethnicity" : [],
+    "race" : []
   }
 }
 ]

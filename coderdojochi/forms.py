@@ -248,11 +248,11 @@ class StudentForm(CDCModelForm):
         required=False,
     )
 
-    race_ethnicity = forms.ModelMultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple,
-        queryset=RaceEthnicity.objects.filter(is_visible=True),
-        required=False,
-    )
+    # race_ethnicity = forms.ModelMultipleChoiceField(
+    #     widget=forms.CheckboxSelectMultiple,
+    #     queryset=RaceEthnicity.objects.filter(is_visible=True),
+    #     required=False,
+    # )
 
     birthday = forms.CharField(
         widget=html5_widgets.DateInput(

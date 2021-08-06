@@ -1,12 +1,39 @@
 from django.db import models
 from django.utils import timezone
 
-from .common import CommonInfo
-from .race_ethnicity import RaceEthnicity
+# from simple_salesforce import format_soql
+
+from .common import CommonInfo, Salesforce
+
+# from .race_ethnicity import RaceEthnicity
 
 
 class Student(CommonInfo):
     from .guardian import Guardian
+
+    HISPANIC = "Hispanic"
+    NOT_HISPANIC = "Not Hispanic"
+
+    ETHNICITY = [
+        (HISPANIC, "Hispanic"),
+        (NOT_HISPANIC, "Not Hispanic"),
+    ]
+
+    WHITE = "White"
+    BLACK = "Black"
+    ASIAN = "Asian"
+    AMERICAN_INDIAN = "American Indian"
+    NATIVE_HAWAIIN = "Native Hawaiin"
+    MIDDLE_EASTERN = "Middle Eastern"
+
+    RACES = [
+        (WHITE, "White"),
+        (BLACK, "Black"),
+        (ASIAN, "Asian"),
+        (AMERICAN_INDIAN, "American Indian"),
+        (NATIVE_HAWAIIN, "Native Hawaiin"),
+        (MIDDLE_EASTERN, "Middle Eastern"),
+    ]
 
     guardian = models.ForeignKey(
         Guardian,
@@ -22,10 +49,18 @@ class Student(CommonInfo):
     gender = models.CharField(
         max_length=255,
     )
-    race_ethnicity = models.ManyToManyField(
-        RaceEthnicity,
-        blank=True,
+
+    ethnicity = models.CharField(
+        choices=ETHNICITY,
+        max_length=12,
+        default="",
     )
+    race = models.CharField(
+        choices=RACES,
+        max_length=15,
+        default="",
+    )
+
     school_name = models.CharField(
         max_length=255,
         null=True,
@@ -116,3 +151,35 @@ class Student(CommonInfo):
                 return False
         else:
             return True
+
+    def save(self, *args, **kwargs):
+        # How to get self.guardian first and last name for querying
+        super().save(*args, **kwargs)
+
+        obj = Salesforce()
+
+        obj.upsert_contact(
+            first_name=self.first_name,
+            last_name=self.last_name,
+            birthdate=self.birthday,
+            gender=self.gender,
+            race=self.race,
+            ethnicity=self.ethnicity,
+            role="student",
+            parent=self.guardian,
+            active=self.is_active,
+            school_name=self.school_name,
+            school_type=self.school_type,
+            medical=self.medical_conditions,
+            medications=self.medications,
+            ext_id=self.id,
+        )
+
+        obj.create_relationship(
+            parent_first_name=self.guardian.first_name,
+            parent_last_name=self.guardian.last_name,
+            child_first_name=self.first_name,
+            child_last_name=self.last_name,
+        )
+
+        print(f"{self.first_name} {self.last_name} has been saved to SF")

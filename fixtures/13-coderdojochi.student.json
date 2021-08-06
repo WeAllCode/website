@@ -3,8 +3,6 @@
   "model": "coderdojochi.student",
   "pk": 1,
   "fields": {
-    "created_at": "2016-05-08T19:05:21.112Z",
-    "updated_at": "2016-05-08T19:05:21.112Z",
     "guardian": 1,
     "first_name": "David",
     "last_name": "Doe",
@@ -16,12 +14,14 @@
     "medications": "",
     "photo_release": true,
     "consent": true,
+    "created_at": "2016-05-08T13:05:21.112",
+    "updated_at": "2016-05-08T13:05:21.112",
     "is_active": true,
-    "race_ethnicity": [
-      3,
-      4,
-      5,
-      6
+    "race": [
+      5
+    ],
+    "ethnicity": [
+      1
     ]
   }
 },
@@ -29,8 +29,6 @@
   "model": "coderdojochi.student",
   "pk": 2,
   "fields": {
-    "created_at": "2016-05-08T19:05:51.103Z",
-    "updated_at": "2016-05-08T19:05:54.813Z",
     "guardian": 1,
     "first_name": "Rachel",
     "last_name": "Doe",
@@ -42,9 +40,14 @@
     "medications": "",
     "photo_release": true,
     "consent": true,
+    "created_at": "2016-05-08T13:05:51.103",
+    "updated_at": "2016-05-08T13:05:54.813",
     "is_active": true,
-    "race_ethnicity": [
-      2
+    "race": [
+      1
+    ],
+    "ethnicity": [
+      1
     ]
   }
 },
@@ -52,8 +55,6 @@
   "model": "coderdojochi.student",
   "pk": 3,
   "fields": {
-    "created_at": "2016-05-08T19:06:25.378Z",
-    "updated_at": "2016-05-08T19:06:31.135Z",
     "guardian": 1,
     "first_name": "Kelly",
     "last_name": "Doe",
@@ -65,9 +66,14 @@
     "medications": "",
     "photo_release": true,
     "consent": true,
+    "created_at": "2016-05-08T13:06:25.378",
+    "updated_at": "2016-05-08T13:06:31.135",
     "is_active": true,
-    "race_ethnicity": [
-      4
+    "race": [
+      3
+    ],
+    "ethnicity": [
+      2
     ]
   }
 },
@@ -75,8 +81,6 @@
   "model": "coderdojochi.student",
   "pk": 4,
   "fields": {
-    "created_at": "2016-05-08T19:07:00.193Z",
-    "updated_at": "2016-05-08T19:07:00.193Z",
     "guardian": 1,
     "first_name": "Mitch",
     "last_name": "Doe",
@@ -88,9 +92,14 @@
     "medications": "",
     "photo_release": true,
     "consent": true,
+    "created_at": "2016-05-08T13:07:00.193",
+    "updated_at": "2016-05-08T13:07:00.193",
     "is_active": true,
-    "race_ethnicity": [
-      7
+    "race": [
+      2
+    ],
+    "ethnicity": [
+      1
     ]
   }
 }

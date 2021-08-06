@@ -1,8 +1,10 @@
+from calendar import firstweekday
+
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
 
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 
 
 class Donation(CommonInfo):
@@ -81,3 +83,21 @@ class Donation(CommonInfo):
             return self.email
 
     get_email.short_description = "Email"
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        sf.add_donation(
+            session=self.session,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            email=self.email,
+            is_verified=self.is_verified,
+            receipt_sent=self.receipt_sent,
+            referral_code=self.referral_code,
+            amount=self.amount,
+            ext_id=self.id,
+        )

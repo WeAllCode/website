@@ -1,6 +1,6 @@
 from django.db import models
 
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 
 
 class EmailContent(CommonInfo):
@@ -29,3 +29,15 @@ class EmailContent(CommonInfo):
 
     def __str__(self):
         return f"{self.nickname} | {self.subject}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        sf.add_email_content(
+            nickname=self.nickname,
+            subject=self.subject,
+            body=self.body,
+            is_active=self.is_active,
+        )
