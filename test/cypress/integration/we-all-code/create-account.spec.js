@@ -88,7 +88,6 @@ describe("Create Parent Account", () => {
 });
 
 describe("Signup Volunteer", () => {
-  
 
   it("Volunteer Signup", () => {
 
@@ -105,7 +104,6 @@ describe("Signup Volunteer", () => {
 
     cy.contains("Volunteer").click();
 
-    /* ==== Generated with Cypress Studio ==== */
     cy.get("#id_bio").type("Lorem ipsum");
 
     cy.get("#id_birthday").type(volunteer.birthday);
@@ -121,6 +119,5 @@ describe("Signup Volunteer", () => {
     cy.get("#id_race_ethnicity").select([`${volunteer.ethnicity + 1}`]);
     
     cy.get(".submit").click();
-    /* ==== End Cypress Studio ==== */
   });
 });

@@ -2,10 +2,11 @@ import json
 from datetime import date, datetime, timedelta
 from logging import Formatter
 from re import S
-from pytz import timezone
+
 from django.conf import settings
 from django.db import models
 
+from pytz import timezone
 from simple_salesforce import Salesforce as sf
 from simple_salesforce.format import format_soql
 
@@ -62,19 +63,6 @@ class Salesforce:
 
         return None
 
-    def query_timeblocks(self, start_time, end_time):
-        print(start_time)
-        print(end_time)
-
-        query = f"SELECT Id FROM hed__Time_Block__c WHERE hed__Start_Time__c >= {start_time} AND hed__End_Time__c < {end_time}"
-
-        results = self.salesforce_obj.query(query)
-
-        if results["totalSize"]:
-            return results["records"][0]["Id"]
-
-        return None
-
     def course_query(self, course_id):
         query = "SELECT Id FROM hed__Course__c WHERE hed__Course_ID__c = {}"
         formatted = format_soql(query, course_id)
@@ -87,32 +75,16 @@ class Salesforce:
 
         return None
 
-    def offering_query(self, ext_id):
-
-        query = "SELECT Id FROM hed__Course_Offering__c WHERE External_Id__c = '{}'"
-
-        formatted_query = format_soql(
-            query,
-            ext_id,
+    def general_query(self, ext_id, object):
+        query = (
+            f"SELECT Id FROM {object} WHERE " + "External_Id__c = '{}'"
+            if isinstance(ext_id, int)
+            else f"SELECT Id FROM {object} WHERE " + "External_Id__c = {}"
         )
-
-        results = self.salesforce_obj.query(formatted_query)
-
-        num_same_offerings = results["totalSize"]
-
-        if num_same_offerings:
-            return results["records"][0]["Id"]
-
-        return None
-
-    def order_query(self, ext_id):
-
-        query = "SELECT Id FROM hed__Course_Enrollment__c WHERE External_Id__c = '{}'"
-
         formatted_query = format_soql(query, ext_id)
+        print(formatted_query)
 
         results = self.salesforce_obj.query(formatted_query)
-
         exists = results["totalSize"]
 
         if exists:
@@ -185,12 +157,12 @@ class Salesforce:
         zip_code=None,
         parent=None,
     ):
-        exists = self.contact_id_query(ext_id=ext_id)
+        exists = self.general_query(ext_id=ext_id, object="Contact")
 
         household_name = f"{last_name} Household"
         account_created = self.in_account_list(household_name)
 
-        parent_id = self.contact_id_query(ext_id=parent.id) if parent is not None else None
+        parent_id = self.general_query(ext_id=parent.id, object="Contact") if parent is not None else None
 
         data = {
             "FirstName": first_name,
@@ -287,19 +259,23 @@ class Salesforce:
         capacity,
         mentor_capacity,
         mentor,
-        cost,
         ext_id,
+        online_link,
+        video_meeting_id,
+        meeting_password,
+        cost,
         minimum_cost,
         maximum_cost,
         additional_info,
         assistant=None,
     ):
 
-        exist = self.offering_query(
-            ext_id=ext_id,
-        )
+        exist = self.general_query(ext_id=ext_id, object="hed__Course_Offering__c")
         course_id = self.course_query(course_id=course.code)
-        mentor_id = self.contact_id_query(ext_id=mentor.id)
+        mentor_id = self.general_query(
+            ext_id=mentor.id,
+            object="Contact",
+        )
 
         # Session times are stored as timeblock objects in Salesforce
         # Need to query the appropriate block to assign to session based on start and end time
@@ -308,6 +284,10 @@ class Salesforce:
         end_date = (start_datetime + course.duration).strftime("%Y-%m-%d")
         start_time = (start_datetime - timedelta(hours=5)).strftime("%H:%M:%S")
         end_time = (start_datetime + course.duration - timedelta(hours=5)).strftime("%H:%M:%S")
+
+        minimum_cost_converted = int(minimum_cost) if minimum_cost else None
+        maximum_cost_converted = int(maximum_cost) if maximum_cost else None
+        cost_converted = int(cost) if cost else None
 
         data = {
             "hed__Course__c": course_id,
@@ -318,15 +298,18 @@ class Salesforce:
             "hed__Capacity__c": capacity,
             "Mentor_Capacity__c": mentor_capacity,
             "hed__Faculty__c": mentor_id,
-            # "Assistant_Mentor__c": assistant_id,
             "hed__Term__c": "a1O7h000000pwOBEAY",
-            "Cost__c": cost,
-            "Minimum_Cost__c": minimum_cost,
-            "Maximum_Cost__c": maximum_cost,
+            "Cost__c": cost_converted,
+            "Minimum_Cost__c": minimum_cost_converted,
+            "Maximum_Cost__c": maximum_cost_converted,
             "Additional_Information__c": additional_info,
+            "Online_Video_Link__c":online_link,
+            "Online_Video_Meeting_Id__c":video_meeting_id,
+            "Online_Video_Meeting_Password__c":meeting_password,
             "Start_Time__c": start_time,
             "End_Time__c": end_time,
             "External_Id__c": ext_id,
+            
         }
 
         if exist is None:
@@ -350,26 +333,35 @@ class Salesforce:
         alternate_guardian=None,
         guardian=None,
         affiliate=None,
+        is_mentor=False,
     ):
         guardian_id = None
 
         if guardian:
-            guardian_id = self.contact_id_query(
+            guardian_id = self.general_query(
                 ext_id=guardian.id,
+                object="Contact",
             )
 
-        contact_id = self.contact_id_query(
+        contact_id = self.general_query(
             ext_id=main_contact.id,
+            object="Contact",
         )
 
-        session_id = self.offering_query(
+        session_id = self.general_query(
             ext_id=session.id,
+            object="hed__Course_Offering__c",
         )
 
-        order_id = self.order_query(ext_id)
+        order_id = self.general_query(
+            ext_id=ext_id,
+            object="hed__Course_Enrollment__c",
+        )
 
+        print(order_id)
         # Date/time must be in below format for Salesforce to accept it
-        temp = check_in.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if check_in else None
+        converted = (check_in - timedelta(hours=5)) if check_in else None
+        temp = converted.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if check_in else None
 
         if order_id is None:
             self.salesforce_obj.hed__Course_Enrollment__c.create(
@@ -383,11 +375,12 @@ class Salesforce:
                     "Alternate_Guardian__c": alternate_guardian,
                     "External_Id__c": ext_id,
                     "Affiliate__c": affiliate,
+                    "Is_Mentor__c": is_mentor,
                 }
             )
         else:
             self.salesforce_obj.hed__Course_Enrollment__c.update(
-                id,
+                order_id,
                 {
                     "Parent__c": guardian_id,
                     "hed__Contact__c": contact_id,
@@ -410,20 +403,277 @@ class Salesforce:
         is_verified,
         receipt_sent,
         referral_code,
+        ext_id,
         last_name="",
     ):
-        session_id = self.offering_query(ext_id=session.id)
+        session_id = (
+            self.general_query(
+                ext_id=session.id,
+                object="hed__Course_Offering__c",
+            )
+            if session
+            else None
+        )
+        donation_id = self.general_query(
+            ext_id=ext_id,
+            object="Donation__c",
+        )
 
-        self.salesforce_obj.Donation__c.create(
+        if not donation_id:
+            self.salesforce_obj.Donation__c.create(
+                {
+                    "Name": f"{first_name} {last_name}'s Donation",
+                    "Amount__c": amount,
+                    "Course_Offering__c": session_id,
+                    "First_Name__c": first_name,
+                    "Last_Name__c": last_name,
+                    "Email__c": email,
+                    "Is_Verified__c": is_verified,
+                    "Receipt_Sent__c": receipt_sent,
+                    "Referral_Code__c": referral_code,
+                    "External_Id__c": ext_id,
+                }
+            )
+        else:
+            self.salesforce_obj.Donation__c.update(
+                donation_id,
+                {
+                    "Name": f"{first_name} {last_name}'s Donation",
+                    "Amount__c": amount,
+                    "Course_Offering__c": session_id,
+                    "First_Name__c": first_name,
+                    "Last_Name__c": last_name,
+                    "Email__c": email,
+                    "Is_Verified__c": is_verified,
+                    "Receipt_Sent__c": receipt_sent,
+                    "Referral_Code__c": referral_code,
+                    "External_Id__c": ext_id,
+                },
+            )
+
+    def add_email_content(
+        self,
+        nickname,
+        subject,
+        body,
+        is_active,
+    ):
+
+        self.salesforce_obj.Email_Content__c.create(
             {
-                "Name": f"{first_name} {last_name}'s Donation",
-                "Amount__c": amount,
-                "Course_Offering__c": session_id,
-                "First_Name__c": first_name,
-                "Last_Name__c": last_name,
-                "Email__c": email,
-                "Is_Verified__c": is_verified,
-                "Receipt_Sent__c": receipt_sent,
-                "Referral_Code__c": referral_code,
+                "Nickname__c": nickname,
+                "Subject__c": subject,
+                "Body__c": body,
+                "Active__c": is_active,
             }
         )
+
+    def add_equipment_type(self, name, ext_id):
+
+        type_id = self.general_query(
+            ext_id=ext_id,
+            object="Equipment_Type__c",
+        )
+
+        if not type_id:
+            self.salesforce_obj.Equipment_Type__c.create(
+                {
+                    "Name": name,
+                    "External_Id__c": ext_id,
+                }
+            )
+        else:
+            self.salesforce_obj.Equipment_Type__c.update(
+                type_id,
+                {
+                    "Name": name,
+                    "External_Id__c": ext_id,
+                },
+            )
+
+    def add_equipment(
+        self,
+        uuid,
+        equipment_type,
+        make,
+        model,
+        asset_tag,
+        acquisition_date,
+        condition,
+        notes,
+        last_system_update_check_in,
+        last_system_update,
+        force_update_on_next_boot,
+        ext_id,
+    ):
+
+        equipment_type_id = self.general_query(
+            ext_id=equipment_type.id,
+            object="Equipment_Type__c",
+        )
+        formatted_time = acquisition_date.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if acquisition_date else None
+        equipment_id = self.general_query(ext_id=ext_id, object="Equipment__c")
+
+        if not equipment_id:
+            self.salesforce_obj.Equipment__c.create(
+                {
+                    "uuid__c": uuid,
+                    "Type__c": equipment_type_id,
+                    "Make__c": make,
+                    "Model__c": model,
+                    "Asset_Tag__c": asset_tag,
+                    "Acquisition_Date__c": formatted_time,
+                    "Condition__c": condition,
+                    "Notes__c": notes,
+                    "Last_System_Update__c": last_system_update,
+                    "Last_System_Update_Check__c": last_system_update_check_in,
+                    "Force_Update_Next__c": force_update_on_next_boot,
+                    "External_Id__c": ext_id,
+                }
+            )
+        else:
+            self.salesforce_obj.Equipment__c.update(
+                equipment_id,
+                {
+                    "uuid__c": uuid,
+                    "Type__c": equipment_type_id,
+                    "Make__c": make,
+                    "Model__c": model,
+                    "Asset_Tag__c": asset_tag,
+                    "Acquisition_Date__c": formatted_time,
+                    "Condition__c": condition,
+                    "Notes__c": notes,
+                    "Last_System_Update__c": last_system_update,
+                    "Last_System_Update_Check__c": last_system_update_check_in,
+                    "Force_Update_Next__c": force_update_on_next_boot,
+                    "External_Id__c": ext_id,
+                },
+            )
+
+    def add_location(
+        self,
+        name,
+        address,
+        city,
+        state,
+        zip,
+        is_active,
+        ext_id,
+    ):
+
+        location_id = self.general_query(ext_id=ext_id, object="Location__c")
+
+        if not location_id:
+
+            self.salesforce_obj.Location__c.create(
+                {
+                    "Active__c": is_active,
+                    "Address__c": address,
+                    "City__c": city,
+                    "External_Id__c": ext_id,
+                    "Name__c": name,
+                    "State__c": state,
+                    "Zip__c": zip,
+                }
+            )
+
+        else:
+            self.salesforce_obj.Location__c.update(
+                location_id,
+                {
+                    "Active__c": is_active,
+                    "Address__c": address,
+                    "City__c": city,
+                    "External_Id__c": ext_id,
+                    "Name__c": name,
+                    "State__c": state,
+                    "Zip__c": zip,
+                },
+            )
+
+    def add_meeting_type(
+        self,
+        code,
+        title,
+        slug,
+        description,
+        ext_id,
+    ):
+        type_id = self.meeting_type_query(ext_id=ext_id, object="Meeting_Type__c")
+
+        if not type_id:
+            self.salesforce_obj.Meeting_Type__c.create(
+                {
+                    "Code__c": code,
+                    "Description__c": description,
+                    "Title__c": title,
+                    "Slug__c": slug,
+                    "External_Id__c": ext_id,
+                }
+            )
+        else:
+            self.salesforce_obj.Meeting_Type__c.update(
+                type_id,
+                {
+                    "Code__c": code,
+                    "Description__c": description,
+                    "Title__c": title,
+                    "Slug__c": slug,
+                    "External_Id__c": ext_id,
+                },
+            )
+
+    def add_meeting(
+        self,
+        meeting_type,
+        additional_info,
+        start_date,
+        end_date,
+        location,
+        external_enrollment_url,
+        is_public,
+        is_active,
+        ext_id,
+        announced_date,
+    ):
+
+        meeting_type_id = self.general_query(ext_id=meeting_type.id, object="Meeting_Type__c")
+        location_id = self.general_query(
+            ext_id=location.id,
+            object="Location__c",
+        )
+        meeting_id = self.general_query(ext_id=ext_id, object="Meeting__c")
+
+        formatted_start = start_date.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if start_date else None
+        formatted_end = end_date.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if end_date else None
+        formatted_announced = announced_date.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if announced_date else None
+
+        if not meeting_id:
+            self.salesforce_obj.Meeting__c.create(
+                {
+                    "Location__c": location_id,
+                    "Meeting_Type__c": meeting_type_id,
+                    "Additional_Information__c": additional_info,
+                    "Start_Date__c": formatted_start,
+                    "End_Date__c": formatted_end,
+                    "External_Enrollment_URL__c": external_enrollment_url,
+                    "Is_Public__c": is_public,
+                    "Is_Active__c": is_active,
+                    "Announced_Date__c": formatted_announced,
+                }
+            )
+        else:
+            self.salesforce_obj.Meeting__c.update(
+                meeting_id,
+                {
+                    "Location__c": location_id,
+                    "Meeting_Type__c": meeting_type_id,
+                    "Additional_Information__c": additional_info,
+                    "Start_Date__c": formatted_start,
+                    "End_Date__c": formatted_end,
+                    "External_Enrollment_URL__c": external_enrollment_url,
+                    "Is_Public__c": is_public,
+                    "Is_Active__c": is_active,
+                    "Announced_Date__c": formatted_announced,
+                },
+            )

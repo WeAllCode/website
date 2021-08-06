@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import formats
 
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
 from .location import Location
 from .mentor import Mentor
 
@@ -32,6 +32,19 @@ class MeetingType(CommonInfo):
             return f"{self.code} | {self.title}"
 
         return f"{self.title}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        sf.add_meeting_type(
+            code=self.code,
+            title=self.title,
+            slug=self.slug,
+            description=self.description,
+            ext_id=f"{self.code}{self.id}",
+        )
 
 
 class Meeting(CommonInfo):
@@ -83,8 +96,10 @@ class Meeting(CommonInfo):
     )
 
     def __str__(self):
-        date = formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
-        return f"{self.meeting_type.title} | {date}"
+        if self.start_date:
+            date = formats.date_format(self.start_date, "SHORT_DATETIME_FORMAT")
+            return f"{self.meeting_type.title} | {date}"
+        return ""
 
     def get_absolute_url(self):
         return reverse("meeting-detail", args=[str(self.id)])
@@ -134,6 +149,24 @@ class Meeting(CommonInfo):
         return MeetingOrder.objects.filter(meeting__id=self.id).count()
 
     get_mentor_count.short_description = "Mentors"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        sf = Salesforce()
+
+        sf.add_meeting(
+            meeting_type=self.meeting_type,
+            additional_info=self.additional_info,
+            start_date=self.start_date,
+            end_date=self.end_date,
+            location=self.location,
+            external_enrollment_url=self.external_enrollment_url,
+            is_public=self.is_public,
+            is_active=self.is_active,
+            ext_id=self.id,
+            announced_date=self.announced_date,
+        )
 
 
 class MeetingOrder(CommonInfo):

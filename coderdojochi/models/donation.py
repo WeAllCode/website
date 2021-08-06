@@ -98,4 +98,6 @@ class Donation(CommonInfo):
             is_verified=self.is_verified,
             receipt_sent=self.receipt_sent,
             referral_code=self.referral_code,
+            amount=self.amount,
+            ext_id=self.id,
         )

@@ -1,6 +1,8 @@
 from django.db import models
 
-from .common import CommonInfo
+from .common import CommonInfo, Salesforce
+
+sf = Salesforce()
 
 
 class EquipmentType(CommonInfo):
@@ -13,6 +15,14 @@ class EquipmentType(CommonInfo):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        sf.add_equipment_type(
+            name=self.name,
+            ext_id=self.id,
+        )
 
 
 class Equipment(CommonInfo):
@@ -87,3 +97,22 @@ class Equipment(CommonInfo):
 
     def __str__(self):
         return f"{self.equipment_type.name} | {self.make} {self.model} | {self.acquisition_date}"
+
+    def save(self, *args, **kwargs):
+        
+        super().save(*args, **kwargs)
+
+        sf.add_equipment(
+            uuid=self.uuid,
+            equipment_type=self.equipment_type,
+            make=self.make,
+            model=self.model,
+            asset_tag=self.asset_tag,
+            acquisition_date=self.acquisition_date,
+            condition=self.condition,
+            notes=self.notes,
+            last_system_update=self.last_system_update,
+            last_system_update_check_in=self.last_system_update_check_in,
+            force_update_on_next_boot=self.force_update_on_next_boot,
+            ext_id=self.id,
+        )

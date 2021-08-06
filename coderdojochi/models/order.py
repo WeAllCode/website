@@ -85,6 +85,6 @@ class Order(CommonInfo):
             active=self.is_active,
             ip=self.ip,
             check_in=self.check_in,
-            ext_id=self.id,
+            ext_id=self.id.__str__(),
             alternate_guardian=self.alternate_guardian,
         )

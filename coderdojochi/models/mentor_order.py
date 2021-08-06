@@ -63,6 +63,10 @@ class MentorOrder(CommonInfo):
 
         super().save(*args, **kwargs)
 
+        print("SElf id is below")
+        print(type(self.id))
+        self.id = f"mo{self.id}"
+
         sf = Salesforce()
 
         sf.create_order(
@@ -73,4 +77,5 @@ class MentorOrder(CommonInfo):
             check_in=self.check_in,
             ext_id=self.id,
             affiliate=self.affiliate,
+            is_mentor=True,
         )

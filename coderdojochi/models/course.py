@@ -86,7 +86,3 @@ class Course(CommonInfo):
             minimum_age=self.minimum_age,
             maximum_age=self.maximum_age,
         )
-
-@receiver(pre_save, sender=Course)
-def Course_pre_save_receiver(sender, instance, **kwargs):
-    pass
