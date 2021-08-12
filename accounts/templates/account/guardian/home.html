@@ -74,7 +74,7 @@
       {% for order in upcoming_orders %}
       <tr>
         <td class="hidden-xs"><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
-        <td><a href="{{ order.session.get_absolute_url }}">{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></a></td>
+        <td><a href="{{ order.session.get_absolute_url }}">{{ order.session.start_date }}</a></td>
         <td>{{ order.student.full_name }}</td>
         <td>{% student_register_link order.student order.session %}</td>
       </tr>
@@ -102,7 +102,7 @@
       {% for order in past_orders %}
       <tr>
         <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}({{ order.session.course.code }}) {% endif %}{{ order.session.course.title }}</a></td>
-        <td>{{ order.session.start_date|date }} <span class="text-muted">@ {{ order.session.start_date|time }}</span></td>
+        <td>{{ order.session.start_date }}</td>
         <td>{{ order.student.full_name }}</td>
       </tr>
       {% endfor %}
