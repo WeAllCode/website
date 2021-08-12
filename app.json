@@ -4,7 +4,7 @@
   "env": {
     "POETRY_VERSION": {
       "description": "Poetry Version",
-      "value": "1.1.4"
+      "value": "1.1.7"
     },
     "CONTACT_EMAIL": {
       "required": true
