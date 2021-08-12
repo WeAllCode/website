@@ -122,7 +122,7 @@
         {% for order in past_sessions %}
             <tr>
                 <td><a href="{{ order.session.get_absolute_url }}">{% if order.session.course.code %}{{ order.session.course.code }}: {% endif %}{{ order.session.course.title }}</a></td>
-                <td>{{ order.session.mentor_start_date|date }} <span class="text-muted">@ {{ order.session.mentor_start_date|time }}</span></td>
+                <td>{{ order.session.mentor_start_date }}</td>
             </tr>
         {% endfor %}
         </tbody>

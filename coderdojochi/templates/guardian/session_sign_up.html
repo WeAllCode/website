@@ -10,7 +10,7 @@
 <div class="container registration min-height">
     {% if user_signed_up %}
 
-        <h1 class="title light"><strong>{{ student.full_name }}</strong> can no longer make it to the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
+        <h1 class="title light"><strong>{{ student.full_name }}</strong> can no longer make it to the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time:"P" }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
 
         <form class="form" method="POST" action="">
             {% csrf_token %}
@@ -20,7 +20,7 @@
 
     {% else %}
 
-        <h1 class="title light">Enroll <strong>{{ student.full_name }}</strong> for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
+        <h1 class="title light">Enroll <strong>{{ student.full_name }}</strong> for the <strong>"{{ session.course.title }}"</strong> class on <strong>{{ session.start_date|date }}</strong> from <strong>{{ session.start_date|time:"P" }}</strong> to <strong>{{ session.end_date|time }}</strong>.</h1>
 
         <form class="form" method="POST" action="">
             {% csrf_token %}

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+from django.conf.locale.en import formats as en_formats
+
 import dj_database_url
 import django_heroku
 import environ
@@ -205,6 +207,15 @@ USE_TZ = True
 SITE_ID = 1
 SITE_NAME = "We All Code"
 SITE_URL = env("SITE_URL", default=None)
+
+# Date/time settings
+DATE_FORMAT = "N j, Y"
+DATETIME_FORMAT = "N j, Y, P T"
+TIME_FORMAT = "P T"
+
+en_formats.DATE_FORMAT = DATE_FORMAT
+en_formats.DATETIME_FORMAT = DATETIME_FORMAT
+en_formats.TIME_FORMAT = TIME_FORMAT
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

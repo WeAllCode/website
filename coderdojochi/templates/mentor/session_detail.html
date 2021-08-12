@@ -73,16 +73,8 @@
   </div>
   <div class="cell medium-4 bg-primary padding-2">
     <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
-    <p>
-      {% if account and user.role == 'mentor' %}
-        {{ session.mentor_start_date|time }} to {{ session.mentor_end_date|time }}
-      {% else %}
-        {{ session.start_date|time }} to {{ session.end_date|time }}
-      {% endif %}
-      <br>
-
-      <i class="fa fa-calendar"></i> <a class="text-white" href="{{ session.get_calendar_url }}">Add to your calendar</a>
-    </p>
+    <p>{{ session.mentor_start_date|time:"P" }} to {{ session.mentor_end_date|time }}</p>
+    <p><i class="fa fa-calendar"></i> <a class="text-white" href="{{ session.get_calendar_url }}">Add to your calendar</a></p>
 
 
     <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
@@ -173,49 +165,48 @@
 </section>
 {% endif %}
 
-{% if user.role == 'mentor' or user.is_staff %}
-  <section class="margin-top-3">
-    <h3 class="title text-tertiary">Class Stats</h3>
-    {% if user.role == 'mentor' %}
-      <ul class="center-block well well-sm well-admin list-group list-unstyled">
-          <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
-          <li class="list-group-item">Mentors: <b>{{ session.get_mentor_orders.count }} / {{ session.mentor_capacity }}</b></li>
-      </ul>
-    {% endif %}
+
+<section class="margin-top-3">
+  <h3 class="title text-tertiary">Class Stats</h3>
+
+  <ul class="center-block well well-sm well-admin list-group list-unstyled">
+      <li class="list-group-item">Students: <b>{{ session.get_current_orders.count }} / {{ session.capacity }}</b></li>
+      <li class="list-group-item">Mentors: <b>{{ session.get_mentor_orders.count }} / {{ session.mentor_capacity }}</b></li>
+  </ul>
 
 
-    {% if user.is_staff %}
-      <ul class="center-block well well-sm well-admin list-group list-unstyled">
-        <li class="list-group-item">Active: <b>{{ session.is_active }}</b></li>
-        <li class="list-group-item">Public: <b>{{ session.is_public }}</b></li>
+  {% if user.is_staff %}
+    <ul class="center-block well well-sm well-admin list-group list-unstyled">
+      <li class="list-group-item">Active: <b>{{ session.is_active }}</b></li>
+      <li class="list-group-item">Public: <b>{{ session.is_public }}</b></li>
 
-        {% if session.is_active %}
-          <li class="list-group-item">Min Age: <b>{{ session.minimum_age }}</b></li>
-          <li class="list-group-item">Max Age: <b>{{ session.maximum_age }}</b></li>
+      {% if session.is_active %}
+        <li class="list-group-item">Min Age: <b>{{ session.minimum_age }}</b></li>
+        <li class="list-group-item">Max Age: <b>{{ session.maximum_age }}</b></li>
 
-          {% if session.announced_date_mentors %}
-            <li class="text-muted list-group-item">Announced to mentors on:<br><b>{{ session.announced_date_mentors|date:'F j, Y \a\t g:i a' }}</b></li>
-          {% else %}
-            <li class="list-group-item"><a href="{% url 'session-announce-mentors' session.id %}" onclick="return confirm('Are you sure you want to email all mentors?')">Announce to mentors</a></li>
-          {% endif %}
-
-          {% if session.announced_date_guardians %}
-            <li class="text-muted list-group-item">Announced to guardians on:<br><b>{{ session.announced_date_guardians|date:'F j, Y \a\t g:i a' }}</b></li>
-          {% else %}
-            <li class="list-group-item"><a href="{% url 'session-announce-guardians' session.id %}" onclick="return confirm('Are you sure you want to email all guardians?')">Announce to guardians</a></li>
-          {% endif %}
-
-          <li class="list-group-item"><a href="{% url 'student-check-in' session.id %}">Check-in Students</a></li>
-          <li class="list-group-item"><a href="{% url 'mentor-check-in' session.id %}">Check-in Mentors</a></li>
+        {% if session.announced_date_mentors %}
+          <li class="text-muted list-group-item">Announced to mentors on:<br><b>{{ session.announced_date_mentors|date:'F j, Y \a\t g:i a' }}</b></li>
+        {% else %}
+          <li class="list-group-item"><a href="{% url 'session-announce-mentors' session.id %}" onclick="return confirm('Are you sure you want to email all mentors?')">Announce to mentors</a></li>
         {% endif %}
 
-        <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>
-        <li class="list-group-item"><a href="{% url 'admin:coderdojochi_session_change' session.id %}">Edit Class</a></li>
-      </ul>
+        {% if session.announced_date_guardians %}
+          <li class="text-muted list-group-item">Announced to guardians on:<br><b>{{ session.announced_date_guardians|date:'F j, Y \a\t g:i a' }}</b></li>
+        {% else %}
+          <li class="list-group-item"><a href="{% url 'session-announce-guardians' session.id %}" onclick="return confirm('Are you sure you want to email all guardians?')">Announce to guardians</a></li>
+        {% endif %}
 
-    {% endif %}
+        <li class="list-group-item"><a href="{% url 'student-check-in' session.id %}">Check-in Students</a></li>
+        <li class="list-group-item"><a href="{% url 'mentor-check-in' session.id %}">Check-in Mentors</a></li>
+      {% endif %}
 
-  </section>
-{% endif %}
+      <li class="list-group-item"><a href="{% url 'stats' session.id %}">Class Stats</a></li>
+      <li class="list-group-item"><a href="{% url 'admin:coderdojochi_session_change' session.id %}">Edit Class</a></li>
+    </ul>
+
+  {% endif %}
+
+</section>
+
 
 {% endblock %}
