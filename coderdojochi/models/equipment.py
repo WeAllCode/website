@@ -99,7 +99,7 @@ class Equipment(CommonInfo):
         return f"{self.equipment_type.name} | {self.make} {self.model} | {self.acquisition_date}"
 
     def save(self, *args, **kwargs):
-        
+
         super().save(*args, **kwargs)
 
         sf.add_equipment(

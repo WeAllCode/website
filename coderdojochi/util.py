@@ -26,16 +26,19 @@ def email(
     reply_to=None,
     unsub_group_id=None,
 ):
-
+    print("Email1")
     if not (subject and template_name and recipients):
+        print("Email2")
         raise NameError()
 
     if not isinstance(recipients, list):
+        print("Email3")
         raise TypeError("recipients must be a list")
 
     # bcc is set to False by default.
     # make sure bcc is in a list form when sent over
     if bcc not in [False, None] and not isinstance(bcc, list):
+        print("Email4")
         raise TypeError("recipients must be a list")
 
     merge_global_data["subject"] = subject
@@ -45,8 +48,8 @@ def email(
     merge_global_data["preheader"] = preheader
     merge_global_data["unsub_group_id"] = unsub_group_id
 
-    body = render_to_string(f"{template_name}.html", merge_global_data)
-
+    body = "This is a test email"
+    # render_to_string(f"{template_name}.html", merge_global_data)
     # If we send values that don't exist in the template,
     # SendGrid divides by zero, doesn't pass go, does not collect $200.
     merge_field_format = "*|{}|*"

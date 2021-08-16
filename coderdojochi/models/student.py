@@ -181,5 +181,3 @@ class Student(CommonInfo):
             child_first_name=self.first_name,
             child_last_name=self.last_name,
         )
-
-        print(f"{self.first_name} {self.last_name} has been saved to SF")

@@ -5,7 +5,7 @@ import { format } from "date-fns";
 
 const location = faker.datatype.number({ min: 1, max: 3 });
 const start_datetime = faker.date.between("2021-01-01","2023-12-31")
-const course = faker.datatype.number({min: 17, max: 21})
+const course = faker.datatype.number({min: 20, max: 21})
 const date = start_datetime.toLocaleDateString();
 const time = start_datetime.toLocaleTimeString();
 

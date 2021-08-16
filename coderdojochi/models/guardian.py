@@ -110,7 +110,7 @@ class Guardian(CommonInfo):
                 ethnicity=self.ethnicity,
                 role="guardian",
                 active=self.is_active,
-                zip_code=self.zip.replace('-',''),
+                zip_code=self.zip.replace("-", ""),
                 phone=self.phone,
                 ext_id=self.id,
             )

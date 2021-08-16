@@ -86,6 +86,8 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.redirects",
     "django.contrib.sitemaps",
+    "django_cron",
+    "django_crontab",
     # vendor
     "active_link",
     "allauth",
@@ -119,6 +121,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 ]
+
+CRON_CLASSES = [
+    "coderdojochi.cron.SendReminders",
+]
+
+CRONJOBS = [("* * * * *", "coderdojochi.cron.my_scheduled_job")]
 
 ROOT_URLCONF = "coderdojochi.urls"
 
@@ -337,14 +345,33 @@ SOCIALACCOUNT_ADAPTER = "coderdojochi.social_account_adapter.SocialAccountAdapte
 
 
 # Email
-ANYMAIL = {
-    "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
-}
-EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
-CONTACT_EMAIL = env("CONTACT_EMAIL")
-SENDGRID_UNSUB_CLASSANNOUNCE = env.int("SENDGRID_UNSUB_CLASSANNOUNCE")
+# ANYMAIL = {
+#     "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
+# }
+# EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+# DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+# CONTACT_EMAIL = env("CONTACT_EMAIL")
+# SENDGRID_UNSUB_CLASSANNOUNCE = env.int("SENDGRID_UNSUB_CLASSANNOUNCE")
 
+# EMAIL
+# ------------------------------------------------------------------------------
+CONTACT_EMAIL = env("CONTACT_EMAIL")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+if DEBUG:
+    # https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+    EMAIL_HOST = env("EMAIL_HOST", default="mailhog")
+    # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
+    EMAIL_PORT = 1025
+else:
+    # https://anymail.readthedocs.io/en/stable/esps/sendgrid/
+    EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+    ANYMAIL = {
+        "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
+        "SENDGRID_GENERATE_MESSAGE_ID": env("SENDGRID_GENERATE_MESSAGE_ID", default=True),
+        # "SENDGRID_MERGE_FIELD_FORMAT": env("SENDGRID_MERGE_FIELD_FORMAT"),
+        "SENDGRID_API_URL": env("SENDGRID_API_URL", default="https://api.sendgrid.com/v3/"),
+    }
+    SENDGRID_UNSUB_CLASSANNOUNCE = env.int("SENDGRID_UNSUB_CLASSANNOUNCE")
 
 # Slack
 SLACK_WEBHOOK_URL = env("SLACK_WEBHOOK_URL")
@@ -394,7 +421,7 @@ if DEBUG:
 SALESFORCE_USER = os.environ.get("SALESFORCE_USER")
 SALESFORCE_PASSWORD = os.environ.get("SALESFORCE_PASSWORD")
 SALESFORCE_TOKEN = os.environ.get("SALESFORCE_TOKEN")
-
+SALESFORCE_DOMAIN = os.environ.get("SALESFORCE_DOMAIN")
 
 # Activate Django-Heroku.
 django_heroku.settings(locals(), staticfiles=False)

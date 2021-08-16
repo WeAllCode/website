@@ -30,7 +30,7 @@ describe("Signup for Classes", () => {
         cy.get(".margin-vertical-3 > .grid-container > .margin-top-3 > h2").eq(1).should("have.text","Students")
         cy.contains("Programs").click()
         cy.get(':nth-child(2) > .medium-4 > .button').click();
-        cy.get(':nth-child(3) > .text-right > .button').click();
+        cy.get(':nth-child(2) > .text-right > .button').click();
         cy.get("body").then(($body) => {
                     if($body.text().includes("Enroll Kelly Doe for the")) {
                         cy.get(".margin-vertical-3 > .grid-container > .container > .title").should("have.text",'Enroll Kelly Doe for the "Choose Your Own Adventure" class on Jan. 1, 2022 from 10 a.m. to 1 p.m..')
@@ -51,7 +51,7 @@ describe("Signup for Classes", () => {
         cy.get(".margin-vertical-3 > .grid-container > .margin-top-3 > h2").eq(1).should("have.text","Students")
         cy.contains("Programs").click()
         cy.get(':nth-child(2) > .medium-4 > .button').click();
-        cy.get(':nth-child(3) > .text-right > .button').click();
+        cy.get(':nth-child(2) > .text-right > .button').click();
         cy.contains("Nevermind").click();
         cy.get(".padding-vertical-1 > .callout > strong").should("not.exist");
     })

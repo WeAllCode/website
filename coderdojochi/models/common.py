@@ -33,7 +33,7 @@ class Salesforce:
             username=settings.SALESFORCE_USER,
             password=settings.SALESFORCE_PASSWORD,
             security_token=settings.SALESFORCE_TOKEN,
-            domain="cs201",
+            domain=settings.SALESFORCE_DOMAIN,
         )
 
     def in_account_list(self, household_name):
@@ -105,7 +105,7 @@ class Salesforce:
             parent_last_name,
         )
         parent_result = self.salesforce_obj.query(parent_query)
-        parent = parent_result["records"][0]["Id"]
+        parent = parent_result["records"][0]["Id"] if parent_result["totalSize"] > 0 else None
 
         child_query = format_soql(
             "SELECT Id FROM Contact WHERE FirstName = {} AND LastName = {}",
@@ -113,7 +113,7 @@ class Salesforce:
             child_last_name,
         )
         child_result = self.salesforce_obj.query(child_query)
-        child = child_result["records"][0]["Id"]
+        child = child_result["records"][0]["Id"] if child_result["totalSize"] > 0 else None
 
         relationship_query = format_soql(
             "SELECT Id FROM hed__Relationship__c WHERE hed__Contact__c = {} AND hed__RelatedContact__c = {}",
@@ -123,8 +123,7 @@ class Salesforce:
         relationship_results = self.salesforce_obj.query(relationship_query)
         exist = relationship_results["totalSize"]
 
-        if not exist:
-            print(f"No relationship btwn {child_first_name} and {parent_first_name}")
+        if not exist and parent and child:
             self.salesforce_obj.hed__Relationship__c.create(
                 {
                     "hed__Contact__c": parent,
@@ -162,7 +161,11 @@ class Salesforce:
         household_name = f"{last_name} Household"
         account_created = self.in_account_list(household_name)
 
-        parent_id = self.general_query(ext_id=parent.id, object="Contact") if parent is not None else None
+        parent_id = (
+            self.general_query(ext_id=parent.id, object="Contact")
+            if (parent is not None and parent != ext_id)
+            else None
+        )
 
         data = {
             "FirstName": first_name,
@@ -175,7 +178,7 @@ class Salesforce:
             "School_Type__c": school_type,
             "Role__c": role,
             "Parent__c": parent_id,
-            "Medical__c": medical,
+            "Medical_Conditions__c": medical,
             "Medications__c": medications,
             "Active__c": active,
             "GW_Volunteers__Volunteer_Organization__c": work_place,
@@ -227,7 +230,7 @@ class Salesforce:
                     "hed__Course_ID__c": course_id,
                     "Course_Type__c": course_type,
                     "hed__Description__c": description,
-                    "hed__Account__c": "0017h00000ZfotKAAR",
+                    "hed__Account__c": "0012f00000ffAGVAA2",  # hardcoded
                     "Course_Duration__c": duration.__str__(),
                     "Minimum_Age__c": minimum_age.__str__(),
                     "Maximum_Age__c": maximum_age.__str__(),
@@ -243,7 +246,7 @@ class Salesforce:
                     "hed__Course_ID__c": course_id,
                     "Course_Type__c": course_type,
                     "hed__Description__c": description,
-                    "hed__Account__c": "0017h00000ZfotKAAR",
+                    "hed__Account__c": "0012f00000ffAGVAA2",  # hardcoded
                     "Course_Duration__c": duration.__str__(),
                     "Minimum_Age__c": minimum_age.__str__(),
                     "Maximum_Age__c": maximum_age.__str__(),
@@ -298,18 +301,17 @@ class Salesforce:
             "hed__Capacity__c": capacity,
             "Mentor_Capacity__c": mentor_capacity,
             "hed__Faculty__c": mentor_id,
-            "hed__Term__c": "a1O7h000000pwOBEAY",
+            "hed__Term__c": "a1P2f0000003vaEEAQ",  # hardcoded
             "Cost__c": cost_converted,
             "Minimum_Cost__c": minimum_cost_converted,
             "Maximum_Cost__c": maximum_cost_converted,
             "Additional_Information__c": additional_info,
-            "Online_Video_Link__c":online_link,
-            "Online_Video_Meeting_Id__c":video_meeting_id,
-            "Online_Video_Meeting_Password__c":meeting_password,
+            "Online_Video_Link__c": online_link,
+            "Online_Video_Meeting_Id__c": video_meeting_id,
+            "Password__c": meeting_password,
             "Start_Time__c": start_time,
             "End_Time__c": end_time,
             "External_Id__c": ext_id,
-            
         }
 
         if exist is None:
@@ -359,39 +361,36 @@ class Salesforce:
         )
 
         print(order_id)
+        print(ext_id)
+
         # Date/time must be in below format for Salesforce to accept it
         converted = (check_in - timedelta(hours=5)) if check_in else None
         temp = converted.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if check_in else None
 
+        data = {
+            "Parent__c": guardian_id,
+            "hed__Contact__c": contact_id,
+            "hed__Course_Offering__c": session_id,
+            "IP__c": ip,
+            "Check_in__c": temp,
+            "Active__c": active,
+            "Alternate_Guardian__c": alternate_guardian,
+            "External_Id__c": ext_id,
+            "Affiliate__c": affiliate,
+            "Is_Mentor__c": is_mentor,
+        }
+
+        # print(ext_id)
+        # print(self.salesforce_obj.hed__Course_Enrollment__c.get('a192f000000i2Gx'))
+
         if order_id is None:
             self.salesforce_obj.hed__Course_Enrollment__c.create(
-                {
-                    "Parent__c": guardian_id,
-                    "hed__Contact__c": contact_id,
-                    "hed__Course_Offering__c": session_id,
-                    "IP__c": ip,
-                    "Check_in__c": temp,
-                    "Active__c": active,
-                    "Alternate_Guardian__c": alternate_guardian,
-                    "External_Id__c": ext_id,
-                    "Affiliate__c": affiliate,
-                    "Is_Mentor__c": is_mentor,
-                }
+                data,
             )
         else:
             self.salesforce_obj.hed__Course_Enrollment__c.update(
                 order_id,
-                {
-                    "Parent__c": guardian_id,
-                    "hed__Contact__c": contact_id,
-                    "hed__Course_Offering__c": session_id,
-                    "IP__c": ip,
-                    "Check_in__c": temp,
-                    "Active__c": active,
-                    "Alternate_Guardian__c": alternate_guardian,
-                    "External_Id__c": ext_id,
-                    "Affiliate__c": affiliate,
-                },
+                data,
             )
 
     def add_donation(
@@ -419,36 +418,27 @@ class Salesforce:
             object="Donation__c",
         )
 
+        data = {
+            "Name": f"{first_name} {last_name}'s Donation",
+            "Amount__c": amount,
+            "Course_Offering__c": session_id,
+            "First_Name__c": first_name,
+            "Last_Name__c": last_name,
+            "Email__c": email,
+            "Is_Verified__c": is_verified,
+            "Receipt_Sent__c": receipt_sent,
+            "Referral_Code__c": referral_code,
+            "External_Id__c": ext_id,
+        }
+
         if not donation_id:
             self.salesforce_obj.Donation__c.create(
-                {
-                    "Name": f"{first_name} {last_name}'s Donation",
-                    "Amount__c": amount,
-                    "Course_Offering__c": session_id,
-                    "First_Name__c": first_name,
-                    "Last_Name__c": last_name,
-                    "Email__c": email,
-                    "Is_Verified__c": is_verified,
-                    "Receipt_Sent__c": receipt_sent,
-                    "Referral_Code__c": referral_code,
-                    "External_Id__c": ext_id,
-                }
+                data,
             )
         else:
             self.salesforce_obj.Donation__c.update(
                 donation_id,
-                {
-                    "Name": f"{first_name} {last_name}'s Donation",
-                    "Amount__c": amount,
-                    "Course_Offering__c": session_id,
-                    "First_Name__c": first_name,
-                    "Last_Name__c": last_name,
-                    "Email__c": email,
-                    "Is_Verified__c": is_verified,
-                    "Receipt_Sent__c": receipt_sent,
-                    "Referral_Code__c": referral_code,
-                    "External_Id__c": ext_id,
-                },
+                data,
             )
 
     def add_email_content(
@@ -514,40 +504,29 @@ class Salesforce:
         formatted_time = acquisition_date.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if acquisition_date else None
         equipment_id = self.general_query(ext_id=ext_id, object="Equipment__c")
 
+        data = {
+            "uuid__c": uuid,
+            "Type__c": equipment_type_id,
+            "Make__c": make,
+            "Model__c": model,
+            "Asset_Tag__c": asset_tag,
+            "Acquisition_Date__c": formatted_time,
+            "Condition__c": condition,
+            "Notes__c": notes,
+            "Last_System_Update__c": last_system_update,
+            "Last_System_Update_Checkin__c": last_system_update_check_in,
+            "Force_Update_On_Next_Boot__c": force_update_on_next_boot,
+            "External_Id__c": ext_id,
+        }
+
         if not equipment_id:
             self.salesforce_obj.Equipment__c.create(
-                {
-                    "uuid__c": uuid,
-                    "Type__c": equipment_type_id,
-                    "Make__c": make,
-                    "Model__c": model,
-                    "Asset_Tag__c": asset_tag,
-                    "Acquisition_Date__c": formatted_time,
-                    "Condition__c": condition,
-                    "Notes__c": notes,
-                    "Last_System_Update__c": last_system_update,
-                    "Last_System_Update_Check__c": last_system_update_check_in,
-                    "Force_Update_Next__c": force_update_on_next_boot,
-                    "External_Id__c": ext_id,
-                }
+                data,
             )
         else:
             self.salesforce_obj.Equipment__c.update(
                 equipment_id,
-                {
-                    "uuid__c": uuid,
-                    "Type__c": equipment_type_id,
-                    "Make__c": make,
-                    "Model__c": model,
-                    "Asset_Tag__c": asset_tag,
-                    "Acquisition_Date__c": formatted_time,
-                    "Condition__c": condition,
-                    "Notes__c": notes,
-                    "Last_System_Update__c": last_system_update,
-                    "Last_System_Update_Check__c": last_system_update_check_in,
-                    "Force_Update_Next__c": force_update_on_next_boot,
-                    "External_Id__c": ext_id,
-                },
+                data,
             )
 
     def add_location(
@@ -561,11 +540,11 @@ class Salesforce:
         ext_id,
     ):
 
-        location_id = self.general_query(ext_id=ext_id, object="Location__c")
+        location_id = self.general_query(ext_id=ext_id, object="CLocation__c")
 
         if not location_id:
 
-            self.salesforce_obj.Location__c.create(
+            self.salesforce_obj.CLocation__c.create(
                 {
                     "Active__c": is_active,
                     "Address__c": address,
@@ -578,7 +557,7 @@ class Salesforce:
             )
 
         else:
-            self.salesforce_obj.Location__c.update(
+            self.salesforce_obj.CLocation__c.update(
                 location_id,
                 {
                     "Active__c": is_active,
@@ -640,7 +619,7 @@ class Salesforce:
         meeting_type_id = self.general_query(ext_id=meeting_type.id, object="Meeting_Type__c")
         location_id = self.general_query(
             ext_id=location.id,
-            object="Location__c",
+            object="CLocation__c",
         )
         meeting_id = self.general_query(ext_id=ext_id, object="Meeting__c")
 
@@ -648,32 +627,24 @@ class Salesforce:
         formatted_end = end_date.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if end_date else None
         formatted_announced = announced_date.strftime("%Y-%m-%dT%H:%M:%SZ").__str__() if announced_date else None
 
+        data = {
+            "Location__c": location_id,
+            "Meeting_Type__c": meeting_type_id,
+            "Additional_Information__c": additional_info,
+            "Start_Date__c": formatted_start,
+            "End_Date__c": formatted_end,
+            "External_Enrollment_URL__c": external_enrollment_url,
+            "Is_Public__c": is_public,
+            "Is_Active__c": is_active,
+            "Announced_Date__c": formatted_announced,
+        }
+
         if not meeting_id:
             self.salesforce_obj.Meeting__c.create(
-                {
-                    "Location__c": location_id,
-                    "Meeting_Type__c": meeting_type_id,
-                    "Additional_Information__c": additional_info,
-                    "Start_Date__c": formatted_start,
-                    "End_Date__c": formatted_end,
-                    "External_Enrollment_URL__c": external_enrollment_url,
-                    "Is_Public__c": is_public,
-                    "Is_Active__c": is_active,
-                    "Announced_Date__c": formatted_announced,
-                }
+                data,
             )
         else:
             self.salesforce_obj.Meeting__c.update(
                 meeting_id,
-                {
-                    "Location__c": location_id,
-                    "Meeting_Type__c": meeting_type_id,
-                    "Additional_Information__c": additional_info,
-                    "Start_Date__c": formatted_start,
-                    "End_Date__c": formatted_end,
-                    "External_Enrollment_URL__c": external_enrollment_url,
-                    "Is_Public__c": is_public,
-                    "Is_Active__c": is_active,
-                    "Announced_Date__c": formatted_announced,
-                },
+                data,
             )

@@ -13,6 +13,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - mailhog
   db:
     image: postgres:12.5-alpine
     environment:
@@ -20,3 +21,8 @@ services:
     container_name: dojo-v1-db
     ports:
       - "5432:5432"
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    container_name: mailhog
+    ports:
+      - "8025:8025"

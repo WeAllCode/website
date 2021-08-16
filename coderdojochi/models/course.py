@@ -9,8 +9,6 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 
-
-
 class Course(CommonInfo):
 
     WEEKEND = "WE"
@@ -68,10 +66,9 @@ class Course(CommonInfo):
             return f"{self.code} | {self.title}"
 
         return f"{self.title}"
-    
 
     def save(self, *args, **kwargs):
-        
+
         super().save(*args, **kwargs)
 
         sf = Salesforce()
