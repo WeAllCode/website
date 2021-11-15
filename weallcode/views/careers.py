@@ -18,6 +18,13 @@ class CareersOperationsView(DefaultMetaTags, TemplateView):
     title = f"Operations | Careers | We All Code"
 
 
+class CareersOperationsPartTimeView(DefaultMetaTags, TemplateView):
+    template_name = "weallcode/careers/operations-part-time.html"
+    url = reverse_lazy("weallcode-careers-operations-part-time")
+
+    title = f"Operations (Part Time) | Careers | We All Code"
+
+
 class CareersEducatorView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/careers/educator.html"
     url = reverse_lazy("weallcode-careers-educator")

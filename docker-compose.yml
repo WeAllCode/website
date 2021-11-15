@@ -8,7 +8,7 @@ services:
     container_name: dojo-v1-app
     command: invoke release start
     volumes:
-      - .:/app
+      - ".:/app"
     ports:
       - "8000:8000"
     depends_on:
