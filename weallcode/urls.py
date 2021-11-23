@@ -6,6 +6,7 @@ from django.views.generic import RedirectView
 from weallcode.views import (
     AssociateBoardView,
     CareersEducatorView,
+    CareersOperationsPartTimeView,
     CareersOperationsView,
     CareersView,
     CreditsView,
@@ -52,6 +53,11 @@ urlpatterns = [
             [
                 path("", CareersView.as_view(), name="weallcode-careers"),
                 path("operations/", CareersOperationsView.as_view(), name="weallcode-careers-operations"),
+                path(
+                    "operations-part-time/",
+                    CareersOperationsPartTimeView.as_view(),
+                    name="weallcode-careers-operations-part-time",
+                ),
                 path("educator/", CareersEducatorView.as_view(), name="weallcode-careers-educator"),
             ]
         ),
