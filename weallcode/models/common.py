@@ -63,9 +63,6 @@ class CommonInfo(models.Model):
 
 
 class CommonBoardMemberManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_active=True)
-
     def get_sorted(self):
         """
         Reordering by role.
