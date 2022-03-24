@@ -3,21 +3,22 @@
 <div class="text-center height-100 {% if is_on_dark %}bg-white{% else %}bg-dark-blue{% endif %}">
   <div class="position-relative">
     {% if link %}
-    <a href="{{ link }}" class="profile-image-wrapper bg-avatar">
+      <a href="{{ link }}" class="profile-image-wrapper bg-avatar">
     {% else %}
-    <div class="profile-image-wrapper bg-avatar">
+      <div class="profile-image-wrapper bg-avatar">
     {% endif %}
       <img class="profile-image" src="{% if image %}{{ image.url }}{% else %}{% static static_image %}{% endif %}" alt="{{ name }}" loading="lazy">
+
     {% if link %}
-    </a>
+      </a>
     {% else %}
-    </div>
+      </div>
     {% endif %}
 
     {% if label %}
-    <div class="bottom-label bg-primary text-white">
-      <strong>{{ label }}</strong>{% if sublabel %}<br><small>{{ sublabel }}</small>{% endif %}
-    </div>
+      <div class="bottom-label bg-primary text-white">
+        <strong>{{ label }}</strong>{% if sublabel %}<br><small>{{ sublabel }}</small>{% endif %}
+      </div>
     {% endif %}
   </div>
 
