@@ -23,22 +23,22 @@
 
   <div class="padding-vertical-2 padding-horizontal-1">
     {% if is_small %}
-    <h6 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h6>
+      <h6 class="text-uppercase text-{% if is_on_dark %}primary{% else %}white{% endif %}">{{ name }}</h6>
     {% else %}
-    <h4 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h4>
+      <h4 class="text-uppercase text-{% if is_on_dark %}primary{% else %}white{% endif %}">{{ name }}</h4>
     {% endif %}
 
     {% if title %}
-    <div class="line width-25 bg-{{ color|default:"secondary" }} margin-vertical-half"></div>
+      <div class="line width-25 bg-{{ color|default:"secondary" }} margin-vertical-half"></div>
 
-    <div class="text-uppercase text-grey-for-white">
-      {% if is_small %}<small>{% endif %}
+      <div class="text-uppercase text-grey-for-white">
+        {% if is_small %}<small>{% endif %}
         <p><strong>{{ title }}</strong></p>
         {% if description %}
-        <p>{{ description }}</p>
+          <p>{{ description }}</p>
         {% endif %}
         {% if is_small %}</small>{% endif %}
-    </div>
+      </div>
     {% endif %}
   </div>
 </div>
