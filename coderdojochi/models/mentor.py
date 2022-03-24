@@ -145,7 +145,7 @@ class Mentor(CommonInfo):
         email_encoded = hashlib.md5(email).hexdigest()
 
         if self.avatar:
-            d = f"https://weallcode.s3.amazonaws.com{self.avatar.url}"
+            d = self.avatar.url
         else:
             d = "mp"
 
