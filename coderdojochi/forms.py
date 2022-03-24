@@ -11,6 +11,8 @@ from django.utils.safestring import mark_safe
 from django.utils.text import format_lazy
 
 import html5.forms.widgets as html5_widgets
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
 from dateutil.relativedelta import relativedelta
 
 from coderdojochi.models import CDCUser, Donation, Guardian, Mentor, RaceEthnicity, Session, Student
@@ -85,11 +87,16 @@ class CDCModelForm(ModelForm):
 class SignupForm(forms.Form):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
+    captcha = ReCaptchaField(
+        label="",
+        widget=ReCaptchaV3,
+    )
+    field_order = ["first_name", "last_name", "email", "password1", "password2"]
 
     class Meta:
         model = get_user_model()
 
-    def save(self, user):
+    def signup(self, request, user):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         user.save()
