@@ -9,9 +9,9 @@
     {% endif %}
       <img class="profile-image" src="{% if image %}{{ image.url }}{% else %}{% static static_image %}{% endif %}" alt="{{ name }}" loading="lazy">
     {% if link %}
-    </a>
+      </a>
     {% else %}
-    </div>
+      </div>
     {% endif %}
 
     {% if label %}
