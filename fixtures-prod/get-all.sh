@@ -1,7 +1,7 @@
-#/bin/env bash
+#!/usr/bin/env bash
 
 # To run:
-# command time ./get-all.sh
+# command time ./get-all.sh && say "I'm done."
 
 models=(
     "sites.site"
@@ -26,4 +26,4 @@ models=(
     "weallcode.staffmember"
 )
 
-heroku run --app production-wac python -W ignore manage.py dumpdata "${models[@]}" -- > "all.json"
+heroku run --app production-wac python -W ignore manage.py dumpdata "${models[@]}" -- >"all.json"
