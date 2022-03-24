@@ -491,6 +491,7 @@ ul.list-plus li {
   display: block;
   background-position: center center;
   background-size: cover;
+  aspect-ratio: 1;
 }
 
 /* Kill Debug on Mobile */

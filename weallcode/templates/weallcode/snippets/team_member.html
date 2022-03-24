@@ -2,20 +2,18 @@
 
 <div class="text-center height-100 {% if is_on_dark %}bg-white{% else %}bg-dark-blue{% endif %}">
   <div class="position-relative">
-    <{% if link %}a href="{{ link }}"{% else %}div{% endif %} class="profile-image-wrapper bg-avatar">
-      <svg
-        class="profile-image"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
-        style="background-image: url(
-          {% if image %}
-            {{ image.url }}
-          {% elif static_image %}
-            {% static static_image %}
-          {% endif %})
-        "
-      ></svg>
-    </{% if link %}a{% else %}div{% endif %}>
+    {% if link %}
+      <a href="{{ link }}" class="profile-image-wrapper bg-avatar">
+    {% else %}
+      <div class="profile-image-wrapper bg-avatar">
+    {% endif %}
+      <img class="profile-image" src="{% if image %}{{ image.url }}{% else %}{% static static_image %}{% endif %}" alt="{{ name }}" loading="lazy">
+    {% if link %}
+      </a>
+    {% else %}
+      </div>
+    {% endif %}
+
     {% if label %}
     <div class="bottom-label bg-primary text-white">
       <strong>{{ label }}</strong>{% if sublabel %}<br><small>{{ sublabel }}</small>{% endif %}
