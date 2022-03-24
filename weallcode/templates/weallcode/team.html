@@ -132,7 +132,7 @@
       <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
         {% for mentor in top_mentors %}
           <div class="cell small-6 medium-3">
-            {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.get_avatar sublabel="classes" %}
           </div>
         {% endfor %}
       </div>
@@ -141,7 +141,7 @@
         <div class="mentor-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
           {% for mentor in other_mentors %}
             <div class="cell small-6 medium-3">
-              {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.avatar sublabel="classes" %}
+              {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.get_avatar sublabel="classes" %}
             </div>
           {% endfor %}
         </div>
@@ -172,7 +172,7 @@
       <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
         {% for volunteer in top_volunteers %}
           <div class="cell small-6 medium-3">
-            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.avatar sublabel="classes" %}
+            {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.get_avatar sublabel="classes" %}
           </div>
         {% endfor %}
       </div>
@@ -181,7 +181,7 @@
         {% for volunteer in other_volunteers %}
           {% if volunteer.session_count %}
             <div class="cell small-6 medium-3">
-              {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.avatar sublabel="classes" %}
+              {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.get_avatar sublabel="classes" %}
             </div>
           {% endif %}
         {% endfor %}

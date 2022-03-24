@@ -136,36 +136,34 @@ class Mentor(CommonInfo):
         )
 
     def get_avatar(self):
-        if (
-            self.avatar
-            and self.avatar.storage.exists(self.avatar.name)
-            and self.avatar.storage.exists(self.avatar.thumbnail.name)
-        ):
-            return self.avatar
-
         # Gravatar
         import hashlib
         from urllib.parse import urlencode
 
         # https://en.gravatar.com/site/implement/images/
-
         email = self.email.encode("utf-8").lower()
         email_encoded = hashlib.md5(email).hexdigest()
 
+        if self.avatar:
+            d = f"https://weallcode.s3.amazonaws.com{self.avatar.url}"
+        else:
+            d = "mp"
+
         thumbnail_params = urlencode(
             {
-                "d": "mp",
-                "r": "g",
+                "d": d,
+                "r": "pg",
                 "s": str(320),
             }
         )
         full_params = urlencode(
             {
-                "d": "mp",
-                "r": "g",
+                "d": d,
+                "r": "pg",
                 "s": str(500),
             }
         )
+
         slug_url = f"https://www.gravatar.com/avatar/{email_encoded}"
 
         avatar = {
