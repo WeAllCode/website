@@ -23,9 +23,9 @@
 
   <div class="padding-vertical-2 padding-horizontal-1">
     {% if is_small %}
-      <h6 class="text-uppercase text-{% if is_on_dark %}primary{% else %}white{% endif %}">{{ name }}</h6>
+      <h6 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h6>
     {% else %}
-      <h4 class="text-uppercase text-{% if is_on_dark %}primary{% else %}white{% endif %}">{{ name }}</h4>
+      <h4 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h4>
     {% endif %}
 
     {% if title %}
