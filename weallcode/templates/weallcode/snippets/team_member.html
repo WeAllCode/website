@@ -7,7 +7,7 @@
     {% else %}
       <div class="profile-image-wrapper bg-avatar">
     {% endif %}
-      <img class="profile-image" src="{% if image %}{{ image.url }}{% else %}{% static static_image %}{% endif %}" alt="{{ name }}" loading="lazy">
+      <img class="profile-image" src="{% if image %}{{ image.url }}{% elif static_image %}{% static static_image %}{% endif %}" alt="{{ name }}" loading="lazy">
     {% if link %}
       </a>
     {% else %}
