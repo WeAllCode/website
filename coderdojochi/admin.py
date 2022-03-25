@@ -628,6 +628,17 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                 ),
             },
         ),
+        (
+            "Old Data",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    'old_end_date',
+                    'old_mentor_start_date',
+                    'old_mentor_end_date',
+                ),
+            },
+        ),
     )
 
     def view_on_site(self, obj):

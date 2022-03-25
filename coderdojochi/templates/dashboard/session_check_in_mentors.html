@@ -169,7 +169,9 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Mentor Name</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
                             <th>Age</th>
                             <th>Gender</th>
                             <th class="text-right">Cancelled Date</th>
@@ -182,8 +184,10 @@
                             <td>
                               <strong>{{ order.mentor.first_name }}</strong> {{ order.mentor.last_name }}
                             </td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td>{{ order.mentor.email }}</td>
+                            <td>{{ order.mentor.phone }}</td>
+                            <th>-</th>
+                            <th>-</th>
                             <td class="text-right">{{ order.updated_at }}</td>
                         </tr>
                         {% endfor %}

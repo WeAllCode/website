@@ -1,10 +1,10 @@
 [
-{
-  "model": "sites.site",
-  "pk": 1,
-  "fields": {
-    "domain": "weallcode.org",
-    "name": "We All Code"
+  {
+    "model": "sites.site",
+    "pk": 1,
+    "fields": {
+      "domain": "weallcode.org",
+      "name": "We All Code"
+    }
   }
-}
 ]

@@ -1,17 +1,18 @@
 [
-{
-  "model": "weallcode.staffmember",
-  "pk": 1,
-  "fields": {
-    "name": "Ali Karbassi",
-    "description": null,
-    "linkedin": null,
-    "join_date": "2020-01-01",
-    "is_active": true,
-    "created_at": "2020-05-18T20:40:00Z",
-    "updated_at": "2020-05-18T21:48:23.037Z",
-    "role": "Founder and CEO of We All Code",
-    "image": "staff/ali-karbassi.jpg"
+  {
+    "model": "weallcode.staffmember",
+    "pk": 1,
+    "fields": {
+      "name": "Ali Karbassi",
+      "description": null,
+      "linkedin": null,
+      "join_date": "2020-01-01",
+      "departure_date": null,
+      "is_active": true,
+      "created_at": "2020-05-18T20:40:00Z",
+      "updated_at": "2020-05-18T21:48:23.037Z",
+      "role": "Founder and CEO of We All Code",
+      "image": "staff/ali-karbassi.jpg"
+    }
   }
-}
 ]

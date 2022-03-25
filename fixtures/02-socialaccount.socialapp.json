@@ -1,30 +1,26 @@
 [
-{
-  "model": "socialaccount.socialapp",
-  "pk": 1,
-  "fields": {
-    "provider": "google",
-    "name": "Google",
-    "client_id": "391824352520-1li5boq1g81pbtn58v4ke2bpetlnrnpi.apps.googleusercontent.com",
-    "secret": "DZB3v3XvEIJOYMkezao1XwCQ",
-    "key": "",
-    "sites": [
-      1
-    ]
+  {
+    "model": "socialaccount.socialapp",
+    "pk": 1,
+    "fields": {
+      "provider": "google",
+      "name": "Google",
+      "client_id": "391824352520-1li5boq1g81pbtn58v4ke2bpetlnrnpi.apps.googleusercontent.com",
+      "secret": "DZB3v3XvEIJOYMkezao1XwCQ",
+      "key": "",
+      "sites": [1]
+    }
+  },
+  {
+    "model": "socialaccount.socialapp",
+    "pk": 2,
+    "fields": {
+      "provider": "facebook",
+      "name": "Facebook",
+      "client_id": "1454178611519345",
+      "secret": "6215c5635337caafa7b70f94e5d6aaa1",
+      "key": "",
+      "sites": [1]
+    }
   }
-},
-{
-  "model": "socialaccount.socialapp",
-  "pk": 2,
-  "fields": {
-    "provider": "facebook",
-    "name": "Facebook",
-    "client_id": "1454178611519345",
-    "secret": "6215c5635337caafa7b70f94e5d6aaa1",
-    "key": "",
-    "sites": [
-      1
-    ]
-  }
-}
 ]
