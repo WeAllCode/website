@@ -38,7 +38,9 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": [2]
+    "race_ethnicity": [
+      2
+    ]
   }
 },
 {
@@ -1970,7 +1972,10 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": [4,7]
+    "race_ethnicity": [
+      4,
+      7
+    ]
   }
 },
 {
@@ -2054,7 +2059,10 @@
     "work_place": null,
     "phone": null,
     "home_address": null,
-    "race_ethnicity": [1,7]
+    "race_ethnicity": [
+      1,
+      7
+    ]
   }
 },
 {

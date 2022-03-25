@@ -1,92 +1,40 @@
 [
-{
-  "model": "auth.group",
-  "pk": 1,
-  "fields": {
-    "name": "Committee Head",
-    "permissions": [
-      35,
-      49,
-      50,
-      51,
-      52,
-      53,
-      54,
-      55,
-      56,
-      57,
-      58,
-      59,
-      60,
-      61,
-      62,
-      64,
-      65,
-      66,
-      67,
-      68,
-      69,
-      38,
-      41,
-      44,
-      46,
-      47,
-      48
-    ]
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "Committee Head",
+      "permissions": [
+        35, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 64, 65, 66,
+        67, 68, 69, 38, 41, 44, 46, 47, 48
+      ]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+      "name": "Management",
+      "permissions": [
+        29, 30, 49, 50, 52, 53, 54, 58, 59, 61, 62, 64, 65, 66, 67, 68, 69, 100,
+        101, 28, 37, 38, 40, 41, 43, 44, 46, 47, 48
+      ]
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 4,
+    "fields": {
+      "name": "Instructor",
+      "permissions": []
+    }
+  },
+  {
+    "model": "auth.group",
+    "pk": 5,
+    "fields": {
+      "name": "Assistant",
+      "permissions": []
+    }
   }
-},
-{
-  "model": "auth.group",
-  "pk": 3,
-  "fields": {
-    "name": "Management",
-    "permissions": [
-      29,
-      30,
-      49,
-      50,
-      52,
-      53,
-      54,
-      58,
-      59,
-      61,
-      62,
-      64,
-      65,
-      66,
-      67,
-      68,
-      69,
-      100,
-      101,
-      28,
-      37,
-      38,
-      40,
-      41,
-      43,
-      44,
-      46,
-      47,
-      48
-    ]
-  }
-},
-{
-  "model": "auth.group",
-  "pk": 4,
-  "fields": {
-    "name": "Instructor",
-    "permissions": []
-  }
-},
-{
-  "model": "auth.group",
-  "pk": 5,
-  "fields": {
-    "name": "Assistant",
-    "permissions": []
-  }
-}
 ]

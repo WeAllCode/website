@@ -13,6 +13,44 @@
 
         /* to override bootstrap*/
         .table > tbody > tr > td { vertical-align: middle; }
+
+        /* Custom styles */
+        .student-name,
+        .parent-name {
+            min-width: 150px;
+            width: 10%;
+        }
+
+        .parent-email {
+            min-width: 150px;
+            width: 10%;
+        }
+
+        .parent-phone {
+            min-width: 100px;
+            width: 10%;
+        }
+
+        .student-school {
+            min-width: 200px;
+            width: 10%;
+        }
+
+        .order-date {}
+
+        .student-gender {
+            width: 50px;
+            text-align: center;
+        }
+
+        .order-num,
+        .student-age,
+        .num-attended,
+        .num-missed {
+            box-sizing: border-box;
+            width: 50px;
+            text-align: right;
+        }
     </style>
 
     <!-- Google Charts -->
@@ -182,19 +220,20 @@
                 {% endif %}
 
                 {% if active_orders.count %}
-                    <table class="table table-condensed table-striped">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th></th>
-                                <th>Student Name</th>
-                                <th>Age</th>
-                                <th>Guardian Name</th>
-                                <th>Guardian Email</th>
-                                <th>Guardian Phone</th>
-                                <th>School</th>
-                                <th class="text-right">{% if not active_session %}Checkin Date{% endif %}</th>
-                                <th class="text-right"><abbr title="Number Attended">#A</abbr></th>
-                                <th class="text-right"><abbr title="Number Missed">#M</abbr></th>
+                                <th class="order-num"></th>
+                                <th class="student-name">Student</th>
+                                <th class="student-age">Age</th>
+                                <th class="student-gender">Gender</th>
+                                <th class="parent-name">Guardian</th>
+                                <th class="parent-email">Parent Email</th>
+                                <th class="parent-phone">Parent Phone</th>
+                                <th class="student-school">School</th>
+                                <th class="order-date">{% if not active_session %}Checkin Date{% endif %}</th>
+                                <th class="text-right num-attended"><abbr title="Number Attended">#A</abbr></th>
+                                <th class="text-right num-missed"><abbr title="Number Missed">#M</abbr></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -208,6 +247,7 @@
                                       <strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}
                                     </td>
                                     <td class="text-right vert-align">{{ order.student | student_age:session.start_date }}</td>
+                                    <td class="student-gender">{{ order.student.get_clean_gender_short | upper }}</td>
                                     <td>
                                         {% if active_session %}
                                             <input type="text" name="order_alternate_guardian" class="form-control" value="{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.full_name }}{% endif %}">
@@ -220,9 +260,9 @@
                                         {% endif %}
                                     </td>
                                     <td>{{ order.guardian.email }}</td>
-                                    <td>{{ order.guardian.phone }}</td>
+                                    <td>{{ order.guardian.phone | phone_number }}</td>
                                     <td>{{ order.student.school_name }}</td>
-                                    <td class="text-right vert-align">
+                                    <td>
                                         {% if active_session %}
                                             {% if not order.check_in %}
                                                 <button class="button small">Check In</button>
@@ -230,7 +270,7 @@
                                                 <button class="button tertiary small">Undo</button>
                                             {% endif %}
                                         {% else %}
-                                            {{ order.check_in }}
+                                            {{ order.check_in | date:"M j, g:i A" }}
                                         {% endif %}
                                     </td>
                                     <td class="text-right vert-align">{{ order.num_attended }}</td>
@@ -253,30 +293,36 @@
         <div class="row">
             <div class="col-sm-12">
                 <h2 class="title">No Shows <span class="badge">{{ no_show_orders.count }}</span></h2>
-                <table class="table table-condensed table-striped">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Student Name</th>
-                            <th>Age</th>
-                            <th>Guardian</th>
-                            <th>Last Update Date</th>
-                            <th class="text-right"><abbr title="Number Attended">#A</abbr></th>
-                            <th class="text-right"><abbr title="Number Missed">#M</abbr></th>
+                            <th class="order-num"></th>
+                            <th class="student-name">Student</th>
+                            <th class="student-age">Age</th>
+                            <th class="student-gender">Gender</th>
+                            <th class="parent-name">Guardian</th>
+                            <th class="parent-email">Parent Email</th>
+                            <th class="parent-phone">Parent Phone</th>
+                            <th class="student-school">School</th>
+                            <th class="order-date">Last Update Date</th>
+                            <th class="text-right num-attended"><abbr title="Number Attended">#A</abbr></th>
+                            <th class="text-right num-missed"><abbr title="Number Missed">#M</abbr></th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for order in no_show_orders %}
-                        <tr>
-                            <td>{{ forloop.counter|stringformat:"02d" }}</td>
-                            <td>
-                              <strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}
-                            </td>
-                            <td class="text-right">{{ order.student | student_age:session.start_date }}</td>
-                            <td>{{ order.guardian.full_name }}</td>
-                            <td class="text-right">{{ order.updated_at }}</td>
-                            <td class="text-right">{{ order.num_attended }}</td>
-                            <td class="text-right {% if order.num_missed >= 3 %}danger{% endif %}">{{ order.num_missed }}</td>
+                        <tr class="{% if order.check_in %}success{% endif %}">
+                            <td class="vert-align">{{ forloop.counter|stringformat:"02d" }}</td>
+                            <td class="vert-align"><strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}</td>
+                            <td class="text-right vert-align">{{ order.student | student_age:session.start_date }}</td>
+                            <td class="student-gender">{{ order.student.get_clean_gender_short | upper }}</td>
+                            <td>{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.full_name }}{% endif %}</td>
+                            <td>{{ order.guardian.email }}</td>
+                            <td>{{ order.guardian.phone | phone_number }}</td>
+                            <td>{{ order.student.school_name }}</td>
+                            <td>{{ order.updated_at | date:"M j, g:i A" }}</td>
+                            <td class="text-right vert-align">{{ order.num_attended }}</td>
+                            <td class="text-right vert-align {% if order.num_missed >= 3 %}danger{% endif %}">{{ order.num_missed }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -291,19 +337,20 @@
         <div class="row">
             <div class="col-sm-12">
                 <h2 class="title">Cancelled Tickets <span class="badge">{{ inactive_orders.count }}</span></h2>
-                <table class="table table-condensed">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th>Student Name</th>
-                            <th>Age</th>
-                            <th>Guardian</th>
-                            <th>Guardian Email</th>
-                            <th>Guardian Phone</th>
-                            <th>School</th>
-                            <th>Cancelled Date</th>
-                            <th class="text-right"><abbr title="Number Attended">#A</abbr></th>
-                            <th class="text-right"><abbr title="Number Missed">#M</abbr></th>
+                            <th class="order-num"></th>
+                            <th class="student-name">Student</th>
+                            <th class="student-age">Age</th>
+                            <th class="student-gender">Gender</th>
+                            <th class="parent-name">Parent</th>
+                            <th class="parent-email">Parent Email</th>
+                            <th class="parent-phone">Parent Phone</th>
+                            <th class="student-school">School</th>
+                            <th class="order-date">Cancelled Date</th>
+                            <th class="text-right num-attended"><abbr title="Number Attended">#A</abbr></th>
+                            <th class="text-right num-missed"><abbr title="Number Missed">#M</abbr></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -312,11 +359,12 @@
                             <td>{{ forloop.counter|stringformat:"02d" }}</td>
                             <td><strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}</td>
                             <td class="text-right">{{ order.student | student_age:session.start_date }}</td>
+                            <td class="student-gender">{{ order.student.get_clean_gender_short | upper }}</td>
                             <td>{{ order.guardian.full_name }}</td>
                             <td>{{ order.guardian.email }}</td>
-                            <td>{{ order.guardian.phone }}</td>
+                            <td>{{ order.guardian.phone | phone_number }}</td>
                             <td>{{ order.student.school_name }}</td>
-                            <td>{{ order.updated_at }}</td>
+                            <td>{{ order.updated_at | date:"M j, g:i A" }}</td>
                             <td class="text-right">{{ order.num_attended }}</td>
                             <td class="text-right {% if order.num_missed >= 3 %}danger{% endif %}">{{ order.num_missed }}</td>
                         </tr>

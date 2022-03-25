@@ -1,2064 +1,2062 @@
 [
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 1,
-  "fields": {
-    "password": "pbkdf2_sha256$180000$pzOxiyt4JP4t$28iw2Ts2JVSK7ZcWdCbIUbGtlNPnCo8XfmKpv7mlQ14=",
-    "last_login": "2020-03-15T02:20:32.521Z",
-    "is_superuser": true,
-    "username": "test_admin",
-    "first_name": "Ali",
-    "last_name": "Karbassi",
-    "email": "gregoriofs+admin@uchicago.edu",
-    "is_staff": true,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [
-      4
-    ],
-    "user_permissions": []
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$4KDcTznX9TYw6oFjwvLWLf$halNYRso0u6bz6apuHevoicLKQwN8Rl5AD4syRBahH8=",
+      "last_login": "2022-03-25T14:25:19.132Z",
+      "is_superuser": true,
+      "username": "test_admin",
+      "first_name": "Ali",
+      "last_name": "Karbassi",
+      "email": "gregoriofs+admin@uchicago.edu",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [4],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$180000$WY1JcWz9KnYL$z7EGcskpYzNYnSRFLy9V3SctD9/4FBj7WrB7nahV/tE=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "test_guardian",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "gregoriofs+guardian@uchicago.edu",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "guardian",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$180000$7kNf3Qo2GNy5$lW+k3O3gaZL1dio7+MUUbF+hl8zwfSCO3yOYibqzkIo=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "test_mentor",
+      "first_name": "Daniel",
+      "last_name": "Conrad",
+      "email": "gregoriofs+mentor@uchicago.edu",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "levifowler",
+      "first_name": "Levi",
+      "last_name": "Fowler",
+      "email": "levi.fowler@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "maureenbradley",
+      "first_name": "Maureen",
+      "last_name": "Bradley",
+      "email": "maureen.bradley@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "kellythompson",
+      "first_name": "Kelly",
+      "last_name": "Thompson",
+      "email": "kelly.thompson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "violetlawson",
+      "first_name": "Violet",
+      "last_name": "Lawson",
+      "email": "violet.lawson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "mitchellsims",
+      "first_name": "Mitchell",
+      "last_name": "Sims",
+      "email": "mitchell.sims@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 9,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "tammysmith",
+      "first_name": "Tammy",
+      "last_name": "Smith",
+      "email": "tammy.smith@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 10,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "philipalvarez",
+      "first_name": "Philip",
+      "last_name": "Alvarez",
+      "email": "philip.alvarez@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 11,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "derekwallace",
+      "first_name": "Derek",
+      "last_name": "Wallace",
+      "email": "derek.wallace@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 12,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "arnoldrichards",
+      "first_name": "Arnold",
+      "last_name": "Richards",
+      "email": "arnold.richards@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 13,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "evankennedy",
+      "first_name": "Evan",
+      "last_name": "Kennedy",
+      "email": "evan.kennedy@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 14,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "sallymitchell",
+      "first_name": "Sally",
+      "last_name": "Mitchell",
+      "email": "sally.mitchell@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 15,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "gilbertferguson",
+      "first_name": "Gilbert",
+      "last_name": "Ferguson",
+      "email": "gilbert.ferguson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 16,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "virgillawson",
+      "first_name": "Virgil",
+      "last_name": "Lawson",
+      "email": "virgil.lawson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 17,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "annettemarshall",
+      "first_name": "Annette",
+      "last_name": "Marshall",
+      "email": "annette.marshall@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 18,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "jeansanders",
+      "first_name": "Jean",
+      "last_name": "Sanders",
+      "email": "jean.sanders@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 19,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "isaacgordon",
+      "first_name": "Isaac",
+      "last_name": "Gordon",
+      "email": "isaac.gordon@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 20,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "edithsimpson",
+      "first_name": "Edith",
+      "last_name": "Simpson",
+      "email": "edith.simpson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 21,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "robertaburke",
+      "first_name": "Roberta",
+      "last_name": "Burke",
+      "email": "roberta.burke@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 22,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "mariotorres",
+      "first_name": "Mario",
+      "last_name": "Torres",
+      "email": "mario.torres@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 23,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "brandiehansen",
+      "first_name": "Brandie",
+      "last_name": "Hansen",
+      "email": "brandie.hansen@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 24,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "mikemitchelle",
+      "first_name": "Mike",
+      "last_name": "Mitchelle",
+      "email": "mike.mitchelle@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 25,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "suecrawford",
+      "first_name": "Sue",
+      "last_name": "Crawford",
+      "email": "sue.crawford@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 26,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "mabelpatterson",
+      "first_name": "Mabel",
+      "last_name": "Patterson",
+      "email": "mabel.patterson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 27,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "melvinhill",
+      "first_name": "Melvin",
+      "last_name": "Hill",
+      "email": "melvin.hill@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 28,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "andreajennings",
+      "first_name": "Andrea",
+      "last_name": "Jennings",
+      "email": "andrea.jennings@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 29,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "byrongomez",
+      "first_name": "Byron",
+      "last_name": "Gomez",
+      "email": "byron.gomez@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 30,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "flenncurtis",
+      "first_name": "Flenn",
+      "last_name": "Curtis",
+      "email": "flenn.curtis@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 31,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "landonherrera",
+      "first_name": "Landon",
+      "last_name": "Herrera",
+      "email": "landon.herrera@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 32,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "brettprice",
+      "first_name": "Brett",
+      "last_name": "Price",
+      "email": "brett.price@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 33,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "morriscole",
+      "first_name": "Morris",
+      "last_name": "Cole",
+      "email": "morris.cole@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 34,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "candicewarren",
+      "first_name": "Candice",
+      "last_name": "Warren",
+      "email": "candice.warren@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 35,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "jenniferortiz",
+      "first_name": "Jennifer",
+      "last_name": "Ortiz",
+      "email": "jennifer.ortiz@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 36,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "carlaellis",
+      "first_name": "Carla",
+      "last_name": "Ellis",
+      "email": "carla.ellis@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 37,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "brianross",
+      "first_name": "Brian",
+      "last_name": "Ross",
+      "email": "brian.ross@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 38,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "amandabyrd",
+      "first_name": "Amanda",
+      "last_name": "Byrd",
+      "email": "amanda.byrd@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 39,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "sergiohorton",
+      "first_name": "Sergio",
+      "last_name": "Horton",
+      "email": "sergio.horton@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 40,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "oscarhowell",
+      "first_name": "Oscar",
+      "last_name": "Howell",
+      "email": "oscar.howell@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 41,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "savannahrobinson",
+      "first_name": "Savannah",
+      "last_name": "Robinson",
+      "email": "savannah.robinson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 42,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "mistyvargas",
+      "first_name": "Misty",
+      "last_name": "Vargas",
+      "email": "misty.vargas@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 43,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "kristinacook",
+      "first_name": "Kristina",
+      "last_name": "Cook",
+      "email": "kristina.cook@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 44,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "doloresbrewer",
+      "first_name": "Dolores",
+      "last_name": "Brewer",
+      "email": "dolores.brewer@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 45,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "andymills",
+      "first_name": "Andy",
+      "last_name": "Mills",
+      "email": "andy.mills@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 46,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "kristinashaw",
+      "first_name": "Kristina",
+      "last_name": "Shaw",
+      "email": "kristina.shaw@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 47,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "jeanbutler",
+      "first_name": "Jean",
+      "last_name": "Butler",
+      "email": "jean.butler@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 48,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "paulbishop",
+      "first_name": "Paul",
+      "last_name": "Bishop",
+      "email": "paul.bishop@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 49,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "avanguyen",
+      "first_name": "Ava",
+      "last_name": "Nguyen",
+      "email": "ava.nguyen@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 50,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "freddiewilliamson",
+      "first_name": "Freddie",
+      "last_name": "Williamson",
+      "email": "freddie.williamson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 51,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "roberthayes",
+      "first_name": "Robert",
+      "last_name": "Hayes",
+      "email": "robert.hayes@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 52,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "marleneknight",
+      "first_name": "Marlene",
+      "last_name": "Knight",
+      "email": "marlene.knight@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 53,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "johnnijennings",
+      "first_name": "Johnni",
+      "last_name": "Jennings",
+      "email": "johnni.jennings@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 54,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "vincentjensen",
+      "first_name": "Vincent",
+      "last_name": "Jensen",
+      "email": "vincent.jensen@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 55,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "dennismatthews",
+      "first_name": "Dennis",
+      "last_name": "Matthews",
+      "email": "dennis.matthews@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 56,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "cecilwade",
+      "first_name": "Cecil",
+      "last_name": "Wade",
+      "email": "cecil.wade@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 57,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "gregorysutton",
+      "first_name": "Gregory",
+      "last_name": "Sutton",
+      "email": "gregory.sutton@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 58,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "amberreid",
+      "first_name": "Amber",
+      "last_name": "Reid",
+      "email": "amber.reid@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 59,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "nataliewallace",
+      "first_name": "Natalie",
+      "last_name": "Wallace",
+      "email": "natalie.wallace@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 60,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "theodorecollins",
+      "first_name": "Theodore",
+      "last_name": "Collins",
+      "email": "theodore.collins@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 61,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "fernandohanson",
+      "first_name": "Fernando",
+      "last_name": "Hanson",
+      "email": "fernando.hanson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 62,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "eileenellis",
+      "first_name": "Eileen",
+      "last_name": "Ellis",
+      "email": "eileen.ellis@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 63,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "braydenpatterson",
+      "first_name": "Brayden",
+      "last_name": "Patterson",
+      "email": "brayden.patterson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 64,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "ronnielucas",
+      "first_name": "Ronnie",
+      "last_name": "Lucas",
+      "email": "ronnie.lucas@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 65,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "norahowell",
+      "first_name": "Nora",
+      "last_name": "Howell",
+      "email": "nora.howell@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 66,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "aaronjames",
+      "first_name": "Aaron",
+      "last_name": "James",
+      "email": "aaron.james@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 67,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "gabenguyen",
+      "first_name": "Gabe",
+      "last_name": "Nguyen",
+      "email": "gabe.nguyen@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 68,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "braydenprescott",
+      "first_name": "Brayden",
+      "last_name": "Prescott",
+      "email": "brayden.prescott@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 69,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "brettmckinney",
+      "first_name": "Brett",
+      "last_name": "Mckinney",
+      "email": "brett.mckinney@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 70,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "hildasanchez",
+      "first_name": "Hilda",
+      "last_name": "Sanchez",
+      "email": "hilda.sanchez@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 71,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "jessiedouglas",
+      "first_name": "Jessie",
+      "last_name": "Douglas",
+      "email": "jessie.douglas@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 72,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "dannygardner",
+      "first_name": "Danny",
+      "last_name": "Gardner",
+      "email": "danny.gardner@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 73,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "annegutierrez",
+      "first_name": "Anne",
+      "last_name": "Gutierrez",
+      "email": "anne.gutierrez@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 74,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "carlaarmstrong",
+      "first_name": "Carla",
+      "last_name": "Armstrong",
+      "email": "carla.armstrong@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 75,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "lucasbradley",
+      "first_name": "Lucas",
+      "last_name": "Bradley",
+      "email": "lucas.bradley@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 76,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "beverlyharris",
+      "first_name": "Beverly",
+      "last_name": "Harris",
+      "email": "beverly.harris@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 77,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "norarice",
+      "first_name": "Nora",
+      "last_name": "Rice",
+      "email": "nora.rice@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 78,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "tarahenry",
+      "first_name": "Tara",
+      "last_name": "Henry",
+      "email": "tara.henry@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 79,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "marthamason",
+      "first_name": "Martha",
+      "last_name": "Mason",
+      "email": "martha.mason@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 80,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "perrywagner",
+      "first_name": "Perry",
+      "last_name": "Wagner",
+      "email": "perry.wagner@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 81,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "jamesbennett",
+      "first_name": "James",
+      "last_name": "Bennett",
+      "email": "james.bennett@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 82,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "vivanhamilton",
+      "first_name": "Vivan",
+      "last_name": "Hamilton",
+      "email": "vivan.hamilton@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 83,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "arleneoliver",
+      "first_name": "Arlene",
+      "last_name": "Oliver",
+      "email": "arlene.oliver@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 84,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "shawngarcia",
+      "first_name": "Shawn",
+      "last_name": "Garcia",
+      "email": "shawn.garcia@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 85,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "stephenfleming",
+      "first_name": "Stephen",
+      "last_name": "Fleming",
+      "email": "stephen.fleming@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 86,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "ethelellis",
+      "first_name": "Ethel",
+      "last_name": "Ellis",
+      "email": "ethel.ellis@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 87,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "marionnelson",
+      "first_name": "Marion",
+      "last_name": "Nelson",
+      "email": "marion.nelson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 88,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "theresasimmons",
+      "first_name": "Theresa",
+      "last_name": "Simmons",
+      "email": "theresa.simmons@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 89,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "teresadavis",
+      "first_name": "Teresa",
+      "last_name": "Davis",
+      "email": "teresa.davis@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 90,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "danajones",
+      "first_name": "Dana",
+      "last_name": "Jones",
+      "email": "dana.jones@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 91,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "haroldmontgomery",
+      "first_name": "Harold",
+      "last_name": "Montgomery",
+      "email": "harold.montgomery@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 92,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "edwardburns",
+      "first_name": "Edward",
+      "last_name": "Burns",
+      "email": "edward.burns@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 93,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "lonniemurray",
+      "first_name": "Lonnie",
+      "last_name": "Murray",
+      "email": "lonnie.murray@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 94,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "lisaanderson",
+      "first_name": "Lisa",
+      "last_name": "Anderson",
+      "email": "lisa.anderson@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 95,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "gregmurphy",
+      "first_name": "Greg",
+      "last_name": "Murphy",
+      "email": "greg.murphy@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [5],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 96,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "christinebradley",
+      "first_name": "Christine",
+      "last_name": "Bradley",
+      "email": "christine.bradley@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 97,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "ameliaburns",
+      "first_name": "Amelia",
+      "last_name": "Burns",
+      "email": "amelia.burns@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 98,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "joreid",
+      "first_name": "Jo",
+      "last_name": "Reid",
+      "email": "jo.reid@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 99,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "saragardner",
+      "first_name": "Sara",
+      "last_name": "Gardner",
+      "email": "sara.gardner@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [5],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 100,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "charlesbrown",
+      "first_name": "Charles",
+      "last_name": "Brown",
+      "email": "spam@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 101,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "lynnlittle",
+      "first_name": "Lynn",
+      "last_name": "Little",
+      "email": "soft_bounce@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 102,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "rebeccaday",
+      "first_name": "Rebecca",
+      "last_name": "Day",
+      "email": "hard_bounce@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "coderdojochi.cdcuser",
+    "pk": 103,
+    "fields": {
+      "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
+      "last_login": "2013-01-01T06:00:00Z",
+      "is_superuser": false,
+      "username": "benjaminlee",
+      "first_name": "Benjamin",
+      "last_name": "Lee",
+      "email": "reject@sink.sendgrid.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2013-01-01T06:00:00Z",
+      "role": "mentor",
+      "admin_notes": "",
+      "groups": [],
+      "user_permissions": []
+    }
   }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 2,
-  "fields": {
-    "password": "pbkdf2_sha256$180000$WY1JcWz9KnYL$z7EGcskpYzNYnSRFLy9V3SctD9/4FBj7WrB7nahV/tE=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "test_guardian",
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "gregoriofs+guardian@uchicago.edu",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "guardian",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 3,
-  "fields": {
-    "password": "pbkdf2_sha256$180000$7kNf3Qo2GNy5$lW+k3O3gaZL1dio7+MUUbF+hl8zwfSCO3yOYibqzkIo=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "test_mentor",
-    "first_name": "Daniel",
-    "last_name": "Conrad",
-    "email": "gregoriofs+mentor@uchicago.edu",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 4,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "levifowler",
-    "first_name": "Levi",
-    "last_name": "Fowler",
-    "email": "levi.fowler@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 5,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "maureenbradley",
-    "first_name": "Maureen",
-    "last_name": "Bradley",
-    "email": "maureen.bradley@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 6,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "kellythompson",
-    "first_name": "Kelly",
-    "last_name": "Thompson",
-    "email": "kelly.thompson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 7,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "violetlawson",
-    "first_name": "Violet",
-    "last_name": "Lawson",
-    "email": "violet.lawson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 8,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "mitchellsims",
-    "first_name": "Mitchell",
-    "last_name": "Sims",
-    "email": "mitchell.sims@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 9,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "tammysmith",
-    "first_name": "Tammy",
-    "last_name": "Smith",
-    "email": "tammy.smith@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 10,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "philipalvarez",
-    "first_name": "Philip",
-    "last_name": "Alvarez",
-    "email": "philip.alvarez@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 11,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "derekwallace",
-    "first_name": "Derek",
-    "last_name": "Wallace",
-    "email": "derek.wallace@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 12,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "arnoldrichards",
-    "first_name": "Arnold",
-    "last_name": "Richards",
-    "email": "arnold.richards@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 13,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "evankennedy",
-    "first_name": "Evan",
-    "last_name": "Kennedy",
-    "email": "evan.kennedy@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 14,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "sallymitchell",
-    "first_name": "Sally",
-    "last_name": "Mitchell",
-    "email": "sally.mitchell@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 15,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "gilbertferguson",
-    "first_name": "Gilbert",
-    "last_name": "Ferguson",
-    "email": "gilbert.ferguson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 16,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "virgillawson",
-    "first_name": "Virgil",
-    "last_name": "Lawson",
-    "email": "virgil.lawson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 17,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "annettemarshall",
-    "first_name": "Annette",
-    "last_name": "Marshall",
-    "email": "annette.marshall@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 18,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "jeansanders",
-    "first_name": "Jean",
-    "last_name": "Sanders",
-    "email": "jean.sanders@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 19,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "isaacgordon",
-    "first_name": "Isaac",
-    "last_name": "Gordon",
-    "email": "isaac.gordon@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 20,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "edithsimpson",
-    "first_name": "Edith",
-    "last_name": "Simpson",
-    "email": "edith.simpson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 21,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "robertaburke",
-    "first_name": "Roberta",
-    "last_name": "Burke",
-    "email": "roberta.burke@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 22,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "mariotorres",
-    "first_name": "Mario",
-    "last_name": "Torres",
-    "email": "mario.torres@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 23,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "brandiehansen",
-    "first_name": "Brandie",
-    "last_name": "Hansen",
-    "email": "brandie.hansen@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 24,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "mikemitchelle",
-    "first_name": "Mike",
-    "last_name": "Mitchelle",
-    "email": "mike.mitchelle@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 25,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "suecrawford",
-    "first_name": "Sue",
-    "last_name": "Crawford",
-    "email": "sue.crawford@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 26,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "mabelpatterson",
-    "first_name": "Mabel",
-    "last_name": "Patterson",
-    "email": "mabel.patterson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 27,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "melvinhill",
-    "first_name": "Melvin",
-    "last_name": "Hill",
-    "email": "melvin.hill@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 28,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "andreajennings",
-    "first_name": "Andrea",
-    "last_name": "Jennings",
-    "email": "andrea.jennings@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 29,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "byrongomez",
-    "first_name": "Byron",
-    "last_name": "Gomez",
-    "email": "byron.gomez@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 30,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "flenncurtis",
-    "first_name": "Flenn",
-    "last_name": "Curtis",
-    "email": "flenn.curtis@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 31,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "landonherrera",
-    "first_name": "Landon",
-    "last_name": "Herrera",
-    "email": "landon.herrera@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 32,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "brettprice",
-    "first_name": "Brett",
-    "last_name": "Price",
-    "email": "brett.price@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 33,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "morriscole",
-    "first_name": "Morris",
-    "last_name": "Cole",
-    "email": "morris.cole@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 34,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "candicewarren",
-    "first_name": "Candice",
-    "last_name": "Warren",
-    "email": "candice.warren@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 35,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "jenniferortiz",
-    "first_name": "Jennifer",
-    "last_name": "Ortiz",
-    "email": "jennifer.ortiz@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 36,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "carlaellis",
-    "first_name": "Carla",
-    "last_name": "Ellis",
-    "email": "carla.ellis@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 37,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "brianross",
-    "first_name": "Brian",
-    "last_name": "Ross",
-    "email": "brian.ross@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 38,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "amandabyrd",
-    "first_name": "Amanda",
-    "last_name": "Byrd",
-    "email": "amanda.byrd@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 39,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "sergiohorton",
-    "first_name": "Sergio",
-    "last_name": "Horton",
-    "email": "sergio.horton@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 40,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "oscarhowell",
-    "first_name": "Oscar",
-    "last_name": "Howell",
-    "email": "oscar.howell@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 41,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "savannahrobinson",
-    "first_name": "Savannah",
-    "last_name": "Robinson",
-    "email": "savannah.robinson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 42,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "mistyvargas",
-    "first_name": "Misty",
-    "last_name": "Vargas",
-    "email": "misty.vargas@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 43,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "kristinacook",
-    "first_name": "Kristina",
-    "last_name": "Cook",
-    "email": "kristina.cook@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 44,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "doloresbrewer",
-    "first_name": "Dolores",
-    "last_name": "Brewer",
-    "email": "dolores.brewer@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 45,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "andymills",
-    "first_name": "Andy",
-    "last_name": "Mills",
-    "email": "andy.mills@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 46,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "kristinashaw",
-    "first_name": "Kristina",
-    "last_name": "Shaw",
-    "email": "kristina.shaw@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 47,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "jeanbutler",
-    "first_name": "Jean",
-    "last_name": "Butler",
-    "email": "jean.butler@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 48,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "paulbishop",
-    "first_name": "Paul",
-    "last_name": "Bishop",
-    "email": "paul.bishop@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 49,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "avanguyen",
-    "first_name": "Ava",
-    "last_name": "Nguyen",
-    "email": "ava.nguyen@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 50,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "freddiewilliamson",
-    "first_name": "Freddie",
-    "last_name": "Williamson",
-    "email": "freddie.williamson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 51,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "roberthayes",
-    "first_name": "Robert",
-    "last_name": "Hayes",
-    "email": "robert.hayes@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 52,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "marleneknight",
-    "first_name": "Marlene",
-    "last_name": "Knight",
-    "email": "marlene.knight@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 53,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "johnnijennings",
-    "first_name": "Johnni",
-    "last_name": "Jennings",
-    "email": "johnni.jennings@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 54,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "vincentjensen",
-    "first_name": "Vincent",
-    "last_name": "Jensen",
-    "email": "vincent.jensen@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 55,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "dennismatthews",
-    "first_name": "Dennis",
-    "last_name": "Matthews",
-    "email": "dennis.matthews@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 56,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "cecilwade",
-    "first_name": "Cecil",
-    "last_name": "Wade",
-    "email": "cecil.wade@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 57,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "gregorysutton",
-    "first_name": "Gregory",
-    "last_name": "Sutton",
-    "email": "gregory.sutton@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 58,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "amberreid",
-    "first_name": "Amber",
-    "last_name": "Reid",
-    "email": "amber.reid@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 59,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "nataliewallace",
-    "first_name": "Natalie",
-    "last_name": "Wallace",
-    "email": "natalie.wallace@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 60,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "theodorecollins",
-    "first_name": "Theodore",
-    "last_name": "Collins",
-    "email": "theodore.collins@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 61,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "fernandohanson",
-    "first_name": "Fernando",
-    "last_name": "Hanson",
-    "email": "fernando.hanson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 62,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "eileenellis",
-    "first_name": "Eileen",
-    "last_name": "Ellis",
-    "email": "eileen.ellis@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 63,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "braydenpatterson",
-    "first_name": "Brayden",
-    "last_name": "Patterson",
-    "email": "brayden.patterson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 64,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "ronnielucas",
-    "first_name": "Ronnie",
-    "last_name": "Lucas",
-    "email": "ronnie.lucas@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 65,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "norahowell",
-    "first_name": "Nora",
-    "last_name": "Howell",
-    "email": "nora.howell@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 66,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "aaronjames",
-    "first_name": "Aaron",
-    "last_name": "James",
-    "email": "aaron.james@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 67,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "gabenguyen",
-    "first_name": "Gabe",
-    "last_name": "Nguyen",
-    "email": "gabe.nguyen@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 68,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "braydenprescott",
-    "first_name": "Brayden",
-    "last_name": "Prescott",
-    "email": "brayden.prescott@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 69,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "brettmckinney",
-    "first_name": "Brett",
-    "last_name": "Mckinney",
-    "email": "brett.mckinney@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 70,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "hildasanchez",
-    "first_name": "Hilda",
-    "last_name": "Sanchez",
-    "email": "hilda.sanchez@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 71,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "jessiedouglas",
-    "first_name": "Jessie",
-    "last_name": "Douglas",
-    "email": "jessie.douglas@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 72,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "dannygardner",
-    "first_name": "Danny",
-    "last_name": "Gardner",
-    "email": "danny.gardner@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 73,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "annegutierrez",
-    "first_name": "Anne",
-    "last_name": "Gutierrez",
-    "email": "anne.gutierrez@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 74,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "carlaarmstrong",
-    "first_name": "Carla",
-    "last_name": "Armstrong",
-    "email": "carla.armstrong@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 75,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "lucasbradley",
-    "first_name": "Lucas",
-    "last_name": "Bradley",
-    "email": "lucas.bradley@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 76,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "beverlyharris",
-    "first_name": "Beverly",
-    "last_name": "Harris",
-    "email": "beverly.harris@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 77,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "norarice",
-    "first_name": "Nora",
-    "last_name": "Rice",
-    "email": "nora.rice@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 78,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "tarahenry",
-    "first_name": "Tara",
-    "last_name": "Henry",
-    "email": "tara.henry@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 79,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "marthamason",
-    "first_name": "Martha",
-    "last_name": "Mason",
-    "email": "martha.mason@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 80,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "perrywagner",
-    "first_name": "Perry",
-    "last_name": "Wagner",
-    "email": "perry.wagner@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 81,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "jamesbennett",
-    "first_name": "James",
-    "last_name": "Bennett",
-    "email": "james.bennett@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 82,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "vivanhamilton",
-    "first_name": "Vivan",
-    "last_name": "Hamilton",
-    "email": "vivan.hamilton@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 83,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "arleneoliver",
-    "first_name": "Arlene",
-    "last_name": "Oliver",
-    "email": "arlene.oliver@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 84,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "shawngarcia",
-    "first_name": "Shawn",
-    "last_name": "Garcia",
-    "email": "shawn.garcia@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 85,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "stephenfleming",
-    "first_name": "Stephen",
-    "last_name": "Fleming",
-    "email": "stephen.fleming@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 86,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "ethelellis",
-    "first_name": "Ethel",
-    "last_name": "Ellis",
-    "email": "ethel.ellis@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 87,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "marionnelson",
-    "first_name": "Marion",
-    "last_name": "Nelson",
-    "email": "marion.nelson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 88,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "theresasimmons",
-    "first_name": "Theresa",
-    "last_name": "Simmons",
-    "email": "theresa.simmons@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 89,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "teresadavis",
-    "first_name": "Teresa",
-    "last_name": "Davis",
-    "email": "teresa.davis@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 90,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "danajones",
-    "first_name": "Dana",
-    "last_name": "Jones",
-    "email": "dana.jones@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 91,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "haroldmontgomery",
-    "first_name": "Harold",
-    "last_name": "Montgomery",
-    "email": "harold.montgomery@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 92,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "edwardburns",
-    "first_name": "Edward",
-    "last_name": "Burns",
-    "email": "edward.burns@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 93,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "lonniemurray",
-    "first_name": "Lonnie",
-    "last_name": "Murray",
-    "email": "lonnie.murray@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 94,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "lisaanderson",
-    "first_name": "Lisa",
-    "last_name": "Anderson",
-    "email": "lisa.anderson@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 95,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "gregmurphy",
-    "first_name": "Greg",
-    "last_name": "Murphy",
-    "email": "greg.murphy@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [5],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 96,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "christinebradley",
-    "first_name": "Christine",
-    "last_name": "Bradley",
-    "email": "christine.bradley@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 97,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "ameliaburns",
-    "first_name": "Amelia",
-    "last_name": "Burns",
-    "email": "amelia.burns@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 98,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "joreid",
-    "first_name": "Jo",
-    "last_name": "Reid",
-    "email": "jo.reid@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 99,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "saragardner",
-    "first_name": "Sara",
-    "last_name": "Gardner",
-    "email": "sara.gardner@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [5],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 100,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "charlesbrown",
-    "first_name": "Charles",
-    "last_name": "Brown",
-    "email": "spam@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 101,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "lynnlittle",
-    "first_name": "Lynn",
-    "last_name": "Little",
-    "email": "soft_bounce@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 102,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "rebeccaday",
-    "first_name": "Rebecca",
-    "last_name": "Day",
-    "email": "hard_bounce@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-},
-{
-  "model": "coderdojochi.cdcuser",
-  "pk": 103,
-  "fields": {
-    "password": "pbkdf2_sha256$100000$yBgNBYjjCrmY$26MzzNci8ohH+8VnnlM0u/3IASji1koWptvOONUK5F4=",
-    "last_login": "2013-01-01T06:00:00Z",
-    "is_superuser": false,
-    "username": "benjaminlee",
-    "first_name": "Benjamin",
-    "last_name": "Lee",
-    "email": "reject@sink.sendgrid.net",
-    "is_staff": false,
-    "is_active": true,
-    "date_joined": "2013-01-01T06:00:00Z",
-    "role": "mentor",
-    "admin_notes": "",
-    "groups": [],
-    "user_permissions": []
-  }
-}
 ]

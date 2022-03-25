@@ -99,6 +99,18 @@ class Student(CommonInfo):
 
     get_clean_gender.short_description = "Clean Gender"
 
+    def get_clean_gender_short(self):
+        gender = self.get_clean_gender()
+
+        if gender is 'male':
+            return "m"
+        elif gender is 'female':
+            return "f"
+        else:
+            return "o"
+
+    get_clean_gender_short.short_description = "Clean Gender Short"
+
     # returns True if the student age is between minimum_age and maximum_age
     def is_within_age_range(self, minimum_age, maximum_age, date=timezone.now()):
         age = self.get_age(date)

@@ -98,3 +98,40 @@ def menu_is_active(context, pattern_or_urlname, css_class="active"):
         return css_class
     else:
         return ""
+
+
+@register.filter(name="phone_number")
+def phone_number(str):
+    """Convert a 10 character string into 'xxx-xxx-xxxx'."""
+
+    # Strip out all non-digits
+    number = re.sub("[^0-9]", "", str)
+
+    # If the number is greater than 11 characters, return it as-is
+    if len(number) > 11:
+        return str
+
+    # Default country code to nothing
+    country_code = ""
+
+    # If the number is 10 characters long, assume it's a US number
+    if len(number) == 11:
+
+        # If the first character is 1, strip it out
+        if number[0] != "1":
+            country_code = f"+{number[0]} "
+
+        # Remove the country code from the number
+        number = number[1:]
+
+    # First three digits are the area code
+    first = number[0:3]
+
+    # Second three digits are the exchange
+    second = number[3:6]
+
+    # Last four digits are the subscriber number
+    third = number[6:10]
+
+    # Return the formatted number
+    return f"{country_code}{first}-{second}-{third}"
