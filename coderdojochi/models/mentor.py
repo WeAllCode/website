@@ -136,6 +136,14 @@ class Mentor(CommonInfo):
         )
 
     def get_avatar(self):
+        if self.avatar and self.avatar_approved == True:
+            return {
+                "url": f"{self.avatar.url}",
+                "thumbnail": {
+                    "url": f"{self.avatar.thumbnail.url}",
+                },
+            }
+
         # Gravatar
         import hashlib
         from urllib.parse import urlencode
@@ -144,21 +152,16 @@ class Mentor(CommonInfo):
         email = self.email.encode("utf-8").lower()
         email_encoded = hashlib.md5(email).hexdigest()
 
-        if self.avatar:
-            d = self.avatar.url
-        else:
-            d = "mp"
-
         thumbnail_params = urlencode(
             {
-                "d": d,
+                "d": "mp",
                 "r": "pg",
                 "s": str(320),
             }
         )
         full_params = urlencode(
             {
-                "d": d,
+                "d": "mp",
                 "r": "pg",
                 "s": str(500),
             }
@@ -166,11 +169,9 @@ class Mentor(CommonInfo):
 
         slug_url = f"https://www.gravatar.com/avatar/{email_encoded}"
 
-        avatar = {
+        return {
             "url": f"{slug_url}?{full_params}",
             "thumbnail": {
                 "url": f"{slug_url}?{thumbnail_params}",
             },
         }
-
-        return avatar
