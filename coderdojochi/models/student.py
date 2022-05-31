@@ -102,9 +102,9 @@ class Student(CommonInfo):
     def get_clean_gender_short(self):
         gender = self.get_clean_gender()
 
-        if gender is "male":
+        if gender == "male":
             return "m"
-        elif gender is "female":
+        elif gender == "female":
             return "f"
         else:
             return "o"
