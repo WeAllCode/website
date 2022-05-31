@@ -11,8 +11,8 @@
   "author": "Ali Karbassi <ali@karbassi.com>",
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^6.0.0",
-    "cypress": "^9.5.2",
-    "del": "^6.0.0"
+    "@faker-js/faker": "7.1.0",
+    "cypress": "9.7.0",
+    "del": "6.1.1"
   }
 }
