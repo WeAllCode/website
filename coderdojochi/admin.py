@@ -633,9 +633,9 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             {
                 "classes": ("collapse",),
                 "fields": (
-                    'old_end_date',
-                    'old_mentor_start_date',
-                    'old_mentor_end_date',
+                    "old_end_date",
+                    "old_mentor_start_date",
+                    "old_mentor_end_date",
                 ),
             },
         ),
