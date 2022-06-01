@@ -11,15 +11,15 @@
 {% block body_class %}page-welcome{% endblock %}
 
 {% block contained_content %}
-<section class="medium-padding-horizontal-3 text-center">
+<section class="medium-padding-horizontal-3">
     {% if role %}
         {% if role == 'guardian' %}
             {% if not add_student %}
-            <h2 class="title text-primary">Tell us a little more about yourself...</h2>
-            <p>
-              Before you sign up your student(s), let's start with some contact information.<br>
-              <strong>We will never share this information with anyone.</strong>
-            </p>
+                <h2 class="title text-primary">Parent information</h2>
+                <p>
+                Before you sign up your student(s), let's start with some contact information.<br>
+                <strong>We will never share this information with anyone.</strong>
+                </p>
             {% else %}
                 {% if students %}
                     <h4 class="title light">{{ students }} Student{{ students|pluralize }} Registered <i class="fas fa-check"></i></h4>
@@ -30,8 +30,8 @@
             {% endif %}
         {% endif %}
         {% if role == 'mentor' %}
-        <h2 class="title text-primary">Tell us a little more...</h2>
-        <p>Before you sign up to mentor classes, come up with a short bio for yourself...</p>
+            <h2 class="title text-primary">Tell us a little more...</h2>
+            <p>Before you sign up to mentor classes, come up with a short bio for yourself...</p>
         {% endif %}
 
         <hr>
@@ -43,9 +43,8 @@
 
         <form action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" method="post">
             {% csrf_token %}
-            <div class="grid-x margin-top-3 grid-margin-x grid-margin-y">
-                <div class="cell medium-offset-3 medium-6">{% bootstrap_form form %}</div>
-            </div>
+            {{ form }}
+
             <button class="submit button margin-top-3">{% if not add_student %}Continue{% else %}Register{% endif %} <i class="fas fa-chevron-right margin-left-half"></i></button>
         </form>
         {% endif %}
@@ -54,21 +53,21 @@
         <h3 class="title text-secondary">Who are you?</h3>
         <hr>
         <div class="grid-x margin-top-3 grid-margin-x grid-margin-y">
-            <form class="cell medium-4 medium-offset-2" method="post" action="" class="role">
+            <form class="cell medium-6" method="post" action="" class="role">
                 {% csrf_token %}
                 <input type="hidden" name="role" value="parent">
-                <p>
-                  <button class="button expanded"><i class="fas fa-graduation-cap margin-right-half"></i> Parent/Guardian</button><br>
-                  Enroll students for classes
-                </p>
+                <button class="button expanded large">
+                    <i class="fas fa-graduation-cap margin-right-half"></i> Parent/Guardian
+                </button>
+                <p>Enroll students for classes</p>
             </form>
-            <form class="cell medium-4" method="post" action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" class="role">
+            <form class="cell medium-6" method="post" action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" class="role">
                 {% csrf_token %}
                 <input type="hidden" name="role" value="mentor">
-                <p>
-                  <button class="button expanded"><i class="fas fa-hands-helping margin-right-half"></i> Volunteer</button><br>
-                  Looking to join our team!
-                </p>
+                <button class="button expanded large">
+                    <i class="fas fa-hands-helping margin-right-half"></i> Volunteer
+                </button>
+                <p>Looking to join our team!</p>
             </form>
         </div>
     {% endif %}
