@@ -25,38 +25,21 @@
   </div>
   <div class="cell medium-4 bg-primary padding-2">
     <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
-    {% if account and user.role == 'mentor' %}
-    <p>{{ session.mentor_start_date|time:"P" }} to {{ session.mentor_end_date|time }}</p>
-    {% else %}
-    <p>{{ session.start_date|time:"P" }} to {{ session.end_date|time }}</p>
-    {% endif %}
+
+    <p>{{ session.start_time|time:"P" }} to {{ session.end_time|time }}</p>
 
     <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
 
     {% if session.location.address %}
 
-    <p>{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</p>
+      <p>{{ session.location.address }}, {{ session.location.city }}, {{ session.location.state }} {{ session.location.zip }}</p>
 
     {% else %}
 
-    <p>Details will be shared once you sign up.</p>
+      <p>Details will be shared once you sign up.</p>
 
     {% endif %}
 
-    <a href="{{ session.get_absolute_url }}" class="button secondary width-100 text-uppercase margin-top-1">
-      {% if user.is_authenticated and user.role == 'mentor' %}
-        {% if session.mentor_capacity and session.get_mentor_orders.count >= session.mentor_capacity %}
-          Class Full
-        {% else %}
-          Volunteer
-        {% endif %}
-      {% else %}
-        {% if session.get_active_student_count < session.capacity %}
-          Sign up
-        {% else %}
-          Class Full
-        {% endif %}
-      {% endif %}
-    </a>
+    <a href="{{ session.get_absolute_url }}" class="button secondary width-100 text-uppercase margin-top-1">{{ session.class_status }}</a>
   </div>
 </div>
