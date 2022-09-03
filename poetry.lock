@@ -228,15 +228,14 @@ Django = ">=1.8.0"
 
 [[package]]
 name = "django-cron"
-version = "0.5.1"
+version = "0.6.0"
 description = "Running python crons in a Django project"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-Django = ">=1.8.0"
-django-common-helpers = ">=0.6.4"
+Django = ">=3.2"
 
 [[package]]
 name = "django-debug-toolbar"
@@ -831,7 +830,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.1"
-content-hash = "01d2872b0d6dd854466d27f4d7a3757ee9120ab8e3f003241613f0e8c16fc8ae"
+content-hash = "f64fbebd7593e6bfdc9c23559364d804df2c433cba3b6e3ea602906b430c799f"
 
 [metadata.files]
 arrow = [
@@ -991,7 +990,8 @@ django-common-helpers = [
     {file = "django-common-helpers-0.9.2.tar.gz", hash = "sha256:2d56be6fa261d829a6a224f189bf276267b9082a17d613fe5f015dd4d65c17b4"},
 ]
 django-cron = [
-    {file = "django-cron-0.5.1.tar.gz", hash = "sha256:08d22708c8b2ecab8cda989019a66c7e1e2424c59d822796fd45abf7731d261d"},
+    {file = "django-cron-0.6.0.tar.gz", hash = "sha256:dc3c0d3433a2e4e7012f77f6d8415ad90367ba068649db2674325bc36f935841"},
+    {file = "django_cron-0.6.0-py3-none-any.whl", hash = "sha256:016203554748512b7f19d7363b4fde8741c6ff63fe8a15051f3031f4a0506a41"},
 ]
 django-debug-toolbar = [
     {file = "django-debug-toolbar-3.5.0.tar.gz", hash = "sha256:97965f2630692de316ea0c1ca5bfa81660d7ba13146dbc6be2059cf55b35d0e5"},
