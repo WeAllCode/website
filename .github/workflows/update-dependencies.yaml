@@ -3,7 +3,7 @@ name: Update Dependencies
 # controls when the action will run
 on:
   schedule:
-    - cron:  '0 6 1 * *' # at 06:00 on the first day of every month
+    - cron:  '30 5 * * *' # Every day at 5:30 AM UTC
   workflow_dispatch: # enables manual trigger
 
 jobs:
@@ -13,15 +13,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up python 3.8
+      - name: Set up python 3.9.1
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: '3.9.1'
 
       - name: Install poetry 1.1.12
         uses: snok/install-poetry@v1
         with:
-          version: 1.1.12
+          version: 1.2.0
 
       - name: Update dependencies
         run: |
