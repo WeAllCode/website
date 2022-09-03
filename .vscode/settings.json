@@ -23,6 +23,7 @@
     "css": ["css", "less", "scss"],
     "html": ["htm", "html", "django-html"]
   },
+  "python.defaultInterpreterPath": "python",
   "python.formatting.provider": "black",
   "python.linting.ignorePatterns": [
     ".vscode/*.py",
@@ -50,7 +51,8 @@
     }
   },
   "[django-html]": {
-    "editor.defaultFormatter": "HookyQR.beautify",
+    //
+    "editor.defaultFormatter": "batisteo.vscode-django",
     "editor.quickSuggestions": {
       "other": true,
       "comments": true,

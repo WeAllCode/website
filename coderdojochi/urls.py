@@ -7,8 +7,8 @@ from django.urls import path
 from django.views import defaults
 from django.views.generic import RedirectView
 
-from . import old_views
-from .views import (  # SessionDetailView,
+from coderdojochi import old_views
+from coderdojochi.views import (  # SessionDetailView,
     MeetingCalendarView,
     MeetingDetailView,
     MeetingsView,
@@ -20,7 +20,7 @@ from .views import (  # SessionDetailView,
     meeting_announce,
     meeting_sign_up,
 )
-from .views.public import MentorDetailView, MentorListView
+from coderdojochi.views.public import MentorDetailView, MentorListView
 
 admin.autodiscover()
 
@@ -52,15 +52,15 @@ urlpatterns += [
                             # /meetings/
                             path("", MeetingsView.as_view(), name="meetings"),
                             # Individual Meeting
-                            # /meeting/ID/
+                            # /meeting/<ID>/
                             path("<int:pk>/", MeetingDetailView.as_view(), name="meeting-detail"),
-                            # /meeting/ID/announce/
+                            # /meeting/<ID>/announce/
                             path("<int:pk>/announce/", meeting_announce, name="meeting-announce"),
                             # Meeting sign up
-                            # /meeting/ID/sign-up/
+                            # /meeting/<ID>/sign-up/
                             path("<int:pk>/register/", meeting_sign_up, name="meeting-register"),
                             # Meeting Calendar
-                            # /meeting/ID/calendar/
+                            # /meeting/<ID>/calendar/
                             path("<int:pk>/calendar/", MeetingCalendarView.as_view(), name="meeting-calendar"),
                         ]
                     ),
@@ -94,16 +94,18 @@ urlpatterns += [
                     "classes/",
                     include(
                         [
-                            # /admin/classes/ID/stats/
+                            # /admin/classes/<ID>/stats/
                             path("<int:pk>/stats/", old_views.session_stats, name="stats"),
-                            # /admin/classes/ID/check-in/
+                            # /admin/classes/<ID>/check-in/
                             path("<int:pk>/check-in/", old_views.session_check_in, name="student-check-in"),
-                            # /admin/classes/ID/check-in-mentors/
+                            # /admin/classes/<ID>/check-in-mentors/
                             path(
                                 "<int:pk>/check-in-mentors/", old_views.session_check_in_mentors, name="mentor-check-in"
                             ),
-                            # /admin/classes/ID/donations/
+                            # /admin/classes/<ID>/donations/
                             path("<int:pk>/donations/", old_views.session_donations, name="donations"),
+                            # /admin/classes/<ID>/list/
+                            # path("<int:pk>/list", )
                         ]
                     ),
                 ),
@@ -111,7 +113,7 @@ urlpatterns += [
                     "meetings/",
                     include(
                         [
-                            # /admin/meeting/ID/check-in/
+                            # /admin/meeting/<ID>/check-in/
                             path("<int:meeting_id>/check-in/", old_views.meeting_check_in, name="meeting-check-in"),
                         ]
                     ),
@@ -134,27 +136,27 @@ urlpatterns += [
                 # /classes/
                 path("", RedirectView.as_view(pattern_name="weallcode-programs"), name="sessions"),
                 # Individual Class
-                # /classes/ID/
+                # /classes/<ID>/
                 path("<int:pk>/", SessionDetailView.as_view(), name="session-detail"),
                 # Password
-                # /classes/ID/password/
+                # /classes/<ID>/password/
                 path("<int:pk>/password/", PasswordSessionView.as_view(), name="session-password"),
                 # Announce
-                # /classes/ID/announce/mentors/
+                # /classes/<ID>/announce/mentors/
                 path("<int:pk>/announce/mentors/", old_views.session_announce_mentors, name="session-announce-mentors"),
-                # /classes/ID/announce/guardians/
+                # /classes/<ID>/announce/guardians/
                 path(
                     "<int:pk>/announce/guardians/",
                     old_views.session_announce_guardians,
                     name="session-announce-guardians",
                 ),
                 # Calendar
-                # /classes/ID/calendar/
+                # /classes/<ID>/calendar/
                 path("<int:pk>/calendar/", SessionCalendarView.as_view(), name="session-calendar"),
                 # Sign up
-                # /classes/ID/sign-up/
+                # /classes/<ID>/sign-up/
                 path("<int:pk>/sign-up/", SessionSignUpView.as_view(), name="session-sign-up"),
-                # /classes/ID/sign-up/STUDENT-ID/
+                # /classes/<ID>/sign-up/STUDENT-ID/
                 path("<int:pk>/sign-up/<int:student_id>/", SessionSignUpView.as_view(), name="session-sign-up"),
             ]
         ),
@@ -170,13 +172,13 @@ urlpatterns += [
         include(
             [
                 # Mentors
-                # /
+                # /mentors/
                 path("", MentorListView.as_view(), name="mentors"),
-                # /ID/
+                # /mentors/<ID>/
                 path("<int:pk>/", MentorDetailView.as_view(), name="mentor-detail"),
-                # /ID/reject-avatar/
+                # /mentors/<ID>/reject-avatar/
                 path("<int:pk>/reject-avatar/", old_views.mentor_reject_avatar, name="mentor-reject-avatar"),
-                # /ID/approve-avatar/
+                # /mentors/<ID>/approve-avatar/
                 path("<int:pk>/approve-avatar/", old_views.mentor_approve_avatar, name="mentor-approve-avatar"),
             ]
         ),
@@ -186,7 +188,7 @@ urlpatterns += [
 # Students
 urlpatterns += [
     # Student
-    # /student/ID/
+    # /students/<ID>/
     path("students/<int:student_id>/", old_views.student_detail, name="student-detail"),
 ]
 
@@ -203,7 +205,7 @@ urlpatterns += [
 # Meetings
 urlpatterns += []
 
-# robots.txt
+# /robots.txt
 urlpatterns += [
     path(
         "robots.txt",
