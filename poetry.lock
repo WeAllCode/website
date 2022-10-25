@@ -440,7 +440,7 @@ tornado = ["tornado (>=0.2)"]
 
 [[package]]
 name = "icalendar"
-version = "5.0.0"
+version = "5.0.1"
 description = "iCalendar parser/generator"
 category = "main"
 optional = false
@@ -831,7 +831,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.1"
-content-hash = "8d1423bd3e8f6fd9c36252b448bcc2d5269b0e552c0e11e951742da8d72a2d42"
+content-hash = "c0e53c541eaf291c4e63779e9b4a35c87fe168b43c84a4488517fec1e58e2c63"
 
 [metadata.files]
 arrow = [
@@ -1058,8 +1058,8 @@ gunicorn = [
     {file = "gunicorn-20.1.0.tar.gz", hash = "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"},
 ]
 icalendar = [
-    {file = "icalendar-5.0.0-py2.py3-none-any.whl", hash = "sha256:47f0e00a9ff4d50345f97e5ccd54bf78f0298afc8b55e3bd1942d9e169c07144"},
-    {file = "icalendar-5.0.0.tar.gz", hash = "sha256:cabfa6b800072318d7a4b415786bdd30129618afa4620ea55b99c656d85ea22d"},
+    {file = "icalendar-5.0.1-py3-none-any.whl", hash = "sha256:41f2f450707a503365a81c22954be4053779994c8ff01fc11bf4ce33a724092e"},
+    {file = "icalendar-5.0.1.tar.gz", hash = "sha256:35faeae20e58d0fe26e33c04bbfd08b424192d61ae3e1da1d7611ba06ab33570"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
