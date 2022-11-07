@@ -22,14 +22,14 @@ tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
 
 [[package]]
 name = "boto3"
-version = "1.26.2"
+version = "1.26.3"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 
 [package.dependencies]
-botocore = ">=1.29.2,<1.30.0"
+botocore = ">=1.29.3,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -38,7 +38,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.2"
+version = "1.29.3"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -831,7 +831,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.1"
-content-hash = "5f101f29be8649dee005329e0637912b0d9e528d4237ff7f920368d34a62ce9d"
+content-hash = "b621776a458b6b82da18534816aa86924b21f40b7980e05f3378fe506b51321b"
 
 [metadata.files]
 arrow = [
@@ -843,12 +843,12 @@ asgiref = [
     {file = "asgiref-3.5.2.tar.gz", hash = "sha256:4a29362a6acebe09bf1d6640db38c1dc3d9217c68e6f9f6204d72667fc19a424"},
 ]
 boto3 = [
-    {file = "boto3-1.26.2-py3-none-any.whl", hash = "sha256:a60b71a41b257f15662d8bec9fa32db4a9558bf9b032d1a6957e8bf9f21324c8"},
-    {file = "boto3-1.26.2.tar.gz", hash = "sha256:db37be1a765a06d2fea6ed4ca27f71d710ba1be6982574419dcd2a78020077e0"},
+    {file = "boto3-1.26.3-py3-none-any.whl", hash = "sha256:7e871c481f88e5b2fc6ac16eb190c95de21efb43ab2d959beacf8b7b096b11d2"},
+    {file = "boto3-1.26.3.tar.gz", hash = "sha256:b81e4aa16891eac7532ce6cc9eb690a8d2e0ceea3bcf44b5c5a1309c2500d35f"},
 ]
 botocore = [
-    {file = "botocore-1.29.2-py3-none-any.whl", hash = "sha256:e170dd237b976fe9d9ae8d8bea7248dbc6d3664ed5fc142f59b41c2078e9220f"},
-    {file = "botocore-1.29.2.tar.gz", hash = "sha256:8a8c28dc22c241faae7ed09a67481e82972c4d632020b99598a8e81e8e07ae6b"},
+    {file = "botocore-1.29.3-py3-none-any.whl", hash = "sha256:100534532b2745f6fa019b79199a8941f04b8168f9d557d0847191455f1f1eed"},
+    {file = "botocore-1.29.3.tar.gz", hash = "sha256:ac7986fefe1b9c6323d381c4fdee3845c67fa53eb6c9cf586a8e8a07270dbcfe"},
 ]
 certifi = [
     {file = "certifi-2022.6.15-py3-none-any.whl", hash = "sha256:fe86415d55e84719d75f8b69414f6438ac3547d2078ab91b67e779ef69378412"},
@@ -1100,6 +1100,8 @@ openpyxl = [
     {file = "openpyxl-3.0.10.tar.gz", hash = "sha256:e47805627aebcf860edb4edf7987b1309c1b3632f3750538ed962bbcc3bd7449"},
 ]
 pillow = [
+    {file = "Pillow-9.3.0-1-cp37-cp37m-win32.whl", hash = "sha256:e6ea6b856a74d560d9326c0f5895ef8050126acfdc7ca08ad703eb0081e82b74"},
+    {file = "Pillow-9.3.0-1-cp37-cp37m-win_amd64.whl", hash = "sha256:32a44128c4bdca7f31de5be641187367fe2a450ad83b833ef78910397db491aa"},
     {file = "Pillow-9.3.0-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:0b7257127d646ff8676ec8a15520013a698d1fdc48bc2a79ba4e53df792526f2"},
     {file = "Pillow-9.3.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:b90f7616ea170e92820775ed47e136208e04c967271c9ef615b6fbd08d9af0e3"},
     {file = "Pillow-9.3.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:68943d632f1f9e3dce98908e873b3a090f6cba1cbb1b892a9e8d97c938871fbe"},
