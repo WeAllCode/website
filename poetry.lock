@@ -22,14 +22,14 @@ tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
 
 [[package]]
 name = "boto3"
-version = "1.26.8"
+version = "1.26.9"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 
 [package.dependencies]
-botocore = ">=1.29.8,<1.30.0"
+botocore = ">=1.29.9,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -38,7 +38,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.8"
+version = "1.29.9"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -831,7 +831,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "3.9.1"
-content-hash = "5bd903886bab3e8061ce0149aed90f6c4ef5357fd96a41df998f5afe5c309b22"
+content-hash = "6aebffc0ec9edccbc5d2cd47b8dd7c436857b807917548c444cf3013cf366cc8"
 
 [metadata.files]
 arrow = [
@@ -843,12 +843,12 @@ asgiref = [
     {file = "asgiref-3.5.2.tar.gz", hash = "sha256:4a29362a6acebe09bf1d6640db38c1dc3d9217c68e6f9f6204d72667fc19a424"},
 ]
 boto3 = [
-    {file = "boto3-1.26.8-py3-none-any.whl", hash = "sha256:c02fc93a926944b4b426a170d2dae274b4c8c09ec5259450b94269a8ce990dd7"},
-    {file = "boto3-1.26.8.tar.gz", hash = "sha256:b39303fdda9b5d77a152e3ec9f264ae318ccdaa853eaf694626dc335464ded98"},
+    {file = "boto3-1.26.9-py3-none-any.whl", hash = "sha256:27efa5eb229364bc4643d9e182de0891f73c21b65ef80b5bd02a977caeaf595c"},
+    {file = "boto3-1.26.9.tar.gz", hash = "sha256:15b059251990706c5d5a556c42a6e6e781a51edadf48a42afdd06bd313adfaf2"},
 ]
 botocore = [
-    {file = "botocore-1.29.8-py3-none-any.whl", hash = "sha256:9c6adcf4e080be63b92f50d01e176ef2d1d2a3da7d8387a964abb9eb65fc8aad"},
-    {file = "botocore-1.29.8.tar.gz", hash = "sha256:48cf33d7c513320711321c3b303b0c9810b23e15fa03424f7323883e4ce6cef8"},
+    {file = "botocore-1.29.9-py3-none-any.whl", hash = "sha256:c876a7c6a07d7f86f46a8cc765f0d38999b84ac1d7b0666d6ce08c0503e13145"},
+    {file = "botocore-1.29.9.tar.gz", hash = "sha256:01f168e2418419a6d8b335ecc4330faa6a7332d5a097029fc9b4a3ae3c41cea2"},
 ]
 certifi = [
     {file = "certifi-2022.6.15-py3-none-any.whl", hash = "sha256:fe86415d55e84719d75f8b69414f6438ac3547d2078ab91b67e779ef69378412"},
