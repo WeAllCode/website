@@ -16,7 +16,7 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.9.1'
           
       - name: Load cached Poetry installation
         uses: actions/cache@v3
