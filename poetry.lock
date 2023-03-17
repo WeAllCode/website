@@ -348,14 +348,14 @@ django = "*"
 
 [[package]]
 name = "django-bootstrap3"
-version = "22.1"
+version = "22.2"
 description = "Bootstrap 3 support for Django projects"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "django-bootstrap3-22.1.tar.gz", hash = "sha256:6ac3af76ec81df53d81f01a19cac1565ca24d5b036a0e636815120a212270d14"},
-    {file = "django_bootstrap3-22.1-py3-none-any.whl", hash = "sha256:bab5113b0c865dd644d317d73ae2c3b716215b1bcfacc671124f9dffb823246a"},
+    {file = "django-bootstrap3-22.2.tar.gz", hash = "sha256:537b08748ab40a9f214968c188ae26cfeadb7987b784f2857396a33b477fa10a"},
+    {file = "django_bootstrap3-22.2-py3-none-any.whl", hash = "sha256:c128452497500188052c0e0a24fe5639ee1a26170985b8da636d8fea9114430a"},
 ]
 
 [package.dependencies]
@@ -1385,4 +1385,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.9"
-content-hash = "b085b121e7f647aa5ba74f90c4a6b50b5aa7329f55d81ec199a82ecaf2cd1de8"
+content-hash = "69ad92aa8d949bf1bb3abae2294f210c146de5ec7406199e1cab8fc2d132c378"
