@@ -10,7 +10,7 @@ We, the community and staff, have been building a custom Django application to h
 1. Run the following to get a random Django secret key.
 
 ```sh
-python -c "import string,random; uni=string.ascii_letters+string.digits+string.punctuation; print(repr(''.join([random.SystemRandom().choice(uni) for i in range(random.randint(45,50))])))"
+python -c "import secrets; print(secrets.token_urlsafe())"
 ```
 
 1. Enter the output inside the `.env` file for `SECRET_KEY`. Be sure to include the double quotes (`"`) around the key. It'll look like the following `SECRET_KEY="<unique-key-here>"`.

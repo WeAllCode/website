@@ -117,7 +117,6 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
         user_signed_up = False
 
     if request.method == "POST":
-
         if user_signed_up:
             meeting_order = get_object_or_404(MeetingOrder, meeting=meeting_obj, mentor=mentor)
             meeting_order.is_active = False

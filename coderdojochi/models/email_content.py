@@ -4,7 +4,6 @@ from .common import CommonInfo
 
 
 class EmailContent(CommonInfo):
-
     nickname = models.CharField(
         max_length=255,
     )

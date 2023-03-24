@@ -26,11 +26,15 @@ jobs:
 
       - name: Install poetry
         uses: snok/install-poetry@v1
-
+        
+      - name: Add Poetry Up plugin
+        run: poetry self add poetry-plugin-up
+        
+      - name: Run Poetry Up
+        run: poetry up
+        
       - name: Update dependencies
         run: |
-          pip install poetryup
-          poetryup
           if [ -n "$(git status --porcelain)" ]; then
             # working tree NOT clean, bump project version
             poetry version patch

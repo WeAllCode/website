@@ -141,7 +141,6 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-
         session_obj = get_object_or_404(Session, id=kwargs["pk"])
         kwargs["session_obj"] = session_obj
 
@@ -168,7 +167,6 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         return super(SessionSignUpView, self).dispatch(request, *args, **kwargs)
 
     def check_access(self, request, *args, **kwargs):
-
         BG_CHECK_LINK = "https://app.sterlingvolunteers.com/promoorder/3df76c55-9961-46e1-8e5f-f6b38e2ec4dc"
 
         access_dict = {}
@@ -332,7 +330,6 @@ class SessionCalendarView(CalendarView):
         return strip_tags(event_obj.course.description)
 
     def get_location(self, request, event_obj):
-
         # Set default location to the name of the location
         location = f"{event_obj.location.name}"
 

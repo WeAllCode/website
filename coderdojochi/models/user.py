@@ -6,7 +6,6 @@ from django.utils.functional import cached_property
 
 
 class CDCUser(AbstractUser):
-
     MENTOR = "mentor"
     GUARDIAN = "guardian"
 
