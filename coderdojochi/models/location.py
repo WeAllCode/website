@@ -4,7 +4,6 @@ from .common import CommonInfo
 
 
 class Location(CommonInfo):
-
     name = models.CharField(
         max_length=255,
     )

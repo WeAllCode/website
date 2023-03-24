@@ -256,7 +256,6 @@ class Session(CommonInfo):
         return f"{self.course.title} | {date}"
 
     def save(self, *args, **kwargs):
-
         # Mentor Capacity Check
         if self.mentor_capacity is None:
             self.mentor_capacity = int(self.capacity / 2)

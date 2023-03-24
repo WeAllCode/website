@@ -196,7 +196,6 @@ class GuardianForm(CDCModelForm):
 
 
 class StudentForm(CDCModelForm):
-
     PUBLIC = "PU"
     CHARTER = "CH"
     PRIVATE = "PR"

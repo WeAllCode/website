@@ -7,7 +7,6 @@ from .common import CommonInfo
 
 
 class Course(CommonInfo):
-
     WEEKEND = "WE"
     CAMP = "CA"
     SPECIAL = "SP"

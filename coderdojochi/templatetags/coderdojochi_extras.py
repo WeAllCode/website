@@ -116,7 +116,6 @@ def phone_number(str):
 
     # If the number is 10 characters long, assume it's a US number
     if len(number) == 11:
-
         # If the first character is 1, strip it out
         if number[0] != "1":
             country_code = f"+{number[0]} "
