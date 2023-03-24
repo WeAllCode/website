@@ -3,11 +3,11 @@
     "ms-python.python",
     "batisteo.vscode-django",
     "ms-azuretools.vscode-docker",
-    "Zignd.html-css-class-completion",
+    "zignd.html-css-class-completion",
     "esbenp.prettier-vscode",
     "pranaygp.vscode-css-peek",
-    "mkaufman.htmlhint",
     "ecmel.vscode-html-css",
-    "ms-vscode-remote.vscode-remote-extensionpack"
+    "ms-vscode-remote.vscode-remote-extensionpack",
+    "htmlhint.vscode-htmlhint"
   ]
 }

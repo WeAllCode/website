@@ -1,4 +1,4 @@
-FROM python:3.9.1
+FROM python:3.11
 
 ARG DJANGO_ENV
 
@@ -9,7 +9,7 @@ ENV DJANGO_ENV=${DJANGO_ENV} \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.1.7
+    POETRY_VERSION=1.4.1
 
 # System deps:
 RUN pip install "poetry==$POETRY_VERSION"
