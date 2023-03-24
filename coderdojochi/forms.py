@@ -1,11 +1,13 @@
+from email.policy import default
 import re
 
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
 from django.forms import FileField, Form, ModelForm, ValidationError
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils import dateformat, timezone
+from django.utils.functional import lazy
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import format_lazy
@@ -81,17 +83,33 @@ class CDCModelForm(ModelForm):
 
     class Meta:
         model = CDCUser
-        fields = ("first_name", "last_name")
+        fields = (
+            "first_name",
+            "last_name",
+        )
 
 
 class SignupForm(forms.Form):
-    first_name = forms.CharField(max_length=30)
-    last_name = forms.CharField(max_length=30)
+    first_name = forms.CharField(
+        max_length=30,
+    )
+
+    last_name = forms.CharField(
+        max_length=30,
+    )
+
     captcha = ReCaptchaField(
         label="",
         widget=ReCaptchaV3,
     )
-    field_order = ["first_name", "last_name", "email", "password1", "password2"]
+
+    field_order = [
+        "first_name",
+        "last_name",
+        "email",
+        "password1",
+        "password2",
+    ]
 
     class Meta:
         model = get_user_model()
@@ -104,39 +122,101 @@ class SignupForm(forms.Form):
 
 class MentorForm(CDCModelForm):
     bio = forms.CharField(
-        widget=forms.Textarea(attrs={"placeholder": "Short Bio", "class": "form-control", "rows": 4}),
-        label="Short Bio",
         required=False,
+        label="Short Bio",
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "Short Bio",
+                "class": "form-control",
+                "rows": 4,
+            },
+        ),
     )
 
     gender = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "", "class": "form-control"}), label="Gender", required=True
+        required=True,
+        label="Gender",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+            },
+        ),
     )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
-        widget=forms.SelectMultiple, queryset=RaceEthnicity.objects.filter(is_visible=True), required=True
+        required=True,
+        widget=forms.CheckboxSelectMultiple,
+        queryset=RaceEthnicity.objects.filter(is_visible=True),
     )
 
-    birthday = forms.CharField(widget=html5_widgets.DateInput(attrs={"class": "form-control"}), required=True)
+    birthday = forms.CharField(
+        required=True,
+        widget=html5_widgets.DateInput(
+            attrs={
+                "class": "form-control",
+            },
+        ),
+    )
 
     work_place = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "", "class": "form-control"}), label="Work Place", required=False
+        required=False,
+        label="Work Place",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+            },
+        ),
     )
 
     phone = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "", "class": "form-control"}), label="Phone", required=False
+        required=False,
+        label="Phone",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+            },
+        ),
     )
 
     home_address = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "", "class": "form-control"}), label="Home Address", required=False
+        required=False,
+        label="Home Address",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+            },
+        ),
     )
 
     class Meta:
         model = Mentor
-        fields = ("bio", "avatar", "gender", "race_ethnicity", "birthday", "phone", "home_address", "work_place")
+        fields = (
+            "bio",
+            "avatar",
+            "gender",
+            "race_ethnicity",
+            "birthday",
+            "phone",
+            "home_address",
+            "work_place",
+        )
 
     def clean_avatar(self):
         avatar = self.cleaned_data["avatar"]
+
+        max_width = max_height = 1000
+        min_width = min_height = 500
+        valid_image_types = (
+            "jpeg",
+            "pjpeg",
+            "gif",
+            "png",
+        )
+        max_file_size = 2000 * 1024  # 2MB
 
         if avatar is None:
             return avatar
@@ -144,22 +224,24 @@ class MentorForm(CDCModelForm):
         try:
             w, h = get_image_dimensions(avatar)
 
-            # validate dimensions
-            max_width = max_height = 1000
-            if w > max_width or h > max_height:
-                raise forms.ValidationError(f"Please use an image that is {max_width} x {max_height}px or smaller.")
+            if w is None or h is None:
+                raise forms.ValidationError("Could not determine image dimensions.")
 
-            min_width = min_height = 500
+            # validate dimensions
+
+            if w > max_width or h > max_height:
+                raise forms.ValidationError(f"Please use an image that is {max_width} 𐄂 {max_height}px or smaller.")
+
             if w < min_width or h < min_height:
-                raise forms.ValidationError(f"Please use an image that is {min_width} x {min_height}px or larger.")
+                raise forms.ValidationError(f"Please use an image that is {min_width} 𐄂 {min_height}px or larger.")
 
             # validate content type
             main, sub = avatar.content_type.split("/")
-            if not (main == "image" and sub in ["jpeg", "pjpeg", "gif", "png"]):
+            if not (main == "image" and sub in valid_image_types):
                 raise forms.ValidationError("Please use a JPEG, GIF or PNG image.")
 
             # validate file size
-            if len(avatar) > (2000 * 1024):
+            if len(avatar) > max_file_size:
                 raise forms.ValidationError("Avatar file size may not exceed 2MB.")
 
         except AttributeError:
@@ -173,26 +255,68 @@ class MentorForm(CDCModelForm):
 
 class GuardianForm(CDCModelForm):
     phone = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Phone Number", "class": "form-control"}), label="Phone Number"
+        required=True,
+        label="Parent's Phone Number",
+        # help_text="Please enter the parent's phone number.",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "000-000-0000",
+                "class": "form-control",
+                "inputmode": "tel",
+            }
+        ),
     )
 
     zip = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Zip Code", "class": "form-control"}), label="Zip Code"
+        required=True,
+        label="Parent's Zip Code",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "60606",
+                "class": "form-control",
+                "inputmode": "numeric",
+            }
+        ),
     )
 
     gender = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "", "class": "form-control"}), label="Gender", required=True
+        required=True,
+        label="Parent's Gender",
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+            }
+        ),
     )
 
     race_ethnicity = forms.ModelMultipleChoiceField(
-        widget=forms.SelectMultiple, queryset=RaceEthnicity.objects.filter(is_visible=True), required=True
+        required=True,
+        label="Parent's Gender",
+        # widget=forms.SelectMultiple,
+        widget=forms.CheckboxSelectMultiple,
+        queryset=RaceEthnicity.objects.filter(is_visible=True),
     )
 
-    birthday = forms.CharField(widget=html5_widgets.DateInput(attrs={"class": "form-control"}), required=True)
+    birthday = forms.CharField(
+        required=True,
+        label="Parent's Date of Birth",
+        widget=html5_widgets.DateInput(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
 
     class Meta:
         model = Guardian
-        fields = ("phone", "zip", "gender", "race_ethnicity", "birthday")
+        fields = (
+            "phone",
+            "zip",
+            "gender",
+            "birthday",
+            "race_ethnicity",
+        )
 
 
 class StudentForm(CDCModelForm):
@@ -278,11 +402,7 @@ class StudentForm(CDCModelForm):
                 "rows": 5,
             }
         ),
-        label=format_html(
-            "{0} {1}",
-            "Medications",
-            mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'),
-        ),
+        label="Medications",
         required=False,
     )
 
@@ -294,18 +414,16 @@ class StudentForm(CDCModelForm):
                 "rows": 5,
             },
         ),
-        label=format_html(
-            "{0} {1}",
-            "Medical Conditions",
-            mark_safe('<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'),
-        ),
+        label="Medical Conditions",
         required=False,
     )
 
     photo_release = forms.BooleanField(
+        
         widget=forms.CheckboxInput(
             attrs={
                 "required": "required",
+                "checked": "checked",
             },
         ),
         label=(
@@ -315,9 +433,11 @@ class StudentForm(CDCModelForm):
     )
 
     consent = forms.BooleanField(
+        required=True,
         widget=forms.CheckboxInput(
             attrs={
                 "required": "required",
+                "checked": "checked",
             },
         ),
         label=format_lazy(
@@ -329,21 +449,52 @@ class StudentForm(CDCModelForm):
 
     class Meta:
         model = Student
-        exclude = ("guardian", "created_at", "updated_at", "is_active")
+        exclude = (
+            "guardian",
+            "created_at",
+            "updated_at",
+            "is_active",
+        )
 
 
 class ContactForm(CDCForm):
-    name = forms.CharField(max_length=100, label="Your name")
-    email = forms.EmailField(max_length=200, label="Your email address")
-    message = forms.CharField(widget=forms.Textarea, label="Your message")
-    human = forms.CharField(max_length=100, label=False, required=False)
+    name = forms.CharField(
+        max_length=100,
+        label="Your name",
+    )
+    email = forms.EmailField(
+        max_length=200,
+        label="Your email address",
+    )
+    message = forms.CharField(
+        widget=forms.Textarea,
+        label="Your message",
+    )
+    human = forms.CharField(
+        max_length=100,
+        label=None,
+        required=False,
+    )
 
 
 class DonationForm(ModelForm):
-    session = forms.ModelChoiceField(queryset=Session.objects.all(), widget=forms.HiddenInput(), required=True)
-    user = forms.ModelChoiceField(queryset=CDCUser.objects.all(), required=True)
-    amount = forms.CharField(label="Amount (dollars)")
+    session = forms.ModelChoiceField(
+        queryset=Session.objects.all(),
+        widget=forms.HiddenInput(),
+        required=True,
+    )
+    user = forms.ModelChoiceField(
+        queryset=CDCUser.objects.all(),
+        required=True,
+    )
+    amount = forms.CharField(
+        label="Amount (dollars)",
+    )
 
     class Meta:
         model = Donation
-        fields = ["session", "user", "amount"]
+        fields = (
+            "session",
+            "user",
+            "amount",
+        )
