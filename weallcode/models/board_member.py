@@ -4,7 +4,6 @@ from .common import CommonBoardMemberManager, CommonInfo
 
 
 class BoardMember(CommonInfo):
-
     image = models.ImageField(
         upload_to="board/",
         blank=True,

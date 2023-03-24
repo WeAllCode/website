@@ -3,7 +3,7 @@ name: Update Dependencies
 # controls when the action will run
 on:
   schedule:
-    - cron:  '0 6 1 * *' # at 06:00 on the first day of every month
+    - cron:  '30 5 * * *' # Every day at 5:30 AM UTC
   workflow_dispatch: # enables manual trigger
 
 jobs:
@@ -11,31 +11,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Set up python 3.8
-        uses: actions/setup-python@v2
+      - name: Set up python
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: '3.11'
+          
+      - name: Load cached Poetry installation
+        uses: actions/cache@v3
+        with:
+          path: ~/.local  # the path depends on the OS
+          key: poetry-0  # increment to reset cache
 
-      - name: Install poetry 1.1.12
+      - name: Install poetry
         uses: snok/install-poetry@v1
-        with:
-          version: 1.1.12
-
+        
+      - name: Add Poetry Up plugin
+        run: poetry self add poetry-plugin-up
+        
+      - name: Run Poetry Up
+        run: poetry up
+        
       - name: Update dependencies
         run: |
-          pip install poetryup
-          poetryup
           if [ -n "$(git status --porcelain)" ]; then
             # working tree NOT clean, bump project version
             poetry version patch
           fi
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
-            token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
             commit-message: Update dependencies
             title: Update dependencies
             labels: |

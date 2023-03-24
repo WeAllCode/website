@@ -26,7 +26,6 @@ def email(
     reply_to=None,
     unsub_group_id=None,
 ):
-
     if not (subject and template_name and recipients):
         raise NameError()
 

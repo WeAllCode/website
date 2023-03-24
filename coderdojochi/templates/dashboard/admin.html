@@ -258,6 +258,15 @@
             </tr>
             {% endfor %}
         </tbody>
+        {% if sessions.count > 5 %}
+        <tfoot>
+          <tr>
+            <td colspan="100" class="text-center">
+              <button class="button" type="button" data-toggle="collapse" data-target=".session-collapse">Show/Hide</button>
+            </td>
+          </tr>
+        </tfoot>
+        {% endif %}
     </table>
     {% else %}
     <p>No past sessions.</p>

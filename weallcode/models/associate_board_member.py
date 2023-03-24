@@ -7,7 +7,6 @@ from .common import CommonBoardMemberManager, CommonInfo
 
 
 class AssociateBoardMember(CommonInfo):
-
     image = models.ImageField(
         upload_to="associate-board/",
         blank=True,

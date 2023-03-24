@@ -4,7 +4,6 @@ from .common import CommonInfo
 
 
 class EquipmentType(CommonInfo):
-
     name = models.CharField(
         max_length=255,
         blank=False,

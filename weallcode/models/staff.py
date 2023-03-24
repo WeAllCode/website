@@ -19,7 +19,6 @@ class StaffMemberManager(models.Manager):
 
 
 class StaffMember(CommonInfo):
-
     role = models.CharField(
         max_length=255,
     )

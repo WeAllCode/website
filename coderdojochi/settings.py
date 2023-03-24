@@ -403,3 +403,12 @@ if DEBUG:
 
 # Activate Django-Heroku.
 django_heroku.settings(locals(), staticfiles=False)
+
+
+# region We All Code specific
+
+# Number of days before a class before parents can sign up.
+MAX_DAYS_FOR_PARENTS = 30
+
+
+# endregion

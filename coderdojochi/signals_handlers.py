@@ -11,7 +11,6 @@ from coderdojochi.util import email
 
 @receiver(pre_save, sender=Mentor)
 def avatar_updated_handler(sender, instance, **kwargs):
-
     try:
         original_mentor = Mentor.objects.get(id=instance.id)
     except ObjectDoesNotExist:

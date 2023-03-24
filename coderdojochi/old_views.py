@@ -253,7 +253,6 @@ def cdc_admin(request, template_name="admin.html"):
 @login_required
 @never_cache
 def session_stats(request, pk, template_name="session_stats.html"):
-
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
         return redirect("weallcode-home")
@@ -308,7 +307,6 @@ def session_stats(request, pk, template_name="session_stats.html"):
 @login_required
 @never_cache
 def session_check_in(request, pk, template_name="session_check_in.html"):
-
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
 
@@ -398,7 +396,6 @@ def session_check_in(request, pk, template_name="session_check_in.html"):
 @login_required
 @never_cache
 def session_check_in_mentors(request, pk, template_name="session_check_in_mentors.html"):
-
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
         return redirect("weallcode-home")
@@ -456,7 +453,6 @@ def session_check_in_mentors(request, pk, template_name="session_check_in_mentor
 @login_required
 @never_cache
 def session_donations(request, pk, template_name="session_donations.html"):
-
     # TODO: we should really turn this into a decorator
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
@@ -486,7 +482,6 @@ def session_donations(request, pk, template_name="session_donations.html"):
 @login_required
 @never_cache
 def meeting_check_in(request, meeting_id, template_name="meeting_check_in.html"):
-
     if not request.user.is_staff:
         messages.error(request, "You do not have permission to access this page.")
         return redirect("account_home")
