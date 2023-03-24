@@ -41,17 +41,24 @@ class LoginView(MetadataMixin, AllAuthLoginView):
 
 
 @method_decorator(login_required, name="dispatch")
-class AccountHomeView(MetadataMixin, TemplateView):
+class GuardianAccountHomeView(MetadataMixin, TemplateView):
+    template_name = "account/guardian/home.html"
     title = "My Account | We All Code"
 
     def dispatch(self, *args, **kwargs):
-        if not self.request.user.role:
+        guardian = get_object_or_404(Guardian, user=self.request.user)
+        students = Student.objects.filter(
+            is_active=True,
+            guardian=guardian,
+        ).exists()
+
+        if students == False:
             if "next" in self.request.GET:
                 return redirect(f"{reverse('welcome')}?next={self.request.GET['next']}")
             else:
-                messages.warning(
+                messages.error(
                     self.request,
-                    "Tell us a little about yourself before going on account.",
+                    "Please add at least one student to your account.",
                 )
             return redirect("welcome")
 
@@ -67,61 +74,10 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
         context["user"] = self.request.user
 
-        if self.request.user.role == "mentor":
-            return {**context, **self.get_context_data_for_mentor()}
-
-        if self.request.user.role == "guardian":
-            return {**context, **self.get_context_data_for_guardian()}
-
-        return context
-
-    def get_context_data_for_mentor(self):
-        mentor = get_object_or_404(Mentor, user=self.request.user)
-
-        orders = MentorOrder.objects.select_related().filter(
-            is_active=True,
-            mentor=mentor,
+        guardian = get_object_or_404(
+            Guardian,
+            user=self.request.user,
         )
-
-        upcoming_sessions = orders.filter(is_active=True, session__start_date__gte=timezone.now()).order_by(
-            "session__start_date"
-        )
-
-        past_sessions = orders.filter(is_active=True, session__start_date__lte=timezone.now()).order_by(
-            "session__start_date"
-        )
-
-        meeting_orders = MeetingOrder.objects.select_related().filter(mentor=mentor)
-
-        upcoming_meetings = meeting_orders.filter(
-            is_active=True,
-            meeting__is_public=True,
-            meeting__end_date__gte=timezone.now(),
-        ).order_by("meeting__start_date")
-
-        account_complete = False
-
-        if (
-            mentor.first_name
-            and mentor.last_name
-            and mentor.avatar
-            and mentor.background_check
-            and past_sessions.count() > 0
-        ):
-            account_complete = True
-
-        return {
-            "mentor": mentor,
-            "orders": orders,
-            "upcoming_sessions": upcoming_sessions,
-            "past_sessions": past_sessions,
-            "meeting_orders": meeting_orders,
-            "upcoming_meetings": upcoming_meetings,
-            "account_complete": account_complete,
-        }
-
-    def get_context_data_for_guardian(self):
-        guardian = get_object_or_404(Guardian, user=self.request.user)
 
         students = Student.objects.filter(
             is_active=True,
@@ -142,30 +98,20 @@ class AccountHomeView(MetadataMixin, TemplateView):
             session__start_date__lte=timezone.now(),
         ).order_by("session__start_date")
 
-        return {
-            "guardian": guardian,
-            "students": students,
-            "student_orders": student_orders,
-            "upcoming_orders": upcoming_orders,
-            "past_orders": past_orders,
+        context = {
+            **context,
+            **{
+                "guardian": guardian,
+                "students": students,
+                "student_orders": student_orders,
+                "upcoming_orders": upcoming_orders,
+                "past_orders": past_orders,
+            },
         }
 
+        return context
+
     def get(self, *args, **kwargs):
-        if self.request.user.role == "mentor":
-            return self.get_for_mentor(**kwargs)
-
-        if self.request.user.role == "guardian":
-            return self.get_for_guardian(**kwargs)
-
-    def get_for_mentor(self, **kwargs):
-        context = self.get_context_data(**kwargs)
-
-        context["form"] = MentorForm(instance=context["mentor"])
-        context["user_form"] = CDCModelForm(instance=context["mentor"].user)
-
-        return render(self.request, "account/mentor/home.html", context)
-
-    def get_for_guardian(self, **kwargs):
         context = self.get_context_data(**kwargs)
 
         context["form"] = GuardianForm(instance=context["guardian"])
@@ -174,20 +120,132 @@ class AccountHomeView(MetadataMixin, TemplateView):
         return render(self.request, "account/guardian/home.html", context)
 
     def post(self, *args, **kwargs):
-        if self.request.user.role == "mentor":
-            return self.post_for_mentor(**kwargs)
+        context = self.get_context_data(**kwargs)
 
-        if self.request.user.role == "guardian":
-            return self.post_for_guardian(**kwargs)
+        guardian = context["guardian"]
 
-    def post_for_mentor(self, **kwargs):
+        form = GuardianForm(
+            self.request.POST,
+            instance=guardian,
+        )
+
+        user_form = CDCModelForm(
+            self.request.POST,
+            instance=guardian.user,
+        )
+
+        if form.is_valid() and user_form.is_valid():
+            form.save()
+            user_form.save()
+            messages.success(self.request, "Profile information saved.")
+
+            return redirect("account_home")
+
+        else:
+            messages.error(self.request, "There was an error. Please try again.")
+
+        context["form"] = form
+        context["user_form"] = user_form
+
+        return render(self.request, "account/guardian/home.html", context)
+
+
+@method_decorator(login_required, name="dispatch")
+class MentorAccountHomeView(MetadataMixin, TemplateView):
+    template_name = "account/mentor/home.html"
+    title = "My Account | We All Code"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if "highlight" in self.request.GET:
+            context["highlight"] = self.request.GET["highlight"]
+        else:
+            context["highlight"] = False
+
+        context["user"] = self.request.user
+
+        mentor = get_object_or_404(
+            Mentor,
+            user=self.request.user,
+        )
+
+        orders = MentorOrder.objects.select_related().filter(
+            is_active=True,
+            mentor=mentor,
+        )
+
+        upcoming_sessions = orders.filter(
+            is_active=True,
+            session__start_date__gte=timezone.now(),
+        ).order_by("session__start_date")
+
+        past_sessions = orders.filter(
+            is_active=True,
+            session__start_date__lte=timezone.now(),
+        ).order_by("session__start_date")
+
+        meeting_orders = MeetingOrder.objects.select_related().filter(
+            mentor=mentor,
+        )
+
+        upcoming_meetings = meeting_orders.filter(
+            is_active=True,
+            meeting__is_public=True,
+            meeting__end_date__gte=timezone.now(),
+        ).order_by(
+            "meeting__start_date",
+        )
+
+        account_complete = False
+
+        if (
+            mentor.first_name
+            and mentor.last_name
+            and mentor.avatar
+            and mentor.background_check
+            and past_sessions.count() > 0
+        ):
+            account_complete = True
+
+        context = {
+            **context,
+            **{
+                "mentor": mentor,
+                "orders": orders,
+                "upcoming_sessions": upcoming_sessions,
+                "past_sessions": past_sessions,
+                "meeting_orders": meeting_orders,
+                "upcoming_meetings": upcoming_meetings,
+                "account_complete": account_complete,
+            },
+        }
+        return context
+
+    def get(self, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        context["form"] = MentorForm(instance=context["mentor"])
+        context["user_form"] = CDCModelForm(instance=context["mentor"].user)
+
+        return render(self.request, "account/mentor/home.html", context)
+
+    def post(self, *args, **kwargs):
         context = self.get_context_data(**kwargs)
 
         mentor = context["mentor"]
 
-        form = MentorForm(self.request.POST, self.request.FILES, instance=mentor)
+        form = MentorForm(
+            self.request.POST,
+            self.request.FILES,
+            instance=mentor,
+        )
 
-        user_form = CDCModelForm(self.request.POST, self.request.FILES, instance=mentor.user)
+        user_form = CDCModelForm(
+            self.request.POST,
+            self.request.FILES,
+            instance=mentor.user,
+        )
 
         if form.is_valid() and user_form.is_valid():
             form.save()
@@ -204,26 +262,26 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
         return render(self.request, "account/mentor/home.html", context)
 
-    def post_for_guardian(self, **kwargs):
-        context = self.get_context_data(**kwargs)
 
-        guardian = context["guardian"]
+@method_decorator(login_required, name="dispatch")
+class AccountHomeView(MetadataMixin, TemplateView):
+    title = "My Account | We All Code"
 
-        form = GuardianForm(self.request.POST, instance=guardian)
+    def dispatch(self, *args, **kwargs):
+        if not self.request.user.role:
+            if "next" in self.request.GET:
+                return redirect(f"{reverse('welcome')}?next={self.request.GET['next']}")
+            else:
+                messages.warning(
+                    self.request,
+                    "Tell us a little about yourself before going on account.",
+                )
+            return redirect("welcome")
 
-        user_form = CDCModelForm(self.request.POST, instance=guardian.user)
+        if self.request.user.role == "guardian":
+            return GuardianAccountHomeView.as_view()(self.request)
 
-        if form.is_valid() and user_form.is_valid():
-            form.save()
-            user_form.save()
-            messages.success(self.request, "Profile information saved.")
+        if self.request.user.role == "mentor":
+            return MentorAccountHomeView.as_view()(self.request)
 
-            return redirect("account_home")
-
-        else:
-            messages.error(self.request, "There was an error. Please try again.")
-
-        context["form"] = form
-        context["user_form"] = user_form
-
-        return render(self.request, "account/guardian/home.html", context)
+        return super().dispatch(*args, **kwargs)

@@ -11,21 +11,27 @@
 {% block body_class %}page-welcome{% endblock %}
 
 {% block contained_content %}
-<section class="medium-padding-horizontal-3 text-center">
+<style>
+    .helptext {
+        margin-top: -3em;
+        display: block;
+        font-size: 0.85rem;
+        margin-bottom: 2em;
+    }
+    
+</style>
+<section class="">
     {% if role %}
         {% if role == 'guardian' %}
             {% if not add_student %}
-            <h2 class="title text-primary">Tell us a little more about yourself...</h2>
-            <p>
-              Before you sign up your student(s), let's start with some contact information.<br>
-              <strong>We will never share this information with anyone.</strong>
-            </p>
+            <h2 class="title text-primary">Parent Information</h2>
+            <p>Let's start with some parent information. <strong>We will never share this information with anyone.</strong></p>
             {% else %}
                 {% if students %}
                     <h4 class="title light">{{ students }} Student{{ students|pluralize }} Registered <i class="fas fa-check"></i></h4>
                     <h2 class="title text-primary">Register another student</h2>
                 {% else %}
-                    <h2 class="title text-primary">Register your first student now</h2>
+                    <h2 class="title text-primary">Student Information</h2>
                 {% endif %}
             {% endif %}
         {% endif %}
@@ -38,14 +44,12 @@
 
         {% if form %}
         {% if add_student %}
-        <p>Please complete all fields below</p>
+        <p><strong>Please complete all fields below.</strong></p>
         {% endif %}
 
         <form action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" method="post">
             {% csrf_token %}
-            <div class="grid-x margin-top-3 grid-margin-x grid-margin-y">
-                <div class="cell medium-offset-3 medium-6">{% bootstrap_form form %}</div>
-            </div>
+            {{ form }}
             <button class="submit button margin-top-3">{% if not add_student %}Continue{% else %}Register{% endif %} <i class="fas fa-chevron-right margin-left-half"></i></button>
         </form>
         {% endif %}

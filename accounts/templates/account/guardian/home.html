@@ -6,6 +6,37 @@
 {% block contained_content %}
 
 <section class="margin-top-3">
+  <h2 class="title text-tertiary">Students</h2>
+  {% if students %}
+  <table class="students">
+    <thead>
+      <tr class="text-muted">
+        <th>Name</th>
+        <th class="hidden-xs">Age</th>
+        <!-- <th class="hidden-xs">Medical Conditions</th> -->
+        <!-- <th class="hidden-xs">Medications</th> -->
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr>
+        <td>{{ student.full_name }}</td>
+        <td class="hidden-xs">{{ student.get_age }}</td>
+        <!-- <td class="hidden-xs">{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td> -->
+        <!-- <td class="hidden-xs">{% if student.medications %}Yes{% else %}No{% endif %}</td> -->
+        <td class="text-right"><a href="{% url 'student-detail' student.id %}" class="button ">Edit Info</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><a href="{% url 'welcome' %}?next={% url 'account_home' %}">Add another student</a></p>
+  {% else %}
+  <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
+  {% endif %}
+</section>
+
+<section class="margin-top-3">
   <h2 class="title text-primary">Your Profile</h2>
   <p>Joined on {{ guardian.user.date_joined|naturalday|capfirst }}</p>
 
@@ -26,36 +57,7 @@
   </form>
 </section>
 
-<section class="margin-top-3">
-  <h2 class="title text-tertiary">Students</h2>
-  {% if students %}
-  <table class="students table table-striped">
-    <thead>
-      <tr class="text-muted">
-        <th>Name</th>
-        <th class="hidden-xs">Age</th>
-        <th class="hidden-xs">Medical Conditions</th>
-        <th class="hidden-xs">Medications</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for student in students %}
-      <tr>
-        <td>{{ student.full_name }}</td>
-        <td class="hidden-xs">{{ student.get_age }}</td>
-        <td class="hidden-xs">{% if student.medical_conditions %}Yes{% else %}No{% endif %}</td>
-        <td class="hidden-xs">{% if student.medications %}Yes{% else %}No{% endif %}</td>
-        <td><a href="{% url 'student-detail' student.id %}" class="button small">Edit Info</a></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <p><a href="{% url 'welcome' %}?next={% url 'account_home' %}">Add another student</a></p>
-  {% else %}
-  <p>You have no students registered yet, <a href="{% url 'welcome' %}">register a student now</a>.</p>
-  {% endif %}
-</section>
+
 
 <section class="margin-top-3">
   <h2 class="title text-secondary">Upcoming Classes</h2>
