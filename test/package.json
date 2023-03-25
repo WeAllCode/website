@@ -10,9 +10,12 @@
   "keywords": [],
   "author": "Ali Karbassi <ali@karbassi.com>",
   "license": "MIT",
-  "devDependencies": {
-    "@faker-js/faker": "7.1.0",
-    "cypress": "9.7.0",
-    "del": "6.1.1"
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "cypress": "^12.8.1",
+    "del": "^7.0.0"
+  },
+  "engines": {
+    "node": "18.15.0"
   }
 }
