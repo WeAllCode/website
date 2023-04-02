@@ -8,6 +8,7 @@
     "pranaygp.vscode-css-peek",
     "ecmel.vscode-html-css",
     "ms-vscode-remote.vscode-remote-extensionpack",
-    "htmlhint.vscode-htmlhint"
+    "htmlhint.vscode-htmlhint",
+    "yy0931.vscode-sqlite3-editor"
   ]
 }
