@@ -187,7 +187,10 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def user_link(self, obj):
         return format_html(
             '<a href="{url}">{user}</a>',
-            url=reverse("admin:coderdojochi_cdcuser_change", args=(obj.user.id,)),
+            url=reverse(
+                "admin:coderdojochi_cdcuser_change",
+                args=(obj.user.id,),
+            ),
             user=obj.user,
         )
 
@@ -295,13 +298,18 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def get_queryset(self, request):
         qs = super(GuardianAdmin, self).get_queryset(request)
         qs = qs.select_related()
-        qs = qs.annotate(student_count=Count("student")).order_by("-student_count")
+        qs = qs.annotate(
+            student_count=Count("student"),
+        ).order_by("-student_count")
         return qs
 
     def user_link(self, obj):
         return format_html(
             '<a href="{url}">{name}</a>',
-            url=reverse("admin:coderdojochi_cdcuser_change", args=(obj.user.id,)),
+            url=reverse(
+                "admin:coderdojochi_cdcuser_change",
+                args=(obj.user.id,),
+            ),
             name=obj.user,
         )
 
@@ -461,7 +469,10 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def guardian_link(self, obj):
         return format_html(
             '<a href="{url}">{name}</a>',
-            url=reverse("admin:coderdojochi_guardian_change", args=(obj.guardian.id,)),
+            url=reverse(
+                "admin:coderdojochi_guardian_change",
+                args=(obj.guardian.id,),
+            ),
             name=obj.guardian.full_name,
         )
 
@@ -655,7 +666,10 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             '<a href="{url}?session__id__exact={query}">{count}</a>',
             url=reverse("admin:coderdojochi_mentororder_changelist"),
             query=obj.id,
-            count=MentorOrder.objects.filter(session__id=obj.id, is_active=True).count(),
+            count=MentorOrder.objects.filter(
+                session__id=obj.id,
+                is_active=True,
+            ).count(),
         )
 
     mentor_count_link.short_description = "Mentors"
@@ -742,7 +756,10 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def get_student_link(self, obj):
         return format_html(
             '<a href="{url}">{student}</a>',
-            url=reverse("admin:coderdojochi_student_change", args=(obj.student.id,)),
+            url=reverse(
+                "admin:coderdojochi_student_change",
+                args=(obj.student.id,),
+            ),
             student=obj.student,
         )
 
@@ -751,7 +768,10 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def get_guardian_link(self, obj):
         return format_html(
             '<a href="{url}">{guardian}</a>',
-            url=reverse("admin:coderdojochi_guardian_change", args=(obj.guardian.id,)),
+            url=reverse(
+                "admin:coderdojochi_guardian_change",
+                args=(obj.guardian.id,),
+            ),
             guardian=obj.guardian,
         )
 
@@ -760,7 +780,10 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     def get_session_link(self, obj):
         return format_html(
             '<a href="{url}">{course_code}</a>',
-            url=reverse("admin:coderdojochi_session_change", args=(obj.session.course.id,)),
+            url=reverse(
+                "admin:coderdojochi_session_change",
+                args=(obj.session.course.id,),
+            ),
             course_code=obj.session.course.code,
         )
 

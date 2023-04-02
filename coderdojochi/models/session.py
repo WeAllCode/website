@@ -26,13 +26,17 @@ class Session(CommonInfo):
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,
-        limit_choices_to={"is_active": True},
+        limit_choices_to={
+            "is_active": True,
+        },
     )
     start_date = models.DateTimeField()
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
-        limit_choices_to={"is_active": True},
+        limit_choices_to={
+            "is_active": True,
+        },
     )
     capacity = models.IntegerField(
         default=20,
@@ -89,7 +93,11 @@ class Session(CommonInfo):
     )
 
     # Extra
-    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    additional_info = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
+    )
     waitlist_mentors = models.ManyToManyField(
         Mentor,
         blank=True,
@@ -157,14 +165,20 @@ class Session(CommonInfo):
         help_text="Only update this if different from the default.",
         blank=True,
         null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100),
+        ],
     )
     override_maximum_age_limitation = models.IntegerField(
         "Max Age",
         help_text="Only update this if different from the default.",
         blank=True,
         null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100),
+        ],
     )
     online_video_link = models.URLField(
         "Online Video Link",
@@ -296,9 +310,11 @@ class Session(CommonInfo):
     def get_checked_in_mentor_orders(self):
         from .mentor_order import MentorOrder
 
-        return MentorOrder.objects.filter(session=self, is_active=True, check_in__isnull=False).order_by(
-            "mentor__user__last_name"
-        )
+        return MentorOrder.objects.filter(
+            session=self,
+            is_active=True,
+            check_in__isnull=False,
+        ).order_by("mentor__user__last_name")
 
     def get_current_orders(self, checked_in=None):
         from .order import Order
@@ -306,28 +322,54 @@ class Session(CommonInfo):
         if checked_in is not None:
             if checked_in:
                 orders = (
-                    Order.objects.filter(is_active=True, session=self)
-                    .exclude(check_in=None)
+                    Order.objects.filter(
+                        is_active=True,
+                        session=self,
+                    )
+                    .exclude(
+                        check_in=None,
+                    )
                     .order_by("student__last_name")
                 )
             else:
-                orders = Order.objects.filter(is_active=True, session=self, check_in=None).order_by(
-                    "student__last_name"
-                )
+                orders = Order.objects.filter(
+                    is_active=True,
+                    session=self,
+                    check_in=None,
+                ).order_by("student__last_name")
         else:
-            orders = Order.objects.filter(is_active=True, session=self).order_by("check_in", "student__last_name")
+            orders = Order.objects.filter(
+                is_active=True,
+                session=self,
+            ).order_by("check_in", "student__last_name")
 
         return orders
 
     def get_active_student_count(self):
         from .order import Order
 
-        return Order.objects.filter(is_active=True, session=self).values("student").count()
+        return (
+            Order.objects.filter(
+                is_active=True,
+                session=self,
+            )
+            .values("student")
+            .count()
+        )
 
     def get_checked_in_students(self):
         from .order import Order
 
-        return Order.objects.filter(is_active=True, session=self).exclude(check_in=None).values("student")
+        return (
+            Order.objects.filter(
+                is_active=True,
+                session=self,
+            )
+            .exclude(
+                check_in=None,
+            )
+            .values("student")
+        )
 
 
 class PartnerPasswordAccess(CommonInfo):

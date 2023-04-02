@@ -54,11 +54,21 @@ class CalendarView(View):
 
         event_slug = "weallcode-{event_type}_{date}".format(
             event_type=self.event_type.lower(),
-            date=arrow.get(event_obj.start_date).to("local").format("MM-DD-YYYY_HH-mma"),
+            date=(
+                arrow.get(
+                    event_obj.start_date,
+                )
+                .to("local")
+                .format("MM-DD-YYYY_HH-mma")
+            ),
         )
 
         # Return the ICS formatted calendar
-        response = HttpResponse(cal.to_ical(), content_type="text/calendar", charset="utf-8")
+        response = HttpResponse(
+            cal.to_ical(),
+            content_type="text/calendar",
+            charset="utf-8",
+        )
 
         response["Content-Disposition"] = f"attachment;filename={event_slug}.ics"
 

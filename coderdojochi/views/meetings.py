@@ -69,9 +69,14 @@ class MeetingDetailView(DetailView):
         if user.is_authenticated and user.role == "mentor":
             mentor = get_object_or_404(Mentor, user=self.request.user)
 
-            active_meeting_orders = MeetingOrder.objects.filter(meeting=self.object, is_active=True)
+            active_meeting_orders = MeetingOrder.objects.filter(
+                meeting=self.object,
+                is_active=True,
+            )
             context["active_meeting_orders"] = active_meeting_orders
-            context["mentor_signed_up"] = active_meeting_orders.filter(mentor=mentor).exists()
+            context["mentor_signed_up"] = active_meeting_orders.filter(
+                mentor=mentor,
+            ).exists()
 
         return context
 
@@ -106,11 +111,18 @@ class MeetingCalendarView(CalendarView):
 def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
     meeting_obj = get_object_or_404(Meeting, pk=pk)
 
-    mentor = get_object_or_404(Mentor, user=request.user)
+    mentor = get_object_or_404(
+        Mentor,
+        user=request.user,
+    )
 
-    meeting_orders = MeetingOrder.objects.filter(meeting=meeting_obj, is_active=True)
+    meeting_orders = MeetingOrder.objects.filter(
+        meeting=meeting_obj,
+        is_active=True,
+    )
 
     user_meeting_order = meeting_orders.filter(mentor=mentor)
+
     if user_meeting_order.count():
         user_signed_up = True
     else:
@@ -118,7 +130,11 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
 
     if request.method == "POST":
         if user_signed_up:
-            meeting_order = get_object_or_404(MeetingOrder, meeting=meeting_obj, mentor=mentor)
+            meeting_order = get_object_or_404(
+                MeetingOrder,
+                meeting=meeting_obj,
+                mentor=mentor,
+            )
             meeting_order.is_active = False
             meeting_order.save()
 
@@ -130,7 +146,10 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
             else:
                 ip = request.META["REMOTE_ADDR"]
 
-            meeting_order, created = MeetingOrder.objects.get_or_create(mentor=mentor, meeting=meeting_obj)
+            meeting_order, created = MeetingOrder.objects.get_or_create(
+                mentor=mentor,
+                meeting=meeting_obj,
+            )
 
             meeting_order.ip = ip
             meeting_order.is_active = True
@@ -144,10 +163,22 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                 "order_id": meeting_order.id,
                 "meeting_title": meeting_obj.meeting_type.title,
                 "meeting_description": meeting_obj.meeting_type.description,
-                "meeting_start_date": arrow.get(meeting_obj.start_date).to("local").format("dddd, MMMM D, YYYY"),
-                "meeting_start_time": arrow.get(meeting_obj.start_date).to("local").format("h:mma"),
-                "meeting_end_date": arrow.get(meeting_obj.end_date).to("local").format("dddd, MMMM D, YYYY"),
-                "meeting_end_time": arrow.get(meeting_obj.end_date).to("local").format("h:mma"),
+                "meeting_start_date": (
+                    arrow.get(meeting_obj.start_date)
+                    .to("local")
+                    .format("dddd, MMMM D, YYYY")
+                ),
+                "meeting_start_time": (
+                    arrow.get(meeting_obj.start_date).to("local").format("h:mma")
+                ),
+                "meeting_end_date": (
+                    arrow.get(meeting_obj.end_date)
+                    .to("local")
+                    .format("dddd, MMMM D, YYYY")
+                ),
+                "meeting_end_time": (
+                    arrow.get(meeting_obj.end_date).to("local").format("h:mma")
+                ),
                 "meeting_location_name": meeting_obj.location.name,
                 "meeting_location_address": meeting_obj.location.address,
                 "meeting_location_city": meeting_obj.location.city,
@@ -156,8 +187,12 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                 "meeting_additional_info": meeting_obj.additional_info,
                 "meeting_url": f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}",
                 "meeting_calendar_url": f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}",
-                "microdata_start_date": arrow.get(meeting_obj.start_date).to("local").isoformat(),
-                "microdata_end_date": arrow.get(meeting_obj.end_date).to("local").isoformat(),
+                "microdata_start_date": (
+                    arrow.get(meeting_obj.start_date).to("local").isoformat()
+                ),
+                "microdata_end_date": (
+                    arrow.get(meeting_obj.end_date).to("local").isoformat()
+                ),
             }
 
             email(
@@ -165,12 +200,22 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                 template_name="meeting_confirm_mentor",
                 merge_global_data=merge_global_data,
                 recipients=[request.user.email],
-                preheader=f"Thanks for signing up for our next meeting, {request.user.first_name}. We look forward to seeing there.",
+                preheader=(
+                    f"Thanks for signing up for our next meeting, {request.user.first_name}. "
+                    "We look forward to seeing there."
+                ),
             )
 
         return redirect("meeting_detail", meeting_obj.id)
 
-    return render(request, template_name, {"meeting": meeting_obj, "user_signed_up": user_signed_up})
+    return render(
+        request,
+        template_name,
+        {
+            "meeting": meeting_obj,
+            "user_signed_up": user_signed_up,
+        },
+    )
 
 
 def meeting_announce(request, pk):
@@ -185,10 +230,20 @@ def meeting_announce(request, pk):
         merge_global_data = {
             "meeting_title": meeting_obj.meeting_type.title,
             "meeting_description": meeting_obj.meeting_type.description,
-            "meeting_start_date": arrow.get(meeting_obj.start_date).to("local").format("dddd, MMMM D, YYYY"),
-            "meeting_start_time": arrow.get(meeting_obj.start_date).to("local").format("h:mma"),
-            "meeting_end_date": arrow.get(meeting_obj.end_date).to("local").format("dddd, MMMM D, YYYY"),
-            "meeting_end_time": arrow.get(meeting_obj.end_date).to("local").format("h:mma"),
+            "meeting_start_date": (
+                arrow.get(meeting_obj.start_date)
+                .to("local")
+                .format("dddd, MMMM D, YYYY")
+            ),
+            "meeting_start_time": (
+                arrow.get(meeting_obj.start_date).to("local").format("h:mma")
+            ),
+            "meeting_end_date": (
+                arrow.get(meeting_obj.end_date).to("local").format("dddd, MMMM D, YYYY")
+            ),
+            "meeting_end_time": (
+                arrow.get(meeting_obj.end_date).to("local").format("h:mma")
+            ),
             "meeting_location_name": meeting_obj.location.name,
             "meeting_location_address": meeting_obj.location.address,
             "meeting_location_city": meeting_obj.location.city,

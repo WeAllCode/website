@@ -15,7 +15,16 @@ from django.views.generic.base import RedirectView
 import arrow
 
 from coderdojochi.mixins import RoleRedirectMixin, RoleTemplateMixin
-from coderdojochi.models import Guardian, Mentor, MentorOrder, Order, PartnerPasswordAccess, Session, Student, guardian
+from coderdojochi.models import (
+    Guardian,
+    Mentor,
+    MentorOrder,
+    Order,
+    PartnerPasswordAccess,
+    Session,
+    Student,
+    guardian,
+)
 from coderdojochi.util import email
 
 from . import guardian, mentor, public
@@ -34,10 +43,22 @@ def session_confirm_mentor(request, session_obj, order):
         "class_code": session_obj.course.code,
         "class_title": session_obj.course.title,
         "class_description": session_obj.course.description,
-        "class_start_date": arrow.get(session_obj.mentor_start_date).to("local").format("dddd, MMMM D, YYYY"),
-        "class_start_time": arrow.get(session_obj.mentor_start_date).to("local").format("h:mma"),
-        "class_end_date": arrow.get(session_obj.mentor_end_date).to("local").format("dddd, MMMM D, YYYY"),
-        "class_end_time": arrow.get(session_obj.mentor_end_date).to("local").format("h:mma"),
+        "class_start_date": (
+            arrow.get(session_obj.mentor_start_date)
+            .to("local")
+            .format("dddd, MMMM D, YYYY")
+        ),
+        "class_start_time": (
+            arrow.get(session_obj.mentor_start_date).to("local").format("h:mma")
+        ),
+        "class_end_date": (
+            arrow.get(session_obj.mentor_end_date)
+            .to("local")
+            .format("dddd, MMMM D, YYYY")
+        ),
+        "class_end_time": (
+            arrow.get(session_obj.mentor_end_date).to("local").format("h:mma")
+        ),
         "class_location_name": session_obj.location.name,
         "class_location_address": session_obj.location.address,
         "class_location_city": session_obj.location.city,
@@ -46,16 +67,22 @@ def session_confirm_mentor(request, session_obj, order):
         "class_additional_info": session_obj.additional_info,
         "class_url": f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
         "class_calendar_url": f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
-        "microdata_start_date": arrow.get(session_obj.mentor_start_date).to("local").isoformat(),
-        "microdata_end_date": arrow.get(session_obj.mentor_end_date).to("local").isoformat(),
+        "microdata_start_date": (
+            arrow.get(session_obj.mentor_start_date).to("local").isoformat()
+        ),
+        "microdata_end_date": (
+            arrow.get(session_obj.mentor_end_date).to("local").isoformat()
+        ),
         "order_id": order.id,
         "online_video_link": session_obj.online_video_link,
         "online_video_description": session_obj.online_video_description,
     }
 
     email(
-        subject="Mentoring confirmation for {} class".format(
-            arrow.get(session_obj.mentor_start_date).to("local").format("MMMM D"),
+        subject=(
+            "Mentoring confirmation for {} class".format(
+                arrow.get(session_obj.mentor_start_date).to("local").format("MMMM D"),
+            )
         ),
         template_name="class_confirm_mentor",
         merge_global_data=merge_global_data,
@@ -73,9 +100,15 @@ def session_confirm_guardian(request, session_obj, order, student):
         "class_code": session_obj.course.code,
         "class_title": session_obj.course.title,
         "class_description": session_obj.course.description,
-        "class_start_date": arrow.get(session_obj.start_date).to("local").format("dddd, MMMM D, YYYY"),
-        "class_start_time": arrow.get(session_obj.start_date).to("local").format("h:mma"),
-        "class_end_date": arrow.get(session_obj.end_date).to("local").format("dddd, MMMM D, YYYY"),
+        "class_start_date": (
+            arrow.get(session_obj.start_date).to("local").format("dddd, MMMM D, YYYY")
+        ),
+        "class_start_time": (
+            arrow.get(session_obj.start_date).to("local").format("h:mma")
+        ),
+        "class_end_date": (
+            arrow.get(session_obj.end_date).to("local").format("dddd, MMMM D, YYYY")
+        ),
         "class_end_time": arrow.get(session_obj.end_date).to("local").format("h:mma"),
         "class_location_name": session_obj.location.name,
         "class_location_address": session_obj.location.address,
@@ -85,7 +118,9 @@ def session_confirm_guardian(request, session_obj, order, student):
         "class_additional_info": session_obj.additional_info,
         "class_url": session_obj.get_absolute_url(),
         "class_calendar_url": session_obj.get_calendar_url(),
-        "microdata_start_date": arrow.get(session_obj.start_date).to("local").isoformat(),
+        "microdata_start_date": (
+            arrow.get(session_obj.start_date).to("local").isoformat()
+        ),
         "microdata_end_date": arrow.get(session_obj.end_date).to("local").isoformat(),
         "order_id": order.id,
         "online_video_link": session_obj.online_video_link,
@@ -97,7 +132,10 @@ def session_confirm_guardian(request, session_obj, order, student):
         template_name="class_confirm_guardian",
         merge_global_data=merge_global_data,
         recipients=[request.user.email],
-        preheader="Magical wizards have generated this confirmation. All thanks to the mystical power of coding.",
+        preheader=(
+            "Magical wizards have generated this confirmation. "
+            "All thanks to the mystical power of coding."
+        ),
     )
 
 
@@ -114,6 +152,7 @@ class SessionDetailView(View):
                 return mentor.SessionDetailView.as_view()(request, *args, **kwargs)
             else:
                 return guardian.SessionDetailView.as_view()(request, *args, **kwargs)
+
         return public.SessionDetailView.as_view()(request, *args, **kwargs)
 
     def validate_partner_session_access(self, request, pk):
@@ -121,12 +160,18 @@ class SessionDetailView(View):
 
         if authed_sessions and pk in authed_sessions:
             if request.user.is_authenticated:
-                PartnerPasswordAccess.objects.get_or_create(session_id=pk, user=request.user)
+                PartnerPasswordAccess.objects.get_or_create(
+                    session_id=pk,
+                    user=request.user,
+                )
             return True
 
         if request.user.is_authenticated:
             try:
-                PartnerPasswordAccess.objects.get(session_id=pk, user_id=request.user.id)
+                PartnerPasswordAccess.objects.get(
+                    session_id=pk,
+                    user_id=request.user.id,
+                )
             except PartnerPasswordAccess.DoesNotExist:
                 return False
             else:
@@ -145,14 +190,21 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         kwargs["session_obj"] = session_obj
 
         if request.user.role == "mentor":
-            session_orders = MentorOrder.objects.filter(session=session_obj, is_active=True)
+            session_orders = MentorOrder.objects.filter(
+                session=session_obj,
+                is_active=True,
+            )
             kwargs["mentor"] = get_object_or_404(Mentor, user=request.user)
-            kwargs["user_signed_up"] = session_orders.filter(mentor=kwargs["mentor"]).exists()
+            kwargs["user_signed_up"] = session_orders.filter(
+                mentor=kwargs["mentor"],
+            ).exists()
 
         elif request.user.role == "guardian":
             kwargs["guardian"] = get_object_or_404(Guardian, user=request.user)
             kwargs["student"] = get_object_or_404(Student, id=kwargs["student_id"])
-            kwargs["user_signed_up"] = kwargs["student"].is_registered_for_session(session_obj)
+            kwargs["user_signed_up"] = kwargs["student"].is_registered_for_session(
+                session_obj
+            )
 
         access_dict = self.check_access(request, *args, **kwargs)
 
@@ -182,9 +234,17 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                 }
 
         if kwargs.get("student"):
-            limits = self.student_limitations(kwargs["student"], kwargs["session_obj"], kwargs["user_signed_up"])
+            limits = self.student_limitations(
+                kwargs["student"],
+                kwargs["session_obj"],
+                kwargs["user_signed_up"],
+            )
+
             if limits:
-                access_dict = {"message": limits, "redirect": kwargs["session_obj"].get_absolute_url()}
+                access_dict = {
+                    "message": limits,
+                    "redirect": kwargs["session_obj"].get_absolute_url(),
+                }
 
         return access_dict
 
@@ -192,10 +252,15 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         if not student.is_within_gender_limitation(session_obj.gender_limitation):
             return f"Sorry, this class is limited to {session_obj.gender_limitation}s this time around."
 
-        if not student.is_within_age_range(session_obj.minimum_age, session_obj.maximum_age):
+        if not student.is_within_age_range(
+            session_obj.minimum_age, session_obj.maximum_age
+        ):
             return f"Sorry, this class is limited to students between ages {session_obj.minimum_age} and {session_obj.maximum_age}."
 
-        if not user_signed_up and session_obj.capacity <= session_obj.get_active_student_count():
+        if (
+            not user_signed_up
+            and session_obj.capacity <= session_obj.get_active_student_count()
+        ):
             return "Sorry this class has sold out. Please sign up for the wait list and/or check back later."
 
         return False
@@ -216,7 +281,11 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
         if user_signed_up:
             if mentor:
-                order = get_object_or_404(MentorOrder, mentor=mentor, session=session_obj)
+                order = get_object_or_404(
+                    MentorOrder,
+                    mentor=mentor,
+                    session=session_obj,
+                )
             elif student:
                 order = get_object_or_404(
                     Order,
@@ -253,9 +322,18 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             messages.success(request, "Success! See you there!")
 
             if mentor:
-                session_confirm_mentor(request, session_obj, order)
+                session_confirm_mentor(
+                    request,
+                    session_obj,
+                    order,
+                )
             else:
-                session_confirm_guardian(request, session_obj, order, student)
+                session_confirm_guardian(
+                    request,
+                    session_obj,
+                    order,
+                    student,
+                )
 
         return redirect(session_obj.get_absolute_url())
 
@@ -299,7 +377,10 @@ class PasswordSessionView(TemplateView):
         request.session["authed_partner_sessions"] = authed_partner_sessions
 
         if request.user.is_authenticated:
-            PartnerPasswordAccess.objects.get_or_create(session=session_obj, user=request.user)
+            PartnerPasswordAccess.objects.get_or_create(
+                session=session_obj,
+                user=request.user,
+            )
 
         return redirect(session_obj)
 
@@ -316,7 +397,9 @@ class SessionCalendarView(CalendarView):
         dtstart = f"{arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')}Z"
 
         if request.user.is_authenticated and request.user.role == "mentor":
-            dtstart = f"{arrow.get(event_obj.mentor_start_date).format('YYYYMMDDTHHmmss')}Z"
+            dtstart = (
+                f"{arrow.get(event_obj.mentor_start_date).format('YYYYMMDDTHHmmss')}Z"
+            )
 
         return dtstart
 
@@ -339,7 +422,9 @@ class SessionCalendarView(CalendarView):
                 try:
                     mentor = Mentor.objects.get(user=self.request.user)
                     mentor_signed_up = MentorOrder.objects.filter(
-                        session=event_obj, is_active=True, mentor=mentor
+                        session=event_obj,
+                        is_active=True,
+                        mentor=mentor,
                     ).exists()
 
                     if mentor_signed_up:

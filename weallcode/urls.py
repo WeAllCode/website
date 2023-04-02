@@ -28,7 +28,11 @@ urlpatterns = [
         include(
             [
                 path("", ProgramsView.as_view(), name="weallcode-programs"),
-                path("summer-camps/", ProgramsSummerCampsView.as_view(), name="weallcode-programs-summer-camps"),
+                path(
+                    "summer-camps/",
+                    ProgramsSummerCampsView.as_view(),
+                    name="weallcode-programs-summer-camps",
+                ),
             ]
         ),
     ),
@@ -38,15 +42,29 @@ urlpatterns = [
         include(
             [
                 path("", JoinUsView.as_view(), name="weallcode-join-us"),
-                path("associate-board/", AssociateBoardView.as_view(), name="weallcode-associate-board"),
+                path(
+                    "associate-board/",
+                    AssociateBoardView.as_view(),
+                    name="weallcode-associate-board",
+                ),
             ]
         ),
     ),
     path("privacy/", PrivacyView.as_view(), name="weallcode-privacy"),
     path("credits/", CreditsView.as_view(), name="weallcode-credits"),
-    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {
+            "sitemaps": sitemaps,
+        },
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
     # Redirect /summer-camps/ to weallcode-programs-summer-camps
-    path("summer-camps/", RedirectView.as_view(pattern_name="weallcode-programs-summer-camps")),
+    path(
+        "summer-camps/",
+        RedirectView.as_view(pattern_name="weallcode-programs-summer-camps"),
+    ),
     # Redirect /get-involved/ to weallcode-join-us
     path("get-involved/", RedirectView.as_view(pattern_name="weallcode-join-us")),
 ]

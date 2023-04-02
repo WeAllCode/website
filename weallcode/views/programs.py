@@ -30,8 +30,13 @@ class ProgramsView(DefaultMetaTags, TemplateView):
                 start_date__gte=timezone.now(),
                 course__course_type=Course.WEEKEND,
             )
-            .order_by("start_date")
-            .prefetch_related("course", "location")
+            .order_by(
+                "start_date",
+            )
+            .prefetch_related(
+                "course",
+                "location",
+            )
         )
 
         if not user.is_authenticated or not user.role == "mentor":
@@ -44,20 +49,29 @@ class ProgramsView(DefaultMetaTags, TemplateView):
                 session.start_time = session.mentor_start_date
                 session.end_time = session.mentor_end_date
 
-                if session.mentor_capacity and len(session.get_mentor_orders()) >= session.mentor_capacity:
+                if (
+                    session.mentor_capacity
+                    and len(session.get_mentor_orders()) >= session.mentor_capacity
+                ):
                     session.class_status = "Class Full"
                 else:
                     session.class_status = "Volunteer"
 
             else:
-                session.start_time = arrow.get(session.start_date).to(settings.TIME_ZONE)
+                session.start_time = arrow.get(session.start_date).to(
+                    settings.TIME_ZONE
+                )
                 session.end_time = session.end_date
 
                 # MAX_DAYS_FOR_PARENTS (30) days before the class start time
-                open_signup_time = session.start_time.shift(days=-settings.MAX_DAYS_FOR_PARENTS)
+                open_signup_time = session.start_time.shift(
+                    days=-settings.MAX_DAYS_FOR_PARENTS
+                )
 
                 if IS_PARENT and NOW < open_signup_time:
-                    session.class_status = f"Sign up available {open_signup_time.humanize(NOW)}"
+                    session.class_status = (
+                        f"Sign up available {open_signup_time.humanize(NOW)}"
+                    )
                 elif session.get_active_student_count() >= session.capacity:
                     session.class_status = "Class Full"
                 else:
@@ -74,8 +88,13 @@ class ProgramsView(DefaultMetaTags, TemplateView):
                 start_date__gte=timezone.now(),
                 course__course_type=Course.CAMP,
             )
-            .order_by("start_date")
-            .prefetch_related("course", "location")
+            .order_by(
+                "start_date",
+            )
+            .prefetch_related(
+                "course",
+                "location",
+            )
         )
 
         if not user.is_authenticated or not user.role == "mentor":

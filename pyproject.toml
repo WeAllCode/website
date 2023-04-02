@@ -9,9 +9,9 @@ include_trailing_comma = true
 skip=['.eggs', '.git', '.hg', '.mypy_cache', '.nox', '.pants.d', '.tox', '.venv', '_build', 'buck-out', 'build', 'dist', 'node_modules', 'venv', 'migrations']
 
 [tool.black]
-line-length = 120
-#target-version = ['py38']
-#include = '\.pyi?$'
+# line-length = 120
+# target-version = ['py38']
+# include = '\.pyi?$'
 exclude = '''
 
 (

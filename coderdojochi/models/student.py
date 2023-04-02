@@ -52,7 +52,10 @@ class Student(CommonInfo):
     )
     consent = models.BooleanField(
         "General Consent",
-        help_text=("I hereby give consent for the student signed up " "above to participate in We All Code."),
+        help_text=(
+            "I hereby give consent for the student signed up "
+            "above to participate in We All Code."
+        ),
         default=False,
     )
     is_active = models.BooleanField(
@@ -82,13 +85,30 @@ class Student(CommonInfo):
         return is_registered
 
     def get_age(self, date=timezone.now()):
-        return date.year - self.birthday.year - ((date.month, date.day) < (self.birthday.month, self.birthday.day))
+        return (
+            date.year
+            - self.birthday.year
+            - ((date.month, date.day) < (self.birthday.month, self.birthday.day))
+        )
 
     get_age.short_description = "Age"
 
     def get_clean_gender(self):
-        MALE = ["male", "m", "boy", "nino", "masculino"]
-        FEMALE = ["female", "f", "girl", "femail", "femal", "femenino"]
+        MALE = [
+            "male",
+            "m",
+            "boy",
+            "nino",
+            "masculino",
+        ]
+        FEMALE = [
+            "female",
+            "f",
+            "girl",
+            "femail",
+            "femal",
+            "femenino",
+        ]
 
         if self.gender.lower() in MALE:
             return "male"

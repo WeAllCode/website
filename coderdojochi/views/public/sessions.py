@@ -12,7 +12,10 @@ class SessionDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         context["active_mentors"] = Mentor.objects.filter(
-            id__in=MentorOrder.objects.filter(session=self.object, is_active=True).values("mentor__id")
+            id__in=MentorOrder.objects.filter(
+                session=self.object,
+                is_active=True,
+            ).values("mentor__id")
         )
 
         return context

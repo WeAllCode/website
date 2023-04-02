@@ -8,7 +8,8 @@ from django.views import defaults
 from django.views.generic import RedirectView
 
 from . import old_views
-from .views import (  # SessionDetailView,
+from .views import (
+    # SessionDetailView,
     MeetingCalendarView,
     MeetingDetailView,
     MeetingsView,
@@ -50,18 +51,38 @@ urlpatterns += [
                         [
                             # Meetings
                             # /meetings/
-                            path("", MeetingsView.as_view(), name="meetings"),
+                            path(
+                                "",
+                                MeetingsView.as_view(),
+                                name="meetings",
+                            ),
                             # Individual Meeting
                             # /meeting/ID/
-                            path("<int:pk>/", MeetingDetailView.as_view(), name="meeting-detail"),
+                            path(
+                                "<int:pk>/",
+                                MeetingDetailView.as_view(),
+                                name="meeting-detail",
+                            ),
                             # /meeting/ID/announce/
-                            path("<int:pk>/announce/", meeting_announce, name="meeting-announce"),
+                            path(
+                                "<int:pk>/announce/",
+                                meeting_announce,
+                                name="meeting-announce",
+                            ),
                             # Meeting sign up
                             # /meeting/ID/sign-up/
-                            path("<int:pk>/register/", meeting_sign_up, name="meeting-register"),
+                            path(
+                                "<int:pk>/register/",
+                                meeting_sign_up,
+                                name="meeting-register",
+                            ),
                             # Meeting Calendar
                             # /meeting/ID/calendar/
-                            path("<int:pk>/calendar/", MeetingCalendarView.as_view(), name="meeting-calendar"),
+                            path(
+                                "<int:pk>/calendar/",
+                                MeetingCalendarView.as_view(),
+                                name="meeting-calendar",
+                            ),
                         ]
                     ),
                 ),
@@ -95,15 +116,27 @@ urlpatterns += [
                     include(
                         [
                             # /admin/classes/ID/stats/
-                            path("<int:pk>/stats/", old_views.session_stats, name="stats"),
+                            path(
+                                "<int:pk>/stats/", old_views.session_stats, name="stats"
+                            ),
                             # /admin/classes/ID/check-in/
-                            path("<int:pk>/check-in/", old_views.session_check_in, name="student-check-in"),
+                            path(
+                                "<int:pk>/check-in/",
+                                old_views.session_check_in,
+                                name="student-check-in",
+                            ),
                             # /admin/classes/ID/check-in-mentors/
                             path(
-                                "<int:pk>/check-in-mentors/", old_views.session_check_in_mentors, name="mentor-check-in"
+                                "<int:pk>/check-in-mentors/",
+                                old_views.session_check_in_mentors,
+                                name="mentor-check-in",
                             ),
                             # /admin/classes/ID/donations/
-                            path("<int:pk>/donations/", old_views.session_donations, name="donations"),
+                            path(
+                                "<int:pk>/donations/",
+                                old_views.session_donations,
+                                name="donations",
+                            ),
                         ]
                     ),
                 ),
@@ -112,7 +145,11 @@ urlpatterns += [
                     include(
                         [
                             # /admin/meeting/ID/check-in/
-                            path("<int:meeting_id>/check-in/", old_views.meeting_check_in, name="meeting-check-in"),
+                            path(
+                                "<int:meeting_id>/check-in/",
+                                old_views.meeting_check_in,
+                                name="meeting-check-in",
+                            ),
                         ]
                     ),
                 ),
@@ -132,16 +169,28 @@ urlpatterns += [
             [
                 # Classes
                 # /classes/
-                path("", RedirectView.as_view(pattern_name="weallcode-programs"), name="sessions"),
+                path(
+                    "",
+                    RedirectView.as_view(pattern_name="weallcode-programs"),
+                    name="sessions",
+                ),
                 # Individual Class
                 # /classes/ID/
                 path("<int:pk>/", SessionDetailView.as_view(), name="session-detail"),
                 # Password
                 # /classes/ID/password/
-                path("<int:pk>/password/", PasswordSessionView.as_view(), name="session-password"),
+                path(
+                    "<int:pk>/password/",
+                    PasswordSessionView.as_view(),
+                    name="session-password",
+                ),
                 # Announce
                 # /classes/ID/announce/mentors/
-                path("<int:pk>/announce/mentors/", old_views.session_announce_mentors, name="session-announce-mentors"),
+                path(
+                    "<int:pk>/announce/mentors/",
+                    old_views.session_announce_mentors,
+                    name="session-announce-mentors",
+                ),
                 # /classes/ID/announce/guardians/
                 path(
                     "<int:pk>/announce/guardians/",
@@ -150,12 +199,24 @@ urlpatterns += [
                 ),
                 # Calendar
                 # /classes/ID/calendar/
-                path("<int:pk>/calendar/", SessionCalendarView.as_view(), name="session-calendar"),
+                path(
+                    "<int:pk>/calendar/",
+                    SessionCalendarView.as_view(),
+                    name="session-calendar",
+                ),
                 # Sign up
                 # /classes/ID/sign-up/
-                path("<int:pk>/sign-up/", SessionSignUpView.as_view(), name="session-sign-up"),
+                path(
+                    "<int:pk>/sign-up/",
+                    SessionSignUpView.as_view(),
+                    name="session-sign-up",
+                ),
                 # /classes/ID/sign-up/STUDENT-ID/
-                path("<int:pk>/sign-up/<int:student_id>/", SessionSignUpView.as_view(), name="session-sign-up"),
+                path(
+                    "<int:pk>/sign-up/<int:student_id>/",
+                    SessionSignUpView.as_view(),
+                    name="session-sign-up",
+                ),
             ]
         ),
     ),
@@ -175,9 +236,17 @@ urlpatterns += [
                 # /ID/
                 path("<int:pk>/", MentorDetailView.as_view(), name="mentor-detail"),
                 # /ID/reject-avatar/
-                path("<int:pk>/reject-avatar/", old_views.mentor_reject_avatar, name="mentor-reject-avatar"),
+                path(
+                    "<int:pk>/reject-avatar/",
+                    old_views.mentor_reject_avatar,
+                    name="mentor-reject-avatar",
+                ),
                 # /ID/approve-avatar/
-                path("<int:pk>/approve-avatar/", old_views.mentor_approve_avatar, name="mentor-approve-avatar"),
+                path(
+                    "<int:pk>/approve-avatar/",
+                    old_views.mentor_approve_avatar,
+                    name="mentor-approve-avatar",
+                ),
             ]
         ),
     ),
@@ -208,7 +277,8 @@ urlpatterns += [
     path(
         "robots.txt",
         lambda r: HttpResponse(
-            "User-agent: *\nDisallow:\nSitemap: " + settings.SITE_URL + "/sitemap.xml", content_type="text/plain"
+            "User-agent: *\nDisallow:\nSitemap: " + settings.SITE_URL + "/sitemap.xml",
+            content_type="text/plain",
         ),
     )
 ]

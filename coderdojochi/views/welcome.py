@@ -55,7 +55,11 @@ class WelcomeView(TemplateView):
                 context["form"] = GuardianForm(instance=account)
             else:
                 context["add_student"] = True
-                context["form"] = StudentForm(initial={"guardian": guardian.pk})
+                context["form"] = StudentForm(
+                    initial={
+                        "guardian": guardian.pk,
+                    },
+                )
 
             if account.first_name and account.get_students():
                 context["students"] = account.get_students().count()
@@ -73,6 +77,7 @@ class WelcomeView(TemplateView):
             if role == "mentor":
                 account = get_object_or_404(Mentor, user=user)
                 return self.update_account(request, account, next_url)
+
             account = get_object_or_404(Guardian, user=user)
 
             if not account.phone or not account.zip:
@@ -89,9 +94,11 @@ class WelcomeView(TemplateView):
         else:
             form = GuardianForm(request.POST, instance=account)
             role = "guardian"
+
         if form.is_valid():
             form.save()
             messages.success(request, "Profile information saved.")
+
             if next_url:
                 if "enroll" in request.GET:
                     next_url = f"{next_url}?enroll=True"
@@ -100,30 +107,47 @@ class WelcomeView(TemplateView):
                     next_url = "account_home"
                 else:
                     next_url = "welcome"
-            return redirect(next_url)
 
-        return render(
-            request, self.template_name, {"form": form, "role": role, "account": account, "next_url": next_url}
-        )
-
-    def add_student(self, request, account, next_url):
-        form = StudentForm(request.POST)
-        if form.is_valid():
-            new_student = form.save(commit=False)
-            new_student.guardian = account
-            new_student.save()
-            messages.success(request, "Student Registered.")
-            if next_url:
-                if "enroll" in request.GET:
-                    next_url = f"{next_url}?enroll=True&student={new_student.id}"
-            else:
-                next_url = "welcome"
             return redirect(next_url)
 
         return render(
             request,
             self.template_name,
-            {"form": form, "role": "guardian", "account": account, "next_url": next_url, "add_student": True},
+            {
+                "form": form,
+                "role": role,
+                "account": account,
+                "next_url": next_url,
+            },
+        )
+
+    def add_student(self, request, account, next_url):
+        form = StudentForm(request.POST)
+
+        if form.is_valid():
+            new_student = form.save(commit=False)
+            new_student.guardian = account
+            new_student.save()
+            messages.success(request, "Student Registered.")
+
+            if next_url:
+                if "enroll" in request.GET:
+                    next_url = f"{next_url}?enroll=True&student={new_student.id}"
+            else:
+                next_url = "welcome"
+
+            return redirect(next_url)
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "role": "guardian",
+                "account": account,
+                "next_url": next_url,
+                "add_student": True,
+            },
         )
 
     def create_new_user(self, request, user, next_url):
@@ -141,7 +165,11 @@ class WelcomeView(TemplateView):
         user.role = role
         user.save()
 
-        merge_global_data = {"user": user.username, "first_name": user.first_name, "last_name": user.last_name}
+        merge_global_data = {
+            "user": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+        }
 
         if next_url:
             next_url = f"?next={next_url}"
@@ -150,10 +178,19 @@ class WelcomeView(TemplateView):
 
         if role == "mentor":
             # check for next upcoming meeting
-            next_meeting = Meeting.objects.filter(is_active=True, is_public=True).order_by("start_date").first()
+            next_meeting = (
+                Meeting.objects.filter(
+                    is_active=True,
+                    is_public=True,
+                )
+                .order_by("start_date")
+                .first()
+            )
 
             if next_meeting:
-                merge_global_data["next_intro_meeting_url"] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
+                merge_global_data[
+                    "next_intro_meeting_url"
+                ] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
                 merge_global_data[
                     "next_intro_meeting_calendar_url"
                 ] = f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
@@ -170,11 +207,21 @@ class WelcomeView(TemplateView):
             )
         else:
             # check for next upcoming class
-            next_class = Session.objects.filter(is_active=True).order_by("start_date").first()
+            next_class = (
+                Session.objects.filter(
+                    is_active=True,
+                )
+                .order_by("start_date")
+                .first()
+            )
 
             if next_class:
-                merge_global_data["next_class_url"] = f"{settings.SITE_URL}{next_class.get_absolute_url()}"
-                merge_global_data["next_class_calendar_url"] = f"{settings.SITE_URL}{next_class.get_calendar_url()}"
+                merge_global_data[
+                    "next_class_url"
+                ] = f"{settings.SITE_URL}{next_class.get_absolute_url()}"
+                merge_global_data[
+                    "next_class_calendar_url"
+                ] = f"{settings.SITE_URL}{next_class.get_calendar_url()}"
 
             if not next_url:
                 next_url = reverse("welcome")
