@@ -640,7 +640,9 @@ def session_donations(request, pk, template_name="session_donations.html"):
 
     default_form = DonationForm(initial={"session": session})
     default_form.fields["user"].queryset = User.objects.filter(
-        id__in=Order.objects.filter(session=session,).values_list(
+        id__in=Order.objects.filter(
+            session=session,
+        ).values_list(
             "guardian__user__id",
             flat=True,
         ),

@@ -128,7 +128,10 @@ class Meeting(CommonInfo):
 
     def get_current_mentors(self):
         return Mentor.objects.filter(
-            id__in=MeetingOrder.objects.filter(is_active=True, meeting=self,).values(
+            id__in=MeetingOrder.objects.filter(
+                is_active=True,
+                meeting=self,
+            ).values(
                 "mentor__id",
             )
         )
