@@ -175,13 +175,6 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # Change 'default' database configuration with $DATABASE_URL.
 DATABASES["default"].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
 
-# Use SQLite3 if no database URL is set.
-if not DATABASE_URL:
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -280,10 +273,7 @@ else:
     # region http://stackoverflow.com/questions/10390244/
     from django.contrib.staticfiles.storage import ManifestFilesMixin
 
-    from storages.backends.s3boto3 import (
-        S3Boto3Storage,
-        SpooledTemporaryFile,
-    )  # noqa E402
+    from storages.backends.s3boto3 import S3Boto3Storage, SpooledTemporaryFile  # noqa E402
 
     # ManifestFilesSafeMixin = lambda: ManifestFilesMixin(manifest_strict=False)
     # Taken from an issue in django-storages:
@@ -342,8 +332,7 @@ META_USE_SCHEMAORG_PROPERTIES = True
 META_TWITTER_SITE = env("META_TWITTER_SITE", default="@weallcode")
 META_FB_APPID = env("META_SITE_DOMAIN", default="1454178301519376")
 META_INCLUDE_KEYWORDS = env.list(
-    "META_INCLUDE_KEYWORDS",
-    default=["stem", "code", "coding", "kids", "chicago", "chicago coding"],
+    "META_INCLUDE_KEYWORDS", default=["stem", "code", "coding", "kids", "chicago", "chicago coding"]
 )
 DEFAULT_META_TITLE = env("DEFAULT_META_TITLE", default="")
 
