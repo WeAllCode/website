@@ -17,8 +17,6 @@ from django.conf.locale.en import formats as en_formats
 import dj_database_url
 import django_heroku
 import environ
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
 
@@ -155,25 +153,49 @@ WSGI_APPLICATION = "coderdojochi.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-DATABASE_URL = env("DATABASE_URL", default=False)
-if DATABASE_URL:
-    DATABASES = {"default": env.db()}
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": os.environ.get("POSTGRES_DB"),
-            "USER": os.environ.get("POSTGRES_USER"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-            "HOST": os.environ.get("POSTGRES_HOST"),
-            "PORT": os.environ.get("POSTGRES_PORT"),
-        }
+# DATABASE_URL = env("DATABASE_URL", default=False)
+# if DATABASE_URL:
+#     DATABASES = {"default": env.db()}
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": os.environ.get("POSTGRES_DB"),
+#             "USER": os.environ.get("POSTGRES_USER"),
+#             "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+#             "HOST": os.environ.get("POSTGRES_HOST"),
+#             "PORT": os.environ.get("POSTGRES_PORT"),
+#         }
+#     }
+
+# DATABASES["default"]["ATOMIC_REQUESTS"] = True
+
+# # Change 'default' database configuration with $DATABASE_URL.
+# DATABASES["default"].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
+
+MAX_CONN_AGE = 600
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
     }
+}
 
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
+if "DATABASE_URL" in os.environ:
+    # Configure Django for DATABASE_URL environment variable.
+    DATABASES["default"] = dj_database_url.config(
+        conn_max_age=MAX_CONN_AGE,
+        ssl_require=True,
+    )
 
-# Change 'default' database configuration with $DATABASE_URL.
-DATABASES["default"].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
+    # Enable test database if found in CI environment.
+    if "CI" in os.environ:
+        DATABASES["default"]["TEST"] = DATABASES["default"]
 
 
 # Password validation
@@ -362,18 +384,22 @@ SLACK_WEBHOOK_URL = env("SLACK_WEBHOOK_URL")
 SLACK_ALERTS_CHANNEL = env("SLACK_ALERTS_CHANNEL", default=None)
 
 # Sentry
-SENTRY_DSN = env("SENTRY_DSN")
-sentry_sdk.init(
-    dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration()],
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-)
+SENTRY_DSN = env("SENTRY_DSN", default=False)
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )
 
 
 # Django 3.2.x fix

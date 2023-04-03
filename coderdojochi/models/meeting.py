@@ -116,10 +116,7 @@ class Meeting(CommonInfo):
                 ).order_by("mentor__user__last_name")
 
         else:
-            orders = MeetingOrder.objects.filter(
-                is_active=True,
-                meeting=self,
-            ).order_by(
+            orders = MeetingOrder.objects.filter(is_active=True, meeting=self,).order_by(
                 "check_in",
                 "mentor__user__last_name",
             )
@@ -128,10 +125,7 @@ class Meeting(CommonInfo):
 
     def get_current_mentors(self):
         return Mentor.objects.filter(
-            id__in=MeetingOrder.objects.filter(
-                is_active=True,
-                meeting=self,
-            ).values(
+            id__in=MeetingOrder.objects.filter(is_active=True, meeting=self,).values(
                 "mentor__id",
             )
         )

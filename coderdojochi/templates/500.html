@@ -22,9 +22,13 @@
 <p><b>Email:</b> <a href="mailto:hello@weallcode.org">hello@weallcode.org</a></p>
 <p><b>Phone:</b> <a href="tel:+17738696536">(773) 869-6536</a></p>
 
-<script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" integrity="sha384-wF7Jc4ZlWVxe/L8Ji3hOIBeTgo/HwFuaeEfjGmS3EXAG7Y+7Kjjr91gJpJtr+PAT" crossorigin="anonymous"></script>
+{% if SENTRY_DSN and sentry_event_id %}
+<script
+  src="https://browser.sentry-cdn.com/7.46.0/bundle.min.js"
+  integrity="sha384-AfN9/2RSX7pLS3X2yieiMJYVrZpmuiiy+X2VmHvghWptYJJhkBmN1sqvjpwkxHCu"
+  crossorigin="anonymous"
+></script>
 
-{% if sentry_event_id %}
 <script>
   Sentry.init({ dsn: '{{ SENTRY_DSN }}' });
   Sentry.showReportDialog({ eventId: '{{ sentry_event_id }}' });

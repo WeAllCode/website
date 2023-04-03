@@ -23,15 +23,18 @@ User = get_user_model()
 
 def page_not_found_view(*args, **kwargs):
     print("page_not_found_view")
-    capture_message("Page not found!", level="error")
+
+    options = {}
+
+    if settings.SENTRY_DSN:
+        capture_message("Page not found!", level="error")
+        options["sentry_event_id"] = last_event_id()
+        options["SENTRY_DSN"] = settings.SENTRY_DSN
 
     return render(
         request,
         "404.html",
-        {
-            "sentry_event_id": last_event_id(),
-            "SENTRY_DSN": settings.SENTRY_DSN,
-        },
+        options,
         status=404,
     )
 
