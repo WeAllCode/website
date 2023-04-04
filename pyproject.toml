@@ -45,7 +45,7 @@ authors = ["Ali Karbassi <ali@weallcode.org>"]
 [tool.poetry.dependencies]
 python = "3.11.2"
 arrow = "^1.2.3"
-boto3 = "^1.26.104"
+boto3 = "^1.26.105"
 Django = "^4.1.7"
 django-allauth = "^0.53.1"
 django-anymail = "^9.1"
