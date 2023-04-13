@@ -1,7 +1,11 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 
-from ...models import Mentor, MentorOrder, Session
+from ...models import (
+    Mentor,
+    MentorOrder,
+    Session,
+)
 
 
 class SessionDetailView(DetailView):
@@ -18,8 +22,12 @@ class SessionDetailView(DetailView):
         )
 
         context = super().get_context_data(**kwargs)
-        context["mentor_signed_up"] = session_orders.filter(mentor=mentor).exists()
-        context["spots_remaining"] = session.mentor_capacity - session_orders.count()
+        context["mentor_signed_up"] = session_orders.filter(
+            mentor=mentor
+        ).exists()
+        context["spots_remaining"] = (
+            session.mentor_capacity - session_orders.count()
+        )
         context["account"] = mentor
 
         context["active_mentors"] = Mentor.objects.filter(

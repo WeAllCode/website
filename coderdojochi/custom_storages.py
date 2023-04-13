@@ -12,7 +12,7 @@ class S3StaticStorage(S3BotoStorage):
             custom_domain=settings.AWS_STATIC_CUSTOM_DOMAIN,
             secure_urls=False,
             *args,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -25,5 +25,5 @@ class S3MediaStorage(S3BotoStorage):
             custom_domain=settings.AWS_S3_CUSTOM_DOMAIN,
             secure_urls=False,
             *args,
-            **kwargs
+            **kwargs,
         )

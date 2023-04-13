@@ -101,7 +101,10 @@ def email(
 
                 user = User.objects.get(email=recipient)
                 user.is_active = False
-                user.admin_notes = f"User '{send_attempt.reject_reason}' when checked on {timezone.now()}"
+                user.admin_notes = (
+                    f"User '{send_attempt.reject_reason}' when checked on"
+                    f" {timezone.now()}"
+                )
                 user.save()
 
 

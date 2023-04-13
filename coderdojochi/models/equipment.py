@@ -85,4 +85,7 @@ class Equipment(CommonInfo):
         verbose_name_plural = "equipment"
 
     def __str__(self):
-        return f"{self.equipment_type.name} | {self.make} {self.model} | {self.acquisition_date}"
+        return (
+            f"{self.equipment_type.name} | {self.make} {self.model} |"
+            f" {self.acquisition_date}"
+        )

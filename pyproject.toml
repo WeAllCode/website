@@ -1,17 +1,23 @@
-[tool]
 [tool.isort]
-line_length = 120
+profile = "black"
+line_length = 79
 multi_line_output = 3
 include_trailing_comma = true
-#default_section = "THIRDPARTY"
-#known_first_party = []
-#known_third_party = []
-skip=['.eggs', '.git', '.hg', '.mypy_cache', '.nox', '.pants.d', '.tox', '.venv', '_build', 'buck-out', 'build', 'dist', 'node_modules', 'venv', 'migrations']
+combine_as_imports = true
+force_grid_wrap = 2
+use_parentheses = true
+remove_redundant_aliases = true
+known_django = "django"
+sections = "FUTURE,STDLIB,DJANGO,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+skip_gitignore = true
+skip = [".gitignore", ".dockerignore", ".venv"]
+skip_glob = "**/migrations/*.py"
+
 
 [tool.black]
-line-length = 120
-#target-version = ['py38']
-#include = '\.pyi?$'
+line_length = 79
+target-version = ['py311']
+include = '\.pyi?$'
 exclude = '''
 
 (
@@ -76,3 +82,4 @@ Pillow = "^9.5.0"
 psycopg2-binary = "^2.9.6"
 sentry-sdk = "^1.19.1"
 django-active-link = "^0.1.8"
+# pre-commit = "^3.2.2"

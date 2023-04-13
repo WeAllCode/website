@@ -14,9 +14,14 @@ class HomeView(DefaultMetaTags, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        sessions = Session.objects.filter(is_active=True, start_date__gte=timezone.now()).order_by("start_date")
+        sessions = Session.objects.filter(
+            is_active=True, start_date__gte=timezone.now()
+        ).order_by("start_date")
 
-        if not self.request.user.is_authenticated or not self.request.user.role == "mentor":
+        if (
+            not self.request.user.is_authenticated
+            or not self.request.user.role == "mentor"
+        ):
             sessions = sessions.filter(is_public=True)
 
         if len(sessions) > 0:

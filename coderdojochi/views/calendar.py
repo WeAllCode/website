@@ -4,7 +4,11 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import View
 
 import arrow
-from icalendar import Calendar, Event, vText
+from icalendar import (
+    Calendar,
+    Event,
+    vText,
+)
 
 
 class CalendarView(View):
@@ -28,7 +32,9 @@ class CalendarView(View):
         raise NotImplementedError
 
     def get(self, request, *args, **kwargs):
-        event_obj = get_object_or_404(self.event_class, id=kwargs[self.event_kwarg])
+        event_obj = get_object_or_404(
+            self.event_class, id=kwargs[self.event_kwarg]
+        )
         cal = Calendar()
 
         cal["prodid"] = "-//We All Code//weallcode.org//"
@@ -37,7 +43,9 @@ class CalendarView(View):
 
         event = Event()
 
-        event["uid"] = f"{self.event_type.upper()}{event_obj.id:04}@weallcode.org"
+        event["uid"] = (
+            f"{self.event_type.upper()}{event_obj.id:04}@weallcode.org"
+        )
         event["summary"] = self.get_summary(request, event_obj)
         event["dtstart"] = self.get_dtstart(request, event_obj)
         event["dtend"] = self.get_dtend(request, event_obj)
@@ -54,12 +62,18 @@ class CalendarView(View):
 
         event_slug = "weallcode-{event_type}_{date}".format(
             event_type=self.event_type.lower(),
-            date=arrow.get(event_obj.start_date).to("local").format("MM-DD-YYYY_HH-mma"),
+            date=arrow.get(event_obj.start_date)
+            .to("local")
+            .format("MM-DD-YYYY_HH-mma"),
         )
 
         # Return the ICS formatted calendar
-        response = HttpResponse(cal.to_ical(), content_type="text/calendar", charset="utf-8")
+        response = HttpResponse(
+            cal.to_ical(), content_type="text/calendar", charset="utf-8"
+        )
 
-        response["Content-Disposition"] = f"attachment;filename={event_slug}.ics"
+        response["Content-Disposition"] = (
+            f"attachment;filename={event_slug}.ics"
+        )
 
         return response

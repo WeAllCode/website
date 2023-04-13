@@ -56,7 +56,9 @@ class MentorOrder(CommonInfo):
     is_checked_in.boolean = True
 
     def save(self, *args, **kwargs):
-        num_orders = MentorOrder.objects.filter(mentor__id=self.mentor.id).count()
+        num_orders = MentorOrder.objects.filter(
+            mentor__id=self.mentor.id
+        ).count()
 
         if self.pk is None and num_orders == 0:
             NewMentorOrderNotification(self).send()

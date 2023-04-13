@@ -8,16 +8,27 @@ logger = logging.getLogger(__name__)
 
 
 class SlackNotification:
-    DEFAULT_PAYLOAD = {"channel": settings.SLACK_ALERTS_CHANNEL, "text": "IMPLEMENT_ME"}
+    DEFAULT_PAYLOAD = {
+        "channel": settings.SLACK_ALERTS_CHANNEL,
+        "text": "IMPLEMENT_ME",
+    }
 
     def __init__(self):
         self.payload = DEFAULT_PAYLOAD
 
     def send(self):
-        res = requests.post(settings.SLACK_WEBHOOK_URL, json={**self.DEFAULT_PAYLOAD, **self.payload})
+        res = requests.post(
+            settings.SLACK_WEBHOOK_URL,
+            json={**self.DEFAULT_PAYLOAD, **self.payload},
+        )
 
         if res.status_code != requests.codes.ok:
-            logger.error({"msg": "Unable to send Slack notification", "error": res.content})
+            logger.error(
+                {
+                    "msg": "Unable to send Slack notification",
+                    "error": res.content,
+                }
+            )
 
 
 class NewMentorNotification(SlackNotification):
@@ -25,12 +36,24 @@ class NewMentorNotification(SlackNotification):
         self.payload = {
             "blocks": [
                 {"type": "divider"},
-                {"type": "section", "text": {"text": "👋 New mentor signup!", "type": "mrkdwn"}},
+                {
+                    "type": "section",
+                    "text": {
+                        "text": "👋 New mentor signup!",
+                        "type": "mrkdwn",
+                    },
+                },
                 {
                     "type": "section",
                     "fields": [
-                        {"type": "mrkdwn", "text": f"*Name*: \n{mentor.full_name}"},
-                        {"type": "mrkdwn", "text": f"*Email*: \n{mentor.email}"},
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Name*: \n{mentor.full_name}",
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Email*: \n{mentor.email}",
+                        },
                     ],
                 },
             ]
@@ -47,13 +70,22 @@ class NewMentorOrderNotification(SlackNotification):
         self.payload = {
             "blocks": [
                 {"type": "divider"},
-                {"type": "section", "text": {"type": "mrkdwn", "text": "🏫 New mentor enrollment!"}},
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "🏫 New mentor enrollment!",
+                    },
+                },
                 {
                     "type": "section",
                     "fields": [
                         {"type": "mrkdwn", "text": f"*Name*: \n{name}\n"},
                         {"type": "mrkdwn", "text": f"*Email*: \n{email}\n"},
-                        {"type": "mrkdwn", "text": f"*Location*: \n{location}"},
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Location*: \n{location}",
+                        },
                         {"type": "mrkdwn", "text": f"*Date*: \n{start_date}"},
                     ],
                 },
@@ -66,12 +98,24 @@ class NewMentorBgCheckNotification(SlackNotification):
         self.payload = {
             "blocks": [
                 {"type": "divider"},
-                {"type": "section", "text": {"type": "mrkdwn", "text": "✅ New mentor background check!"}},
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "✅ New mentor background check!",
+                    },
+                },
                 {
                     "type": "section",
                     "fields": [
-                        {"type": "mrkdwn", "text": f"*Name*: \n{mentor.user.name}"},
-                        {"type": "mrkdwn", "text": f"*Email*: \n{mentor.user.email}"},
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Name*: \n{mentor.user.name}",
+                        },
+                        {
+                            "type": "mrkdwn",
+                            "text": f"*Email*: \n{mentor.user.email}",
+                        },
                     ],
                 },
             ]
