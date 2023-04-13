@@ -547,20 +547,20 @@ files = [
 
 [[package]]
 name = "django-import-export"
-version = "3.1.0"
+version = "3.2.0"
 description = "Django application and library for importing and exporting data with included admin integration."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "django-import-export-3.1.0.tar.gz", hash = "sha256:0760414c125142f5db02382f661b091f7597dbbebf82c8797c7830cc140a6a1a"},
-    {file = "django_import_export-3.1.0-py3-none-any.whl", hash = "sha256:5f72cb49ad92f4393f0bdb8396f344232445555e77fc501dd294bcd3d1788606"},
+    {file = "django-import-export-3.2.0.tar.gz", hash = "sha256:38fd7b9439b9e3aa1a4747421c1087a5bc194e915a28d795fb8429a5f8028f2d"},
+    {file = "django_import_export-3.2.0-py3-none-any.whl", hash = "sha256:1d3f2cb2ee3cca0386ed60651fa1623be989f130d9fbdf98a67f7dc3a94b8a37"},
 ]
 
 [package.dependencies]
 diff-match-patch = "*"
 Django = ">=3.2"
-tablib = {version = ">=3.2.1", extras = ["html", "ods", "xls", "xlsx", "yaml"]}
+tablib = {version = ">=3.4.0", extras = ["html", "ods", "xls", "xlsx", "yaml"]}
 
 [[package]]
 name = "django-loginas"
@@ -1446,4 +1446,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "2c8d6da48e1144a5065a06cca197ed8fb14b7caec54fa6d85ff16cb865fb3a66"
+content-hash = "c097a22779fa9c343cc8b47224d9251e3248ed1f533446f60159b99ed20db3fc"
