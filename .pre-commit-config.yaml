@@ -12,6 +12,7 @@ repos:
       - id: no-commit-to-branch
         args: [--branch, main]
       - id: trailing-whitespace
+      - id: end-of-file-fixer
 
   # isort
   - repo: https://github.com/pycqa/isort
