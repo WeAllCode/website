@@ -43,7 +43,7 @@ homepage = "https://github.com/weallcode/website"
 authors = ["Ali Karbassi <ali@weallcode.org>"]
 
 [tool.poetry.dependencies]
-python = "3.11.2"
+python = "3.11.3"
 arrow = "^1.2.3"
 boto3 = "^1.26.112"
 Django = "^4.2"
