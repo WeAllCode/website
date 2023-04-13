@@ -321,8 +321,10 @@ class StudentForm(CDCModelForm):
             },
         ),
         label=format_lazy(
-            "I hereby give consent for the student signed up above to participate in We All Code as per the "
-            '<a href="{0}">terms</a>.',
+            (
+                "I hereby give consent for the student signed up above to participate in We All Code as per the "
+                '<a href="{0}">terms</a>.'
+            ),
             reverse_lazy("weallcode-privacy"),
         ),
     )

@@ -193,7 +193,10 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             return f"Sorry, this class is limited to {session_obj.gender_limitation}s this time around."
 
         if not student.is_within_age_range(session_obj.minimum_age, session_obj.maximum_age):
-            return f"Sorry, this class is limited to students between ages {session_obj.minimum_age} and {session_obj.maximum_age}."
+            return (
+                f"Sorry, this class is limited to students between ages {session_obj.minimum_age} and"
+                f" {session_obj.maximum_age}."
+            )
 
         if not user_signed_up and session_obj.capacity <= session_obj.get_active_student_count():
             return "Sorry this class has sold out. Please sign up for the wait list and/or check back later."
@@ -365,6 +368,9 @@ class SessionCalendarView(CalendarView):
                     pass
 
         elif event_obj.location.address:
-            location = f"{event_obj.location.name}, {event_obj.location.address}, {event_obj.location.city}, {event_obj.location.state}, {event_obj.location.zip}"
+            location = (
+                f"{event_obj.location.name}, {event_obj.location.address}, {event_obj.location.city},"
+                f" {event_obj.location.state}, {event_obj.location.zip}"
+            )
 
         return location

@@ -52,7 +52,7 @@ class Student(CommonInfo):
     )
     consent = models.BooleanField(
         "General Consent",
-        help_text=("I hereby give consent for the student signed up " "above to participate in We All Code."),
+        help_text="I hereby give consent for the student signed up above to participate in We All Code.",
         default=False,
     )
     is_active = models.BooleanField(

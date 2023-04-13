@@ -127,7 +127,10 @@ def mentor_reject_avatar(request, pk=None):
 
     messages.warning(
         request,
-        f"{mentor.full_name}'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor.",
+        (
+            f"{mentor.full_name}'s avatar rejected and their account is no longer public. An email notice has been sent"
+            " to the mentor."
+        ),
     )
 
     return redirect("mentors")
@@ -653,9 +656,7 @@ def check_system(request):
     # set up variables
     runUpdate = True
     responseString = ""
-    cmdString = (
-        'sh -c "$(curl -fsSL ' "https://raw.githubusercontent.com/CoderDojoChi" '/linux-update/master/update.sh)"'
-    )
+    cmdString = 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/CoderDojoChi/linux-update/master/update.sh)"'
     halfday = timedelta(hours=12)
     # halfday = timedelta(seconds=15)
 

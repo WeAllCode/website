@@ -154,9 +154,9 @@ class WelcomeView(TemplateView):
 
             if next_meeting:
                 merge_global_data["next_intro_meeting_url"] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
-                merge_global_data[
-                    "next_intro_meeting_calendar_url"
-                ] = f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
+                merge_global_data["next_intro_meeting_calendar_url"] = (
+                    f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
+                )
 
             if not next_url:
                 next_url = reverse("account_home")

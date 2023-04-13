@@ -165,7 +165,10 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                 template_name="meeting_confirm_mentor",
                 merge_global_data=merge_global_data,
                 recipients=[request.user.email],
-                preheader=f"Thanks for signing up for our next meeting, {request.user.first_name}. We look forward to seeing there.",
+                preheader=(
+                    f"Thanks for signing up for our next meeting, {request.user.first_name}. We look forward to seeing"
+                    " there."
+                ),
             )
 
         return redirect("meeting_detail", meeting_obj.id)
