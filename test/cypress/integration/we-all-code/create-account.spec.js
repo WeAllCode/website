@@ -70,7 +70,7 @@ describe("Signup User", () => {
     cy.get(":nth-child(11) > .checkbox > label").click();
     cy.get("#id_consent").check();
     cy.get(".submit").click();
-    
+
   });
 
   it("Volunteer Signup", () => {
