@@ -27,7 +27,9 @@ def student_session_order_count(student, session):
 
 @register.simple_tag(takes_context=True)
 def student_register_link(context, student, session):
-    orders = Order.objects.filter(student=student, session=session, is_active=True)
+    orders = Order.objects.filter(
+        student=student, session=session, is_active=True
+    )
 
     url = reverse(
         "session-sign-up",
@@ -56,19 +58,25 @@ def student_register_link(context, student, session):
 
         if not student.is_within_age_range(
             session.minimum_age, session.maximum_age, session.start_date
-        ) and not student.is_within_gender_limitation(session.gender_limitation):
+        ) and not student.is_within_gender_limitation(
+            session.gender_limitation
+        ):
             title = "Limited event."
             message = f"Sorry, this class is limited to {session.gender_limitation}s between {session.minimum_age} and {session.maximum_age} this time around."
 
             button_href = f'data-trigger="hover" data-placement="top" data-toggle="popover" title="" data-content="{message}" data-original-title="{title}"'
 
-        elif not student.is_within_age_range(session.minimum_age, session.maximum_age, session.start_date):
+        elif not student.is_within_age_range(
+            session.minimum_age, session.maximum_age, session.start_date
+        ):
             title = "Age-limited event."
             message = f"Sorry, this class is limited to student between ages {session.minimum_age} and {session.maximum_age} this time around."
 
             button_href = f'data-trigger="hover" data-placement="top" data-toggle="popover" title="" data-content="{message}" data-original-title="{title}"'
 
-        elif not student.is_within_gender_limitation(session.gender_limitation):
+        elif not student.is_within_gender_limitation(
+            session.gender_limitation
+        ):
             if session.gender_limitation == "female":
                 title = "Girls-only event."
             else:

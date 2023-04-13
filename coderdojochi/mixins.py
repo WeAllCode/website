@@ -22,13 +22,20 @@ class RoleRedirectMixin(object):
         user = request.user
 
         if user.is_authenticated and session_obj and not user.role:
-            messages.warning(request, "Please select one of the following options to continue.")
+            messages.warning(
+                request,
+                "Please select one of the following options to continue.",
+            )
 
-            next_url = f"{reverse('welcome')}?next={session_obj.get_absolute_url()}"
+            next_url = (
+                f"{reverse('welcome')}?next={session_obj.get_absolute_url()}"
+            )
 
             if "enroll" in request.GET:
                 next_url += "&enroll=True"
 
             return redirect(next_url)
 
-        return super(RoleRedirectMixin, self).dispatch(request, *args, **kwargs)
+        return super(RoleRedirectMixin, self).dispatch(
+            request, *args, **kwargs
+        )

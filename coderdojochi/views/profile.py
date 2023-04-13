@@ -39,9 +39,9 @@ class DojoMentorView(TemplateView):
         #     "session__start_date"
         # )
 
-        past_sessions = orders.filter(is_active=True, session__start_date__lte=timezone.now()).order_by(
-            "session__start_date"
-        )
+        past_sessions = orders.filter(
+            is_active=True, session__start_date__lte=timezone.now()
+        ).order_by("session__start_date")
 
         # meeting_orders = MeetingOrder.objects.select_related().filter(mentor=mentor)
 
@@ -66,7 +66,9 @@ class DojoMentorView(TemplateView):
 
         form = MentorForm(request.POST, request.FILES, instance=mentor)
 
-        user_form = CDCModelForm(request.POST, request.FILES, instance=mentor.user)
+        user_form = CDCModelForm(
+            request.POST, request.FILES, instance=mentor.user
+        )
 
         if form.is_valid() and user_form.is_valid():
             form.save()

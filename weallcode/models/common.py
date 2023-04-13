@@ -69,9 +69,13 @@ class CommonBoardMemberManager(models.Manager):
         """
 
         roles = [CHAIR, VICE_CHAIR, TREASURER, SECRETARY, DIRECTOR]
-        order = Case(*[When(role=role, then=pos) for pos, role in enumerate(roles)])
+        order = Case(
+            *[When(role=role, then=pos) for pos, role in enumerate(roles)]
+        )
         return (
             self.get_queryset()
-            .filter(is_active=True, departure_date__isnull=True, role__in=roles)
+            .filter(
+                is_active=True, departure_date__isnull=True, role__in=roles
+            )
             .order_by(order, "join_date", "name")
         )

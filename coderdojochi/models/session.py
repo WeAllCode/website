@@ -89,7 +89,9 @@ class Session(CommonInfo):
     )
 
     # Extra
-    additional_info = models.TextField(blank=True, null=True, help_text="Basic HTML allowed")
+    additional_info = models.TextField(
+        blank=True, null=True, help_text="Basic HTML allowed"
+    )
     waitlist_mentors = models.ManyToManyField(
         Mentor,
         blank=True,
@@ -296,9 +298,9 @@ class Session(CommonInfo):
     def get_checked_in_mentor_orders(self):
         from .mentor_order import MentorOrder
 
-        return MentorOrder.objects.filter(session=self, is_active=True, check_in__isnull=False).order_by(
-            "mentor__user__last_name"
-        )
+        return MentorOrder.objects.filter(
+            session=self, is_active=True, check_in__isnull=False
+        ).order_by("mentor__user__last_name")
 
     def get_current_orders(self, checked_in=None):
         from .order import Order
@@ -311,23 +313,33 @@ class Session(CommonInfo):
                     .order_by("student__last_name")
                 )
             else:
-                orders = Order.objects.filter(is_active=True, session=self, check_in=None).order_by(
-                    "student__last_name"
-                )
+                orders = Order.objects.filter(
+                    is_active=True, session=self, check_in=None
+                ).order_by("student__last_name")
         else:
-            orders = Order.objects.filter(is_active=True, session=self).order_by("check_in", "student__last_name")
+            orders = Order.objects.filter(
+                is_active=True, session=self
+            ).order_by("check_in", "student__last_name")
 
         return orders
 
     def get_active_student_count(self):
         from .order import Order
 
-        return Order.objects.filter(is_active=True, session=self).values("student").count()
+        return (
+            Order.objects.filter(is_active=True, session=self)
+            .values("student")
+            .count()
+        )
 
     def get_checked_in_students(self):
         from .order import Order
 
-        return Order.objects.filter(is_active=True, session=self).exclude(check_in=None).values("student")
+        return (
+            Order.objects.filter(is_active=True, session=self)
+            .exclude(check_in=None)
+            .values("student")
+        )
 
 
 class PartnerPasswordAccess(CommonInfo):
