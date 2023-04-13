@@ -4,14 +4,25 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import Http404
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.utils import timezone
 from django.utils.html import strip_tags
-from django.views.generic import DetailView, ListView
+from django.views.generic import (
+    DetailView,
+    ListView,
+)
 
 import arrow
 
-from coderdojochi.models import Meeting, MeetingOrder, Mentor
+from coderdojochi.models import (
+    Meeting,
+    MeetingOrder,
+    Mentor,
+)
 from coderdojochi.util import email
 from coderdojochi.views.calendar import CalendarView
 
@@ -157,32 +168,42 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                 "order_id": meeting_order.id,
                 "meeting_title": meeting_obj.meeting_type.title,
                 "meeting_description": meeting_obj.meeting_type.description,
-                "meeting_start_date": arrow.get(meeting_obj.start_date)
-                .to("local")
-                .format("dddd, MMMM D, YYYY"),
-                "meeting_start_time": arrow.get(meeting_obj.start_date)
-                .to("local")
-                .format("h:mma"),
-                "meeting_end_date": arrow.get(meeting_obj.end_date)
-                .to("local")
-                .format("dddd, MMMM D, YYYY"),
-                "meeting_end_time": arrow.get(meeting_obj.end_date)
-                .to("local")
-                .format("h:mma"),
+                "meeting_start_date": (
+                    arrow.get(meeting_obj.start_date)
+                    .to("local")
+                    .format("dddd, MMMM D, YYYY")
+                ),
+                "meeting_start_time": (
+                    arrow.get(meeting_obj.start_date)
+                    .to("local")
+                    .format("h:mma")
+                ),
+                "meeting_end_date": (
+                    arrow.get(meeting_obj.end_date)
+                    .to("local")
+                    .format("dddd, MMMM D, YYYY")
+                ),
+                "meeting_end_time": (
+                    arrow.get(meeting_obj.end_date).to("local").format("h:mma")
+                ),
                 "meeting_location_name": meeting_obj.location.name,
                 "meeting_location_address": meeting_obj.location.address,
                 "meeting_location_city": meeting_obj.location.city,
                 "meeting_location_state": meeting_obj.location.state,
                 "meeting_location_zip": meeting_obj.location.zip,
                 "meeting_additional_info": meeting_obj.additional_info,
-                "meeting_url": f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}",
-                "meeting_calendar_url": f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}",
-                "microdata_start_date": arrow.get(meeting_obj.start_date)
-                .to("local")
-                .isoformat(),
-                "microdata_end_date": arrow.get(meeting_obj.end_date)
-                .to("local")
-                .isoformat(),
+                "meeting_url": (
+                    f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"
+                ),
+                "meeting_calendar_url": (
+                    f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}"
+                ),
+                "microdata_start_date": (
+                    arrow.get(meeting_obj.start_date).to("local").isoformat()
+                ),
+                "microdata_end_date": (
+                    arrow.get(meeting_obj.end_date).to("local").isoformat()
+                ),
             }
 
             email(
@@ -190,7 +211,11 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                 template_name="meeting_confirm_mentor",
                 merge_global_data=merge_global_data,
                 recipients=[request.user.email],
-                preheader=f"Thanks for signing up for our next meeting, {request.user.first_name}. We look forward to seeing there.",
+                preheader=(
+                    "Thanks for signing up for our next meeting,"
+                    f" {request.user.first_name}. We look forward to seeing"
+                    " there."
+                ),
             )
 
         return redirect("meeting_detail", meeting_obj.id)
@@ -216,26 +241,34 @@ def meeting_announce(request, pk):
         merge_global_data = {
             "meeting_title": meeting_obj.meeting_type.title,
             "meeting_description": meeting_obj.meeting_type.description,
-            "meeting_start_date": arrow.get(meeting_obj.start_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY"),
-            "meeting_start_time": arrow.get(meeting_obj.start_date)
-            .to("local")
-            .format("h:mma"),
-            "meeting_end_date": arrow.get(meeting_obj.end_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY"),
-            "meeting_end_time": arrow.get(meeting_obj.end_date)
-            .to("local")
-            .format("h:mma"),
+            "meeting_start_date": (
+                arrow.get(meeting_obj.start_date)
+                .to("local")
+                .format("dddd, MMMM D, YYYY")
+            ),
+            "meeting_start_time": (
+                arrow.get(meeting_obj.start_date).to("local").format("h:mma")
+            ),
+            "meeting_end_date": (
+                arrow.get(meeting_obj.end_date)
+                .to("local")
+                .format("dddd, MMMM D, YYYY")
+            ),
+            "meeting_end_time": (
+                arrow.get(meeting_obj.end_date).to("local").format("h:mma")
+            ),
             "meeting_location_name": meeting_obj.location.name,
             "meeting_location_address": meeting_obj.location.address,
             "meeting_location_city": meeting_obj.location.city,
             "meeting_location_state": meeting_obj.location.state,
             "meeting_location_zip": meeting_obj.location.zip,
             "meeting_additional_info": meeting_obj.additional_info,
-            "meeting_url": f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}",
-            "meeting_calendar_url": f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}",
+            "meeting_url": (
+                f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"
+            ),
+            "meeting_calendar_url": (
+                f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}"
+            ),
         }
 
         mentors = Mentor.objects.filter(
@@ -257,7 +290,10 @@ def meeting_announce(request, pk):
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
-            preheader="A new meeting has been announced. Come join us for some amazing fun!",
+            preheader=(
+                "A new meeting has been announced. Come join us for some"
+                " amazing fun!"
+            ),
         )
 
         meeting_obj.announced_date = timezone.now()

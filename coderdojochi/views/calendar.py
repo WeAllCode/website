@@ -4,7 +4,11 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import View
 
 import arrow
-from icalendar import Calendar, Event, vText
+from icalendar import (
+    Calendar,
+    Event,
+    vText,
+)
 
 
 class CalendarView(View):
@@ -39,9 +43,9 @@ class CalendarView(View):
 
         event = Event()
 
-        event[
-            "uid"
-        ] = f"{self.event_type.upper()}{event_obj.id:04}@weallcode.org"
+        event["uid"] = (
+            f"{self.event_type.upper()}{event_obj.id:04}@weallcode.org"
+        )
         event["summary"] = self.get_summary(request, event_obj)
         event["dtstart"] = self.get_dtstart(request, event_obj)
         event["dtend"] = self.get_dtend(request, event_obj)
@@ -68,8 +72,8 @@ class CalendarView(View):
             cal.to_ical(), content_type="text/calendar", charset="utf-8"
         )
 
-        response[
-            "Content-Disposition"
-        ] = f"attachment;filename={event_slug}.ics"
+        response["Content-Disposition"] = (
+            f"attachment;filename={event_slug}.ics"
+        )
 
         return response

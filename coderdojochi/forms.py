@@ -3,9 +3,17 @@ import re
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
-from django.forms import FileField, Form, ModelForm, ValidationError
+from django.forms import (
+    FileField,
+    Form,
+    ModelForm,
+    ValidationError,
+)
 from django.urls import reverse_lazy
-from django.utils import dateformat, timezone
+from django.utils import (
+    dateformat,
+    timezone,
+)
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import format_lazy
@@ -202,13 +210,15 @@ class MentorForm(CDCModelForm):
             max_width = max_height = 1000
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
-                    f"Please use an image that is {max_width} x {max_height}px or smaller."
+                    f"Please use an image that is {max_width} x {max_height}px"
+                    " or smaller."
                 )
 
             min_width = min_height = 500
             if w < min_width or h < min_height:
                 raise forms.ValidationError(
-                    f"Please use an image that is {min_width} x {min_height}px or larger."
+                    f"Please use an image that is {min_width} x {min_height}px"
+                    " or larger."
                 )
 
             # validate content type
@@ -365,7 +375,8 @@ class StudentForm(CDCModelForm):
             "{0} {1}",
             "Medications",
             mark_safe(
-                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'
+                '<span class="btn btn-xs btn-link'
+                ' js-expand-student-form">expand</span>'
             ),
         ),
         required=False,
@@ -383,7 +394,8 @@ class StudentForm(CDCModelForm):
             "{0} {1}",
             "Medical Conditions",
             mark_safe(
-                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>'
+                '<span class="btn btn-xs btn-link'
+                ' js-expand-student-form">expand</span>'
             ),
         ),
         required=False,
@@ -408,8 +420,11 @@ class StudentForm(CDCModelForm):
             },
         ),
         label=format_lazy(
-            "I hereby give consent for the student signed up above to participate in We All Code as per the "
-            '<a href="{0}">terms</a>.',
+            (
+                "I hereby give consent for the student signed up above to"
+                " participate in We All Code as per the <a"
+                ' href="{0}">terms</a>.'
+            ),
             reverse_lazy("weallcode-privacy"),
         ),
     )

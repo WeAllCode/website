@@ -190,13 +190,19 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.MinimumLengthValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.CommonPasswordValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.NumericPasswordValidator"
+        ),
     },
 ]
 
@@ -266,7 +272,9 @@ else:
     _AWS_EXPIRY = 60 * 60 * 24 * 7
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_S3_OBJECT_PARAMETERS = {
-        "CacheControl": f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate",
+        "CacheControl": (
+            f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate"
+        ),
     }
 
     # STATIC
@@ -279,10 +287,10 @@ else:
     # region http://stackoverflow.com/questions/10390244/
     from django.contrib.staticfiles.storage import ManifestFilesMixin
 
-    from storages.backends.s3boto3 import (
+    from storages.backends.s3boto3 import (  # noqa E402
         S3Boto3Storage,
         SpooledTemporaryFile,
-    )  # noqa E402
+    )
 
     # ManifestFilesSafeMixin = lambda: ManifestFilesMixin(manifest_strict=False)
     # Taken from an issue in django-storages:

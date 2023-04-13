@@ -1,12 +1,16 @@
+from django.conf import settings
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import TemplateView
-from django.conf import settings
 
-from coderdojochi.models import Course, Session
+import arrow
+
+from coderdojochi.models import (
+    Course,
+    Session,
+)
 
 from .common import DefaultMetaTags
-import arrow
 
 
 class ProgramsView(DefaultMetaTags, TemplateView):

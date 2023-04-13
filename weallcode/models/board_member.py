@@ -1,6 +1,9 @@
 from django.db import models
 
-from .common import CommonBoardMemberManager, CommonInfo
+from .common import (
+    CommonBoardMemberManager,
+    CommonInfo,
+)
 
 
 class BoardMember(CommonInfo):

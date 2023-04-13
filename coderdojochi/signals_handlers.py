@@ -33,8 +33,12 @@ def avatar_updated_handler(sender, instance, **kwargs):
                 "first_name": instance.first_name,
                 "last_name": instance.last_name,
                 "image": "avatar",
-                "approve_url": f"{settings.SITE_URL}{instance.get_approve_avatar_url()}",
-                "reject_url": f"{settings.SITE_URL}{instance.get_reject_avatar_url()}",
+                "approve_url": (
+                    f"{settings.SITE_URL}{instance.get_approve_avatar_url()}"
+                ),
+                "reject_url": (
+                    f"{settings.SITE_URL}{instance.get_reject_avatar_url()}"
+                ),
             },
             recipients=[settings.CONTACT_EMAIL],
             preheader="Mentor Avatar Changed",

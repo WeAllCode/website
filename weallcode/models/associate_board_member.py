@@ -3,7 +3,10 @@ from itertools import chain
 
 from django.db import models
 
-from .common import CommonBoardMemberManager, CommonInfo
+from .common import (
+    CommonBoardMemberManager,
+    CommonInfo,
+)
 
 
 class AssociateBoardMember(CommonInfo):

@@ -3,13 +3,22 @@ import logging
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+)
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from coderdojochi.forms import CDCModelForm, MentorForm
-from coderdojochi.models import Mentor, MentorOrder
+from coderdojochi.forms import (
+    CDCModelForm,
+    MentorForm,
+)
+from coderdojochi.models import (
+    Mentor,
+    MentorOrder,
+)
 
 logger = logging.getLogger(__name__)
 

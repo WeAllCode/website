@@ -1,9 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-from django.test import Client, TestCase
+from django.test import (
+    Client,
+    TestCase,
+)
 from django.urls import reverse
 
-from coderdojochi.factories import PartnerPasswordAccessFactory, SessionFactory
+from coderdojochi.factories import (
+    PartnerPasswordAccessFactory,
+    SessionFactory,
+)
 from coderdojochi.models import PartnerPasswordAccess
 
 User = get_user_model()

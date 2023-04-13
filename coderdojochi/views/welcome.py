@@ -3,13 +3,26 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from coderdojochi.forms import GuardianForm, MentorForm, StudentForm
-from coderdojochi.models import Guardian, Meeting, Mentor, Session
+from coderdojochi.forms import (
+    GuardianForm,
+    MentorForm,
+    StudentForm,
+)
+from coderdojochi.models import (
+    Guardian,
+    Meeting,
+    Mentor,
+    Session,
+)
 from coderdojochi.util import email
 
 logger = logging.getLogger(__name__)
@@ -181,12 +194,12 @@ class WelcomeView(TemplateView):
             )
 
             if next_meeting:
-                merge_global_data[
-                    "next_intro_meeting_url"
-                ] = f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
-                merge_global_data[
-                    "next_intro_meeting_calendar_url"
-                ] = f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
+                merge_global_data["next_intro_meeting_url"] = (
+                    f"{settings.SITE_URL}{next_meeting.get_absolute_url()}"
+                )
+                merge_global_data["next_intro_meeting_calendar_url"] = (
+                    f"{settings.SITE_URL}{next_meeting.get_calendar_url()}"
+                )
 
             if not next_url:
                 next_url = reverse("account_home")
@@ -207,12 +220,12 @@ class WelcomeView(TemplateView):
             )
 
             if next_class:
-                merge_global_data[
-                    "next_class_url"
-                ] = f"{settings.SITE_URL}{next_class.get_absolute_url()}"
-                merge_global_data[
-                    "next_class_calendar_url"
-                ] = f"{settings.SITE_URL}{next_class.get_calendar_url()}"
+                merge_global_data["next_class_url"] = (
+                    f"{settings.SITE_URL}{next_class.get_absolute_url()}"
+                )
+                merge_global_data["next_class_calendar_url"] = (
+                    f"{settings.SITE_URL}{next_class.get_calendar_url()}"
+                )
 
             if not next_url:
                 next_url = reverse("welcome")

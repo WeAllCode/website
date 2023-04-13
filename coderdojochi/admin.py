@@ -3,13 +3,20 @@ from distutils.util import strtobool
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.db.models import Case, Count, When
+from django.db.models import (
+    Case,
+    Count,
+    When,
+)
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
 from import_export import resources
-from import_export.admin import ImportExportActionModelAdmin, ImportExportMixin
+from import_export.admin import (
+    ImportExportActionModelAdmin,
+    ImportExportMixin,
+)
 from import_export.fields import Field
 
 from .models import (

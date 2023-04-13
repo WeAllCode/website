@@ -3,7 +3,10 @@ from datetime import date
 from itertools import chain
 
 from django.db import models
-from django.db.models import Case, When
+from django.db.models import (
+    Case,
+    When,
+)
 
 CHAIR = "Chair"
 VICE_CHAIR = "Vice Chair"

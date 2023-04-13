@@ -81,7 +81,10 @@ class ContactForm(forms.Form):
         if field_classes == "":
             return f"{field}{field.errors}"
 
-        return f"<div class='cell {field_classes}'>{field.label_tag()}{field}{field.errors}</div>"
+        return (
+            "<div class='cell"
+            f" {field_classes}'>{field.label_tag()}{field}{field.errors}</div>"
+        )
 
     def send_email(self):
         # send email using the self.cleaned_data dictionary

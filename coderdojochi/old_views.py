@@ -9,9 +9,18 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Case, Count, IntegerField, When
+from django.db.models import (
+    Case,
+    Count,
+    IntegerField,
+    When,
+)
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -19,7 +28,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 import arrow
 
-from coderdojochi.forms import DonationForm, StudentForm
+from coderdojochi.forms import (
+    DonationForm,
+    StudentForm,
+)
 from coderdojochi.models import (
     Donation,
     Equipment,
@@ -100,7 +112,10 @@ def mentor_approve_avatar(request, pk=None):
     if mentor.background_check:
         messages.success(
             request,
-            f"{mentor.full_name}'s avatar approved and their account is now public.",
+            (
+                f"{mentor.full_name}'s avatar approved and their account is"
+                " now public."
+            ),
         )
 
         return redirect(f"{reverse('mentors')}{mentor.id}")
@@ -108,7 +123,10 @@ def mentor_approve_avatar(request, pk=None):
     else:
         messages.success(
             request,
-            f"{mentor.full_name}'s avatar approved but they have yet to fill out the 'background search' form.",
+            (
+                f"{mentor.full_name}'s avatar approved but they have yet to"
+                " fill out the 'background search' form."
+            ),
         )
 
         return redirect("mentors")
@@ -141,7 +159,10 @@ def mentor_reject_avatar(request, pk=None):
 
     messages.warning(
         request,
-        f"{mentor.full_name}'s avatar rejected and their account is no longer public. An email notice has been sent to the mentor.",
+        (
+            f"{mentor.full_name}'s avatar rejected and their account is no"
+            " longer public. An email notice has been sent to the mentor."
+        ),
     )
 
     return redirect("mentors")
@@ -655,18 +676,24 @@ def session_announce_mentors(request, pk):
             "class_code": session_obj.course.code,
             "class_title": session_obj.course.title,
             "class_description": session_obj.course.description,
-            "class_start_date": arrow.get(session_obj.mentor_start_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY"),
-            "class_start_time": arrow.get(session_obj.mentor_start_date)
-            .to("local")
-            .format("h:mma"),
-            "class_end_date": arrow.get(session_obj.end_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY"),
-            "class_end_time": arrow.get(session_obj.end_date)
-            .to("local")
-            .format("h:mma"),
+            "class_start_date": (
+                arrow.get(session_obj.mentor_start_date)
+                .to("local")
+                .format("dddd, MMMM D, YYYY")
+            ),
+            "class_start_time": (
+                arrow.get(session_obj.mentor_start_date)
+                .to("local")
+                .format("h:mma")
+            ),
+            "class_end_date": (
+                arrow.get(session_obj.end_date)
+                .to("local")
+                .format("dddd, MMMM D, YYYY")
+            ),
+            "class_end_time": (
+                arrow.get(session_obj.end_date).to("local").format("h:mma")
+            ),
             "minimum_age": session_obj.minimum_age,
             "maximum_age": session_obj.maximum_age,
             "class_location_name": session_obj.location.name,
@@ -675,8 +702,12 @@ def session_announce_mentors(request, pk):
             "class_location_state": session_obj.location.state,
             "class_location_zip": session_obj.location.zip,
             "class_additional_info": session_obj.additional_info,
-            "class_url": f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-            "class_calendar_url": f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
+            "class_url": (
+                f"{settings.SITE_URL}{session_obj.get_absolute_url()}"
+            ),
+            "class_calendar_url": (
+                f"{settings.SITE_URL}{session_obj.get_calendar_url()}"
+            ),
         }
         recipients = []
 
@@ -699,7 +730,10 @@ def session_announce_mentors(request, pk):
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
-            preheader="Help us make a huge difference! A brand new class was just announced.",
+            preheader=(
+                "Help us make a huge difference! A brand new class was just"
+                " announced."
+            ),
             unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
         )
 
@@ -732,18 +766,22 @@ def session_announce_guardians(request, pk):
             "class_code": session_obj.course.code,
             "class_title": session_obj.course.title,
             "class_description": session_obj.course.description,
-            "class_start_date": arrow.get(session_obj.start_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY"),
-            "class_start_time": arrow.get(session_obj.start_date)
-            .to("local")
-            .format("h:mma"),
-            "class_end_date": arrow.get(session_obj.end_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY"),
-            "class_end_time": arrow.get(session_obj.end_date)
-            .to("local")
-            .format("h:mma"),
+            "class_start_date": (
+                arrow.get(session_obj.start_date)
+                .to("local")
+                .format("dddd, MMMM D, YYYY")
+            ),
+            "class_start_time": (
+                arrow.get(session_obj.start_date).to("local").format("h:mma")
+            ),
+            "class_end_date": (
+                arrow.get(session_obj.end_date)
+                .to("local")
+                .format("dddd, MMMM D, YYYY")
+            ),
+            "class_end_time": (
+                arrow.get(session_obj.end_date).to("local").format("h:mma")
+            ),
             "minimum_age": session_obj.minimum_age,
             "maximum_age": session_obj.maximum_age,
             "class_location_name": session_obj.location.name,
@@ -752,8 +790,12 @@ def session_announce_guardians(request, pk):
             "class_location_state": session_obj.location.state,
             "class_location_zip": session_obj.location.zip,
             "class_additional_info": session_obj.additional_info,
-            "class_url": f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-            "class_calendar_url": f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
+            "class_url": (
+                f"{settings.SITE_URL}{session_obj.get_absolute_url()}"
+            ),
+            "class_calendar_url": (
+                f"{settings.SITE_URL}{session_obj.get_calendar_url()}"
+            ),
         }
         recipients = []
 
@@ -775,7 +817,10 @@ def session_announce_guardians(request, pk):
             merge_data=merge_data,
             merge_global_data=merge_global_data,
             recipients=recipients,
-            preheader="We're super excited to bring you another class date. Sign up to reserve your spot",
+            preheader=(
+                "We're super excited to bring you another class date. Sign up"
+                " to reserve your spot"
+            ),
             unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
         )
 

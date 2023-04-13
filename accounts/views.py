@@ -1,16 +1,26 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from allauth.account.views import LoginView as AllAuthLoginView
-from allauth.account.views import SignupView as AllAuthSignupView
+from allauth.account.views import (
+    LoginView as AllAuthLoginView,
+    SignupView as AllAuthSignupView,
+)
 from meta.views import MetadataMixin
 
-from coderdojochi.forms import CDCModelForm, GuardianForm, MentorForm
+from coderdojochi.forms import (
+    CDCModelForm,
+    GuardianForm,
+    MentorForm,
+)
 from coderdojochi.models import (
     Guardian,
     MeetingOrder,
@@ -25,8 +35,8 @@ class SignupView(MetadataMixin, AllAuthSignupView):
     template_name = "account/signup.html"
     title = "Sign up | We All Code"
     description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
+        "We All Code is volunteer run nonprofit organization that teaches web,"
+        " game, and app development to youth ages 7 to 17 free of charge."
     )
     image = "weallcode/images/photos/real-coding-skills.jpg"
     twitter_card = "summary_large_image"
@@ -38,8 +48,8 @@ class LoginView(MetadataMixin, AllAuthLoginView):
     template_name = "account/login.html"
     title = "Login | We All Code"
     description = (
-        "We All Code is volunteer run nonprofit organization that teaches web, game, and app development to "
-        "youth ages 7 to 17 free of charge."
+        "We All Code is volunteer run nonprofit organization that teaches web,"
+        " game, and app development to youth ages 7 to 17 free of charge."
     )
     image = "weallcode/images/photos/real-coding-skills.jpg"
     twitter_card = "summary_large_image"

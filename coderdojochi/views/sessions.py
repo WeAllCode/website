@@ -4,17 +4,28 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
-from django.views.generic import DetailView, TemplateView, View
+from django.views.generic import (
+    DetailView,
+    TemplateView,
+    View,
+)
 from django.views.generic.base import RedirectView
 
 import arrow
 
-from coderdojochi.mixins import RoleRedirectMixin, RoleTemplateMixin
+from coderdojochi.mixins import (
+    RoleRedirectMixin,
+    RoleTemplateMixin,
+)
 from coderdojochi.models import (
     Guardian,
     Mentor,
@@ -27,7 +38,11 @@ from coderdojochi.models import (
 )
 from coderdojochi.util import email
 
-from . import guardian, mentor, public
+from . import (
+    guardian,
+    mentor,
+    public,
+)
 from .calendar import CalendarView
 
 logger = logging.getLogger(__name__)
@@ -43,18 +58,24 @@ def session_confirm_mentor(request, session_obj, order):
         "class_code": session_obj.course.code,
         "class_title": session_obj.course.title,
         "class_description": session_obj.course.description,
-        "class_start_date": arrow.get(session_obj.mentor_start_date)
-        .to("local")
-        .format("dddd, MMMM D, YYYY"),
-        "class_start_time": arrow.get(session_obj.mentor_start_date)
-        .to("local")
-        .format("h:mma"),
-        "class_end_date": arrow.get(session_obj.mentor_end_date)
-        .to("local")
-        .format("dddd, MMMM D, YYYY"),
-        "class_end_time": arrow.get(session_obj.mentor_end_date)
-        .to("local")
-        .format("h:mma"),
+        "class_start_date": (
+            arrow.get(session_obj.mentor_start_date)
+            .to("local")
+            .format("dddd, MMMM D, YYYY")
+        ),
+        "class_start_time": (
+            arrow.get(session_obj.mentor_start_date)
+            .to("local")
+            .format("h:mma")
+        ),
+        "class_end_date": (
+            arrow.get(session_obj.mentor_end_date)
+            .to("local")
+            .format("dddd, MMMM D, YYYY")
+        ),
+        "class_end_time": (
+            arrow.get(session_obj.mentor_end_date).to("local").format("h:mma")
+        ),
         "class_location_name": session_obj.location.name,
         "class_location_address": session_obj.location.address,
         "class_location_city": session_obj.location.city,
@@ -62,13 +83,15 @@ def session_confirm_mentor(request, session_obj, order):
         "class_location_zip": session_obj.location.zip,
         "class_additional_info": session_obj.additional_info,
         "class_url": f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-        "class_calendar_url": f"{settings.SITE_URL}{session_obj.get_calendar_url()}",
-        "microdata_start_date": arrow.get(session_obj.mentor_start_date)
-        .to("local")
-        .isoformat(),
-        "microdata_end_date": arrow.get(session_obj.mentor_end_date)
-        .to("local")
-        .isoformat(),
+        "class_calendar_url": (
+            f"{settings.SITE_URL}{session_obj.get_calendar_url()}"
+        ),
+        "microdata_start_date": (
+            arrow.get(session_obj.mentor_start_date).to("local").isoformat()
+        ),
+        "microdata_end_date": (
+            arrow.get(session_obj.mentor_end_date).to("local").isoformat()
+        ),
         "order_id": order.id,
         "online_video_link": session_obj.online_video_link,
         "online_video_description": session_obj.online_video_description,
@@ -96,18 +119,22 @@ def session_confirm_guardian(request, session_obj, order, student):
         "class_code": session_obj.course.code,
         "class_title": session_obj.course.title,
         "class_description": session_obj.course.description,
-        "class_start_date": arrow.get(session_obj.start_date)
-        .to("local")
-        .format("dddd, MMMM D, YYYY"),
-        "class_start_time": arrow.get(session_obj.start_date)
-        .to("local")
-        .format("h:mma"),
-        "class_end_date": arrow.get(session_obj.end_date)
-        .to("local")
-        .format("dddd, MMMM D, YYYY"),
-        "class_end_time": arrow.get(session_obj.end_date)
-        .to("local")
-        .format("h:mma"),
+        "class_start_date": (
+            arrow.get(session_obj.start_date)
+            .to("local")
+            .format("dddd, MMMM D, YYYY")
+        ),
+        "class_start_time": (
+            arrow.get(session_obj.start_date).to("local").format("h:mma")
+        ),
+        "class_end_date": (
+            arrow.get(session_obj.end_date)
+            .to("local")
+            .format("dddd, MMMM D, YYYY")
+        ),
+        "class_end_time": (
+            arrow.get(session_obj.end_date).to("local").format("h:mma")
+        ),
         "class_location_name": session_obj.location.name,
         "class_location_address": session_obj.location.address,
         "class_location_city": session_obj.location.city,
@@ -116,12 +143,12 @@ def session_confirm_guardian(request, session_obj, order, student):
         "class_additional_info": session_obj.additional_info,
         "class_url": session_obj.get_absolute_url(),
         "class_calendar_url": session_obj.get_calendar_url(),
-        "microdata_start_date": arrow.get(session_obj.start_date)
-        .to("local")
-        .isoformat(),
-        "microdata_end_date": arrow.get(session_obj.end_date)
-        .to("local")
-        .isoformat(),
+        "microdata_start_date": (
+            arrow.get(session_obj.start_date).to("local").isoformat()
+        ),
+        "microdata_end_date": (
+            arrow.get(session_obj.end_date).to("local").isoformat()
+        ),
         "order_id": order.id,
         "online_video_link": session_obj.online_video_link,
         "online_video_description": session_obj.online_video_description,
@@ -132,7 +159,10 @@ def session_confirm_guardian(request, session_obj, order, student):
         template_name="class_confirm_guardian",
         merge_global_data=merge_global_data,
         recipients=[request.user.email],
-        preheader="Magical wizards have generated this confirmation. All thanks to the mystical power of coding.",
+        preheader=(
+            "Magical wizards have generated this confirmation. All thanks to"
+            " the mystical power of coding."
+        ),
     )
 
 
@@ -230,8 +260,9 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             if not kwargs["mentor"].background_check:
                 access_dict = {
                     "message": (
-                        "You cannot sign up for a class until you "
-                        f'<a href="{BG_CHECK_LINK}" target="_blank">fill out the background search form</a>.'
+                        "You cannot sign up for a class until you <a"
+                        f' href="{BG_CHECK_LINK}" target="_blank">fill out the'
+                        " background search form</a>."
                     ),
                     "redirect": request.META.get("HTTP_REFERER", "/dojo"),
                 }
@@ -254,18 +285,27 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         if not student.is_within_gender_limitation(
             session_obj.gender_limitation
         ):
-            return f"Sorry, this class is limited to {session_obj.gender_limitation}s this time around."
+            return (
+                "Sorry, this class is limited to"
+                f" {session_obj.gender_limitation}s this time around."
+            )
 
         if not student.is_within_age_range(
             session_obj.minimum_age, session_obj.maximum_age
         ):
-            return f"Sorry, this class is limited to students between ages {session_obj.minimum_age} and {session_obj.maximum_age}."
+            return (
+                "Sorry, this class is limited to students between ages"
+                f" {session_obj.minimum_age} and {session_obj.maximum_age}."
+            )
 
         if (
             not user_signed_up
             and session_obj.capacity <= session_obj.get_active_student_count()
         ):
-            return "Sorry this class has sold out. Please sign up for the wait list and/or check back later."
+            return (
+                "Sorry this class has sold out. Please sign up for the wait"
+                " list and/or check back later."
+            )
 
         return False
 
@@ -447,6 +487,10 @@ class SessionCalendarView(CalendarView):
                     pass
 
         elif event_obj.location.address:
-            location = f"{event_obj.location.name}, {event_obj.location.address}, {event_obj.location.city}, {event_obj.location.state}, {event_obj.location.zip}"
+            location = (
+                f"{event_obj.location.name}, {event_obj.location.address},"
+                f" {event_obj.location.city}, {event_obj.location.state},"
+                f" {event_obj.location.zip}"
+            )
 
         return location

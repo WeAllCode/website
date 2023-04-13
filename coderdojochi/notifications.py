@@ -38,7 +38,10 @@ class NewMentorNotification(SlackNotification):
                 {"type": "divider"},
                 {
                     "type": "section",
-                    "text": {"text": "👋 New mentor signup!", "type": "mrkdwn"},
+                    "text": {
+                        "text": "👋 New mentor signup!",
+                        "type": "mrkdwn",
+                    },
                 },
                 {
                     "type": "section",

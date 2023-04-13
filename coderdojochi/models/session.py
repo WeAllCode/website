@@ -1,6 +1,9 @@
 from datetime import timedelta
 
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (
+    MaxValueValidator,
+    MinValueValidator,
+)
 from django.db import models
 from django.urls.base import reverse
 from django.utils import formats
@@ -51,7 +54,10 @@ class Session(CommonInfo):
             "background_check": True,
             "avatar_approved": True,
         },
-        help_text="A mentor with 'Instructor' role, is active (user and mentor), background check passed, and avatar approved.",
+        help_text=(
+            "A mentor with 'Instructor' role, is active (user and mentor),"
+            " background check passed, and avatar approved."
+        ),
     )
 
     assistant = models.ManyToManyField(
@@ -65,7 +71,10 @@ class Session(CommonInfo):
             "background_check": True,
             "avatar_approved": True,
         },
-        help_text="A mentor with 'Assistant' role, is active (user and mentor), background check passed, and avatar approved.",
+        help_text=(
+            "A mentor with 'Assistant' role, is active (user and mentor),"
+            " background check passed, and avatar approved."
+        ),
     )
 
     # Pricing
@@ -190,7 +199,10 @@ class Session(CommonInfo):
     )
     online_video_description = models.TextField(
         "Online Video Description",
-        help_text="Information on how to connect to the video call. Basic HTML allowed.",
+        help_text=(
+            "Information on how to connect to the video call. Basic HTML"
+            " allowed."
+        ),
         blank=True,
         null=True,
     )

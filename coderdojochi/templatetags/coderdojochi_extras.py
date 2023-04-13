@@ -62,17 +62,33 @@ def student_register_link(context, student, session):
             session.gender_limitation
         ):
             title = "Limited event."
-            message = f"Sorry, this class is limited to {session.gender_limitation}s between {session.minimum_age} and {session.maximum_age} this time around."
+            message = (
+                f"Sorry, this class is limited to {session.gender_limitation}s"
+                f" between {session.minimum_age} and"
+                f" {session.maximum_age} this time around."
+            )
 
-            button_href = f'data-trigger="hover" data-placement="top" data-toggle="popover" title="" data-content="{message}" data-original-title="{title}"'
+            button_href = (
+                'data-trigger="hover" data-placement="top"'
+                f' data-toggle="popover" title="" data-content="{message}"'
+                f' data-original-title="{title}"'
+            )
 
         elif not student.is_within_age_range(
             session.minimum_age, session.maximum_age, session.start_date
         ):
             title = "Age-limited event."
-            message = f"Sorry, this class is limited to student between ages {session.minimum_age} and {session.maximum_age} this time around."
+            message = (
+                "Sorry, this class is limited to student between ages"
+                f" {session.minimum_age} and {session.maximum_age} this time"
+                " around."
+            )
 
-            button_href = f'data-trigger="hover" data-placement="top" data-toggle="popover" title="" data-content="{message}" data-original-title="{title}"'
+            button_href = (
+                'data-trigger="hover" data-placement="top"'
+                f' data-toggle="popover" title="" data-content="{message}"'
+                f' data-original-title="{title}"'
+            )
 
         elif not student.is_within_gender_limitation(
             session.gender_limitation
@@ -82,10 +98,20 @@ def student_register_link(context, student, session):
             else:
                 title = "Boys-only event."
 
-            message = f"Sorry, this class is limited to {session.gender_limitation}s this time around."
-            button_href = f'data-trigger="hover" data-placement="top" data-toggle="popover" title="" data-content="{message}" data-original-title="{title}" '
+            message = (
+                f"Sorry, this class is limited to {session.gender_limitation}s"
+                " this time around."
+            )
+            button_href = (
+                'data-trigger="hover" data-placement="top"'
+                f' data-toggle="popover" title="" data-content="{message}"'
+                f' data-original-title="{title}" '
+            )
 
-    form = f"<{button_tag} {button_href} class='button small {button_modifier}' {button_additional_attributes}>{button_msg}</{button_tag}>"
+    form = (
+        f"<{button_tag} {button_href} class='button small {button_modifier}'"
+        f" {button_additional_attributes}>{button_msg}</{button_tag}>"
+    )
 
     return Template(form).render(context)
 
