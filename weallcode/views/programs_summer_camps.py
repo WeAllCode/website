@@ -20,7 +20,10 @@ class ProgramsSummerCampsView(DefaultMetaTags, TemplateView):
             course__course_type=Course.CAMP,
         ).order_by("start_date")
 
-        if not self.request.user.is_authenticated or not self.request.user.role == "mentor":
+        if (
+            not self.request.user.is_authenticated
+            or not self.request.user.role == "mentor"
+        ):
             summer_camp_classes = summer_camp_classes.filter(is_public=True)
 
         context["summer_camp_classes"] = summer_camp_classes

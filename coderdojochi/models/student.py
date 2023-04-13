@@ -52,7 +52,10 @@ class Student(CommonInfo):
     )
     consent = models.BooleanField(
         "General Consent",
-        help_text=("I hereby give consent for the student signed up " "above to participate in We All Code."),
+        help_text=(
+            "I hereby give consent for the student signed up "
+            "above to participate in We All Code."
+        ),
         default=False,
     )
     is_active = models.BooleanField(
@@ -82,7 +85,14 @@ class Student(CommonInfo):
         return is_registered
 
     def get_age(self, date=timezone.now()):
-        return date.year - self.birthday.year - ((date.month, date.day) < (self.birthday.month, self.birthday.day))
+        return (
+            date.year
+            - self.birthday.year
+            - (
+                (date.month, date.day)
+                < (self.birthday.month, self.birthday.day)
+            )
+        )
 
     get_age.short_description = "Age"
 
@@ -112,7 +122,9 @@ class Student(CommonInfo):
     get_clean_gender_short.short_description = "Clean Gender Short"
 
     # returns True if the student age is between minimum_age and maximum_age
-    def is_within_age_range(self, minimum_age, maximum_age, date=timezone.now()):
+    def is_within_age_range(
+        self, minimum_age, maximum_age, date=timezone.now()
+    ):
         age = self.get_age(date)
 
         if age >= minimum_age and age <= maximum_age:

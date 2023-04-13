@@ -5,7 +5,11 @@ from django.urls import reverse
 
 from stdimage.models import StdImageField
 
-from ..notifications import NewMentorBgCheckNotification, NewMentorNotification, NewMentorOrderNotification
+from ..notifications import (
+    NewMentorBgCheckNotification,
+    NewMentorNotification,
+    NewMentorOrderNotification,
+)
 from .common import CommonInfo
 from .race_ethnicity import RaceEthnicity
 from .user import CDCUser
@@ -106,7 +110,10 @@ class Mentor(CommonInfo):
             if orig.avatar != self.avatar:
                 self.avatar_approved = False
 
-            if self.background_check is True and orig.background_check != self.background_check:
+            if (
+                self.background_check is True
+                and orig.background_check != self.background_check
+            ):
                 NewMentorBgCheckNotification(self).send()
 
         super(Mentor, self).save(*args, **kwargs)

@@ -29,9 +29,9 @@ class TeamView(DefaultMetaTags, TemplateView):
 
     # Volunteers
     def get_volunteers(self, context, volunteers):
-        all_volunteers = volunteers.annotate(session_count=Count("mentororder")).order_by(
-            "-user__role", "-session_count"
-        )
+        all_volunteers = volunteers.annotate(
+            session_count=Count("mentororder")
+        ).order_by("-user__role", "-session_count")
 
         mentors = []
         volunteers = []

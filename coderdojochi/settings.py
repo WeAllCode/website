@@ -17,8 +17,6 @@ from django.conf.locale.en import formats as en_formats
 import dj_database_url
 import django_heroku
 import environ
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
 
 env = environ.Env()
 
@@ -64,11 +62,15 @@ if SECURE_SSL_REDIRECT:
     # set this to 60 seconds first and then to 518400 once you prove the former works
     SECURE_HSTS_SECONDS = 518400
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
+        "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
+    )
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
     SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
     # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-    SECURE_CONTENT_TYPE_NOSNIFF = env.bool("DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True)
+    SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
+        "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
+    )
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
     SECURE_BROWSER_XSS_FILTER = True
     # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
@@ -154,26 +156,31 @@ WSGI_APPLICATION = "coderdojochi.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-DATABASE_URL = env("DATABASE_URL", default=False)
-if DATABASE_URL:
-    DATABASES = {"default": env.db()}
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": os.environ.get("POSTGRES_DB"),
-            "USER": os.environ.get("POSTGRES_USER"),
-            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-            "HOST": os.environ.get("POSTGRES_HOST"),
-            "PORT": os.environ.get("POSTGRES_PORT"),
-        }
+MAX_CONN_AGE = 600
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
     }
+}
 
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
-# Change 'default' database configuration with $DATABASE_URL.
-DATABASES["default"].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
+if "DATABASE_URL" in os.environ:
+    # Configure Django for DATABASE_URL environment variable.
+    DATABASES["default"] = dj_database_url.config(
+        conn_max_age=MAX_CONN_AGE,
+        ssl_require=True,
+    )
+
+    # Enable test database if found in CI environment.
+    if "CI" in os.environ:
+        DATABASES["default"]["TEST"] = DATABASES["default"]
 
 
 # Password validation
@@ -184,13 +191,19 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.MinimumLengthValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.CommonPasswordValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.NumericPasswordValidator"
+        ),
     },
 ]
 
@@ -260,7 +273,9 @@ else:
     _AWS_EXPIRY = 60 * 60 * 24 * 7
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_S3_OBJECT_PARAMETERS = {
-        "CacheControl": f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate",
+        "CacheControl": (
+            f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate"
+        ),
     }
 
     # STATIC
@@ -273,7 +288,10 @@ else:
     # region http://stackoverflow.com/questions/10390244/
     from django.contrib.staticfiles.storage import ManifestFilesMixin
 
-    from storages.backends.s3boto3 import S3Boto3Storage, SpooledTemporaryFile  # noqa E402
+    from storages.backends.s3boto3 import (  # noqa E402
+        S3Boto3Storage,
+        SpooledTemporaryFile,
+    )
 
     # ManifestFilesSafeMixin = lambda: ManifestFilesMixin(manifest_strict=False)
     # Taken from an issue in django-storages:
@@ -294,7 +312,9 @@ else:
             content_autoclose.write(content.read())
 
             # Upload the object which will auto close the content_autoclose instance
-            super(CustomS3Storage, self)._save_content(obj, content_autoclose, parameters)
+            super(CustomS3Storage, self)._save_content(
+                obj, content_autoclose, parameters
+            )
 
             # Cleanup if this is fixed upstream our duplicate should always close
             if not content_autoclose.closed:
@@ -332,7 +352,8 @@ META_USE_SCHEMAORG_PROPERTIES = True
 META_TWITTER_SITE = env("META_TWITTER_SITE", default="@weallcode")
 META_FB_APPID = env("META_SITE_DOMAIN", default="1454178301519376")
 META_INCLUDE_KEYWORDS = env.list(
-    "META_INCLUDE_KEYWORDS", default=["stem", "code", "coding", "kids", "chicago", "chicago coding"]
+    "META_INCLUDE_KEYWORDS",
+    default=["stem", "code", "coding", "kids", "chicago", "chicago coding"],
 )
 DEFAULT_META_TITLE = env("DEFAULT_META_TITLE", default="")
 
@@ -344,7 +365,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = "coderdojochi.forms.SignupForm"
-SOCIALACCOUNT_ADAPTER = "coderdojochi.social_account_adapter.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = (
+    "coderdojochi.social_account_adapter.SocialAccountAdapter"
+)
 
 
 # Email
@@ -362,18 +385,22 @@ SLACK_WEBHOOK_URL = env("SLACK_WEBHOOK_URL")
 SLACK_ALERTS_CHANNEL = env("SLACK_ALERTS_CHANNEL", default=None)
 
 # Sentry
-SENTRY_DSN = env("SENTRY_DSN")
-sentry_sdk.init(
-    dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration()],
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-)
+SENTRY_DSN = env("SENTRY_DSN", default=False)
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )
 
 
 # Django 3.2.x fix
