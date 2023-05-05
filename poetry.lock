@@ -32,18 +32,18 @@ tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
 
 [[package]]
 name = "boto3"
-version = "1.26.126"
+version = "1.26.127"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.26.126-py3-none-any.whl", hash = "sha256:a0a049d16dabf559bd86d4622a985549154c6918f779f373fb7588bd3cf1272d"},
-    {file = "boto3-1.26.126.tar.gz", hash = "sha256:ea7dc518399106ee300b867596c92d2b7b498ee7721db935915cdd53339a9f92"},
+    {file = "boto3-1.26.127-py3-none-any.whl", hash = "sha256:ded836536be41de9f9bd6a75e9feeb74d61b8c58ed7dc4ea89095082d7a616af"},
+    {file = "boto3-1.26.127.tar.gz", hash = "sha256:ed31b2d35aad31418bd8093c5732c6296f785cc234333330df6b81396424d93b"},
 ]
 
 [package.dependencies]
-botocore = ">=1.29.126,<1.30.0"
+botocore = ">=1.29.127,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -52,14 +52,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.29.126"
+version = "1.29.127"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.29.126-py3-none-any.whl", hash = "sha256:a2c5cedb26b364386d02f9ed0a3492da6a322a82e539e54600fbc7190a49660d"},
-    {file = "botocore-1.29.126.tar.gz", hash = "sha256:e7549da5d69b37e8e1f63fcc18fbb9b23f05db8dcb4118019497eee4dad57ff7"},
+    {file = "botocore-1.29.127-py3-none-any.whl", hash = "sha256:cf41d871b2a17d40bd579ce44dace18c875659ac13139a66680540fdf6f1c304"},
+    {file = "botocore-1.29.127.tar.gz", hash = "sha256:d2f9d00df16058cb4a3572a66bb1831e846e5aaa7c0a3033dd47f9a80e2dd58b"},
 ]
 
 [package.dependencies]
@@ -1465,4 +1465,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "6111bf1ce7e3a95f187e27f4f6a1b30beae08dd864b2cc91ab659b4157f7c0af"
+content-hash = "a10a3d776f183bd19551a4c73b21a375ba9211a2f127d7a7948fccd263247c11"
