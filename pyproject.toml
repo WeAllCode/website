@@ -81,4 +81,4 @@ json-logging-py = "^0.2"
 mock = "^5.0.2"
 pillow = "^9.5.0"
 psycopg = {extras = ["binary"], version = "^3.1.9"}
-sentry-sdk = "^1.22.2"
+sentry-sdk = "^1.23.0"
