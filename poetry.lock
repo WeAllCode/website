@@ -417,13 +417,13 @@ django = "*"
 
 [[package]]
 name = "django-bootstrap3"
-version = "23.2"
+version = "23.4"
 description = "Bootstrap 3 for Django"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "django_bootstrap3-23.2-py3-none-any.whl", hash = "sha256:133b5fc9d34afcabe1fd23c2d6b76849325df2c0f4d90851d9d9801c85d489df"},
-    {file = "django_bootstrap3-23.2.tar.gz", hash = "sha256:1effbe687f5378a8ceb8489fea438ed43e358b9f2e10f26ce0e9735eddde729f"},
+    {file = "django_bootstrap3-23.4-py3-none-any.whl", hash = "sha256:fc54b9afc6e0d33b9e2ac039dd022996ee95fc19bdf8320f4fd01ec611143ee3"},
+    {file = "django_bootstrap3-23.4.tar.gz", hash = "sha256:975e6017bb25b29a86416c4fbac6020f15bfd36d66861f42a20dd4ccfdab435d"},
 ]
 
 [package.dependencies]
@@ -1425,4 +1425,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "bdc8d3da2d93c10a583c4269fc529d19a837d72112efaa0548b4b9f7b604a9fd"
+content-hash = "e4ab40d4e0d8209a45964f3de730e814f9849f2799ca4375e2080fb903cea451"
