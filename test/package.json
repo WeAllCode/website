@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
-    "cypress": "^12.8.1",
+    "cypress": "^13.2.0",
     "del": "^7.0.0"
   },
   "engines": {
