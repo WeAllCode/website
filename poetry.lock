@@ -576,13 +576,13 @@ files = [
 
 [[package]]
 name = "django-meta"
-version = "2.3.0"
+version = "2.4.0"
 description = "Pluggable app for handling webpage meta tags and OpenGraph properties"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "django-meta-2.3.0.tar.gz", hash = "sha256:a7011d48dd83046b22671209f1baef236314932b41553fe5eb4f3f2fa682c2f3"},
-    {file = "django_meta-2.3.0-py2.py3-none-any.whl", hash = "sha256:d8f2386b5e475545ae7f2c58c27673ff0b29915af589463d3400828657b5360f"},
+    {file = "django-meta-2.4.0.tar.gz", hash = "sha256:4319ba348640b28bf11e0107a18a5704b9456ab3d670f8e03b566aa0171b2720"},
+    {file = "django_meta-2.4.0-py2.py3-none-any.whl", hash = "sha256:5f725c66851bc311e8d0428c07abf6ffcd715fadfb51e4d7a2e5b5f2a2fa669b"},
 ]
 
 [package.extras]
@@ -1420,4 +1420,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "a17762d11acbac5aa10bd8aaf62d467bce74506f798079c13384c6849541f5f1"
+content-hash = "79b9317b97c1ed3b5fc60edec52163b91b67c340fb23ff3f01d8b53336f8e90e"
