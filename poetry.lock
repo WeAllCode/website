@@ -729,13 +729,13 @@ tornado = ["tornado (>=0.2)"]
 
 [[package]]
 name = "icalendar"
-version = "5.0.10"
+version = "5.0.11"
 description = "iCalendar parser/generator"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "icalendar-5.0.10-py3-none-any.whl", hash = "sha256:6e392c2f301b6b5f49433e14c905db3de444b12876f3345f1856a75e9cd8be6f"},
-    {file = "icalendar-5.0.10.tar.gz", hash = "sha256:34f0ca020b804758ddf316eb70d1d46f769bce64638d5a080cb65dd46cfee642"},
+    {file = "icalendar-5.0.11-py3-none-any.whl", hash = "sha256:81864971ac43a1b7d0a555dc1b667836ce59fc719a7f845a96f2f03205fb83b9"},
+    {file = "icalendar-5.0.11.tar.gz", hash = "sha256:7a298bb864526589d0de81f4b736eeb6ff9e539fefb405f7977aa5c1e201ca00"},
 ]
 
 [package.dependencies]
@@ -1448,4 +1448,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "bfcfc7c7b90166daa40c4c9820199a08f63bb8891779d102b52c1063368b9016"
+content-hash = "19c099d282f6c06932eb718422655537ecb6367c30e4539e10bda37321f86c4a"
