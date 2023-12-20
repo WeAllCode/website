@@ -582,17 +582,17 @@ files = [
 
 [[package]]
 name = "django-meta"
-version = "2.4.0"
+version = "2.4.1"
 description = "Pluggable app for handling webpage meta tags and OpenGraph properties"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "django-meta-2.4.0.tar.gz", hash = "sha256:4319ba348640b28bf11e0107a18a5704b9456ab3d670f8e03b566aa0171b2720"},
-    {file = "django_meta-2.4.0-py2.py3-none-any.whl", hash = "sha256:5f725c66851bc311e8d0428c07abf6ffcd715fadfb51e4d7a2e5b5f2a2fa669b"},
+    {file = "django-meta-2.4.1.tar.gz", hash = "sha256:04de9d65d8a7f9be487835a6311d5ca4f2c4f9072fad82aeb0894830aba3ba59"},
+    {file = "django_meta-2.4.1-py2.py3-none-any.whl", hash = "sha256:9ecd98cf37bdb0fb7e314a94b2a069d838e0ebe23c50c8848aa9dd87c36cda41"},
 ]
 
 [package.extras]
-docs = ["django (<5.0)"]
+docs = ["django (<5.0)", "sphinx-rtd-theme"]
 
 [[package]]
 name = "django-nose"
@@ -1448,4 +1448,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "5f60e3d6f64d56e9443e724e5f0c46919ada4f5eb13239d3a35d4df6906661b9"
+content-hash = "a613fdaf530fd843b7644508d15a68ac82a0393b8bcf23600ec8ba034588527e"
