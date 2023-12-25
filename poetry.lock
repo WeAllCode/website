@@ -34,24 +34,6 @@ files = [
 tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
 
 [[package]]
-name = "beautifulsoup4"
-version = "4.12.2"
-description = "Screen-scraping library"
-optional = false
-python-versions = ">=3.6.0"
-files = [
-    {file = "beautifulsoup4-4.12.2-py3-none-any.whl", hash = "sha256:bd2520ca0d9d7d12694a53d44ac482d181b4ec1888909b035a3dbf40d0f57d4a"},
-    {file = "beautifulsoup4-4.12.2.tar.gz", hash = "sha256:492bbc69dca35d12daac71c4db1bfff0c876c00ef4a2ffacce226d4638eb72da"},
-]
-
-[package.dependencies]
-soupsieve = ">1.2"
-
-[package.extras]
-html5lib = ["html5lib"]
-lxml = ["lxml"]
-
-[[package]]
 name = "boto3"
 version = "1.34.2"
 description = "The AWS SDK for Python"
@@ -431,18 +413,17 @@ django = "*"
 
 [[package]]
 name = "django-bootstrap3"
-version = "23.4"
+version = "23.5"
 description = "Bootstrap 3 for Django"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_bootstrap3-23.4-py3-none-any.whl", hash = "sha256:fc54b9afc6e0d33b9e2ac039dd022996ee95fc19bdf8320f4fd01ec611143ee3"},
-    {file = "django_bootstrap3-23.4.tar.gz", hash = "sha256:975e6017bb25b29a86416c4fbac6020f15bfd36d66861f42a20dd4ccfdab435d"},
+    {file = "django-bootstrap3-23.5.tar.gz", hash = "sha256:980db04a7a098f8084c381f1cffedf68c7dcfa36e6516ba050f9f2b1cf253e80"},
+    {file = "django_bootstrap3-23.5-py3-none-any.whl", hash = "sha256:f752464a97901671fe5280ff86f6b8619a2f73bff34b180474ad8799977d0642"},
 ]
 
 [package.dependencies]
-beautifulsoup4 = ">=4.8.0"
-django = ">=3.2"
+Django = ">=3.2"
 
 [[package]]
 name = "django-cleanup"
@@ -1300,17 +1281,6 @@ files = [
 ]
 
 [[package]]
-name = "soupsieve"
-version = "2.4.1"
-description = "A modern CSS selector implementation for Beautiful Soup."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "soupsieve-2.4.1-py3-none-any.whl", hash = "sha256:1c1bfee6819544a3447586c889157365a27e10d88cde3ad3da0cf0ddf646feb8"},
-    {file = "soupsieve-2.4.1.tar.gz", hash = "sha256:89d12b2d5dfcd2c9e8c22326da9d9aa9cb3dfab0a83a024f05704076ee8d35ea"},
-]
-
-[[package]]
 name = "sqlparse"
 version = "0.4.4"
 description = "A non-validating SQL parser."
@@ -1448,4 +1418,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "7b5c43e3a6cf66226b496a1a47bb2c4650cf80dfbffd2694425417e43a808901"
+content-hash = "b313e1f0eb52f852dba78b4b4c38c987e21105702de5a3a9d1d7ca76210995aa"
