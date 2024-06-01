@@ -80,5 +80,5 @@ invoke = "^2.2.0"
 json-logging-py = "^0.2"
 mock = "^5.1.0"
 pillow = "^10.3.0"
-psycopg = {extras = ["binary"], version = "^3.1.18"}
+psycopg = {extras = ["binary"], version = "^3.1.19"}
 sentry-sdk = "^2.0.1"
