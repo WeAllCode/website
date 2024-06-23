@@ -53,7 +53,7 @@
       "quantity": 1
     }
   },
-  "addons": ["heroku-postgresql", "logdna", "sendgrid"],
+  "addons": ["heroku-postgresql", "logdna"],
   "buildpacks": [
     {
       "url": "https://github.com/moneymeets/python-poetry-buildpack.git"
