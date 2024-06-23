@@ -106,7 +106,7 @@ INSTALLED_APPS = [
     "import_export",
     "django_nose",
     "meta",
-    "captcha",
+    "django_recaptcha",
     # apps
     "accounts",
     "coderdojochi",
