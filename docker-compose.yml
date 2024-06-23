@@ -14,7 +14,7 @@ services:
         condition: service_healthy
         restart: true
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     environment:
       POSTGRES_PASSWORD: mysecretpassword
     container_name: dojo-v1-db
