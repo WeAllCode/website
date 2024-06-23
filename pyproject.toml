@@ -39,6 +39,7 @@ exclude = '''
 '''
 
 [tool.poetry]
+package-mode = false
 name = "we-all-code"
 description = ""
 version = "0.0.1"
