@@ -106,7 +106,7 @@ INSTALLED_APPS = [
     "import_export",
     "django_nose",
     "meta",
-    "captcha",
+    "django_recaptcha",
     # apps
     "accounts",
     "coderdojochi",
@@ -122,6 +122,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
+
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "coderdojochi.urls"

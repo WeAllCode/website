@@ -1,4 +1,4 @@
-FROM python:3.11.3
+FROM python:3.11.9
 
 ARG DJANGO_ENV
 
@@ -9,7 +9,8 @@ ENV DJANGO_ENV=${DJANGO_ENV} \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.4.1
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_VERSION=1.8.3
 
 # System deps:
 RUN pip install "poetry==$POETRY_VERSION"
@@ -19,8 +20,7 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 
 # Project initialization:
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
+RUN poetry install --no-interaction --no-ansi
 
 # Creating folders, and files for a project:
 COPY . /app

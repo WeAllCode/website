@@ -19,8 +19,8 @@ from django.utils.safestring import mark_safe
 from django.utils.text import format_lazy
 
 import html5.forms.widgets as html5_widgets
-from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV3
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV3
 from dateutil.relativedelta import relativedelta
 
 from coderdojochi.models import (
