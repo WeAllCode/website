@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.11.9
 
 ARG DJANGO_ENV
 
