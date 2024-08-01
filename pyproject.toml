@@ -80,6 +80,6 @@ icalendar = "^5.0.12"
 invoke = "^2.2.0"
 json-logging-py = "^0.2"
 mock = "^5.1.0"
-pillow = "^10.3.0"
+pillow = "^10.4.0"
 psycopg = {extras = ["binary"], version = "^3.2.1"}
 sentry-sdk = "^2.8.0"
