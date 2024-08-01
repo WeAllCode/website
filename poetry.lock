@@ -350,13 +350,13 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-active-link"
-version = "0.2.1"
+version = "0.2.2"
 description = "The best and simplest way to highlight active links in your Django app."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "django_active_link-0.2.1-py3-none-any.whl", hash = "sha256:a9096497dd23dd0c5929872304f4ce26717e1904b82efa7592493328db5b6edf"},
-    {file = "django_active_link-0.2.1.tar.gz", hash = "sha256:70e1812fd08319bd814568e36a56ece1b72195dcc43bb5992d492867bbf2dc0e"},
+    {file = "django_active_link-0.2.2-py3-none-any.whl", hash = "sha256:8bd88b0102904886887e4fbf329eb454b62c35fe000d700801b7153f6894f0df"},
+    {file = "django_active_link-0.2.2.tar.gz", hash = "sha256:d5ff2c08cbda0632e2ac0fdda187743734d74e2ad5bffc68795768ad8721fee7"},
 ]
 
 [[package]]
@@ -1307,4 +1307,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.9"
-content-hash = "7187352be3a400bf622f8989d53d957b44351b9f261b1043b9a9b26099862ff6"
+content-hash = "ac81c1974f41e154da51165a93aeefc432bd894075d5bf597015905ea5b0809d"
