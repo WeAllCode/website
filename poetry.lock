@@ -414,17 +414,17 @@ django = "*"
 
 [[package]]
 name = "django-bootstrap3"
-version = "24.2"
+version = "24.3"
 description = "Bootstrap 3 for Django"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_bootstrap3-24.2-py3-none-any.whl", hash = "sha256:b07a122ba5ac4050735fd430839e6a0312f3d5c8cfc4b7e9da1cb93cd6c63331"},
-    {file = "django_bootstrap3-24.2.tar.gz", hash = "sha256:09c659b37aa1e7473aa59a0b5518a3f08207b90399eb6e1b315d06290ed56740"},
+    {file = "django_bootstrap3-24.3-py3-none-any.whl", hash = "sha256:65bbc34a85002e41923d3ba544febbcacfdc91d39186f284fc6748fad43909fa"},
+    {file = "django_bootstrap3-24.3.tar.gz", hash = "sha256:e3d85ed48c131ed3535cb7dbad760275473052f18470b3fc060018cb21d229e0"},
 ]
 
 [package.dependencies]
-Django = ">=4.1"
+Django = ">=4.2"
 
 [[package]]
 name = "django-cleanup"
@@ -1296,4 +1296,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.9"
-content-hash = "47607d45b4eac5f68cb394b394666e77c8411f40c3cfae38aaf4a5ad5a148646"
+content-hash = "23f36cebeb21f27cc69e68f97fad2fdbf4b762b5b0902f2186b2c835ce9dcf3a"

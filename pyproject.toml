@@ -58,7 +58,7 @@ django-active-link = "^0.2.2"
 django-allauth = {extras = ["socialaccount"], version = "^65.0.2"}
 django-anymail = "^11.1"
 django-appconf = "^1.0.6"
-django-bootstrap3 = "^24.2"
+django-bootstrap3 = "^24.3"
 django-cleanup = "^9.0.0"
 django-common-helpers = "^0.9.2"
 django-cron = "^0.6.0"
