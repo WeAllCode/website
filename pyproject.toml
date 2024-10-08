@@ -52,7 +52,7 @@ authors = ["Ali Karbassi <ali@weallcode.org>"]
 [tool.poetry.dependencies]
 python = "3.11.9"
 arrow = "^1.3.0"
-boto3 = "^1.34.151"
+boto3 = "^1.35.36"
 django = "^5.1"
 django-active-link = "^0.2.2"
 django-allauth = {extras = ["socialaccount"], version = "^65.0.2"}
