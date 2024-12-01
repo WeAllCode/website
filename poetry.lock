@@ -713,13 +713,13 @@ tornado = ["tornado (>=0.2)"]
 
 [[package]]
 name = "icalendar"
-version = "6.0.1"
+version = "6.1.0"
 description = "iCalendar parser/generator"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "icalendar-6.0.1-py3-none-any.whl", hash = "sha256:9bf3d69203bd0366a9a29a8b0e220574580b86d7918afcb628fc6920287922f3"},
-    {file = "icalendar-6.0.1.tar.gz", hash = "sha256:1ff44825d7b41c3f77eac9e09cc67a770dd3c2377430c23b0eb7d91603088892"},
+    {file = "icalendar-6.1.0-py3-none-any.whl", hash = "sha256:46c09b774a6e6948495dafcb166dc15135c8259d0ae25491f154cbc822714b69"},
+    {file = "icalendar-6.1.0.tar.gz", hash = "sha256:43c2db8632959d634f4e48f6e6131e706bf2cdddad488cf0b72fda079b796bad"},
 ]
 
 [package.dependencies]
@@ -1295,4 +1295,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.9"
-content-hash = "b26da33bf5c4d6ed97b84060d8cef9586b87a18ee4b90396246647a088016ce9"
+content-hash = "fb021a2f3668c4b39ff7aba3f72bd1e384a07e33d7b715474aa3befd50e0240a"
