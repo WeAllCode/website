@@ -380,17 +380,17 @@ steam = ["python3-openid (>=3.0.8)"]
 
 [[package]]
 name = "django-anymail"
-version = "11.1"
+version = "12.0"
 description = "Django email backends and webhooks for Amazon SES, Brevo,  MailerSend, Mailgun, Mailjet, Mandrill, Postal, Postmark, Resend,  SendGrid, SparkPost and Unisender Go  (EmailBackend, transactional email tracking and inbound email signals)"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "django_anymail-11.1-py3-none-any.whl", hash = "sha256:f1a5b2de713f46fbdf311f875a9546511e4aa9bfa1c3f8350d21b43e75579acc"},
-    {file = "django_anymail-11.1.tar.gz", hash = "sha256:ec373c0a2d79f5e6a3ecda819c8087af0b0e114e4ec1d8576dea4c786f9b2a59"},
+    {file = "django_anymail-12.0-py3-none-any.whl", hash = "sha256:de8458d713d0f9776da9ed04dcd3a0161be23e9ecbcb49dcf149219700ecd274"},
+    {file = "django_anymail-12.0.tar.gz", hash = "sha256:65789c1b0f42915aa0450a4f173f77572d4c552979b748ddd8125af41972ad30"},
 ]
 
 [package.dependencies]
-django = ">=2.0"
+django = ">=4.0"
 requests = ">=2.4.3"
 urllib3 = ">=1.25.0"
 
@@ -1306,4 +1306,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.9"
-content-hash = "26e7157c82b54c1ebb60a7c5ed2ea9e329bf867e409e20f4cca62ee57aaeb946"
+content-hash = "811ddd2c460a9fc66f54b58b39d22e67cb392b2681a65c6b783534073440da81"
