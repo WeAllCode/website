@@ -56,7 +56,7 @@ boto3 = "^1.35.71"
 django = "^5.1"
 django-active-link = "^0.2.2"
 django-allauth = {extras = ["socialaccount"], version = "^65.3.0"}
-django-anymail = "^11.1"
+django-anymail = "^12.0"
 django-appconf = "^1.0.6"
 django-bootstrap3 = "^24.3"
 django-cleanup = "^9.0.0"
