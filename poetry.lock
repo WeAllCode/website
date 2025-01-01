@@ -356,12 +356,12 @@ files = [
 
 [[package]]
 name = "django-allauth"
-version = "65.3.0"
+version = "65.3.1"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_allauth-65.3.0.tar.gz", hash = "sha256:92e0242724af03458b05b88c5fa798b01112ab22a86d873a8a9fd8f0ec57bbbf"},
+    {file = "django_allauth-65.3.1.tar.gz", hash = "sha256:e02e951b71a2753a746459f2efa114c7c72bf2cef6887dbe8607a577c0350587"},
 ]
 
 [package.dependencies]
@@ -1306,4 +1306,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.9"
-content-hash = "7d80b51ab8743d08fc1c84e860b23dfc7fed0efbf4f1bcaea602f5daa7380ea7"
+content-hash = "72fded8b9a8219d42447e7bcd257e3f397883309a039efd19e7a8ee5aece8775"
