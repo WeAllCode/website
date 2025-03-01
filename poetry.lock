@@ -405,13 +405,13 @@ resend = ["svix"]
 
 [[package]]
 name = "django-appconf"
-version = "1.0.6"
+version = "1.1.0"
 description = "A helper class for handling configuration defaults of packaged apps gracefully."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 files = [
-    {file = "django-appconf-1.0.6.tar.gz", hash = "sha256:cfe87ea827c4ee04b9a70fab90b86d704cb02f2981f89da8423cb0fabf88efbf"},
-    {file = "django_appconf-1.0.6-py3-none-any.whl", hash = "sha256:c3ae442fba1ff7ec830412c5184b17169a7a1e71cf0864a4c3f93cf4c98a1993"},
+    {file = "django-appconf-1.1.0.tar.gz", hash = "sha256:9fcead372f82a0f21ee189434e7ae9c007cbb29af1118c18251720f3d06243e4"},
+    {file = "django_appconf-1.1.0-py3-none-any.whl", hash = "sha256:7abd5a163ff57557f216e84d3ce9dac36c37ffce1ab9a044d3d53b7c943dd10f"},
 ]
 
 [package.dependencies]
@@ -1309,4 +1309,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.9"
-content-hash = "cfc897f7f988df9467427709a451c4c038adfb12daceef195b90c6e20cfca270"
+content-hash = "8b4f5e9f39408c61afe933cb939546432ef78eedc9c2cdf5cc02b48235dee2e6"
