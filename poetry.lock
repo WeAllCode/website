@@ -607,18 +607,18 @@ files = [
 
 [[package]]
 name = "django-meta"
-version = "2.4.2"
+version = "2.5.0"
 description = "Pluggable app for handling webpage meta tags and OpenGraph properties"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "django-meta-2.4.2.tar.gz", hash = "sha256:1f96193935134ab734b25f42ce2d3b2148d75b1cd5da696e71ccf49766e804aa"},
-    {file = "django_meta-2.4.2-py2.py3-none-any.whl", hash = "sha256:afc6b77c3885db0cd97883d1dc3df47f91a9c7951b2f4928fee91ca60a7d0ff2"},
+    {file = "django_meta-2.5.0-py2.py3-none-any.whl", hash = "sha256:94674286c8515314a025958af6bbcb44d6134d5a2ea3a61f680a852d334af88d"},
+    {file = "django_meta-2.5.0.tar.gz", hash = "sha256:e30669865bccff6be61765dfc57d97ee0a68ab7625efd081dd9045e17f3500c5"},
 ]
 
 [package.extras]
-docs = ["django (<5.0)", "sphinx-rtd-theme"]
+docs = ["django (<6.0)", "sphinx-rtd-theme"]
 
 [[package]]
 name = "django-nose"
@@ -1377,4 +1377,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = "3.11.9"
-content-hash = "78d7f57ca459a178528d54baa56b10c94431786a504f479ee3f0890eaebc8015"
+content-hash = "a94cc1882aefad47f1b3414b7b33f8a91a7afbe0d634b9ca630bd723bec18bf0"
