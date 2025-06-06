@@ -373,28 +373,29 @@ files = [
 
 [[package]]
 name = "django-allauth"
-version = "65.7.0"
+version = "65.9.0"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "django_allauth-65.7.0.tar.gz", hash = "sha256:eb060692150f39e1529893c2de5f9b46e1dab51153ff6cca7ad72c7c125259ea"},
+    {file = "django_allauth-65.9.0.tar.gz", hash = "sha256:a06bca9974df44321e94c33bcf770bb6f924d1a44b57defbce4d7ec54a55483e"},
 ]
 
 [package.dependencies]
 asgiref = ">=3.8.1"
 Django = ">=4.2.16"
-pyjwt = {version = ">=1.7", extras = ["crypto"], optional = true, markers = "extra == \"socialaccount\""}
-requests = {version = ">=2.0.0", optional = true, markers = "extra == \"socialaccount\""}
+pyjwt = {version = ">=2.0,<3", extras = ["crypto"], optional = true, markers = "extra == \"socialaccount\""}
+requests = {version = ">=2.0.0,<3", optional = true, markers = "extra == \"socialaccount\""}
 requests-oauthlib = {version = ">=0.3.0", optional = true, markers = "extra == \"socialaccount\""}
 
 [package.extras]
-mfa = ["fido2 (>=1.1.2)", "qrcode (>=7.0.0)"]
-openid = ["python3-openid (>=3.0.8)"]
+idp-oidc = ["oauthlib (>=3.2.2,<4)", "pyjwt[crypto] (>=2.0,<3)"]
+mfa = ["fido2 (>=1.1.2,<3)", "qrcode (>=7.0.0,<9)"]
+openid = ["python3-openid (>=3.0.8,<4)"]
 saml = ["python3-saml (>=1.15.0,<2.0.0)"]
-socialaccount = ["pyjwt[crypto] (>=1.7)", "requests (>=2.0.0)", "requests-oauthlib (>=0.3.0)"]
-steam = ["python3-openid (>=3.0.8)"]
+socialaccount = ["pyjwt[crypto] (>=2.0,<3)", "requests (>=2.0.0,<3)", "requests-oauthlib (>=0.3.0)"]
+steam = ["python3-openid (>=3.0.8,<4)"]
 
 [[package]]
 name = "django-anymail"
@@ -1388,4 +1389,4 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "2.1"
 python-versions = "3.11.9"
-content-hash = "10ccbe9b5589304717b5dd9acf3b94fb843f14c6ab4494ea6f507f1b67649ec2"
+content-hash = "46fe482739d4606e5f6e91ef5a159298db24abe14cedd31bd903e01cc904401d"
