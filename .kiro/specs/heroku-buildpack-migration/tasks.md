@@ -29,7 +29,7 @@
   - Search for and remove any Pipfile or Pipfile.lock files
   - _Requirements: 1.1, 3.2_
 
-- [ ] 5. Test application with uv dependencies in Docker
+- [x] 5. Test application with uv dependencies in Docker
 
   - Install dependencies using `uv sync` in Docker container
   - Run Django application in Docker with uv-managed environment
