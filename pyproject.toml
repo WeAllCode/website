@@ -45,7 +45,7 @@ version = "0.0.1"
 license = {text = "MIT"}
 readme = "README.md"
 authors = [{name = "Ali Karbassi", email = "ali@weallcode.org"}]
-requires-python = "==3.11.9"
+requires-python = ">=3.11.9,<3.12"
 dependencies = [
     "arrow>=1.3.0,<2.0.0",
     "boto3>=1.39.0,<2.0.0",
