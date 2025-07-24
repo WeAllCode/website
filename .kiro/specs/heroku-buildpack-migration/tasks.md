@@ -38,7 +38,7 @@
   - Test Docker container functionality with complete uv setup
   - _Requirements: 4.1, 4.2_
 
-- [ ] 6. Remove deprecated Poetry buildpack from Heroku
+- [x] 6. Remove deprecated Poetry buildpack from Heroku
 
   - Check current Heroku buildpack configuration with `heroku buildpacks`
   - Remove the deprecated Poetry buildpack using exact URL/name
