@@ -5,22 +5,20 @@ ARG DJANGO_ENV
 ENV DJANGO_ENV=${DJANGO_ENV} \
     PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONHASHSEED=random \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VIRTUALENVS_CREATE=false \
-    POETRY_VERSION=1.8.3
+    PYTHONHASHSEED=random
 
-# System deps:
-RUN pip install "poetry==$POETRY_VERSION"
+# Install uv
+RUN pip install uv
 
 # Copy only requirements to cache them in docker layer
 WORKDIR /app
-COPY poetry.lock pyproject.toml /app/
+COPY uv.lock pyproject.toml .python-version /app/
 
 # Project initialization:
-RUN poetry install --no-interaction --no-ansi
+RUN uv sync --frozen
+
+# Activate the virtual environment
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Creating folders, and files for a project:
 COPY . /app
