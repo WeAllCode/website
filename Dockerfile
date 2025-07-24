@@ -17,8 +17,9 @@ COPY uv.lock pyproject.toml .python-version /app/
 # Project initialization:
 RUN uv sync --frozen
 
-# Activate the virtual environment
-ENV PATH="/app/.venv/bin:$PATH"
+# Define and activate the virtual environment
+ENV VIRTUAL_ENV=/app/.venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Creating folders, and files for a project:
 COPY . /app
