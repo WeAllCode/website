@@ -272,14 +272,10 @@ class Session(CommonInfo):
         if self.mentor_capacity is None:
             self.mentor_capacity = int(self.capacity / 2)
 
-        if self.mentor_capacity is None:
-            self.mentor_capacity = 0
-        self.mentor_capacity = max(self.mentor_capacity, 0)
+        self.mentor_capacity = max(self.mentor_capacity or 0, 0)
 
         # Capacity check
-        if self.capacity is None:
-            self.capacity = 0
-        self.capacity = max(self.capacity, 0)
+        self.capacity = max(self.capacity or 0, 0)
 
         super(Session, self).save(*args, **kwargs)
 
