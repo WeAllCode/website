@@ -13,7 +13,7 @@ class SlackNotification:
     }
 
     def __init__(self):
-        self.payload = self.DEFAULT_PAYLOAD
+        self.payload = self.DEFAULT_PAYLOAD.copy()
 
     def send(self):
         res = requests.post(
