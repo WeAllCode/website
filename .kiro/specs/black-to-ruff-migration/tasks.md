@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. Configure Ruff in pyproject.toml
+- [x] 1. Configure Ruff in pyproject.toml
 
   - Remove existing [tool.black] and [tool.isort] configuration sections
   - Add comprehensive [tool.ruff] configuration with general settings (line-length = 79, target-version = "py311", exclude migrations)
