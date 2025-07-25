@@ -3,16 +3,12 @@ from datetime import timedelta
 import arrow
 from django.conf import settings
 from django.utils import timezone
-from django_cron import (
-    CronJobBase,
-    Schedule,
-)
+from django_cron import CronJobBase
+from django_cron import Schedule
 
-from coderdojochi.models import (
-    MentorOrder,
-    Order,
-    Session,
-)
+from coderdojochi.models import MentorOrder
+from coderdojochi.models import Order
+from coderdojochi.models import Session
 from coderdojochi.util import email
 
 
@@ -68,9 +64,7 @@ class SendReminders(CronJobBase):
                     .format("dddd, MMMM D, YYYY")
                 ),
                 "class_start_time": (
-                    arrow.get(order.session.start_date)
-                    .to("local")
-                    .format("h:mma")
+                    arrow.get(order.session.start_date).to("local").format("h:mma")
                 ),
                 "class_end_date": (
                     arrow.get(order.session.end_date)
@@ -78,9 +72,7 @@ class SendReminders(CronJobBase):
                     .format("dddd, MMMM D, YYYY")
                 ),
                 "class_end_time": (
-                    arrow.get(order.session.end_date)
-                    .to("local")
-                    .format("h:mma")
+                    arrow.get(order.session.end_date).to("local").format("h:mma")
                 ),
                 "class_location_name": order.session.location.name,
                 "class_location_address": order.session.location.address,
@@ -88,9 +80,7 @@ class SendReminders(CronJobBase):
                 "class_location_state": order.session.location.state,
                 "class_location_zip": order.session.location.zip,
                 "class_additional_info": order.session.additional_info,
-                "class_url": (
-                    f"{settings.SITE_URL}{order.session.get_absolute_url()}"
-                ),
+                "class_url": (f"{settings.SITE_URL}{order.session.get_absolute_url()}"),
                 "class_calendar_url": (
                     f"{settings.SITE_URL}{order.session.get_calendar_url()}"
                 ),
@@ -102,9 +92,7 @@ class SendReminders(CronJobBase):
                 ),
                 "order_id": order.id,
                 "online_video_link": order.session.online_video_link,
-                "online_video_description": (
-                    order.session.online_video_description
-                ),
+                "online_video_description": (order.session.online_video_description),
             }
 
         email(
@@ -140,9 +128,7 @@ class SendReminders(CronJobBase):
                     .format("dddd, MMMM D, YYYY")
                 ),
                 "class_start_time": (
-                    arrow.get(order.session.start_date)
-                    .to("local")
-                    .format("h:mma")
+                    arrow.get(order.session.start_date).to("local").format("h:mma")
                 ),
                 "class_end_date": (
                     arrow.get(order.session.end_date)
@@ -150,9 +136,7 @@ class SendReminders(CronJobBase):
                     .format("dddd, MMMM D, YYYY")
                 ),
                 "class_end_time": (
-                    arrow.get(order.session.end_date)
-                    .to("local")
-                    .format("h:mma")
+                    arrow.get(order.session.end_date).to("local").format("h:mma")
                 ),
                 "class_location_name": order.session.location.name,
                 "class_location_address": order.session.location.address,
@@ -160,9 +144,7 @@ class SendReminders(CronJobBase):
                 "class_location_state": order.session.location.state,
                 "class_location_zip": order.session.location.zip,
                 "class_additional_info": order.session.additional_info,
-                "class_url": (
-                    f"{settings.SITE_URL}{order.session.get_absolute_url()}"
-                ),
+                "class_url": (f"{settings.SITE_URL}{order.session.get_absolute_url()}"),
                 "class_calendar_url": (
                     f"{settings.SITE_URL}{order.session.get_calendar_url()}"
                 ),
@@ -174,9 +156,7 @@ class SendReminders(CronJobBase):
                 ),
                 "order_id": order.id,
                 "online_video_link": order.session.online_video_link,
-                "online_video_description": (
-                    order.session.online_video_description
-                ),
+                "online_video_description": (order.session.online_video_description),
             }
 
         email(
@@ -236,14 +216,10 @@ class SendReminders(CronJobBase):
                     "class_url": f"{settings.SITE_URL}{order.session.get_absolute_url()}",
                     "class_calendar_url": f"{settings.SITE_URL}{order.session.get_calendar_url()}",
                     "microdata_start_date": (
-                        arrow.get(order.session.start_date)
-                        .to("local")
-                        .isoformat()
+                        arrow.get(order.session.start_date).to("local").isoformat()
                     ),
                     "microdata_end_date": (
-                        arrow.get(order.session.end_date)
-                        .to("local")
-                        .isoformat()
+                        arrow.get(order.session.end_date).to("local").isoformat()
                     ),
                     "order_id": order.id,
                     "online_video_link": order.session.online_video_link,
@@ -304,14 +280,10 @@ class SendReminders(CronJobBase):
                     "class_url": f"{settings.SITE_URL}{order.session.get_absolute_url()}",
                     "class_calendar_url": f"{settings.SITE_URL}{order.session.get_calendar_url()}",
                     "microdata_start_date": (
-                        arrow.get(order.session.start_date)
-                        .to("local")
-                        .isoformat()
+                        arrow.get(order.session.start_date).to("local").isoformat()
                     ),
                     "microdata_end_date": (
-                        arrow.get(order.session.end_date)
-                        .to("local")
-                        .isoformat()
+                        arrow.get(order.session.end_date).to("local").isoformat()
                     ),
                     "order_id": order.id,
                     "online_video_link": order.session.online_video_link,

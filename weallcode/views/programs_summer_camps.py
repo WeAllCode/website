@@ -2,7 +2,8 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-from coderdojochi.models import Course, Session
+from coderdojochi.models import Course
+from coderdojochi.models import Session
 
 from .common import DefaultMetaTags
 

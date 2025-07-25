@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 
-class RoleTemplateMixin(object):
+class RoleTemplateMixin:
     def get_template_names(self):
         if self.request.user.is_authenticated:
             if self.request.user.role == "mentor":
@@ -16,7 +16,7 @@ class RoleTemplateMixin(object):
         return [template_name]
 
 
-class RoleRedirectMixin(object):
+class RoleRedirectMixin:
     def dispatch(self, request, *args, **kwargs):
         session_obj = kwargs.get("session_obj")
         user = request.user
@@ -27,9 +27,7 @@ class RoleRedirectMixin(object):
                 "Please select one of the following options to continue.",
             )
 
-            next_url = (
-                f"{reverse('welcome')}?next={session_obj.get_absolute_url()}"
-            )
+            next_url = f"{reverse('welcome')}?next={session_obj.get_absolute_url()}"
 
             if "enroll" in request.GET:
                 next_url += "&enroll=True"
@@ -37,5 +35,7 @@ class RoleRedirectMixin(object):
             return redirect(next_url)
 
         return super(RoleRedirectMixin, self).dispatch(
-            request, *args, **kwargs
+            request,
+            *args,
+            **kwargs,
         )

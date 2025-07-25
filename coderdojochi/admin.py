@@ -3,38 +3,32 @@ from distutils.util import strtobool
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.db.models import (
-    Case,
-    Count,
-    When,
-)
+from django.db.models import Case
+from django.db.models import Count
+from django.db.models import When
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 from import_export import resources
-from import_export.admin import (
-    ImportExportActionModelAdmin,
-    ImportExportMixin,
-)
+from import_export.admin import ImportExportActionModelAdmin
+from import_export.admin import ImportExportMixin
 from import_export.fields import Field
 
-from .models import (
-    Course,
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Location,
-    Meeting,
-    MeetingOrder,
-    MeetingType,
-    Mentor,
-    MentorOrder,
-    Order,
-    RaceEthnicity,
-    Session,
-    Student,
-)
+from .models import Course
+from .models import Donation
+from .models import Equipment
+from .models import EquipmentType
+from .models import Guardian
+from .models import Location
+from .models import Meeting
+from .models import MeetingOrder
+from .models import MeetingType
+from .models import Mentor
+from .models import MentorOrder
+from .models import Order
+from .models import RaceEthnicity
+from .models import Session
+from .models import Student
 
 User = get_user_model()
 
@@ -94,7 +88,7 @@ class UserAdmin(ImportExportActionModelAdmin):
                 query=obj.email,
                 role=obj.role,
             )
-        elif obj.role == "guardian":
+        if obj.role == "guardian":
             return format_html(
                 '<a href="{url}?q={query}">{role}</a>',
                 url=reverse("admin:coderdojochi_guardian_changelist"),
@@ -173,9 +167,9 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                     When(
                         mentororder__is_active=True,
                         then=1,
-                    )
-                )
-            )
+                    ),
+                ),
+            ),
         )
         return qs
 
@@ -194,7 +188,8 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return format_html(
             '<a href="{url}">{user}</a>',
             url=reverse(
-                "admin:coderdojochi_cdcuser_change", args=(obj.user.id,)
+                "admin:coderdojochi_cdcuser_change",
+                args=(obj.user.id,),
             ),
             user=obj.user,
         )
@@ -304,7 +299,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         qs = super(GuardianAdmin, self).get_queryset(request)
         qs = qs.select_related()
         qs = qs.annotate(student_count=Count("student")).order_by(
-            "-student_count"
+            "-student_count",
         )
         return qs
 
@@ -312,7 +307,8 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return format_html(
             '<a href="{url}">{name}</a>',
             url=reverse(
-                "admin:coderdojochi_cdcuser_change", args=(obj.user.id,)
+                "admin:coderdojochi_cdcuser_change",
+                args=(obj.user.id,),
             ),
             name=obj.user,
         )
@@ -386,7 +382,7 @@ class StudentResource(resources.ModelResource):
             obj.guardian = Guardian.objects.get(user__email=guardian_email)
         except Guardian.DoesNotExist:
             raise ImportError(
-                f"guardian with email {guardian_email} not found"
+                f"guardian with email {guardian_email} not found",
             )
 
         if not dry_run:
@@ -466,9 +462,9 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                     When(
                         order__is_active=True,
                         then=1,
-                    )
-                )
-            )
+                    ),
+                ),
+            ),
         )
         return qs
 
@@ -476,7 +472,8 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return format_html(
             '<a href="{url}">{name}</a>',
             url=reverse(
-                "admin:coderdojochi_guardian_change", args=(obj.guardian.id,)
+                "admin:coderdojochi_guardian_change",
+                args=(obj.guardian.id,),
             ),
             name=obj.guardian.full_name,
         )
@@ -623,7 +620,7 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
                     "cost",
                     "minimum_cost",
                     "maximum_cost",
-                )
+                ),
             },
         ),
         (
@@ -672,7 +669,8 @@ class SessionAdmin(ImportExportMixin, ImportExportActionModelAdmin):
             url=reverse("admin:coderdojochi_mentororder_changelist"),
             query=obj.id,
             count=MentorOrder.objects.filter(
-                session__id=obj.id, is_active=True
+                session__id=obj.id,
+                is_active=True,
             ).count(),
         )
 
@@ -761,7 +759,8 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return format_html(
             '<a href="{url}">{student}</a>',
             url=reverse(
-                "admin:coderdojochi_student_change", args=(obj.student.id,)
+                "admin:coderdojochi_student_change",
+                args=(obj.student.id,),
             ),
             student=obj.student,
         )
@@ -772,7 +771,8 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return format_html(
             '<a href="{url}">{guardian}</a>',
             url=reverse(
-                "admin:coderdojochi_guardian_change", args=(obj.guardian.id,)
+                "admin:coderdojochi_guardian_change",
+                args=(obj.guardian.id,),
             ),
             guardian=obj.guardian,
         )

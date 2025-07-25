@@ -2,7 +2,8 @@ import re
 
 from django import template
 from django.template import Template
-from django.urls import NoReverseMatch, reverse
+from django.urls import NoReverseMatch
+from django.urls import reverse
 
 from coderdojochi.models import Order
 
@@ -28,7 +29,9 @@ def student_session_order_count(student, session):
 @register.simple_tag(takes_context=True)
 def student_register_link(context, student, session):
     orders = Order.objects.filter(
-        student=student, session=session, is_active=True
+        student=student,
+        session=session,
+        is_active=True,
     )
 
     url = reverse(
@@ -50,16 +53,20 @@ def student_register_link(context, student, session):
         button_msg = "Can't make it"
 
     elif not student.is_within_age_range(
-        session.minimum_age, session.maximum_age, session.start_date
+        session.minimum_age,
+        session.maximum_age,
+        session.start_date,
     ) or not student.is_within_gender_limitation(session.gender_limitation):
         button_modifier = "btn-default"
         button_additional_attributes = "disabled"
         button_tag = "span"
 
         if not student.is_within_age_range(
-            session.minimum_age, session.maximum_age, session.start_date
+            session.minimum_age,
+            session.maximum_age,
+            session.start_date,
         ) and not student.is_within_gender_limitation(
-            session.gender_limitation
+            session.gender_limitation,
         ):
             title = "Limited event."
             message = (
@@ -75,7 +82,9 @@ def student_register_link(context, student, session):
             )
 
         elif not student.is_within_age_range(
-            session.minimum_age, session.maximum_age, session.start_date
+            session.minimum_age,
+            session.maximum_age,
+            session.start_date,
         ):
             title = "Age-limited event."
             message = (
@@ -91,7 +100,7 @@ def student_register_link(context, student, session):
             )
 
         elif not student.is_within_gender_limitation(
-            session.gender_limitation
+            session.gender_limitation,
         ):
             if session.gender_limitation == "female":
                 title = "Girls-only event."
@@ -130,8 +139,7 @@ def menu_is_active(context, pattern_or_urlname, css_class="active"):
 
     if re.search(pattern, context["request"].path):
         return css_class
-    else:
-        return ""
+    return ""
 
 
 @register.filter(name="phone_number")

@@ -5,32 +5,26 @@ from dateutil.relativedelta import relativedelta
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
-from django.forms import (
-    FileField,
-    Form,
-    ModelForm,
-    ValidationError,
-)
+from django.forms import FileField
+from django.forms import Form
+from django.forms import ModelForm
+from django.forms import ValidationError
 from django.urls import reverse_lazy
-from django.utils import (
-    dateformat,
-    timezone,
-)
+from django.utils import dateformat
+from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import format_lazy
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV3
 
-from coderdojochi.models import (
-    CDCUser,
-    Donation,
-    Guardian,
-    Mentor,
-    RaceEthnicity,
-    Session,
-    Student,
-)
+from coderdojochi.models import CDCUser
+from coderdojochi.models import Donation
+from coderdojochi.models import Guardian
+from coderdojochi.models import Mentor
+from coderdojochi.models import RaceEthnicity
+from coderdojochi.models import Session
+from coderdojochi.models import Student
 
 
 class CDCForm(Form):
@@ -41,18 +35,19 @@ class CDCForm(Form):
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
             value = field.widget.value_from_datadict(
-                self.data, self.files, self.add_prefix(name)
+                self.data,
+                self.files,
+                self.add_prefix(name),
             )
 
             try:
                 if isinstance(field, FileField):
                     initial = self.initial.get(name, field.initial)
                     value = field.clean(value, initial)
+                elif isinstance(value, str):
+                    value = field.clean(value.strip())
                 else:
-                    if isinstance(value, str):
-                        value = field.clean(value.strip())
-                    else:
-                        value = field.clean(value)
+                    value = field.clean(value)
 
                 self.cleaned_data[name] = value
 
@@ -72,22 +67,23 @@ class CDCModelForm(ModelForm):
             # Each widget type knows how to retrieve its own data, because some
             # widgets split data over several HTML fields.
             value = field.widget.value_from_datadict(
-                self.data, self.files, self.add_prefix(name)
+                self.data,
+                self.files,
+                self.add_prefix(name),
             )
 
             try:
                 if isinstance(field, FileField):
                     initial = self.initial.get(name, field.initial)
                     value = field.clean(value, initial)
+                elif isinstance(value, str):
+                    # regex normalizes carriage return
+                    # and cuts them to two at most
+                    value = re.sub(r"\r\n", "\n", value)
+                    value = re.sub(r"\n{3,}", "\n\n", value)
+                    value = field.clean(value.strip())
                 else:
-                    if isinstance(value, str):
-                        # regex normalizes carriage return
-                        # and cuts them to two at most
-                        value = re.sub(r"\r\n", "\n", value)
-                        value = re.sub(r"\n{3,}", "\n\n", value)
-                        value = field.clean(value.strip())
-                    else:
-                        value = field.clean(value)
+                    value = field.clean(value)
 
                 self.cleaned_data[name] = value
 
@@ -134,7 +130,7 @@ class MentorForm(CDCModelForm):
                 "placeholder": "Short Bio",
                 "class": "form-control",
                 "rows": 4,
-            }
+            },
         ),
         label="Short Bio",
         required=False,
@@ -142,7 +138,7 @@ class MentorForm(CDCModelForm):
 
     gender = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"}
+            attrs={"placeholder": "", "class": "form-control"},
         ),
         label="Gender",
         required=True,
@@ -161,7 +157,7 @@ class MentorForm(CDCModelForm):
 
     work_place = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"}
+            attrs={"placeholder": "", "class": "form-control"},
         ),
         label="Work Place",
         required=False,
@@ -169,7 +165,7 @@ class MentorForm(CDCModelForm):
 
     phone = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"}
+            attrs={"placeholder": "", "class": "form-control"},
         ),
         label="Phone",
         required=False,
@@ -177,7 +173,7 @@ class MentorForm(CDCModelForm):
 
     home_address = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"}
+            attrs={"placeholder": "", "class": "form-control"},
         ),
         label="Home Address",
         required=False,
@@ -210,29 +206,27 @@ class MentorForm(CDCModelForm):
             if w > max_width or h > max_height:
                 raise forms.ValidationError(
                     f"Please use an image that is {max_width} x {max_height}px"
-                    " or smaller."
+                    " or smaller.",
                 )
 
             min_width = min_height = 500
             if w < min_width or h < min_height:
                 raise forms.ValidationError(
                     f"Please use an image that is {min_width} x {min_height}px"
-                    " or larger."
+                    " or larger.",
                 )
 
             # validate content type
             main, sub = avatar.content_type.split("/")
-            if not (
-                main == "image" and sub in ["jpeg", "pjpeg", "gif", "png"]
-            ):
+            if not (main == "image" and sub in ["jpeg", "pjpeg", "gif", "png"]):
                 raise forms.ValidationError(
-                    "Please use a JPEG, GIF or PNG image."
+                    "Please use a JPEG, GIF or PNG image.",
                 )
 
             # validate file size
             if len(avatar) > (2000 * 1024):
                 raise forms.ValidationError(
-                    "Avatar file size may not exceed 2MB."
+                    "Avatar file size may not exceed 2MB.",
                 )
 
         except AttributeError:
@@ -247,21 +241,21 @@ class MentorForm(CDCModelForm):
 class GuardianForm(CDCModelForm):
     phone = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "Phone Number", "class": "form-control"}
+            attrs={"placeholder": "Phone Number", "class": "form-control"},
         ),
         label="Phone Number",
     )
 
     zip = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "Zip Code", "class": "form-control"}
+            attrs={"placeholder": "Zip Code", "class": "form-control"},
         ),
         label="Zip Code",
     )
 
     gender = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"}
+            attrs={"placeholder": "", "class": "form-control"},
         ),
         label="Gender",
         required=True,
@@ -353,12 +347,14 @@ class StudentForm(CDCModelForm):
             attrs={
                 "class": "form-control",
                 "min": dateformat.format(
-                    timezone.now() - relativedelta(years=19), "Y-m-d"
+                    timezone.now() - relativedelta(years=19),
+                    "Y-m-d",
                 ),
                 "max": dateformat.format(
-                    timezone.now() - relativedelta(years=5), "Y-m-d"
+                    timezone.now() - relativedelta(years=5),
+                    "Y-m-d",
                 ),
-            }
+            },
         ),
     )
 
@@ -368,14 +364,13 @@ class StudentForm(CDCModelForm):
                 "placeholder": "List any medications currently being taken.",
                 "class": "form-control hidden",
                 "rows": 5,
-            }
+            },
         ),
         label=format_html(
             "{0} {1}",
             "Medications",
             mark_safe(
-                '<span class="btn btn-xs btn-link'
-                ' js-expand-student-form">expand</span>'
+                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>',
             ),
         ),
         required=False,
@@ -393,8 +388,7 @@ class StudentForm(CDCModelForm):
             "{0} {1}",
             "Medical Conditions",
             mark_safe(
-                '<span class="btn btn-xs btn-link'
-                ' js-expand-student-form">expand</span>'
+                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>',
             ),
         ),
         required=False,
@@ -447,7 +441,8 @@ class DonationForm(ModelForm):
         required=True,
     )
     user = forms.ModelChoiceField(
-        queryset=CDCUser.objects.all(), required=True
+        queryset=CDCUser.objects.all(),
+        required=True,
     )
     amount = forms.CharField(label="Amount (dollars)")
 

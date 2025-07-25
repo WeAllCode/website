@@ -1,10 +1,8 @@
 from datetime import date
 
 from django.db import models
-from django.db.models import (
-    Case,
-    When,
-)
+from django.db.models import Case
+from django.db.models import When
 
 CHAIR = "Chair"
 VICE_CHAIR = "Vice Chair"
@@ -71,12 +69,14 @@ class CommonBoardMemberManager(models.Manager):
 
         roles = [CHAIR, VICE_CHAIR, TREASURER, SECRETARY, DIRECTOR]
         order = Case(
-            *[When(role=role, then=pos) for pos, role in enumerate(roles)]
+            *[When(role=role, then=pos) for pos, role in enumerate(roles)],
         )
         return (
             self.get_queryset()
             .filter(
-                is_active=True, departure_date__isnull=True, role__in=roles
+                is_active=True,
+                departure_date__isnull=True,
+                role__in=roles,
             )
             .order_by(order, "join_date", "name")
         )

@@ -2,7 +2,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from meta.views import MetadataMixin
-from sentry_sdk import capture_message, last_event_id
+from sentry_sdk import capture_message
+from sentry_sdk import last_event_id
 
 User = get_user_model()
 

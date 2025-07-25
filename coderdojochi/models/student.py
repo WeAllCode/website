@@ -88,10 +88,7 @@ class Student(CommonInfo):
         return (
             date.year
             - self.birthday.year
-            - (
-                (date.month, date.day)
-                < (self.birthday.month, self.birthday.day)
-            )
+            - ((date.month, date.day) < (self.birthday.month, self.birthday.day))
         )
 
     get_age.short_description = "Age"
@@ -102,10 +99,9 @@ class Student(CommonInfo):
 
         if self.gender.lower() in MALE:
             return "male"
-        elif self.gender.lower() in FEMALE:
+        if self.gender.lower() in FEMALE:
             return "female"
-        else:
-            return "other"
+        return "other"
 
     get_clean_gender.short_description = "Clean Gender"
 
@@ -114,29 +110,28 @@ class Student(CommonInfo):
 
         if gender == "male":
             return "m"
-        elif gender == "female":
+        if gender == "female":
             return "f"
-        else:
-            return "o"
+        return "o"
 
     get_clean_gender_short.short_description = "Clean Gender Short"
 
     # returns True if the student age is between minimum_age and maximum_age
     def is_within_age_range(
-        self, minimum_age, maximum_age, date=timezone.now()
+        self,
+        minimum_age,
+        maximum_age,
+        date=timezone.now(),
     ):
         age = self.get_age(date)
 
         if age >= minimum_age and age <= maximum_age:
             return True
-        else:
-            return False
+        return False
 
     def is_within_gender_limitation(self, limitation):
         if limitation:
             if self.get_clean_gender() in [limitation.lower(), "other"]:
                 return True
-            else:
-                return False
-        else:
-            return True
+            return False
+        return True

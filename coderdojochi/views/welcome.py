@@ -3,26 +3,20 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from coderdojochi.forms import (
-    GuardianForm,
-    MentorForm,
-    StudentForm,
-)
-from coderdojochi.models import (
-    Guardian,
-    Meeting,
-    Mentor,
-    Session,
-)
+from coderdojochi.forms import GuardianForm
+from coderdojochi.forms import MentorForm
+from coderdojochi.forms import StudentForm
+from coderdojochi.models import Guardian
+from coderdojochi.models import Meeting
+from coderdojochi.models import Mentor
+from coderdojochi.models import Session
 from coderdojochi.util import email
 
 logger = logging.getLogger(__name__)
@@ -36,17 +30,13 @@ class WelcomeView(TemplateView):
         next_url = request.GET.get("next")
         kwargs["next_url"] = next_url
         # Check for redirect condition on mentor, otherwise pass as kwarg
-        if (
-            getattr(request.user, "role", False) == "mentor"
-            and request.method == "GET"
-        ):
+        if getattr(request.user, "role", False) == "mentor" and request.method == "GET":
             mentor = get_object_or_404(Mentor, user=request.user)
 
             if mentor.first_name:
                 if next_url:
                     return redirect(next_url)
-                else:
-                    return redirect("account_home")
+                return redirect("account_home")
 
             kwargs["mentor"] = mentor
         return super().dispatch(request, *args, **kwargs)
@@ -72,7 +62,7 @@ class WelcomeView(TemplateView):
             else:
                 context["add_student"] = True
                 context["form"] = StudentForm(
-                    initial={"guardian": guardian.pk}
+                    initial={"guardian": guardian.pk},
                 )
 
             if account.first_name and account.get_students():
@@ -97,8 +87,7 @@ class WelcomeView(TemplateView):
                 return self.update_account(request, account, next_url)
 
             return self.add_student(request, account, next_url)
-        else:
-            return self.create_new_user(request, user, next_url)
+        return self.create_new_user(request, user, next_url)
 
     def update_account(self, request, account, next_url):
         if isinstance(account, Mentor):
@@ -113,11 +102,10 @@ class WelcomeView(TemplateView):
             if next_url:
                 if "enroll" in request.GET:
                     next_url = f"{next_url}?enroll=True"
+            elif isinstance(account, Mentor):
+                next_url = "account_home"
             else:
-                if isinstance(account, Mentor):
-                    next_url = "account_home"
-                else:
-                    next_url = "welcome"
+                next_url = "welcome"
             return redirect(next_url)
 
         return render(
@@ -140,9 +128,7 @@ class WelcomeView(TemplateView):
             messages.success(request, "Student Registered.")
             if next_url:
                 if "enroll" in request.GET:
-                    next_url = (
-                        f"{next_url}?enroll=True&student={new_student.id}"
-                    )
+                    next_url = f"{next_url}?enroll=True&student={new_student.id}"
             else:
                 next_url = "welcome"
             return redirect(next_url)
@@ -214,9 +200,7 @@ class WelcomeView(TemplateView):
         else:
             # check for next upcoming class
             next_class = (
-                Session.objects.filter(is_active=True)
-                .order_by("start_date")
-                .first()
+                Session.objects.filter(is_active=True).order_by("start_date").first()
             )
 
             if next_class:

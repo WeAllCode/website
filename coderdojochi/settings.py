@@ -62,13 +62,15 @@ if SECURE_SSL_REDIRECT:
     SECURE_HSTS_SECONDS = 518400
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
     SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
-        "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
+        "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS",
+        default=True,
     )
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
     SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
     # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
     SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
-        "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
+        "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF",
+        default=True,
     )
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
     SECURE_BROWSER_XSS_FILTER = True
@@ -167,7 +169,7 @@ DATABASES = {
         "PASSWORD": os.environ.get("DB_PASSWORD"),
         "HOST": os.environ.get("DB_HOST"),
         "PORT": os.environ.get("DB_PORT"),
-    }
+    },
 }
 
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
@@ -192,19 +194,13 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation.MinimumLengthValidator"
-        ),
+        "NAME": ("django.contrib.auth.password_validation.MinimumLengthValidator"),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation.CommonPasswordValidator"
-        ),
+        "NAME": ("django.contrib.auth.password_validation.CommonPasswordValidator"),
     },
     {
-        "NAME": (
-            "django.contrib.auth.password_validation.NumericPasswordValidator"
-        ),
+        "NAME": ("django.contrib.auth.password_validation.NumericPasswordValidator"),
     },
 ]
 
@@ -258,7 +254,7 @@ else:
     # STORAGES
     # ------------------------------------------------------------------------------
     # https://django-storages.readthedocs.io/en/latest/#installation
-    INSTALLED_APPS += ["storages"]  # noqa F405
+    INSTALLED_APPS += ["storages"]
 
     # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
     AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
@@ -288,10 +284,8 @@ else:
     # ------------------------------------------------------------------------------
     # region http://stackoverflow.com/questions/10390244/
     from django.contrib.staticfiles.storage import ManifestFilesMixin
-    from storages.backends.s3boto3 import (  # noqa E402
-        S3Boto3Storage,
-        SpooledTemporaryFile,
-    )
+    from storages.backends.s3boto3 import S3Boto3Storage
+    from storages.backends.s3boto3 import SpooledTemporaryFile
 
     # ManifestFilesSafeMixin = lambda: ManifestFilesMixin(manifest_strict=False)
     # Taken from an issue in django-storages:
@@ -313,7 +307,9 @@ else:
 
             # Upload the object which will auto close the content_autoclose instance
             super(CustomS3Storage, self)._save_content(
-                obj, content_autoclose, parameters
+                obj,
+                content_autoclose,
+                parameters,
             )
 
             # Cleanup if this is fixed upstream our duplicate should always close
@@ -365,9 +361,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_FORM_CLASS = "coderdojochi.forms.SignupForm"
-SOCIALACCOUNT_ADAPTER = (
-    "coderdojochi.social_account_adapter.SocialAccountAdapter"
-)
+SOCIALACCOUNT_ADAPTER = "coderdojochi.social_account_adapter.SocialAccountAdapter"
 
 
 # Email

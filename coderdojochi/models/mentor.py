@@ -4,10 +4,8 @@ from django.db import models
 from django.urls import reverse
 from stdimage.models import StdImageField
 
-from ..notifications import (
-    NewMentorBgCheckNotification,
-    NewMentorNotification,
-)
+from ..notifications import NewMentorBgCheckNotification
+from ..notifications import NewMentorNotification
 from .common import CommonInfo
 from .race_ethnicity import RaceEthnicity
 from .user import CDCUser
@@ -162,14 +160,14 @@ class Mentor(CommonInfo):
                 "d": "mp",
                 "r": "pg",
                 "s": str(320),
-            }
+            },
         )
         full_params = urlencode(
             {
                 "d": "mp",
                 "r": "pg",
                 "s": str(500),
-            }
+            },
         )
 
         slug_url = f"https://www.gravatar.com/avatar/{email_encoded}"

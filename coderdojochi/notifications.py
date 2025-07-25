@@ -26,7 +26,7 @@ class SlackNotification:
                 {
                     "msg": "Unable to send Slack notification",
                     "error": res.content,
-                }
+                },
             )
 
 
@@ -55,7 +55,7 @@ class NewMentorNotification(SlackNotification):
                         },
                     ],
                 },
-            ]
+            ],
         }
 
 
@@ -88,7 +88,7 @@ class NewMentorOrderNotification(SlackNotification):
                         {"type": "mrkdwn", "text": f"*Date*: \n{start_date}"},
                     ],
                 },
-            ]
+            ],
         }
 
 
@@ -117,5 +117,5 @@ class NewMentorBgCheckNotification(SlackNotification):
                         },
                     ],
                 },
-            ]
+            ],
         }

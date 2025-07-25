@@ -133,7 +133,7 @@ class Meeting(CommonInfo):
                 meeting=self,
             ).values(
                 "mentor__id",
-            )
+            ),
         )
 
     def get_mentor_count(self):

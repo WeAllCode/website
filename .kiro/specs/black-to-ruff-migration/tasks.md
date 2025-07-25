@@ -37,29 +37,29 @@
   - Ensure consistency with Ruff usage throughout documentation
   - _Requirements: 3.3, 3.4, 3.5_
 
-- [ ] 4. Enhance Ruff configuration for complete migration
+- [-] 4. Enhance Ruff configuration for complete migration
 - [ ] 4.1 Complete pyproject.toml Ruff configuration
 
   - Add exclude patterns for migrations and other directories
   - Add [tool.ruff.isort] section with Django-aware import sorting (known-django, section-order, combine-as-imports)
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [ ] 5. Test Ruff configuration
-- [ ] 5.1 Validate formatting compatibility
+- [x] 5. Test Ruff configuration
+- [x] 5.1 Validate formatting compatibility
 
   - Run `docker compose run --rm app uv run ruff format --check .` on existing codebase to verify minimal changes
   - Compare Ruff output with current formatting to ensure consistency
   - Verify migrations are excluded from formatting (configured in pyproject.toml)
   - _Requirements: 1.1, 1.3, 1.4_
 
-- [ ] 5.2 Validate import sorting
+- [x] 5.2 Validate import sorting
 
   - Run `docker compose run --rm app uv run ruff check --select I .` to test import sorting functionality
   - Verify Django-aware section organization is maintained
   - Test that import sorting follows isort-compatible behavior using `docker compose run --rm app uv run ruff check --select I --fix .`
   - _Requirements: 1.2, 1.5_
 
-- [ ] 5.3 Test pre-commit integration
+- [x] 5.3 Test pre-commit integration
   - Run `docker compose run --rm app pre-commit run --all-files` to test pre-commit hooks in containerized environment
   - Test that Ruff hooks execute correctly and maintain exclusion patterns
   - Verify pre-commit performance improvement with Ruff using `docker compose run --rm app pre-commit run ruff-format ruff-check`

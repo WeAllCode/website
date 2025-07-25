@@ -1,15 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-from django.test import (
-    Client,
-    TestCase,
-)
+from django.test import Client
+from django.test import TestCase
 from django.urls import reverse
 
-from coderdojochi.factories import (
-    PartnerPasswordAccessFactory,
-    SessionFactory,
-)
+from coderdojochi.factories import PartnerPasswordAccessFactory
+from coderdojochi.factories import SessionFactory
 from coderdojochi.models import PartnerPasswordAccess
 
 User = get_user_model()
@@ -38,7 +34,8 @@ class TestPartnerSessionPassword(TestCase):
 
     def test_session_password_valid_password_unauthed(self):
         response = self.client.post(
-            self.url, data={"password": self.partner_session.password}
+            self.url,
+            data={"password": self.partner_session.password},
         )
         self.assertIsInstance(response, HttpResponseRedirect)
 
@@ -53,14 +50,17 @@ class TestPartnerSessionPassword(TestCase):
 
     def test_session_password_valid_password_authed(self):
         user = User.objects.create_user(
-            "user", email="email@email.com", password="pass123"
+            "user",
+            email="email@email.com",
+            password="pass123",
         )
         self.assertTrue(
-            self.client.login(email="email@email.com", password="pass123")
+            self.client.login(email="email@email.com", password="pass123"),
         )
 
         response = self.client.post(
-            self.url, data={"password": self.partner_session.password}
+            self.url,
+            data={"password": self.partner_session.password},
         )
         self.assertIsInstance(response, HttpResponseRedirect)
 
@@ -68,7 +68,8 @@ class TestPartnerSessionPassword(TestCase):
         self.assertEqual(response.url, detail_url)
 
         partner_password_access = PartnerPasswordAccess.objects.get(
-            session=self.partner_session, user=user
+            session=self.partner_session,
+            user=user,
         )
         self.assertIsNotNone(partner_password_access)
 
@@ -99,10 +100,12 @@ class TestSessionDetail(TestCase):
 
     def test_redirect_password_authed(self):
         User.objects.create_user(
-            "user", email="email@email.com", password="pass123"
+            "user",
+            email="email@email.com",
+            password="pass123",
         )
         self.assertTrue(
-            self.client.login(email="email@email.com", password="pass123")
+            self.client.login(email="email@email.com", password="pass123"),
         )
 
         response = self.client.get(self.url)
@@ -113,14 +116,17 @@ class TestSessionDetail(TestCase):
 
     def test_redirect_password_partner_password_access(self):
         user = User.objects.create_user(
-            "user", email="email@email.com", password="pass123"
+            "user",
+            email="email@email.com",
+            password="pass123",
         )
         self.assertTrue(
-            self.client.login(email="email@email.com", password="pass123")
+            self.client.login(email="email@email.com", password="pass123"),
         )
 
         PartnerPasswordAccessFactory.create(
-            user=user, session=self.partner_session
+            user=user,
+            session=self.partner_session,
         )
         response = self.client.get(self.url)
         detail_url = reverse("session_password", kwargs=self.url_kwargs)

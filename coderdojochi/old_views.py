@@ -10,40 +10,32 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import (
-    Case,
-    Count,
-    IntegerField,
-    When,
-)
+from django.db.models import Case
+from django.db.models import Count
+from django.db.models import IntegerField
+from django.db.models import When
 from django.http import HttpResponse
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
-from coderdojochi.forms import (
-    DonationForm,
-    StudentForm,
-)
-from coderdojochi.models import (
-    Donation,
-    Equipment,
-    EquipmentType,
-    Guardian,
-    Meeting,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    Session,
-    Student,
-)
+from coderdojochi.forms import DonationForm
+from coderdojochi.forms import StudentForm
+from coderdojochi.models import Donation
+from coderdojochi.models import Equipment
+from coderdojochi.models import EquipmentType
+from coderdojochi.models import Guardian
+from coderdojochi.models import Meeting
+from coderdojochi.models import MeetingOrder
+from coderdojochi.models import Mentor
+from coderdojochi.models import MentorOrder
+from coderdojochi.models import Order
+from coderdojochi.models import Session
+from coderdojochi.models import Student
 from coderdojochi.util import email
 
 logger = logging.getLogger(__name__)
@@ -64,7 +56,9 @@ def home(request, template_name="home.html"):
     upcoming_classes = upcoming_classes[:3]
 
     return render(
-        request, template_name, {"upcoming_classes": upcoming_classes}
+        request,
+        template_name,
+        {"upcoming_classes": upcoming_classes},
     )
 
 
@@ -82,7 +76,9 @@ def volunteer(request, template_name="volunteer.html"):
     )
 
     upcoming_meetings = Meeting.objects.filter(
-        is_active=True, is_public=True, end_date__gte=timezone.now()
+        is_active=True,
+        is_public=True,
+        end_date__gte=timezone.now(),
     ).order_by("start_date")[:3]
 
     return render(
@@ -98,11 +94,12 @@ def mentor_approve_avatar(request, pk=None):
 
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permissions to moderate content."
+            request,
+            "You do not have permissions to moderate content.",
         )
 
         return redirect(
-            f"{reverse('account_login')}?next={mentor.get_approve_avatar_url()}"
+            f"{reverse('account_login')}?next={mentor.get_approve_avatar_url()}",
         )
 
     mentor.avatar_approved = True
@@ -111,24 +108,20 @@ def mentor_approve_avatar(request, pk=None):
     if mentor.background_check:
         messages.success(
             request,
-            (
-                f"{mentor.full_name}'s avatar approved and their account is"
-                " now public."
-            ),
+            (f"{mentor.full_name}'s avatar approved and their account is now public."),
         )
 
         return redirect(f"{reverse('mentors')}{mentor.id}")
 
-    else:
-        messages.success(
-            request,
-            (
-                f"{mentor.full_name}'s avatar approved but they have yet to"
-                " fill out the 'background search' form."
-            ),
-        )
+    messages.success(
+        request,
+        (
+            f"{mentor.full_name}'s avatar approved but they have yet to"
+            " fill out the 'background search' form."
+        ),
+    )
 
-        return redirect("mentors")
+    return redirect("mentors")
 
 
 @login_required
@@ -137,11 +130,12 @@ def mentor_reject_avatar(request, pk=None):
 
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permissions to moderate content."
+            request,
+            "You do not have permissions to moderate content.",
         )
 
         return redirect(
-            f"{reverse('account_login')}?next={mentor.get_reject_avatar_url()}"
+            f"{reverse('account_login')}?next={mentor.get_reject_avatar_url()}",
         )
 
     mentor.avatar_approved = False
@@ -169,7 +163,9 @@ def mentor_reject_avatar(request, pk=None):
 
 @login_required
 def student_detail(
-    request, student_id=False, template_name="student_detail.html"
+    request,
+    student_id=False,
+    template_name="student_detail.html",
 ):
     access = True
 
@@ -195,7 +191,8 @@ def student_detail(
     if not access:
         return redirect("account_home")
         messages.error(
-            request, "You do not have permissions to edit this student."
+            request,
+            "You do not have permissions to edit this student.",
         )
 
     if request.method == "POST":
@@ -203,7 +200,8 @@ def student_detail(
             student.is_active = False
             student.save()
             messages.success(
-                request, f'Student "{student.full_name}" Deleted.'
+                request,
+                f'Student "{student.full_name}" Deleted.',
             )
             return redirect("account_home")
 
@@ -220,7 +218,8 @@ def student_detail(
 def cdc_admin(request, template_name="admin.html"):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("weallcode-home")
 
@@ -229,7 +228,7 @@ def cdc_admin(request, template_name="admin.html"):
         .annotate(
             num_orders=Count("order"),
             num_attended=Count(
-                Case(When(order__check_in__isnull=False, then=1))
+                Case(When(order__check_in__isnull=False, then=1)),
             ),
             is_future=Case(
                 When(start_date__gte=timezone.now(), then=1),
@@ -245,7 +244,7 @@ def cdc_admin(request, template_name="admin.html"):
         .annotate(
             num_orders=Count("meetingorder"),
             num_attended=Count(
-                Case(When(meetingorder__check_in__isnull=False, then=1))
+                Case(When(meetingorder__check_in__isnull=False, then=1)),
             ),
             is_future=Case(
                 When(end_date__gte=timezone.now(), then=1),
@@ -261,26 +260,23 @@ def cdc_admin(request, template_name="admin.html"):
     total_past_orders = orders.filter(is_active=True)
     total_past_orders_count = total_past_orders.count()
     total_checked_in_orders = orders.filter(
-        is_active=True, check_in__isnull=False
+        is_active=True,
+        check_in__isnull=False,
     )
     total_checked_in_orders_count = total_checked_in_orders.count()
 
     # Genders
     gender_count = list(
-        Counter(
-            e.student.get_clean_gender() for e in total_checked_in_orders
-        ).items()
+        Counter(e.student.get_clean_gender() for e in total_checked_in_orders).items(),
     )
     gender_count = sorted(
-        list(dict(gender_count).items()), key=operator.itemgetter(1)
+        list(dict(gender_count).items()),
+        key=operator.itemgetter(1),
     )
 
     # Ages
     ages = sorted(
-        list(
-            e.student.get_age(e.session.start_date)
-            for e in total_checked_in_orders
-        )
+        list(e.student.get_age(e.session.start_date) for e in total_checked_in_orders),
     )
     age_count = sorted(
         list(dict(list(Counter(ages).items())).items()),
@@ -317,7 +313,8 @@ def cdc_admin(request, template_name="admin.html"):
 def session_stats(request, pk, template_name="session_stats.html"):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("weallcode-home")
 
@@ -333,7 +330,7 @@ def session_stats(request, pk, template_name="session_stats.html"):
                 float(current_orders_checked_in.count())
                 / float(session_obj.get_active_student_count())
             )
-            * 100
+            * 100,
         )
 
     else:
@@ -342,13 +339,13 @@ def session_stats(request, pk, template_name="session_stats.html"):
     # Genders
     gender_count = list(
         Counter(
-            e.student.get_clean_gender()
-            for e in session_obj.get_current_orders()
-        ).items()
+            e.student.get_clean_gender() for e in session_obj.get_current_orders()
+        ).items(),
     )
 
     gender_count = sorted(
-        list(dict(gender_count).items()), key=operator.itemgetter(1)
+        list(dict(gender_count).items()),
+        key=operator.itemgetter(1),
     )
 
     # Ages
@@ -356,7 +353,7 @@ def session_stats(request, pk, template_name="session_stats.html"):
         list(
             e.student.get_age(e.session.start_date)
             for e in session_obj.get_current_orders()
-        )
+        ),
     )
 
     age_count = sorted(
@@ -370,11 +367,11 @@ def session_stats(request, pk, template_name="session_stats.html"):
         student_ages = []
         for order in current_orders_checked_in:
             student_ages.append(
-                order.student.get_age(order.session.start_date)
+                order.student.get_age(order.session.start_date),
             )
 
         average_age = reduce(lambda x, y: x + y, student_ages) / len(
-            student_ages
+            student_ages,
         )
 
     return render(
@@ -396,7 +393,8 @@ def session_stats(request, pk, template_name="session_stats.html"):
 def session_check_in(request, pk, template_name="session_check_in.html"):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
 
         return redirect("weallcode-home")
@@ -414,9 +412,7 @@ def session_check_in(request, pk, template_name="session_check_in.html"):
                 f"{order.guardian.full_name}"
                 != request.POST["order_alternate_guardian"]
             ):
-                order.alternate_guardian = request.POST[
-                    "order_alternate_guardian"
-                ]
+                order.alternate_guardian = request.POST["order_alternate_guardian"]
 
             order.save()
         else:
@@ -437,22 +433,23 @@ def session_check_in(request, pk, template_name="session_check_in.html"):
         .filter(session_id=pk)
         .annotate(
             num_attended=Count(
-                Case(When(student__order__check_in__isnull=False, then=1))
+                Case(When(student__order__check_in__isnull=False, then=1)),
             ),
             num_missed=Count(
-                Case(When(student__order__check_in__isnull=True, then=1))
+                Case(When(student__order__check_in__isnull=True, then=1)),
             ),
         )
     )
 
     if active_session:
         active_orders = orders.filter(is_active=True).order_by(
-            "student__first_name"
+            "student__first_name",
         )
 
     else:
         active_orders = orders.filter(
-            is_active=True, check_in__isnull=False
+            is_active=True,
+            check_in__isnull=False,
         ).order_by("student__first_name")
 
     inactive_orders = orders.filter(is_active=False).order_by("-updated_at")
@@ -468,16 +465,16 @@ def session_check_in(request, pk, template_name="session_check_in.html"):
                 list(
                     Counter(
                         e.student.get_clean_gender() for e in active_orders
-                    ).items()
-                )
-            ).items()
+                    ).items(),
+                ),
+            ).items(),
         ),
         key=operator.itemgetter(1),
     )
 
     # Ages
     ages = sorted(
-        list(e.student.get_age(e.session.start_date) for e in active_orders)
+        list(e.student.get_age(e.session.start_date) for e in active_orders),
     )
 
     age_count = sorted(
@@ -511,11 +508,14 @@ def session_check_in(request, pk, template_name="session_check_in.html"):
 @login_required
 @never_cache
 def session_check_in_mentors(
-    request, pk, template_name="session_check_in_mentors.html"
+    request,
+    pk,
+    template_name="session_check_in_mentors.html",
 ):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("weallcode-home")
 
@@ -545,12 +545,13 @@ def session_check_in_mentors(
 
     if active_session:
         active_orders = orders.filter(is_active=True).order_by(
-            "mentor__user__first_name"
+            "mentor__user__first_name",
         )
 
     else:
         active_orders = orders.filter(
-            is_active=True, check_in__isnull=False
+            is_active=True,
+            check_in__isnull=False,
         ).order_by("mentor__user__first_name")
 
     inactive_orders = orders.filter(is_active=False).order_by("-updated_at")
@@ -579,7 +580,8 @@ def session_donations(request, pk, template_name="session_donations.html"):
     # TODO: we should really turn this into a decorator
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("account_home")
 
@@ -588,8 +590,9 @@ def session_donations(request, pk, template_name="session_donations.html"):
     default_form = DonationForm(initial={"session": session})
     default_form.fields["user"].queryset = User.objects.filter(
         id__in=Order.objects.filter(session=session).values_list(
-            "guardian__user__id", flat=True
-        )
+            "guardian__user__id",
+            flat=True,
+        ),
     )
 
     form = default_form
@@ -613,18 +616,22 @@ def session_donations(request, pk, template_name="session_donations.html"):
 @login_required
 @never_cache
 def meeting_check_in(
-    request, meeting_id, template_name="meeting_check_in.html"
+    request,
+    meeting_id,
+    template_name="meeting_check_in.html",
 ):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("account_home")
 
     if request.method == "POST":
         if "order_id" in request.POST:
             order = get_object_or_404(
-                MeetingOrder, id=request.POST["order_id"]
+                MeetingOrder,
+                id=request.POST["order_id"],
             )
 
             if order.check_in:
@@ -663,7 +670,8 @@ def meeting_check_in(
 def session_announce_mentors(request, pk):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("home")
 
@@ -681,14 +689,10 @@ def session_announce_mentors(request, pk):
                 .format("dddd, MMMM D, YYYY")
             ),
             "class_start_time": (
-                arrow.get(session_obj.mentor_start_date)
-                .to("local")
-                .format("h:mma")
+                arrow.get(session_obj.mentor_start_date).to("local").format("h:mma")
             ),
             "class_end_date": (
-                arrow.get(session_obj.end_date)
-                .to("local")
-                .format("dddd, MMMM D, YYYY")
+                arrow.get(session_obj.end_date).to("local").format("dddd, MMMM D, YYYY")
             ),
             "class_end_time": (
                 arrow.get(session_obj.end_date).to("local").format("h:mma")
@@ -701,9 +705,7 @@ def session_announce_mentors(request, pk):
             "class_location_state": session_obj.location.state,
             "class_location_zip": session_obj.location.zip,
             "class_additional_info": session_obj.additional_info,
-            "class_url": (
-                f"{settings.SITE_URL}{session_obj.get_absolute_url()}"
-            ),
+            "class_url": (f"{settings.SITE_URL}{session_obj.get_absolute_url()}"),
             "class_calendar_url": (
                 f"{settings.SITE_URL}{session_obj.get_calendar_url()}"
             ),
@@ -730,8 +732,7 @@ def session_announce_mentors(request, pk):
             merge_global_data=merge_global_data,
             recipients=recipients,
             preheader=(
-                "Help us make a huge difference! A brand new class was just"
-                " announced."
+                "Help us make a huge difference! A brand new class was just announced."
             ),
             unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
         )
@@ -740,7 +741,8 @@ def session_announce_mentors(request, pk):
         session_obj.save()
 
         messages.success(
-            request, f"Session announced to {mentors.count()} mentors."
+            request,
+            f"Session announced to {mentors.count()} mentors.",
         )
 
     else:
@@ -753,7 +755,8 @@ def session_announce_mentors(request, pk):
 def session_announce_guardians(request, pk):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("home")
 
@@ -774,9 +777,7 @@ def session_announce_guardians(request, pk):
                 arrow.get(session_obj.start_date).to("local").format("h:mma")
             ),
             "class_end_date": (
-                arrow.get(session_obj.end_date)
-                .to("local")
-                .format("dddd, MMMM D, YYYY")
+                arrow.get(session_obj.end_date).to("local").format("dddd, MMMM D, YYYY")
             ),
             "class_end_time": (
                 arrow.get(session_obj.end_date).to("local").format("h:mma")
@@ -789,9 +790,7 @@ def session_announce_guardians(request, pk):
             "class_location_state": session_obj.location.state,
             "class_location_zip": session_obj.location.zip,
             "class_additional_info": session_obj.additional_info,
-            "class_url": (
-                f"{settings.SITE_URL}{session_obj.get_absolute_url()}"
-            ),
+            "class_url": (f"{settings.SITE_URL}{session_obj.get_absolute_url()}"),
             "class_calendar_url": (
                 f"{settings.SITE_URL}{session_obj.get_calendar_url()}"
             ),
@@ -827,7 +826,8 @@ def session_announce_guardians(request, pk):
         session_obj.save()
 
         messages.success(
-            request, f"Session announced to {guardians.count()} guardians!"
+            request,
+            f"Session announced to {guardians.count()} guardians!",
         )
 
     else:
@@ -866,7 +866,8 @@ def check_system(request):
         equipmentType = EquipmentType.objects.get(name="Laptop")
         if equipmentType:
             equipment, created = Equipment.objects.get_or_create(
-                uuid=uuid, defaults={"equipment_type": equipmentType}
+                uuid=uuid,
+                defaults={"equipment_type": equipmentType},
             )
 
             # check for blank values of last_system_update.
