@@ -14,15 +14,14 @@ This feature involves migrating the We All Code Django project from using Black 
 
 1. WHEN the project is configured THEN Ruff SHALL replace Black as the code formatter
 2. WHEN the project is configured THEN Ruff SHALL replace isort for import sorting
-3. WHEN Ruff is configured THEN it SHALL maintain the existing 79-character line length
-4. WHEN Ruff is configured THEN it SHALL exclude migrations from formatting (same as current Black config)
-5. WHEN Ruff is configured THEN it SHALL maintain Django-aware import sorting sections
+3. WHEN Ruff is configured THEN it SHALL exclude migrations from formatting (same as current Black config)
+4. WHEN Ruff is configured THEN it SHALL maintain Django-aware import sorting sections with proper separation of Django imports from other third-party libraries
 
 ### Requirement 2: Pre-commit Integration
 
 **User Story:** As a developer, I want the pre-commit hooks updated to use Ruff, so that code quality checks run automatically before commits.
 
-#### Pre-commit Acceptance Criteria
+#### Acceptance Criteria
 
 1. WHEN pre-commit hooks are updated THEN they SHALL use Ruff instead of Black and isort
 2. WHEN pre-commit runs THEN it SHALL format code using Ruff
@@ -33,20 +32,19 @@ This feature involves migrating the We All Code Django project from using Black 
 
 **User Story:** As a developer, I want all project documentation updated to reflect the Ruff migration, so that new contributors understand the current tooling and existing developers have accurate reference materials.
 
-#### Documentation Acceptance Criteria
+#### Acceptance Criteria
 
 1. WHEN documentation is updated THEN .kiro/steering/tech.md SHALL reference Ruff instead of Black and isort in the Code Quality Tools section
 2. WHEN documentation is updated THEN .kiro/steering/structure.md SHALL reference Ruff formatting conventions instead of Black
 3. WHEN documentation is updated THEN README.md SHALL be updated if it contains references to Black or isort
 4. WHEN documentation is updated THEN any developer setup instructions SHALL include Ruff-specific commands
 5. WHEN documentation is updated THEN all references to code formatting tools SHALL be consistent with Ruff usage
-6. WHEN documentation is updated THEN it SHALL maintain accuracy about the 79-character line length requirement
 
 ### Requirement 4: Dependency Management
 
 **User Story:** As a developer, I want Ruff to be added as a project dependency, so that it's available in the development environment.
 
-#### Dependency Acceptance Criteria
+#### Acceptance Criteria
 
 1. WHEN dependencies are updated THEN Ruff SHALL be added to pyproject.toml
 2. WHEN dependencies are updated THEN Black and isort SHALL be removed from dependencies (if present)

@@ -1,33 +1,39 @@
+exclude: "^docs/|/migrations/|devcontainer.json"
+default_stages: [pre-commit]
+minimum_pre_commit_version: "3.2.0"
+
 default_language_version:
   python: python3.11
-
-# Ignore migration folders
-exclude: '.*\/migrations\/.*'
 
 repos:
   # pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
-      - id: no-commit-to-branch
-        args: [--branch, main]
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: check-yaml
       - id: check-json
       - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: detect-private-key
+      - id: no-commit-to-branch
+        args: [--branch, main]
       - id: check-added-large-files
       - id: check-merge-conflict
-      - id: detect-private-key
       - id: mixed-line-ending
         args: [--fix=lf]
 
-  # ruff
+  # Run the Ruff linter.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.5
     hooks:
-      # Run the linter.
+      # Linter
       - id: ruff-check
-        args: [--fix]
-      # Run the formatter.
+        args: [--fix, --exit-non-zero-on-fix]
+      # Formatter
       - id: ruff-format
