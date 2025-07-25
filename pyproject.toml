@@ -77,50 +77,14 @@ Repository = "https://github.com/weallcode/website"
 Homepage = "https://github.com/weallcode/website"
 
 [tool.ruff]
-line-length = 79
+# Use Ruff's recommended defaults
 target-version = "py311"
-exclude = [
-    ".eggs",
-    ".git",
-    ".hg",
-    ".mypy_cache",
-    ".tox",
-    ".venv",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "migrations",
-]
-
-[tool.ruff.format]
-
-
-[tool.ruff.lint.isort]
-known-third-party = ["django"]
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
-combine-as-imports = true
-force-wrap-aliases = true
-split-on-trailing-comma = true
-
-[dependency-groups]
-dev = [
-    "pre-commit>=4.2.0",
-]
 
 [tool.ruff.lint]
 # Allow wildcard imports in __init__.py files (common Django pattern)
 per-file-ignores = {"__init__.py" = ["F403", "F401"]}
 
-# Enable specific rule categories
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-]
-
-# Ignore specific rules that are common in Django projects
-ignore = [
-    "E501",  # line too long (handled by formatter)
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
 ]

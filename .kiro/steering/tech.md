@@ -25,7 +25,7 @@
 
 ## Code Quality Tools
 
-- **Ruff** - Fast Python linter and formatter with import sorting (line length: 79)
+- **Ruff** - Fast Python linter and formatter with import sorting
 - **django-nose** - Test runner
 
 ## Common Commands
