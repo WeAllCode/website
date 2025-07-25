@@ -85,6 +85,7 @@ extend-exclude = [
     "staticfiles/*",
 ]
 
+[tool.ruff.lint]
 select = [
   "F",
   "E",
@@ -101,7 +102,6 @@ select = [
   "FBT",
   "B",
   "A",
-  "COM",
   "C4",
   "DTZ",
   "T10",
@@ -149,6 +149,7 @@ ignore = [
           # of types for comparison.
           # Deactivated because it can make the code slow:
           # https://github.com/astral-sh/ruff/issues/7871
+  "COM812", # Trailing comma missing - conflicts with formatter
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.
