@@ -272,7 +272,9 @@ class Session(CommonInfo):
         if self.mentor_capacity is None:
             self.mentor_capacity = int(self.capacity / 2)
 
-        self.mentor_capacity = max(self.mentor_capacity if self.mentor_capacity is not None else 0, 0)
+        if self.mentor_capacity is None:
+            self.mentor_capacity = 0
+        self.mentor_capacity = max(self.mentor_capacity, 0)
 
         # Capacity check
         if self.capacity is None:
