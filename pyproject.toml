@@ -94,18 +94,33 @@ exclude = [
 ]
 
 [tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-source-first-line = false
-line-ending = "auto"
 
-[tool.ruff.isort]
-known-django = ["django"]
-section-order = ["future", "standard-library", "django", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["django"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 combine-as-imports = true
 force-wrap-aliases = true
 split-on-trailing-comma = true
 
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+]
+
 [tool.ruff.lint]
-select = ["E", "F", "W", "I"]
-ignore = []
+# Allow wildcard imports in __init__.py files (common Django pattern)
+per-file-ignores = {"__init__.py" = ["F403", "F401"]}
+
+# Enable specific rule categories
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+]
+
+# Ignore specific rules that are common in Django projects
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]

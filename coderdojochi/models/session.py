@@ -7,7 +7,6 @@ from django.core.validators import (
 from django.db import models
 from django.urls.base import reverse
 from django.utils import formats
-from django.utils.functional import cached_property
 
 from .common import CommonInfo
 

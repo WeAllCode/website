@@ -1,8 +1,7 @@
 import logging
 
-from django.conf import settings
-
 import requests
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +13,7 @@ class SlackNotification:
     }
 
     def __init__(self):
-        self.payload = DEFAULT_PAYLOAD
+        self.payload = self.DEFAULT_PAYLOAD
 
     def send(self):
         res = requests.post(

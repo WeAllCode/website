@@ -10,7 +10,7 @@
   - Add Ruff as a development dependency in the "# Development & Debugging" section alongside django-debug-toolbar
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 2. Update pre-commit configuration
+- [x] 2. Update pre-commit configuration
 
   - Replace Black hook (psf/black) with Ruff formatter hook (charliermarsh/ruff-pre-commit)
   - Replace isort hook (pycqa/isort) with Ruff import sorting hook using --select I flag

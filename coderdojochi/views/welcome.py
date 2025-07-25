@@ -206,7 +206,7 @@ class WelcomeView(TemplateView):
 
             email(
                 subject="Welcome!",
-                template_name=f"welcome_mentor",
+                template_name="welcome_mentor",
                 merge_global_data=merge_global_data,
                 recipients=[user.email],
                 preheader="Welcome to We All Code! Let's get started..",
@@ -232,7 +232,7 @@ class WelcomeView(TemplateView):
 
             email(
                 subject="Welcome!",
-                template_name=f"welcome_guardian",
+                template_name="welcome_guardian",
                 merge_global_data=merge_global_data,
                 recipients=[user.email],
                 preheader="Your adventure awaits!",

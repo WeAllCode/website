@@ -2,7 +2,7 @@ import re
 
 from django import template
 from django.template import Template
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 
 from coderdojochi.models import Order
 

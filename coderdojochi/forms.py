@@ -1,5 +1,7 @@
 import re
 
+import html5.forms.widgets as html5_widgets
+from dateutil.relativedelta import relativedelta
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
@@ -17,11 +19,8 @@ from django.utils import (
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import format_lazy
-
-import html5.forms.widgets as html5_widgets
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV3
-from dateutil.relativedelta import relativedelta
 
 from coderdojochi.models import (
     CDCUser,

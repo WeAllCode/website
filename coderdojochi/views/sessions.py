@@ -1,5 +1,6 @@
 import logging
 
+import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -10,17 +11,12 @@ from django.shortcuts import (
     render,
 )
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.views.generic import (
-    DetailView,
     TemplateView,
     View,
 )
-from django.views.generic.base import RedirectView
-
-import arrow
 
 from coderdojochi.mixins import (
     RoleRedirectMixin,
@@ -34,7 +30,6 @@ from coderdojochi.models import (
     PartnerPasswordAccess,
     Session,
     Student,
-    guardian,
 )
 from coderdojochi.util import email
 

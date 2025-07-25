@@ -1,11 +1,10 @@
 import logging
 
+from anymail.message import AnymailMessage
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.utils import timezone
-
-from anymail.message import AnymailMessage
 
 logger = logging.getLogger(__name__)
 
@@ -108,6 +107,20 @@ def email(
                 user.save()
 
 
-def batches(l, n):
-    for i in range(0, len(l), n):
-        yield l[i : i + n]
+def batches(items, batch_size):
+    """
+    Split a list into smaller batches of a specified size.
+
+    Args:
+        items (list): The list of items to be split into batches
+        batch_size (int): The maximum number of items per batch
+
+    Yields:
+        list: A batch containing up to batch_size items from the original list
+
+    Example:
+        >>> list(batches([1, 2, 3, 4, 5], 2))
+        [[1, 2], [3, 4], [5]]
+    """
+    for start_index in range(0, len(items), batch_size):
+        yield items[start_index : start_index + batch_size]

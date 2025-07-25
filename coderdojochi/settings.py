@@ -12,11 +12,10 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
-from django.conf.locale.en import formats as en_formats
-
 import dj_database_url
 import django_heroku
 import environ
+from django.conf.locale.en import formats as en_formats
 
 env = environ.Env()
 
@@ -122,7 +121,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
-
     # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
 ]
@@ -290,7 +288,6 @@ else:
     # ------------------------------------------------------------------------------
     # region http://stackoverflow.com/questions/10390244/
     from django.contrib.staticfiles.storage import ManifestFilesMixin
-
     from storages.backends.s3boto3 import (  # noqa E402
         S3Boto3Storage,
         SpooledTemporaryFile,

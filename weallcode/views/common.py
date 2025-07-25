@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
-
+from django.shortcuts import render
 from meta.views import MetadataMixin
-from sentry_sdk import capture_message
+from sentry_sdk import capture_message, last_event_id
 
 User = get_user_model()
 
 
-def page_not_found_view(*args, **kwargs):
+def page_not_found_view(request, exception=None):
     print("page_not_found_view")
 
     options = {}

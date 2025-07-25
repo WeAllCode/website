@@ -74,7 +74,7 @@ handler404 = "weallcode.views.page_not_found_view"
 
 # Sentry Testing
 def trigger_error(request):
-    division_by_zero = 1 / 0
+    1 / 0  # Intentional division by zero for Sentry testing
 
 
 urlpatterns += [

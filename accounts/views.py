@@ -1,4 +1,7 @@
-from django.conf import settings
+from allauth.account.views import (
+    LoginView as AllAuthLoginView,
+    SignupView as AllAuthSignupView,
+)
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import (
@@ -6,14 +9,10 @@ from django.shortcuts import (
     redirect,
     render,
 )
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-
-from allauth.account.views import (
-    LoginView as AllAuthLoginView,
-    SignupView as AllAuthSignupView,
-)
 from meta.views import MetadataMixin
 
 from coderdojochi.forms import (

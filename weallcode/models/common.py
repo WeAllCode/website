@@ -1,6 +1,4 @@
-from collections import defaultdict
 from datetime import date
-from itertools import chain
 
 from django.db import models
 from django.db.models import (

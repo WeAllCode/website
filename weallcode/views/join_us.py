@@ -12,7 +12,7 @@ class JoinUsView(DefaultMetaTags, FormView):
     url = reverse_lazy("weallcode-join-us")
     success_url = reverse_lazy("weallcode-join-us")
 
-    title = f"Join Us | We All Code"
+    title = "Join Us | We All Code"
 
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.

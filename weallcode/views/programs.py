@@ -1,9 +1,8 @@
+import arrow
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import TemplateView
-
-import arrow
 
 from coderdojochi.models import (
     Course,
@@ -17,7 +16,7 @@ class ProgramsView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/programs.html"
     url = reverse_lazy("weallcode-programs")
 
-    title = f"Programs | We All Code"
+    title = "Programs | We All Code"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

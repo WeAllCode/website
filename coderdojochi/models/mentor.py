@@ -2,13 +2,11 @@ import os
 
 from django.db import models
 from django.urls import reverse
-
 from stdimage.models import StdImageField
 
 from ..notifications import (
     NewMentorBgCheckNotification,
     NewMentorNotification,
-    NewMentorOrderNotification,
 )
 from .common import CommonInfo
 from .race_ethnicity import RaceEthnicity
@@ -143,7 +141,7 @@ class Mentor(CommonInfo):
         )
 
     def get_avatar(self):
-        if self.avatar and self.avatar_approved == True:
+        if self.avatar and self.avatar_approved:
             return {
                 "url": f"{self.avatar.url}",
                 "thumbnail": {

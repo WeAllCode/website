@@ -1,5 +1,6 @@
 import logging
 
+import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -15,8 +16,6 @@ from django.views.generic import (
     DetailView,
     ListView,
 )
-
-import arrow
 
 from coderdojochi.models import (
     Meeting,

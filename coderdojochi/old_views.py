@@ -4,6 +4,7 @@ from collections import Counter
 from datetime import timedelta
 from functools import reduce
 
+import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -25,8 +26,6 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
-
-import arrow
 
 from coderdojochi.forms import (
     DonationForm,
@@ -745,7 +744,7 @@ def session_announce_mentors(request, pk):
         )
 
     else:
-        messages.warning(request, f"Session already announced.")
+        messages.warning(request, "Session already announced.")
 
     return redirect("cdc-admin")
 

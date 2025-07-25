@@ -8,4 +8,4 @@ class OurStoryView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/our_story.html"
     url = reverse_lazy("weallcode-our-story")
 
-    title = f"Our Story | We All Code"
+    title = "Our Story | We All Code"

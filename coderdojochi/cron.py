@@ -1,9 +1,8 @@
 from datetime import timedelta
 
+import arrow
 from django.conf import settings
 from django.utils import timezone
-
-import arrow
 from django_cron import (
     CronJobBase,
     Schedule,

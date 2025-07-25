@@ -1,6 +1,3 @@
-from collections import defaultdict
-from itertools import chain
-
 from django.db import models
 
 from .common import (
