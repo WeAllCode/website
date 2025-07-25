@@ -2,10 +2,6 @@
   "name": "We All Code",
   "scripts": {},
   "env": {
-    "POETRY_VERSION": {
-      "description": "Poetry Version",
-      "value": "1.8.3"
-    },
     "CONTACT_EMAIL": {
       "required": true
     },
@@ -55,9 +51,6 @@
   },
   "addons": ["heroku-postgresql", "logdna"],
   "buildpacks": [
-    {
-      "url": "https://github.com/moneymeets/python-poetry-buildpack.git"
-    },
     {
       "url": "heroku/python"
     }
