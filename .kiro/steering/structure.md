@@ -3,7 +3,7 @@
 ## Root Directory
 
 - `manage.py` - Django management script
-- `pyproject.toml` - Poetry dependencies and tool configuration
+- `pyproject.toml` - uv dependencies and tool configuration
 - `tasks.py` - Invoke task definitions for common operations
 - `docker-compose.yml` - Development environment setup
 - `Dockerfile` - Container configuration

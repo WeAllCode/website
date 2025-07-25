@@ -9,7 +9,7 @@
 ## Development Environment
 
 - **Docker & Docker Compose** - Containerized development
-- **Poetry** - Python dependency management
+- **uv** - Python dependency management and package installer
 - **Gunicorn** - WSGI HTTP Server for production
 
 ## Key Dependencies

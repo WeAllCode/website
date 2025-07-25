@@ -98,7 +98,7 @@ Examples:
 
 ```console
 docker compose run --rm app /bin/bash
-docker compose run --rm app poetry lock
+docker compose run --rm app uv lock
 docker compose run --rm app python manage.py makemigrations
 docker compose run --rm app python manage.py migrate
 ```
