@@ -26,7 +26,7 @@ def email(
     unsub_group_id=None,
 ):
     if not (subject and template_name and recipients):
-        raise NameError
+        raise ValueError("Missing required parameters: 'subject', 'template_name', and 'recipients' are all required.")
 
     if not isinstance(recipients, list):
         raise TypeError("recipients must be a list")
