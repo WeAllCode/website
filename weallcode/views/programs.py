@@ -64,7 +64,7 @@ class ProgramsView(DefaultMetaTags, TemplateView):
                     days=-settings.MAX_DAYS_FOR_PARENTS,
                 )
 
-                if IS_PARENT and open_signup_time > NOW:
+                if IS_PARENT and NOW < open_signup_time:
                     session.class_status = (
                         f"Sign up available {open_signup_time.humanize(NOW)}"
                     )
