@@ -91,8 +91,8 @@ Extends django-allauth for custom authentication:
 
 ### Code Style
 
-- Black formatter with 79 character line length
-- isort for import organization with Django-aware sections
+- Ruff formatter and linter with 79 character line length
+- Ruff import sorting with Django-aware sections
 - Migrations excluded from formatting
 
 ### Database

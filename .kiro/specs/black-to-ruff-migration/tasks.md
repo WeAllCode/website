@@ -18,22 +18,22 @@
   - Keep all other pre-commit hooks unchanged (trailing-whitespace, end-of-file-fixer, etc.)
   - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 3. Update documentation files
-- [ ] 3.1 Update .kiro/steering/tech.md
+- [x] 3. Update documentation files
+- [x] 3.1 Update .kiro/steering/tech.md
 
   - Replace Black and isort references with Ruff in Code Quality Tools section
   - Update tool descriptions to reflect Ruff's combined formatting and linting capabilities
   - Maintain 79-character line length documentation
   - _Requirements: 3.1, 3.6_
 
-- [ ] 3.2 Update .kiro/steering/structure.md
+- [x] 3.2 Update .kiro/steering/structure.md
 
   - Replace Black formatter references with Ruff in Development Conventions section
   - Update code style documentation to reference Ruff instead of Black and isort
   - Maintain Django-aware import sorting documentation
   - _Requirements: 3.2, 3.6_
 
-- [ ] 3.3 Check and update README.md if needed
+- [x] 3.3 Check and update README.md if needed
 
   - Search for any references to Black or isort in README.md
   - Update developer setup instructions to include Ruff-specific commands if present
