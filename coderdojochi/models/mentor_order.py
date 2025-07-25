@@ -1,5 +1,3 @@
-import os
-
 from django.db import models
 
 from ..notifications import NewMentorOrderNotification
@@ -57,7 +55,7 @@ class MentorOrder(CommonInfo):
 
     def save(self, *args, **kwargs):
         num_orders = MentorOrder.objects.filter(
-            mentor__id=self.mentor.id
+            mentor__id=self.mentor.id,
         ).count()
 
         if self.pk is None and num_orders == 0:

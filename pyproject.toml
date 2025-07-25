@@ -54,6 +54,7 @@ dependencies = [
 
     # Development & Debugging
     "django-debug-toolbar>=5.2.0,<6.0.0",
+    "ruff>=0.8.0,<1.0.0",
 
     # Testing
     "django-nose>=1.4.7,<2.0.0",
@@ -75,37 +76,91 @@ dependencies = [
 Repository = "https://github.com/weallcode/website"
 Homepage = "https://github.com/weallcode/website"
 
-[tool.black]
-line-length = 79
-target-version = ["py311"]
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-  | migrations
-)/
-'''
+[tool.ruff]
+# Use Ruff's recommended defaults
+target-version = "py311"
+# Exclude a variety of commonly ignored directories.
+extend-exclude = [
+    "*/migrations/*.py",
+    "staticfiles/*",
+]
 
-[tool.isort]
-profile = "black"
-line_length = 79
-multi_line_output = 3
-include_trailing_comma = true
-combine_as_imports = true
-force_grid_wrap = 2
-use_parentheses = true
-remove_redundant_aliases = true
-known_django = "django"
-sections = "FUTURE,STDLIB,DJANGO,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
-skip_gitignore = true
-skip = [".gitignore", ".dockerignore", ".venv"]
-skip_glob = ["**/migrations/*.py"]
+[tool.ruff.lint]
+select = [
+  "F",
+  "E",
+  "W",
+  "C90",
+  "I",
+  "N",
+  "UP",
+  "YTT",
+  # "ANN", # flake8-annotations: we should support this in the future but 100+ errors atm
+  "ASYNC",
+  "S",
+  "BLE",
+  "FBT",
+  "B",
+  "A",
+  "C4",
+  "DTZ",
+  "T10",
+  "DJ",
+  "EM",
+  "EXE",
+  "FA",
+  'ISC',
+  "ICN",
+  "G",
+  'INP',
+  'PIE',
+  "T20",
+  'PYI',
+  'PT',
+  "Q",
+  "RSE",
+  "RET",
+  "SLF",
+  "SLOT",
+  "SIM",
+  "TID",
+  "TC",
+  "INT",
+  # "ARG", # Unused function argument
+  "PTH",
+  "ERA",
+  "PD",
+  "PGH",
+  "PL",
+  "TRY",
+  "FLY",
+  # "NPY",
+  # "AIR",
+  "PERF",
+  # "FURB",
+  # "LOG",
+  "RUF",
+]
+ignore = [
+  "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
+  "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+  "SIM102", # sometimes it's better to nest
+  "UP038", # Checks for uses of isinstance/issubclass that take a tuple
+          # of types for comparison.
+          # Deactivated because it can make the code slow:
+          # https://github.com/astral-sh/ruff/issues/7871
+  "COM812", # Trailing comma missing - conflicts with formatter
+]
+# The fixes in extend-unsafe-fixes will require
+# provide the `--unsafe-fixes` flag when fixing.
+extend-unsafe-fixes = [
+  "UP038",
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.2.0",
+]

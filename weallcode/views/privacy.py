@@ -8,4 +8,4 @@ class PrivacyView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/privacy.html"
     url = reverse_lazy("weallcode-privacy")
 
-    title = f"Privacy & Terms | We All Code"
+    title = "Privacy & Terms | We All Code"

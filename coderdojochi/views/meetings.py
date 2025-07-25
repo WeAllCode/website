@@ -1,28 +1,21 @@
 import logging
 
+import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import Http404
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.utils import timezone
 from django.utils.html import strip_tags
-from django.views.generic import (
-    DetailView,
-    ListView,
-)
+from django.views.generic import DetailView
+from django.views.generic import ListView
 
-import arrow
-
-from coderdojochi.models import (
-    Meeting,
-    MeetingOrder,
-    Mentor,
-)
+from coderdojochi.models import Meeting
+from coderdojochi.models import MeetingOrder
+from coderdojochi.models import Mentor
 from coderdojochi.util import email
 from coderdojochi.views.calendar import CalendarView
 
@@ -81,11 +74,12 @@ class MeetingDetailView(DetailView):
             mentor = get_object_or_404(Mentor, user=self.request.user)
 
             active_meeting_orders = MeetingOrder.objects.filter(
-                meeting=self.object, is_active=True
+                meeting=self.object,
+                is_active=True,
             )
             context["active_meeting_orders"] = active_meeting_orders
             context["mentor_signed_up"] = active_meeting_orders.filter(
-                mentor=mentor
+                mentor=mentor,
             ).exists()
 
         return context
@@ -124,7 +118,8 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
     mentor = get_object_or_404(Mentor, user=request.user)
 
     meeting_orders = MeetingOrder.objects.filter(
-        meeting=meeting_obj, is_active=True
+        meeting=meeting_obj,
+        is_active=True,
     )
 
     user_meeting_order = meeting_orders.filter(mentor=mentor)
@@ -136,7 +131,9 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
     if request.method == "POST":
         if user_signed_up:
             meeting_order = get_object_or_404(
-                MeetingOrder, meeting=meeting_obj, mentor=mentor
+                MeetingOrder,
+                meeting=meeting_obj,
+                mentor=mentor,
             )
             meeting_order.is_active = False
             meeting_order.save()
@@ -145,15 +142,13 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
 
         else:
             if not settings.DEBUG:
-                ip = (
-                    request.META["HTTP_X_FORWARDED_FOR"]
-                    or request.META["REMOTE_ADDR"]
-                )
+                ip = request.META["HTTP_X_FORWARDED_FOR"] or request.META["REMOTE_ADDR"]
             else:
                 ip = request.META["REMOTE_ADDR"]
 
             meeting_order, created = MeetingOrder.objects.get_or_create(
-                mentor=mentor, meeting=meeting_obj
+                mentor=mentor,
+                meeting=meeting_obj,
             )
 
             meeting_order.ip = ip
@@ -174,9 +169,7 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                     .format("dddd, MMMM D, YYYY")
                 ),
                 "meeting_start_time": (
-                    arrow.get(meeting_obj.start_date)
-                    .to("local")
-                    .format("h:mma")
+                    arrow.get(meeting_obj.start_date).to("local").format("h:mma")
                 ),
                 "meeting_end_date": (
                     arrow.get(meeting_obj.end_date)
@@ -192,9 +185,7 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
                 "meeting_location_state": meeting_obj.location.state,
                 "meeting_location_zip": meeting_obj.location.zip,
                 "meeting_additional_info": meeting_obj.additional_info,
-                "meeting_url": (
-                    f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"
-                ),
+                "meeting_url": (f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"),
                 "meeting_calendar_url": (
                     f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}"
                 ),
@@ -230,7 +221,8 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
 def meeting_announce(request, pk):
     if not request.user.is_staff:
         messages.error(
-            request, "You do not have permission to access this page."
+            request,
+            "You do not have permission to access this page.",
         )
         return redirect("home")
 
@@ -250,9 +242,7 @@ def meeting_announce(request, pk):
                 arrow.get(meeting_obj.start_date).to("local").format("h:mma")
             ),
             "meeting_end_date": (
-                arrow.get(meeting_obj.end_date)
-                .to("local")
-                .format("dddd, MMMM D, YYYY")
+                arrow.get(meeting_obj.end_date).to("local").format("dddd, MMMM D, YYYY")
             ),
             "meeting_end_time": (
                 arrow.get(meeting_obj.end_date).to("local").format("h:mma")
@@ -263,9 +253,7 @@ def meeting_announce(request, pk):
             "meeting_location_state": meeting_obj.location.state,
             "meeting_location_zip": meeting_obj.location.zip,
             "meeting_additional_info": meeting_obj.additional_info,
-            "meeting_url": (
-                f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"
-            ),
+            "meeting_url": (f"{settings.SITE_URL}{meeting_obj.get_absolute_url()}"),
             "meeting_calendar_url": (
                 f"{settings.SITE_URL}{meeting_obj.get_calendar_url()}"
             ),
@@ -291,8 +279,7 @@ def meeting_announce(request, pk):
             merge_global_data=merge_global_data,
             recipients=recipients,
             preheader=(
-                "A new meeting has been announced. Come join us for some"
-                " amazing fun!"
+                "A new meeting has been announced. Come join us for some amazing fun!"
             ),
         )
 
@@ -300,7 +287,8 @@ def meeting_announce(request, pk):
         meeting_obj.save()
 
         messages.success(
-            request, f"Meeting announced to {mentors.count()} mentors."
+            request,
+            f"Meeting announced to {mentors.count()} mentors.",
         )
     else:
         messages.warning(request, "Meeting already announced.")

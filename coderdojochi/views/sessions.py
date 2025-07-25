@@ -1,48 +1,33 @@
 import logging
 
+import arrow
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
-from django.views.generic import (
-    DetailView,
-    TemplateView,
-    View,
-)
-from django.views.generic.base import RedirectView
+from django.views.generic import TemplateView
+from django.views.generic import View
 
-import arrow
-
-from coderdojochi.mixins import (
-    RoleRedirectMixin,
-    RoleTemplateMixin,
-)
-from coderdojochi.models import (
-    Guardian,
-    Mentor,
-    MentorOrder,
-    Order,
-    PartnerPasswordAccess,
-    Session,
-    Student,
-    guardian,
-)
+from coderdojochi.mixins import RoleRedirectMixin
+from coderdojochi.mixins import RoleTemplateMixin
+from coderdojochi.models import Guardian
+from coderdojochi.models import Mentor
+from coderdojochi.models import MentorOrder
+from coderdojochi.models import Order
+from coderdojochi.models import PartnerPasswordAccess
+from coderdojochi.models import Session
+from coderdojochi.models import Student
 from coderdojochi.util import email
 
-from . import (
-    guardian,
-    mentor,
-    public,
-)
+from . import guardian
+from . import mentor
+from . import public
 from .calendar import CalendarView
 
 logger = logging.getLogger(__name__)
@@ -64,9 +49,7 @@ def session_confirm_mentor(request, session_obj, order):
             .format("dddd, MMMM D, YYYY")
         ),
         "class_start_time": (
-            arrow.get(session_obj.mentor_start_date)
-            .to("local")
-            .format("h:mma")
+            arrow.get(session_obj.mentor_start_date).to("local").format("h:mma")
         ),
         "class_end_date": (
             arrow.get(session_obj.mentor_end_date)
@@ -83,9 +66,7 @@ def session_confirm_mentor(request, session_obj, order):
         "class_location_zip": session_obj.location.zip,
         "class_additional_info": session_obj.additional_info,
         "class_url": f"{settings.SITE_URL}{session_obj.get_absolute_url()}",
-        "class_calendar_url": (
-            f"{settings.SITE_URL}{session_obj.get_calendar_url()}"
-        ),
+        "class_calendar_url": (f"{settings.SITE_URL}{session_obj.get_calendar_url()}"),
         "microdata_start_date": (
             arrow.get(session_obj.mentor_start_date).to("local").isoformat()
         ),
@@ -99,9 +80,7 @@ def session_confirm_mentor(request, session_obj, order):
 
     email(
         subject="Mentoring confirmation for {} class".format(
-            arrow.get(session_obj.mentor_start_date)
-            .to("local")
-            .format("MMMM D"),
+            arrow.get(session_obj.mentor_start_date).to("local").format("MMMM D"),
         ),
         template_name="class_confirm_mentor",
         merge_global_data=merge_global_data,
@@ -120,21 +99,15 @@ def session_confirm_guardian(request, session_obj, order, student):
         "class_title": session_obj.course.title,
         "class_description": session_obj.course.description,
         "class_start_date": (
-            arrow.get(session_obj.start_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY")
+            arrow.get(session_obj.start_date).to("local").format("dddd, MMMM D, YYYY")
         ),
         "class_start_time": (
             arrow.get(session_obj.start_date).to("local").format("h:mma")
         ),
         "class_end_date": (
-            arrow.get(session_obj.end_date)
-            .to("local")
-            .format("dddd, MMMM D, YYYY")
+            arrow.get(session_obj.end_date).to("local").format("dddd, MMMM D, YYYY")
         ),
-        "class_end_time": (
-            arrow.get(session_obj.end_date).to("local").format("h:mma")
-        ),
+        "class_end_time": (arrow.get(session_obj.end_date).to("local").format("h:mma")),
         "class_location_name": session_obj.location.name,
         "class_location_address": session_obj.location.address,
         "class_location_city": session_obj.location.city,
@@ -146,9 +119,7 @@ def session_confirm_guardian(request, session_obj, order, student):
         "microdata_start_date": (
             arrow.get(session_obj.start_date).to("local").isoformat()
         ),
-        "microdata_end_date": (
-            arrow.get(session_obj.end_date).to("local").isoformat()
-        ),
+        "microdata_end_date": (arrow.get(session_obj.end_date).to("local").isoformat()),
         "order_id": order.id,
         "online_video_link": session_obj.online_video_link,
         "online_video_description": session_obj.online_video_description,
@@ -172,19 +143,23 @@ class SessionDetailView(View):
         session = get_object_or_404(Session, id=pk)
 
         if session.password and not self.validate_partner_session_access(
-            request, pk
+            request,
+            pk,
         ):
             return redirect(reverse("session-password", kwargs=kwargs))
 
         if request.user.is_authenticated:
             if request.user.role == "mentor":
                 return mentor.SessionDetailView.as_view()(
-                    request, *args, **kwargs
+                    request,
+                    *args,
+                    **kwargs,
                 )
-            else:
-                return guardian.SessionDetailView.as_view()(
-                    request, *args, **kwargs
-                )
+            return guardian.SessionDetailView.as_view()(
+                request,
+                *args,
+                **kwargs,
+            )
         return public.SessionDetailView.as_view()(request, *args, **kwargs)
 
     def validate_partner_session_access(self, request, pk):
@@ -193,14 +168,16 @@ class SessionDetailView(View):
         if authed_sessions and pk in authed_sessions:
             if request.user.is_authenticated:
                 PartnerPasswordAccess.objects.get_or_create(
-                    session_id=pk, user=request.user
+                    session_id=pk,
+                    user=request.user,
                 )
             return True
 
         if request.user.is_authenticated:
             try:
                 PartnerPasswordAccess.objects.get(
-                    session_id=pk, user_id=request.user.id
+                    session_id=pk,
+                    user_id=request.user.id,
                 )
             except PartnerPasswordAccess.DoesNotExist:
                 return False
@@ -221,21 +198,23 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
         if request.user.role == "mentor":
             session_orders = MentorOrder.objects.filter(
-                session=session_obj, is_active=True
+                session=session_obj,
+                is_active=True,
             )
             kwargs["mentor"] = get_object_or_404(Mentor, user=request.user)
             kwargs["user_signed_up"] = session_orders.filter(
-                mentor=kwargs["mentor"]
+                mentor=kwargs["mentor"],
             ).exists()
 
         elif request.user.role == "guardian":
             kwargs["guardian"] = get_object_or_404(Guardian, user=request.user)
             kwargs["student"] = get_object_or_404(
-                Student, id=kwargs["student_id"]
+                Student,
+                id=kwargs["student_id"],
             )
-            kwargs["user_signed_up"] = kwargs[
-                "student"
-            ].is_registered_for_session(session_obj)
+            kwargs["user_signed_up"] = kwargs["student"].is_registered_for_session(
+                session_obj
+            )
 
         access_dict = self.check_access(request, *args, **kwargs)
 
@@ -248,7 +227,9 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             return redirect(access_dict["redirect"])
 
         return super(SessionSignUpView, self).dispatch(
-            request, *args, **kwargs
+            request,
+            *args,
+            **kwargs,
         )
 
     def check_access(self, request, *args, **kwargs):
@@ -283,7 +264,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
     def student_limitations(self, student, session_obj, user_signed_up):
         if not student.is_within_gender_limitation(
-            session_obj.gender_limitation
+            session_obj.gender_limitation,
         ):
             return (
                 "Sorry, this class is limited to"
@@ -291,7 +272,8 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             )
 
         if not student.is_within_age_range(
-            session_obj.minimum_age, session_obj.maximum_age
+            session_obj.minimum_age,
+            session_obj.maximum_age,
         ):
             return (
                 "Sorry, this class is limited to students between ages"
@@ -326,7 +308,9 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         if user_signed_up:
             if mentor:
                 order = get_object_or_404(
-                    MentorOrder, mentor=mentor, session=session_obj
+                    MentorOrder,
+                    mentor=mentor,
+                    session=session_obj,
                 )
             elif student:
                 order = get_object_or_404(
@@ -343,10 +327,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             ip = request.META["REMOTE_ADDR"]
 
             if not settings.DEBUG:
-                ip = (
-                    request.META["HTTP_X_FORWARDED_FOR"]
-                    or request.META["REMOTE_ADDR"]
-                )
+                ip = request.META["HTTP_X_FORWARDED_FOR"] or request.META["REMOTE_ADDR"]
 
             if mentor:
                 order, created = MentorOrder.objects.get_or_create(
@@ -402,7 +383,8 @@ class PasswordSessionView(TemplateView):
 
         # Get from user session or create an empty set
         authed_partner_sessions = request.session.get(
-            "authed_partner_sessions", []
+            "authed_partner_sessions",
+            [],
         )
 
         # Add course session id to user session
@@ -416,7 +398,8 @@ class PasswordSessionView(TemplateView):
 
         if request.user.is_authenticated:
             PartnerPasswordAccess.objects.get_or_create(
-                session=session_obj, user=request.user
+                session=session_obj,
+                user=request.user,
             )
 
         return redirect(session_obj)
@@ -428,17 +411,15 @@ class SessionCalendarView(CalendarView):
     event_class = Session
 
     def get_summary(self, request, event_obj):
-        return (
-            f"We All Code: {event_obj.course.code} - {event_obj.course.title}"
-        )
+        return f"We All Code: {event_obj.course.code} - {event_obj.course.title}"
 
     def get_dtstart(self, request, event_obj):
-        dtstart = (
-            f"{arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')}Z"
-        )
+        dtstart = f"{arrow.get(event_obj.start_date).format('YYYYMMDDTHHmmss')}Z"
 
         if request.user.is_authenticated and request.user.role == "mentor":
-            dtstart = f"{arrow.get(event_obj.mentor_start_date).format('YYYYMMDDTHHmmss')}Z"
+            dtstart = (
+                f"{arrow.get(event_obj.mentor_start_date).format('YYYYMMDDTHHmmss')}Z"
+            )
 
         return dtstart
 
@@ -461,7 +442,9 @@ class SessionCalendarView(CalendarView):
                 try:
                     mentor = Mentor.objects.get(user=self.request.user)
                     mentor_signed_up = MentorOrder.objects.filter(
-                        session=event_obj, is_active=True, mentor=mentor
+                        session=event_obj,
+                        is_active=True,
+                        mentor=mentor,
                     ).exists()
 
                     if mentor_signed_up:

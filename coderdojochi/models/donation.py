@@ -61,23 +61,20 @@ class Donation(CommonInfo):
     def get_first_name(self):
         if self.user:
             return self.user.first_name
-        else:
-            return self.first_name
+        return self.first_name
 
     get_first_name.short_description = "First Name"
 
     def get_last_name(self):
         if self.user:
             return self.user.last_name
-        else:
-            return self.last_name
+        return self.last_name
 
     get_last_name.short_description = "Last Name"
 
     def get_email(self):
         if self.user:
             return self.user.email
-        else:
-            return self.email
+        return self.email
 
     get_email.short_description = "Email"

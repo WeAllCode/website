@@ -1,6 +1,3 @@
-from collections import defaultdict
-from itertools import chain
-
 from django.db.models.aggregates import Count
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
@@ -17,7 +14,7 @@ class TeamView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/team.html"
     url = reverse_lazy("weallcode-team")
 
-    title = f"Team | We All Code"
+    title = "Team | We All Code"
 
     # Instructors
     def get_instructors(self, context, volunteers):
@@ -30,7 +27,7 @@ class TeamView(DefaultMetaTags, TemplateView):
     # Volunteers
     def get_volunteers(self, context, volunteers):
         all_volunteers = volunteers.annotate(
-            session_count=Count("mentororder")
+            session_count=Count("mentororder"),
         ).order_by("-user__role", "-session_count")
 
         mentors = []

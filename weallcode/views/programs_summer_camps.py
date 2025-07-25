@@ -1,5 +1,9 @@
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import TemplateView
+
+from coderdojochi.models import Course
+from coderdojochi.models import Session
 
 from .common import DefaultMetaTags
 
@@ -8,7 +12,7 @@ class ProgramsSummerCampsView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/programs_summer_camps.html"
     url = reverse_lazy("weallcode-programs-summer-camps")
 
-    title = f"Summer Camps | We All Code"
+    title = "Summer Camps | We All Code"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

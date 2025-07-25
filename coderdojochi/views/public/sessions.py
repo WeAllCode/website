@@ -1,11 +1,8 @@
-from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 
-from ...models import (
-    Mentor,
-    MentorOrder,
-    Session,
-)
+from ...models import Mentor
+from ...models import MentorOrder
+from ...models import Session
 
 
 class SessionDetailView(DetailView):
@@ -17,8 +14,9 @@ class SessionDetailView(DetailView):
 
         context["active_mentors"] = Mentor.objects.filter(
             id__in=MentorOrder.objects.filter(
-                session=self.object, is_active=True
-            ).values("mentor__id")
+                session=self.object,
+                is_active=True,
+            ).values("mentor__id"),
         )
 
         return context

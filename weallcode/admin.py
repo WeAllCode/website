@@ -1,11 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import (
-    AssociateBoardMember,
-    BoardMember,
-    StaffMember,
-)
+from .models import AssociateBoardMember
+from .models import BoardMember
+from .models import StaffMember
 
 
 @admin.register(StaffMember)

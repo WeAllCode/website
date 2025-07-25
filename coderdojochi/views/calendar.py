@@ -1,14 +1,11 @@
+import arrow
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
-
-import arrow
-from icalendar import (
-    Calendar,
-    Event,
-    vText,
-)
+from icalendar import Calendar
+from icalendar import Event
+from icalendar import vText
 
 
 class CalendarView(View):
@@ -33,7 +30,8 @@ class CalendarView(View):
 
     def get(self, request, *args, **kwargs):
         event_obj = get_object_or_404(
-            self.event_class, id=kwargs[self.event_kwarg]
+            self.event_class,
+            id=kwargs[self.event_kwarg],
         )
         cal = Calendar()
 
@@ -43,9 +41,7 @@ class CalendarView(View):
 
         event = Event()
 
-        event["uid"] = (
-            f"{self.event_type.upper()}{event_obj.id:04}@weallcode.org"
-        )
+        event["uid"] = f"{self.event_type.upper()}{event_obj.id:04}@weallcode.org"
         event["summary"] = self.get_summary(request, event_obj)
         event["dtstart"] = self.get_dtstart(request, event_obj)
         event["dtend"] = self.get_dtend(request, event_obj)
@@ -69,11 +65,11 @@ class CalendarView(View):
 
         # Return the ICS formatted calendar
         response = HttpResponse(
-            cal.to_ical(), content_type="text/calendar", charset="utf-8"
+            cal.to_ical(),
+            content_type="text/calendar",
+            charset="utf-8",
         )
 
-        response["Content-Disposition"] = (
-            f"attachment;filename={event_slug}.ics"
-        )
+        response["Content-Disposition"] = f"attachment;filename={event_slug}.ics"
 
         return response

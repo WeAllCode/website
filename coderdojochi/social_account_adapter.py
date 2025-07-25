@@ -1,6 +1,5 @@
-from django.contrib.auth import get_user_model
-
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 

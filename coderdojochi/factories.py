@@ -3,14 +3,12 @@ from datetime import datetime
 import factory
 from pytz import utc
 
-from .models import (
-    CDCUser,
-    Course,
-    Location,
-    Mentor,
-    PartnerPasswordAccess,
-    Session,
-)
+from .models import CDCUser
+from .models import Course
+from .models import Location
+from .models import Mentor
+from .models import PartnerPasswordAccess
+from .models import Session
 
 
 class CourseFactory(factory.DjangoModelFactory):

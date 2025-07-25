@@ -1,34 +1,25 @@
-from django.conf import settings
+from allauth.account.views import LoginView as AllAuthLoginView
+from allauth.account.views import SignupView as AllAuthSignupView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-
-from allauth.account.views import (
-    LoginView as AllAuthLoginView,
-    SignupView as AllAuthSignupView,
-)
 from meta.views import MetadataMixin
 
-from coderdojochi.forms import (
-    CDCModelForm,
-    GuardianForm,
-    MentorForm,
-)
-from coderdojochi.models import (
-    Guardian,
-    MeetingOrder,
-    Mentor,
-    MentorOrder,
-    Order,
-    Student,
-)
+from coderdojochi.forms import CDCModelForm
+from coderdojochi.forms import GuardianForm
+from coderdojochi.forms import MentorForm
+from coderdojochi.models import Guardian
+from coderdojochi.models import MeetingOrder
+from coderdojochi.models import Mentor
+from coderdojochi.models import MentorOrder
+from coderdojochi.models import Order
+from coderdojochi.models import Student
 
 
 class SignupView(MetadataMixin, AllAuthSignupView):
@@ -65,13 +56,12 @@ class AccountHomeView(MetadataMixin, TemplateView):
         if not self.request.user.role:
             if "next" in self.request.GET:
                 return redirect(
-                    f"{reverse('welcome')}?next={self.request.GET['next']}"
+                    f"{reverse('welcome')}?next={self.request.GET['next']}",
                 )
-            else:
-                messages.warning(
-                    self.request,
-                    "Tell us a little about yourself before going on account.",
-                )
+            messages.warning(
+                self.request,
+                "Tell us a little about yourself before going on account.",
+            )
             return redirect("welcome")
 
         return super().dispatch(*args, **kwargs)
@@ -103,15 +93,17 @@ class AccountHomeView(MetadataMixin, TemplateView):
         )
 
         upcoming_sessions = orders.filter(
-            is_active=True, session__start_date__gte=timezone.now()
+            is_active=True,
+            session__start_date__gte=timezone.now(),
         ).order_by("session__start_date")
 
         past_sessions = orders.filter(
-            is_active=True, session__start_date__lte=timezone.now()
+            is_active=True,
+            session__start_date__lte=timezone.now(),
         ).order_by("session__start_date")
 
         meeting_orders = MeetingOrder.objects.select_related().filter(
-            mentor=mentor
+            mentor=mentor,
         )
 
         upcoming_meetings = meeting_orders.filter(
@@ -207,11 +199,15 @@ class AccountHomeView(MetadataMixin, TemplateView):
         mentor = context["mentor"]
 
         form = MentorForm(
-            self.request.POST, self.request.FILES, instance=mentor
+            self.request.POST,
+            self.request.FILES,
+            instance=mentor,
         )
 
         user_form = CDCModelForm(
-            self.request.POST, self.request.FILES, instance=mentor.user
+            self.request.POST,
+            self.request.FILES,
+            instance=mentor.user,
         )
 
         if form.is_valid() and user_form.is_valid():
@@ -221,10 +217,10 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
             return redirect("account_home")
 
-        else:
-            messages.error(
-                self.request, "There was an error. Please try again."
-            )
+        messages.error(
+            self.request,
+            "There was an error. Please try again.",
+        )
 
         context["form"] = form
         context["user_form"] = user_form
@@ -247,10 +243,10 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
             return redirect("account_home")
 
-        else:
-            messages.error(
-                self.request, "There was an error. Please try again."
-            )
+        messages.error(
+            self.request,
+            "There was an error. Please try again.",
+        )
 
         context["form"] = form
         context["user_form"] = user_form

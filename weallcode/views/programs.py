@@ -1,14 +1,11 @@
+import arrow
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-import arrow
-
-from coderdojochi.models import (
-    Course,
-    Session,
-)
+from coderdojochi.models import Course
+from coderdojochi.models import Session
 
 from .common import DefaultMetaTags
 
@@ -17,20 +14,14 @@ class ProgramsView(DefaultMetaTags, TemplateView):
     template_name = "weallcode/programs.html"
     url = reverse_lazy("weallcode-programs")
 
-    title = f"Programs | We All Code"
+    title = "Programs | We All Code"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         user = self.request.user
-        IS_PARENT = (
-            True
-            if user.is_authenticated and user.role == "guardian"
-            else False
-        )
-        IS_MENTOR = (
-            True if user.is_authenticated and user.role == "mentor" else False
-        )
+        IS_PARENT = True if user.is_authenticated and user.role == "guardian" else False
+        IS_MENTOR = True if user.is_authenticated and user.role == "mentor" else False
         NOW = arrow.now()
 
         # region WEEKEND CLASSES
@@ -56,8 +47,7 @@ class ProgramsView(DefaultMetaTags, TemplateView):
 
                 if (
                     session.mentor_capacity
-                    and len(session.get_mentor_orders())
-                    >= session.mentor_capacity
+                    and len(session.get_mentor_orders()) >= session.mentor_capacity
                 ):
                     session.class_status = "Class Full"
                 else:
@@ -65,13 +55,13 @@ class ProgramsView(DefaultMetaTags, TemplateView):
 
             else:
                 session.start_time = arrow.get(session.start_date).to(
-                    settings.TIME_ZONE
+                    settings.TIME_ZONE,
                 )
                 session.end_time = session.end_date
 
                 # MAX_DAYS_FOR_PARENTS (30) days before the class start time
                 open_signup_time = session.start_time.shift(
-                    days=-settings.MAX_DAYS_FOR_PARENTS
+                    days=-settings.MAX_DAYS_FOR_PARENTS,
                 )
 
                 if IS_PARENT and NOW < open_signup_time:

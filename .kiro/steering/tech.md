@@ -25,8 +25,7 @@
 
 ## Code Quality Tools
 
-- **Black** - Code formatter (line length: 79)
-- **isort** - Import sorting with Black profile
+- **Ruff** - Fast Python linter and formatter with import sorting
 - **django-nose** - Test runner
 
 ## Common Commands

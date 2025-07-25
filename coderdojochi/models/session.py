@@ -1,13 +1,10 @@
 from datetime import timedelta
 
-from django.core.validators import (
-    MaxValueValidator,
-    MinValueValidator,
-)
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls.base import reverse
 from django.utils import formats
-from django.utils.functional import cached_property
 
 from .common import CommonInfo
 
@@ -99,7 +96,9 @@ class Session(CommonInfo):
 
     # Extra
     additional_info = models.TextField(
-        blank=True, null=True, help_text="Basic HTML allowed"
+        blank=True,
+        null=True,
+        help_text="Basic HTML allowed",
     )
     waitlist_mentors = models.ManyToManyField(
         Mentor,
@@ -200,8 +199,7 @@ class Session(CommonInfo):
     online_video_description = models.TextField(
         "Online Video Description",
         help_text=(
-            "Information on how to connect to the video call. Basic HTML"
-            " allowed."
+            "Information on how to connect to the video call. Basic HTML allowed."
         ),
         blank=True,
         null=True,
@@ -274,11 +272,12 @@ class Session(CommonInfo):
         if self.mentor_capacity is None:
             self.mentor_capacity = int(self.capacity / 2)
 
-        if self.mentor_capacity < 0:
+        # Ensure mentor_capacity is not negative
+        if self.mentor_capacity is None or self.mentor_capacity < 0:
             self.mentor_capacity = 0
 
-        # Capacity check
-        if self.capacity < 0:
+        # Ensure capacity is not negative
+        if self.capacity is None or self.capacity < 0:
             self.capacity = 0
 
         super(Session, self).save(*args, **kwargs)
@@ -311,7 +310,9 @@ class Session(CommonInfo):
         from .mentor_order import MentorOrder
 
         return MentorOrder.objects.filter(
-            session=self, is_active=True, check_in__isnull=False
+            session=self,
+            is_active=True,
+            check_in__isnull=False,
         ).order_by("mentor__user__last_name")
 
     def get_current_orders(self, checked_in=None):
@@ -326,11 +327,14 @@ class Session(CommonInfo):
                 )
             else:
                 orders = Order.objects.filter(
-                    is_active=True, session=self, check_in=None
+                    is_active=True,
+                    session=self,
+                    check_in=None,
                 ).order_by("student__last_name")
         else:
             orders = Order.objects.filter(
-                is_active=True, session=self
+                is_active=True,
+                session=self,
             ).order_by("check_in", "student__last_name")
 
         return orders
@@ -339,9 +343,7 @@ class Session(CommonInfo):
         from .order import Order
 
         return (
-            Order.objects.filter(is_active=True, session=self)
-            .values("student")
-            .count()
+            Order.objects.filter(is_active=True, session=self).values("student").count()
         )
 
     def get_checked_in_students(self):

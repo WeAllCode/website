@@ -2,14 +2,10 @@ import os
 
 from django.db import models
 from django.urls import reverse
-
 from stdimage.models import StdImageField
 
-from ..notifications import (
-    NewMentorBgCheckNotification,
-    NewMentorNotification,
-    NewMentorOrderNotification,
-)
+from ..notifications import NewMentorBgCheckNotification
+from ..notifications import NewMentorNotification
 from .common import CommonInfo
 from .race_ethnicity import RaceEthnicity
 from .user import CDCUser
@@ -143,7 +139,7 @@ class Mentor(CommonInfo):
         )
 
     def get_avatar(self):
-        if self.avatar and self.avatar_approved == True:
+        if self.avatar and self.avatar_approved:
             return {
                 "url": f"{self.avatar.url}",
                 "thumbnail": {
@@ -164,14 +160,14 @@ class Mentor(CommonInfo):
                 "d": "mp",
                 "r": "pg",
                 "s": str(320),
-            }
+            },
         )
         full_params = urlencode(
             {
                 "d": "mp",
                 "r": "pg",
                 "s": str(500),
-            }
+            },
         )
 
         slug_url = f"https://www.gravatar.com/avatar/{email_encoded}"

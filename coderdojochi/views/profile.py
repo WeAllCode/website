@@ -3,22 +3,16 @@ import logging
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-)
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from coderdojochi.forms import (
-    CDCModelForm,
-    MentorForm,
-)
-from coderdojochi.models import (
-    Mentor,
-    MentorOrder,
-)
+from coderdojochi.forms import CDCModelForm
+from coderdojochi.forms import MentorForm
+from coderdojochi.models import Mentor
+from coderdojochi.models import MentorOrder
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +43,8 @@ class DojoMentorView(TemplateView):
         # )
 
         past_sessions = orders.filter(
-            is_active=True, session__start_date__lte=timezone.now()
+            is_active=True,
+            session__start_date__lte=timezone.now(),
         ).order_by("session__start_date")
 
         # meeting_orders = MeetingOrder.objects.select_related().filter(mentor=mentor)
@@ -76,7 +71,9 @@ class DojoMentorView(TemplateView):
         form = MentorForm(request.POST, request.FILES, instance=mentor)
 
         user_form = CDCModelForm(
-            request.POST, request.FILES, instance=mentor.user
+            request.POST,
+            request.FILES,
+            instance=mentor.user,
         )
 
         if form.is_valid() and user_form.is_valid():
@@ -86,5 +83,4 @@ class DojoMentorView(TemplateView):
 
             return redirect("account_home")
 
-        else:
-            messages.error(request, "There was an error. Please try again.")
+        messages.error(request, "There was an error. Please try again.")

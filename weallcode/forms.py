@@ -1,6 +1,5 @@
 from django import forms
 from django.conf import settings
-
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV3
 

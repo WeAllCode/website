@@ -8,22 +8,18 @@ from django.views import defaults
 from django.views.generic import RedirectView
 
 from . import old_views
-from .views import (  # SessionDetailView,
-    MeetingCalendarView,
-    MeetingDetailView,
-    MeetingsView,
-    PasswordSessionView,
-    SessionCalendarView,
-    SessionDetailView,
-    SessionSignUpView,
-    WelcomeView,
-    meeting_announce,
-    meeting_sign_up,
-)
-from .views.public import (
-    MentorDetailView,
-    MentorListView,
-)
+from .views import MeetingCalendarView
+from .views import MeetingDetailView
+from .views import MeetingsView
+from .views import PasswordSessionView
+from .views import SessionCalendarView
+from .views import SessionDetailView
+from .views import SessionSignUpView
+from .views import WelcomeView
+from .views import meeting_announce
+from .views import meeting_sign_up
+from .views.public import MentorDetailView
+from .views.public import MentorListView
 
 admin.autodiscover()
 
@@ -81,10 +77,10 @@ urlpatterns += [
                                 MeetingCalendarView.as_view(),
                                 name="meeting-calendar",
                             ),
-                        ]
+                        ],
                     ),
                 ),
-            ]
+            ],
         ),
     ),
 ]
@@ -137,7 +133,7 @@ urlpatterns += [
                                 old_views.session_donations,
                                 name="donations",
                             ),
-                        ]
+                        ],
                     ),
                 ),
                 path(
@@ -150,17 +146,19 @@ urlpatterns += [
                                 old_views.meeting_check_in,
                                 name="meeting-check-in",
                             ),
-                        ]
+                        ],
                     ),
                 ),
                 # Admin Check System
                 # /admin/checksystem/
                 path(
-                    "checksystem/", old_views.check_system, name="check-system"
+                    "checksystem/",
+                    old_views.check_system,
+                    name="check-system",
                 ),
-            ]
+            ],
         ),
-    )
+    ),
 ]
 
 # Sessions
@@ -223,7 +221,7 @@ urlpatterns += [
                     SessionSignUpView.as_view(),
                     name="session-sign-up",
                 ),
-            ]
+            ],
         ),
     ),
 ]
@@ -257,7 +255,7 @@ urlpatterns += [
                     old_views.mentor_approve_avatar,
                     name="mentor-approve-avatar",
                 ),
-            ]
+            ],
         ),
     ),
 ]
@@ -291,12 +289,10 @@ urlpatterns += [
     path(
         "robots.txt",
         lambda r: HttpResponse(
-            "User-agent: *\nDisallow:\nSitemap: "
-            + settings.SITE_URL
-            + "/sitemap.xml",
+            "User-agent: *\nDisallow:\nSitemap: " + settings.SITE_URL + "/sitemap.xml",
             content_type="text/plain",
         ),
-    )
+    ),
 ]
 
 # Anymail
@@ -337,5 +333,5 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [
-            path("__debug__/", include(debug_toolbar.urls))
+            path("__debug__/", include(debug_toolbar.urls)),
         ] + urlpatterns
