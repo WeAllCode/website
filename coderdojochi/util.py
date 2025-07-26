@@ -1,5 +1,6 @@
 import logging
 from itertools import batched
+from typing import Any
 
 from anymail.message import AnymailMessage
 from django.conf import settings
@@ -13,19 +14,29 @@ User = get_user_model()
 
 
 def email(
-    subject,
-    template_name,
-    attachments=[],
-    batch_size=500,
-    bcc=None,
-    merge_data={},
-    merge_global_data={},
-    mixed_subtype=None,
-    preheader=None,
-    recipients=[],
-    reply_to=None,
-    unsub_group_id=None,
-):
+    subject: str,
+    template_name: str,
+    attachments: list[Any] | None = None,
+    batch_size: int = 500,
+    bcc: list[str] | None | bool = None,
+    merge_data: dict[str, Any] | None = None,
+    merge_global_data: dict[str, Any] | None = None,
+    mixed_subtype: str | None = None,
+    preheader: str | None = None,
+    recipients: list[str] | None = None,
+    reply_to: str | None = None,
+    unsub_group_id: int | None = None,
+) -> None:
+    # Handle mutable default arguments
+    if attachments is None:
+        attachments = []
+    if merge_data is None:
+        merge_data = {}
+    if merge_global_data is None:
+        merge_global_data = {}
+    if recipients is None:
+        recipients = []
+
     if not (subject and template_name and recipients):
         raise ValueError("Missing required parameters: 'subject', 'template_name', and 'recipients' are all required.")
 
