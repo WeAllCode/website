@@ -1,4 +1,5 @@
 import logging
+from itertools import batched
 
 from anymail.message import AnymailMessage
 from django.conf import settings
@@ -66,7 +67,7 @@ def email(
             "group_id": unsub_group_id,
         }
 
-    for recipients_batch in batches(recipients, batch_size):
+    for recipients_batch in batched(recipients, batch_size):
         msg = AnymailMessage(
             subject=subject,
             body=body,
@@ -107,20 +108,4 @@ def email(
                 user.save()
 
 
-def batches(items, batch_size):
-    """
-    Split a list into smaller batches of a specified size.
 
-    Args:
-        items (list): The list of items to be split into batches
-        batch_size (int): The maximum number of items per batch
-
-    Yields:
-        list: A batch containing up to batch_size items from the original list
-
-    Example:
-        >>> list(batches([1, 2, 3, 4, 5], 2))
-        [[1, 2], [3, 4], [5]]
-    """
-    for start_index in range(0, len(items), batch_size):
-        yield items[start_index : start_index + batch_size]

@@ -7,14 +7,14 @@
   - Update `Dockerfile` base image from `python:3.11.9` to `python:3.13`
   - _Requirements: 1.1, 4.1, 4.2, 4.3_
 
-- [ ] 2. Regenerate dependency lock file for Python 3.13
+- [x] 2. Regenerate dependency lock file for Python 3.13
 
   - Run `docker compose run --rm app uv lock --upgrade` to regenerate uv.lock for Python 3.13
   - Test that all dependencies resolve correctly with `docker compose run --rm app uv sync --frozen`
   - Verify no compatibility issues with existing dependencies
   - _Requirements: 5.1, 5.2_
 
-- [ ] 3. Replace custom batches function with native itertools.batched
+- [x] 3. Replace custom batches function with native itertools.batched
 
   - Remove the custom `batches()` function from `coderdojochi/util.py`
   - Replace all usage of `batches()` with `itertools.batched()` in the email function
