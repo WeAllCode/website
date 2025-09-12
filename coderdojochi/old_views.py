@@ -236,7 +236,7 @@ def cdc_admin(request, template_name="admin.html"):
                 output_field=IntegerField(),
             ),
         )
-        .order_by("-start_date")
+        .order_by("-start_date")[:5]
     )
 
     meetings = (
