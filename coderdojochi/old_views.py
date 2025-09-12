@@ -241,6 +241,13 @@ def cdc_admin(request, template_name="admin.html"):
         .order_by("-start_date")[:5]
     )
 
+    # Check if there are more sessions available (within the last 365 days)
+    one_year_ago = timezone.now() - timedelta(days=365)
+    total_recent_sessions_count = Session.objects.filter(
+        start_date__gte=one_year_ago
+    ).count()
+    has_more_sessions = total_recent_sessions_count > 5
+
     meetings = (
         Meeting.objects.select_related()
         .annotate(
@@ -300,6 +307,7 @@ def cdc_admin(request, template_name="admin.html"):
             # 'past_sessions': past_sessions,
             # 'past_sessions_count': past_sessions_count,
             "sessions": sessions,
+            "has_more_sessions": has_more_sessions,
             "total_checked_in_orders_count": total_checked_in_orders_count,
             "total_past_orders_count": total_past_orders_count,
             # 'upcoming_meetings': upcoming_meetings,
