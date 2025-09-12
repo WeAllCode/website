@@ -148,6 +148,7 @@
             <col>
             <col span="3" class="info">
             <col>
+            <col class="warning">
         </colgroup>
         <thead>
             <tr>
@@ -162,6 +163,7 @@
                 <th rowspan="2" class=""></th>
                 <th colspan="3" class="text-center">Volunteers</th>
                 <th rowspan="2" class=""></th>
+                <th rowspan="2" class="text-center">Notify</th>
             </tr>
             <tr>
                 <th class="text-center"><abbr title="Attended">A</abbr></th>
@@ -254,6 +256,11 @@
                     {% else %}
                         &times;
                     {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'course_notifications' session.id %}" title="Send Notifications">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                    </a>
                 </td>
             </tr>
             {% endfor %}
