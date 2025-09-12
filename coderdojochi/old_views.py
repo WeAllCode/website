@@ -15,9 +15,11 @@ from django.db.models import Count
 from django.db.models import IntegerField
 from django.db.models import When
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
@@ -306,6 +308,55 @@ def cdc_admin(request, template_name="admin.html"):
             # 'upcoming_sessions_count': upcoming_sessions_count,
         },
     )
+
+
+@login_required
+def load_more_sessions(request):
+    """AJAX endpoint to load additional sessions for admin page"""
+    if not request.user.is_staff:
+        return JsonResponse({"error": "Permission denied"}, status=403)
+
+    # Get offset from request, default to 5 (after the initial 5 sessions)
+    offset = int(request.GET.get("offset", 5))
+    limit = int(request.GET.get("limit", 10))  # Load 10 more at a time
+    
+    # Limit to sessions within the last 365 days
+    one_year_ago = timezone.now() - timedelta(days=365)
+    
+    sessions = (
+        Session.objects.select_related()
+        .annotate(
+            num_orders=Count("order"),
+            num_attended=Count(
+                Case(When(order__check_in__isnull=False, then=1)),
+            ),
+            is_future=Case(
+                When(start_date__gte=timezone.now(), then=1),
+                default=0,
+                output_field=IntegerField(),
+            ),
+        )
+        .filter(start_date__gte=one_year_ago)
+        .order_by("-start_date")[offset:offset+limit]
+    )
+    
+    # Render the sessions to HTML
+    html = render_to_string(
+        "dashboard/admin_sessions_rows.html",
+        {"sessions": sessions},
+        request=request
+    )
+    
+    # Check if there are more sessions to load
+    has_more = Session.objects.filter(
+        start_date__gte=one_year_ago
+    ).count() > offset + limit
+    
+    return JsonResponse({
+        "html": html,
+        "has_more": has_more,
+        "next_offset": offset + limit
+    })
 
 
 @login_required
