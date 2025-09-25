@@ -5,7 +5,7 @@ version = "0.0.1"
 license = {text = "MIT"}
 readme = "README.md"
 authors = [{name = "Ali Karbassi", email = "ali@weallcode.org"}]
-requires-python = ">=3.11,<3.12"
+requires-python = ">=3.13,<3.14"
 
 dependencies = [
     # Core Framework
@@ -78,7 +78,7 @@ Homepage = "https://github.com/weallcode/website"
 
 [tool.ruff]
 # Use Ruff's recommended defaults
-target-version = "py311"
+target-version = "py313"
 # Exclude a variety of commonly ignored directories.
 extend-exclude = [
     "*/migrations/*.py",
