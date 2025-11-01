@@ -31,7 +31,7 @@ dependencies = [
     "django-meta>=2.5.0,<3.0.0",
 
     # Image Processing
-    "pillow>=11.3.0,<12.0.0",
+    "pillow>=11.3.0,<13.0.0",
     "django-stdimage>=6.0.2,<7.0.0",
     "django-cleanup>=9.0.0,<10.0.0",
 
