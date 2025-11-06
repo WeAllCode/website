@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = "==3.11.*"
 
 [[package]]
@@ -923,7 +923,7 @@ requires-dist = [
     { name = "django-cleanup", specifier = ">=9.0.0,<10.0.0" },
     { name = "django-common-helpers", specifier = ">=0.9.2,<1.0.0" },
     { name = "django-cron", specifier = ">=0.6.0,<0.7.0" },
-    { name = "django-debug-toolbar", specifier = ">=5.2.0,<6.0.0" },
+    { name = "django-debug-toolbar", specifier = ">=5.2.0,<7.0.0" },
     { name = "django-environ", specifier = ">=0.12.0,<0.13.0" },
     { name = "django-fullurl", specifier = ">=1.4,<2.0" },
     { name = "django-heroku", specifier = ">=0.3.1,<0.4.0" },
