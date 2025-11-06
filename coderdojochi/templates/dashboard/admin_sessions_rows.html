@@ -1,0 +1,80 @@
+{% for session in sessions %}
+<tr class="
+    {% if session.is_active == False %}
+        danger
+    {% else %}
+        {% if session.is_future == 1 %}
+        success
+        {% endif %}
+    {% endif %}
+    "
+>
+    <td>{{ session.start_date|date:"M j, Y" }}</td>
+    <td class="text-right">{{ session.start_date|time:"H:i" }}</td>
+    <td class="text-right">{{ session.end_date|time:"H:i" }}</td>
+    <td class="hidden-xs hidden-sm"><a href="{{ session.get_absolute_url }}">{{ session.course.title }}</a></td>
+    <td>{{ session.instructor }}</td>
+    <td class="hidden-xs hidden-sm">{{ session.location.name }}</td>
+    <td class="text-center hidden-xs hidden-sm">
+        {% if session.announced_date_guardians|yesno:'yes,no' == 'yes' %}
+            <i class="fa fa-calendar-check-o" title="{{ session.announced_date_guardians }}" aria-hidden="true"></i>
+        {% endif %}
+    </td>
+    <td class="text-right">
+        {% if not session.external_enrollment_url %}
+            {{ session.num_attended|default:'-' }}
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+    <td class="text-right">
+        {% if not session.external_enrollment_url %}
+            {{ session.num_orders|default:'-' }}
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+    <td class="text-right">
+        {% if not session.external_enrollment_url %}
+            {{ session.capacity|default:'-' }}
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+    <td class="text-center">
+        {% if not session.external_enrollment_url %}
+            <a href="{% url 'student-check-in' session.id %}"><span class="glyphicon glyphicon-check"></span></a>
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+    <td class="text-center">
+        {% if not session.external_enrollment_url %}
+            {{ session.get_checked_in_mentor_orders|length|default:'-' }}
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+    <td class="text-center">
+        {% if not session.external_enrollment_url %}
+            {{ session.get_mentor_orders|length|default:'-' }}
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+    <td class="text-center">
+        {% if not session.external_enrollment_url %}
+            {{ session.mentor_capacity|default:'-' }}
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+    <td>
+        {% if not session.external_enrollment_url %}
+            <a href="{% url 'mentor-check-in' session.id %}"><span class="glyphicon glyphicon-check"></span></a>
+        {% else %}
+            &times;
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
