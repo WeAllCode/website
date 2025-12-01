@@ -26,7 +26,7 @@ dependencies = [
 
     # UI & Templates
     "django-bootstrap3>=25.1,<26.0",
-    "django-active-link>=0.2.2,<0.3.0",
+    "django-active-link>=0.2.2,<0.4.0",
     "django-html5>=1.0.0,<2.0.0",
     "django-meta>=2.5.0,<3.0.0",
 
