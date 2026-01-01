@@ -22,7 +22,7 @@ dependencies = [
     "django-loginas>=0.3.11,<0.4.0",
 
     # Email & Communications
-    "django-anymail>=13.0,<14.0",
+    "django-anymail>=13.0,<15.0",
 
     # UI & Templates
     "django-bootstrap3>=25.1,<26.0",
