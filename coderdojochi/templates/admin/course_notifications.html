@@ -1,0 +1,329 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Course Notifications - {{ session.course.title }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumbs">
+    <a href="/dj-admin/">Home</a>
+    &rsaquo; <a href="/dj-admin/coderdojochi/session/">Sessions</a>
+    &rsaquo; <a href="/dj-admin/coderdojochi/session/{{ session.id }}/change/">{{ session.course.title }}</a>
+    &rsaquo; Course Notifications
+</div>
+
+<h1>Course Notifications - {{ session.course.title }}</h1>
+
+<div class="module aligned">
+    <h2>Session Information</h2>
+    <p><strong>Course:</strong> {{ session.course.title }}</p>
+    <p><strong>Date:</strong> {{ session.start_date }}</p>
+    <p><strong>Location:</strong> {{ session.location.name }}</p>
+    <p><strong>Enrolled Students:</strong> {{ student_count }}</p>
+    <p><strong>Parents/Guardians:</strong> {{ guardian_count }}</p>
+    <p><strong>Enrolled Mentors:</strong> {{ mentor_count }}</p>
+</div>
+
+<style>
+.notification-section {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.notification-buttons {
+    margin: 20px 0;
+}
+
+.notification-buttons button {
+    background: #417690;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.notification-buttons button:hover {
+    background: #205067;
+}
+
+.notification-buttons button.secondary {
+    background: #6c757d;
+}
+
+.notification-buttons button.secondary:hover {
+    background: #5a6268;
+}
+
+.form-group {
+    margin: 15px 0;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.form-group select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.preview-section {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 3px;
+    display: none;
+}
+
+.recipient-counts {
+    background: #e9ecef;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-size: 14px;
+}
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Email Notifications Section -->
+<div class="notification-section">
+    <h2>📧 Email Notifications</h2>
+    
+    <form id="email-form" method="post" action="{% url 'send_email_notifications' session.id %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="email-recipient-type">Send to:</label>
+            <select id="email-recipient-type" name="recipient_type">
+                <option value="both">Both Parents and Mentors</option>
+                <option value="parents">Parents Only</option>
+                <option value="mentors">Mentors Only</option>
+            </select>
+        </div>
+        
+        <div class="recipient-counts">
+            <strong>Recipients:</strong> 
+            <span id="email-parent-count">{{ guardian_count }} parents</span>, 
+            <span id="email-mentor-count">{{ mentor_count }} mentors</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="email-template">Email Template:</label>
+            <textarea id="email-template" name="email_template">{{ default_email_template }}</textarea>
+        </div>
+        
+        <div class="notification-buttons">
+            <button type="button" onclick="previewEmail()">Preview Email</button>
+            <button type="submit" onclick="return confirmSend('email')">Send Email Notifications</button>
+        </div>
+        
+        <div id="email-preview" class="preview-section">
+            <h3>Email Preview</h3>
+            <div id="email-preview-content"></div>
+        </div>
+    </form>
+</div>
+
+<!-- SMS Notifications Section -->
+<div class="notification-section">
+    <h2>📱 SMS Notifications</h2>
+    <p><em>Note: SMS functionality requires Dialpad API configuration</em></p>
+    
+    <form id="sms-form" method="post" action="{% url 'send_sms_notifications' session.id %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="sms-recipient-type">Send to:</label>
+            <select id="sms-recipient-type" name="recipient_type">
+                <option value="both">Both Parents and Mentors</option>
+                <option value="parents">Parents Only</option>
+                <option value="mentors">Mentors Only</option>
+            </select>
+        </div>
+        
+        <div class="recipient-counts">
+            <strong>Recipients:</strong> 
+            <span id="sms-parent-count">{{ guardian_count }} parents</span>, 
+            <span id="sms-mentor-count">{{ mentor_count }} mentors</span>
+        </div>
+        
+        <div class="form-group">
+            <label for="sms-template-type">Template:</label>
+            <select id="sms-template-type" onchange="updateSMSTemplate()">
+                <option value="parent">Parent Template</option>
+                <option value="mentor">Mentor Template</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="sms-template">SMS Template:</label>
+            <textarea id="sms-template" name="sms_template" style="min-height: 100px;">{{ default_sms_parent_template }}</textarea>
+            <small>Character count: <span id="sms-char-count">0</span>/160</small>
+        </div>
+        
+        <div class="notification-buttons">
+            <button type="button" onclick="previewSMS()">Preview SMS</button>
+            <button type="submit" onclick="return confirmSend('sms')">Send SMS Notifications</button>
+        </div>
+        
+        <div id="sms-preview" class="preview-section">
+            <h3>SMS Preview</h3>
+            <div id="sms-preview-content"></div>
+        </div>
+    </form>
+</div>
+
+<!-- Template Variables Help -->
+<div class="notification-section">
+    <h2>📝 Template Variables</h2>
+    <p>You can use the following variables in your templates:</p>
+    <ul>
+        <li><code>{parent_name}</code> - Parent's first name</li>
+        <li><code>{mentor_name}</code> - Mentor's first name</li>
+        <li><code>{student_names}</code> - Student's first name(s)</li>
+        <li><code>&lt;class date written as Saturday, September 12&gt;</code> - Formatted class date</li>
+        <li><code>&lt;15 minutes before class start time&gt;</code> - Time 15 minutes before class</li>
+        <li><code>&lt;class start time&gt;</code> - Class start time</li>
+        <li><code>&lt;class location&gt;</code> - Class location name</li>
+    </ul>
+</div>
+
+<script>
+// Store default templates
+const defaultTemplates = {
+    parent_sms: `{{ default_sms_parent_template }}`,
+    mentor_sms: `{{ default_sms_mentor_template }}`
+};
+
+function updateSMSTemplate() {
+    const templateType = document.getElementById('sms-template-type').value;
+    const smsTemplate = document.getElementById('sms-template');
+    
+    if (templateType === 'parent') {
+        smsTemplate.value = defaultTemplates.parent_sms;
+    } else {
+        smsTemplate.value = defaultTemplates.mentor_sms;
+    }
+    
+    updateCharCount();
+}
+
+function updateCharCount() {
+    const template = document.getElementById('sms-template').value;
+    document.getElementById('sms-char-count').textContent = template.length;
+}
+
+function updateRecipientCounts() {
+    const emailRecipientType = document.getElementById('email-recipient-type').value;
+    const smsRecipientType = document.getElementById('sms-recipient-type').value;
+    
+    // Update email recipient display
+    const emailParentCount = document.getElementById('email-parent-count');
+    const emailMentorCount = document.getElementById('email-mentor-count');
+    
+    if (emailRecipientType === 'parents') {
+        emailParentCount.style.fontWeight = 'bold';
+        emailMentorCount.style.fontWeight = 'normal';
+        emailMentorCount.style.textDecoration = 'line-through';
+    } else if (emailRecipientType === 'mentors') {
+        emailParentCount.style.fontWeight = 'normal';
+        emailParentCount.style.textDecoration = 'line-through';
+        emailMentorCount.style.fontWeight = 'bold';
+    } else {
+        emailParentCount.style.fontWeight = 'bold';
+        emailParentCount.style.textDecoration = 'none';
+        emailMentorCount.style.fontWeight = 'bold';
+        emailMentorCount.style.textDecoration = 'none';
+    }
+    
+    // Update SMS recipient display (similar logic)
+    const smsParentCount = document.getElementById('sms-parent-count');
+    const smsMentorCount = document.getElementById('sms-mentor-count');
+    
+    if (smsRecipientType === 'parents') {
+        smsParentCount.style.fontWeight = 'bold';
+        smsMentorCount.style.fontWeight = 'normal';
+        smsMentorCount.style.textDecoration = 'line-through';
+    } else if (smsRecipientType === 'mentors') {
+        smsParentCount.style.fontWeight = 'normal';
+        smsParentCount.style.textDecoration = 'line-through';
+        smsMentorCount.style.fontWeight = 'bold';
+    } else {
+        smsParentCount.style.fontWeight = 'bold';
+        smsParentCount.style.textDecoration = 'none';
+        smsMentorCount.style.fontWeight = 'bold';
+        smsMentorCount.style.textDecoration = 'none';
+    }
+}
+
+function previewEmail() {
+    const template = document.getElementById('email-template').value;
+    const recipientType = document.getElementById('email-recipient-type').value;
+    
+    $.get('{% url "preview_notifications" session.id %}', {
+        template: template,
+        type: 'email',
+        recipient: recipientType === 'mentors' ? 'mentors' : 'parents'
+    }, function(data) {
+        document.getElementById('email-preview-content').innerHTML = '<pre>' + data.preview + '</pre>';
+        document.getElementById('email-preview').style.display = 'block';
+    });
+}
+
+function previewSMS() {
+    const template = document.getElementById('sms-template').value;
+    const recipientType = document.getElementById('sms-recipient-type').value;
+    
+    $.get('{% url "preview_notifications" session.id %}', {
+        template: template,
+        type: 'sms',
+        recipient: recipientType === 'mentors' ? 'mentors' : 'parents'
+    }, function(data) {
+        document.getElementById('sms-preview-content').innerHTML = '<pre>' + data.preview + '</pre>';
+        document.getElementById('sms-preview').style.display = 'block';
+    });
+}
+
+function confirmSend(type) {
+    const recipientType = document.getElementById(type + '-recipient-type').value;
+    let recipientText = '';
+    
+    if (recipientType === 'both') {
+        recipientText = '{{ guardian_count }} parents and {{ mentor_count }} mentors';
+    } else if (recipientType === 'parents') {
+        recipientText = '{{ guardian_count }} parents';
+    } else {
+        recipientText = '{{ mentor_count }} mentors';
+    }
+    
+    return confirm(`Are you sure you want to send ${type} notifications to ${recipientText}?`);
+}
+
+// Event listeners
+document.getElementById('email-recipient-type').addEventListener('change', updateRecipientCounts);
+document.getElementById('sms-recipient-type').addEventListener('change', updateRecipientCounts);
+document.getElementById('sms-template').addEventListener('input', updateCharCount);
+
+// Initialize
+updateCharCount();
+updateRecipientCounts();
+</script>
+
+{% endblock %}

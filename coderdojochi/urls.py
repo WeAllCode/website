@@ -20,6 +20,10 @@ from .views import meeting_announce
 from .views import meeting_sign_up
 from .views.public import MentorDetailView
 from .views.public import MentorListView
+from .views.notifications import course_notifications
+from .views.notifications import send_email_notifications
+from .views.notifications import send_sms_notifications
+from .views.notifications import preview_notifications
 
 admin.autodiscover()
 
@@ -132,6 +136,30 @@ urlpatterns += [
                                 "<int:pk>/donations/",
                                 old_views.session_donations,
                                 name="donations",
+                            ),
+                            # /admin/classes/ID/notifications/
+                            path(
+                                "<int:session_id>/notifications/",
+                                course_notifications,
+                                name="course_notifications",
+                            ),
+                            # /admin/classes/ID/notifications/email/
+                            path(
+                                "<int:session_id>/notifications/email/",
+                                send_email_notifications,
+                                name="send_email_notifications",
+                            ),
+                            # /admin/classes/ID/notifications/sms/
+                            path(
+                                "<int:session_id>/notifications/sms/",
+                                send_sms_notifications,
+                                name="send_sms_notifications",
+                            ),
+                            # /admin/classes/ID/notifications/preview/
+                            path(
+                                "<int:session_id>/notifications/preview/",
+                                preview_notifications,
+                                name="preview_notifications",
                             ),
                         ],
                     ),
