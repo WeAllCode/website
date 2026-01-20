@@ -76,10 +76,9 @@ def student_register_link(context, student, session):
             )
 
             button_href = (
-                'data-trigger="hover" data-placement="top"'
-                f' data-toggle="popover" title="" data-content="{message}"'
-                f' data-original-title="{title}"'
+                f'data-tooltip data-position="top" title="{message}"'
             )
+            button_modifier = "btn-default has-tip"
 
         elif not student.is_within_age_range(
             session.minimum_age,
@@ -94,10 +93,9 @@ def student_register_link(context, student, session):
             )
 
             button_href = (
-                'data-trigger="hover" data-placement="top"'
-                f' data-toggle="popover" title="" data-content="{message}"'
-                f' data-original-title="{title}"'
+                f'data-tooltip data-position="top" title="{message}"'
             )
+            button_modifier = "btn-default has-tip"
 
         elif not student.is_within_gender_limitation(
             session.gender_limitation,
@@ -112,10 +110,9 @@ def student_register_link(context, student, session):
                 " this time around."
             )
             button_href = (
-                'data-trigger="hover" data-placement="top"'
-                f' data-toggle="popover" title="" data-content="{message}"'
-                f' data-original-title="{title}" '
+                f'data-tooltip data-position="top" title="{message}"'
             )
+            button_modifier = "btn-default has-tip"
 
     form = (
         f"<{button_tag} {button_href} class='button small {button_modifier}'"
