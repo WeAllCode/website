@@ -62,7 +62,7 @@ dependencies = [
     "mock>=5.2.0,<6.0.0",
 
     # Production Server
-    "gunicorn>=23.0.0,<24.0.0",
+    "gunicorn>=23.0.0,<25.0.0",
 
     # Monitoring & Logging
     "sentry-sdk>=2.32.0,<3.0.0",
