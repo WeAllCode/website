@@ -105,6 +105,8 @@ urlpatterns += [
                 # Admin
                 # /admin/
                 path("", old_views.cdc_admin, name="cdc-admin"),
+                # /admin/load-more-sessions/
+                path("load-more-sessions/", old_views.load_more_sessions, name="load-more-sessions"),
                 path(
                     "classes/",
                     include(

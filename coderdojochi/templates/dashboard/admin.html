@@ -173,7 +173,7 @@
                 <th class="text-center"><abbr title="Capacity">C</abbr></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="sessions-tbody">
             {% for session in sessions %}
             <tr class="
                 {% if session.is_active == False %}
@@ -182,9 +182,6 @@
                     {% if session.is_future == 1 %}
                     success
                     {% endif %}
-                {% endif %}
-                {% if forloop.counter > 5 %}
-                    collapse session-collapse
                 {% endif %}
                 "
             >
@@ -258,13 +255,14 @@
             </tr>
             {% endfor %}
         </tbody>
-        {% if sessions.count > 5 %}
-        <tfoot>
-          <tr>
-            <td colspan="100" class="text-center">
-              <button class="button" type="button" data-toggle="collapse" data-target=".session-collapse">Show/Hide</button>
-            </td>
-          </tr>
+        {% if has_more_sessions %}
+        <tfoot id="load-more-section">
+            <tr>
+                <td colspan="100" class="text-center">
+                    <button id="load-more-btn" class="button" type="button">Load More Classes</button>
+                    <div id="loading-indicator" style="display: none;">Loading...</div>
+                </td>
+            </tr>
         </tfoot>
         {% endif %}
     </table>
@@ -372,6 +370,59 @@
     <p>No upcoming meetings.</p>
     {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const sessionTable = document.getElementById('sessions-tbody');
+    let currentOffset = 5; // Start after the initial 5 sessions
+    
+    if (loadMoreBtn && sessionTable) {
+        loadMoreBtn.addEventListener('click', function() {
+            // Show loading indicator and hide button
+            loadMoreBtn.style.display = 'none';
+            loadingIndicator.style.display = 'block';
+            
+            // Make AJAX request
+            fetch(`/admin/load-more-sessions/?offset=${currentOffset}&limit=10`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert('Error loading more sessions: ' + data.error);
+                        return;
+                    }
+                    
+                    // Append new session rows
+                    sessionTable.insertAdjacentHTML('beforeend', data.html);
+                    
+                    // Update offset for next request
+                    currentOffset = data.next_offset;
+                    
+                    // Hide loading indicator
+                    loadingIndicator.style.display = 'none';
+                    
+                    // Show button again if there are more sessions
+                    if (data.has_more) {
+                        loadMoreBtn.style.display = 'block';
+                    } else {
+                        // Replace button text to indicate no more sessions
+                        const loadMoreSection = document.getElementById('load-more-section');
+                        loadMoreSection.innerHTML = '<tr><td colspan="100" class="text-center text-muted">All sessions from the last 365 days have been loaded</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error loading more sessions. Please try again.');
+                    // Reset UI state
+                    loadingIndicator.style.display = 'none';
+                    loadMoreBtn.style.display = 'block';
+                });
+        });
+    }
+});
+</script>
+
 {% endblock %}
 
 {% block footer_base %}{% endblock %}
