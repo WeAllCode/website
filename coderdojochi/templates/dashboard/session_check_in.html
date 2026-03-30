@@ -36,6 +36,12 @@
             width: 10%;
         }
 
+        .cancellation-reason {
+            min-width: 150px;
+            width: 15%;
+            max-width: 200px;
+        }
+
         .order-date {}
 
         .student-gender {
@@ -305,6 +311,7 @@
                             <th class="parent-phone">Parent Phone</th>
                             <th class="student-school">School</th>
                             <th class="order-date">Last Update Date</th>
+                            <th class="cancellation-reason">Reason</th>
                             <th class="text-right num-attended"><abbr title="Number Attended">#A</abbr></th>
                             <th class="text-right num-missed"><abbr title="Number Missed">#M</abbr></th>
                         </tr>
@@ -321,6 +328,13 @@
                             <td>{{ order.guardian.phone | phone_number }}</td>
                             <td>{{ order.student.school_name }}</td>
                             <td>{{ order.updated_at | date:"M j, g:i A" }}</td>
+                            <td class="cancellation-reason">
+                                {% if order.cancellation_reason %}
+                                    {{ order.cancellation_reason|truncatewords:10 }}
+                                {% else %}
+                                    <em>No reason given</em>
+                                {% endif %}
+                            </td>
                             <td class="text-right vert-align">{{ order.num_attended }}</td>
                             <td class="text-right vert-align {% if order.num_missed >= 3 %}danger{% endif %}">{{ order.num_missed }}</td>
                         </tr>
@@ -349,6 +363,7 @@
                             <th class="parent-phone">Parent Phone</th>
                             <th class="student-school">School</th>
                             <th class="order-date">Cancelled Date</th>
+                            <th class="cancellation-reason">Reason</th>
                             <th class="text-right num-attended"><abbr title="Number Attended">#A</abbr></th>
                             <th class="text-right num-missed"><abbr title="Number Missed">#M</abbr></th>
                         </tr>
@@ -365,6 +380,13 @@
                             <td>{{ order.guardian.phone | phone_number }}</td>
                             <td>{{ order.student.school_name }}</td>
                             <td>{{ order.updated_at | date:"M j, g:i A" }}</td>
+                            <td class="cancellation-reason">
+                                {% if order.cancellation_reason %}
+                                    {{ order.cancellation_reason|truncatewords:10 }}
+                                {% else %}
+                                    <em>No reason given</em>
+                                {% endif %}
+                            </td>
                             <td class="text-right">{{ order.num_attended }}</td>
                             <td class="text-right {% if order.num_missed >= 3 %}danger{% endif %}">{{ order.num_missed }}</td>
                         </tr>
