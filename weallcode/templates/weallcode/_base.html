@@ -31,8 +31,8 @@
   <meta name="msapplication-config" content="{% static 'weallcode/images/favicon/browserconfig.xml' %}?v=12">
   <meta name="theme-color" content="#426cff">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans&display=swap">
+  <link rel="stylesheet" href="{% static 'weallcode/css/vendor/font-awesome.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'weallcode/css/vendor/google-fonts.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/foundation.min.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
 
@@ -70,11 +70,11 @@
     {% include 'weallcode/_footer.html' %}
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.2.1/what-input.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.1/js/foundation.min.js"></script>
+  <script src="{% static 'weallcode/js/vendor/jquery-3.4.1.min.js' %}"></script>
+  <script src="{% static 'weallcode/js/vendor/what-input.min.js' %}"></script>
+  <script src="{% static 'weallcode/js/vendor/foundation.min.js' %}"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/seamless-scroll-polyfill@1.0.0/dist/es5/seamless.auto-polyfill.min.js" data-seamless></script>
+  <script src="{% static 'weallcode/js/vendor/seamless.auto-polyfill.min.js' %}" data-seamless></script>
 
   {% block extra_script %}{% endblock %}
   {% block extra_body %}{% endblock %}
