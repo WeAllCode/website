@@ -257,6 +257,15 @@
                 </td>
             </tr>
             {% endfor %}
+            {% if sessions.count > 5 %}
+            <tfoot>
+              <tr>
+                <td colspan="100" class="text-center">
+                  <button class="button" type="button" data-toggle="collapse" data-target=".meeting-collapse">Show/Hide</button>
+                </td>
+              </tr>
+            </tfoot>
+            {% endif %}
         </tbody>
         {% if sessions.count > 5 %}
         <tfoot>
@@ -273,6 +282,7 @@
     {% endif %}
 </div>
 
+{% comment %}
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
@@ -372,6 +382,7 @@
     <p>No upcoming meetings.</p>
     {% endif %}
 </div>
+{% endcomment %}
 {% endblock %}
 
 {% block footer_base %}{% endblock %}
