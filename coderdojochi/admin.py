@@ -717,6 +717,7 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "_created_at",
         "is_checked_in",
         "is_active",
+        "has_cancellation_reason",
     ]
 
     list_filter = [
@@ -747,6 +748,21 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     date_hierarchy = "created_at"
+
+    fields = (
+        "guardian",
+        "session", 
+        "student",
+        "is_active",
+        "check_in",
+        "cancellation_reason",
+        "alternate_guardian",
+        "affiliate",
+        "order_number",
+        "ip",
+        "week_reminder_sent",
+        "day_reminder_sent",
+    )
 
     view_on_site = False
 
@@ -795,6 +811,12 @@ class OrderAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return obj.created_at.strftime("%m/%d/%y %H:%M")
 
     _created_at.short_description = "Created At"
+
+    def has_cancellation_reason(self, obj):
+        return bool(obj.cancellation_reason)
+
+    has_cancellation_reason.boolean = True
+    has_cancellation_reason.short_description = "Has Reason"
 
 
 def mentor_check_in(modeladmin, request, queryset):
