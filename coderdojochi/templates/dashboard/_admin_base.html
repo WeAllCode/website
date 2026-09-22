@@ -9,15 +9,15 @@
         {% block extra_meta %}{% endblock %}
 
         <link rel="shortcut icon" href="{% static 'weallcode/images/favicon/favicon.ico' %}?v=12">
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Quicksand:300,400,700" rel="stylesheet">
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
+        <link href="{% static 'weallcode/css/vendor/google-fonts.css' %}" rel="stylesheet">
+        <link href="{% static 'weallcode/css/vendor/font-awesome-4.6.3.min.css' %}" rel="stylesheet">
+        <link href="{% static 'weallcode/css/vendor/bootstrap-3.3.7.min.css' %}" rel="stylesheet" >
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+            <script src="{% static 'weallcode/js/vendor/html5shiv.min.js' %}"></script>
+            <script src="{% static 'weallcode/js/vendor/respond.min.js' %}"></script>
         <![endif]-->
 
         {% block extra_style %}{% endblock %}
@@ -42,10 +42,10 @@
         {% block script_base %}
 
             <!-- jQuery CDN -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="{% static 'weallcode/js/vendor/jquery-1.12.4.min.js' %}"></script>
 
             <!-- Latest compiled and minified JavaScript -->
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+            <script src="{% static 'weallcode/js/vendor/bootstrap-3.3.7.min.js' %}"></script>
 
             {% block extra_script %}{% endblock %}
         {% endblock %}
