@@ -53,6 +53,11 @@ class Order(CommonInfo):
     day_reminder_sent = models.BooleanField(
         default=False,
     )
+    cancellation_reason = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Reason for cancellation or no-show",
+    )
 
     def __str__(self):
         return f"{self.student.full_name} | {self.session.course.title}"
