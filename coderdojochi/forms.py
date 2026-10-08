@@ -168,7 +168,7 @@ class MentorForm(CDCModelForm):
             attrs={"placeholder": "", "class": "form-control"},
         ),
         label="Phone",
-        required=False,
+        required=True,
     )
 
     home_address = forms.CharField(
