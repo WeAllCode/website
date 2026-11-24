@@ -435,6 +435,8 @@ Checkpoint 1 — **passed and committed** (lead's own checks):
 - Ruff: the repo-wide `ruff check .`, `ruff format --check .` and `pre-commit run --all-files` already failed before this work (`util.py` fails format on HEAD; the repo has ~285 lint errors). Changed files: new files clean; `settings.py` errors went from 24 → 18 (all in untouched code). These whole-build checks are scoped to changed files until a separate lint cleanup.
 - Spot review: `IPV6_ONLY` unless `enable_ipv4`, e2-micro, 30 GB pd-standard, `prevent_destroy`, 443-only firewall from Cloudflare ranges, no secret versions in Terraform. Grep for tokens/private keys in the tree → none.
 
+**Next (for a fresh session):** (1) Checkpoint 2: dispatch Tasks B (with the R8/R13/R14 widening), C, I in parallel. (2) In parallel, Checkpoint 0b: show Ali the command list, then run it. It covers: project create + billing link to `0183FC-3A3638-28092E`; delete stray project `light-router-515716-a2`; the state bucket; the org-policy checks (R3 plus `iam.disableServiceAccountKeyCreation` and `storage.publicAccessPrevention`); the Cloudflare snapshot + R18 origin curl check; the Resend domain → `resend_dns_records`; the SendGrid export; the config files into `homelab`; Daniel's Owner invite in Chrome. Still pending from Ali: approve the Sentry transfer email.
+
 Sub-agent reports:
 
 - Task A: proof 1 (5 tests OK) and proof 2 (`check --deploy`, 4 warnings, no ImportError) pass. Proof 3 fails repo-wide because of code that was already there: `ruff check coderdojochi` shows 285 errors, and `ruff format --check` wants to reformat `util.py`. Task A's new and changed blocks are clean. The SQLite fallback wasn't needed.
