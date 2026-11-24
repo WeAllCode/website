@@ -17,16 +17,21 @@ class SocialLoginPostTest(TestCase):
     """allauth 65 shows a confirm page on GET, so the buttons must POST."""
 
     def setUp(self):
-        site = Site.objects.get_current()
-        for provider in ("google", "facebook"):
-            app = SocialApp.objects.create(
-                provider=provider,
-                name=provider,
-                client_id=f"{provider}-id",
-                secret=f"{provider}-secret",
-            )
-            app.sites.add(site)
+        app = SocialApp.objects.create(
+            provider="google",
+            name="google",
+            client_id="google-id",
+            secret="google-secret",  # noqa: S106
+        )
+        app.sites.add(Site.objects.get_current())
         self.client = Client(enforce_csrf_checks=True)
+
+    def test_no_facebook_login_on_login_or_signup(self):
+        """Meta disabled our Facebook app, so the buttons are gone."""
+        for path in ("/account/login/", "/account/signup/"):
+            response = self.client.get(path, secure=True)
+            assert response.status_code == HTTPStatus.OK
+            assert "/account/facebook/login/" not in response.content.decode()
 
     def test_login_page_posts_to_google_with_next(self):
         response = self.client.get("/account/login/?next=/account/", secure=True)

@@ -2,10 +2,12 @@
 {% get_providers as socialaccount_providers %}
 
 {% for provider in socialaccount_providers %}
+{% if provider.id != "facebook" %}{# Meta disabled our Facebook app #}
 <li>
   <form method="post" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="social-login-form">
     {% csrf_token %}
     <button type="submit" title="{{ provider.name }}" class="button secondary socialaccount_provider {{ provider.id }}">{{ provider.name }}</button>
   </form>
 </li>
+{% endif %}
 {% endfor %}
