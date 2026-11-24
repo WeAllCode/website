@@ -1,5 +1,6 @@
 locals {
-  vm_ipv6 = google_compute_instance.web.network_interface[0].ipv6_access_config[0].external_ipv6
+  # GCP returns the expanded IPv6 form; Cloudflare stores the compressed one. cidrhost canonicalizes to stop perpetual AAAA drift.
+  vm_ipv6 = cidrhost("${google_compute_instance.web.network_interface[0].ipv6_access_config[0].external_ipv6}/128", 0)
   vm_ipv4 = var.enable_ipv4 ? google_compute_instance.web.network_interface[0].access_config[0].nat_ip : null
 }
 

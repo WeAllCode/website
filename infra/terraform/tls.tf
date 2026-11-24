@@ -22,9 +22,10 @@ resource "tls_cert_request" "origin" {
   }
 }
 
+# Cloudflare returns hostnames sorted; sort() here so the list diff doesn't force replacement.
 resource "cloudflare_origin_ca_certificate" "origin" {
   csr                = tls_cert_request.origin.cert_request_pem
-  hostnames          = tls_cert_request.origin.dns_names
+  hostnames          = sort(tls_cert_request.origin.dns_names)
   request_type       = "origin-ecc"
   requested_validity = 5475
 }
