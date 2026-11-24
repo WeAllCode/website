@@ -73,6 +73,8 @@ On the VM, `wac-deploy@prod.timer` and `wac-deploy@staging.timer` also run `wac-
 7. Installs `/etc/wac/env-<target>`, flips `current` and restarts `wac-web` or `wac-staging`. If the service doesn't come up, it flips back to the previous release and env and restarts that.
 8. Writes `deployed` and keeps the newest 3 releases.
 
+The gunicorn restart in step 7 takes ~20 s (`--preload` on the e2-micro), and its socket is gone meanwhile. Caddy doesn't return 502 straight away: every `reverse_proxy` (snippet `wac_proxy` in the `Caddyfile`) has `lb_try_duration 30s` / `lb_try_interval 250ms`, so it holds the request and redials until gunicorn is back. 30 s is well under Cloudflare's 100 s origin timeout. Only failed dials are retried, so no request reaches gunicorn twice; a restart longer than 30 s still gets a 502. The `Caddyfile` also strips Caddy's `Via` response header.
+
 Any failure leaves `current` and the env file as they were and writes the pointer to `failed`. To retry the same pointer, run `sudo rm /srv/wac/<target>/failed`, or release again with `--force`.
 
 Deploy now instead of waiting: `sudo systemctl start wac-deploy@prod` (or `@staging`).
