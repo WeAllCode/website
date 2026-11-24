@@ -36,7 +36,9 @@ from coderdojochi.models import MentorOrder
 from coderdojochi.models import Order
 from coderdojochi.models import Session
 from coderdojochi.models import Student
+from coderdojochi.util import deliverable_recipients
 from coderdojochi.util import email
+from coderdojochi.util import email_daily_limit
 
 logger = logging.getLogger(__name__)
 
@@ -725,20 +727,39 @@ def session_announce_mentors(request, pk):
                 "last_name": mentor.last_name,
             }
 
-        email(
-            subject="New We All Code class date announced! Come mentor!",
-            template_name="class_announcement_mentor",
-            merge_data=merge_data,
-            merge_global_data=merge_global_data,
-            recipients=recipients,
-            preheader=(
-                "Help us make a huge difference! A brand new class was just announced."
-            ),
-            unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
-        )
+        # Check the daily limit first, so an over-limit list is never marked announced.
+        deliverable = deliverable_recipients(recipients)
+        if len(deliverable) > email_daily_limit():
+            messages.error(
+                request,
+                f"{len(deliverable)} recipients exceeds the daily email limit of"
+                f" {email_daily_limit()}; nothing sent.",
+            )
+            return redirect("cdc-admin")
 
+        # Mark announced before sending so a retried request never re-mails anyone.
         session_obj.announced_date_mentors = timezone.now()
         session_obj.save()
+
+        try:
+            email(
+                subject="New We All Code class date announced! Come mentor!",
+                template_name="class_announcement_mentor",
+                merge_data=merge_data,
+                merge_global_data=merge_global_data,
+                recipients=recipients,
+                preheader=(
+                    "Help us make a huge difference!"
+                    " A brand new class was just announced."
+                ),
+                unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
+            )
+        except ValueError as e:
+            # Raised before any send (no recipients or over the daily limit).
+            session_obj.announced_date_mentors = None
+            session_obj.save()
+            messages.error(request, f"Session not announced: {e}")
+            return redirect("cdc-admin")
 
         messages.success(
             request,
@@ -809,21 +830,39 @@ def session_announce_guardians(request, pk):
                 "last_name": guardian.last_name,
             }
 
-        email(
-            subject="New We All Code class date announced!",
-            template_name="class_announcement_guardian",
-            merge_data=merge_data,
-            merge_global_data=merge_global_data,
-            recipients=recipients,
-            preheader=(
-                "We're super excited to bring you another class date. Sign up"
-                " to reserve your spot"
-            ),
-            unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
-        )
+        # Check the daily limit first, so an over-limit list is never marked announced.
+        deliverable = deliverable_recipients(recipients)
+        if len(deliverable) > email_daily_limit():
+            messages.error(
+                request,
+                f"{len(deliverable)} recipients exceeds the daily email limit of"
+                f" {email_daily_limit()}; nothing sent.",
+            )
+            return redirect("cdc-admin")
 
+        # Mark announced before sending so a retried request never re-mails anyone.
         session_obj.announced_date_guardians = timezone.now()
         session_obj.save()
+
+        try:
+            email(
+                subject="New We All Code class date announced!",
+                template_name="class_announcement_guardian",
+                merge_data=merge_data,
+                merge_global_data=merge_global_data,
+                recipients=recipients,
+                preheader=(
+                    "We're super excited to bring you another class date. Sign up"
+                    " to reserve your spot"
+                ),
+                unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
+            )
+        except ValueError as e:
+            # Raised before any send (no recipients or over the daily limit).
+            session_obj.announced_date_guardians = None
+            session_obj.save()
+            messages.error(request, f"Session not announced: {e}")
+            return redirect("cdc-admin")
 
         messages.success(
             request,

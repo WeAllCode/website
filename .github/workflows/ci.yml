@@ -1,0 +1,158 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          show-progress: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.3.2
+
+      - name: Install dependencies
+        run: uv sync --frozen
+        shell: bash
+
+      - name: Run tests
+        env:
+          DJANGO_SETTINGS_MODULE: coderdojochi.test_settings
+        run: >-
+          uv run python manage.py test
+          coderdojochi.tests.test_storage_settings
+          coderdojochi.tests.test_email_util
+          coderdojochi.tests.test_slack_notifications
+        shell: bash
+
+  django-postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: wac
+          POSTGRES_USER: wac
+          POSTGRES_PASSWORD: ci-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U wac -d wac"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DEBUG: 'True'
+      SECRET_KEY: ci-dummy-secret-key
+      SITE_URL: http://127.0.0.1:8000
+      DJANGO_SECURE_SSL_REDIRECT: 'False'
+      DB_HOST: 127.0.0.1
+      DB_PORT: '5432'
+      DB_NAME: wac
+      DB_USER: wac
+      DB_PASSWORD: ci-password
+      DEFAULT_FROM_EMAIL: hello+ci@weallcode.org
+      CONTACT_EMAIL: hello+ci@weallcode.org
+      EMAIL_BACKEND: django.core.mail.backends.console.EmailBackend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          show-progress: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.3.2
+
+      - name: Install dependencies
+        run: uv sync --frozen
+        shell: bash
+
+      - name: Migrate
+        run: uv run python manage.py migrate --noinput
+        shell: bash
+
+      - name: Check for missing migrations
+        run: uv run python manage.py makemigrations --check --dry-run
+        shell: bash
+
+      - name: Load dev fixtures
+        run: uv run python manage.py loaddata fixtures/*.json
+        shell: bash
+
+      - name: Smoke test pages under gunicorn
+        run: |
+          uv run gunicorn coderdojochi.wsgi -b 127.0.0.1:8000 --log-file gunicorn.log &
+          for _ in $(seq 1 30); do
+            if curl -s -o /dev/null http://127.0.0.1:8000/; then
+              break
+            fi
+            sleep 1
+          done
+          fail=0
+          for path in / /programs/ /team/ /account/login/ /admin/login/ /dj-admin/login/; do
+            status=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:8000${path}")
+            echo "${path} -> ${status}"
+            if [ "${status}" = "000" ] || [ "${status}" -ge 500 ]; then
+              fail=1
+            fi
+          done
+          if [ "${fail}" -ne 0 ]; then
+            cat gunicorn.log
+            exit 1
+          fi
+        shell: bash
+
+      - name: Check production settings import
+        env:
+          DEBUG: 'False'
+          GS_BUCKET_NAME: ci-dummy
+          SECRET_KEY: ci-dummy-secret-key-that-is-long-enough-for-check-deploy-0123456789
+          DJANGO_SECURE_SSL_REDIRECT: 'True'
+        run: uv run python manage.py check --deploy
+        shell: bash
+
+  infra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          show-progress: false
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4.0.0
+
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive infra/terraform
+        shell: bash
+
+      - name: Terraform init
+        run: terraform -chdir=infra/terraform init -backend=false
+        shell: bash
+
+      - name: Terraform validate
+        run: terraform -chdir=infra/terraform validate
+        shell: bash
+
+      - name: Shellcheck VM scripts
+        run: shellcheck infra/vm/*.sh infra/vm/wac-manage
+        shell: bash
