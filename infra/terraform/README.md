@@ -70,7 +70,7 @@ Secrets (Secret Manager, auto replication): `wac-env-prod`, `wac-env-staging`, `
 |---|---|
 | VM SA `wac-web` | media: objectAdmin; deploy: objectViewer; backups: objectCreator + objectViewer (no delete); transfer: objectViewer; secretAccessor on `wac-env-prod`, `wac-env-staging`, `wac-staging-sa-key` (root deploys both targets) |
 | Staging SA `wac-staging-vm` | staging media: objectAdmin; secretAccessor on `wac-env-staging` only |
-| `allUsers` | objectViewer on the prod and staging media buckets |
+| `allUsers` | legacyObjectReader (`storage.objects.get` only, no listing) on the prod and staging media buckets |
 
 Buckets are all in `US-CENTRAL1`. Deploy: versioned, noncurrent versions beyond 5 deleted. Backups: objects deleted after 30 days. Transfer (one-off DB dumps, R12): not versioned, no soft delete, objects deleted after 1 day; `gcloud storage rm` each dump right after the restore. CORS `GET`: prod media from the apex, `www.` and `gcp.`; staging media from `staging.`.
 

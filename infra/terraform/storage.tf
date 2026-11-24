@@ -26,12 +26,21 @@ resource "google_storage_bucket" "media" {
   depends_on = [google_project_service.apis]
 }
 
+# Public read of single objects only. objectViewer would also grant storage.objects.list,
+# which let anyone list the bucket (every avatar). legacyObjectReader is objects.get only
+# and is bucket-grantable on uniform-bucket-level-access buckets (GCS already binds it
+# to projectViewer on these buckets). Changing role replaces the member; create_before_destroy
+# adds the new binding before removing the old one, so public media never 403s.
 resource "google_storage_bucket_iam_member" "media_public" {
   bucket = google_storage_bucket.media.name
-  role   = "roles/storage.objectViewer"
+  role   = "roles/storage.legacyObjectReader"
   member = "allUsers"
 
   depends_on = [google_org_policy_policy.allow_all_member_domains]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "google_storage_bucket_iam_member" "media_vm_admin" {
@@ -59,12 +68,17 @@ resource "google_storage_bucket" "staging_media" {
   depends_on = [google_project_service.apis]
 }
 
+# Same as media_public: objects.get only, no listing.
 resource "google_storage_bucket_iam_member" "staging_media_public" {
   bucket = google_storage_bucket.staging_media.name
-  role   = "roles/storage.objectViewer"
+  role   = "roles/storage.legacyObjectReader"
   member = "allUsers"
 
   depends_on = [google_org_policy_policy.allow_all_member_domains]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Only the staging SA writes staging media (R10).
