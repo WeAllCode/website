@@ -1017,15 +1017,15 @@ wheels = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.33.2"
+version = "2.76.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b0/82/dfe4a91fd38e048fbb55ca6c072710408e8802015aa27cde18e8684bb1e9/sentry_sdk-2.33.2.tar.gz", hash = "sha256:e85002234b7b8efac9b74c2d91dbd4f8f3970dc28da8798e39530e65cb740f94", size = 335804, upload-time = "2025-07-22T10:41:18.578Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/f5/0ea84f508b959db1b1349b446034b945ea8c0c7d5b8f463860acbdf77764/sentry_sdk-2.76.0.tar.gz", hash = "sha256:08115d93eab60ab6e49e2b867254aaa0babaca4dfa4d8fcf905c5d980e157041", size = 1092284, upload-time = "2026-11-23T08:47:59.093Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c2/dc/4d825d5eb6e924dfcc6a91c8185578a7b0a5c41fd2416a6f49c8226d6ef9/sentry_sdk-2.33.2-py2.py3-none-any.whl", hash = "sha256:8d57a3b4861b243aa9d558fda75509ad487db14f488cbdb6c78c614979d77632", size = 356692, upload-time = "2025-07-22T10:41:16.531Z" },
+    { url = "https://files.pythonhosted.org/packages/e2/7f/ed55e3b972af18226da01dc5d0a11a966cb15d4bc0f5f74ab4e6ba0c105d/sentry_sdk-2.76.0-py3-none-any.whl", hash = "sha256:1cd9a82a1610ce8f472efd3841542e3b957a26d5ffe83ddf48215bfd07c3833f", size = 555933, upload-time = "2026-11-23T08:47:57.442Z" },
 ]
 
 [[package]]
@@ -1222,7 +1222,7 @@ requires-dist = [
     { name = "pillow", specifier = ">=12.3.0,<14.0.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9,<4.0.0" },
     { name = "ruff", specifier = ">=0.8.0,<1.0.0" },
-    { name = "sentry-sdk", specifier = ">=2.32.0,<3.0.0" },
+    { name = "sentry-sdk", specifier = ">=2.35.0,<3.0.0" },
 ]
 
 [package.metadata.requires-dev]

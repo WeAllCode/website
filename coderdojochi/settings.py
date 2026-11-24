@@ -334,7 +334,9 @@ SLACK_WEBHOOK_URL = env("SLACK_WEBHOOK_URL", default="")
 SLACK_ALERTS_CHANNEL = env("SLACK_ALERTS_CHANNEL", default=None)
 
 # Sentry
-SENTRY_DSN = env("SENTRY_DSN", default=False)
+# default="" (not False): django-environ casts to type(default), and a bool
+# cast turns any DSN string into False, so Sentry never initialized.
+SENTRY_DSN = env("SENTRY_DSN", default="")
 if SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
@@ -342,10 +344,11 @@ if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()],
-        # Set traces_sample_rate to 1.0 to capture 100%
-        # of transactions for performance monitoring.
-        # We recommend adjusting this value in production.
-        traces_sample_rate=1.0,
+        # Sample 10% of transactions by default to stay within the free
+        # span quota. Override with SENTRY_TRACES_SAMPLE_RATE.
+        traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.1),
+        # Send Python logging records (INFO and up) to Sentry Logs.
+        enable_logs=True,
         # If you wish to associate users to errors (assuming you are using
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True,
