@@ -189,6 +189,12 @@ small {
   color: white;
 }
 
+/* Social login buttons POST to allauth; keep them inline like the old links. */
+.social-login-form {
+  display: inline;
+  margin: 0;
+}
+
 /* Like hide but for bots */
 .edih {
   display: none;

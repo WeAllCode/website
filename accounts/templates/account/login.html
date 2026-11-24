@@ -34,12 +34,12 @@
                     </button>
                 </form>
                 <div class="cell medium-5 medium-offset-1 padding-top-1">
-                    <a href="{% provider_login_url 'google' %}" class="button secondary">
-                        <i class="margin-right-1 fab fa-google"></i> Sign in with Google <i class="fas fa-chevron-right margin-left-1"></i>
-                    </a>
-                    <a href="{% provider_login_url 'facebook' method='oauth2' %}" class="button secondary">
-                        <i class="margin-right-1 fab fa-facebook"></i> Sign in with Facebook <i class="fas fa-chevron-right margin-left-1"></i>
-                    </a>
+                    <form method="post" action="{% provider_login_url 'google' %}" class="social-login-form">
+                        {% csrf_token %}
+                        <button type="submit" class="button secondary">
+                            <i class="margin-right-1 fab fa-google"></i> Sign in with Google <i class="fas fa-chevron-right margin-left-1"></i>
+                        </button>
+                    </form>
                     <p>Not yet a member? <a href="{% url 'account_signup' %}">Register now</a>!</p>
                     <p>Forgot your password? <a href="{% url 'account_reset_password' %}">Reset it</a>!</p>
                 </div>
