@@ -101,9 +101,9 @@ CHANGED_WATCH=0
 install_vm_files() {
 	local src=$1 f
 	local units=(wac-web.service wac-staging.service wac-deploy@.service wac-deploy@.timer
-		wac-backup.service wac-backup.timer wac-deploy-watch.service)
+		wac-backup.service wac-backup.timer)
 	local required=("${units[@]}" Caddyfile nftables-wac.nft postgresql.conf.d-wac.conf
-		deploy-pull.sh deploy-watch.sh backup-db.sh refresh-staging-db.sh provision.sh wac-manage)
+		deploy-pull.sh backup-db.sh refresh-staging-db.sh provision.sh wac-manage)
 
 	for f in "${required[@]}"; do
 		[ -f "$src/$f" ] || die "$src/$f is missing"
@@ -123,16 +123,23 @@ install_vm_files() {
 	fi
 
 	for f in "${units[@]}"; do
-		if put_file "$src/$f" "/etc/systemd/system/$f" 0644; then
-			CHANGED_UNITS=1
-			if [ "$f" = wac-deploy-watch.service ]; then CHANGED_WATCH=1; fi
-		fi
+		if put_file "$src/$f" "/etc/systemd/system/$f" 0644; then CHANGED_UNITS=1; fi
 	done
+	# Optional: at boot $src is /var/lib/wac/infra-vm from the last prod deploy, which may
+	# predate the watcher (a newer startup-script, or prod rolled back). Skip, never die.
+	if [ -f "$src/wac-deploy-watch.service" ] && [ -f "$src/deploy-watch.sh" ]; then
+		if put_file "$src/wac-deploy-watch.service" /etc/systemd/system/wac-deploy-watch.service 0644; then
+			CHANGED_UNITS=1
+			CHANGED_WATCH=1
+		fi
+		if put_file "$src/deploy-watch.sh" /usr/local/sbin/wac-deploy-watch 0755; then CHANGED_WATCH=1; fi
+	else
+		log "$src has no wac-deploy-watch.service/deploy-watch.sh; leaving the deploy watcher as it is"
+	fi
 	if put_file "$src/Caddyfile" /etc/caddy/Caddyfile 0644; then CHANGED_CADDY=1; fi
 	if put_file "$src/nftables-wac.nft" /etc/wac/nftables-wac.nft 0644; then CHANGED_NFT=1; fi
 	if put_file "$src/postgresql.conf.d-wac.conf" "$PG_ETC/conf.d/wac.conf" 0644; then CHANGED_PG=1; fi
 	put_file "$src/deploy-pull.sh" /usr/local/sbin/wac-deploy-pull 0755 || true
-	if put_file "$src/deploy-watch.sh" /usr/local/sbin/wac-deploy-watch 0755; then CHANGED_WATCH=1; fi
 	put_file "$src/backup-db.sh" /usr/local/sbin/wac-backup-db 0755 || true
 	put_file "$src/refresh-staging-db.sh" /usr/local/sbin/wac-refresh-staging-db 0755 || true
 	put_file "$src/provision.sh" /usr/local/sbin/wac-provision 0755 || true
@@ -157,6 +164,9 @@ reload_changed() {
 # touches that deploy.
 start_watcher() {
 	local verb=start
+	if [ ! -f /etc/systemd/system/wac-deploy-watch.service ] || [ ! -x /usr/local/sbin/wac-deploy-watch ]; then
+		return 0
+	fi
 	if [ "$CHANGED_WATCH" = 1 ]; then verb=restart; fi
 	if systemctl enable --quiet wac-deploy-watch.service && systemctl "$verb" wac-deploy-watch.service; then
 		return 0

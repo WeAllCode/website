@@ -56,7 +56,7 @@ Then it sets instance metadata `deploy-nonce-<target>=<sha>:<UTC time>` with `gc
 **Instant trigger.** `wac-deploy-watch.service` (root, `Restart=always`) runs `wac-deploy-watch`. It long-polls `computeMetadata/v1/instance/attributes/?recursive=true&wait_for_change=true&last_etag=<etag>&timeout_sec=300` over IPv6 with `Metadata-Flavor: Google`, the same way the deploy scripts reach the metadata server. When `deploy-nonce-prod` or `deploy-nonce-staging` differs from the last value seen, it runs `systemctl start --no-block wac-deploy@<target>.service`.
 
 - Last-seen values live in `/var/lib/wac-deploy-watch/nonce-<target>`. On the very first start it records the current values without deploying. After that, a release made while the watcher was down still deploys when it comes back.
-- If that target's deploy is already running, the start is held and fired once the run finishes. A `systemctl start` on a running oneshot merges into that run instead of queueing a new one.
+- If that target's deploy is already running, the start is held and fired once the run finishes. A nonce is saved only after its start succeeds, so a held start survives a watcher restart. A `systemctl start` on a running oneshot merges into that run instead of queueing a new one.
 - Metadata errors back off up to 60 s and then retry.
 - The response body contains the origin key. It stays in a 0700 runtime dir and is deleted after each poll; only the two nonce values are read from it.
 - It runs as root because nftables blocks the metadata server for `wac-staging`. That isolation is unchanged.

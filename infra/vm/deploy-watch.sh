@@ -9,7 +9,8 @@
 #
 # - Last-seen nonces live in $STATE_DIR/nonce-<target>. With no state file (first start) the
 #   current value is recorded without firing; with one, any difference fires, so a release
-#   made while the watcher was down still deploys.
+#   made while the watcher was down still deploys. A nonce is saved only once its start
+#   succeeded, so a pending start survives a restart of the watcher.
 # - wac-deploy@ is a oneshot: `systemctl start` while it is already running merges into that
 #   run instead of queueing another. So a nonce change while the target's unit is active or
 #   activating is kept pending and fired once the unit is inactive.
@@ -34,7 +35,10 @@ umask 077
 mkdir -p "$STATE_DIR" "$RUN_DIR"
 body=$RUN_DIR/attributes.json
 
+# pending[TARGET]=nonce to deploy. A nonce is saved only after its start succeeded, so a
+# pending start survives a watcher restart (e.g. a deploy that reinstalls the watcher).
 declare -A pending=()
+declare -A waiting=()
 
 unit_busy() { # TARGET -> 0 when wac-deploy@TARGET is running or starting
 	local s
@@ -42,23 +46,23 @@ unit_busy() { # TARGET -> 0 when wac-deploy@TARGET is running or starting
 	[ "$s" = active ] || [ "$s" = activating ] || [ "$s" = reloading ]
 }
 
-fire() { # TARGET
+save_nonce() { # TARGET VALUE
+	printf '%s\n' "$2" >"$STATE_DIR/nonce-$1.tmp" && mv -f "$STATE_DIR/nonce-$1.tmp" "$STATE_DIR/nonce-$1"
+}
+
+fire() { # TARGET: start the pending deploy unless that target's deploy is still running
 	if unit_busy "$1"; then
-		[ -n "${pending[$1]:-}" ] || log "wac-deploy@$1 is already running; starting it again when it finishes"
-		pending[$1]=1
+		[ -n "${waiting[$1]:-}" ] || log "wac-deploy@$1 is already running; starting it again when it finishes"
+		waiting[$1]=1
 		return
 	fi
 	if "$SYSTEMCTL" start --no-block "wac-deploy@$1.service"; then
 		log "started wac-deploy@$1.service"
-		unset 'pending[$1]'
+		save_nonce "$1" "${pending[$1]}"
+		unset 'pending[$1]' 'waiting[$1]'
 	else
 		log "systemctl start wac-deploy@$1.service failed; retrying on the next loop"
-		pending[$1]=1
 	fi
-}
-
-save_nonce() { # TARGET VALUE
-	printf '%s\n' "$2" >"$STATE_DIR/nonce-$1.tmp" && mv -f "$STATE_DIR/nonce-$1.tmp" "$STATE_DIR/nonce-$1"
 }
 
 # check BODYFILE: compare each target's nonce with the saved one
@@ -72,19 +76,20 @@ check() {
 			continue
 		fi
 		last=$(cat "$STATE_DIR/nonce-$t")
-		[ "$cur" = "$last" ] && continue
-		save_nonce "$t" "$cur"
-		if [ -n "$cur" ]; then
-			log "$t nonce changed '${last:-none}' -> '$cur'"
-			fire "$t"
+		if [ "$cur" = "$last" ] || [ -z "$cur" ]; then
+			# Unchanged, or the key was removed: record it, nothing to deploy.
+			[ "$cur" = "$last" ] || save_nonce "$t" "$cur"
+			unset 'pending[$t]' 'waiting[$t]'
+			continue
 		fi
+		[ "${pending[$t]:-}" = "$cur" ] || log "$t nonce changed '${last:-none}' -> '$cur'"
+		pending[$t]=$cur
 	done
 }
 
 etag=""
 backoff=2
 while true; do
-	# Retry pending fires whose unit has finished.
 	for t in "${!pending[@]}"; do
 		fire "$t"
 	done
