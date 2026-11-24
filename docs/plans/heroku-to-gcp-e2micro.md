@@ -555,6 +555,12 @@ Leftovers (not blocking): `/root/f.sh` and `/root/f-out.txt` from an earlier ses
 - [ ] R2: import Daniel's Owner binding once he accepts.
 - [ ] Open (Ali deferred): announcements over 90 recipients are refused (Resend free tier).
 
+### 2026-11-24 — instant deploys (branch `claude/instant-deploy`)
+
+- [x] Deploys within seconds instead of up to 15 minutes. `release.sh` now also sets instance metadata `deploy-nonce-<target>=<sha>:<time>` (the VM is the instance whose `wac-deploy-bucket` is the bucket; if that fails, it warns and exits 0 and the timer still deploys). A new root `wac-deploy-watch.service` long-polls `instance/attributes/?recursive=true&wait_for_change=true&last_etag=…` and runs `systemctl start --no-block wac-deploy@<target>` when a nonce changes. Last-seen values are in `/var/lib/wac-deploy-watch`; the first start records them without firing; a start while that target's deploy is running is held until the run ends (oneshot starts merge). The 15-minute timer stays as the fallback. `vm.tf` ignores the two nonce keys (`ignore_changes`, next to `prevent_destroy`).
+- How it reaches the running VM: the existing prod-deploy path. `deploy-pull.sh` runs the release's own `provision.sh --install-files`, which now installs, enables and (re)starts the watcher (non-fatal). So the first `release.sh --target prod` after this merges installs it via the timer. No apply, reboot or serial console needed. `terraform plan` then shows an in-place `startup-script` + `bootstrap.tgz` update, as for any `provision.sh` change; apply it (in place, no restart) to get AC5 back to exit 0.
+- Checks: shellcheck clean, terraform fmt/validate pass, and a fake-metadata-server test of the watcher passes 22/22 (seed without firing, etag-only change, per-target fire, restart, missed-while-down, pending-while-busy, 500s and an outage, secret never logged). `systemd-analyze verify` not run (no Linux/Docker locally).
+
 Sub-agent reports (session 4):
 
 - allauth client IP: `settings.py` `ALLAUTH_TRUSTED_CLIENT_IP_HEADER = env(..., default=None)`; env examples set `CF-Connecting-IP`. allauth (`core/internal/httpkit.py:213`) reads only that header when it is set, with no `REMOTE_ADDR` fallback, and reads the setting live, so `override_settings` works in tests. Break checks: setting `None` → test 3 fails; override `None` → test 1 `PermissionDenied`.

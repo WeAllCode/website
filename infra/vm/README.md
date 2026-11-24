@@ -14,11 +14,12 @@ The VM can't reach GitHub (no IPv6), so nothing is cloned.
 
 | Repo file | Installed as |
 |---|---|
-| `wac-web.service`, `wac-staging.service`, `wac-deploy@.service`, `wac-deploy@.timer`, `wac-backup.service`, `wac-backup.timer` | `/etc/systemd/system/` |
+| `wac-web.service`, `wac-staging.service`, `wac-deploy@.service`, `wac-deploy@.timer`, `wac-backup.service`, `wac-backup.timer`, `wac-deploy-watch.service` | `/etc/systemd/system/` |
 | `Caddyfile` | `/etc/caddy/Caddyfile` |
 | `nftables-wac.nft` | `/etc/wac/nftables-wac.nft` |
 | `postgresql.conf.d-wac.conf` | `/etc/postgresql/17/main/conf.d/wac.conf` |
 | `deploy-pull.sh` | `/usr/local/sbin/wac-deploy-pull` |
+| `deploy-watch.sh` | `/usr/local/sbin/wac-deploy-watch` |
 | `backup-db.sh` | `/usr/local/sbin/wac-backup-db` |
 | `refresh-staging-db.sh` | `/usr/local/sbin/wac-refresh-staging-db` |
 | `provision.sh` | `/usr/local/sbin/wac-provision` |
@@ -35,7 +36,7 @@ There is no `google-cloud-cli` on the VM. Every script uses `curl` with the toke
 - GCS upload (backups): `https://storage.googleapis.com/upload/storage/v1/b/<bucket>/o?uploadType=media&ifGenerationMatch=0&name=...`
 - Secret Manager: `https://secretmanager.googleapis.com/v1/projects/<project>/secrets/<name>/versions/latest:access`
 
-Instance metadata keys read: `wac-deploy-bucket`, `wac-backup-bucket`, `wac-origin-cert`, `wac-origin-key`, `wac-staging-basic-auth`, `wac-serial-password-hash`. Secrets read: `wac-env-prod`, `wac-env-staging`, `wac-staging-sa-key`.
+Instance metadata keys read: `wac-deploy-bucket`, `wac-backup-bucket`, `wac-origin-cert`, `wac-origin-key`, `wac-staging-basic-auth`, `wac-serial-password-hash`, and `deploy-nonce-prod` / `deploy-nonce-staging` (set by `release.sh`, not Terraform; long-polled by `wac-deploy-watch`). Secrets read: `wac-env-prod`, `wac-env-staging`, `wac-staging-sa-key`.
 
 ## Deploy
 
@@ -50,7 +51,18 @@ infra/vm/release.sh --target prod --force     # same sha again: rerun migrations
 
 `release.sh` uploads `git archive <ref>` to `gs://wac-deploy-<project>/releases/<sha>.tar.gz` and writes `<sha>` (or `<sha>:<nonce>` with `--force`) to `gs://wac-deploy-<project>/current-<target>`. Set `WAC_PROJECT_ID` to pin the exact project ID.
 
-On the VM, `wac-deploy@prod.timer` and `wac-deploy@staging.timer` run `wac-deploy-pull <target>` 3 minutes after boot and every 15 minutes after that. For each target it:
+Then it sets instance metadata `deploy-nonce-<target>=<sha>:<UTC time>` with `gcloud compute instances add-metadata`, so the deploy starts within seconds. It finds the VM as the one instance whose `wac-deploy-bucket` metadata is this bucket (`WAC_VM_NAME` and `WAC_VM_ZONE` skip the lookup). If that fails, it warns and exits 0: the pointer is written, and the timer deploys it within 15 minutes. Terraform ignores both nonce keys (`lifecycle.ignore_changes` in `vm.tf`), so they are not drift.
+
+**Instant trigger.** `wac-deploy-watch.service` (root, `Restart=always`) runs `wac-deploy-watch`. It long-polls `computeMetadata/v1/instance/attributes/?recursive=true&wait_for_change=true&last_etag=<etag>&timeout_sec=300` over IPv6 with `Metadata-Flavor: Google`, the same way the deploy scripts reach the metadata server. When `deploy-nonce-prod` or `deploy-nonce-staging` differs from the last value seen, it runs `systemctl start --no-block wac-deploy@<target>.service`.
+
+- Last-seen values live in `/var/lib/wac-deploy-watch/nonce-<target>`. On the very first start it records the current values without deploying. After that, a release made while the watcher was down still deploys when it comes back.
+- If that target's deploy is already running, the start is held and fired once the run finishes. A `systemctl start` on a running oneshot merges into that run instead of queueing a new one.
+- Metadata errors back off up to 60 s and then retry.
+- The response body contains the origin key. It stays in a 0700 runtime dir and is deleted after each poll; only the two nonce values are read from it.
+- It runs as root because nftables blocks the metadata server for `wac-staging`. That isolation is unchanged.
+- Logs: `journalctl -u wac-deploy-watch`.
+
+On the VM, `wac-deploy@prod.timer` and `wac-deploy@staging.timer` also run `wac-deploy-pull <target>` 3 minutes after boot and every 15 minutes after that, as the fallback. For each target it:
 
 1. Reads the pointer. If it equals `/srv/wac/<target>/deployed` (whole-string compare), it stops. If it equals `/srv/wac/<target>/failed`, it also stops: a failed pointer is skipped until it changes.
 2. Downloads the tarball and extracts it to `/srv/wac/<target>/releases/<UTC time>-<sha12>`, owned by the target's user.
@@ -65,7 +77,7 @@ Any failure leaves `current` and the env file as they were and writes the pointe
 
 Deploy now instead of waiting: `sudo systemctl start wac-deploy@prod` (or `@staging`).
 
-Only one deploy runs at a time, for both targets together (`flock /run/lock/wac-deploy.lock`).
+Only one deploy runs at a time, for both targets together (`flock /run/lock/wac-deploy.lock`). The pointer is read after the lock is taken, so a deploy that waited reads the latest pointer. systemd never runs two copies of `wac-deploy@<target>`, so the timer, the watcher and a manual start can overlap safely.
 
 ## Management commands
 

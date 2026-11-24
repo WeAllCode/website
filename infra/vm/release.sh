@@ -6,7 +6,9 @@
 #
 # Default ref is HEAD. Builds `git archive` of the ref, uploads it to
 # gs://<deploy-bucket>/releases/<sha>.tar.gz, then writes the pointer
-# gs://<deploy-bucket>/current-<target>. The VM polls the pointer every 15 minutes.
+# gs://<deploy-bucket>/current-<target>, then sets instance metadata deploy-nonce-<target> so
+# wac-deploy-watch on the VM deploys within seconds. The VM also polls the pointer every
+# 15 minutes, so a failed metadata update only delays the deploy.
 # --force writes "<sha>:<nonce>" so the same sha deploys again (migrations, new secret
 # version) (R7). Secrets are not touched here; they live in Secret Manager.
 #
@@ -119,5 +121,41 @@ gcloud storage cp --quiet --content-type=text/plain --cache-control=no-store \
 	"$work/pointer" "gs://$bucket/current-$target"
 
 echo "release.sh: gs://$bucket/current-$target -> $pointer"
-echo "release.sh: the VM deploys it within ~15 minutes (wac-deploy@$target.timer)."
+
+# --- Instant deploy -----------------------------------------------------------------------------
+# Change instance metadata deploy-nonce-<target>; wac-deploy-watch on the VM long-polls it and
+# starts the deploy within seconds. The VM is the instance whose wac-deploy-bucket metadata is
+# this bucket (set WAC_VM_NAME and WAC_VM_ZONE to skip the lookup). Any failure here only loses
+# the speed-up: the pointer is written and the 15-minute timer still deploys it.
+notified=0
+vm_name=${WAC_VM_NAME:-}
+vm_zone=${WAC_VM_ZONE:-}
+if [ -z "$vm_name" ] || [ -z "$vm_zone" ]; then
+	vm_list=$(gcloud compute instances list \
+		--filter="metadata.items.key=wac-deploy-bucket AND metadata.items.value=$bucket" \
+		--format='value(name,zone.basename())' 2>/dev/null) || vm_list=""
+	if [ "$(grep -c . <<<"$vm_list")" = 1 ]; then
+		read -r vm_name vm_zone <<<"$vm_list"
+	else
+		echo "release.sh: warning: expected one VM with wac-deploy-bucket=$bucket, found: '${vm_list//$'\n'/, }'" >&2
+		vm_name=""
+	fi
+fi
+if [ -n "$vm_name" ] && [ -n "$vm_zone" ]; then
+	nonce="$sha:$(date -u +%Y%m%dT%H%M%SZ)"
+	if gcloud compute instances add-metadata "$vm_name" --zone "$vm_zone" --quiet \
+		--metadata "deploy-nonce-$target=$nonce" >/dev/null 2>"$work/add-metadata.err"; then
+		notified=1
+	else
+		echo "release.sh: warning: could not set deploy-nonce-$target on $vm_name:" >&2
+		sed 's/^/  /' "$work/add-metadata.err" >&2
+	fi
+fi
+
+if [ "$notified" = 1 ]; then
+	echo "release.sh: set deploy-nonce-$target=$nonce on $vm_name; the VM starts the deploy within seconds"
+	echo "release.sh: (if wac-deploy-watch isn't running there yet, wac-deploy@$target.timer picks it up within ~15 minutes)"
+else
+	echo "release.sh: the VM deploys it within ~15 minutes (wac-deploy@$target.timer)."
+fi
 echo "release.sh: watch with: journalctl -u wac-deploy@$target -f (serial console)"

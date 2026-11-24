@@ -60,6 +60,7 @@ Instance metadata keys the VM reads:
 | `wac-origin-key` | its ECDSA P-256 private key (PEM) |
 | `wac-staging-basic-auth` | `var.staging_basic_auth_hash` (bcrypt, from `caddy hash-password`) |
 | `wac-serial-password-hash` | `var.serial_console_password_hash`, present only while `serial_console = true` and the hash is set |
+| `deploy-nonce-prod`, `deploy-nonce-staging` | not Terraform's: `infra/vm/release.sh` sets them (`gcloud compute instances add-metadata`) to trigger `wac-deploy-watch`; listed in `lifecycle.ignore_changes` so they never show as drift |
 
 Secrets (Secret Manager, auto replication): `wac-env-prod`, `wac-env-staging`, `wac-staging-sa-key`.
 

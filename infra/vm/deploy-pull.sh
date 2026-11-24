@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Pull-based deploy for one target (prod|staging). Runs as root on the VM from
 # wac-deploy@<target>.service. Installed to /usr/local/sbin/wac-deploy-pull.
+# That oneshot unit is started by its 15-minute timer and by wac-deploy-watch (instant deploys).
+# systemd never runs two copies of one unit (a start while it runs merges into that run), and
+# the flock below serializes prod and staging; the pointer is read only after the lock.
 #
 # 1. Read gs://<deploy-bucket>/current-<target>: "<sha>" or "<sha>:<nonce>" (release.sh --force).
 # 2. Do nothing if it equals /srv/wac/<target>/deployed (whole-string compare, R7), or equals

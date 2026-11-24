@@ -95,14 +95,15 @@ CHANGED_UNITS=0
 CHANGED_CADDY=0
 CHANGED_NFT=0
 CHANGED_PG=0
+CHANGED_WATCH=0
 
 # install_vm_files SRCDIR: validate, then install every infra/vm file to its place on the VM.
 install_vm_files() {
 	local src=$1 f
 	local units=(wac-web.service wac-staging.service wac-deploy@.service wac-deploy@.timer
-		wac-backup.service wac-backup.timer)
+		wac-backup.service wac-backup.timer wac-deploy-watch.service)
 	local required=("${units[@]}" Caddyfile nftables-wac.nft postgresql.conf.d-wac.conf
-		deploy-pull.sh backup-db.sh refresh-staging-db.sh provision.sh wac-manage)
+		deploy-pull.sh deploy-watch.sh backup-db.sh refresh-staging-db.sh provision.sh wac-manage)
 
 	for f in "${required[@]}"; do
 		[ -f "$src/$f" ] || die "$src/$f is missing"
@@ -122,12 +123,16 @@ install_vm_files() {
 	fi
 
 	for f in "${units[@]}"; do
-		if put_file "$src/$f" "/etc/systemd/system/$f" 0644; then CHANGED_UNITS=1; fi
+		if put_file "$src/$f" "/etc/systemd/system/$f" 0644; then
+			CHANGED_UNITS=1
+			if [ "$f" = wac-deploy-watch.service ]; then CHANGED_WATCH=1; fi
+		fi
 	done
 	if put_file "$src/Caddyfile" /etc/caddy/Caddyfile 0644; then CHANGED_CADDY=1; fi
 	if put_file "$src/nftables-wac.nft" /etc/wac/nftables-wac.nft 0644; then CHANGED_NFT=1; fi
 	if put_file "$src/postgresql.conf.d-wac.conf" "$PG_ETC/conf.d/wac.conf" 0644; then CHANGED_PG=1; fi
 	put_file "$src/deploy-pull.sh" /usr/local/sbin/wac-deploy-pull 0755 || true
+	if put_file "$src/deploy-watch.sh" /usr/local/sbin/wac-deploy-watch 0755; then CHANGED_WATCH=1; fi
 	put_file "$src/backup-db.sh" /usr/local/sbin/wac-backup-db 0755 || true
 	put_file "$src/refresh-staging-db.sh" /usr/local/sbin/wac-refresh-staging-db 0755 || true
 	put_file "$src/provision.sh" /usr/local/sbin/wac-provision 0755 || true
@@ -143,6 +148,21 @@ reload_changed() {
 		systemctl reload postgresql
 		log "postgresql.conf.d-wac.conf changed; shared_buffers/listen_addresses need 'systemctl restart postgresql'"
 	fi
+	start_watcher
+}
+
+# Enable and (re)start the instant-deploy watcher. Never fatal: the 15-minute timer is the
+# fallback, and a watcher problem must not fail the deploy that installs it. The watcher only
+# starts wac-deploy@ units with --no-block, so restarting it from inside a deploy never
+# touches that deploy.
+start_watcher() {
+	local verb=start
+	if [ "$CHANGED_WATCH" = 1 ]; then verb=restart; fi
+	if systemctl enable --quiet wac-deploy-watch.service && systemctl "$verb" wac-deploy-watch.service; then
+		return 0
+	fi
+	log "WARNING: could not $verb wac-deploy-watch.service; deploys fall back to the 15-minute timer" >&2
+	return 0
 }
 
 if [ "${1:-}" = "--install-files" ]; then
@@ -325,6 +345,7 @@ systemctl daemon-reload
 systemctl enable caddy
 if [ "$CHANGED_CADDY" = 1 ]; then systemctl restart caddy; else systemctl start caddy; fi
 systemctl enable --now wac-deploy@prod.timer wac-deploy@staging.timer wac-backup.timer
+start_watcher
 # Both start on their own once a deploy has created /srv/wac/<target>/current.
 systemctl enable wac-web.service wac-staging.service
 
