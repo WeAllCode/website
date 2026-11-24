@@ -112,6 +112,36 @@ class EmailTest(TestCase):
 
         assert [m.to for m in mail.outbox] == [["here@example.com"]]
 
+    def _send_both(self, address):
+        for template in ("class_announcement_mentor", TEMPLATE):
+            email(subject="Hi", template_name=template, recipients=[address])
+        return [m.subject for m in mail.outbox]
+
+    def test_group_unsubscribe_blocks_only_announcements(self):
+        for reason in (
+            EmailSuppression.GROUP_UNSUBSCRIBE,
+            EmailSuppression.USER_UNSUBSCRIBE,
+        ):
+            mail.outbox = []
+            EmailSuppression.objects.all().delete()
+            EmailSuppression.objects.create(email="opt@example.com", reason=reason)
+
+            self._send_both("opt@example.com")
+
+            assert [m.to for m in mail.outbox] == [["opt@example.com"]]
+            assert "*|" not in mail.outbox[0].body
+            assert "Unsubscribe from these announcements" not in mail.outbox[0].body
+
+    def test_bounce_blocks_all_mail(self):
+        EmailSuppression.objects.create(
+            email="bounce@example.com",
+            reason=EmailSuppression.BOUNCE,
+        )
+
+        self._send_both("bounce@example.com")
+
+        assert mail.outbox == []
+
     def test_suppression_counts_before_the_limit(self):
         recipients = [f"user{i}@example.com" for i in range(DAILY_LIMIT + 1)]
         EmailSuppression.objects.create(

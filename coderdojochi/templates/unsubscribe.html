@@ -7,9 +7,9 @@
 {% if invalid %}
 <p>This unsubscribe link is not valid. If you'd like help, please email <a href="mailto:hello@weallcode.org">hello@weallcode.org</a>.</p>
 {% elif unsubscribed %}
-<p>You're unsubscribed. We won't email <strong>{{ email }}</strong> again.</p>
+<p>You're unsubscribed. <strong>{{ email }}</strong> won't get new class or meeting announcements. You'll still get emails about classes and meetings you sign up for.</p>
 {% else %}
-<p>Stop all emails from We All Code to <strong>{{ email }}</strong>?</p>
+<p>Stop We All Code class and meeting announcements to <strong>{{ email }}</strong>?</p>
 <form method="post">
   {% csrf_token %}
   <button type="submit" class="button">Unsubscribe</button>

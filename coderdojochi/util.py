@@ -22,6 +22,22 @@ LEFTOVER_MERGE_FIELD = re.compile(r"\*\|\w+\|\*")
 UNSUBSCRIBE_SALT = "email-unsubscribe"
 SEND_INTERVAL_SECONDS = 0.6
 
+# Templates an unsubscribe link or a SendGrid group unsubscribe opts people out of.
+ANNOUNCEMENT_TEMPLATES = frozenset(
+    {
+        "class_announcement_guardian",
+        "class_announcement_mentor",
+        "meeting_announcement_mentor",
+    },
+)
+# These reasons block announcements only; every other reason blocks all mail.
+ANNOUNCEMENT_ONLY_REASONS = frozenset(
+    {
+        EmailSuppression.GROUP_UNSUBSCRIBE,
+        EmailSuppression.USER_UNSUBSCRIBE,
+    },
+)
+
 
 def unsubscribe_token(email_address):
     return signing.dumps(email_address.strip().lower(), salt=UNSUBSCRIBE_SALT)
@@ -54,18 +70,22 @@ def email_daily_limit():
     return getattr(settings, "EMAIL_DAILY_LIMIT", 90)
 
 
-def deliverable_recipients(recipients):
-    """Return `recipients` minus any address in EmailSuppression (case-insensitive)."""
-    suppressed = set(
-        EmailSuppression.objects.filter(
-            email__in={recipient.strip().lower() for recipient in recipients},
-        ).values_list("email", flat=True),
+def deliverable_recipients(recipients, template_name=None):
+    """Return `recipients` minus suppressed addresses (case-insensitive).
+
+    Group and link unsubscribes only block the announcement templates.
+    """
+    suppressions = EmailSuppression.objects.filter(
+        email__in={recipient.strip().lower() for recipient in recipients},
     )
+    if template_name not in ANNOUNCEMENT_TEMPLATES:
+        suppressions = suppressions.exclude(reason__in=ANNOUNCEMENT_ONLY_REASONS)
+    suppressed = set(suppressions.values_list("email", flat=True))
     return [r for r in recipients if r.strip().lower() not in suppressed]
 
 
 def _drop_suppressed(recipients, template_name):
-    kept = deliverable_recipients(recipients)
+    kept = deliverable_recipients(recipients, template_name)
     if len(kept) < len(recipients):
         logger.info(
             "Skipping %d suppressed recipient(s) for '%s'.",

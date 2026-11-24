@@ -425,7 +425,7 @@ Checkpoint 0a (lead in Chrome with Ali, who entered passwords and approved each 
 - [x] 1Password (decision change): `op` here runs as a service account that only sees vault `homelab`, and the desktop-app integration fails. Ali chose to store We All Code secrets in `homelab`. Every `op://<vault>/...` reference in this plan means `op://homelab/...`.
 - [x] Resend: account via Google login as ali@weallcode.org (team "weallcode"), no domains yet. Full-access key "admin full access (Ali)" at `op://homelab/Resend weallcode full access/credential`.
 - [x] Sentry: new org "We All Code" `we-all-code-p5` (US region, Google login ali@weallcode.org). Project `production` transferred from the Heroku org `we-all-code` (Ali approved; verified 2026-11-24: the old org now lists only `staging`, which stays behind, per Ali). DSN still to be read from the new org and put into 1Password (0b). Sentry for Good application submitted (Non-Profit / 501c3, org URL https://we-all-code-p5.sentry.io).
-- [ ] Invite daniel.m.conrad@gmail.com as Owner (after 0b creates the project).
+- [x] Invite daniel.m.conrad@gmail.com as Owner: invited in session 2, pending his acceptance (see session 2).
 
 Checkpoint 1 — **passed and committed** (lead's own checks):
 
@@ -464,7 +464,9 @@ Checkpoint 2 — **passed and committed** (lead's own checks):
 
 Deviations accepted from sub-agents: R13 "re-raise" replaced by continue + Sentry per failed recipient + one error log of unsent addresses; announce views clear the date and show an error if `email()` raises `ValueError`; SendGrid's own unsubscribe footer shows only on the SendGrid backend; the unsubscribe link text says it stops all We All Code email; rejected-address deactivation no longer raises when no user matches.
 
-**Open for Ali:** `load_suppressions` maps SendGrid's "Class Announcements" group unsubscribes (86) to suppressions that block *all* mail (confirmations, reminders, password-related app mail), wider than in SendGrid. Options: scope `group_unsubscribe` + `user_unsubscribe` to announcement templates only, or keep global. Decide before Task G loads the file.
+**Decided by Ali (session 2):** `group_unsubscribe` and `user_unsubscribe` suppressions block only the announcement templates (`class_announcement_guardian`, `class_announcement_mentor`, `meeting_announcement_mentor`); `bounce`, `block`, `spam_report` and `unsubscribe` (SendGrid global) block all mail. The announcement link text changes to match. Built as a follow-up commit by a sub-agent.
+
+**Decided by Ali (session 2):** delete the dead `donate.weallcode.org` Cloudflare record (exported first to `meta/cloudflare-donate-deleted.json`). Done: record `624cf21c…` deleted via API. Scope follow-up committed: 26 tests OK, `makemigrations --check` clean, no new ruff errors.
 
 **Next (for a fresh session):** (1) Ali OKs pushing the branch and opening the PR (merges after Checkpoint 3, before Checkpoint 4, per R4); check CI goes green. (2) Ali's two decisions above. (3) Checkpoint 3 (Task F): generate the staging basic-auth password (1Password `homelab`) + hash into `terraform.tfvars`, `terraform init -backend-config="bucket=wac-tfstate-wac-website-7bda80"`, plan, Ali approves apply, then the Task F checks (Sentry host above), Resend verify + sending key, Daniel's binding import once he accepts.
 

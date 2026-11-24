@@ -275,7 +275,8 @@ def meeting_announce(request, pk):
             }
 
         # Check the daily limit first, so an over-limit list is never marked announced.
-        deliverable = deliverable_recipients(recipients)
+        template_name = "meeting_announcement_mentor"
+        deliverable = deliverable_recipients(recipients, template_name)
         if len(deliverable) > email_daily_limit():
             messages.error(
                 request,
@@ -291,7 +292,7 @@ def meeting_announce(request, pk):
         try:
             email(
                 subject="New meeting announced!",
-                template_name="meeting_announcement_mentor",
+                template_name=template_name,
                 merge_data=merge_data,
                 merge_global_data=merge_global_data,
                 recipients=recipients,

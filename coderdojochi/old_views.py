@@ -728,7 +728,8 @@ def session_announce_mentors(request, pk):
             }
 
         # Check the daily limit first, so an over-limit list is never marked announced.
-        deliverable = deliverable_recipients(recipients)
+        template_name = "class_announcement_mentor"
+        deliverable = deliverable_recipients(recipients, template_name)
         if len(deliverable) > email_daily_limit():
             messages.error(
                 request,
@@ -744,7 +745,7 @@ def session_announce_mentors(request, pk):
         try:
             email(
                 subject="New We All Code class date announced! Come mentor!",
-                template_name="class_announcement_mentor",
+                template_name=template_name,
                 merge_data=merge_data,
                 merge_global_data=merge_global_data,
                 recipients=recipients,
@@ -831,7 +832,8 @@ def session_announce_guardians(request, pk):
             }
 
         # Check the daily limit first, so an over-limit list is never marked announced.
-        deliverable = deliverable_recipients(recipients)
+        template_name = "class_announcement_guardian"
+        deliverable = deliverable_recipients(recipients, template_name)
         if len(deliverable) > email_daily_limit():
             messages.error(
                 request,
@@ -847,7 +849,7 @@ def session_announce_guardians(request, pk):
         try:
             email(
                 subject="New We All Code class date announced!",
-                template_name="class_announcement_guardian",
+                template_name=template_name,
                 merge_data=merge_data,
                 merge_global_data=merge_global_data,
                 recipients=recipients,
