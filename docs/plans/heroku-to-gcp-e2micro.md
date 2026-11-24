@@ -498,7 +498,10 @@ Observations for later (not blocking): `nftables.service` is inactive, so the R1
 
 **Checkpoint 3 passed.** Per R4, ask Ali whether to mark PR 1613 ready and merge it before Checkpoint 4.
 
-**Next (for a fresh session):** Checkpoint 4 (Task G), after PR 1613 merges: media copy, rehearsal restore via the transfer bucket (R11/R12), env secrets (R15, `GCE_METADATA_*` for R20), `release.sh --target prod`, R20's `google.auth.default()` proof, staging (4b), smoke test on `gcp.weallcode.org` (use `/dj-admin/login/`). Daniel's binding import when he accepts.
+**Next (for a fresh session):** Checkpoint 4 (Task G), after PR 1613 merges: media copy, rehearsal restore via the transfer bucket (R11/R12), env secrets (R15, `GCE_METADATA_*` for R20), `release.sh --target prod`, R20's `google.auth.default()` proof, staging (4b), smoke test on `gcp.weallcode.org` (use `/dj-admin/login/`). Daniel's binding import when he accepts. Two gates in Checkpoint 4:
+
+- **Before staging is deployed (4b):** close R10's boot window. `wac-staging.service` starts at multi-user.target with no ordering against google-startup-scripts, and the metadata drop rule is loaded only by `provision.sh`. So after every reboot, staging could fetch the prod SA token until the script runs. Fix (Task E files, sub-agent): load `/etc/wac/nftables-wac.nft` from a unit ordered `Before=wac-staging.service` (and have `wac-staging.service` require it).
+- **Memory headroom:** at idle with nothing deployed the guest uses ~390 of 969 MB. The plan's estimate adds ~330 MB for the two gunicorns, leaving ~250 MB available plus 1 GB of swap. Not proven yet: record `free -m` and per-service memory with prod and staging both running (4b) before calling the VM stable under load.
 
 Sub-agent reports (session 3):
 
