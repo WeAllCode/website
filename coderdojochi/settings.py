@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 import dj_database_url
-import django_heroku
 import environ
 from django.conf.locale.en import formats as en_formats
 
@@ -251,81 +250,36 @@ if DEBUG:
     MEDIA_URL = "/media/"
 
 else:
-    # STORAGES
+    # STORAGES (Google Cloud Storage)
     # ------------------------------------------------------------------------------
-    # https://django-storages.readthedocs.io/en/latest/#installation
+    # https://django-storages.readthedocs.io/en/latest/backends/gcloud.html
+    # Credentials come from Application Default Credentials (the VM's service
+    # account). The bucket uses uniform bucket-level access, so no ACLs.
     INSTALLED_APPS += ["storages"]
 
-    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
-    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
-    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
-    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_AUTO_CREATE_BUCKET = True
-    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_QUERYSTRING_AUTH = False
-    # DO NOT change these unless you know what you're doing.
-    _AWS_EXPIRY = 60 * 60 * 24 * 7
-    # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
-    AWS_S3_OBJECT_PARAMETERS = {
-        "CacheControl": (
-            f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate"
-        ),
+    GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+
+    _GS_OPTIONS = {
+        "bucket_name": GS_BUCKET_NAME,
+        "default_acl": None,
+        "querystring_auth": False,
+        "object_parameters": {"cache_control": "public, max-age=604800"},
     }
 
-    # STATIC
-    # ------------------------
-    STATICFILES_STORAGE = "coderdojochi.settings.StaticRootS3BotoStorage"
-    STATIC_URL = f"https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/static/"
+    # https://docs.djangoproject.com/en/5.2/ref/settings/#storages
+    STORAGES = {
+        "default": {
+            "BACKEND": "coderdojochi.storage_backends.MediaStorage",
+            "OPTIONS": dict(_GS_OPTIONS),
+        },
+        "staticfiles": {
+            "BACKEND": "coderdojochi.storage_backends.StaticStorage",
+            "OPTIONS": dict(_GS_OPTIONS),
+        },
+    }
 
-    # MEDIA
-    # ------------------------------------------------------------------------------
-    # region http://stackoverflow.com/questions/10390244/
-    from django.contrib.staticfiles.storage import ManifestFilesMixin
-    from storages.backends.s3boto3 import S3Boto3Storage
-    from storages.backends.s3boto3 import SpooledTemporaryFile
-
-    # ManifestFilesSafeMixin = lambda: ManifestFilesMixin(manifest_strict=False)
-    # Taken from an issue in django-storages:
-    # https://github.com/jschneier/django-storages/issues/382#issuecomment-377174808
-    class CustomS3Storage(ManifestFilesMixin, S3Boto3Storage):
-        def _save_content(self, obj, content, parameters):
-            """
-            We create a clone of the content file as when this is passed to boto3 it wrongly closes
-            the file upon upload where as the storage backend expects it to still be open
-            """
-            # Seek our content back to the start
-            content.seek(0, os.SEEK_SET)
-
-            # Create a temporary file that will write to disk after a specified size
-            content_autoclose = SpooledTemporaryFile()
-
-            # Write our original content into our copy that will be closed by boto3
-            content_autoclose.write(content.read())
-
-            # Upload the object which will auto close the content_autoclose instance
-            super(CustomS3Storage, self)._save_content(
-                obj,
-                content_autoclose,
-                parameters,
-            )
-
-            # Cleanup if this is fixed upstream our duplicate should always close
-            if not content_autoclose.closed:
-                content_autoclose.close()
-
-    def StaticRootS3BotoStorage():
-        return CustomS3Storage(location="static")
-
-    def MediaRootS3BotoStorage():
-        return S3Boto3Storage(location="media", file_overwrite=False)
-
-    DEFAULT_FILE_STORAGE = "coderdojochi.settings.MediaRootS3BotoStorage"
-    MEDIA_URL = f"https://s3.amazonaws.com/{AWS_STORAGE_BUCKET_NAME}/media/"
-
-    # endregion
+    STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
+    MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
 
 
 AUTHENTICATION_BACKENDS = (
@@ -365,17 +319,17 @@ SOCIALACCOUNT_ADAPTER = "coderdojochi.social_account_adapter.SocialAccountAdapte
 
 
 # Email
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="anymail.backends.resend.EmailBackend")
 ANYMAIL = {
-    "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
+    "RESEND_API_KEY": env("RESEND_API_KEY", default=""),
 }
-EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 CONTACT_EMAIL = env("CONTACT_EMAIL")
-SENDGRID_UNSUB_CLASSANNOUNCE = env.int("SENDGRID_UNSUB_CLASSANNOUNCE")
+SENDGRID_UNSUB_CLASSANNOUNCE = env.int("SENDGRID_UNSUB_CLASSANNOUNCE", default=None)
 
 
 # Slack
-SLACK_WEBHOOK_URL = env("SLACK_WEBHOOK_URL")
+SLACK_WEBHOOK_URL = env("SLACK_WEBHOOK_URL", default="")
 SLACK_ALERTS_CHANNEL = env("SLACK_ALERTS_CHANNEL", default=None)
 
 # Sentry
@@ -422,8 +376,48 @@ if DEBUG:
     }
 
 
-# Activate Django-Heroku.
-django_heroku.settings(locals(), staticfiles=False)
+# Logging
+# Copied from django_heroku's console config so logs go to stdout (journald),
+# with the root logger attached to the console at INFO.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": (
+                "%(asctime)s [%(process)d] [%(levelname)s] "
+                "pathname=%(pathname)s lineno=%(lineno)s "
+                "funcname=%(funcName)s %(message)s"
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+        "simple": {
+            "format": "%(levelname)s %(message)s",
+        },
+    },
+    "handlers": {
+        "null": {
+            "level": "DEBUG",
+            "class": "logging.NullHandler",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "testlogger": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
 
 
 # region We All Code specific

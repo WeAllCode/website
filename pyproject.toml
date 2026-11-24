@@ -13,8 +13,8 @@ dependencies = [
 
     # Database & Storage
     "psycopg[binary]>=3.2.9,<4.0.0",
-    "boto3>=1.39.0,<2.0.0",
-    "django-storages>=1.14,<2.0",
+    "dj-database-url>=2.0,<4.0",
+    "django-storages[google]>=1.14,<2.0",
 
     # Authentication & Security
     "django-allauth[socialaccount]>=65.9.0,<66.0.0",
@@ -22,7 +22,7 @@ dependencies = [
     "django-loginas>=0.3.11,<0.4.0",
 
     # Email & Communications
-    "django-anymail>=13.0,<15.0",
+    "django-anymail[resend]>=13.0,<15.0",
 
     # UI & Templates
     "django-bootstrap3>=25.1,<27.0",
@@ -50,7 +50,6 @@ dependencies = [
 
     # Environment & Configuration
     "django-environ>=0.12.0,<0.13.0",
-    "django-heroku>=0.3.1,<0.4.0",
 
     # Development & Debugging
     "django-debug-toolbar>=5.2.0,<7.0.0",

@@ -1,0 +1,13 @@
+# One deploy check for one target: wac-deploy@prod.service or wac-deploy@staging.service.
+# Fired by wac-deploy@<target>.timer; run by hand with `systemctl start wac-deploy@prod`.
+[Unit]
+Description=We All Code deploy check (%i)
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/wac-deploy-pull %i
+# uv sync on an e2-micro can be slow on a cold cache.
+TimeoutStartSec=30min
+Nice=10

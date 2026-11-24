@@ -145,3 +145,11 @@ $RECYCLE.BIN/
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+infra/terraform/terraform.tfvars
+infra/terraform/.build/

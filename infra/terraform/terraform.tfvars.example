@@ -1,0 +1,35 @@
+# Copy to terraform.tfvars (gitignored) and fill in.
+
+project_id         = "wac-website-xxxx"
+billing_account_id = "XXXXXX-XXXXXX-XXXXXX"
+cloudflare_zone_id = "0123456789abcdef0123456789abcdef"
+domain             = "weallcode.org"
+media_bucket_name  = "wac-media-wac-website-xxxx"
+
+# Switches (see README).
+enable_ipv4    = false
+serial_console = false
+cutover        = false
+
+# R25: only while serial_console = true. Generate with `openssl passwd -6`.
+# serial_console_password_hash = "$6$..."
+
+# R3: true only if 0b found iam.allowedPolicyMemberDomains enforced.
+allow_all_member_domains = false
+
+# bcrypt hash from `caddy hash-password` (password lives in 1Password).
+staging_basic_auth_hash = "$2a$14$..."
+
+# Add the gmail owner here only after he accepts the console invite and the
+# binding is imported (R2).
+project_owners = [
+  "user:ali@weallcode.org",
+  "user:hello@weallcode.org",
+]
+
+# Filled in by Checkpoint 0b from the Resend API response (POST /domains).
+resend_dns_records = [
+  # { type = "MX",  name = "send",              content = "feedback-smtp.us-east-1.amazonses.com", priority = 10 },
+  # { type = "TXT", name = "send",              content = "v=spf1 include:amazonses.com ~all" },
+  # { type = "TXT", name = "resend._domainkey", content = "p=MIGfMA0..." },
+]
