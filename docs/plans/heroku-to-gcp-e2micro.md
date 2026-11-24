@@ -468,7 +468,9 @@ Deviations accepted from sub-agents: R13 "re-raise" replaced by continue + Sentr
 
 **Decided by Ali (session 2):** delete the dead `donate.weallcode.org` Cloudflare record (exported first to `meta/cloudflare-donate-deleted.json`). Done: record `624cf21c…` deleted via API. Scope follow-up committed: 26 tests OK, `makemigrations --check` clean, no new ruff errors.
 
-**Next (for a fresh session):** (1) Ali OKs pushing the branch and opening the PR (merges after Checkpoint 3, before Checkpoint 4, per R4); check CI goes green. (2) Ali's two decisions above. (3) Checkpoint 3 (Task F): generate the staging basic-auth password (1Password `homelab`) + hash into `terraform.tfvars`, `terraform init -backend-config="bucket=wac-tfstate-wac-website-7bda80"`, plan, Ali approves apply, then the Task F checks (Sentry host above), Resend verify + sending key, Daniel's binding import once he accepts.
+PR: with Ali's OK, branch pushed and draft PR https://github.com/WeAllCode/website/pull/1613 opened. `main` had moved on (dependabot bumps), so `main` was merged in (aa8b443): kept main's ranges (`django-anymail[resend] <16`, `django-environ <0.15`), dropped `django-heroku` again, re-locked from main's `uv.lock` (no `psycopg2`; Django 5.2.17, Pillow 13). After the merge: 26 tests OK, `makemigrations --check` clean, `check --deploy` imports.
+
+**Next (for a fresh session):** (1) Confirm CI on the PR is green (it had not reported when session 2 ended); fix failures in a follow-up commit. Keep the PR a draft until Checkpoint 3 passes (R4). (2) Ali's two decisions above. (3) Checkpoint 3 (Task F): generate the staging basic-auth password (1Password `homelab`) + hash into `terraform.tfvars`, `terraform init -backend-config="bucket=wac-tfstate-wac-website-7bda80"`, plan, Ali approves apply, then the Task F checks (Sentry host above), Resend verify + sending key, Daniel's binding import once he accepts.
 
 Sub-agent reports (session 2):
 
