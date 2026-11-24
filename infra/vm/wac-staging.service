@@ -1,0 +1,36 @@
+# Staging gunicorn for staging.weallcode.org. Installed to /etc/systemd/system/ by provision.sh.
+# Runs as its own Unix user (wac-staging) with its own DB role, env file and service-account key.
+# Starts only after the first staging deploy has created /srv/wac/staging/current.
+[Unit]
+Description=We All Code web (staging, gunicorn)
+After=network-online.target postgresql.service
+Wants=network-online.target postgresql.service
+ConditionPathExists=/srv/wac/staging/current/.venv/bin/gunicorn
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=wac-staging
+Group=wac-staging
+# Load the nftables rule that blocks this user from the metadata server (prod SA token) before
+# anything runs as wac-staging, even if the startup script has not run yet on this boot.
+ExecStartPre=+/usr/sbin/nft -f /etc/wac/nftables-wac.nft
+EnvironmentFile=/etc/wac/env-staging
+# EnvironmentFile wins over Environment, so keep this key out of the staging env secret.
+Environment=GOOGLE_APPLICATION_CREDENTIALS=/etc/wac/staging-sa.json
+WorkingDirectory=/srv/wac/staging/current
+ExecStart=/srv/wac/staging/current/.venv/bin/gunicorn coderdojochi.wsgi --preload -w 1 --timeout 120 --max-requests 500 --max-requests-jitter 50 -b unix:/run/wac-staging/gunicorn.sock --access-logfile -
+ExecReload=/bin/kill -s HUP $MAINPID
+RuntimeDirectory=wac-staging
+RuntimeDirectoryMode=0755
+Restart=always
+RestartSec=5
+MemoryMax=200M
+OOMScoreAdjust=500
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

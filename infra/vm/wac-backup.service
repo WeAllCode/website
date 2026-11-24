@@ -1,0 +1,12 @@
+# Nightly pg_dump of the prod database to the private backup bucket.
+[Unit]
+Description=We All Code nightly database backup
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/wac-backup-db
+TimeoutStartSec=30min
+Nice=10

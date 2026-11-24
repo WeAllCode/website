@@ -16,10 +16,18 @@ class SlackNotification:
         self.payload = self.DEFAULT_PAYLOAD.copy()
 
     def send(self):
-        res = requests.post(
-            settings.SLACK_WEBHOOK_URL,
-            json={**self.DEFAULT_PAYLOAD, **self.payload},
-        )
+        if not settings.SLACK_WEBHOOK_URL:
+            return
+
+        try:
+            res = requests.post(
+                settings.SLACK_WEBHOOK_URL,
+                json={**self.DEFAULT_PAYLOAD, **self.payload},
+                timeout=5,
+            )
+        except requests.RequestException:
+            logger.exception("Unable to send Slack notification")
+            return
 
         if res.status_code != requests.codes.ok:
             logger.error(

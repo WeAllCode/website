@@ -1,0 +1,24 @@
+#!/usr/sbin/nft -f
+# Installed to /etc/wac/nftables-wac.nft. Loaded by provision.sh on every boot, by
+# wac-staging.service (ExecStartPre) and by wac-manage before any staging command.
+#
+# The metadata server hands the VM's (prod) service-account token to any local process, so the
+# staging user must never reach it (R10). Staging authenticates with its own key instead.
+# The first two lines make reloading idempotent: create the table if missing, then drop it.
+
+table inet wac
+delete table inet wac
+
+table inet wac {
+	chain output {
+		type filter hook output priority 0; policy accept;
+		# The metadata server is also the VM's DNS resolver; DNS is allowed, everything else
+		# (the HTTP token endpoint) is dropped.
+		meta skuid "wac-staging" ip6 daddr fd20:ce::254 udp dport 53 accept
+		meta skuid "wac-staging" ip6 daddr fd20:ce::254 tcp dport 53 accept
+		meta skuid "wac-staging" ip daddr 169.254.169.254 udp dport 53 accept
+		meta skuid "wac-staging" ip daddr 169.254.169.254 tcp dport 53 accept
+		meta skuid "wac-staging" ip6 daddr fd20:ce::254 counter drop
+		meta skuid "wac-staging" ip daddr 169.254.169.254 counter drop
+	}
+}

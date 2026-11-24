@@ -16,7 +16,9 @@ from django.views.generic import ListView
 from coderdojochi.models import Meeting
 from coderdojochi.models import MeetingOrder
 from coderdojochi.models import Mentor
+from coderdojochi.util import deliverable_recipients
 from coderdojochi.util import email
+from coderdojochi.util import email_daily_limit
 from coderdojochi.views.calendar import CalendarView
 
 logger = logging.getLogger(__name__)
@@ -272,19 +274,39 @@ def meeting_announce(request, pk):
                 "last_name": mentor.last_name,
             }
 
-        email(
-            subject="New meeting announced!",
-            template_name="meeting_announcement_mentor",
-            merge_data=merge_data,
-            merge_global_data=merge_global_data,
-            recipients=recipients,
-            preheader=(
-                "A new meeting has been announced. Come join us for some amazing fun!"
-            ),
-        )
+        # Check the daily limit first, so an over-limit list is never marked announced.
+        template_name = "meeting_announcement_mentor"
+        deliverable = deliverable_recipients(recipients, template_name)
+        if len(deliverable) > email_daily_limit():
+            messages.error(
+                request,
+                f"{len(deliverable)} recipients exceeds the daily email limit of"
+                f" {email_daily_limit()}; nothing sent.",
+            )
+            return redirect("cdc-admin")
 
+        # Mark announced before sending so a retried request never re-mails anyone.
         meeting_obj.announced_date = timezone.now()
         meeting_obj.save()
+
+        try:
+            email(
+                subject="New meeting announced!",
+                template_name=template_name,
+                merge_data=merge_data,
+                merge_global_data=merge_global_data,
+                recipients=recipients,
+                preheader=(
+                    "A new meeting has been announced."
+                    " Come join us for some amazing fun!"
+                ),
+            )
+        except ValueError as e:
+            # Raised before any send (no recipients or over the daily limit).
+            meeting_obj.announced_date = None
+            meeting_obj.save()
+            messages.error(request, f"Meeting not announced: {e}")
+            return redirect("cdc-admin")
 
         messages.success(
             request,

@@ -1,0 +1,32 @@
+# Installed to /etc/caddy/Caddyfile by provision.sh (and by prod deploys when it changes).
+# Cloudflare terminates public TLS and talks to this origin over IPv6 on :443 with the
+# Cloudflare Origin CA certificate (Full (strict)). Nothing listens on :80.
+{
+	auto_https disable_redirects
+}
+
+(wac_common) {
+	tls /etc/caddy/origin.pem /etc/caddy/origin.key
+	encode zstd gzip
+	request_body {
+		max_size 10MB
+	}
+}
+
+weallcode.org:443, www.weallcode.org:443, gcp.weallcode.org:443 {
+	import wac_common
+	reverse_proxy unix//run/wac-prod/gunicorn.sock {
+		header_up X-Forwarded-Proto https
+	}
+}
+
+staging.weallcode.org:443 {
+	import wac_common
+	# Written by provision.sh from metadata key wac-staging-basic-auth: a basic_auth block with
+	# a bcrypt hash (caddy hash-password). Falls back to a random password when the key is unset.
+	import wac-staging-auth.caddy
+	header X-Robots-Tag "noindex, nofollow"
+	reverse_proxy unix//run/wac-staging/gunicorn.sock {
+		header_up X-Forwarded-Proto https
+	}
+}

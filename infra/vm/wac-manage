@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Run a Django management command for one target, as that target's user, with its env file,
+# in a transient systemd unit (R21). Env files are never sourced by a shell.
+#
+#   wac-manage prod showmigrations
+#   wac-manage staging migrate --noinput
+#   wac-manage prod shell -c 'from django.conf import settings; print(settings.DEBUG)'
+#
+# Installed to /usr/local/bin/wac-manage. Must run as root (re-execs itself with sudo).
+# deploy-pull.sh overrides the release and env file with WAC_RELEASE_DIR / WAC_ENV_FILE.
+set -euo pipefail
+
+usage() {
+	echo "usage: wac-manage <prod|staging> <manage.py args...>" >&2
+	exit 64
+}
+
+[ $# -ge 2 ] || usage
+target=$1
+shift
+
+case "$target" in
+prod) user=wac ;;
+staging) user=wac-staging ;;
+*) usage ;;
+esac
+
+if [ "$(id -u)" -ne 0 ]; then
+	exec sudo -- "$0" "$target" "$@"
+fi
+
+release_dir=${WAC_RELEASE_DIR:-/srv/wac/$target/current}
+env_file=${WAC_ENV_FILE:-/etc/wac/env-$target}
+
+release_dir=$(readlink -f -- "$release_dir")
+python=$release_dir/.venv/bin/python
+[ -x "$python" ] || {
+	echo "wac-manage: no release venv at $release_dir (has $target been deployed?)" >&2
+	exit 1
+}
+[ -f "$env_file" ] || {
+	echo "wac-manage: missing env file $env_file" >&2
+	exit 1
+}
+
+props=(
+	-p "User=$user"
+	-p "Group=$user"
+	-p "EnvironmentFile=$env_file"
+	-p "WorkingDirectory=$release_dir"
+	-p "NoNewPrivileges=true"
+	-p "PrivateTmp=true"
+)
+
+if [ "$target" = staging ]; then
+	# Keep the staging user away from the metadata server before running anything as it (R10).
+	/usr/sbin/nft -f /etc/wac/nftables-wac.nft
+	props+=(-p "Environment=GOOGLE_APPLICATION_CREDENTIALS=/etc/wac/staging-sa.json")
+fi
+
+exec systemd-run --wait --pipe --quiet --collect \
+	--unit="wac-manage-$target-$$" \
+	"${props[@]}" \
+	-- "$python" manage.py "$@"

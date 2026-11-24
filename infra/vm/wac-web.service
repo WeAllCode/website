@@ -1,0 +1,29 @@
+# Production gunicorn for weallcode.org. Installed to /etc/systemd/system/ by provision.sh.
+# Starts only after the first deploy has created /srv/wac/prod/current.
+[Unit]
+Description=We All Code web (prod, gunicorn)
+After=network-online.target postgresql.service
+Wants=network-online.target postgresql.service
+ConditionPathExists=/srv/wac/prod/current/.venv/bin/gunicorn
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=wac
+Group=wac
+EnvironmentFile=/etc/wac/env-prod
+WorkingDirectory=/srv/wac/prod/current
+ExecStart=/srv/wac/prod/current/.venv/bin/gunicorn coderdojochi.wsgi --preload -w 2 --timeout 120 --max-requests 500 --max-requests-jitter 50 -b unix:/run/wac-prod/gunicorn.sock --access-logfile -
+ExecReload=/bin/kill -s HUP $MAINPID
+RuntimeDirectory=wac-prod
+RuntimeDirectoryMode=0755
+Restart=always
+RestartSec=5
+MemoryMax=450M
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

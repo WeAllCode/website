@@ -16,6 +16,7 @@ from import_export.fields import Field
 
 from .models import Course
 from .models import Donation
+from .models import EmailSuppression
 from .models import Equipment
 from .models import EquipmentType
 from .models import Guardian
@@ -1115,3 +1116,10 @@ class LocationAdmin(ImportExportMixin, ImportExportActionModelAdmin):
 @admin.register(RaceEthnicity)
 class RaceEthnicityAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     pass
+
+
+@admin.register(EmailSuppression)
+class EmailSuppressionAdmin(admin.ModelAdmin):
+    list_display = ["email", "reason", "created_at"]
+    list_filter = ["reason"]
+    search_fields = ["email"]

@@ -1,0 +1,13 @@
+# Poll the deploy pointer for one target every 15 minutes (R16).
+# Enabled as wac-deploy@prod.timer and wac-deploy@staging.timer by provision.sh.
+[Unit]
+Description=We All Code deploy poll (%i)
+
+[Timer]
+# OnUnitActiveSec counts from the service's last run, so OnBootSec gives it the first run.
+OnBootSec=3min
+OnUnitActiveSec=15min
+RandomizedDelaySec=60s
+
+[Install]
+WantedBy=timers.target

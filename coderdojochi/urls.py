@@ -20,6 +20,7 @@ from .views import meeting_announce
 from .views import meeting_sign_up
 from .views.public import MentorDetailView
 from .views.public import MentorListView
+from .views.unsubscribe import UnsubscribeView
 
 admin.autodiscover()
 
@@ -283,6 +284,15 @@ urlpatterns += [
 
 # Meetings
 urlpatterns += []
+
+# Email unsubscribe
+urlpatterns += [
+    path(
+        "unsubscribe/<str:token>/",
+        UnsubscribeView.as_view(),
+        name="email-unsubscribe",
+    ),
+]
 
 # robots.txt
 urlpatterns += [

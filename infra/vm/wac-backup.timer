@@ -1,0 +1,9 @@
+[Unit]
+Description=We All Code nightly database backup (03:30 America/Chicago)
+
+[Timer]
+OnCalendar=*-*-* 03:30:00 America/Chicago
+Persistent=true
+
+[Install]
+WantedBy=timers.target
