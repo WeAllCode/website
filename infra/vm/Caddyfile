@@ -8,15 +8,28 @@
 (wac_common) {
 	tls /etc/caddy/origin.pem /etc/caddy/origin.key
 	encode zstd gzip
+	# Drop the "Via: 1.x Caddy" that reverse_proxy adds (a deletion, so it applies as the
+	# response is written; header_down -Via inside reverse_proxy does not remove it).
+	header -Via
 	request_body {
 		max_size 10MB
 	}
 }
 
+# Inside each reverse_proxy. A deploy restarts gunicorn (~20 s with --preload on the e2-micro);
+# its RuntimeDirectory and socket vanish meanwhile, so dials fail. Instead of an instant 502,
+# hold the request and redial every 250ms for up to 30s (well under Cloudflare's 100s).
+# Only failed dials are retried, so a request is never sent to gunicorn twice.
+(wac_proxy) {
+	header_up X-Forwarded-Proto https
+	lb_try_duration 30s
+	lb_try_interval 250ms
+}
+
 weallcode.org:443, www.weallcode.org:443, gcp.weallcode.org:443 {
 	import wac_common
 	reverse_proxy unix//run/wac-prod/gunicorn.sock {
-		header_up X-Forwarded-Proto https
+		import wac_proxy
 	}
 }
 
@@ -27,6 +40,6 @@ staging.weallcode.org:443 {
 	import wac-staging-auth.caddy
 	header X-Robots-Tag "noindex, nofollow"
 	reverse_proxy unix//run/wac-staging/gunicorn.sock {
-		header_up X-Forwarded-Proto https
+		import wac_proxy
 	}
 }

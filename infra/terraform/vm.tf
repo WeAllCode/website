@@ -84,8 +84,15 @@ resource "google_compute_instance" "web" {
   # R9: Postgres lives on the boot disk, so a replace wipes the database.
   # Before any plan that replaces this VM: run backup-db.sh, verify the dump
   # restores into a scratch DB, then ask Ali before removing this guard.
+  #
+  # deploy-nonce-<target> is written by infra/vm/release.sh (gcloud add-metadata) on every
+  # release to trigger wac-deploy-watch; it is not Terraform's, so it must not show as drift.
   lifecycle {
     prevent_destroy = true
+    ignore_changes = [
+      metadata["deploy-nonce-prod"],
+      metadata["deploy-nonce-staging"],
+    ]
   }
 
   # provision.sh fetches bootstrap.tgz and reads secrets on first boot.

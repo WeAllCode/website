@@ -1,0 +1,24 @@
+# Instant deploys: long-polls instance metadata and starts wac-deploy@<target>.service when
+# release.sh changes deploy-nonce-<target>. wac-deploy@<target>.timer stays as the fallback.
+# Runs as root (it needs the metadata server, which nftables blocks for wac-staging).
+[Unit]
+Description=We All Code deploy trigger (metadata long-poll)
+After=network-online.target
+Wants=network-online.target
+# Never give up restarting.
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/wac-deploy-watch
+Restart=always
+RestartSec=10
+StateDirectory=wac-deploy-watch
+StateDirectoryMode=0700
+RuntimeDirectory=wac-deploy-watch
+RuntimeDirectoryMode=0700
+PrivateTmp=true
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
