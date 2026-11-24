@@ -12,6 +12,13 @@ resource "cloudflare_zone_setting" "ssl" {
   value      = "strict"
 }
 
+# Refuse TLS 1.0/1.1 at the edge.
+resource "cloudflare_zone_setting" "min_tls_version" {
+  zone_id    = var.cloudflare_zone_id
+  setting_id = "min_tls_version"
+  value      = "1.2"
+}
+
 # --- Always on ---------------------------------------------------------------
 
 resource "cloudflare_dns_record" "gcp_aaaa" {

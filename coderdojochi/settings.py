@@ -43,38 +43,40 @@ RECAPTCHA_REQUIRED_SCORE = env("RECAPTCHA_REQUIRED_SCORE", default=0.85)
 # SECURITY
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
+# Off in prod: Cloudflare redirects http->https at the edge.
 SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
-if SECURE_SSL_REDIRECT:
-    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
+# Caddy always sends X-Forwarded-Proto: https, so request.is_secure() is True.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
+SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
+    "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF",
+    default=True,
+)
+# https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
+X_FRAME_OPTIONS = "DENY"
+# https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
+SESSION_COOKIE_HTTPONLY = True
+# CSRF_COOKIE_HTTPONLY stays False: cdc.js reads csrftoken from document.cookie.
+
+if not DEBUG:
+    # Secure cookies and HSTS whenever DEBUG is off, independent of
+    # SECURE_SSL_REDIRECT (which is off in prod behind Cloudflare).
     # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
     SESSION_COOKIE_SECURE = True
-    # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
-    SESSION_COOKIE_HTTPONLY = True
     # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
     CSRF_COOKIE_SECURE = True
-    # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
-    CSRF_COOKIE_HTTPONLY = True
-    # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
-    # set this to 60 seconds first and then to 518400 once you prove the former works
-    SECURE_HSTS_SECONDS = 518400
+    # Start at 1 day; raise once proven.
+    SECURE_HSTS_SECONDS = env.int("DJANGO_SECURE_HSTS_SECONDS", default=86400)
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
+    # Off: the apex is served by Django, and gcp.weallcode.org uses an Origin CA cert.
     SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
         "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS",
-        default=True,
+        default=False,
     )
     # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
-    SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
-    # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-    SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
-        "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF",
-        default=True,
-    )
-    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
-    SECURE_BROWSER_XSS_FILTER = True
-    # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
-    X_FRAME_OPTIONS = "DENY"
+    SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=False)
 
 
 # Application definition
@@ -225,9 +227,6 @@ TIME_FORMAT = "P T"
 en_formats.DATE_FORMAT = DATE_FORMAT
 en_formats.DATETIME_FORMAT = DATETIME_FORMAT
 en_formats.TIME_FORMAT = TIME_FORMAT
-
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Allow all host headers
 ALLOWED_HOSTS = ["*"]
