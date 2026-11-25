@@ -25,6 +25,8 @@ Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. W
 7. Dead dependencies are removed instead of upgraded (list in Checkpoint 1).
 8. Every third-party font, CSS and JS file is vendored under `coderdojochi/static/vendor/` and served from our own static bucket. The only remaining third-party hosts are the services on the Checkpoint 9 allowlist (reCAPTCHA, Google Charts, GA4 gtag).
 
+**Direction (Ali, 2026-11-24):** we want to move away from old front-end code: jQuery, Foundation, and by extension Bootstrap 3, Font Awesome 4/5 and what-input. Checkpoint 9 only upgrades and self-hosts what's there, as a stopgap that fixes the known CVEs and drops third-party CDNs. Replacing these with plain modern JS/CSS is a separate project to plan after this one. Don't add any new jQuery- or Foundation-dependent code in these PRs.
+
 **Out of scope.** Moving the VM to Debian 13 (new boot disk, and Postgres lives on it). Bootstrap 3 → 5, Font Awesome → 6/7, jQuery 4, Foundation 7 ("Yeti"): these are rewrites of the HTML/CSS, not upgrades (see "Front-end scope" below). Replacing the old Google `jsapi` chart loader in `session_stats.html`.
 
 ### Decisions Ali must make before Checkpoint 7–8 (asked at hand-over)
