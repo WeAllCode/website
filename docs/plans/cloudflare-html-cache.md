@@ -188,7 +188,7 @@ Check:
 | AC | Test or check | Change that should make it fail |
 |---|---|---|
 | AC1 | `test_anonymous_home_is_public`; `curl -sI https://www.weallcode.org/` twice shows `HIT`, `age` ≤ 60 | in `middleware.py`, change `public=True` to `private=True` |
-| AC2 | `test_join_us_is_private`, `test_404_is_private`, `test_redirect_is_private`, `test_login_page_not_public`, `test_guard_response_cookie`; `curl -sI https://www.weallcode.org/join-us/` twice never shows `HIT` | delete the `not response.cookies` condition (fails `test_guard_response_cookie`); separately, delete `status_code == 200` (fails `test_404_is_private`) |
+| AC2 | `test_join_us_is_private`, `test_404_is_private`, `test_redirect_is_private`, `test_login_page_not_public`, `test_guard_response_cookie`; `curl -sI https://www.weallcode.org/join-us/` twice never shows `HIT` | delete the `not response.cookies` condition (fails `test_guard_response_cookie`); separately, delete `status_code == 200` (fails `test_allowlisted_404_is_private`) |
 | AC3 | `test_logged_in_home_is_private`, `test_messages_cookie_is_private`, `test_guard_authenticated_no_cookie`, `test_guard_request_sessionid`; `curl -sI -H 'Cookie: sessionid=x' https://www.weallcode.org/` twice never shows `HIT` | delete the `not request.user.is_authenticated` condition (fails `test_guard_authenticated_no_cookie`); separately, delete the `sessionid` request-cookie check (fails `test_guard_request_sessionid`) |
 | AC4 | `curl -sI https://gcp.weallcode.org/` twice and `curl -sI -u staging:<pw> https://staging.weallcode.org/` twice, never `HIT` | remove the `http.host in {...}` clause from the rule (don't apply it; reason it from the expression) |
 | AC5 | oha load test in Checkpoint 3 | n/a |
@@ -227,4 +227,8 @@ The reviewer confirmed these are safe as planned:
 - never overriding the edge TTL
 
 ## Progress
+
+### Checkpoint 1 (2026-11-25)
+
+- Found during the mutation check: deleting `status_code == 200` did not fail `test_404_is_private`, because `/no-such-page-xyz/` has no `resolver_match` and that guard catches it first. Added `test_allowlisted_404_is_private`: `GET /mentors/999999/` (a `mentor-detail` 404, so `resolver_match` is set) → 404 and `private`. The AC2 status mutation now targets this test.
 
