@@ -170,6 +170,8 @@ class AccountHomeView(MetadataMixin, TemplateView):
         if self.request.user.role == "guardian":
             return self.get_for_guardian(**kwargs)
 
+        return redirect("welcome")
+
     def get_for_mentor(self, **kwargs):
         context = self.get_context_data(**kwargs)
 
@@ -192,6 +194,8 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
         if self.request.user.role == "guardian":
             return self.post_for_guardian(**kwargs)
+
+        return redirect("welcome")
 
     def post_for_mentor(self, **kwargs):
         context = self.get_context_data(**kwargs)

@@ -230,26 +230,32 @@ class GuardianImportResource(resources.ModelResource):
         else:
             return (Guardian.objects.get(user=instance), False)
 
-    def import_obj(self, obj, data, dry_run):
-        if obj.pk:
-            user = obj.user
+    def import_instance(self, instance, row, **kwargs):
+        # No super(): first_name/last_name/email are read-only properties on
+        # Guardian, so the default per-field import would fail on them.
+        if instance.pk:
+            user = instance.user
         else:
             user = User(
-                first_name=data.get("first_name"),
-                last_name=data.get("last_name"),
-                email=data.get("email"),
+                first_name=row.get("first_name"),
+                last_name=row.get("last_name"),
+                email=row.get("email"),
                 role="guardian",
-                username=data.get("email"),
+                username=row.get("email"),
             )
 
-        obj.user = user
-        obj.is_active = False
-        obj.zip = data.get("zip")
-        obj.phone = data.get("phone")
-        if not dry_run:
-            user.save()
-            obj.user = user
-            obj.save()
+        instance.user = user
+        instance.is_active = False
+        instance.zip = row.get("zip")
+        instance.phone = row.get("phone")
+
+    def before_save_instance(self, instance, row, **kwargs):
+        # The User must exist before the Guardian that points at it is saved.
+        # Mirror save_instance(): skip only a dry run without transactions;
+        # with transactions, import_data() rolls the dry run back.
+        if not self._is_using_transactions(kwargs) and self._is_dry_run(kwargs):
+            return
+        instance.user.save()
 
     class Meta:
         model = Guardian
@@ -380,28 +386,30 @@ class StudentResource(resources.ModelResource):
         column_name="consent",
     )
 
-    def import_obj(self, obj, data, dry_run):
-        guardian_email = data.get("guardian_email")
+    def import_instance(self, instance, row, **kwargs):
+        # No super(): every column is set explicitly below, and guardian_email
+        # is not a Student attribute. import_data() saves the instance (and
+        # handles dry runs) after this returns.
+        guardian_email = row.get("guardian_email")
 
-        obj.first_name = data.get("first_name")
-        obj.last_name = data.get("last_name")
-        obj.birthday = date(*time.strptime(data.get("birthday", ""), "%m/%d/%Y")[:3])
-        obj.gender = data.get("gender", "")
-        obj.school_name = data.get("school_name", "")
-        obj.school_type = data.get("school_type", "")
-        obj.photo_release = strtobool(data.get("photo_release", ""))
-        obj.consent = strtobool(data.get("consent", ""))
-        obj.is_active = True
+        instance.first_name = row.get("first_name")
+        instance.last_name = row.get("last_name")
+        instance.birthday = date(
+            *time.strptime(row.get("birthday", ""), "%m/%d/%Y")[:3],
+        )
+        instance.gender = row.get("gender", "")
+        instance.school_name = row.get("school_name", "")
+        instance.school_type = row.get("school_type", "")
+        instance.photo_release = strtobool(row.get("photo_release", ""))
+        instance.consent = strtobool(row.get("consent", ""))
+        instance.is_active = True
 
         try:
-            obj.guardian = Guardian.objects.get(user__email=guardian_email)
+            instance.guardian = Guardian.objects.get(user__email=guardian_email)
         except Guardian.DoesNotExist:
             raise ImportError(
                 f"guardian with email {guardian_email} not found",
             ) from None
-
-        if not dry_run:
-            obj.save()
 
     class Meta:
         model = Student

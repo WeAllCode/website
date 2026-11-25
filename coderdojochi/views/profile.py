@@ -84,3 +84,9 @@ class DojoMentorView(TemplateView):
             return redirect("account_home")
 
         messages.error(request, "There was an error. Please try again.")
+
+        context = self.get_context_data(**kwargs)
+        context["form"] = form
+        context["user_form"] = user_form
+
+        return self.render_to_response(context)

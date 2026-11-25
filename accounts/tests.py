@@ -5,6 +5,10 @@ from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
 from django.test import Client
 from django.test import TestCase
+from django.urls import reverse
+
+from coderdojochi.factories import CDCUserFactory
+from coderdojochi.models import CDCUser
 
 GOOGLE_FORM = re.compile(
     r'<form method="post" action="(?P<action>/account/google/login/[^"]*)"'
@@ -54,3 +58,23 @@ class SocialLoginPostTest(TestCase):
         assert response["Location"].startswith(
             "https://accounts.google.com/",
         ), response["Location"]
+
+
+class AccountHomeUnknownRoleTest(TestCase):
+    """A role that is neither mentor nor guardian redirects, not a 500."""
+
+    def setUp(self):
+        user = CDCUserFactory()
+        CDCUser.objects.filter(pk=user.pk).update(role="bogus")
+        user.refresh_from_db()
+        self.client.force_login(user)
+
+    def test_get_redirects_to_welcome(self):
+        response = self.client.get(reverse("account_home"), secure=True)
+        assert response.status_code == HTTPStatus.FOUND
+        assert response["Location"] == reverse("welcome")
+
+    def test_post_redirects_to_welcome(self):
+        response = self.client.post(reverse("account_home"), {}, secure=True)
+        assert response.status_code == HTTPStatus.FOUND
+        assert response["Location"] == reverse("welcome")
