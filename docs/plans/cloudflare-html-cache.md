@@ -237,4 +237,35 @@ The reviewer confirmed these are safe as planned:
 - PR: https://github.com/WeAllCode/website/pull/1628. Staging deploy of `b505447` (basic-auth user is `staging`; password at `op://homelab/WAC staging basic auth/password`). Staging headers: `/`, `/privacy/`, `/mentors/` → `public, max-age=0, s-maxage=60`; `/join-us/` → `private`; `/account/login/` → `max-age=0, no-cache, no-store, must-revalidate, private`; `/no-such-page-xyz/` 404 → `private`; `/get-involved/` 302 → `private`. All `cf-cache-status: DYNAMIC` (no rule yet).
 - CI on the PR: tests, django-postgres, pre-commit, infra all pass.
 - Checkpoint 2 pre-check (read-only): the Terraform token is active but `GET /zones/<zone_id>/rulesets` returns `10000 Authentication error`, so it lacks ruleset permissions. Needs Ali to add "Zone → Cache Rules: Edit" and "Cache Purge" before Task C.
+- Checkpoint 1 closed: PR #1628 merged with Ali's OK (squash `9ce8c61`), released to prod with Ali's OK. Prod: `/`, `/privacy/`, `/mentors/` → `public, max-age=0, s-maxage=60`; `/join-us/` → `private`; `/account/login/` → `…, private`. All `DYNAMIC`.
+
+### Checkpoint 2 (2026-11-25)
+
+- Task C files written by a sub-agent on branch `claude/cf-html-cache-rule`: `infra/terraform/cache.tf` (expression exactly as planned, respect_origin for edge and browser TTL) and the README "Edge cache" section. `terraform fmt -check` and `terraform validate` pass.
+- Token: the Terraform token "weallcode Terraform" (a user token) has Zone Settings Write, Zone Read, SSL and Certificates Write, DNS Write on the weallcode.org zone. Tried adding "Cache Settings Write" and "Cache Purge" with the `cf` CLI (v0.15.0, Ali's OAuth login): `PUT /user/tokens/<id>` returns `9109 Unauthorized`, because `cf`'s OAuth scopes don't cover API-token management. Ali has to add them in the dashboard (My Profile → API Tokens → weallcode Terraform → Edit).
+- Ali added them. `GET .../rulesets/phases/http_request_cache_settings/entrypoint` → "could not find entrypoint ruleset", so there was no existing cache ruleset to import.
+- Terraform setup: `terraform.tfvars` copied from the `heroku-free-hosting-migration-a21bab` worktree (gitignored); `terraform init -reconfigure -backend-config="bucket=wac-tfstate-wac-website-7bda80"`. Baseline plan: `cloudflare_ruleset.cache` to add, plus unrelated drift from #1625 (`google_compute_instance.web` metadata startup-script and `google_storage_bucket_object.bootstrap`, both in place). Ali: include the drift in the full apply so AC6 ends at "No changes".
+- Before applying, checked Ali's other running session (upgrade-cp3, dependency upgrades Checkpoint 3): Python bumps only, no Terraform or Cloudflare work. Sent it an FYI about the cache (use `sessionid=x` or a query string to reach origin).
+- Spike (Ali's OK): applied `-target=cloudflare_ruleset.cache` with the expression narrowed to `http.host eq "www.weallcode.org" and http.request.uri.path eq "/privacy/"` → 1 added (ruleset id `386a3a700609476fb45ed5913c03b62f`) at 17:28:38Z. `curl -sI https://www.weallcode.org/privacy/` every 10 s:
+
+  | UTC | cf-cache-status | age |
+  |---|---|---|
+  | 17:28:42 | MISS | |
+  | 17:28:53 | HIT | 10 |
+  | 17:29:03 | HIT | 20 |
+  | 17:29:13 | MISS | |
+  | 17:29:24 | HIT | 10 |
+  | 17:29:34 | HIT | 20 |
+  | 17:29:44 | (request hung 46 s, empty) | |
+  | 17:30:30 | EXPIRED | |
+  | 17:30:40 | MISS | |
+  | 17:30:51 | HIT | 20 |
+
+  Result: **no clamp.** `age` never passed 20, and the object filled at 17:29:13 was `EXPIRED` 77 s later. `HIT` happens despite `Vary: Cookie`. The occasional early `MISS` is most likely a different cache node in the colo. The 46 s hang was a one-off: right afterwards `/`, `/privacy/` and a cache-busted `/` answered 200 in 0.1–0.4 s. Watch for it in the load test.
+- Widened back to the full expression (sub-agent, restored verbatim; `fmt -check` passes). Full plan: `0 to add, 3 to change, 0 to destroy` (ruleset expression in place, plus the #1625 drift). Applied at 17:32:24Z per Ali's "include it".
+- AC6: `terraform plan` → "No changes. Your infrastructure matches the configuration."
+- AC1: `www /` MISS then HIT `age: 2`; apex `/` HIT, `age` 34–39 over 6 requests; `/programs/` and `/team/` MISS then HIT with `age` 1–6. All `public, max-age=0, s-maxage=60`.
+- AC2: `/join-us/` `private`, `BYPASS` twice; `/account/login/` `…, private`, `DYNAMIC` twice.
+- AC3: `www /` with `Cookie: sessionid=x` → `private`, `DYNAMIC` twice; with `Cookie: messages=x` → `private`, `DYNAMIC` twice.
+- AC4: `gcp.weallcode.org/` and `staging.weallcode.org/` (basic auth) send `public, …s-maxage=60` from origin but are `DYNAMIC` twice each: the host clause excludes them.
 
