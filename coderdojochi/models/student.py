@@ -79,12 +79,14 @@ class Student(CommonInfo):
                 session=session,
             )
             is_registered = True
-        except Exception:
+        except Exception:  # noqa: BLE001
             is_registered = False
 
         return is_registered
 
-    def get_age(self, date=timezone.now()):
+    def get_age(self, date=None):
+        if date is None:
+            date = timezone.now()
         return (
             date.year
             - self.birthday.year
@@ -121,7 +123,7 @@ class Student(CommonInfo):
         self,
         minimum_age,
         maximum_age,
-        date=timezone.now(),
+        date=None,
     ):
         age = self.get_age(date)
 

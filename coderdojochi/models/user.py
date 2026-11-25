@@ -33,7 +33,7 @@ class CDCUser(AbstractUser):
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.last_login = timezone.now()
-        super(CDCUser, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("account_home")

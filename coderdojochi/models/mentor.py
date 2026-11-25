@@ -112,7 +112,7 @@ class Mentor(CommonInfo):
             ):
                 NewMentorBgCheckNotification(self).send()
 
-        super(Mentor, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_approve_avatar_url(self):
         return reverse(
@@ -153,7 +153,7 @@ class Mentor(CommonInfo):
 
         # https://en.gravatar.com/site/implement/images/
         email = self.email.encode("utf-8").lower()
-        email_encoded = hashlib.md5(email).hexdigest()
+        email_encoded = hashlib.md5(email, usedforsecurity=False).hexdigest()
 
         thumbnail_params = urlencode(
             {

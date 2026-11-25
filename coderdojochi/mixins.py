@@ -34,7 +34,7 @@ class RoleRedirectMixin:
 
             return redirect(next_url)
 
-        return super(RoleRedirectMixin, self).dispatch(
+        return super().dispatch(
             request,
             *args,
             **kwargs,

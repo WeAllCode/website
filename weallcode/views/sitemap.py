@@ -24,4 +24,4 @@ class StaticSitemapView(sitemaps.Sitemap):
         return reverse(item)
 
     def lastmod(self, item):
-        return datetime.now()
+        return datetime.now()  # noqa: DTZ005

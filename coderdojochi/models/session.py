@@ -280,7 +280,7 @@ class Session(CommonInfo):
         if self.capacity is None or self.capacity < 0:
             self.capacity = 0
 
-        super(Session, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self) -> str:
         return reverse("session-detail", args=[str(self.id)])

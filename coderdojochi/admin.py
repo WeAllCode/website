@@ -172,7 +172,7 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         return obj.get_absolute_url()
 
     def get_queryset(self, request):
-        qs = super(MentorAdmin, self).get_queryset(request)
+        qs = super().get_queryset(request)
 
         # Count all orders that are marked as active
         qs = qs.annotate(
@@ -310,7 +310,7 @@ class GuardianAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     resource_class = GuardianImportResource
 
     def get_queryset(self, request):
-        qs = super(GuardianAdmin, self).get_queryset(request)
+        qs = super().get_queryset(request)
         qs = qs.select_related()
         qs = qs.annotate(student_count=Count("student")).order_by(
             "-student_count",
@@ -384,7 +384,7 @@ class StudentResource(resources.ModelResource):
 
         obj.first_name = data.get("first_name")
         obj.last_name = data.get("last_name")
-        obj.birthday = datetime.strptime(data.get("birthday", ""), "%m/%d/%Y")
+        obj.birthday = datetime.strptime(data.get("birthday", ""), "%m/%d/%Y")  # noqa: DTZ007
         obj.gender = data.get("gender", "")
         obj.school_name = data.get("school_name", "")
         obj.school_type = data.get("school_type", "")
@@ -397,7 +397,7 @@ class StudentResource(resources.ModelResource):
         except Guardian.DoesNotExist:
             raise ImportError(
                 f"guardian with email {guardian_email} not found",
-            )
+            ) from None
 
         if not dry_run:
             obj.save()
@@ -465,7 +465,7 @@ class StudentAdmin(ImportExportMixin, ImportExportActionModelAdmin):
     ]
 
     def get_queryset(self, request):
-        qs = super(StudentAdmin, self).get_queryset(request)
+        qs = super().get_queryset(request)
 
         qs = qs.select_related()
 
