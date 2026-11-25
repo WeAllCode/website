@@ -130,7 +130,7 @@ Only items that matter here. Full notes: URLs at the bottom.
 
 - **Django 6.0/6.1 (D1):** Python ≥ 3.12. 6.0: `DEFAULT_AUTO_FIELD` default becomes `BigAutoField` (this repo already sets `AutoField` at `coderdojochi/settings.py:360`, so no migrations), positional args to `Model.save()` removed, email internals rewritten, `ADMINS`/`MANAGERS` as tuples deprecated. 6.1: PostgreSQL 15+ (VM and CI run 17), `first()`/`last()` stop ordering by pk after an empty `order_by()`, admin breadcrumbs markup changes, `EMAIL_*` → `MAILERS` deprecation, cache keys change once.
 - **sentry-sdk 3.0:** `init()` raises `TypeError` on removed options. This repo passes two: `enable_logs` and `send_default_pii` (`coderdojochi/settings.py:344-357`). `LoggingIntegration` is no longer on by default, so the Sentry Logs from #1623 stop unless it is added explicitly (`LoggingIntegration(level=logging.INFO)`; note the renames: old `sentry_logs_level` is now `level`, old `level` is now `breadcrumb_level`, `event_level` now defaults to `None`). `send_default_pii` is replaced by `data_collection`, which collects more by default. `DjangoIntegration(transaction_style=)` removed (not used here). `last_event_id`, `capture_message`, `new_scope` still exist in 3.0.0 (checked in the wheel's `sentry_sdk/api.py`). The `sentry-sdk[django]` extra is gone (not used here). Span streaming is the only tracing mode: watch staging memory.
-- **gunicorn 24–27:** Python ≥ 3.10. **25.1 creates a control socket by default** at `$XDG_RUNTIME_DIR/gunicorn.ctl` or `$HOME/.gunicorn/gunicorn.ctl`. The services run as system users with `HOME=/nonexistent` (`infra/vm/provision.sh:215`), `ProtectHome=true` and `ProtectSystem=full` (`infra/vm/wac-web.service:25-26`), so that path is not writable. Turn it off (see Checkpoint 5). 25.3/27.0 reject malformed requests more strictly (Caddy in front sends clean HTTP/1.1, so expect no effect). No sync-worker default changed.
+- **gunicorn 24–27:** Python ≥ 3.10. **25.1 creates a control socket by default** at `$XDG_RUNTIME_DIR/gunicorn.ctl` or `$HOME/.gunicorn/gunicorn.ctl`. The services run as system users with `HOME=/nonexistent` (`infra/vm/provision.sh:232`), `ProtectHome=true` and `ProtectSystem=full` (`infra/vm/wac-web.service:25-26`), so that path is not writable. Turn it off (see Checkpoint 5). 25.3/27.0 reject malformed requests more strictly (Caddy in front sends clean HTTP/1.1, so expect no effect). No sync-worker default changed.
 - **django-anymail 14/15:** Resend raises if an attachment's extension doesn't match its content type (this repo attaches inline images in `coderdojochi/signals_handlers.py` via `MIMEImage`; check). `fail_silently` deprecated in 15.1 (grep it). Needs Django ≥ 5.0.
 - **django-debug-toolbar 6–8:** shadow DOM in 7.0, redesign in 8.0. `debug_toolbar.urls` include at `coderdojochi/urls.py:342-346` still works. Dev-only; prod never installs it into `INSTALLED_APPS` (`DEBUG` is False).
 - **django-bootstrap3 26:** Python ≥ 3.11, Django ≥ 5.2, new system check `bootstrap3.W001` for unknown `BOOTSTRAP3` keys (this repo has no `BOOTSTRAP3` setting). XSS fix in labels.
@@ -154,7 +154,7 @@ Builder: read these before any task.
 
 - `pyproject.toml` (whole file): dependency bounds (the upper bounds are why `uv lock --upgrade` stops at gunicorn 26 and sentry 2.76), ruff config (`UP038` in two places), `requires-python`.
 - `uv.lock`: never hand-edit; regenerate.
-- `.github/workflows/ci.yml:1-163`: the `tests` job runs 4 named modules at lines 31-39; `django-postgres` runs migrate, `makemigrations --check`, fixtures, a gunicorn curl smoke (lines 93-117) and `check --deploy`.
+- `.github/workflows/ci.yml:1-163`: the `tests` job runs 5 named modules in step "Run tests" (#1625 added `test_send_reminders`); `django-postgres` runs migrate, `makemigrations --check`, fixtures, a gunicorn curl smoke (lines 93-117) and `check --deploy`.
 - `.github/workflows/pre-commit.yml`, `.pre-commit-config.yaml`, `.github/dependabot.yml`, `.github/workflows/dependabot-auto-merge.yml` (Dependabot PRs auto-merge to main; see Pitfalls).
 - `coderdojochi/settings.py:80-130` (apps, middleware), `:250-280` (GCS storage), `:330-380` (Sentry init, debug toolbar), `:386-420` (`LOGGING`).
 - `coderdojochi/test_settings.py` (whole file): how tests run without Postgres or GCS.
@@ -166,7 +166,7 @@ Builder: read these before any task.
 - `weallcode/views/common.py:5-19`: `capture_message`, `last_event_id` in the 404 handler.
 - `coderdojochi/views/calendar.py`: icalendar use.
 - `infra/vm/deploy-pull.sh` (whole file), especially the uv sync block (`UV_PYTHON=/usr/bin/python3.11`, `UV_PYTHON_DOWNLOADS=never`, `HOME=/nonexistent`) and "Infra files (prod only)": **infra/vm files are installed only from prod releases**, never staging.
-- `infra/vm/provision.sh:200-250`: apt packages (`python3.11-venv`), system users, uv installed once from PyPI into `/opt/uv` (never upgraded after first boot).
+- `infra/vm/provision.sh:215-270`: apt packages (`python3.11-venv`), system users, uv installed once from PyPI into `/opt/uv` (never upgraded after first boot).
 - `infra/vm/wac-web.service`, `infra/vm/wac-staging.service`: gunicorn flags, `WorkingDirectory=/srv/wac/<target>/current`, `MemoryMax`, sandboxing.
 - `infra/vm/release.sh:1-60` and `infra/vm/README.md` sections "Deploy", "Management commands", "Database", "Admin access (serial console)": how releases, rollback, backups and the serial console work. There is **no SSH**; anything on the VM goes through the serial console, which Ali opens.
 - `docs/plans/heroku-to-gcp-e2micro.md` Task G step 5 (line 253) and Progress entry G5 (line 520): the smoke test used for the cutover and the temporary-superuser pattern (`cp4-smoke`).
@@ -174,7 +174,7 @@ Builder: read these before any task.
 Code to copy:
 
 - Test style: `coderdojochi/tests/test_email_util.py` (uses `override_settings`, `unittest.mock`).
-- CI step style: `.github/workflows/ci.yml:119-127` ("Check production settings import").
+- CI step style: `.github/workflows/ci.yml` step "Check production settings import" (line 126 at `ee9b6d0`).
 - Systemd/infra edits: follow the comment-header style in `infra/vm/deploy-pull.sh:1-16`.
 
 ## Tasks
@@ -185,7 +185,7 @@ Each task owns its files. Within a checkpoint, tasks run in parallel unless mark
 
 - 0.1 #1623 (sentry-sdk 2.76.0 + Sentry Logs) is on `main` but not on prod. Ask Ali to release it to prod first (`infra/vm/release.sh --target prod`) so no upgrade PR carries untested changes. Record the prod sha.
 - 0.2 `gh pr list --author app/dependabot` — note open Dependabot PRs and ask Ali to close them (this plan supersedes them). Dependabot is paused for the whole window by PR 1 (`open-pull-requests-limit: 0`, R4); 2C turns it back on with the `uv` ecosystem after the last checkpoint.
-- 0.3 Baseline: `DJANGO_SETTINGS_MODULE=coderdojochi.test_settings uv run python manage.py test coderdojochi.tests accounts weallcode` → expect 43 tests, 2 errors (`test_password_session` import, `test_new_mentor_no_avatar`). Record it.
+- 0.3 Baseline: `DJANGO_SETTINGS_MODULE=coderdojochi.test_settings uv run python manage.py test coderdojochi.tests accounts weallcode` → expect 58 tests (43 + 15 from #1625's `test_send_reminders`), 2 errors (`test_password_session` import, `test_new_mentor_no_avatar`). Record it.
 - 0.4 Build the Playwright smoke script once (see "Playwright smoke" in Proof) in `/tmp/wac-smoke/`, run it against prod (public pages only) and staging to get a baseline of console errors that already exist (so later PRs only fail on new ones).
 - 0.5 Ask Ali to open the serial console once and record memory baselines: `systemctl show wac-web wac-staging -p MemoryCurrent,MemoryPeak`, `free -m`, `uv --version`, `curl -6 -sI https://releases.astral.sh/` (R9, needed for CP7). Also create the temporary staging superuser `upg-smoke` for Playwright (password in 1Password at `op://homelab/WAC staging upg-smoke`): `sudo wac-manage staging shell -c "from coderdojochi.models import CDCUser as U; ..."` (model at `coderdojochi/models/user.py:8`). `wac-refresh-staging-db` wipes it, so recreate after any refresh.
 
@@ -484,7 +484,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 |---|---|---|---|
 | R1 | Blocker | `coderdojochi/admin.py:2` imports `distutils.util.strtobool` (used ~:378-379); distutils is gone in Python 3.12+, so admin (and Django setup) breaks on 3.13 | 1D added: inline `strtobool` helper + test |
 | R2 | Blocker | 7A: root `uv python install` for a staging release could read the branch's `[tool.uv]`/`uv.toml` (`python-install-mirror`, `python-downloads-json-url`) and plant a non-official build that prod later uses (breaks R10) | 7A now: `env -i`, `UV_NO_CONFIG=1`, cwd `/`, regex-validated version only, `UV_PYTHON_PREFERENCE=only-managed`, **per-target** install dirs `/opt/wac-python-<target>` |
-| R3 | Blocker | The uv upgrade in `provision.sh` never runs on a prod release (`--install-files` exits at provision.sh:178-184, before the uv block at :245) | 7A: after the 7a prod release Ali runs `sudo wac-provision` on the serial console and records `uv --version`; 7b is gated on it |
+| R3 | Blocker | The uv upgrade in `provision.sh` never runs on a prod release (`--install-files` exits at provision.sh:195-201, before the uv block at :263 — line numbers as of `ee9b6d0`) | 7A: after the 7a prod release Ali runs `sudo wac-provision` on the serial console and records `uv --version`; 7b is gated on it |
 | R4 | Major | Dependabot auto-merge can land untested deps on main mid-upgrade | CP0 0.2: pause Dependabot for the whole window (`open-pull-requests-limit: 0` for both ecosystems, in PR 1); 2C restores it with the `uv` ecosystem |
 | R5 | Major | Runbook prod release had no ref → `release.sh` defaults to laptop HEAD | Runbook 4.7: `git fetch && infra/vm/release.sh --target prod <merged-squash-sha>` after confirming `origin/main` = that sha |
 | R6 | Major | `requests` is imported directly (`coderdojochi/notifications.py:3`) but undeclared | 1C declares `requests` too |
@@ -509,7 +509,17 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 ## Progress
 
-(Empty. The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
+(The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
+
+### Checkpoint 0 — in progress (2026-11-24)
+
+- [x] Rebased plan branch onto `origin/main` = `ee9b6d0` (#1625). `git diff --stat f940d74 origin/main` outside docs touches only: `ci.yml` (+1), `cron.py` (deleted), `send_reminders.py` + test (new), `test_settings.py` (+3), `infra/vm/README.md`, `provision.sh` (+17), `wac-reminders.{service,timer}` (new), `pyproject.toml`/`uv.lock` (django-cron out). Every other cited file is unchanged, so its line refs hold.
+- [x] Line refs re-checked. `settings.py` unchanged: `html5` :105, `django_nose` :109, Sentry init :344-357, `DEFAULT_AUTO_FIELD` :360, debug toolbar :370-372, `LOGGING` :386, `STATIC_URL` :280. Drifted and fixed above: `provision.sh` `HOME=/nonexistent` :215→:232, `--install-files` exit :178-184→:195-201, uv block :245→:263 (R3 row updated); `ci.yml` tests job now 5 named modules, refs by step name. `heroku-to-gcp-e2micro.md` +1 line at the end; :253 and :520 still hold.
+- [x] 0.1: #1623 (`f940d74`) is an ancestor of `ee9b6d0`, which the D4 note records as released to prod. Prod pointer sha still to read (needs Ali's OK).
+- [x] 0.2: open Dependabot PRs: #1586 (actions/checkout 6→7; superseded by 2B). Asking Ali to close it.
+- [x] 0.3 baseline (local, Python 3.11.14): `Ran 58 tests`, `FAILED (errors=2)`: `test_password_session` (`ModuleNotFoundError: No module named 'pytz'` from `factories.py:4`) and `test_new_mentor_no_avatar` (`AttributeError: … signals_handlers … does not have the attribute 'EmailMultiAlternatives'`).
+- [ ] 0.4 Playwright baseline (prod public + staging): waiting on Ali's OK.
+- [ ] 0.5 serial-console baselines + `upg-smoke`: waiting on Ali.
 
 ## Sources
 
