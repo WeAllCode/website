@@ -511,7 +511,12 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 2 — `c71fef2` on staging (2026-11-25). Next: Ali merges #1627 → prod release
+### Checkpoint 2 — done, on prod (2026-11-25). Next: Checkpoint 3
+
+- 2026-11-25: Ali said merge + release prod. **Prod sha before: `1668ae59790c15fe088ec922ef2ff774f14364f6`** (rollback: `release.sh --target prod --force 1668ae5`). #1627 squash-merged as `dc113b0`. `release.sh --target prod dc113b049ed0fb27213ab3b9c94b5fe90f2af6c7`: serial log 15:23:38Z `deploying dc113b0… (was '1668ae5…')`, 15:25:47Z `wac-web is running dc113b0…`, 15:25:54Z `done`, no Traceback/Error. **Prod sha after: `dc113b049ed0fb27213ab3b9c94b5fe90f2af6c7`.** No migrations, so no backup step. `/etc/wac/reminders-enabled` not touched.
+- Prod smoke `--cp cp2-prod --baseline out/cp0-prod/report.json`: PASS 0/24, same hosts as CP0 (`/tmp/wac-smoke/out/cp2-prod/report.json`).
+- Sentry 1h watch: not done (only `braven-org` reachable); folded into the 0.5 visit with the others.
+- Open: Dependabot #1586 now superseded; Ali decides whether to close it. CP3 also owns the `StudentResource.import_obj` → `import_instance` finding and the RET503 role-less-user 500 (or its own issue).
 
 - With Ali's OK, pushed `c71fef2`. CI on that head: tests, pre-commit, django-postgres, infra all SUCCESS (dependabot skipped). `release.sh --target staging origin/claude/upgrade-cp2-tooling`: `current-staging` `7049da0…` → `c71fef2baaa83efe649a3aebe12056bba566aeb7`; serial log 14:49:38Z deploying, 14:51:41Z running, 14:51:46Z `done`, no rollback. Smoke `--cp cp2b-staging --baseline out/cp0-staging/report.json`: PASS 0/24, same hosts (`/tmp/wac-smoke/out/cp2b-staging/report.json`).
 
