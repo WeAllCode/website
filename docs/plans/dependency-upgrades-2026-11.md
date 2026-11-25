@@ -5,7 +5,8 @@ Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. W
 **Ali's decisions (2026-11-24) — these override the recommendations below:**
 
 - D1: Python 3.13 now (Checkpoint 7). Django 6.2 LTS in April 2027 (Checkpoint 8 waits for 6.2 and released Django 6 support in storages/recaptcha).
-- D2: front-end latest within each major, as written.
+- D2: front-end latest within each major, as written. **Added by Ali:** vendor all third-party fonts, CSS and JS and host them ourselves (Checkpoint 9).
+- D5 (open): remove the dead Universal Analytics snippet (`UA-78618586-1`) in Checkpoint 9, or keep it.
 - D3: sentry-sdk 3 waits for 3.0.1+ or 2 weeks after 3.0.0, whichever comes first; until then keep `<3`.
 - D4: **keep** `coderdojochi/cron.py` and django-cron. Ali wants the reminders back, and that is a separate task. In 1C, do **not** remove django-cron or delete `cron.py`. Checkpoint 8 gets a precondition: the reminders task must have replaced or fixed django-cron (its models use `index_together`, removed in Django 5.1), or django-cron must have a release that supports Django 6.
 
@@ -22,6 +23,7 @@ Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. W
 5. After each prod release: `/`, `/programs/`, `/team/`, `/account/login/`, `/dj-admin/login/` return 200 through Cloudflare; no new Sentry issues in the hour after; staging `MemoryPeak` (and prod's, where checked) is within +10% of the Checkpoint 0 baseline (R14).
 6. Every prod release has a written rollback path that was checked before release (previous main sha recorded; DB backup taken when the PR adds migrations).
 7. Dead dependencies are removed instead of upgraded (list in Checkpoint 1).
+8. Every third-party font, CSS and JS file is vendored under `coderdojochi/static/vendor/` and served from our own static bucket. The only remaining third-party hosts are the services on the Checkpoint 9 allowlist (reCAPTCHA, Google Charts, and Analytics if D5 keeps it).
 
 **Out of scope.** Moving the VM to Debian 13 (new boot disk, and Postgres lives on it). Bootstrap 3 → 5, Font Awesome → 6/7, jQuery 4, Foundation 7 ("Yeti"): these are rewrites of the HTML/CSS, not upgrades (see "Front-end scope" below). Replacing the old Google `jsapi` chart loader in `session_stats.html`.
 
@@ -80,7 +82,7 @@ Current = `uv.lock` / files at `f940d74`. "Major" = breaking-change notes apply 
 
 `uv lock --upgrade` inside today's bounds also pulls: python-dateutil 2.9 → **4.0**, faker 37 → **40**, pycparser 2 → **3**, asgiref 3.9 → 3.13, pydantic 2.13 → 2.14, cryptography 50.0.0 → 50.0.2, six removed. faker is only used by factory-boy in tests. All other transitive packages (google-cloud-storage 3.17.2, etc.) are already latest.
 
-### Front-end (CDN, in templates)
+### Front-end (CDN today; Checkpoint 9 vendors all of these into `coderdojochi/static/vendor/`, plus Google Fonts and the Sentry browser bundle on `500.html`)
 
 | Library | File | Current | Target |
 |---|---|---|---|
@@ -300,20 +302,63 @@ Pre-conditions (check, don't assume): django-storages and django-recaptcha have 
 - Then `django>=6.2,<6.3` (or 6.1 if Ali chose that). Read 6.0, 6.1, 6.2 release notes "Backwards incompatible changes" against: email (`coderdojochi/util.py`), `ADMINS`/`MANAGERS` tuples in settings, `Model.save()` positional args (grep `\.save\([^)k]`), admin templates under `coderdojochi/templates/admin/`, `first()`/`last()` after `order_by()`.
 - Proof: tests; `makemigrations --check` (contrib apps may ship migrations: record them; triggers backup step); full Playwright incl. `/dj-admin/` change list, change form and import; staging memory.
 
-### Checkpoint 9 — Front-end CDN libraries (PR 9, independent of Python; can run any time after Checkpoint 1, gated by D2)
+### Checkpoint 9 — Front-end libraries upgraded and hosted locally (PR 9, independent of Python; can run any time after Checkpoint 1, gated by D2)
 
-**9A. Public site.** File: `weallcode/templates/weallcode/_base.html`.
-- jQuery 3.8.0, what-input 5.2.12, Foundation 6.9.0 (JS only; keep the local 6.5.1 CSS), Font Awesome 5.15.4 — all from cdnjs, each with `integrity="sha512-…" crossorigin="anonymous" referrerpolicy="no-referrer"`. Get hashes from `curl -s "https://api.cdnjs.com/libraries/<lib>/<version>?fields=sri" | jq '.sri["<file>"]'`.
-- Remove the seamless-scroll-polyfill `<script>`. If `weallcode/static/weallcode/css/app.css` lacks `html { scroll-behavior: smooth; }`, report it (don't edit app.css; it's not this task's file — lead decides).
+Ali (2026-11-24): vendor every third-party font, CSS and JS file into the repo and serve it as our own static files, instead of from cdnjs, unpkg, jsdelivr, maxcdn, ajax.googleapis.com, fonts.googleapis.com or browser.sentry-cdn.com. Static files already go to the GCS bucket through `collectstatic` (`StaticStorage` = `ManifestFilesMixin` + GCS, `coderdojochi/storage_backends.py`; `STATIC_URL` = `https://storage.googleapis.com/<bucket>/static/`, `coderdojochi/settings.py:280`). The bucket's CORS already allows the site origins with `GET` (`infra/terraform/storage.tf:19-24` prod, `:61-66` staging), which cross-origin web fonts need. Manifest hashing gives the files cache-busting names, so no version is needed in the path.
 
-**9B. Dashboard.** File: `coderdojochi/templates/dashboard/_admin_base.html`.
-- jQuery 1.12.4 → 3.8.0 (cdnjs + SRI), Bootstrap 3.3.7 → 3.4.1 CSS and JS (cdnjs `twitter-bootstrap/3.4.1` + SRI — **replace** the old `integrity` on `bootstrap.min.js`, or the browser blocks it), Font Awesome 4.6.3 → 4.7.0 (cdnjs + SRI). Drop the IE8 html5shiv/respond block (`oss.maxcdn.com` is dead).
-- Pitfall: grep the dashboard templates and `coderdojochi/static/js/` for jQuery 3 removals (`.load(` on jQuery objects, `.size()`, `.andSelf()`, `.bind(`, `.delegate(`, `$(document).on("ready"`, `.error(`) and for Bootstrap `data-target`/`href` containing HTML, and tooltips/popovers with custom HTML. Report every hit with file:line.
+**Stays on third-party hosts (allowlist), with the reason:**
+- Google reCAPTCHA (`django_recaptcha` widget): it is a live Google service and must load from Google.
+- Google Charts `https://www.gstatic.com/charts/loader.js` (`dashboard/admin.html:19`, `meeting_check_in.html:17`, `session_check_in.html:57`): Google's terms don't allow self-hosting the loader, which also fetches more code at runtime.
+- `https://www.google.com/jsapi` (`dashboard/session_stats.html:12`): this is the old Charts loader. Switch it to `gstatic.com/charts/loader.js` with `google.charts.load` in 9C, so there's one allowed host.
+- Google Analytics `analytics.js` (`weallcode/templates/weallcode/_base.html:86-94`, property `UA-78618586-1`): Universal Analytics stopped processing data in 2023, so this script does nothing. Whether to remove it is Ali's call (D5). Don't vendor it.
 
-**9C. Welcome page.** File: `coderdojochi/templates/welcome.html` lines 8, 79: js-datepicker 5.18.4 (same paths; add SRI from `https://data.jsdelivr.com/v1/package/npm/js-datepicker@5.18.4` or switch to jsdelivr).
+**Vendored layout (fixed paths, so templates and files can be built in parallel).** Everything goes under `coderdojochi/static/vendor/`, which is served as `{% static 'vendor/…' %}` because `coderdojochi` is an installed app. Each library's license file sits next to it.
 
-- 9A, 9B, 9C in parallel.
-- Proof: Playwright on staging with **zero new console errors** vs the 0.4 baseline and no failed requests (an SRI mismatch shows as a blocked script). Pages: public list + `/admin/` (cdc-admin dashboard, needs staff) + `/welcome/` (needs a logged-in user without a role; use `upg-smoke` or a second temp user) + open a Foundation menu/off-canvas on mobile viewport + open a Bootstrap dropdown on the dashboard + open the datepicker on `/welcome/`.
+| Library | Version | npm package (source) | Files → `vendor/…` |
+|---|---|---|---|
+| jQuery | 3.8.0 | `jquery` | `jquery/jquery.min.js`, `jquery/jquery.min.map` |
+| what-input | 5.2.12 | `what-input` | `what-input/what-input.min.js` |
+| Foundation JS | 6.9.0 | `foundation-sites` | `foundation/foundation.min.js` (+ `.map` if referenced) |
+| Font Awesome 5 | 5.15.4 | `@fortawesome/fontawesome-free@5.15.4` | `fontawesome5/css/all.min.css`, `fontawesome5/webfonts/*` (all formats the CSS references) |
+| Font Awesome 4 | 4.7.0 | `font-awesome` | `fontawesome4/css/font-awesome.min.css`, `fontawesome4/fonts/*` |
+| Bootstrap 3 | 3.4.1 | `bootstrap@3.4.1` | `bootstrap3/css/bootstrap.min.css` (+ `.map`), `bootstrap3/js/bootstrap.min.js`, `bootstrap3/fonts/glyphicons-halflings-regular.*` |
+| js-datepicker | 5.18.4 | `js-datepicker` | `js-datepicker/datepicker.min.css`, `js-datepicker/datepicker.min.js` |
+| Sentry browser bundle | latest 11.x (11.17.0 today) | `@sentry/browser` | `sentry/bundle.min.js` (from `build/bundles/`) |
+| Bungee 400; Poppins 400; Open Sans 300/400/700; Quicksand 300/400/700 | latest (5.3.0 today) | `@fontsource/bungee`, `@fontsource/poppins`, `@fontsource/open-sans`, `@fontsource/quicksand` | `fonts/<family>/<weight>.css` + `fonts/<family>/files/*.woff2` (latin + latin-ext subsets only; drop the `.woff` fallbacks and edit the CSS to match) |
+
+**Pitfalls (these will break `collectstatic` on deploy if they're missed):**
+- `ManifestFilesMixin` rewrites every `url(...)` in CSS and every `sourceMappingURL` in JS and CSS. If a referenced file is missing, `collectstatic` raises `ValueError` and the deploy fails, though deploy-pull then leaves the old release running. So vendor every font format a CSS file references (FA4/FA5 still reference `.eot`, `.svg`, `.ttf`, `.woff`), and either ship each `.map` or strip its `sourceMappingURL` comment. Task 9E's manifest test catches this before staging.
+- Keep each library's directory layout, so relative `url(../webfonts/…)` paths still resolve.
+- Font files load cross-origin from `storage.googleapis.com`. If the bucket CORS didn't cover an origin (for example `localhost` in dev with `DEBUG=False`), the fonts would fail silently. In dev, `DEBUG=True` serves them from `/static/`, which is same-origin.
+- Fontsource weight CSS uses `font-display: swap` and `unicode-range`. Leave those as they are.
+
+**9A. Vendor the files and a refresh task.** Files: `coderdojochi/static/vendor/**` (new), `coderdojochi/static/vendor/vendor.json` (new), `coderdojochi/static/vendor/README.md` (new), `tasks.py`.
+- `vendor.json` lists each package as `{package, version, files: [{from, to}]}`, matching the table.
+- Add an invoke task `invoke vendor` to `tasks.py`. For each entry it fetches `https://registry.npmjs.org/<package>/<version>`, downloads `dist.tarball`, checks it against `dist.integrity` (sha512), extracts only the listed files to a temp dir and copies them into place. Use Python stdlib only (`urllib`, `tarfile`, `hashlib`); add no new dependency. Running it twice must leave no diff.
+- `README.md`: one line per library with version, npm URL and license, plus "refresh with `uv run invoke vendor`; bump versions in `vendor.json`".
+- Proof: `uv run invoke vendor && git status --porcelain coderdojochi/static/vendor` is empty on the second run; `find coderdojochi/static/vendor -type f | wc -l` matches the manifest; total size is under 5 MB (`du -sh`).
+
+**9B. Public site template.** File: `weallcode/templates/weallcode/_base.html`.
+- Replace the cdnjs Font Awesome 5, fonts.googleapis, jQuery, what-input and Foundation tags with `{% static 'vendor/…' %}`. Fonts: link `vendor/fonts/bungee/400.css`, `vendor/fonts/poppins/400.css` and `vendor/fonts/open-sans/400.css`, which is today's request (no weights given = 400). Keep the local `weallcode/css/foundation.min.css` (6.5.1 CSS, which is fine with 6.9 JS).
+- Remove the seamless-scroll-polyfill `<script>` (it's dead in 2.x; native `scroll-behavior` covers it). If `weallcode/static/weallcode/css/app.css` has no `scroll-behavior: smooth`, report that; don't edit app.css.
+- Drop the `<!--[if IE]>` block.
+
+**9C. Dashboard templates.** Files: `coderdojochi/templates/dashboard/_admin_base.html`, `coderdojochi/templates/dashboard/session_stats.html`.
+- `_admin_base.html`: point Google Fonts (Open Sans 300/400/700, Quicksand 300/400/700), FA 4.7.0, Bootstrap 3.4.1 CSS/JS and jQuery 3.8.0 at the vendored files. Remove the old `integrity`/`crossorigin` attributes, which are wrong for local files. Remove the IE8 html5shiv/respond block (`oss.maxcdn.com` is dead).
+- `session_stats.html`: replace `google.com/jsapi` + `google.load("visualization", "1", …)` with `gstatic.com/charts/loader.js` + `google.charts.load('current', {packages: ['corechart']})` + `google.charts.setOnLoadCallback(...)`, copying the pattern in `dashboard/admin.html:19-23`.
+- Pitfall: grep the dashboard templates and `coderdojochi/static/js/` for jQuery 3 removals (`.load(` on jQuery objects, `.size()`, `.andSelf()`, `.bind(`, `.delegate(`, `$(document).on("ready"`, `.error(`), for Bootstrap `data-target`/`href` that contain HTML, and for tooltips/popovers with custom HTML. Report every hit with file:line.
+
+**9D. Welcome and error pages.** Files: `coderdojochi/templates/welcome.html`, `coderdojochi/templates/500.html`.
+- `welcome.html:8,79`: use the vendored js-datepicker.
+- `500.html:26-37`: use the vendored `vendor/sentry/bundle.min.js` (errors only; no tracing or replay on an error page). Update the init for the v11 API. Check that `Sentry.showReportDialog` still exists in 11.x (`grep -c showReportDialog` on the bundle). If it doesn't, use the v11 user-feedback API and report what changed. Note: 500.html is rendered by Django's error handler; `{% static %}` works there as long as the static setup itself isn't what's broken.
+
+**9E. Guard tests.** Files: new `coderdojochi/tests/test_vendored_assets.py`.
+- Test 1, no CDN: render `/`, `/programs/`, `/account/login/` and (as a staff user) `/admin/` and `/welcome/` with the test client. Extract every `<script src>` and `<link href>` and assert that each one is either relative/`STATIC_URL` or on the allowlist (`www.google.com/recaptcha`, `www.gstatic.com/charts`, `www.google-analytics.com` unless D5 removes it). Also render `500.html` directly with `SENTRY_DSN` and `sentry_event_id` in the context.
+- Test 2, the manifest builds: under `override_settings(STORAGES={"staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"}, …}, STATIC_ROOT=<tmpdir>)`, run `call_command("collectstatic", "--noinput")` and assert it doesn't raise and that `staticfiles.json` maps `vendor/fontawesome5/css/all.min.css`. This is the same post-processing the GCS `StaticStorage` does, so it catches missing fonts and maps before staging.
+- Mutations: put one cdnjs URL back in `_base.html` → test 1 fails; delete one file from `vendor/fontawesome5/webfonts/` → test 2 fails. Undo each with the exact reverse edit, or by restoring the file from the vendor task.
+
+- 9A–9E run in parallel, because the paths are fixed above. The lead runs `uv run invoke vendor` once after 9A if a template task needs the files to test.
+- Proof: the full test suite, including 9E. On staging, Playwright with **zero new console errors** compared with the 0.4 baseline, **no failed requests**, and **no request to any host outside the allowlist + `storage.googleapis.com` + the site itself** (record every request host per page). Check that font responses come back 200 with `Access-Control-Allow-Origin`, and that the computed `font-family` on `body`/headings is the vendored one (`document.fonts.check('16px Poppins')` is true). Pages: the public list, `/admin/` (cdc-admin dashboard, needs staff), `/welcome/` (needs a logged-in user without a role; use `upg-smoke` or a second temp user). Also open a Foundation menu/off-canvas at mobile width, open a Bootstrap dropdown on the dashboard, open the datepicker on `/welcome/`, and load a session stats page (Google Charts renders).
 
 ## Checkpoints
 
@@ -331,7 +376,7 @@ Each checkpoint = one PR (Checkpoint 7 = two). Order: 0 → 1 → 2 → 3 → 4 
 | 7a | VM can install uv-managed Python | Prod release is a no-op on 3.11 | Runtime path ready |
 | 7b | Python 3.13 | Staging deploy on 3.13 + Playwright + memory | Supported Python to 2029 |
 | 8 | Django 6.2 LTS | Tests + full Playwright + migrations recorded | Current Django LTS |
-| 9 | Front-end CDN libraries | Playwright zero new console errors | jQuery/Bootstrap CVEs fixed |
+| 9 | Upgrade and self-host front-end libraries and fonts | 9E tests; Playwright: zero new console errors, no requests outside the allowlist | jQuery/Bootstrap CVEs fixed; no third-party CDNs |
 
 ## How to run it
 
@@ -367,7 +412,8 @@ Read the whole plan first. Run it as the lead: you write no code.
 | 4 | CI "Sentry init" step | In `settings.py` add `enable_tracing=True` to `sentry_sdk.init` on sentry-sdk 3 (Checkpoint 6) → `TypeError` → step fails. Before CP6: add `bogus_option=1` → fails on 2.x too |
 | 5 | Prod smoke + Sentry + memory numbers in Progress | Point the smoke script at a 404 path → fails |
 | 6 | Previous sha + backup recorded in Progress before each prod release | — (process) |
-| 7 | `grep -E "mock|nose|common-helpers|fullurl|json-logging|html5|django-cron" pyproject.toml` → nothing | Re-add one → grep hits |
+| 7 | `grep -E "mock|nose|common-helpers|fullurl|json-logging|html5" pyproject.toml` → nothing (django-cron stays, D4) | Re-add one → grep hits |
+| 8 | `test_vendored_assets` (no-CDN test + manifest collectstatic test) | Put a cdnjs URL back in `_base.html` → fails; delete one FA5 webfont → manifest test fails |
 
 After writing each test: make the one-line change, confirm the test fails, undo with the exact reverse edit (never `git checkout`/reset).
 
