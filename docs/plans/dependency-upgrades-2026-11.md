@@ -529,6 +529,14 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
+### Checkpoint 5 — in progress (2026-11-25)
+
+- Started: code branch `claude/upgrade-cp5-gunicorn` from `origin/main` `298fa88` (#1635 scanner defense on top of CP4 `51ccada`). Dependabot open = only #1586 (superseded). gunicorn 27.0.1 still latest on PyPI (requires Python ≥ 3.10).
+- Built by the lead directly (one 3-file task, no sub-agent). Commit `070ee90`: `pyproject.toml` (`gunicorn>=27.0.1,<28`; per-file-ignores `"gunicorn.conf.py" = ["INP001", "N999"]`), `uv.lock` (only gunicorn 23.0.0→27.0.1), new `gunicorn.conf.py` with `control_socket_disable = True` (setting name from `gunicorn/config.py`; CLI `--no-control-socket`). Unit files untouched.
+- Proof of the socket fix: gunicorn with `HOME` = a read-only dir and no `XDG_RUNTIME_DIR`. Without the file (`--config=<empty file>`): `[ERROR] Control server error: [Errno 13] Permission denied: '<home>/.gunicorn'` (non-fatal; pages still served). With `./gunicorn.conf.py`: no error. `gunicorn coderdojochi.wsgi --check-config` rc 0.
+- Checks: `uv lock --check` ok; `ruff check .` all passed; `ruff format --check .` 120 formatted; full suite `Ran 111 tests … OK`; `pre-commit run --all-files` all Passed. Runbook step 0 skipped: no Django/app package changed, so no migrations possible.
+- 2026-11-25: pushed `claude/upgrade-cp5-gunicorn` (`070ee90`), opened https://github.com/WeAllCode/website/pull/1636. CI pending.
+
 ### Checkpoint 4 — in progress (2026-11-25)
 
 - Started: code branch `claude/upgrade-cp4-majors` from `origin/main` `25b441c` (#1632 on top of CP3 `7deb61d`). Prod is `7deb61d`.
