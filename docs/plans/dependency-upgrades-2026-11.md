@@ -541,7 +541,8 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Pre-existing, not new: allauth deprecation warnings for `ACCOUNT_AUTHENTICATION_METHOD`, `ACCOUNT_EMAIL_REQUIRED`, `ACCOUNT_USERNAME_REQUIRED` (`settings.py:317-319`), same 3 on main. Not fatal in `check --deploy`. Follow-up: move to `ACCOUNT_LOGIN_METHODS` / `ACCOUNT_SIGNUP_FIELDS`.
 - **Gap:** allauth login/logout/password-change and the `/dj-admin/` import screen are not verified on staging; `--auth` smoke still waits on `upg-smoke` (0.5). CP3 must not be called auth-verified until then.
 - Admin path checked: 4.4.6 `ImportExportMixinBase.get_resource_classes` still honours `resource_class` (deprecation warning, returns `[resource_class]`), so `StudentAdmin`/`GuardianAdmin` use the fixed resources. Follow-up: switch both to `resource_classes = [...]`.
-- Next: Ali OKs push + PR; CI; staging release + smoke; merge; prod release (prev prod `dc113b0`).
+- With Ali's OK, pushed and opened https://github.com/WeAllCode/website/pull/1629 (CP3) and https://github.com/WeAllCode/website/pull/1630 (this plan onto main, docs only, so every session reads one copy; Ali chose this). CI pending at open.
+- Next: CI green on #1629; CI; staging release + smoke; merge; prod release (prev prod `dc113b0`).
 
 ### Checkpoint 2 — done, on prod (2026-11-25). Next: Checkpoint 3
 
