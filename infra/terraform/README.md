@@ -85,6 +85,21 @@ Buckets are all in `US-CENTRAL1`. Deploy: versioned, noncurrent versions beyond 
 
 Ingress is TCP 443 from Cloudflare's IPv6 ranges only (plus its IPv4 ranges when `enable_ipv4`). Nothing on 80, no SSH. The zone SSL mode is `strict`; Caddy serves a Cloudflare Origin CA certificate (ECC, 15 years) for the apex, `www.`, `gcp.` and `staging.`. Its private key is in state (private, versioned bucket) and in instance metadata: accepted risk, see `../vm/README.md`.
 
+## Edge cache
+
+`cache.tf` adds one cache rule (`cloudflare_ruleset.cache`) for the apex and `www.` only; `gcp.` and `staging.` are never cached. Requests with a `sessionid` or `messages` cookie, and paths under `/admin/`, `/dj-admin/` and `/account/`, skip it. The rule respects the origin's headers, so the real gate is `coderdojochi/middleware.py`: allowlisted pages served to logged-out visitors with no cookies get `public, max-age=0, s-maxage=60` (60 s at the edge, `PUBLIC_CACHE_SECONDS`), and everything else gets `private` and is never cached. Never switch the rule to `override_origin`.
+
+Kill switch: set `PUBLIC_CACHE_SECONDS=0` in the `wac-env-prod` secret and release (every response becomes `private`), or delete `cache.tf` and apply.
+
+Manual purge (the token needs the "Cache Purge" permission; Free allows 5 purge-everything calls per minute):
+
+```sh
+curl -X POST "https://api.cloudflare.com/client/v4/zones/<zone_id>/purge_cache" \
+  -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"purge_everything":true}'
+```
+
 ## Checks
 
 ```sh
