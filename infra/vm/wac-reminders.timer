@@ -1,0 +1,9 @@
+[Unit]
+Description=We All Code class reminder emails (10:00 and 14:00 America/Chicago)
+
+[Timer]
+OnCalendar=*-*-* 10,14:00:00 America/Chicago
+Persistent=true
+
+[Install]
+WantedBy=timers.target

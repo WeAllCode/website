@@ -1,0 +1,26 @@
+# Class reminder emails (prod only; staging never emails real users). Started by
+# wac-reminders.timer. Reminders already sent are flagged on each order, so a rerun is safe.
+# Run one now: sudo systemctl start wac-reminders
+[Unit]
+Description=We All Code class reminder emails (prod)
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+ConditionPathExists=/srv/wac/prod/current/.venv/bin/python
+# Pause switch that survives deploys: sudo touch /etc/wac/reminders-paused
+ConditionPathExists=!/etc/wac/reminders-paused
+
+[Service]
+Type=oneshot
+User=wac
+Group=wac
+EnvironmentFile=/etc/wac/env-prod
+WorkingDirectory=/srv/wac/prod/current
+ExecStart=/srv/wac/prod/current/.venv/bin/python manage.py send_reminders
+TimeoutStartSec=30min
+Nice=10
+MemoryMax=250M
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true

@@ -38,6 +38,7 @@ jobs:
           coderdojochi.tests.test_security_settings
           coderdojochi.tests.test_email_util
           coderdojochi.tests.test_slack_notifications
+          coderdojochi.tests.test_send_reminders
         shell: bash
 
   django-postgres:

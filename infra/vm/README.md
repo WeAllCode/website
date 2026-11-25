@@ -14,7 +14,7 @@ The VM can't reach GitHub (no IPv6), so nothing is cloned.
 
 | Repo file | Installed as |
 |---|---|
-| `wac-web.service`, `wac-staging.service`, `wac-deploy@.service`, `wac-deploy@.timer`, `wac-backup.service`, `wac-backup.timer`, `wac-deploy-watch.service` | `/etc/systemd/system/` |
+| `wac-web.service`, `wac-staging.service`, `wac-deploy@.service`, `wac-deploy@.timer`, `wac-backup.service`, `wac-backup.timer`, `wac-deploy-watch.service`, `wac-reminders.service`, `wac-reminders.timer` | `/etc/systemd/system/` |
 | `Caddyfile` | `/etc/caddy/Caddyfile` |
 | `nftables-wac.nft` | `/etc/wac/nftables-wac.nft` |
 | `postgresql.conf.d-wac.conf` | `/etc/postgresql/17/main/conf.d/wac.conf` |
@@ -134,11 +134,20 @@ pg_restore -l dump | grep -v -E 'EXTENSION|COMMENT - EXTENSION' > toc
 sudo -u wac pg_restore -L toc --no-owner --no-acl --role=wac -d wac dump
 ```
 
+## Class reminders
+
+- `wac-reminders.timer` runs `manage.py send_reminders` for **prod only** at 10:00 and 14:00 America/Chicago (`Persistent=true`). Staging has no timer, so it never emails real users.
+- It emails guardians and mentors of active orders on active sessions: a week reminder 2-7 days before the class, a day reminder in the last 24 hours. Classes that already started are skipped.
+- Each order's `week_reminder_sent` / `day_reminder_sent` is set before its email goes out, so a rerun or catch-up never sends twice. A failed send is logged to Sentry and not retried.
+- Each run sends at most half of `EMAIL_DAILY_LIMIT` (two runs a day); the rest wait for the next run. Day reminders go first.
+- A prod deploy that ships the units enables the timer (`start_reminders` in `provision.sh`); no reprovision needed.
+- See who would get one, sending nothing: `sudo wac-manage prod send_reminders --dry-run`. Run one now: `sudo systemctl start wac-reminders`. Pause them: `sudo touch /etc/wac/reminders-paused` (the service skips while it exists; `sudo rm` it to resume). Don't `disable` the timer to pause: the next prod deploy re-enables it.
+
 ## Logs
 
 ```sh
 journalctl -u wac-web -u wac-staging -f
-journalctl -u 'wac-deploy@*' -u wac-backup -u caddy
+journalctl -u 'wac-deploy@*' -u wac-backup -u wac-reminders -u caddy
 journalctl -u google-startup-scripts    # provision.sh output (also on the serial console)
 systemctl list-timers 'wac-*'
 ```
@@ -169,4 +178,4 @@ These are in addition to the plan's list:
 - `systemd-analyze verify /etc/systemd/system/wac-*.service /etc/systemd/system/wac-deploy@.service`
 - `caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile`
 - `sudo nft list table inet wac`
-- `systemctl list-timers 'wac-*'` shows `wac-deploy@prod`, `wac-deploy@staging` and `wac-backup`.
+- `systemctl list-timers 'wac-*'` shows `wac-deploy@prod`, `wac-deploy@staging`, `wac-backup` and `wac-reminders`.

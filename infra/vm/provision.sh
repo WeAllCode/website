@@ -136,6 +136,13 @@ install_vm_files() {
 	else
 		log "$src has no wac-deploy-watch.service/deploy-watch.sh; leaving the deploy watcher as it is"
 	fi
+	# Optional for the same reason: an older prod release has no reminder units.
+	if [ -f "$src/wac-reminders.service" ] && [ -f "$src/wac-reminders.timer" ]; then
+		if put_file "$src/wac-reminders.service" /etc/systemd/system/wac-reminders.service 0644; then CHANGED_UNITS=1; fi
+		if put_file "$src/wac-reminders.timer" /etc/systemd/system/wac-reminders.timer 0644; then CHANGED_UNITS=1; fi
+	else
+		log "$src has no wac-reminders.service/.timer; leaving class reminders as they are"
+	fi
 	if put_file "$src/Caddyfile" /etc/caddy/Caddyfile 0644; then CHANGED_CADDY=1; fi
 	if put_file "$src/nftables-wac.nft" /etc/wac/nftables-wac.nft 0644; then CHANGED_NFT=1; fi
 	if put_file "$src/postgresql.conf.d-wac.conf" "$PG_ETC/conf.d/wac.conf" 0644; then CHANGED_PG=1; fi
@@ -156,6 +163,16 @@ reload_changed() {
 		log "postgresql.conf.d-wac.conf changed; shared_buffers/listen_addresses need 'systemctl restart postgresql'"
 	fi
 	start_watcher
+	start_reminders
+}
+
+# Enable the class reminder timer once its unit is installed, so a deploy turns it on
+# without a reprovision. Never fatal: a timer problem must not fail the deploy.
+start_reminders() {
+	[ -f /etc/systemd/system/wac-reminders.timer ] || return 0
+	systemctl enable --now --quiet wac-reminders.timer ||
+		log "WARNING: could not enable wac-reminders.timer; class reminders are not scheduled" >&2
+	return 0
 }
 
 # Enable and (re)start the instant-deploy watcher. Never fatal: the 15-minute timer is the
@@ -356,6 +373,7 @@ systemctl enable caddy
 if [ "$CHANGED_CADDY" = 1 ]; then systemctl restart caddy; else systemctl start caddy; fi
 systemctl enable --now wac-deploy@prod.timer wac-deploy@staging.timer wac-backup.timer
 start_watcher
+start_reminders
 # Both start on their own once a deploy has created /srv/wac/<target>/current.
 systemctl enable wac-web.service wac-staging.service
 
