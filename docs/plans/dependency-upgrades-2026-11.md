@@ -511,7 +511,9 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 2 — built, not pushed (2026-11-25). Next: Ali OK to push + open PR 2
+### Checkpoint 2 — PR open (2026-11-25). Next: CI green → Ali OK for staging release
+
+- With Ali's OK, pushed `claude/upgrade-cp2-tooling` and opened https://github.com/WeAllCode/website/pull/1627. CI not reported yet at open.
 
 - Branch `claude/upgrade-cp2-tooling` from `origin/main` `1668ae5`, one commit `7049da0`. Not pushed. 19 files: `.github/workflows/{ci,pre-commit}.yml`, `.pre-commit-config.yaml`, `pyproject.toml`, `uv.lock`, `coderdojochi/{admin,apps,custom_storages,forms,mixins}.py`, `coderdojochi/models/{mentor,session,student,user}.py`, `coderdojochi/views/{profile,sessions}.py`, `weallcode/views/{common,programs,sitemap}.py`.
 - Start-of-CP checks: Dependabot open = only #1586 (checkout 6→7, superseded by 2B; close after PR 2 merges). Terraform providers unchanged (google 8.12.0, cloudflare 5.29.0, tls 4.4.2, archive 2.8.1) → no Terraform work. ruff 0.17.6, pre-commit 4.7.0, pre-commit-hooks v6.0.0 still latest.
