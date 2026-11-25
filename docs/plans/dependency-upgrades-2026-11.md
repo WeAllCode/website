@@ -511,14 +511,20 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 0 — in progress (2026-11-24)
+### Checkpoint 0 — done except 0.5 (2026-11-24). Next: Checkpoint 1
+
+0.5 is on Ali, outside this session.
 
 - [x] Rebased plan branch onto `origin/main` = `ee9b6d0` (#1625). `git diff --stat f940d74 origin/main` outside docs touches only: `ci.yml` (+1), `cron.py` (deleted), `send_reminders.py` + test (new), `test_settings.py` (+3), `infra/vm/README.md`, `provision.sh` (+17), `wac-reminders.{service,timer}` (new), `pyproject.toml`/`uv.lock` (django-cron out). Every other cited file is unchanged, so its line refs hold.
 - [x] Line refs re-checked. `settings.py` unchanged: `html5` :105, `django_nose` :109, Sentry init :344-357, `DEFAULT_AUTO_FIELD` :360, debug toolbar :370-372, `LOGGING` :386, `STATIC_URL` :280. Drifted and fixed above: `provision.sh` `HOME=/nonexistent` :215→:232, `--install-files` exit :178-184→:195-201, uv block :245→:263 (R3 row updated); `ci.yml` tests job now 5 named modules, refs by step name. `heroku-to-gcp-e2micro.md` +1 line at the end; :253 and :520 still hold.
 - [x] 0.1: #1623 (`f940d74`) is an ancestor of `ee9b6d0`, which the D4 note records as released to prod. With Ali's OK, read the pointers: `current-prod` = `ee9b6d015faf6b6bfc45bb6a7586e8b3214204a8` (= `origin/main`), `current-staging` = `4e1b0158adee4f4299783436a6615a94f747c5cc`.
 - [x] 0.2: open Dependabot PRs: #1586 (actions/checkout 6→7; superseded by 2B). Ali: leave it open. Ali: 2C re-enables Dependabot with the `uv` ecosystem after the last checkpoint.
 - [x] 0.3 baseline (local, Python 3.11.14): `Ran 58 tests`, `FAILED (errors=2)`: `test_password_session` (`ModuleNotFoundError: No module named 'pytz'` from `factories.py:4`) and `test_new_mentor_no_avatar` (`AttributeError: … signals_handlers … does not have the attribute 'EmailMultiAlternatives'`).
-- [ ] 0.4 Playwright baseline (prod public + staging): waiting on Ali's OK.
+- [x] 0.4 Playwright baseline (Ali OK'd read-only runs). Script `/tmp/wac-smoke/smoke.mjs` (playwright 1.65.1, node 22 via mise). Args: `--base <url> --cp <label> [--basic-auth-op <op-ref>] [--auth --auth-user <login>] [--baseline <report.json>]`. Baselines: `/tmp/wac-smoke/out/cp0-prod/report.json` (`https://www.weallcode.org`, no redirect) and `/tmp/wac-smoke/out/cp0-staging/report.json`. Each has 24 runs (12 pages × desktop 1280 / mobile 390) with 24 screenshots. Statuses on both: 22× 200, plus 2× 404 for the 404 path, which renders "Page Not Found (404) | We All Code". Prod and staging are the same apart from the host.
+  - Console errors seen today: `net::ERR_CONNECTION_REFUSED` on every page. `/join-us/` and `/account/signup/` also log reCAPTCHA `requestStorageAccess: Permission denied.`. The 404 page also logs its own 404.
+  - Failed requests: `static.cloudflareinsights.com/beacon.min.js`, `www.google-analytics.com/analytics.js` (the dead UA snippet) and `embed.double.giving/…`. **All three are sinkholed by the laptop's DNS (`dig` → `0.0.0.0`), not real site failures.** So the baseline is only valid from this machine, and later runs must use `--baseline`. A rerun against the staging baseline passed (0/24 failing).
+  - Hosts loaded today: cdn.jsdelivr.net, cdnjs.cloudflare.com, embed.donsplus.com, embed.double.giving, fonts.googleapis.com, fonts.gstatic.com, gravatar.com (`/team/`), static.cloudflareinsights.com, storage.googleapis.com, www.google-analytics.com, www.google.com + www.gstatic.com (reCAPTCHA), and the site itself. **CP9 allowlist gap:** `embed.donsplus.com`, `embed.double.giving` (donation embed), `gravatar.com` and `static.cloudflareinsights.com` (injected by Cloudflare) are not on the CP9 allowlist. CP9 must decide on each of them before 9E's test is written.
+  - `--auth` mode is not run yet. The login field is allauth `login` with `ACCOUNT_AUTHENTICATION_METHOD = "email"`, so pass `--auth-user <upg-smoke's email>`. 0.5 must give `upg-smoke` an email address.
 - [ ] 0.5 serial-console baselines + `upg-smoke`: Ali does this later; he said to start CP1 meanwhile. 0.5 must be done before CP1's staging `--auth` smoke, CP5's memory check and CP7.
 
 ## Sources
