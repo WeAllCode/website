@@ -12,7 +12,7 @@ Status: **draft, waiting for Ali's approval.** Nothing in this plan has been bui
 2. The upgrades land as the ordered PRs in Checkpoints 1–8; each PR is green in CI, deployed to staging, smoke-tested with Playwright, then merged and released to prod with Ali's OK.
 3. CI runs the **whole** test suite (all of `coderdojochi.tests`, `accounts`, `weallcode`), not 4 named modules, and the 2 tests that fail on `main` today pass.
 4. CI proves `sentry_sdk.init()` runs with a DSN set (today it never runs in CI because `SENTRY_DSN` is unset).
-5. After each prod release: `/`, `/programs/`, `/team/`, `/account/login/`, `/dj-admin/login/` return 200 through Cloudflare; no new Sentry issues in the hour after; prod gunicorn stays under its 450 MB `MemoryMax`, staging under 200 MB.
+5. After each prod release: `/`, `/programs/`, `/team/`, `/account/login/`, `/dj-admin/login/` return 200 through Cloudflare; no new Sentry issues in the hour after; staging `MemoryPeak` (and prod's, where checked) is within +10% of the Checkpoint 0 baseline (R14).
 6. Every prod release has a written rollback path that was checked before release (previous main sha recorded; DB backup taken when the PR adds migrations).
 7. Dead dependencies are removed instead of upgraded (list in Checkpoint 1).
 
@@ -117,7 +117,7 @@ Terraform needs no PR. Re-check `curl -s https://registry.terraform.io/v1/provid
 
 Only items that matter here. Full notes: URLs at the bottom.
 
-- **Django 6.0/6.1 (D1):** Python ≥ 3.12. 6.0: `DEFAULT_AUTO_FIELD` default becomes `BigAutoField` (this repo already sets `AutoField` at `coderdojochi/settings.py:361`, so no migrations), positional args to `Model.save()` removed, email internals rewritten, `ADMINS`/`MANAGERS` as tuples deprecated. 6.1: PostgreSQL 15+ (VM and CI run 17), `first()`/`last()` stop ordering by pk after an empty `order_by()`, admin breadcrumbs markup changes, `EMAIL_*` → `MAILERS` deprecation, cache keys change once.
+- **Django 6.0/6.1 (D1):** Python ≥ 3.12. 6.0: `DEFAULT_AUTO_FIELD` default becomes `BigAutoField` (this repo already sets `AutoField` at `coderdojochi/settings.py:360`, so no migrations), positional args to `Model.save()` removed, email internals rewritten, `ADMINS`/`MANAGERS` as tuples deprecated. 6.1: PostgreSQL 15+ (VM and CI run 17), `first()`/`last()` stop ordering by pk after an empty `order_by()`, admin breadcrumbs markup changes, `EMAIL_*` → `MAILERS` deprecation, cache keys change once.
 - **sentry-sdk 3.0:** `init()` raises `TypeError` on removed options. This repo passes two: `enable_logs` and `send_default_pii` (`coderdojochi/settings.py:344-357`). `LoggingIntegration` is no longer on by default, so the Sentry Logs from #1623 stop unless it is added explicitly (`LoggingIntegration(level=logging.INFO)`; note the renames: old `sentry_logs_level` is now `level`, old `level` is now `breadcrumb_level`, `event_level` now defaults to `None`). `send_default_pii` is replaced by `data_collection`, which collects more by default. `DjangoIntegration(transaction_style=)` removed (not used here). `last_event_id`, `capture_message`, `new_scope` still exist in 3.0.0 (checked in the wheel's `sentry_sdk/api.py`). The `sentry-sdk[django]` extra is gone (not used here). Span streaming is the only tracing mode: watch staging memory.
 - **gunicorn 24–27:** Python ≥ 3.10. **25.1 creates a control socket by default** at `$XDG_RUNTIME_DIR/gunicorn.ctl` or `$HOME/.gunicorn/gunicorn.ctl`. The services run as system users with `HOME=/nonexistent` (`infra/vm/provision.sh:215`), `ProtectHome=true` and `ProtectSystem=full` (`infra/vm/wac-web.service:25-26`), so that path is not writable. Turn it off (see Checkpoint 5). 25.3/27.0 reject malformed requests more strictly (Caddy in front sends clean HTTP/1.1, so expect no effect). No sync-worker default changed.
 - **django-anymail 14/15:** Resend raises if an attachment's extension doesn't match its content type (this repo attaches inline images in `coderdojochi/signals_handlers.py` via `MIMEImage`; check). `fail_silently` deprecated in 15.1 (grep it). Needs Django ≥ 5.0.
@@ -173,16 +173,16 @@ Each task owns its files. Within a checkpoint, tasks run in parallel unless mark
 ### Checkpoint 0 — Pre-flight (lead + Ali, no code)
 
 - 0.1 #1623 (sentry-sdk 2.76.0 + Sentry Logs) is on `main` but not on prod. Ask Ali to release it to prod first (`infra/vm/release.sh --target prod`) so no upgrade PR carries untested changes. Record the prod sha.
-- 0.2 `gh pr list --author app/dependabot` — note open Dependabot PRs. Ask Ali whether to close them (this plan supersedes them) and whether to switch `.github/dependabot.yml` from `pip` to the `uv` ecosystem (Checkpoint 2, task 2C). Until then, any Dependabot auto-merge between checkpoints means the next PR must rebase and regenerate `uv.lock`.
+- 0.2 `gh pr list --author app/dependabot` — note open Dependabot PRs and ask Ali to close them (this plan supersedes them). Dependabot is paused for the whole window by PR 1 (`open-pull-requests-limit: 0`, R4); 2C turns it back on with the `uv` ecosystem after the last checkpoint.
 - 0.3 Baseline: `DJANGO_SETTINGS_MODULE=coderdojochi.test_settings uv run python manage.py test coderdojochi.tests accounts weallcode` → expect 43 tests, 2 errors (`test_password_session` import, `test_new_mentor_no_avatar`). Record it.
 - 0.4 Build the Playwright smoke script once (see "Playwright smoke" in Proof) in `/tmp/wac-smoke/`, run it against prod (public pages only) and staging to get a baseline of console errors that already exist (so later PRs only fail on new ones).
-- 0.5 Ask Ali to open the serial console once and record memory baselines: `systemctl show wac-web wac-staging -p MemoryCurrent,MemoryPeak`, `free -m`, `uv --version`. Also create the temporary staging superuser `upg-smoke` for Playwright (password in 1Password at `op://homelab/WAC staging upg-smoke`): `sudo wac-manage staging shell -c "from accounts.models import CDCUser as U; ..."` (builder: check the real user model name in `accounts/models.py` first). `wac-refresh-staging-db` wipes it, so recreate after any refresh.
+- 0.5 Ask Ali to open the serial console once and record memory baselines: `systemctl show wac-web wac-staging -p MemoryCurrent,MemoryPeak`, `free -m`, `uv --version`, `curl -6 -sI https://releases.astral.sh/` (R9, needed for CP7). Also create the temporary staging superuser `upg-smoke` for Playwright (password in 1Password at `op://homelab/WAC staging upg-smoke`): `sudo wac-manage staging shell -c "from coderdojochi.models import CDCUser as U; ..."` (model at `coderdojochi/models/user.py:8`). `wac-refresh-staging-db` wipes it, so recreate after any refresh.
 
 ### Checkpoint 1 — Safety net and dead dependencies (PR 1)
 
 **1A. Fix the two failing tests and add guard tests.** Files: `coderdojochi/factories.py`, `coderdojochi/tests/test_mentor_updates.py`, new `coderdojochi/tests/test_forms_widgets.py`, new `coderdojochi/tests/test_calendar_view.py`.
 - `factories.py`: replace `from pytz import utc` with `from datetime import UTC` (Python 3.11+) and `datetime.now(UTC)`. Ruff `UP017` agrees.
-- `test_mentor_updates.py:9`: patch the name the module really calls: `@mock.patch("coderdojochi.signals_handlers.email")`, then fix the assertion to match `email(...)` arguments (read `signals_handlers.py:20-40`).
+- `test_mentor_updates.py:9`: patch the name the module really calls: `@mock.patch("coderdojochi.signals_handlers.email")`, then fix the assertion to match `email(...)` arguments (read `signals_handlers.py:20-46`).
 - `test_forms_widgets.py`: for each form that uses a date widget (`coderdojochi/forms.py:154,271,346` — find the form classes), render the field and assert `'type="date"'` is in the HTML. Guards the django-html5 removal in 1C.
 - `test_calendar_view.py`: create a session and a meeting with `coderdojochi/factories.py`, GET `reverse("session-calendar", args=[pk])` and `reverse("meeting-calendar", args=[pk])`, assert 200, `text/calendar` content type, and that `Calendar.from_ical(response.content)` parses with one `VEVENT` whose `SUMMARY` matches. Guards icalendar 7 in Checkpoint 4.
 - Pitfall: these views may need a logged-in user or published objects; read `views/calendar.py` first.
@@ -190,7 +190,7 @@ Each task owns its files. Within a checkpoint, tasks run in parallel unless mark
 
 **1B. CI runs everything and runs Sentry init.** File: `.github/workflows/ci.yml` only.
 - `tests` job: replace the 4 named modules with `coderdojochi.tests accounts weallcode`.
-- `django-postgres` job: add a step after "Check production settings import", copying its style: `SENTRY_DSN: https://public@o0.ingest.sentry.io/0` + the same prod env, run `uv run python manage.py check`. A dummy DSN never sends (no network call at init). This is what will catch sentry-sdk 3's `TypeError` in Checkpoint 6.
+- `django-postgres` job: add a step after "Check production settings import", copying its style: `SENTRY_DSN: http://public@127.0.0.1:9/0` (R18: unroutable, nothing leaves CI) + the same prod env, run `uv run python manage.py check`. This is what will catch sentry-sdk 3's `TypeError` in Checkpoint 6.
 - Proof: `actionlint .github/workflows/ci.yml` clean (`brew install actionlint` if missing); then green CI on the PR.
 
 **1C. Remove dead dependencies.** Files: `pyproject.toml`, `uv.lock`, `coderdojochi/settings.py` (lines 105, 109 only), `coderdojochi/forms.py`, delete `coderdojochi/cron.py` (D4).
@@ -200,7 +200,14 @@ Each task owns its files. Within a checkpoint, tasks run in parallel unless mark
 - Declare `python-dateutil>=2.9,<3` explicitly (it's imported at `forms.py:4`); Checkpoint 4 lifts the bound.
 - `uv lock` (no `--upgrade`). Confirm with `git diff --stat uv.lock` that only removals happened.
 - Proof: test command from 1A passes; `uv run python manage.py check`; `uv run ruff check .`.
-- Parallel with 1A and 1B (no shared files). 1A's widget test passes before and after 1C by design.
+- Also (R6, R13): declare `requests` (imported at `coderdojochi/notifications.py:3`); move `ruff`, `factory-boy`, `invoke`, `django-debug-toolbar` into `[dependency-groups] dev`.
+- Also (R4): `.github/dependabot.yml` gets `open-pull-requests-limit: 0` on both ecosystems for the upgrade window (lead owns this file in CP1; 2C restores it).
+- Parallel with 1A and 1B (no shared files). 1A's widget test passes before and after 1C by design. All CP1 sub-agents run with `UV_NO_SYNC=1` (R11).
+
+**1D. Remove `distutils` (R1, blocks Python 3.12+).** Files: `coderdojochi/admin.py`, new `coderdojochi/tests/test_admin_strtobool.py`.
+- Replace `from distutils.util import strtobool` (`admin.py:2`, used ~:378-379) with a small local helper that accepts the same values (`y yes t true on 1` / `n no f false off 0`, case-insensitive, `ValueError` otherwise).
+- Test: true/false values and the `ValueError`. Mutation: drop `"on"` from the true set → test fails.
+- Parallel with 1A/1B/1C.
 
 ### Checkpoint 2 — Tooling: ruff, pre-commit, GitHub Actions (PR 2)
 
@@ -211,11 +218,12 @@ Runs after Checkpoint 1 merges (the reformat touches files 1A/1C edit).
 - Delete `UP038` from `ignore` and from `extend-unsafe-fixes` (rule removed in 0.13; leaving it errors).
 - `.pre-commit-config.yaml`: `pre-commit-hooks` rev `v6.0.0`, `ruff-pre-commit` rev `v0.17.6`.
 - Run `uv run ruff check .` and list new findings by rule. Fix real ones; for noisy new rules, add them to `ignore` with a one-line comment why. Report the list.
-- Commit 1 = config + fixes. Commit 2 = only `uv run ruff format .` output. Then add commit 2's sha to a new `.git-blame-ignore-revs` (file owned by the lead, written after commit 2 exists).
+- Commit 1 = config + fixes. Commit 2 = only `uv run ruff format .` output. The repo squash-merges, so `.git-blame-ignore-revs` gets the **post-merge squash sha** as the first commit of PR 3 (R12).
 - Proof: `uv run pre-commit run --all-files` passes; test command passes.
 
 **2B. GitHub Actions.** Files: `.github/workflows/ci.yml`, `.github/workflows/pre-commit.yml`.
 - Pin exact versions from the Actions table (`actions/checkout@v7.0.1`, `actions/setup-python@v7.1.0`, `actions/cache@v6.1.0`, `astral-sh/setup-uv@v10.4.0`, `hashicorp/setup-terraform@v4.0.1`, `stefanzweifel/git-auto-commit-action@v7.2.1`). Verify each tag exists: `gh api repos/<owner>/<repo>/git/ref/tags/<tag>`.
+- `pre-commit.yml` (R15): add `--all-files` to `pre-commit run`, drop the undefined `${{ inputs.extra_args }}` and the git-auto-commit step (Ali confirms in review).
 - Proof: `actionlint` clean; CI green on the PR.
 - Parallel with 2A.
 
@@ -235,7 +243,8 @@ Runs after Checkpoint 1 merges (the reformat touches files 1A/1C edit).
 **4A.** Files: `pyproject.toml`, `uv.lock`, plus code fixes these force (only in `coderdojochi/views/calendar.py`, `coderdojochi/util.py`, `coderdojochi/signals_handlers.py`, `tasks.py`, `coderdojochi/settings.py` debug-toolbar block).
 - django-anymail 15.3 (`<16`), django-debug-toolbar 8.0.0 (`<9`), icalendar 7.3.2 (`<8`), invoke 3.0.3 (`<4`), python-dateutil 4.0 (`<5`, after reading its changelog for `relativedelta`), faker 40 (transitive), pycparser 3 (transitive).
 - grep `fail_silently` (anymail 15.1 deprecation) and `UIDGenerator|decoded(` (icalendar 7).
-- Check inline images in `signals_handlers.py`: content type matches the file extension (anymail 14 Resend check).
+- `signals_handlers.py:25`: `MIMEImage(instance.avatar.read())` has no filename; set the filename and subtype from the avatar's extension so anymail 14's Resend check passes (R24); extend `test_mentor_updates` to assert it.
+- `views/calendar.py:48`: `event["dtstamp"] = event["dtstart"][:-1]` slices a property; rewrite with a real `datetime` (R23). `test_calendar_view` asserts DTSTAMP parses.
 - Proof: tests (incl. `test_calendar_view.py` and `test_email_util.py`); `DEBUG=True uv run python manage.py runserver` locally and load `/` to see the toolbar render (dev only); `uv run invoke --list`.
 - Staging can't prove Resend (console email backend). Prod post-release check: trigger a password reset to Ali's own address; confirm it arrives and appears in Resend's sent list. Also run, via serial console, the `coderdojochi.util.email()` check from the cutover plan (Task G step 5) to Ali's address.
 
@@ -244,6 +253,7 @@ Runs after Checkpoint 1 merges (the reformat touches files 1A/1C edit).
 **5A.** Files: `pyproject.toml`, `uv.lock`, new `gunicorn.conf.py` at the repo root.
 - `gunicorn>=27.0.1,<28`; `uv lock --upgrade-package gunicorn`.
 - Turn the control socket off **in a file that ships with the release**, so staging tests it: gunicorn loads `./gunicorn.conf.py` from its working directory, which is the release dir (`WorkingDirectory=/srv/wac/<target>/current`). Find the exact setting name with `uv run gunicorn --help | grep -i control` (the CLI flag is `--no-control-socket`); write it in `gunicorn.conf.py` with a comment pointing at gunicorn 25.1. Do **not** edit `infra/vm/wac-*.service`: unit changes install only from prod releases, so staging would never test them.
+- Add `[tool.ruff.lint.per-file-ignores] "gunicorn.conf.py" = ["INP001", "N999"]` (R17).
 - Pitfall: a `gunicorn.conf.py` in cwd is also picked up by the CI smoke step (`ci.yml` "Smoke test pages under gunicorn"); that's good — it proves the file parses.
 - Proof: CI gunicorn smoke; locally `uv run gunicorn coderdojochi.wsgi --check-config`; on staging, deploy succeeds (if gunicorn fails to start, deploy-pull rolls back and `journalctl -u 'wac-deploy@staging'` shows why — Ali reads it on the serial console).
 - Memory: serial console `systemctl show wac-staging -p MemoryCurrent,MemoryPeak` after the Playwright pass; compare with the 0.5 baseline. Fail if > 10% higher.
@@ -253,7 +263,7 @@ Runs after Checkpoint 1 merges (the reformat touches files 1A/1C edit).
 **6A.** Files: `pyproject.toml`, `uv.lock`, `coderdojochi/settings.py` (Sentry block only, `:336-357`).
 - `sentry-sdk>=3.0.1,<4` (or `>=3.0.0` if Ali waives D3).
 - Rewrite init: drop `enable_logs`; add `LoggingIntegration(level=logging.INFO)` to `integrations` (keeps #1623's Sentry Logs at INFO and up; `event_level` stays default `None`, matching 2.x where logging errors were not turned into events by default — builder: confirm 2.76 behaviour and keep it the same); replace `send_default_pii=True` with the 3.x `data_collection` option set to the closest equivalent (read the 3.x docs; keep user id/email on events, as today). Keep `traces_sample_rate` as is.
-- Proof: the CI step from 1B (`SENTRY_DSN` set → `manage.py check`) passes — and fails on the old settings (see Proof, mutation). On staging: set `SENTRY_DSN` is already in the staging env? (builder: check `infra/vm/env.staging.example`; if staging has no DSN, this checkpoint's runtime proof is prod-only). After prod release: Sentry shows a log entry from the release and the 404 handler still renders `sentry_event_id` (request a missing page).
+- Proof: the CI step from 1B (`SENTRY_DSN` set → `manage.py check`) passes — and fails on the old settings (see Proof, mutation). Staging has no DSN (`infra/vm/env.staging.example:32`), so before the staging deploy Ali adds a temporary `SENTRY_DSN` + `SENTRY_ENVIRONMENT=staging` secret version and releases with `--force`; remove it after the memory check (R8). After prod release: Sentry shows a log entry from the release and the 404 handler still renders `sentry_event_id` (request a missing page).
 - Memory: as in 5A (span streaming).
 
 ### Checkpoint 7 — Python 3.13 (two PRs, gated by D1)
@@ -262,11 +272,13 @@ The VM has no Python 3.13 package. uv ≥ 0.10.8 downloads CPython from `release
 
 **7A. PR 7a — VM can run a uv-managed Python (infra, ships to prod while the app is still on 3.11).** Files: `infra/vm/deploy-pull.sh`, `infra/vm/provision.sh`, `infra/vm/README.md`.
 - `provision.sh`: upgrade uv when older than a pinned floor (`/opt/uv/bin/pip install --upgrade 'uv>=0.13.7,<0.14'`), not only when missing. Laptop is 0.13.7; lock format must match.
-- `deploy-pull.sh`, before the build: read `$release_dir/.python-version` (validate `^3\.1[1-4]$`, else `die`). If `3.11` → current behaviour (`UV_PYTHON=/usr/bin/python3.11`). Otherwise run as **root** `UV_PYTHON_INSTALL_DIR=/opt/wac-python UV_CACHE_DIR=/var/cache/wac-uv-python uv python install <ver>` (downloads allowed, IPv6), `chmod -R a+rX /opt/wac-python`, then the existing `runuser` sync with `UV_PYTHON=$(UV_PYTHON_INSTALL_DIR=/opt/wac-python uv python find <ver>)` and `UV_PYTHON_DOWNLOADS=never` unchanged. The venv symlinks into `/opt/wac-python`, so never delete an installed version while a kept release uses it.
-- Isolation note for the README (R10): a staging release can make root download a CPython build, but only an official one (version regex + uv's sha256 check). Ali must accept this in review.
+- `deploy-pull.sh`, before the build: read `$release_dir/.python-version` (validate `^3\.1[1-4]$`, else `die`). If `3.11` → current behaviour (`UV_PYTHON=/usr/bin/python3.11`). Otherwise run as **root**, from cwd `/` and never inside the release dir (R2): `env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/root UV_NO_CONFIG=1 UV_PYTHON_PREFERENCE=only-managed UV_PYTHON_INSTALL_DIR=/opt/wac-python-$target UV_CACHE_DIR=/var/cache/wac-uv-python-$target uv python install <ver>`, `chmod -R a+rX /opt/wac-python-$target`, then the existing `runuser` sync with `UV_PYTHON=$(… same env … uv python find --managed-python <ver>)` and `UV_PYTHON_DOWNLOADS=never` unchanged. Per-target dirs mean a staging release can never place a Python that prod uses. The venv symlinks into that dir, so never delete an installed version while a kept release uses it.
+- Isolation note for the README (R10): a staging release can make root download a CPython build into the staging-only dir, only an official one (version regex, no project config, uv's sha256 check). Ali must accept this in review.
+- **uv upgrade reaches the VM only via provision (R3):** `--install-files` exits before the uv block, so after the 7a prod release Ali runs `sudo wac-provision` on the serial console and records `uv --version` (≥ 0.13.7) in Progress. 7b waits for that.
+- Precondition (R9): 0.5 showed `curl -6 -sI https://releases.astral.sh/` works on the VM. If not, rewrite 7A to a `file://` mirror fetched through GCS before building.
 - Proof: `shellcheck infra/vm/*.sh`; CI `infra` job; prod release of 7a is a no-op (still 3.11): deploy log shows the 3.11 path, site up.
 
-**7B. PR 7b — app on Python 3.13 (Django stays 5.2, which supports 3.13).** Files: `.python-version`, `pyproject.toml` (`requires-python = ">=3.13,<3.14"`, ruff `target-version = "py313"`), `uv.lock`, `.pre-commit-config.yaml` (`default_language_version: python3.13`), `.github/workflows/ci.yml` + `pre-commit.yml` (`python-version: '3.13'`), `Dockerfile` (`FROM python:3.13-slim`, latest 3.13.x tag).
+**7B. PR 7b — app on Python 3.13 (Django stays 5.2, which supports 3.13).** Files: `.python-version`, `pyproject.toml` (`requires-python = ">=3.13,<3.14"`, ruff `target-version = "py313"`), `uv.lock`, `.pre-commit-config.yaml` (`default_language_version: python3.13`), `.github/workflows/ci.yml` + `pre-commit.yml` (`python-version: '3.13'`), `Dockerfile` (`FROM python:3.13.<latest patch>`, non-slim like today, R16).
 - Run after 7a is on prod. `uv lock` (wheels for cp313 exist for psycopg-binary, pillow, cryptography, cffi, pydantic-core: check `uv sync` output for any sdist build — the VM has no compiler toolchain for them).
 - `uv run ruff check --fix .` for new `UP` fixes at py313; separate commit if large.
 - Proof: tests on 3.13; CI; staging deploy log shows `uv python install 3.13` then sync; Playwright; memory vs baseline.
@@ -322,14 +334,15 @@ Read the whole plan first. Run it as the lead: you write no code.
 2. You alone: check the actual files (not the report), run the checkpoint's checks, commit, write the result and evidence into Progress.
 3. Anything not in the plan: write it into the plan first, then build it.
 4. Per PR, the release runbook (every step needing Ali waits for his explicit OK in this session — never push, merge or release on your own):
+   0. Migration check (R7, every Python checkpoint): on a scratch Postgres 17 (env as in the CI `django-postgres` job), check out `origin/main`, `uv sync`, `manage.py migrate`; then switch to the branch, `uv sync`, `manage.py migrate --plan`. Any planned operation ⇒ note it in the PR body and do step 6.
    1. Branch `claude/upgrade-cpN-<slug>` from latest `origin/main`. If `main` moved, rebase and **regenerate** `uv.lock` (`git checkout origin/main -- uv.lock && uv lock` + the same `--upgrade-package` list), never hand-merge it.
    2. Ask Ali to push and open the PR (body ends with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`; commits end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`). Wait for CI green.
    3. Ask Ali to run `infra/vm/release.sh --target staging <branch>` (branch must exist on origin). If the staging DB is stale, he runs `sudo wac-refresh-staging-db` first (then recreate `upg-smoke`).
    4. Run the Playwright smoke against staging. For checkpoints with a memory check, ask Ali for the serial-console `systemctl show` numbers.
-   5. Ali merges. Record the **previous prod sha** (`gsutil cat gs://wac-deploy-<project>/current-prod` or the last `release.sh` output) in Progress.
+   5. Ali merges. Record the **previous prod sha** (`gcloud storage cat gs://wac-deploy-<project>/current-prod | cut -d: -f1`, R19) in Progress.
    6. If the PR adds migrations (step recorded in the PR body), Ali runs `sudo systemctl start wac-backup` on the serial console and confirms the new object in the backup bucket, and records `sudo wac-manage prod showmigrations | grep -c '\[X\]'`.
    7. Ali runs `infra/vm/release.sh --target prod`. Run the prod smoke (public pages, no login) and the checkpoint's prod-only checks; watch Sentry for an hour.
-5. Rollback (any checkpoint): Ali runs `infra/vm/release.sh --target prod <previous-prod-sha>` (it's on `origin/main`, so allowed); add `--force` if that sha is in `/srv/wac/prod/failed`. If the bad release ran migrations, first reverse them on the serial console: `sudo wac-manage prod migrate <app> <previous-migration>`; if that isn't possible, restore the step-6 backup per `infra/vm/README.md` "Database". deploy-pull already auto-rolls back when gunicorn fails to start. Only 3 releases are kept on the VM; the tarballs stay in the deploy bucket, so any older sha can be re-released.
+5. Rollback (any checkpoint): Ali runs `infra/vm/release.sh --target prod <previous-prod-sha>` `--force` (it's on `origin/main`, so allowed; always pass `--force` because the `failed` marker can't be read from the laptop, R10). If the bad release ran migrations, first reverse them on the serial console: `sudo wac-manage prod migrate <app> <previous-migration>`; if that isn't possible, restore the step-6 backup per `infra/vm/README.md` "Database". deploy-pull already auto-rolls back when gunicorn fails to start. Only 3 releases are kept on the VM; the tarballs stay in the deploy bucket, so any older sha can be re-released.
 6. After each checkpoint, if your context window is half full, write which checkpoint is next in Progress and stop; a fresh session continues from this plan.
 
 ## Proof
@@ -404,7 +417,34 @@ Before calling the plan done: use the site through its real entry point (prod, t
 
 ## Plan review findings
 
-(Filled in by the fresh review sub-agent; see below.)
+Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text above; this table is the record. **These override anything above that contradicts them.**
+
+| # | Sev | Finding | Resolution (now in the plan) |
+|---|---|---|---|
+| R1 | Blocker | `coderdojochi/admin.py:2` imports `distutils.util.strtobool` (used ~:378-379); distutils is gone in Python 3.12+, so admin (and Django setup) breaks on 3.13 | 1D added: inline `strtobool` helper + test |
+| R2 | Blocker | 7A: root `uv python install` for a staging release could read the branch's `[tool.uv]`/`uv.toml` (`python-install-mirror`, `python-downloads-json-url`) and plant a non-official build that prod later uses (breaks R10) | 7A now: `env -i`, `UV_NO_CONFIG=1`, cwd `/`, regex-validated version only, `UV_PYTHON_PREFERENCE=only-managed`, **per-target** install dirs `/opt/wac-python-<target>` |
+| R3 | Blocker | The uv upgrade in `provision.sh` never runs on a prod release (`--install-files` exits at provision.sh:178-184, before the uv block at :245) | 7A: after the 7a prod release Ali runs `sudo wac-provision` on the serial console and records `uv --version`; 7b is gated on it |
+| R4 | Major | Dependabot auto-merge can land untested deps on main mid-upgrade | CP0 0.2: pause Dependabot for the whole window (`open-pull-requests-limit: 0` for both ecosystems, in PR 1); 2C restores it with the `uv` ecosystem |
+| R5 | Major | Runbook prod release had no ref → `release.sh` defaults to laptop HEAD | Runbook 4.7: `git fetch && infra/vm/release.sh --target prod <merged-squash-sha>` after confirming `origin/main` = that sha |
+| R6 | Major | `requests` is imported directly (`coderdojochi/notifications.py:3`) but undeclared | 1C declares `requests` too |
+| R7 | Major | CP3 migration check was wrong (`makemigrations --check` = own models only; `showmigrations` on scratch DB is all-or-nothing) | New method in Runbook 4.1b: migrate a scratch PG at `origin/main`, `uv sync` the branch, `manage.py migrate --plan`; any output ⇒ backup step 6 |
+| R8 | Major | Staging has no Sentry DSN (`infra/vm/env.staging.example:32`), so CP6's span-streaming memory risk would first hit prod | CP6: Ali adds a temporary staging DSN (same Sentry project, `environment=staging`) before the staging deploy, removes it after |
+| R9 | Major | releases.astral.sh over IPv6 from the VM is unverified | 0.5: `curl -6 -sI https://releases.astral.sh/` on the serial console; if it fails, CP7 falls back to a `file://` mirror fetched by deploy-pull through GCS (rewrite 7A before building) |
+| R10 | Major | Rollback "`--force` if sha is in `failed`" can't be read from the laptop | Rollback always uses `--force` (harmless) |
+| R11 | Major | CP1 parallel tasks share one `.venv`; `uv run` auto-syncs, so 1C's lock change pulls packages from under 1A | CP1 sub-agents run with `UV_NO_SYNC=1`; the lead runs `uv sync` once before the checkpoint check |
+| R12 | Major | Repo squash-merges; 2A's reformat sha won't exist on main | `.git-blame-ignore-revs` added in a follow-up commit (first commit of PR 3) with the post-merge squash sha |
+| R13 | Minor | Dev tools (ruff, factory-boy, invoke, debug-toolbar, pre-commit) are prod deps → installed on the VM | 1C moves ruff, factory-boy, invoke, django-debug-toolbar into `[dependency-groups] dev`; check `settings.py` imports debug_toolbar only under `DEBUG` (it does, `:364-372`) and `test_settings.py` filters it |
+| R14 | Minor | AC5 "under MemoryMax" is near-tautological | AC5 now compares `MemoryPeak` with the 0.5 baseline (≤ +10%) |
+| R15 | Minor | `pre-commit.yml` runs without `--all-files` and auto-commits to the PR branch on failure, so CI green proves nothing | 2B: add `--all-files`, drop the git-auto-commit step (Ali to confirm); until then rely on local `pre-commit run --all-files` |
+| R16 | Minor | Dockerfile is `python:3.11.9` (non-slim) | 7B uses `python:3.13.x` non-slim (latest patch tag) |
+| R17 | Minor | `gunicorn.conf.py` may trip ruff `N999`/`INP001` | 5A adds `per-file-ignores` for it |
+| R18 | Minor | Dummy DSN host is real; startup logs could be POSTed from CI | 1B uses `http://public@127.0.0.1:9/0` |
+| R19 | Minor | `gsutil` may be missing; pointer may be `<sha>:<nonce>` | Runbook 4.5: `gcloud storage cat gs://wac-deploy-<project>/current-prod \| cut -d: -f1` |
+| R20 | Minor | User model is `CDCUser` at `coderdojochi/models/user.py:8`, not `accounts/models.py` | Fixed in 0.5 |
+| R21 | Minor | Line refs drifted (DEFAULT_AUTO_FIELD :360; Sentry init :344-355; ci.yml step lines) | Builders cite **step names** in `ci.yml`; settings refs corrected |
+| R22 | Minor | 1A: `email(...)` call in `signals_handlers.py` runs to :46 | 1A reads :20-46 |
+| R23 | Minor | `views/calendar.py:48` slices a property (`event["dtstamp"] = event["dtstart"][:-1]`), likely broken by icalendar 7 | 4A names this line; `test_calendar_view` asserts DTSTAMP parses |
+| R24 | Minor | `MIMEImage(instance.avatar.read())` (`signals_handlers.py:25`) has no filename; anymail 14 Resend extension check may reject it | 4A sets an explicit filename + subtype from the avatar's extension; `test_mentor_updates` asserts it |
 
 ## Progress
 
