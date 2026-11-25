@@ -268,4 +268,24 @@ The reviewer confirmed these are safe as planned:
 - AC2: `/join-us/` `private`, `BYPASS` twice; `/account/login/` `…, private`, `DYNAMIC` twice.
 - AC3: `www /` with `Cookie: sessionid=x` → `private`, `DYNAMIC` twice; with `Cookie: messages=x` → `private`, `DYNAMIC` twice.
 - AC4: `gcp.weallcode.org/` and `staging.weallcode.org/` (basic auth) send `public, …s-maxage=60` from origin but are `DYNAMIC` twice each: the host clause excludes them.
+- PR for Checkpoints 2–3: https://github.com/WeAllCode/website/pull/1631 (the rule is already applied; the PR records it).
+
+### Checkpoint 3 (2026-11-25)
+
+- AC5 load test: `oha -z 20s -c N -t 10s --no-tui --output-format json https://www.weallcode.org/`, raw output in `/tmp/wac-loadtest/after-c*.json`. "Aborted due to deadline" equals c in every run: those are the requests still in flight when the 20 s ends, not errors. Caveat: the 2026-11-25 baseline mixed `/`, `/programs/`, `/team/` and `/join-us/` (uncached), while this run is `/` only, as the plan says.
+
+  | Run | c | req/s | p50 | p95 | success |
+  |---|---|---|---|---|---|
+  | before | 1 | 6.7 | 78 ms | 328 ms | 100% |
+  | before | 2 | 12 | 87 ms | 401 ms | 100% |
+  | before | 5 | 9.4 | 264 ms | 1,744 ms | 100% |
+  | before | 10 | 3.3 | 2,808 ms | 7,515 ms | 98.2% (1 timeout) |
+  | after | 1 | 34 | 28 ms | 36 ms | 100% |
+  | after | 10 | 226.8 | 42 ms | 63 ms | 100% |
+  | after | 20 | 498.8 | 38 ms | 57 ms | 100% |
+  | after | 40 | 973.9 | 39 ms | 61 ms | 100% |
+
+  **AC5 passes**: p95 is under 1 s with 0% errors at c = 10, 20 and 40. Neither stop rule tripped. Right afterwards a cache-busted `/` answered 200 in 0.37 s, so the origin was fine.
+- AC7, logged out (curl): `/dj-admin/login/` 200 `…, private` `DYNAMIC`; `/mentors/` and `/our-story/` 200 `public`. Class detail wasn't checked: no `/classes/<pk>/` link appeared on `/` or `/programs/` (no upcoming classes listed).
+- AC7, logged in (Ali's Chrome, an existing Google login session): `/` 200 with header "Account", `private`, `DYNAMIC` (not served from cache); `/account/` 200 "My Account"; `/dj-admin/` 200 "Site administration" `…, private`; `/programs/` 200 `private` `DYNAMIC`; `/join-us/` 200 `private`, and the contact form renders. The form wasn't submitted, because that emails the staff inbox and needs Ali's OK.
 
