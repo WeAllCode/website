@@ -431,7 +431,7 @@ class StudentForm(CDCModelForm):
 
     class Meta:
         model = Student
-        exclude = ("guardian", "created_at", "updated_at", "is_active")
+        exclude = ("guardian", "created_at", "updated_at", "is_active")  # noqa: DJ006
 
 
 class ContactForm(CDCForm):

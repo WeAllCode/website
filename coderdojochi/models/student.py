@@ -72,19 +72,15 @@ class Student(CommonInfo):
     def is_registered_for_session(self, session):
         from .order import Order
 
-        try:
-            Order.objects.get(
-                is_active=True,
-                student=self,
-                session=session,
-            )
-            is_registered = True
-        except Exception:
-            is_registered = False
+        return Order.objects.filter(
+            is_active=True,
+            student=self,
+            session=session,
+        ).exists()
 
-        return is_registered
-
-    def get_age(self, date=timezone.now()):
+    def get_age(self, date=None):
+        if date is None:
+            date = timezone.now()
         return (
             date.year
             - self.birthday.year
@@ -121,7 +117,7 @@ class Student(CommonInfo):
         self,
         minimum_age,
         maximum_age,
-        date=timezone.now(),
+        date=None,
     ):
         age = self.get_age(date)
 

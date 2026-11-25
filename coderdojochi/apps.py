@@ -6,4 +6,4 @@ class CoderDojoChiConfig(AppConfig):
     verbose_name = "CoderDojoChi"
 
     def ready(self):
-        import coderdojochi.signals_handlers
+        import coderdojochi.signals_handlers  # noqa: F401

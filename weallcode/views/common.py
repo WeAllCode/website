@@ -9,8 +9,6 @@ User = get_user_model()
 
 
 def page_not_found_view(request, exception=None):
-    print("page_not_found_view")
-
     options = {}
 
     if settings.SENTRY_DSN:

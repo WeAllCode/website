@@ -226,7 +226,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
             return redirect(access_dict["redirect"])
 
-        return super(SessionSignUpView, self).dispatch(
+        return super().dispatch(
             request,
             *args,
             **kwargs,
@@ -292,7 +292,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         return False
 
     def get_context_data(self, **kwargs):
-        context = super(SessionSignUpView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context["session"] = kwargs["session_obj"]
         context["user_signed_up"] = kwargs.get("user_signed_up")
         context["student"] = kwargs.get("student")
@@ -359,7 +359,7 @@ class PasswordSessionView(TemplateView):
     template_name = "session_partner_password.html"
 
     def get_context_data(self, **kwargs):
-        context = super(PasswordSessionView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         session_obj = get_object_or_404(Session, id=kwargs.get("pk"))
 
