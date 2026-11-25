@@ -286,6 +286,7 @@ The reviewer confirmed these are safe as planned:
   | after | 40 | 973.9 | 39 ms | 61 ms | 100% |
 
   **AC5 passes**: p95 is under 1 s with 0% errors at c = 10, 20 and 40. Neither stop rule tripped. Right afterwards a cache-busted `/` answered 200 in 0.37 s, so the origin was fine.
-- AC7, logged out (curl): `/dj-admin/login/` 200 `…, private` `DYNAMIC`; `/mentors/` and `/our-story/` 200 `public`. Class detail wasn't checked: no `/classes/<pk>/` link appeared on `/` or `/programs/` (no upcoming classes listed).
+- AC7, logged out (curl): `/dj-admin/login/` 200 `…, private` `DYNAMIC`; `/mentors/` and `/our-story/` 200 `public`. Class detail: `/classes/476/` (taken from the admin session list) logged out → 200 `private`, `BYPASS` twice; logged in → 200 "PY 102: NEW Robotics with Python…", `private`, `DYNAMIC`.
+- Token now has Cache Settings Write and Cache Purge (checked with `cf user tokens get`). Told upgrade-cp3 not to run `terraform apply` from main until #1631 merges.
 - AC7, logged in (Ali's Chrome, an existing Google login session): `/` 200 with header "Account", `private`, `DYNAMIC` (not served from cache); `/account/` 200 "My Account"; `/dj-admin/` 200 "Site administration" `…, private`; `/programs/` 200 `private` `DYNAMIC`; `/join-us/` 200 `private`, and the contact form renders. The form wasn't submitted, because that emails the staff inbox and needs Ali's OK.
 
