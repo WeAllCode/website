@@ -529,6 +529,12 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
+### Checkpoint 4 — in progress (2026-11-25)
+
+- Started: code branch `claude/upgrade-cp4-majors` from `origin/main` `25b441c` (#1632 on top of CP3 `7deb61d`). Prod is `7deb61d`.
+- Start-of-CP checks: Dependabot open = only #1586 (superseded). All 4A targets still latest on PyPI: anymail 15.3, debug-toolbar 8.0.0, icalendar 7.3.2, invoke 3.0.3, python-dateutil 4.0.0 (requires Python ≥ 3.11, OK), faker 40.63.0, pycparser 3.12. Baseline on `25b441c`: `Ran 108 tests … OK`. Greps for `fail_silently`, `UIDGenerator`, `decoded(`: no hits.
+- Plan addition (before building): the calendar subclasses `get_dtstart`/`get_dtend` in `coderdojochi/views/meetings.py:90-108` and `coderdojochi/views/sessions.py:408-430` return strings; 4B may edit those methods if icalendar 7 forces it. 4A is split into 3 parallel sub-agents, each in its own venv with the target versions: 4A lock + `tasks.py` + debug-toolbar settings; 4B calendar; 4C avatar email (`signals_handlers.py`, `test_mentor_updates.py`).
+
 ### Checkpoint 3 — in progress (2026-11-25)
 
 - Plan branch rebased onto `origin/main` `9ce8c61` (#1628, Cloudflare page cache: `coderdojochi/middleware.py`, `settings.py` +6, `test_cache_headers.py`; no file CP3 owns). Prod is still `dc113b0` per CP2.
