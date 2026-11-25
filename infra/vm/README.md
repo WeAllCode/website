@@ -142,6 +142,7 @@ sudo -u wac pg_restore -L toc --no-owner --no-acl --role=wac -d wac dump
 - Each run sends at most half of `EMAIL_DAILY_LIMIT` (two runs a day); the rest wait for the next run. Day reminders go first.
 - A prod deploy that ships the units enables the timer (`start_reminders` in `provision.sh`); no reprovision needed.
 - See who would get one, sending nothing: `sudo wac-manage prod send_reminders --dry-run`. Run one now: `sudo systemctl start wac-reminders`. Pause them: `sudo touch /etc/wac/reminders-paused` (the service skips while it exists; `sudo rm` it to resume). Don't `disable` the timer to pause: the next prod deploy re-enables it.
+- Rolling prod back to a release older than `send_reminders`: touch the pause file too. Otherwise each run fails with "Unknown command" in the journal (it sends nothing).
 
 ## Logs
 
