@@ -536,6 +536,10 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Proof of the socket fix: gunicorn with `HOME` = a read-only dir and no `XDG_RUNTIME_DIR`. Without the file (`--config=<empty file>`): `[ERROR] Control server error: [Errno 13] Permission denied: '<home>/.gunicorn'` (non-fatal; pages still served). With `./gunicorn.conf.py`: no error. `gunicorn coderdojochi.wsgi --check-config` rc 0.
 - Checks: `uv lock --check` ok; `ruff check .` all passed; `ruff format --check .` 120 formatted; full suite `Ran 111 tests … OK`; `pre-commit run --all-files` all Passed. Runbook step 0 skipped: no Django/app package changed, so no migrations possible.
 - 2026-11-25: pushed `claude/upgrade-cp5-gunicorn` (`070ee90`), opened https://github.com/WeAllCode/website/pull/1636. CI pending.
+- CI on #1636 all green (pre-commit, tests, django-postgres incl. gunicorn smoke, infra; dependabot skipped).
+- Staging: `release.sh --target staging origin/claude/upgrade-cp5-gunicorn` → `current-staging` = `070ee90d914ee9c446c387424c62cf4d47bf863a` (23:21Z). Serial log: 23:23:07Z `Starting gunicorn 27.0.1`, `Listening at: unix:/run/wac-staging/gunicorn.sock`, worker booted, **no `Control server error`**; 23:23:12Z `wac-staging is running 070ee90…`, 23:23:16Z `done`, no rollback/Traceback. (Serial reads need `CLOUDSDK_ACTIVE_CONFIG_NAME=wac`; the default gcloud config is the wrong account.)
+- Staging smoke `--cp cp5-staging --basic-auth-op "op://homelab/WAC staging basic auth/password" --baseline out/cp0-staging/report.json`: **PASS 0/24** (`/tmp/wac-smoke/out/cp5-staging/report.json`). **Pitfall found:** a first run without `--basic-auth-op` got 24× 401, which tripped the #1635 Cloudflare rate limit, so the next run's desktop pass got 429 on all 12 pages. Waited until `/privacy/` returned 200, then reran clean. Always pass `--basic-auth-op` for staging.
+- Memory check (AC5, ≤ baseline +10%) not done: the 0.5 baseline still doesn't exist, and the serial console needs Ali.
 
 ### Checkpoint 4 — in progress (2026-11-25)
 
