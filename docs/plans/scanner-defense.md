@@ -394,4 +394,5 @@ The reviewer confirmed these are safe as planned:
   - `/careers/` → 404, 74,884 bytes (AC4).
   - `check-edge-blocks.sh --min-edge 0 https://www.weallcode.org` → PASS: 403 0, Caddy 404 541 (99.6%), Django 404 2 (0.4%: `/api/graphql`, `/api/v1/namespaces/default/secrets`), 200 0; must-pass 18/18.
   - AC6: Sentry Logs (we-all-code-p5, production) access lines start with the client IP from 23:14:29 UTC (`99.190.111.100 - - […] "GET /careers/ …"`, UptimeRobot `157.90.155.240`, SentryUptimeBot `34.85.249.57`); lines before the restart start with `-`. Checked in Chrome: the Sentry MCP connector is bound to a different org.
-- Next: full `waf_custom` apply (Ali's OK), then Checkpoint 2 steps 3–5.
+- **Checkpoint 2 step 3 done (2026-11-25, Ali's OK).** `terraform apply -target=cloudflare_ruleset.waf_custom` → 1 changed (spike → full expressions). `check-edge-blocks.sh https://www.weallcode.org` → PASS: 403 541 (99.6%), Caddy 404 0, Django 404 2 (0.4%), 200 0; must-pass 18/18 (AC1, AC2). Other hosts: apex `/` 200 and `/.env` 403; staging `/` 401 (basic auth) and `/.env` 403. No rule needed disabling.
+- Next: `ratelimit` apply (Ali's OK) → rate-limit test (Ali's OK) → `terraform plan` "No changes" (the `bootstrap.tgz` in-place update from #1635 is still pending and needs an apply too).
