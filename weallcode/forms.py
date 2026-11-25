@@ -1,3 +1,5 @@
+from email.utils import formataddr
+
 from django import forms
 from django.conf import settings
 from django_recaptcha.fields import ReCaptchaField
@@ -91,7 +93,7 @@ class ContactForm(forms.Form):
         email(
             subject=f"{data['name']} | We All Code Contact Form",
             recipients=[settings.CONTACT_EMAIL],
-            reply_to=[f"{data['name']}<{data['email']}>"],
+            reply_to=[formataddr((data["name"], data["email"]))],
             template_name="contact_email",
             merge_global_data={
                 "interest": data["interest"],
