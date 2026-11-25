@@ -121,7 +121,7 @@ Staging basic auth: set the Terraform variable for metadata `wac-staging-basic-a
 
 ## Database
 
-- Nightly backup: `wac-backup.timer` runs at 03:30 America/Chicago (`Persistent=true`). It runs `pg_dump -Fc wac` as `wac` and uploads to `gs://<backup-bucket>/db/wac-<UTC yyyymmddTHHMMSS>.dump`. `ifGenerationMatch=0` means a backup never overwrites an existing object. The bucket lifecycle keeps 30 days. Run one now: `sudo systemctl start wac-backup`.
+- Nightly backup: `wac-backup.timer` runs at 03:30 America/Chicago (`Persistent=true`). It runs `pg_dump -Fc wac` as `wac` and uploads to `gs://<backup-bucket>/db/wac-<UTC yyyymmddTHHMMSS>.dump`. `ifGenerationMatch=0` means a backup never overwrites an existing object. The bucket lifecycle deletes `db/` objects after 30 days; `heroku-final/` is kept. Run one now: `sudo systemctl start wac-backup`.
 - Refresh staging from prod: `sudo wac-refresh-staging-db`. It refuses unless the staging env has the console `EMAIL_BACKEND` and `DB_NAME=wac_staging`. Then it:
   1. Dumps `wac` locally to a private temp file. It uses a file, not a pipe, because the TOC must be filtered first.
   2. Stops `wac-staging`, drops and recreates `wac_staging`.
