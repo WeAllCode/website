@@ -26,8 +26,29 @@
 	lb_try_interval 250ms
 }
 
+# Vulnerability-scanner probes (/.env, /.git/config, /backup.zip, /wp-login.php ...) get a tiny
+# 404 here instead of reaching Django's 74 KB 404 page. The Cloudflare WAF rules
+# (infra/terraform/waf.tf) are the first line; this catches what their no-regex expressions
+# can't, plus anything that reaches the origin while a rule is disabled. RE2 has no lookahead,
+# so /.well-known/, /robots.txt and /sitemap.xml are excluded with "not path". Cache-Control:
+# private keeps the cache-plan invariant that only the Django middleware marks anything public.
+# respond sorts before reverse_proxy, so a probe never reaches gunicorn.
+# infra/vm/test-caddy-probes.sh extracts the block between the markers and tests it locally.
+# BEGIN wac_probes
+(wac_probes) {
+	@probe {
+		path_regexp probe (?i)(/\.|~$|\.(env|php\d?|phtml|asp|aspx|asax|asa|axd|jsp|cgi|sql|bak|backup|old|orig|save|swp|tmp|zip|tar|gz|tgz|rar|7z|log|ini|cnf|conf|config|cfg|pem|key|enc|kv|ya?ml|toml|properties|gradle|db|sqlite|tfstate|tfvars|hcl|ovpn|py|rb|lock|inc|json|js|map|xml|txt|md)$|^/(wp-|wordpress|xmlrpc|phpmyadmin|pma/|cgi-bin|vendor/|telescope|_ignition|_debugbar|@fs/|phpinfo|server-status|server-info|graphi?ql|horizon)|/actuator|/_profiler|/wp-|^/(dockerfile|makefile|jenkinsfile|procfile|gemfile|vagrantfile|rakefile|capfile|gulpfile|brewfile|pipfile|id_[rd]sa|id_ecdsa|env|direnv|credentials|error_log|kubeconfig|oai_config_list|passwd-s3fs|metrics|healthz?|_?status|_?info|_?version|oauth/token|v2/_catalog|api/(v1/)?config|api/health)/?$)
+		not path /.well-known/* /robots.txt /sitemap.xml
+	}
+	header @probe Cache-Control "private"
+	respond @probe "Not Found" 404
+}
+# END wac_probes
+
 weallcode.org:443, www.weallcode.org:443, gcp.weallcode.org:443 {
 	import wac_common
+	# Probe block: see (wac_probes) above.
+	import wac_probes
 	reverse_proxy unix//run/wac-prod/gunicorn.sock {
 		import wac_proxy
 	}
@@ -35,6 +56,8 @@ weallcode.org:443, www.weallcode.org:443, gcp.weallcode.org:443 {
 
 staging.weallcode.org:443 {
 	import wac_common
+	# Probe block: see (wac_probes) above. basic_auth below still runs first (directive order).
+	import wac_probes
 	# Written by provision.sh from metadata key wac-staging-basic-auth: a basic_auth block with
 	# a bcrypt hash (caddy hash-password). Falls back to a random password when the key is unset.
 	import wac-staging-auth.caddy

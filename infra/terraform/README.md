@@ -100,6 +100,23 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/<zone_id>/purge_cache" 
   -d '{"purge_everything":true}'
 ```
 
+## WAF and rate limit
+
+`waf.tf` stops vulnerability scanners at the edge (`docs/plans/scanner-defense.md`). Caddy's probe 404 is the origin backstop behind it. Both rulesets apply to every host (apex, `www.`, `gcp.`, `staging.`). `cloudflare_ruleset.waf_custom` has four custom rules, all `block` (403), using 4 of the 5 Free custom rules (1 spare):
+
+- `block_probe_extensions`: paths ending in a probe extension (`.php`, `.env`, `.asp`, `.jsp`, `.sql`, `.bak`, `.zip`, `.log`, `.ini`, `.conf`, `.pem`, `.key`, `.yml`, `.json`, `.js`, `.xml`, `.txt` …). Exempt: `/robots.txt`, `/sitemap.xml` and anything under `/.well-known/`. In prod, static and media files come from `storage.googleapis.com`, not the site's hosts, so real `.js`/`.json` assets never hit this rule.
+- `block_dotfiles`: any path containing `/.` (`/.env`, `/.git/config`, `/.aws/credentials` …), except `/.well-known/`.
+- `block_other_stacks`: paths of stacks this site doesn't run: WordPress (`/wp-`, `/wordpress`, `/xmlrpc`), phpMyAdmin (`/phpmyadmin`, `/pma/`), Spring (`/actuator`), `/cgi-bin`, Composer (`/vendor/`), Laravel (`/telescope`, `/_ignition`), Symfony (`/_profiler`), Vite (`/@fs/`), `/phpinfo`.
+- `block_probe_names`: editor backups ending in `~`, plus an exact list of probe names (`/Dockerfile`, `/id_rsa`, `/credentials`, `/metrics`, `/health`, `/status`, `/version`, `/graphql`, `/server-status` …). `in` is case-sensitive, Free has no regex and `lower()` isn't confirmed for Free, so the names are written as scanners send them; Caddy catches other casings.
+
+`cloudflare_ruleset.ratelimit` has one rule, `per_ip_60_per_10s`: an IP that sends more than 60 requests in 10 s to one Cloudflare data center is blocked for 10 s. Free allows a 10 s period and 10 s timeout, and `cf.colo.id` must be a characteristic. Cached hits count too. Why 60 per 10 s: it is below the VM's ~120 uncached requests per 10 s, it catches the scanner bursts seen on 2026-11-25 (~470 and ~67 per 10 s), and it leaves room for a classroom behind one NAT (static and media come from `storage.googleapis.com`, so a page view is about one request to weallcode.org). `/anymail/` (Resend webhooks) is exempt. Free allows only path fields in the expression: never add host or response fields.
+
+Kill switch: set `enabled = false` on the rule and apply. Deleting a rule or ruleset in the dashboard also works, but then `terraform plan` shows drift; re-apply or re-import.
+
+Load test: set `enabled = false` on `per_ip_60_per_10s` and apply first, or the test IP gets 429s after 60 requests. Re-enable and apply afterwards.
+
+Blocks show in the dashboard under Security → Events (filter by rule). Bot Fight Mode is off on purpose: on Free it can't be skipped by WAF rules, covers the whole domain, and may challenge `/anymail/` webhooks and uptime monitors. Never add IP or ASN blocks for cloud ranges: the 2026-11-25 scanner came from a Google Cloud IP and cloud IPs rotate, while the same ranges carry Resend webhooks and uptime monitors.
+
 ## Checks
 
 ```sh
