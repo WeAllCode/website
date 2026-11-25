@@ -542,7 +542,9 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Runbook step 0: scratch PG 17, `migrate` at `origin/main`, branch `migrate --plan` → **"No planned migration operations."** No backup step.
 - Debug toolbar: `DEBUG=True runserver` on scratch PG, `/` 200 with `djDebug` markup, `/static/debug_toolbar/css/toolbar.css` and `js/toolbar.js` 200.
 - 2026-11-25: Ali chose "Push, PR, staging when green". Pushed `claude/upgrade-cp4-majors` (`2d46745`), opened https://github.com/WeAllCode/website/pull/1633. CI pending at open. Staging release is pre-approved once CI is green; merge and prod still need Ali's OK.
-- Next: CI green → staging release + smoke, then merge, prod. Prod-only checks after release: password reset to Ali's address arrives + shows in Resend; serial-console `coderdojochi.util.email()` check; ideally one avatar change to confirm the approval email now arrives.
+- CI on #1633 all green (4 passing, dependabot skipped). Ali: "if CI is green, go to staging". `release.sh --target staging origin/claude/upgrade-cp4-majors` → `current-staging` = `2d4674580eeb2e1a56b4021a2a05ec22e4dd3b07`. Serial log 22:58:49Z `wac-staging is running 2d46745…`, 22:58:53Z `done`, no rollback/Traceback.
+- Staging smoke `--cp cp4-staging --baseline out/cp0-staging/report.json`: **PASS 0/24** (`/tmp/wac-smoke/out/cp4-staging/report.json`, `out/cp4-staging.log`). Live calendar: `/classes/1/calendar/` 200 `text/calendar`, `DTSTART:20150214T160000Z`, `DTSTAMP:20261125T230003Z` (generation time, UTC). `--auth` still waits on `upg-smoke` (0.5).
+- Next: Ali's OK to merge + release prod; then password-reset/Resend check. Prod-only checks after release: password reset to Ali's address arrives + shows in Resend; serial-console `coderdojochi.util.email()` check; ideally one avatar change to confirm the approval email now arrives.
 
 ### Checkpoint 3 — in progress (2026-11-25)
 
