@@ -140,9 +140,12 @@ sudo -u wac pg_restore -L toc --no-owner --no-acl --role=wac -d wac dump
 - It emails guardians and mentors of active orders on active sessions: a week reminder 2-7 days before the class, a day reminder in the last 24 hours. Classes that already started are skipped.
 - Each order's `week_reminder_sent` / `day_reminder_sent` is set before its email goes out, so a rerun or catch-up never sends twice. A failed send is logged to Sentry and not retried.
 - Each run sends at most half of `EMAIL_DAILY_LIMIT` (two runs a day); the rest wait for the next run. Day reminders go first.
-- A prod deploy that ships the units enables the timer (`start_reminders` in `provision.sh`); no reprovision needed.
-- See who would get one, sending nothing: `sudo wac-manage prod send_reminders --dry-run`. Run one now: `sudo systemctl start wac-reminders`. Pause them: `sudo touch /etc/wac/reminders-paused` (the service skips while it exists; `sudo rm` it to resume). Don't `disable` the timer to pause: the next prod deploy re-enables it.
-- Rolling prod back to a release older than `send_reminders`: touch the pause file too. Otherwise each run fails with "Unknown command" in the journal (it sends nothing).
+- **Off until turned on.** The service runs only while `/etc/wac/reminders-enabled` exists. No deploy or provision creates it, so shipping this sends nothing.
+  - On: `sudo touch /etc/wac/reminders-enabled`
+  - Off: `sudo rm /etc/wac/reminders-enabled`. Don't `disable` the timer instead: the next prod deploy re-enables it.
+- A prod deploy that ships the units enables the timer (`start_reminders` in `provision.sh`); no reprovision needed. The timer firing while the switch is off is a skipped run, not a send.
+- See who would get one, sending nothing: `sudo wac-manage prod send_reminders --dry-run`. Run one now (switch on): `sudo systemctl start wac-reminders`.
+- Rolling prod back to a release older than `send_reminders`: turn the switch off. Otherwise each run fails with "Unknown command" in the journal (it sends nothing).
 
 ## Logs
 

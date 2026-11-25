@@ -37,3 +37,6 @@ STORAGES = {
 }
 
 EMAIL_BACKEND = "anymail.backends.test.EmailBackend"
+# No real ESP credentials in tests, even if the shell has RESEND_API_KEY set: a test
+# that swaps in the Resend backend fails instead of emailing anyone.
+ANYMAIL = {"RESEND_API_KEY": ""}

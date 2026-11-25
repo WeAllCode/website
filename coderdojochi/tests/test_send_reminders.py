@@ -3,6 +3,7 @@ from datetime import timedelta
 from io import StringIO
 from unittest import mock
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.management import call_command
@@ -98,6 +99,11 @@ class SendRemindersTest(TestCase):
 
     def sign_up(self, session, mentor, **kwargs):
         return MentorOrder.objects.create(mentor=mentor, session=session, **kwargs)
+
+    def test_tests_cannot_send_real_email(self):
+        # Django's test runner swaps in the in-memory backend; nothing leaves the box.
+        assert settings.EMAIL_BACKEND == "django.core.mail.backends.locmem.EmailBackend"
+        assert not settings.ANYMAIL.get("RESEND_API_KEY")
 
     def test_week_and_day_reminders_go_to_the_right_people(self):
         week = self.session(timedelta(days=5))
