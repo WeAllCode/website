@@ -541,7 +541,8 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Checks (lead, after `uv sync`): `uv lock --check` ok; `ruff check .` all passed; `ruff format --check .` 118 formatted; full suite `Ran 111 tests … OK` 7 runs in a row (4A saw one transient `test_email_util` unsubscribe-link failure while other agents were editing; not reproduced); `pre-commit run --all-files` all Passed; `invoke --list` ok.
 - Runbook step 0: scratch PG 17, `migrate` at `origin/main`, branch `migrate --plan` → **"No planned migration operations."** No backup step.
 - Debug toolbar: `DEBUG=True runserver` on scratch PG, `/` 200 with `djDebug` markup, `/static/debug_toolbar/css/toolbar.css` and `js/toolbar.js` 200.
-- Next: Ali's OK to push + open PR, then CI, staging, merge, prod. Prod-only checks after release: password reset to Ali's address arrives + shows in Resend; serial-console `coderdojochi.util.email()` check; ideally one avatar change to confirm the approval email now arrives.
+- 2026-11-25: Ali chose "Push, PR, staging when green". Pushed `claude/upgrade-cp4-majors` (`2d46745`), opened https://github.com/WeAllCode/website/pull/1633. CI pending at open. Staging release is pre-approved once CI is green; merge and prod still need Ali's OK.
+- Next: CI green → staging release + smoke, then merge, prod. Prod-only checks after release: password reset to Ali's address arrives + shows in Resend; serial-console `coderdojochi.util.email()` check; ideally one avatar change to confirm the approval email now arrives.
 
 ### Checkpoint 3 — in progress (2026-11-25)
 
