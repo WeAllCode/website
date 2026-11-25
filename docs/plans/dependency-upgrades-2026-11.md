@@ -511,8 +511,11 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 1 — PR open (2026-11-24). Next: CP1 runbook steps 2–7 (CI green → Ali's OK for staging release → Playwright → Ali merges → prod), then Checkpoint 2
+### Checkpoint 1 — on staging, smoke passed (2026-11-25). Next: Ali merges #1626 → record prev prod sha → Ali's OK for prod release → prod smoke + Sentry watch 1h, then Checkpoint 2
 
+- 2026-11-25: CI on #1626 all green (tests, django-postgres, pre-commit, infra; dependabot skipped). With Ali's OK, `release.sh --target staging origin/claude/upgrade-cp1-safety-net`: `current-staging` `4e1b015…` → `677141e7f4b5ffd4a7fd9e17703b6a28c1f888cb`. Serial log: `uv sync` installed requests 2.33.0 etc., `migrate` ran (only the existing GuardianImportResource UserWarnings), 13:21:34Z `wac-deploy[staging]: done: 677141e…`, no rollback.
+- Staging smoke `--cp cp1-staging --baseline out/cp0-staging/report.json`: PASS, 0/24 failing, same hosts as CP0. Report `/tmp/wac-smoke/out/cp1-staging/report.json`, log `/tmp/wac-smoke/out/cp1-staging.log`. `--auth` still not run (needs `upg-smoke` from 0.5).
+- Sentry: the Sentry MCP here is the Braven org, not WAC's, so staging Sentry wasn't checked. Ali checks WAC's Sentry by hand, or connects WAC's org.
 - With Ali's OK, Claude pushed `claude/upgrade-cp1-safety-net` and opened https://github.com/WeAllCode/website/pull/1626. CI hadn't reported any checks yet when it was opened.
 
 - Branch `claude/upgrade-cp1-safety-net` from `origin/main` `ee9b6d0`, one commit `677141e`. Not pushed. 13 files: `.github/dependabot.yml`, `.github/workflows/ci.yml`, `coderdojochi/{admin,factories,forms,settings}.py`, `coderdojochi/tests/test_{admin_strtobool,calendar_view,forms_widgets,mentor_updates,password_session}.py`, `pyproject.toml`, `uv.lock`.
