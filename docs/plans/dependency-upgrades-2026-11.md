@@ -1,6 +1,13 @@
 # Upgrade every dependency to its latest stable version
 
-Status: **draft, waiting for Ali's approval.** Nothing in this plan has been built, pushed or deployed. Written 2026-11-24 from `main` at `f940d74`.
+Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. Written 2026-11-24 from `main` at `f940d74`.
+
+**Ali's decisions (2026-11-24) — these override the recommendations below:**
+
+- D1: Python 3.13 now (Checkpoint 7). Django 6.2 LTS in April 2027 (Checkpoint 8 waits for 6.2 and released Django 6 support in storages/recaptcha).
+- D2: front-end latest within each major, as written.
+- D3: sentry-sdk 3 waits for 3.0.1+ or 2 weeks after 3.0.0, whichever comes first; until then keep `<3`.
+- D4: **keep** `coderdojochi/cron.py` and django-cron. Ali wants the reminders back, and that is a separate task. In 1C, do **not** remove django-cron or delete `cron.py`. Checkpoint 8 gets a precondition: the reminders task must have replaced or fixed django-cron (its models use `index_together`, removed in Django 5.1), or django-cron must have a release that supports Django 6.
 
 ## Goal and done
 
