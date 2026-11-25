@@ -387,4 +387,6 @@ The reviewer confirmed these are safe as planned:
   - Task D: `check-edge-blocks.sh --must-pass-only https://www.weallcode.org` → 18/18 PASS. Added `--must-pass-only`. Local stub runs confirm the `--min-edge` gate.
   - `shellcheck infra/vm/*.sh infra/vm/wac-manage` passes.
   - Task C (code only, not applied): fmt and validate pass. `terraform plan` → 2 to add (`waf_custom`, `ratelimit`) and 1 in-place update, `google_storage_bucket_object.bootstrap`. That update is caused by this change: `bootstrap.tgz` archives every `infra/vm/` file (Caddyfile, units, new scripts). It is only read on a VM's first boot.
-- Next: open the PR, CI, then the Checkpoint 2 spike apply (Ali's OK) before merge.
+- **PR opened:** https://github.com/WeAllCode/website/pull/1635.
+- **Checkpoint 2 step 2, spike, done (2026-11-25, Ali's OK).** `terraform apply -target=cloudflare_ruleset.waf_custom` with every expression ANDed with `(http.request.uri.path in {"/.env.spike" "/spike.php" "/wp-spike"})` → 1 added, ruleset id `5891032e2d2948f581ed08455bd38710`. `/spike.php` 403, `/.env.spike` 403, `/wp-spike` 403, `/` 200, `/privacy/` 200. **`http.request.uri.path.extension` works on Free**; rule 1 stays as written. The spike-only rules stay live (they match nothing real) until the full apply in step 3. `waf.tf` in git keeps the full expressions.
+- Next: CI green → merge (Ali's OK) → `release.sh --target prod` (Ali's OK) → CP1 live checks → full `waf_custom` apply (Ali's OK).
