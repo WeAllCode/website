@@ -547,7 +547,12 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - CI on #1629 all green (4 passing, dependabot skipped). With Ali's OK ("Yes, when green"), `release.sh --target staging origin/claude/upgrade-cp3-python-bumps`: `current-staging` `b505447…` → `c891051486f1f689711562bb1c4cf77986817088`. Serial log 17:42:50Z deploying, 17:45:19Z running, 17:45:23Z `done`, no rollback/Traceback.
 - Staging smoke `--cp cp3-staging --baseline out/cp0-staging/report.json`: PASS 0/24, same hosts as CP0 (`/tmp/wac-smoke/out/cp3-staging/report.json`, `out/cp3-staging.log`). `--auth` (login/logout/password change, import screen) still waits on `upg-smoke` (0.5).
 - 2026-11-25: Ali said "Merge + release prod". **Prod sha before: `9ce8c61a624a724fefc0d4fe892d5969adefbf15`** (#1628, released by the edge-cache session after CP2; rollback: `release.sh --target prod --force 9ce8c61`). #1629 squash-merged as `7deb61d` (on top of `f25adbd`, #1631: Terraform/docs only). No migrations, so no backup step.
-- Next: CI; staging release + smoke; merge; prod release (prev prod `dc113b0`).
+- `release.sh --target prod 7deb61de67e9195b4b13ecef7f944dfd35c39dc6`: serial log 17:47:54Z `deploying 7deb61d… (was '9ce8c61…')`, 17:50:20Z `wac-web is running 7deb61d…`, 17:50:25Z `done`, no Traceback/rollback. **Prod sha after: `7deb61de67e9195b4b13ecef7f944dfd35c39dc6`.** `/etc/wac/reminders-enabled` not touched.
+- Prod smoke (17:51Z, >60 s after deploy, so past the edge-cache TTL) `--cp cp3-prod --baseline out/cp0-prod/report.json`: FAIL 1/24, mobile `/join-us/` only, one new failed request: `POST csp.withgoogle.com/csp/frame-ancestors/…` `ERR_BLOCKED_BY_ORB`, Google's reCAPTCHA CSP-report beacon, not our code. Rerun `--cp cp3-prod-r2`: **PASS 0/24**, no `csp.withgoogle.com`. Flaky third-party beacon; noted for CP9's host allowlist. Reports `/tmp/wac-smoke/out/cp3-prod{,-r2}/report.json`.
+- Not done (wait on 0.5): Sentry 1h watch, `--auth` smoke on staging (login/logout/password change, import screen). Prod-only manual check from Proof: Ali logs in with Google on prod (allauth 65.22).
+- **CP3 done, on prod.** Next: Checkpoint 4.
+- Follow-ups (not in CP3): `GuardianImportResource.get_or_init_instance` DoesNotExist; switch admins to `resource_classes`; allauth deprecated settings (`settings.py:317-319`).
+- (superseded) CI; staging release + smoke; merge; prod release (prev prod `dc113b0`).
 
 ### Checkpoint 2 — done, on prod (2026-11-25). Next: Checkpoint 3
 
