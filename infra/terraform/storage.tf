@@ -152,9 +152,12 @@ resource "google_storage_bucket" "backups" {
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
 
+  # Only nightly dumps under db/ expire. heroku-final/ (the last Heroku
+  # dumps and SendGrid suppressions) is kept indefinitely.
   lifecycle_rule {
     condition {
-      age = 30
+      age            = 30
+      matches_prefix = ["db/"]
     }
     action {
       type = "Delete"
