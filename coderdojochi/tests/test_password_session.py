@@ -1,28 +1,38 @@
+from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-from django.test import Client
 from django.test import TestCase
+from django.test import override_settings
 from django.urls import reverse
 
 from coderdojochi.factories import PartnerPasswordAccessFactory
 from coderdojochi.factories import SessionFactory
+from coderdojochi.models import Guardian
 from coderdojochi.models import PartnerPasswordAccess
 
 User = get_user_model()
 
+SESSION_PASSWORD = "124"  # noqa: S105
+USER_EMAIL = "email@email.com"
+USER_PASSWORD = "pass123"  # noqa: S105
 
+
+def _create_user(**extra):
+    return User.objects.create_user(
+        "user",
+        email=USER_EMAIL,
+        password=USER_PASSWORD,
+        **extra,
+    )
+
+
+@override_settings(SECURE_SSL_REDIRECT=False)
 class TestPartnerSessionPassword(TestCase):
     def setUp(self):
-        self.partner_session = SessionFactory.create(password="124")
-        self.url_kwargs = {
-            "year": self.partner_session.start_date.year,
-            "month": self.partner_session.start_date.month,
-            "day": self.partner_session.start_date.day,
-            "slug": self.partner_session.course.slug,
-            "session_id": self.partner_session.id,
-        }
-        self.client = Client()
-        self.url = reverse("session_password", kwargs=self.url_kwargs)
+        self.partner_session = SessionFactory.create(password=SESSION_PASSWORD)
+        self.url_kwargs = {"pk": self.partner_session.id}
+        self.url = reverse("session-password", kwargs=self.url_kwargs)
 
     def test_session_password_invalid_password(self):
         response = self.client.post(self.url, data={"password": "abc"})
@@ -33,104 +43,62 @@ class TestPartnerSessionPassword(TestCase):
         self.assertContains(response, "Must enter a password.")
 
     def test_session_password_valid_password_unauthed(self):
-        response = self.client.post(
-            self.url,
-            data={"password": self.partner_session.password},
-        )
-        self.assertIsInstance(response, HttpResponseRedirect)
+        response = self.client.post(self.url, data={"password": SESSION_PASSWORD})
 
-        detail_url = reverse("session_detail", kwargs=self.url_kwargs)
-        self.assertEqual(response.url, detail_url)
-
-        password_access_count = PartnerPasswordAccess.objects.count()
-        self.assertEqual(password_access_count, 0)
-
+        assert isinstance(response, HttpResponseRedirect)
+        assert response.url == reverse("session-detail", kwargs=self.url_kwargs)
+        assert PartnerPasswordAccess.objects.count() == 0
+        # Anonymous visitors are remembered in their session instead.
         authed_sessions = self.client.session["authed_partner_sessions"]
-        self.assertFalse(str(self.partner_session.id) in authed_sessions)
+        assert self.partner_session.id in authed_sessions
 
     def test_session_password_valid_password_authed(self):
-        user = User.objects.create_user(
-            "user",
-            email="email@email.com",
-            password="pass123",
-        )
-        self.assertTrue(
-            self.client.login(email="email@email.com", password="pass123"),
-        )
+        user = _create_user()
+        assert self.client.login(email=USER_EMAIL, password=USER_PASSWORD)
 
-        response = self.client.post(
-            self.url,
-            data={"password": self.partner_session.password},
-        )
-        self.assertIsInstance(response, HttpResponseRedirect)
+        response = self.client.post(self.url, data={"password": SESSION_PASSWORD})
 
-        detail_url = reverse("session_detail", kwargs=self.url_kwargs)
-        self.assertEqual(response.url, detail_url)
-
-        partner_password_access = PartnerPasswordAccess.objects.get(
+        assert isinstance(response, HttpResponseRedirect)
+        assert response.url == reverse("session-detail", kwargs=self.url_kwargs)
+        assert PartnerPasswordAccess.objects.filter(
             session=self.partner_session,
             user=user,
-        )
-        self.assertIsNotNone(partner_password_access)
-
+        ).exists()
         authed_sessions = self.client.session["authed_partner_sessions"]
-        self.assertTrue(str(self.partner_session.id) in authed_sessions)
+        assert self.partner_session.id in authed_sessions
 
 
+@override_settings(SECURE_SSL_REDIRECT=False)
 class TestSessionDetail(TestCase):
     def setUp(self):
-        super(TestSessionDetail, self).setUp()
-        self.client = Client()
-        self.partner_session = SessionFactory.create(password="124")
-        self.url_kwargs = {
-            "year": self.partner_session.start_date.year,
-            "month": self.partner_session.start_date.month,
-            "day": self.partner_session.start_date.day,
-            "slug": self.partner_session.course.slug,
-            "session_id": self.partner_session.id,
-        }
-        self.url = reverse("session_detail", kwargs=self.url_kwargs)
+        self.partner_session = SessionFactory.create(password=SESSION_PASSWORD)
+        self.url_kwargs = {"pk": self.partner_session.id}
+        self.url = reverse("session-detail", kwargs=self.url_kwargs)
+        self.password_url = reverse("session-password", kwargs=self.url_kwargs)
 
     def test_redirect_password_unauthed(self):
         response = self.client.get(self.url)
-        self.assertIsInstance(response, HttpResponseRedirect)
 
-        detail_url = reverse("session_password", kwargs=self.url_kwargs)
-        self.assertEqual(response.url, detail_url)
+        assert isinstance(response, HttpResponseRedirect)
+        assert response.url == self.password_url
 
     def test_redirect_password_authed(self):
-        User.objects.create_user(
-            "user",
-            email="email@email.com",
-            password="pass123",
-        )
-        self.assertTrue(
-            self.client.login(email="email@email.com", password="pass123"),
-        )
+        _create_user()
+        assert self.client.login(email=USER_EMAIL, password=USER_PASSWORD)
 
         response = self.client.get(self.url)
-        self.assertIsInstance(response, HttpResponseRedirect)
 
-        detail_url = reverse("session_password", kwargs=self.url_kwargs)
-        self.assertEqual(response.url, detail_url)
+        assert isinstance(response, HttpResponseRedirect)
+        assert response.url == self.password_url
 
     def test_redirect_password_partner_password_access(self):
-        user = User.objects.create_user(
-            "user",
-            email="email@email.com",
-            password="pass123",
-        )
-        self.assertTrue(
-            self.client.login(email="email@email.com", password="pass123"),
-        )
+        user = _create_user(role="guardian")
+        # The guardian detail page 404s without a Guardian profile.
+        Guardian.objects.create(user=user)
+        assert self.client.login(email=USER_EMAIL, password=USER_PASSWORD)
+        PartnerPasswordAccessFactory.create(user=user, session=self.partner_session)
 
-        PartnerPasswordAccessFactory.create(
-            user=user,
-            session=self.partner_session,
-        )
         response = self.client.get(self.url)
-        detail_url = reverse("session_password", kwargs=self.url_kwargs)
 
-        # don't care what its doing as long as its not
-        # redirecting to the password url.
-        self.assertNotEqual(response.url, detail_url)
+        assert getattr(response, "url", None) != self.password_url
+        assert response.status_code == HTTPStatus.OK

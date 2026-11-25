@@ -1,7 +1,7 @@
+from datetime import UTC
 from datetime import datetime
 
 import factory
-from pytz import utc
 
 from .models import CDCUser
 from .models import Course
@@ -11,7 +11,7 @@ from .models import PartnerPasswordAccess
 from .models import Session
 
 
-class CourseFactory(factory.DjangoModelFactory):
+class CourseFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: f"Test Course {n}")
     slug = factory.Sequence(lambda n: f"test-course-{n}")
 
@@ -19,7 +19,7 @@ class CourseFactory(factory.DjangoModelFactory):
         model = Course
 
 
-class LocationFactory(factory.DjangoModelFactory):
+class LocationFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"Test Location {n}")
     address = factory.Sequence(lambda n: f"{n} Street")
     city = "Chicago"
@@ -30,28 +30,25 @@ class LocationFactory(factory.DjangoModelFactory):
         model = Location
 
 
-class CDCUserFactory(factory.DjangoModelFactory):
+class CDCUserFactory(factory.django.DjangoModelFactory):
     username = factory.Sequence(lambda n: f"username_{n}")
 
     class Meta:
         model = CDCUser
 
 
-class MentorFactory(factory.DjangoModelFactory):
+class MentorFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(CDCUserFactory)
-    active = True
+    is_active = True
 
     class Meta:
         model = Mentor
 
 
-class SessionFactory(factory.DjangoModelFactory):
+class SessionFactory(factory.django.DjangoModelFactory):
     course = factory.SubFactory(CourseFactory)
     location = factory.SubFactory(LocationFactory)
-    start_date = datetime.now(utc)
-    end_date = datetime.now(utc)
-    mentor_start_date = datetime.now(utc)
-    mentor_end_date = datetime.now(utc)
+    start_date = datetime.now(UTC)
     password = ""
     instructor = factory.SubFactory(MentorFactory)
 
@@ -59,7 +56,7 @@ class SessionFactory(factory.DjangoModelFactory):
         model = Session
 
 
-class PartnerPasswordAccessFactory(factory.DjangoModelFactory):
+class PartnerPasswordAccessFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(CDCUserFactory)
     session = factory.SubFactory(SessionFactory)
 

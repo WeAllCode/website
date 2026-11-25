@@ -102,11 +102,9 @@ INSTALLED_APPS = [
     "bootstrap3",
     "django_cleanup",
     "anymail",
-    "html5",
     "loginas",
     "stdimage",
     "import_export",
-    "django_nose",
     "meta",
     "django_recaptcha",
     # apps
