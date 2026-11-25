@@ -309,18 +309,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/04/b0/19d2de3ee903505288e30e21f0823ab72101d067e091a6b6f5b575b79ca5/django-common-helpers-0.9.2.tar.gz", hash = "sha256:2d56be6fa261d829a6a224f189bf276267b9082a17d613fe5f015dd4d65c17b4", size = 37792, upload-time = "2018-08-04T03:18:17.078Z" }
 
 [[package]]
-name = "django-cron"
-version = "0.6.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/eb/0e/7341616ff90aac0b2c36fe172663bbaa0fc396e1effc215813a3eea8b7e1/django-cron-0.6.0.tar.gz", hash = "sha256:dc3c0d3433a2e4e7012f77f6d8415ad90367ba068649db2674325bc36f935841", size = 14768, upload-time = "2022-05-11T09:20:15.062Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/fc/9a0fa82f88165d44aa38623a77f7a95bc09c4013557b30620cf5d57e4d0c/django_cron-0.6.0-py3-none-any.whl", hash = "sha256:016203554748512b7f19d7363b4fde8741c6ff63fe8a15051f3031f4a0506a41", size = 19314, upload-time = "2022-05-11T09:06:48.57Z" },
-]
-
-[[package]]
 name = "django-debug-toolbar"
 version = "5.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1160,7 +1148,6 @@ dependencies = [
     { name = "django-bootstrap3" },
     { name = "django-cleanup" },
     { name = "django-common-helpers" },
-    { name = "django-cron" },
     { name = "django-debug-toolbar" },
     { name = "django-environ" },
     { name = "django-fullurl" },
@@ -1201,7 +1188,6 @@ requires-dist = [
     { name = "django-bootstrap3", specifier = ">=25.1,<27.0" },
     { name = "django-cleanup", specifier = ">=9.0.0,<10.0.0" },
     { name = "django-common-helpers", specifier = ">=0.9.2,<1.0.0" },
-    { name = "django-cron", specifier = ">=0.6.0,<0.7.0" },
     { name = "django-debug-toolbar", specifier = ">=5.2.0,<9.0.0" },
     { name = "django-environ", specifier = ">=0.12.0,<0.15.0" },
     { name = "django-fullurl", specifier = ">=1.4,<2.0" },
