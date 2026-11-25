@@ -8,7 +8,7 @@ Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. W
 - D2: front-end latest within each major, as written. **Added by Ali:** vendor all third-party fonts, CSS and JS and host them ourselves (Checkpoint 9).
 - D5: replace the dead Universal Analytics snippet (`UA-78618586-1`) with GA4 in Checkpoint 9 (tasks 9B and 9F). The GA4 tag is rendered only when the `GA_MEASUREMENT_ID` setting is set. Ali supplies the `G-…` ID and adds it to `wac-env-prod` only, never staging.
 - D3: sentry-sdk 3 waits for 3.0.1+ or 2 weeks after 3.0.0, whichever comes first; until then keep `<3`.
-- D4: **keep** `coderdojochi/cron.py` and django-cron. Ali wants the reminders back, and that is a separate task. In 1C, do **not** remove django-cron or delete `cron.py`. Checkpoint 8 gets a precondition: the reminders task must have replaced or fixed django-cron (its models use `index_together`, removed in Django 5.1), or django-cron must have a release that supports Django 6.
+- D4: **keep** `coderdojochi/cron.py` and django-cron. Ali wants the reminders back, and that is a separate task. In 1C, do **not** remove django-cron or delete `cron.py`. Checkpoint 8 gets a precondition: the reminders task must have replaced or fixed django-cron (its models use `index_together`, removed in Django 5.1), or django-cron must have a release that supports Django 6. **Update:** the reminders task opened https://github.com/WeAllCode/website/pull/1625 (a `send_reminders` command plus a prod-only timer, and django-cron removed). Once it merges, the precondition is met. Rebase whichever checkpoint is in flight onto it, and drop django-cron from the CP1 table.
 
 ## Goal and done
 
