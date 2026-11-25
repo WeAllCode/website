@@ -8,7 +8,7 @@ Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. W
 - D2: front-end latest within each major, as written. **Added by Ali:** vendor all third-party fonts, CSS and JS and host them ourselves (Checkpoint 9).
 - D5: replace the dead Universal Analytics snippet (`UA-78618586-1`) with GA4 in Checkpoint 9 (tasks 9B and 9F). The GA4 tag is rendered only when the `GA_MEASUREMENT_ID` setting is set. Ali supplies the `G-…` ID and adds it to `wac-env-prod` only, never staging.
 - D3: sentry-sdk 3 waits for 3.0.1+ or 2 weeks after 3.0.0, whichever comes first; until then keep `<3`.
-- D4: **keep** `coderdojochi/cron.py` and django-cron. Ali wants the reminders back, and that is a separate task. In 1C, do **not** remove django-cron or delete `cron.py`. Checkpoint 8 gets a precondition: the reminders task must have replaced or fixed django-cron (its models use `index_together`, removed in Django 5.1), or django-cron must have a release that supports Django 6. **Update:** the reminders task opened https://github.com/WeAllCode/website/pull/1625 (a `send_reminders` command plus a prod-only timer, and django-cron removed). Once it merges, the precondition is met. Rebase whichever checkpoint is in flight onto it, and drop django-cron from the CP1 table.
+- D4: **keep** `coderdojochi/cron.py` and django-cron. Ali wants the reminders back, and that is a separate task. In 1C, do **not** remove django-cron or delete `cron.py`. Checkpoint 8 gets a precondition: the reminders task must have replaced or fixed django-cron (its models use `index_together`, removed in Django 5.1), or django-cron must have a release that supports Django 6. **Update:** the reminders task opened https://github.com/WeAllCode/website/pull/1625 (a `send_reminders` command plus a prod-only timer, and django-cron removed). **Done 2026-11-24:** #1625 squash-merged as `ee9b6d0` and released to prod. django-cron and `cron.py` are gone from main, so 1C has nothing to remove for them and Checkpoint 8's precondition is met. Start CP1 from a main that includes `ee9b6d0`, and re-check the `settings.py` line numbers 1C cites (they may have shifted). Prod reminders stay off until `/etc/wac/reminders-enabled` exists (Ali's separate OK).
 
 ## Goal and done
 
@@ -78,7 +78,7 @@ Current = `uv.lock` / files at `f940d74`. "Major" = breaking-change notes apply 
 | django-fullurl | 1.4 | **remove** (unused) | | 1 |
 | json-logging-py | 0.2 | **remove** (unused) | | 1 |
 | mock | 5.2.0 | **remove** (tests use `unittest.mock`) | | 1 |
-| django-cron | 0.6.0 | **remove** with `cron.py` (D4) | | 1 |
+| django-cron | 0.6.0 | already removed by #1625 (`ee9b6d0`) | | — |
 
 ### Python (transitive majors worth knowing)
 
@@ -204,9 +204,9 @@ Each task owns its files. Within a checkpoint, tasks run in parallel unless mark
 - `django-postgres` job: add a step after "Check production settings import", copying its style: `SENTRY_DSN: http://public@127.0.0.1:9/0` (R18: unroutable, nothing leaves CI) + the same prod env, run `uv run python manage.py check`. This is what will catch sentry-sdk 3's `TypeError` in Checkpoint 6.
 - Proof: `actionlint .github/workflows/ci.yml` clean (`brew install actionlint` if missing); then green CI on the PR.
 
-**1C. Remove dead dependencies.** Files: `pyproject.toml`, `uv.lock`, `coderdojochi/settings.py` (lines 105, 109 only), `coderdojochi/forms.py`, delete `coderdojochi/cron.py` (D4).
-- Before removing each package, grep `.py`, templates and the `LOGGING` dict for its import/app label: `mock` (`^import mock|^from mock`), `django_nose|nose`, `common_helpers|helper`, `fullurl`, `json_logging`, `html5`, `django_cron`. Remove only those with no remaining use; report any hit.
-- Remove from `pyproject.toml`: `mock`, `django-nose`, `django-common-helpers`, `django-fullurl`, `json-logging-py`, `django-html5`, `django-cron`. Remove `"html5"` and `"django_nose"` from `INSTALLED_APPS`.
+**1C. Remove dead dependencies.** Files: `pyproject.toml`, `uv.lock`, `coderdojochi/settings.py` (lines 105, 109 only), `coderdojochi/forms.py`. (`cron.py` and django-cron are already gone, #1625.)
+- Before removing each package, grep `.py`, templates and the `LOGGING` dict for its import/app label: `mock` (`^import mock|^from mock`), `django_nose|nose`, `common_helpers|helper`, `fullurl`, `json_logging`, `html5`. Remove only those with no remaining use; report any hit.
+- Remove from `pyproject.toml`: `mock`, `django-nose`, `django-common-helpers`, `django-fullurl`, `json-logging-py`, `django-html5`. Remove `"html5"` and `"django_nose"` from `INSTALLED_APPS`.
 - `forms.py`: replace `html5_widgets.DateInput(attrs={...})` with `forms.DateInput(attrs={..., "type": "date"})` at all three sites, keeping the other attrs; drop the `html5` import. **Pitfall:** Django's `DateInput` defaults to `type="text"`; without `"type": "date"` the browser date picker silently disappears. Also keep the value format ISO (`format="%Y-%m-%d"`) or the browser shows an empty field for existing values.
 - Declare `python-dateutil>=2.9,<3` explicitly (it's imported at `forms.py:4`); Checkpoint 4 lifts the bound.
 - `uv lock` (no `--upgrade`). Confirm with `git diff --stat uv.lock` that only removals happened.
@@ -420,7 +420,7 @@ Read the whole plan first. Run it as the lead: you write no code.
 | 4 | CI "Sentry init" step | In `settings.py` add `enable_tracing=True` to `sentry_sdk.init` on sentry-sdk 3 (Checkpoint 6) → `TypeError` → step fails. Before CP6: add `bogus_option=1` → fails on 2.x too |
 | 5 | Prod smoke + Sentry + memory numbers in Progress | Point the smoke script at a 404 path → fails |
 | 6 | Previous sha + backup recorded in Progress before each prod release | — (process) |
-| 7 | `grep -E "mock|nose|common-helpers|fullurl|json-logging|html5" pyproject.toml` → nothing (django-cron stays, D4) | Re-add one → grep hits |
+| 7 | `grep -E "mock|nose|common-helpers|fullurl|json-logging|html5" pyproject.toml` → nothing (django-cron already gone, #1625) | Re-add one → grep hits |
 | 8 | `test_vendored_assets` (no-CDN test + manifest collectstatic test) | Put a cdnjs URL back in `_base.html` → fails; delete one FA5 webfont → manifest test fails |
 
 After writing each test: make the one-line change, confirm the test fails, undo with the exact reverse edit (never `git checkout`/reset).
