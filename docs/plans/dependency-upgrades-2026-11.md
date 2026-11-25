@@ -248,6 +248,22 @@ Runs after Checkpoint 1 merges (the reformat touches files 1A/1C edit).
 - Third-party migrations: run `uv run python manage.py makemigrations --check --dry-run` and `uv run python manage.py showmigrations allauth account socialaccount import_export | grep '\[ \]'` against a scratch Postgres (copy the `django-postgres` CI job env). Record any new unapplied migrations in the PR body — they trigger the backup step in the release runbook.
 - Proof: tests, `check --deploy` (CI step), CI gunicorn smoke.
 - Staging Playwright: full list including login, logout, password change (allauth reauth change), `/dj-admin/` import screen opens (import-export).
+- 3A also deletes the `"RET503"` line from `[tool.ruff.lint] ignore` in `pyproject.toml` (3A is the only owner of `pyproject.toml`; 3C fixes the code).
+
+**3B. Admin imports call the right hook (added 2026-11-25 from CP2's finding).** Files: `coderdojochi/admin.py` (`GuardianImportResource` and `StudentResource` only), new `coderdojochi/tests/test_admin_import.py`.
+- Bug: both resources override `import_obj(self, obj, data, dry_run)`. django-import-export 4.x never calls `import_obj`; it calls `import_instance(instance, row, **kwargs)`. So in real admin imports, the student's guardian lookup, birthday parse and `strtobool` fields, and the guardian's `User` creation, never run. CP2 named only `StudentResource`; `GuardianImportResource` (`admin.py:233`) has the same bug.
+- Build against 4.4.6 (3A's target), not 4.3.9: use your own venv (`UV_PROJECT_ENVIRONMENT=<scratch>/venv-3b uv sync` then `uv pip install django-import-export==4.4.6` into it). First read the installed `import_export/resources.py`: `import_row`, `import_instance`, `before_save_instance`, `save_instance`, `get_or_init_instance`, and how `dry_run` reaches them.
+- Rewrite each override as `import_instance(self, instance, row, **kwargs)` (call `super()` if the fields still need it). Never call `.save()` inside it; 4.x saves afterwards and handles dry runs with a transaction. The guardian's new `User` must be saved before the `Guardian` is; `before_save_instance` is the likely place, but check the source.
+- Test: build a `tablib.Dataset`, call `Resource().import_data(dataset, dry_run=False)`, assert no row errors, and assert the student's guardian, parsed birthday, `photo_release`/`consent` bools and `is_active`; for the guardian, assert a `User` with that email and `role="guardian"` exists and is linked. Also re-import the same rows (the 4.4.2 unmatched-pk change) and assert no error and no duplicate. Also: unknown guardian email → row error.
+- Mutation: rename one `import_instance` back to `import_obj` → its test fails.
+- Pitfall: `GuardianImportResource.get_or_init_instance` raises `Guardian.DoesNotExist` when a `User` with that email exists but has no `Guardian`. Report it; fix only if the test hits it.
+
+**3C. Explicit returns where views fall through (RET503; added 2026-11-25 from CP2's finding, corrected).** Files: `accounts/views.py` (`AccountHomeView.get`, `.post`), `coderdojochi/views/profile.py` (`DojoMentorView.post`), new or existing test in `accounts/tests.py`.
+- Correction to the CP2 note: users with **no** role don't hit this; `AccountHomeView.dispatch` already redirects them to `welcome`. `get`/`post` return `None` (→ 500) only for a `role` value outside `ROLE_CHOICES` (bad data). `DojoMentorView.post` returns `None` when the form is invalid, but `DojoMentorView` has no URL (the `dojo/` route is commented out), so it's dead. Latent bugs, not a live 500.
+- Fix: in `AccountHomeView.get`/`post`, after the two role branches, `return redirect("welcome")` (same place `dispatch` sends role-less users). In `DojoMentorView.post`, after the error message, re-render the page with the bound forms (copy `post_for_mentor`'s tail in `accounts/views.py`), or `return redirect("account_home")` if that's simpler; don't delete the view (dead-code removal is out of scope).
+- Test: a user with `role="bogus"` (saved with `.update()` to skip choices validation) GETs and POSTs `reverse("account_home")` → 302 to `welcome`, not 500. Mutation: delete the new `return` → test fails.
+- Proof: `uv run ruff check --isolated --select RET503 accounts/views.py coderdojochi/views/profile.py` clean; full suite.
+- 3A, 3B, 3C run in parallel (no shared files). 3A and 3C use the shared `.venv` with `UV_NO_SYNC=1`; 3A only runs `uv lock`, never `uv sync`. The lead syncs once, then runs the checks and runbook step 0 (migration check on scratch Postgres 17).
 
 ### Checkpoint 4 — Majors without runtime-server risk (PR 4)
 
@@ -510,6 +526,12 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 ## Progress
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
+
+### Checkpoint 3 — in progress (2026-11-25)
+
+- Plan branch rebased onto `origin/main` `9ce8c61` (#1628, Cloudflare page cache: `coderdojochi/middleware.py`, `settings.py` +6, `test_cache_headers.py`; no file CP3 owns). Prod is still `dc113b0` per CP2.
+- Start-of-CP checks: Dependabot open = only #1586 (superseded). Every 3A target is still the latest on PyPI (django 5.2.19 is the latest 5.2.x; 6.1.3 gated by D1). Baseline on `9ce8c61`: `Ran 93 tests … OK` (django 5.2.17, import-export 4.3.9).
+- Added 3B (both import resources use the dead `import_obj` hook) and 3C (RET503; corrected: no live 500 for role-less users, see 3C) to the plan before building.
 
 ### Checkpoint 2 — done, on prod (2026-11-25). Next: Checkpoint 3
 
