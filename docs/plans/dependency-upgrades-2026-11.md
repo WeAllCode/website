@@ -529,6 +529,10 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
+### Checkpoint 6 — in progress (2026-11-25)
+
+- Started: code branch `claude/upgrade-cp6-sentry-939993` at `origin/main` `13b7089` (#1637 docs on top of CP5 `b55d652`). Prod is `b55d652`. D3 gate met: sentry-sdk 3.0.0 (2026-11-23) and 3.0.1 (2026-11-25) on PyPI; 3.0.1 is latest. Dependabot open = only #1586 (superseded).
+
 ### Checkpoint 5 — done, on prod (2026-11-25). Next: Checkpoint 6 (sentry-sdk 3, gated by D3)
 
 - Started: code branch `claude/upgrade-cp5-gunicorn` from `origin/main` `298fa88` (#1635 scanner defense on top of CP4 `51ccada`). Dependabot open = only #1586 (superseded). gunicorn 27.0.1 still latest on PyPI (requires Python ≥ 3.10).
