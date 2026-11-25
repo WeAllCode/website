@@ -1,6 +1,7 @@
 import logging
 import re
 import time
+from email.utils import formataddr
 
 import sentry_sdk
 from anymail.message import AnymailMessage
@@ -206,7 +207,7 @@ def email(
         msg = AnymailMessage(
             subject=fill_merge_fields(subject, values),
             body=fill_merge_fields(body, values),
-            from_email=f"We All Code<{settings.DEFAULT_FROM_EMAIL}>",
+            from_email=formataddr(("We All Code", settings.DEFAULT_FROM_EMAIL)),
             to=[recipient],
             reply_to=reply_to,
         )
