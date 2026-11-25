@@ -511,6 +511,18 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
+### Checkpoint 2 — built, not pushed (2026-11-25). Next: Ali OK to push + open PR 2
+
+- Branch `claude/upgrade-cp2-tooling` from `origin/main` `1668ae5`, one commit `7049da0`. Not pushed. 19 files: `.github/workflows/{ci,pre-commit}.yml`, `.pre-commit-config.yaml`, `pyproject.toml`, `uv.lock`, `coderdojochi/{admin,apps,custom_storages,forms,mixins}.py`, `coderdojochi/models/{mentor,session,student,user}.py`, `coderdojochi/views/{profile,sessions}.py`, `weallcode/views/{common,programs,sitemap}.py`.
+- Start-of-CP checks: Dependabot open = only #1586 (checkout 6→7, superseded by 2B; close after PR 2 merges). Terraform providers unchanged (google 8.12.0, cloudflare 5.29.0, tls 4.4.2, archive 2.8.1) → no Terraform work. ruff 0.17.6, pre-commit 4.7.0, pre-commit-hooks v6.0.0 still latest.
+- **2C skipped:** Ali (0.2) wants Dependabot back only after the last checkpoint; `open-pull-requests-limit: 0` stays.
+- 2A: ruff 0.17.6 / pre-commit 4.7.0 (lock diff: only those two). UP038 and the then-empty `extend-unsafe-fixes` removed. Hooks v6.0.0 / ruff-pre-commit v0.17.6; `check-json` excludes `.vscode/settings.json`. `apps.py` signals import has `# noqa: F401`. Ruff 0.17.6 on main = 293 findings → 0: safe `--fix` (14× UP008 `super()`, 1× SIM300), hand fixes (B008 `Student.get_age`/`is_within_age_range` default `timezone.now()` frozen at import → `None`, a real bug; B904 `from None`; S324 `md5(usedforsecurity=False)`; T201 stray `print` in 404 view removed), 4 inline noqa (BLE001, DTZ005, DTZ007, DJ006), the rest ignored globally or per-file with a reason each in `pyproject.toml`. No import removed (checked `git diff | grep '^-(import|from)'`).
+- **Deviation (R12):** `ruff format .` changed 0 files ("113 files already formatted"), so there is no format-only commit and no `.git-blame-ignore-revs` follow-up for PR 3.
+- 2B: pins checkout v7.0.1, setup-python v7.1.0, cache v6.1.0, setup-uv v10.4.0, setup-terraform v4.0.1 (each tag verified via `gh api`, each = latest release). No `pull_request_target`/`workflow_run`/`pip-install` anywhere. `pre-commit.yml`: `--all-files`, `inputs.extra_args` and the git-auto-commit step dropped (R15, **Ali confirms in review**), added `permissions: contents: read`.
+- Checks (lead): `ruff check .` all passed; `ruff format --check .` 113 already formatted; full suite `Ran 72 tests … OK`; `pre-commit run --all-files` all 17 hooks Passed, tree unchanged after; `actionlint .github/workflows/*.yml` clean; `uv lock --check` ok.
+- Found, not fixed (follow-up issue): RET503 in `accounts/views.py` `get`/`post` and `coderdojochi/views/profile.py` `post` — a role-less user gets `None` → 500.
+- Not yet: push/PR/CI (Ali), staging deploy + smoke, merge, prod release. No migrations, no runtime-dep change (migration check 4.0 not needed).
+
 ### Checkpoint 1 — done, on prod (2026-11-25). Next: Checkpoint 2
 
 - 2026-11-25: Ali said merge. #1626 squash-merged as `1668ae5`. **Prod sha before: `ee9b6d015faf6b6bfc45bb6a7586e8b3214204a8`** (rollback target: `release.sh --target prod --force ee9b6d0`). With Ali's OK, `release.sh --target prod 1668ae5`: serial log 13:29:28Z `deploying 1668ae5… (was 'ee9b6d0…')`, 13:31:42Z `wac-web is running 1668ae5…`, 13:31:49Z `done`. **Prod sha after: `1668ae59790c15fe088ec922ef2ff774f14364f6`.** `/etc/wac/reminders-enabled` not touched.
