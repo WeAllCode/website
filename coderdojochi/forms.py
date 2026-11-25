@@ -1,6 +1,5 @@
 import re
 
-import html5.forms.widgets as html5_widgets
 from dateutil.relativedelta import relativedelta
 from django import forms
 from django.contrib.auth import get_user_model
@@ -151,7 +150,10 @@ class MentorForm(CDCModelForm):
     )
 
     birthday = forms.CharField(
-        widget=html5_widgets.DateInput(attrs={"class": "form-control"}),
+        widget=forms.DateInput(
+            attrs={"class": "form-control", "type": "date"},
+            format="%Y-%m-%d",
+        ),
         required=True,
     )
 
@@ -268,7 +270,10 @@ class GuardianForm(CDCModelForm):
     )
 
     birthday = forms.CharField(
-        widget=html5_widgets.DateInput(attrs={"class": "form-control"}),
+        widget=forms.DateInput(
+            attrs={"class": "form-control", "type": "date"},
+            format="%Y-%m-%d",
+        ),
         required=True,
     )
 
@@ -343,9 +348,10 @@ class StudentForm(CDCModelForm):
     )
 
     birthday = forms.CharField(
-        widget=html5_widgets.DateInput(
+        widget=forms.DateInput(
             attrs={
                 "class": "form-control",
+                "type": "date",
                 "min": dateformat.format(
                     timezone.now() - relativedelta(years=19),
                     "Y-m-d",
@@ -355,6 +361,7 @@ class StudentForm(CDCModelForm):
                     "Y-m-d",
                 ),
             },
+            format="%Y-%m-%d",
         ),
     )
 

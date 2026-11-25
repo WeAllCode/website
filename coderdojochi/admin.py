@@ -1,5 +1,4 @@
 from datetime import datetime
-from distutils.util import strtobool
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -32,6 +31,20 @@ from .models import Session
 from .models import Student
 
 User = get_user_model()
+
+_TRUE_VALUES = {"y", "yes", "t", "true", "on", "1"}
+_FALSE_VALUES = {"n", "no", "f", "false", "off", "0"}
+
+
+def strtobool(val):
+    """Stdlib strtobool replacement (removed in Python 3.12); returns a bool."""
+    normalized = str(val).lower()
+    if normalized in _TRUE_VALUES:
+        return True
+    if normalized in _FALSE_VALUES:
+        return False
+    msg = f"invalid truth value {val!r}"
+    raise ValueError(msg)
 
 
 @admin.register(User)

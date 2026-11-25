@@ -300,15 +300,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-common-helpers"
-version = "0.9.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/04/b0/19d2de3ee903505288e30e21f0823ab72101d067e091a6b6f5b575b79ca5/django-common-helpers-0.9.2.tar.gz", hash = "sha256:2d56be6fa261d829a6a224f189bf276267b9082a17d613fe5f015dd4d65c17b4", size = 37792, upload-time = "2018-08-04T03:18:17.078Z" }
-
-[[package]]
 name = "django-debug-toolbar"
 version = "5.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -329,23 +320,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/d6/04/65d2521842c42f471
 wheels = [
     { url = "https://files.pythonhosted.org/packages/83/b3/0a3bec4ecbfee960f39b1842c2f91e4754251e0a6ed443db9fe3f666ba8f/django_environ-0.12.0-py2.py3-none-any.whl", hash = "sha256:92fb346a158abda07ffe6eb23135ce92843af06ecf8753f43adf9d2366dcc0ca", size = 19957, upload-time = "2025-01-13T17:03:32.918Z" },
 ]
-
-[[package]]
-name = "django-fullurl"
-version = "1.4"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/78/a2/0b27b89ffc0632b5cfa2ac5ac51a653bf89b7bf10ce671ea421f7781c178/django_fullurl-1.4-py2.py3-none-any.whl", hash = "sha256:4eaf270f00f3409afca4360a2c5f38c5cffc6578382a8998558f6e6dfd22e900", size = 6485, upload-time = "2023-03-30T08:15:47.74Z" },
-]
-
-[[package]]
-name = "django-html5"
-version = "1.0.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/1c/50/022ff54f709ae9b7ce331626e9f80bd9af068814f5a5089c286f68d7fc30/django-html5-1.0.0.tar.gz", hash = "sha256:ccad4c854bbd6966264b161f6d259615f24299803a2a4a36950b93a34cd48791", size = 1350, upload-time = "2012-02-14T12:39:32.294Z" }
 
 [[package]]
 name = "django-import-export"
@@ -377,18 +351,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e1/07/fcbaa9b9a067f1717813534b1193b021c544b1f3fb5bfb8f312eca232d95/django_meta-2.5.0.tar.gz", hash = "sha256:e30669865bccff6be61765dfc57d97ee0a68ab7625efd081dd9045e17f3500c5", size = 29111, upload-time = "2025-04-18T13:15:28.913Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/16/ba/46f611931e00a5e9e0ac8fc6f28d3317a77894f07f7db637111c32dc1d79/django_meta-2.5.0-py2.py3-none-any.whl", hash = "sha256:94674286c8515314a025958af6bbcb44d6134d5a2ea3a61f680a852d334af88d", size = 27892, upload-time = "2025-04-18T13:15:27.677Z" },
-]
-
-[[package]]
-name = "django-nose"
-version = "1.4.7"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "nose" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/4c/d6/a340da9854cf0a2b54e23cf9147911b1e15a831911428983dd0158572ce9/django-nose-1.4.7.tar.gz", hash = "sha256:a4885cd002d65fd2de96e2bb2563ef477c3fbe207009360c015fca5c3b5561b7", size = 45041, upload-time = "2020-08-20T02:49:43.355Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/5e/804eda7b128162d215de14c0572717f16508cbdb899d4e839f51cef5481e/django_nose-1.4.7-py2.py3-none-any.whl", hash = "sha256:304adc447ee35b889b733d7106004f98aa401d8387ddcada5d4f2239d86790a9", size = 26470, upload-time = "2020-08-20T02:49:13.44Z" },
 ]
 
 [[package]]
@@ -653,36 +615,12 @@ wheels = [
 ]
 
 [[package]]
-name = "json-logging-py"
-version = "0.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/e9/e1/46c70eebf216b830867c4896ee678cb7f1b28bb68a2810c7e9a811cecfbc/json-logging-py-0.2.tar.gz", hash = "sha256:118b1fe1f4eacaea6370e5b9710d0f6d0c0a4599aef9d5b9875a6a579974fc9a", size = 3617, upload-time = "2015-09-22T23:23:29.29Z" }
-
-[[package]]
-name = "mock"
-version = "5.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/07/8c/14c2ae915e5f9dca5a22edd68b35be94400719ccfa068a03e0fb63d0f6f6/mock-5.2.0.tar.gz", hash = "sha256:4e460e818629b4b173f32d08bf30d3af8123afbb8e04bb5707a1fd4799e503f0", size = 92796, upload-time = "2025-03-03T12:31:42.911Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/bd/d9/617e6af809bf3a1d468e0d58c3997b1dc219a9a9202e650d30c2fc85d481/mock-5.2.0-py3-none-any.whl", hash = "sha256:7ba87f72ca0e915175596069dbbcc7c75af7b5e9b9bc107ad6349ede0819982f", size = 31617, upload-time = "2025-03-03T12:31:41.518Z" },
-]
-
-[[package]]
 name = "nodeenv"
 version = "1.9.1"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/43/16/fc88b08840de0e0a72a2f9d8c6bae36be573e475a6326ae854bcc549fc45/nodeenv-1.9.1.tar.gz", hash = "sha256:6ec12890a2dab7946721edbfbcd91f3319c6ccc9aec47be7c7e6b7011ee6645f", size = 47437, upload-time = "2024-06-04T18:44:11.171Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d2/1d/1b658dbd2b9fa9c4c9f32accbfc0205d532c8c6194dc0f2a4c0428e7128a/nodeenv-1.9.1-py2.py3-none-any.whl", hash = "sha256:ba11c9782d29c27c70ffbdda2d7415098754709be8a7056d79a737cd901155c9", size = 22314, upload-time = "2024-06-04T18:44:08.352Z" },
-]
-
-[[package]]
-name = "nose"
-version = "1.3.7"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/58/a5/0dc93c3ec33f4e281849523a5a913fa1eea9a3068acfa754d44d88107a44/nose-1.3.7.tar.gz", hash = "sha256:f1bffef9cbc82628f6e7d7b40d7e255aefaa1adb6a1b1d26c69a8b79e6208a98", size = 280488, upload-time = "2015-06-02T09:12:32.961Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/15/d8/dd071918c040f50fa1cf80da16423af51ff8ce4a0f2399b7bf8de45ac3d9/nose-1.3.7-py3-none-any.whl", hash = "sha256:9ff7c6cc443f8c51994b34a667bbcf45afd6d945be7477b52e97516fd17c53ac", size = 154731, upload-time = "2015-06-02T09:12:40.57Z" },
 ]
 
 [[package]]
@@ -1147,33 +1085,29 @@ dependencies = [
     { name = "django-appconf" },
     { name = "django-bootstrap3" },
     { name = "django-cleanup" },
-    { name = "django-common-helpers" },
-    { name = "django-debug-toolbar" },
     { name = "django-environ" },
-    { name = "django-fullurl" },
-    { name = "django-html5" },
     { name = "django-import-export" },
     { name = "django-loginas" },
     { name = "django-meta" },
-    { name = "django-nose" },
     { name = "django-recaptcha" },
     { name = "django-stdimage" },
     { name = "django-storages", extra = ["google"] },
-    { name = "factory-boy" },
     { name = "gunicorn" },
     { name = "icalendar" },
     { name = "invoke" },
-    { name = "json-logging-py" },
-    { name = "mock" },
     { name = "pillow" },
     { name = "psycopg", extra = ["binary"] },
-    { name = "ruff" },
+    { name = "python-dateutil" },
+    { name = "requests" },
     { name = "sentry-sdk" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "django-debug-toolbar" },
+    { name = "factory-boy" },
     { name = "pre-commit" },
+    { name = "ruff" },
 ]
 
 [package.metadata]
@@ -1187,32 +1121,30 @@ requires-dist = [
     { name = "django-appconf", specifier = ">=1.1.0,<2.0.0" },
     { name = "django-bootstrap3", specifier = ">=25.1,<27.0" },
     { name = "django-cleanup", specifier = ">=9.0.0,<10.0.0" },
-    { name = "django-common-helpers", specifier = ">=0.9.2,<1.0.0" },
-    { name = "django-debug-toolbar", specifier = ">=5.2.0,<9.0.0" },
     { name = "django-environ", specifier = ">=0.12.0,<0.15.0" },
-    { name = "django-fullurl", specifier = ">=1.4,<2.0" },
-    { name = "django-html5", specifier = ">=1.0.0,<2.0.0" },
     { name = "django-import-export", specifier = ">=4.3.8,<5.0.0" },
     { name = "django-loginas", specifier = ">=0.3.11,<0.4.0" },
     { name = "django-meta", specifier = ">=2.5.0,<3.0.0" },
-    { name = "django-nose", specifier = ">=1.4.7,<2.0.0" },
     { name = "django-recaptcha", specifier = ">=4.1.0,<5.0.0" },
     { name = "django-stdimage", specifier = ">=6.0.2,<7.0.0" },
     { name = "django-storages", extras = ["google"], specifier = ">=1.14,<2.0" },
-    { name = "factory-boy", specifier = ">=3.3.3,<4.0.0" },
     { name = "gunicorn", specifier = ">=23.0.0,<27.0.0" },
     { name = "icalendar", specifier = ">=6.3.1,<8.0.0" },
     { name = "invoke", specifier = ">=2.2.0,<4.0.0" },
-    { name = "json-logging-py", specifier = ">=0.2,<0.3" },
-    { name = "mock", specifier = ">=5.2.0,<6.0.0" },
     { name = "pillow", specifier = ">=12.3.0,<14.0.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9,<4.0.0" },
-    { name = "ruff", specifier = ">=0.8.0,<1.0.0" },
+    { name = "python-dateutil", specifier = ">=2.9,<3" },
+    { name = "requests", specifier = ">=2.33.0,<3" },
     { name = "sentry-sdk", specifier = ">=2.35.0,<3.0.0" },
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "pre-commit", specifier = ">=4.2.0" }]
+dev = [
+    { name = "django-debug-toolbar", specifier = ">=5.2.0,<9.0.0" },
+    { name = "factory-boy", specifier = ">=3.3.3,<4.0.0" },
+    { name = "pre-commit", specifier = ">=4.2.0" },
+    { name = "ruff", specifier = ">=0.8.0,<1.0.0" },
+]
 
 [[package]]
 name = "wrapt"

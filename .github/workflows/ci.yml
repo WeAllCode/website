@@ -34,11 +34,7 @@ jobs:
           DJANGO_SETTINGS_MODULE: coderdojochi.test_settings
         run: >-
           uv run python manage.py test
-          coderdojochi.tests.test_storage_settings
-          coderdojochi.tests.test_security_settings
-          coderdojochi.tests.test_email_util
-          coderdojochi.tests.test_slack_notifications
-          coderdojochi.tests.test_send_reminders
+          coderdojochi.tests accounts weallcode
         shell: bash
 
   django-postgres:
@@ -130,6 +126,16 @@ jobs:
           SECRET_KEY: ci-dummy-secret-key-that-is-long-enough-for-check-deploy-0123456789
           DJANGO_SECURE_SSL_REDIRECT: 'True'
         run: uv run python manage.py check --deploy
+        shell: bash
+
+      - name: Check Sentry init (SENTRY_DSN set)
+        env:
+          DEBUG: 'False'
+          GS_BUCKET_NAME: ci-dummy
+          SECRET_KEY: ci-dummy-secret-key-that-is-long-enough-for-check-deploy-0123456789
+          DJANGO_SECURE_SSL_REDIRECT: 'True'
+          SENTRY_DSN: http://public@127.0.0.1:9/0
+        run: uv run python manage.py check
         shell: bash
 
   infra:
