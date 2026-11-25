@@ -1,4 +1,5 @@
-from datetime import datetime
+import time
+from datetime import date
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -384,7 +385,7 @@ class StudentResource(resources.ModelResource):
 
         obj.first_name = data.get("first_name")
         obj.last_name = data.get("last_name")
-        obj.birthday = datetime.strptime(data.get("birthday", ""), "%m/%d/%Y")  # noqa: DTZ007
+        obj.birthday = date(*time.strptime(data.get("birthday", ""), "%m/%d/%Y")[:3])
         obj.gender = data.get("gender", "")
         obj.school_name = data.get("school_name", "")
         obj.school_type = data.get("school_type", "")

@@ -72,17 +72,11 @@ class Student(CommonInfo):
     def is_registered_for_session(self, session):
         from .order import Order
 
-        try:
-            Order.objects.get(
-                is_active=True,
-                student=self,
-                session=session,
-            )
-            is_registered = True
-        except Exception:  # noqa: BLE001
-            is_registered = False
-
-        return is_registered
+        return Order.objects.filter(
+            is_active=True,
+            student=self,
+            session=session,
+        ).exists()
 
     def get_age(self, date=None):
         if date is None:

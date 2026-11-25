@@ -1,7 +1,6 @@
-from datetime import datetime
-
 from django.contrib import sitemaps
 from django.urls import reverse
+from django.utils import timezone
 
 
 class StaticSitemapView(sitemaps.Sitemap):
@@ -24,4 +23,4 @@ class StaticSitemapView(sitemaps.Sitemap):
         return reverse(item)
 
     def lastmod(self, item):
-        return datetime.now()  # noqa: DTZ005
+        return timezone.now()
