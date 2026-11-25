@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+import logging
 import os
 
 import dj_database_url
@@ -344,18 +345,33 @@ SENTRY_DSN = env("SENTRY_DSN", default="")
 if SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.logging import LoggingIntegration
 
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration()],
+        integrations=[
+            DjangoIntegration(),
+            # sentry-sdk 3 no longer enables logging by default, so add it
+            # explicitly with the 2.x defaults: Python logging records INFO
+            # and up go to Sentry Logs and become breadcrumbs, and ERROR and
+            # up also create error events.
+            LoggingIntegration(
+                level=logging.INFO,
+                event_level=logging.ERROR,
+                breadcrumb_level=logging.INFO,
+            ),
+        ],
         # Sample 10% of transactions by default to stay within the free
         # span quota. Override with SENTRY_TRACES_SAMPLE_RATE.
         traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.1),
-        # Send Python logging records (INFO and up) to Sentry Logs.
-        enable_logs=True,
-        # If you wish to associate users to errors (assuming you are using
-        # django.contrib.auth) you may enable sending PII data.
-        send_default_pii=True,
+        # Attach the django.contrib.auth user (id, email, username) and
+        # client IP to events. Replaces send_default_pii=True. Stack frame
+        # locals with sensitive names (password, token, secret, ...) are
+        # filtered, as the 2.x event scrubber did.
+        data_collection={
+            "user_info": True,
+            "stack_frame_variables": {"mode": "denylist"},
+        },
     )
 
 
