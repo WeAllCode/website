@@ -9,45 +9,45 @@ requires-python = ">=3.11,<3.12"
 
 dependencies = [
     # Core Framework
-    "django>=5.2.16,<6.0",
+    "django>=5.2.19,<6.0",
 
     # Database & Storage
-    "psycopg[binary]>=3.2.9,<4.0.0",
-    "dj-database-url>=2.0,<4.0",
+    "psycopg[binary]>=3.3.9,<4.0.0",
+    "dj-database-url>=3.1.2,<4.0",
     "django-storages[google]>=1.14,<2.0",
 
     # Authentication & Security
-    "django-allauth[socialaccount]>=65.9.0,<66.0.0",
+    "django-allauth[socialaccount]>=65.22.1,<66.0.0",
     "django-recaptcha>=4.1.0,<5.0.0",
-    "django-loginas>=0.3.11,<0.4.0",
+    "django-loginas>=0.3.14,<0.4.0",
 
     # Email & Communications
     "django-anymail[resend]>=13.0,<16.0",
 
     # UI & Templates
-    "django-bootstrap3>=25.1,<27.0",
-    "django-active-link>=0.2.2,<0.4.0",
-    "django-meta>=2.5.0,<3.0.0",
+    "django-bootstrap3>=26.3,<27.0",
+    "django-active-link>=0.3.0,<0.4.0",
+    "django-meta>=2.5.1,<3.0.0",
 
     # Image Processing
-    "pillow>=12.3.0,<14.0.0",
+    "pillow>=13.0,<14.0.0",
     "django-stdimage>=6.0.2,<7.0.0",
     "django-cleanup>=9.0.0,<10.0.0",
 
     # Utilities & Helpers
-    "arrow>=1.3.0,<2.0.0",
+    "arrow>=1.4.0,<2.0.0",
     "icalendar>=6.3.1,<8.0.0",
-    "django-appconf>=1.1.0,<2.0.0",
+    "django-appconf>=1.2.0,<2.0.0",
     "python-dateutil>=2.9,<3",
     "requests>=2.33.0,<3",
 
     # Admin & Data Management
-    "django-import-export>=4.3.8,<5.0.0",
+    "django-import-export>=4.4.6,<5.0.0",
 
     # Background Tasks
 
     # Environment & Configuration
-    "django-environ>=0.12.0,<0.15.0",
+    "django-environ>=0.14.0,<0.15.0",
 
     # Production Server
     "gunicorn>=23.0.0,<27.0.0",
@@ -143,7 +143,6 @@ ignore = [
   "PLC0415", # imports inside functions avoid circular model imports
   "PLR2004", # magic value comparison - style
   "PTH", # os.path -> pathlib - refactor out of scope
-  "RET503", # missing explicit return - views fall through for role-less users
   "RET504", # unnecessary assignment before return - style
   "RUF059", # unused `created` from get_or_create - style
   "SIM103", # return condition directly - style
