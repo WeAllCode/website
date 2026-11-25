@@ -1,3 +1,4 @@
+from datetime import datetime
 from datetime import timedelta
 from http import HTTPStatus
 
@@ -21,6 +22,12 @@ class CalendarViewTest(TestCase):
         assert response.status_code == HTTPStatus.OK
         assert response["Content-Type"].startswith("text/calendar")
         (event,) = Calendar.from_ical(response.content).walk("VEVENT")
+
+        dtstamp = event.decoded("dtstamp")
+        assert isinstance(dtstamp, datetime)
+        assert dtstamp.tzinfo is not None
+        assert dtstamp.utcoffset() == timedelta(0)
+        assert isinstance(event.decoded("dtstart"), datetime)
         return event
 
     def test_session_calendar(self):

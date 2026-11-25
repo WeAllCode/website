@@ -22,7 +22,7 @@ dependencies = [
     "django-loginas>=0.3.14,<0.4.0",
 
     # Email & Communications
-    "django-anymail[resend]>=13.0,<16.0",
+    "django-anymail[resend]>=15.3,<16",
 
     # UI & Templates
     "django-bootstrap3>=26.3,<27.0",
@@ -36,9 +36,9 @@ dependencies = [
 
     # Utilities & Helpers
     "arrow>=1.4.0,<2.0.0",
-    "icalendar>=6.3.1,<8.0.0",
+    "icalendar>=7.3.2,<8",
     "django-appconf>=1.2.0,<2.0.0",
-    "python-dateutil>=2.9,<3",
+    "python-dateutil>=4.0,<5",
     "requests>=2.33.0,<3",
 
     # Admin & Data Management
@@ -57,7 +57,7 @@ dependencies = [
 
     # Task Management (Heroku Procfile release phase runs `invoke release`;
     # move to dev once Procfile/app.json/tasks.py release are removed)
-    "invoke>=2.2.0,<4.0.0",
+    "invoke>=3.0.3,<4",
 ]
 
 [project.urls]
@@ -181,5 +181,5 @@ dev = [
     "pre-commit>=4.7.0",
     "ruff>=0.17.6,<0.18",
     "factory-boy>=3.3.3,<4.0.0",
-    "django-debug-toolbar>=5.2.0,<9.0.0",
+    "django-debug-toolbar>=8.0.0,<9",
 ]
