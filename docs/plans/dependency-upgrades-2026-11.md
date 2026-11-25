@@ -552,7 +552,6 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Not done (wait on 0.5): Sentry 1h watch, `--auth` smoke on staging (login/logout/password change, import screen). Prod-only manual check from Proof: Ali logs in with Google on prod (allauth 65.22).
 - **CP3 done, on prod.** Next: Checkpoint 4.
 - Follow-ups (not in CP3): `GuardianImportResource.get_or_init_instance` DoesNotExist; switch admins to `resource_classes`; allauth deprecated settings (`settings.py:317-319`).
-- (superseded) CI; staging release + smoke; merge; prod release (prev prod `dc113b0`).
 
 ### Checkpoint 2 — done, on prod (2026-11-25). Next: Checkpoint 3
 
