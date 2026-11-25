@@ -492,6 +492,7 @@ Before calling the plan done: use the site through its real entry point (prod, t
 - 1 GB RAM: one deploy at a time (flock). uv sync of a fresh Python (CP7b) downloads every wheel again; expect a slower first deploy.
 - `wac-refresh-staging-db` wipes `upg-smoke`.
 - Cloudflare edge cache (from #1628 / `docs/plans/cloudflare-html-cache.md`, live 2026-11-25): logged-out public HTML on prod is cached for up to 60 s (`cf-cache-status: HIT`). After a prod release, the smoke can see the old release for up to 60 s, and load or memory tests through Cloudflare hit the cache. To reach origin, send a `sessionid=x` cookie or a cache-busting query string, or wait 60 s.
+- Don't run `terraform apply` until https://github.com/WeAllCode/website/pull/1631 is merged. The live Cloudflare cache rule (`cloudflare_ruleset.cache`) is defined in `infra/terraform/cache.tf`, which so far exists only on that PR, so an apply from main or from any branch without it would delete the rule.
 
 ## Plan review findings
 
