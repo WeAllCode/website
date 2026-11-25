@@ -511,7 +511,25 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 0 — done except 0.5 (2026-11-24). Next: Checkpoint 1
+### Checkpoint 1 — built and committed locally (2026-11-24). Next: Ali pushes branch + opens PR (runbook step 2)
+
+- Branch `claude/upgrade-cp1-safety-net` from `origin/main` `ee9b6d0`, one commit `677141e`. Not pushed. 13 files: `.github/dependabot.yml`, `.github/workflows/ci.yml`, `coderdojochi/{admin,factories,forms,settings}.py`, `coderdojochi/tests/test_{admin_strtobool,calendar_view,forms_widgets,mentor_updates,password_session}.py`, `pyproject.toml`, `uv.lock`.
+- Process note: this session's edit tools only reach its own worktree, so CP1 was built here by switching this worktree to the CP1 branch; plan commits stay on `claude/dep-upgrades-94f27a`.
+- **Added to the plan as 1E (not in the original):** fixing the pytz import exposed more drift in `test_password_session.py` (7 errors: old URL names `session_password`/`session_detail` with date/slug kwargs; now `session-password`/`session-detail` with `pk`). Also factories drift: `factory.DjangoModelFactory` → `factory.django.DjangoModelFactory`, `MentorFactory.active` → `is_active`, dropped `end_date`/`mentor_*_date` (read-only properties on `Session`). Test-only changes, no app code. One assertion only passed by accident before (checked `str(id)` but the view stores int pks); one hit a 404 because a role-less user goes to the guardian view (test now gives the user a guardian role).
+- **Deviation (1C):** `invoke` stays a prod dependency: `Procfile:1` still runs `invoke release` (Heroku files not yet removed). Move it to dev when Procfile/app.json go.
+- Checks (lead, after `uv sync`):
+  - Full suite: `Ran 72 tests … OK` (baseline 58/2 errors; +3 strtobool, +3 calendar/widgets, +1 mentor, test_password_session's 7 now load).
+  - `uv lock --check` ok; lock diff = only removals of django-common-helpers, django-fullurl, django-html5, django-nose, json-logging-py, mock, nose (no version changes, per 1C).
+  - `grep -E "mock|nose|common-helpers|fullurl|json-logging|html5" pyproject.toml` → nothing.
+  - `actionlint .github/workflows/ci.yml` clean. (`pre-commit.yml:35` `inputs.extra_args` error exists on main; 2B removes it.)
+  - Simulated new CI step (prod env + `SENTRY_DSN=http://public@127.0.0.1:9/0`) → `manage.py check` exit 0; mutation `bogus_option=1` → `TypeError: Unknown option 'bogus_option'`, reverted.
+  - Mutations done and reverted: pytz back → import error; patch target back → AttributeError; calendar summary changed → fail; `"on"` dropped → strtobool fails; `session_password` back → NoReverseMatch. (Widget mutation skipped: forms.py was another task's file.)
+  - Ruff, per touched file, branch vs main: no new findings (factories 0/0, forms 11/11, admin 14/14, settings 18/18, test_mentor_updates 0/1, test_password_session 0/25, new tests 0). `ruff format --check coderdojochi/` clean.
+- **Baseline fact, not caused by CP1:** `ruff check .` reports 315 errors on main and `pre-commit run --all-files` fails on main (`ruff check`, plus `check-json` on `.vscode/settings.json`, which has comments). CI doesn't run ruff. So "ruff clean / pre-commit passes" can't be a per-checkpoint bar until 2A deals with it; until then the bar is "no new findings in touched files". **Pitfall seen:** `pre-commit run --all-files` applies ruff auto-fixes; here it rewrote `coderdojochi/apps.py` (`import coderdojochi.signals_handlers` → `pass`, which would silently disconnect every signal handler) and `weallcode/views/programs.py`. Both reverted before commit. 2A must add `# noqa: F401` (or `# noqa`) on that import, and builders must check `git status` after any pre-commit run.
+- Found, not fixed (for 4A): meeting `.ics` DTSTAMP is broken today (`[:-1]` on a value without `Z` → `20261125T03304`, icalendar records a parse error); session DTSTAMP loses its UTC `Z`; meeting DTSTART/DTEND are UTC values written without `Z`; `DESCRIPTION:None` / `LOCATION:None` when empty.
+- Not yet: push/PR/CI (Ali), migration check 4.0 (CP1 has no migrations and no Django version change), staging deploy + Playwright (needs `upg-smoke` from 0.5 for `--auth`), prod release.
+
+### Checkpoint 0 — done except 0.5 (2026-11-24)
 
 0.5 is on Ali, outside this session.
 
