@@ -511,7 +511,11 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 1 — on staging, smoke passed (2026-11-25). Next: Ali merges #1626 → record prev prod sha → Ali's OK for prod release → prod smoke + Sentry watch 1h, then Checkpoint 2
+### Checkpoint 1 — done, on prod (2026-11-25). Next: Checkpoint 2
+
+- 2026-11-25: Ali said merge. #1626 squash-merged as `1668ae5`. **Prod sha before: `ee9b6d015faf6b6bfc45bb6a7586e8b3214204a8`** (rollback target: `release.sh --target prod --force ee9b6d0`). With Ali's OK, `release.sh --target prod 1668ae5`: serial log 13:29:28Z `deploying 1668ae5… (was 'ee9b6d0…')`, 13:31:42Z `wac-web is running 1668ae5…`, 13:31:49Z `done`. **Prod sha after: `1668ae59790c15fe088ec922ef2ff774f14364f6`.** `/etc/wac/reminders-enabled` not touched.
+- Prod smoke `--cp cp1-prod --baseline out/cp0-prod/report.json`: PASS, 0/24 failing, same hosts as CP0 (`/tmp/wac-smoke/out/cp1-prod/report.json`, `out/cp1-prod.log`). No Traceback/Error in the serial log during the deploy.
+- Sentry 1h watch: not done. The only Sentry org reachable is `braven-org`. Ali checks WAC's Sentry, or it's folded into the 0.5 console visit along with the staging delivery check.
 
 - 2026-11-25: CI on #1626 all green (tests, django-postgres, pre-commit, infra; dependabot skipped). With Ali's OK, `release.sh --target staging origin/claude/upgrade-cp1-safety-net`: `current-staging` `4e1b015…` → `677141e7f4b5ffd4a7fd9e17703b6a28c1f888cb`. Serial log: `uv sync` installed requests 2.33.0 etc., `migrate` ran (only the existing GuardianImportResource UserWarnings), 13:21:34Z `wac-deploy[staging]: done: 677141e…`, no rollback.
 - Staging smoke `--cp cp1-staging --baseline out/cp0-staging/report.json`: PASS, 0/24 failing, same hosts as CP0. Report `/tmp/wac-smoke/out/cp1-staging/report.json`, log `/tmp/wac-smoke/out/cp1-staging.log`. `--auth` still not run (needs `upg-smoke` from 0.5).
