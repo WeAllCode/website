@@ -546,6 +546,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - With Ali's OK, pushed and opened https://github.com/WeAllCode/website/pull/1629 (CP3) and https://github.com/WeAllCode/website/pull/1630 (this plan onto main, docs only, so every session reads one copy; Ali chose this). CI pending at open.
 - CI on #1629 all green (4 passing, dependabot skipped). With Ali's OK ("Yes, when green"), `release.sh --target staging origin/claude/upgrade-cp3-python-bumps`: `current-staging` `b505447…` → `c891051486f1f689711562bb1c4cf77986817088`. Serial log 17:42:50Z deploying, 17:45:19Z running, 17:45:23Z `done`, no rollback/Traceback.
 - Staging smoke `--cp cp3-staging --baseline out/cp0-staging/report.json`: PASS 0/24, same hosts as CP0 (`/tmp/wac-smoke/out/cp3-staging/report.json`, `out/cp3-staging.log`). `--auth` (login/logout/password change, import screen) still waits on `upg-smoke` (0.5).
+- 2026-11-25: Ali said "Merge + release prod". **Prod sha before: `9ce8c61a624a724fefc0d4fe892d5969adefbf15`** (#1628, released by the edge-cache session after CP2; rollback: `release.sh --target prod --force 9ce8c61`). #1629 squash-merged as `7deb61d` (on top of `f25adbd`, #1631: Terraform/docs only). No migrations, so no backup step.
 - Next: CI; staging release + smoke; merge; prod release (prev prod `dc113b0`).
 
 ### Checkpoint 2 — done, on prod (2026-11-25). Next: Checkpoint 3
