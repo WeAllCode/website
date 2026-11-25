@@ -113,8 +113,14 @@ INSTALLED_APPS = [
     "weallcode",
 ]
 
+# Edge-cache TTL (s-maxage) for logged-out public pages; see coderdojochi/middleware.py.
+# 0 is the kill switch: every response gets Cache-Control: private.
+PUBLIC_CACHE_SECONDS = env.int("PUBLIC_CACHE_SECONDS", default=60)
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # Must sit above Session/Csrf/Message middleware so it sees the cookies they set.
+    "coderdojochi.middleware.public_cache_headers",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
