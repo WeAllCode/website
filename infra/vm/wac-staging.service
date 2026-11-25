@@ -19,7 +19,7 @@ EnvironmentFile=/etc/wac/env-staging
 # EnvironmentFile wins over Environment, so keep this key out of the staging env secret.
 Environment=GOOGLE_APPLICATION_CREDENTIALS=/etc/wac/staging-sa.json
 WorkingDirectory=/srv/wac/staging/current
-ExecStart=/srv/wac/staging/current/.venv/bin/gunicorn coderdojochi.wsgi --preload -w 1 --timeout 120 --max-requests 500 --max-requests-jitter 50 -b unix:/run/wac-staging/gunicorn.sock --access-logfile -
+ExecStart=/srv/wac/staging/current/.venv/bin/gunicorn coderdojochi.wsgi --preload -w 1 --timeout 120 --max-requests 500 --max-requests-jitter 50 -b unix:/run/wac-staging/gunicorn.sock --access-logfile - --access-logformat '%%({cf-connecting-ip}i)s %%(l)s %%(u)s %%(t)s "%%(r)s" %%(s)s %%(b)s "%%(f)s" "%%(a)s"'
 ExecReload=/bin/kill -s HUP $MAINPID
 RuntimeDirectory=wac-staging
 RuntimeDirectoryMode=0755

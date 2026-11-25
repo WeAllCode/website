@@ -1,0 +1,22 @@
+# Paths that must never be blocked by the scanner defenses (Caddy probe block, Cloudflare WAF rules, rate limit). Fixture for docs/plans/scanner-defense.md, read by infra/vm/test-caddy-probes.sh (expects the request to reach the app) and infra/vm/check-edge-blocks.sh (expects the status below).
+# Format: one "<path> <expected GET status>" pair per line, separated by a single space. Lines starting with # and blank lines are ignored.
+# Statuses recorded from prod on 2026-11-25 with curl -s -o /dev/null -w '%{http_code}' https://www.weallcode.org<path> (GET, browser user agent, no cookies, redirects not followed).
+# /careers/ and /.well-known/security.txt are the full Django 404 page (~74 KB). /anymail/resend/tracking/ is the Resend webhook (POST only, so GET is 405). /account/google/login/callback/ without OAuth parameters is 401. /dj-admin/ redirects to the admin login.
+/ 200
+/programs/ 200
+/team/ 200
+/mentors/ 200
+/privacy/ 200
+/join-us/ 200
+/classes/476/ 200
+/our-story/ 200
+/programs/summer-camps/ 200
+/account/login/ 200
+/account/google/login/ 200
+/account/google/login/callback/ 401
+/dj-admin/ 302
+/anymail/resend/tracking/ 405
+/robots.txt 200
+/sitemap.xml 200
+/.well-known/security.txt 404
+/careers/ 404
