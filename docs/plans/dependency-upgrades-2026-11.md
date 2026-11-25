@@ -532,6 +532,14 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 ### Checkpoint 6 — in progress (2026-11-25)
 
 - Started: code branch `claude/upgrade-cp6-sentry-939993` at `origin/main` `13b7089` (#1637 docs on top of CP5 `b55d652`). Prod is `b55d652`. D3 gate met: sentry-sdk 3.0.0 (2026-11-23) and 3.0.1 (2026-11-25) on PyPI; 3.0.1 is latest. Dependabot open = only #1586 (superseded).
+- Built (one sub-agent, 6A): commit `6ac15c2` on local branch `claude/upgrade-cp6-sentry`. **Not pushed.** 3 files: `pyproject.toml` (`sentry-sdk>=3.0.1,<4`), `uv.lock` (only sentry-sdk 2.76.0→3.0.1; deps certifi/urllib3 unchanged), `coderdojochi/settings.py` (`import logging`; Sentry block).
+- **Correction to 6A text:** 2.76 *did* create events from ERROR log records (LoggingIntegration was default, `event_level=ERROR`; `integrations/__init__.py:61`, `logging.py:26-27`), and `send_reminders.py:212` relies on it. So the block sets `LoggingIntegration(level=INFO, event_level=ERROR, breadcrumb_level=INFO)` = 2.76 behaviour exactly, not `event_level=None`.
+- PII: `data_collection={"user_info": True, "stack_frame_variables": {"mode": "denylist"}}`. User id/email/username + client IP still sent. 3.0.1 removed `EventScrubber`, so without the denylist, frame locals (password, token…) would go raw. Differences vs 2.76: query params now denylist-filtered (less); log `extra`, breadcrumb data, span data no longer scrubbed (more; no 3.x option); `attach_stacktrace` default now True (bigger events, left as default).
+- Other APIs used here (`new_scope`, `capture_message`, `last_event_id`, `capture_exception`) all exist in 3.0.1.
+- Checks (lead re-ran): `uv lock --check` ok; `ruff check .` all passed; `ruff format --check .` 120 formatted; `Ran 111 tests … OK`; CI "Check Sentry init" reproduced (job + step env, `SENTRY_DSN=http://public@127.0.0.1:9/0`) → `manage.py check` exit 0. Agent: `pre-commit run --all-files` all Passed, no files changed. Runtime: integrations include `logging`, handlers logs INFO / events ERROR / breadcrumbs INFO.
+- Mutations (agent, reverted, `cmp` identical): `enable_tracing=True` → `TypeError: Unknown option 'enable_tracing'`; old block → `TypeError: Unknown option 'enable_logs'`; `send_default_pii` alone → TypeError.
+- Memory (startup only): `manage.py check` peak RSS 3.0.1 ≈128 MB vs 2.76 ≈129 MB. Runtime/span-streaming memory still needs staging + serial console.
+- Runbook step 0 skipped: no Django/app package changed, so no migrations possible.
 
 ### Checkpoint 5 — done, on prod (2026-11-25). Next: Checkpoint 6 (sentry-sdk 3, gated by D3)
 
