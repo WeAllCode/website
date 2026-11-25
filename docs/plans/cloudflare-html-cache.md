@@ -50,9 +50,9 @@ Docs (Cloudflare, checked 2026-11-25):
 
 Owns: new `coderdojochi/middleware.py`, and `coderdojochi/settings.py` (only the `MIDDLEWARE` list and one new setting).
 
-1. In `coderdojochi/settings.py`, add `PUBLIC_CACHE_SECONDS = int(os.environ.get("PUBLIC_CACHE_SECONDS", "60"))` next to the other env-driven settings. Setting it to `0` turns public caching off, which is the kill switch: every response gets `private`.
+1. In `coderdojochi/settings.py`, add `PUBLIC_CACHE_SECONDS = env.int("PUBLIC_CACHE_SECONDS", default=60)` next to the other env-driven settings. settings.py reads everything through django-environ's `env`. Setting it to `0` turns public caching off, which is the kill switch: every response gets `private`. The middleware must read `settings.PUBLIC_CACHE_SECONDS` on every request, never at import time, or `override_settings` in the tests won't take effect.
 2. Create `coderdojochi/middleware.py` with a function-style middleware `public_cache_headers(get_response)`. After `response = get_response(request)`:
-   - If the response already has a `Cache-Control` header, leave it alone. This keeps `never_cache` views and the allauth login page's own `max-age` header.
+   - If the response already has a `Cache-Control` header, leave it alone. This keeps `never_cache` views as they are, including allauth's `LoginView`, which is `never_cache` and so already `private`.
    - Mark the response public with `django.utils.cache.patch_cache_control(response, public=True, max_age=0, s_maxage=settings.PUBLIC_CACHE_SECONDS)` only when **all** of these hold:
      - `PUBLIC_CACHE_SECONDS > 0`
      - `request.method in ("GET", "HEAD")`
@@ -71,7 +71,7 @@ Pitfalls:
 - The middleware must sit above `SessionMiddleware`, `CsrfViewMiddleware` and `MessageMiddleware` in the list, or `response.cookies` won't yet hold the cookies they set.
 - `request.user` is lazy and set by `AuthenticationMiddleware`, but it's read after `get_response`, so it's already present.
 - `session-detail` is left out: a password-protected class redirects anonymous visitors (a 302, which gets `private` here), but after a visitor enters the password, the session cookie bypasses the cache anyway. It's still left out until someone checks that `public/session_detail.html` has no per-request content. Add it in a later change.
-- Don't touch `Vary`. Django already sends `Vary: Cookie`, and Cloudflare ignores it by default.
+- Don't touch `Vary`. Django already sends `Vary: Cookie`. The docs don't clearly say whether Cloudflare's default ignores it, so the Checkpoint 2 spike confirms that a `HIT` happens despite it. If it never hits, record it in Progress and stop for Ali.
 
 Proof: Task B's tests.
 
@@ -79,7 +79,16 @@ Proof: Task B's tests.
 
 Owns: new `coderdojochi/tests/test_cache_headers.py`.
 
-It can be written in parallel with Task A because it tests the behavior spec above, not the code. Use `django.test.TestCase` and the test client, with `DJANGO_SETTINGS_MODULE=coderdojochi.test_settings`. Copy the user setup from `accounts/tests.py`, or make a user with `get_user_model().objects.create_user(...)` and `self.client.force_login(user)`. Tests:
+It can be written in parallel with Task A because it tests the behavior spec above, not the code. Use `django.test.TestCase` and the test client, with `DJANGO_SETTINGS_MODULE=coderdojochi.test_settings`.
+
+**Decorate the class with `@override_settings(SECURE_SSL_REDIRECT=False)`.** test_settings leaves it True, so otherwise every request is a 301 from SecurityMiddleware. Copy this from `coderdojochi/tests/test_calendar_view.py:16`. Copy the user setup from `accounts/tests.py`, or make a user with `get_user_model().objects.create_user(...)` and `self.client.force_login(user)`.
+
+Each guard in the middleware needs a test that fails without it, so test each condition alone. Use `django.test.RequestFactory` plus a direct call of the middleware with a stub `get_response`, alongside the client tests:
+- authenticated user with **no** cookies → `private`. This tests the `is_authenticated` guard.
+- anonymous with a `sessionid` cookie → `private`. This tests the request-cookie guard.
+- anonymous, and the stub response sets a cookie → `private`. This tests the `response.cookies` guard.
+
+Tests:
 
 1. `test_allowlist_names_resolve`: every name in `PUBLIC_CACHE_VIEW_NAMES` except `mentor-detail` reverses without error. `mentor-detail` takes `pk=1`.
 2. `test_anonymous_home_is_public`: `GET /` → 200, `Cache-Control` contains `public`, `s-maxage=60` and `max-age=0`.
@@ -90,6 +99,8 @@ It can be written in parallel with Task A because it tests the behavior spec abo
 7. `test_messages_cookie_is_private`: set `self.client.cookies["messages"] = "x"`, `GET /` → `private`.
 8. `test_kill_switch`: with `override_settings(PUBLIC_CACHE_SECONDS=0)`, `GET /` → `private`.
 9. `test_redirect_is_private`: `GET /get-involved/` (302) → `private`.
+10. `test_guard_authenticated_no_cookie`, `test_guard_request_sessionid`, `test_guard_response_cookie`: the three RequestFactory tests above. Use `resolve("/")` to set `request.resolver_match` on the factory request.
+11. Note: a fake `messages=x` cookie fails to decode, so Django deletes it in the response. Test 7 therefore proves the behaviour, but not the `"messages" in request.COOKIES` line by itself. That's accepted.
 
 Pitfalls:
 - The home page queries classes. `test_settings` uses in-memory sqlite, so an empty DB is fine; check that `/` renders 200 there before writing the asserts.
@@ -105,7 +116,7 @@ Owns: new `infra/terraform/cache.tf`, and `infra/terraform/README.md` (one short
 It waits for Checkpoint 1 to be live on prod. Without the origin headers, the rule would cache pages with Cloudflare's 2-hour default.
 
 1. Before writing HCL, check that no cache-settings ruleset exists. Use a read-only call with the Terraform token: `curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/zones/<zone_id>/rulesets" | jq '.result[] | select(.phase=="http_request_cache_settings")'`. If one exists, import it (`terraform import cloudflare_ruleset.cache 'zones/<zone_id>/<ruleset_id>'`) and keep its rules, and record that in Progress. Also check that the token can edit rulesets. If `terraform plan` or the API returns 403, stop: Ali adds "Zone → Cache Rules: Edit" (and "Cache Purge") to the token named in 1Password `op://homelab/Cloudflare weallcode Terraform/credential`.
-2. `cache.tf`: one `cloudflare_ruleset` "cache", `kind = "zone"`, `phase = "http_request_cache_settings"`, `zone_id = var.cloudflare_zone_id`, with one rule:
+2. `cache.tf`: one `cloudflare_ruleset` "cache" with `name = "Cache settings"` (required in v5), `kind = "zone"`, `phase = "http_request_cache_settings"` and `zone_id = var.cloudflare_zone_id`. In v5, `rules = [ { ... } ]` is a list attribute, not block syntax. Escape the expression's inner quotes as `\"` in HCL. It has one rule:
    - `ref = "cache_public_html"`, `action = "set_cache_settings"`.
    - expression: `(http.host in {"${var.domain}" "www.${var.domain}"}) and not (http.cookie contains "sessionid=") and not (http.cookie contains "messages=") and not starts_with(http.request.uri.path, "/admin/") and not starts_with(http.request.uri.path, "/dj-admin/") and not starts_with(http.request.uri.path, "/account/")`
    - `action_parameters = { cache = true, edge_ttl = { mode = "respect_origin" }, browser_ttl = { mode = "respect_origin" } }`
@@ -177,8 +188,8 @@ Check:
 | AC | Test or check | Change that should make it fail |
 |---|---|---|
 | AC1 | `test_anonymous_home_is_public`; `curl -sI https://www.weallcode.org/` twice shows `HIT`, `age` ≤ 60 | in `middleware.py`, change `public=True` to `private=True` |
-| AC2 | `test_join_us_is_private`, `test_404_is_private`, `test_redirect_is_private`, `test_login_page_not_public`; `curl -sI https://www.weallcode.org/join-us/` twice never shows `HIT` | delete the `not response.cookies` condition (fails `test_join_us_is_private` once `weallcode-join-us` is added to the list for the mutation run) or delete the `status_code == 200` condition (fails `test_404_is_private`) |
-| AC3 | `test_logged_in_home_is_private`, `test_messages_cookie_is_private`; `curl -sI -H 'Cookie: sessionid=x' https://www.weallcode.org/` twice never shows `HIT` | delete the `not request.user.is_authenticated` condition |
+| AC2 | `test_join_us_is_private`, `test_404_is_private`, `test_redirect_is_private`, `test_login_page_not_public`, `test_guard_response_cookie`; `curl -sI https://www.weallcode.org/join-us/` twice never shows `HIT` | delete the `not response.cookies` condition (fails `test_guard_response_cookie`); separately, delete `status_code == 200` (fails `test_404_is_private`) |
+| AC3 | `test_logged_in_home_is_private`, `test_messages_cookie_is_private`, `test_guard_authenticated_no_cookie`, `test_guard_request_sessionid`; `curl -sI -H 'Cookie: sessionid=x' https://www.weallcode.org/` twice never shows `HIT` | delete the `not request.user.is_authenticated` condition (fails `test_guard_authenticated_no_cookie`); separately, delete the `sessionid` request-cookie check (fails `test_guard_request_sessionid`) |
 | AC4 | `curl -sI https://gcp.weallcode.org/` twice and `curl -sI -u staging:<pw> https://staging.weallcode.org/` twice, never `HIT` | remove the `http.host in {...}` clause from the rule (don't apply it; reason it from the expression) |
 | AC5 | oha load test in Checkpoint 3 | n/a |
 | AC6 | `terraform plan` exits 0 with "No changes" | n/a |
@@ -191,6 +202,29 @@ Mutation rule: when a test is written, make its one-line change, confirm the tes
 Whole-build checks: `DJANGO_SETTINGS_MODULE=coderdojochi.test_settings uv run python manage.py test coderdojochi.tests accounts weallcode`, the lint CI runs, `terraform fmt -check` and `terraform validate`, CI on the PR, and the curls above.
 
 Before each commit, check the actual files, never the sub-agent's report. Anything that doesn't match goes back to its sub-agent or is fixed, never accepted on trust. Before you call it done, use the site through its real entry point the way a user would (logged out and logged in), and check that normal use still works.
+
+## Plan review (2026-11-25)
+
+A fresh sub-agent reviewed the plan. Each finding is folded into the task text above:
+
+| # | Severity | Finding | Resolution |
+|---|---|---|---|
+| 1 | Blocker | test_settings keeps `SECURE_SSL_REDIRECT=True`, so every test request is a 301 | Task B: `@override_settings(SECURE_SSL_REDIRECT=False)` on the class |
+| 2 | Should-fix | v5 `cloudflare_ruleset` needs `name`; `rules` is a list attribute | Task C step 2 updated |
+| 3 | Should-fix | The AC3 and AC2 mutations wouldn't fail any test (the guards overlap), and the messages test can't isolate its line | Task B adds three RequestFactory guard tests; the Proof table now has one mutation per guard |
+| 4 | Nit | allauth `LoginView` is `never_cache`, not its own `max-age` | Task A wording fixed |
+| 5 | Nit | settings use django-environ, and the setting must be read per request | Task A step 1 fixed |
+| 6 | Nit | The docs don't clearly say Vary is ignored | The spike confirms a `HIT`; stop if not |
+
+The reviewer confirmed these are safe as planned:
+- the middleware order
+- the CSRF cookie (Django 5.2 always re-sends it when a token renders, so those pages go `private`)
+- flash messages
+- per-user content
+- cookie expressions (they can only over-match, which means an extra bypass, never a leak)
+- excluding staging and gcp by host
+- 5xx not being cached
+- never overriding the edge TTL
 
 ## Progress
 
