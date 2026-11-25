@@ -511,7 +511,9 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 2 — fix commit added, not pushed (2026-11-25). Next: Ali OK to push `c71fef2` → CI → staging again → merge → prod
+### Checkpoint 2 — `c71fef2` on staging (2026-11-25). Next: Ali merges #1627 → prod release
+
+- With Ali's OK, pushed `c71fef2`. CI on that head: tests, pre-commit, django-postgres, infra all SUCCESS (dependabot skipped). `release.sh --target staging origin/claude/upgrade-cp2-tooling`: `current-staging` `7049da0…` → `c71fef2baaa83efe649a3aebe12056bba566aeb7`; serial log 14:49:38Z deploying, 14:51:41Z running, 14:51:46Z `done`, no rollback. Smoke `--cp cp2b-staging --baseline out/cp0-staging/report.json`: PASS 0/24, same hosts (`/tmp/wac-smoke/out/cp2b-staging/report.json`).
 
 - Ali asked to replace the easy new noqa's with real fixes. Commit `c71fef2` on `claude/upgrade-cp2-tooling` (not pushed): sitemap `timezone.now()`; admin student import `date(*time.strptime(...)[:3])` (ruff 0.17 still flags `datetime.strptime(...).date()` as DTZ007); `is_registered_for_session` → `.filter(...).exists()` (2+ active orders now = registered; old code returned False). New `coderdojochi/tests/test_student.py` (7 tests). Checks: `ruff check .` ok, format ok, `Ran 79 tests … OK`, pre-commit all passed; mutation (drop `is_active=True`) fails a test, reverted. Remaining CP2 noqa: `apps.py` F401 (required), `forms.py` DJ006.
 - **Found, not fixed:** `StudentResource.import_obj` (`coderdojochi/admin.py`) is never called by django-import-export 4.x (it calls `import_instance`), so the guardian lookup and birthday parse in it are dead in real admin imports. Fix belongs with CP3 (import-export 4.4) or its own issue.
