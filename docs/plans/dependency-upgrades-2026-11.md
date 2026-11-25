@@ -515,11 +515,11 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 - [x] Rebased plan branch onto `origin/main` = `ee9b6d0` (#1625). `git diff --stat f940d74 origin/main` outside docs touches only: `ci.yml` (+1), `cron.py` (deleted), `send_reminders.py` + test (new), `test_settings.py` (+3), `infra/vm/README.md`, `provision.sh` (+17), `wac-reminders.{service,timer}` (new), `pyproject.toml`/`uv.lock` (django-cron out). Every other cited file is unchanged, so its line refs hold.
 - [x] Line refs re-checked. `settings.py` unchanged: `html5` :105, `django_nose` :109, Sentry init :344-357, `DEFAULT_AUTO_FIELD` :360, debug toolbar :370-372, `LOGGING` :386, `STATIC_URL` :280. Drifted and fixed above: `provision.sh` `HOME=/nonexistent` :215→:232, `--install-files` exit :178-184→:195-201, uv block :245→:263 (R3 row updated); `ci.yml` tests job now 5 named modules, refs by step name. `heroku-to-gcp-e2micro.md` +1 line at the end; :253 and :520 still hold.
-- [x] 0.1: #1623 (`f940d74`) is an ancestor of `ee9b6d0`, which the D4 note records as released to prod. Prod pointer sha still to read (needs Ali's OK).
-- [x] 0.2: open Dependabot PRs: #1586 (actions/checkout 6→7; superseded by 2B). Asking Ali to close it.
+- [x] 0.1: #1623 (`f940d74`) is an ancestor of `ee9b6d0`, which the D4 note records as released to prod. With Ali's OK, read the pointers: `current-prod` = `ee9b6d015faf6b6bfc45bb6a7586e8b3214204a8` (= `origin/main`), `current-staging` = `4e1b0158adee4f4299783436a6615a94f747c5cc`.
+- [x] 0.2: open Dependabot PRs: #1586 (actions/checkout 6→7; superseded by 2B). Ali: leave it open. Ali: 2C re-enables Dependabot with the `uv` ecosystem after the last checkpoint.
 - [x] 0.3 baseline (local, Python 3.11.14): `Ran 58 tests`, `FAILED (errors=2)`: `test_password_session` (`ModuleNotFoundError: No module named 'pytz'` from `factories.py:4`) and `test_new_mentor_no_avatar` (`AttributeError: … signals_handlers … does not have the attribute 'EmailMultiAlternatives'`).
 - [ ] 0.4 Playwright baseline (prod public + staging): waiting on Ali's OK.
-- [ ] 0.5 serial-console baselines + `upg-smoke`: waiting on Ali.
+- [ ] 0.5 serial-console baselines + `upg-smoke`: Ali does this later; he said to start CP1 meanwhile. 0.5 must be done before CP1's staging `--auth` smoke, CP5's memory check and CP7.
 
 ## Sources
 
