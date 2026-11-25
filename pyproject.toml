@@ -50,7 +50,7 @@ dependencies = [
     "django-environ>=0.14.0,<0.15.0",
 
     # Production Server
-    "gunicorn>=23.0.0,<27.0.0",
+    "gunicorn>=27.0.1,<28",
 
     # Monitoring & Logging
     "sentry-sdk>=2.35.0,<3.0.0",
@@ -172,6 +172,7 @@ ignore = [
 "coderdojochi/util.py" = ["B006"] # email() defaults are never mutated
 "manage.py" = ["EXE001"] # run via `python manage.py`; no mode change
 "tasks.py" = ["B008", "PT028"] # invoke tasks: env defaults are intended; not pytest
+"gunicorn.conf.py" = ["INP001", "N999"] # gunicorn config file, loaded from cwd; not a package module
 
 [tool.ruff.lint.isort]
 force-single-line = true
