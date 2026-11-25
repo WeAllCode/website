@@ -1,3 +1,6 @@
+from datetime import UTC
+from datetime import datetime
+
 import arrow
 from django.conf import settings
 from django.http import HttpResponse
@@ -45,7 +48,7 @@ class CalendarView(View):
         event["summary"] = self.get_summary(request, event_obj)
         event["dtstart"] = self.get_dtstart(request, event_obj)
         event["dtend"] = self.get_dtend(request, event_obj)
-        event["dtstamp"] = event["dtstart"][:-1]
+        event.add("dtstamp", datetime.now(UTC))
         event["location"] = vText(self.get_location(request, event_obj))
         event["url"] = f"{settings.SITE_URL}{event_obj.get_absolute_url()}"
         event["description"] = self.get_description(event_obj)
