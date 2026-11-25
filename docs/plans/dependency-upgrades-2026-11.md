@@ -6,7 +6,7 @@ Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. W
 
 - D1: Python 3.13 now (Checkpoint 7). Django 6.2 LTS in April 2027 (Checkpoint 8 waits for 6.2 and released Django 6 support in storages/recaptcha).
 - D2: front-end latest within each major, as written. **Added by Ali:** vendor all third-party fonts, CSS and JS and host them ourselves (Checkpoint 9).
-- D5 (open): remove the dead Universal Analytics snippet (`UA-78618586-1`) in Checkpoint 9, or keep it.
+- D5: replace the dead Universal Analytics snippet (`UA-78618586-1`) with GA4 in Checkpoint 9 (tasks 9B and 9F). The GA4 tag is rendered only when the `GA_MEASUREMENT_ID` setting is set. Ali supplies the `G-…` ID and adds it to `wac-env-prod` only, never staging.
 - D3: sentry-sdk 3 waits for 3.0.1+ or 2 weeks after 3.0.0, whichever comes first; until then keep `<3`.
 - D4: **keep** `coderdojochi/cron.py` and django-cron. Ali wants the reminders back, and that is a separate task. In 1C, do **not** remove django-cron or delete `cron.py`. Checkpoint 8 gets a precondition: the reminders task must have replaced or fixed django-cron (its models use `index_together`, removed in Django 5.1), or django-cron must have a release that supports Django 6.
 
@@ -23,7 +23,7 @@ Status: **approved by Ali 2026-11-24.** Nothing built, pushed or deployed yet. W
 5. After each prod release: `/`, `/programs/`, `/team/`, `/account/login/`, `/dj-admin/login/` return 200 through Cloudflare; no new Sentry issues in the hour after; staging `MemoryPeak` (and prod's, where checked) is within +10% of the Checkpoint 0 baseline (R14).
 6. Every prod release has a written rollback path that was checked before release (previous main sha recorded; DB backup taken when the PR adds migrations).
 7. Dead dependencies are removed instead of upgraded (list in Checkpoint 1).
-8. Every third-party font, CSS and JS file is vendored under `coderdojochi/static/vendor/` and served from our own static bucket. The only remaining third-party hosts are the services on the Checkpoint 9 allowlist (reCAPTCHA, Google Charts, and Analytics if D5 keeps it).
+8. Every third-party font, CSS and JS file is vendored under `coderdojochi/static/vendor/` and served from our own static bucket. The only remaining third-party hosts are the services on the Checkpoint 9 allowlist (reCAPTCHA, Google Charts, GA4 gtag).
 
 **Out of scope.** Moving the VM to Debian 13 (new boot disk, and Postgres lives on it). Bootstrap 3 → 5, Font Awesome → 6/7, jQuery 4, Foundation 7 ("Yeti"): these are rewrites of the HTML/CSS, not upgrades (see "Front-end scope" below). Replacing the old Google `jsapi` chart loader in `session_stats.html`.
 
@@ -310,7 +310,7 @@ Ali (2026-11-24): vendor every third-party font, CSS and JS file into the repo a
 - Google reCAPTCHA (`django_recaptcha` widget): it is a live Google service and must load from Google.
 - Google Charts `https://www.gstatic.com/charts/loader.js` (`dashboard/admin.html:19`, `meeting_check_in.html:17`, `session_check_in.html:57`): Google's terms don't allow self-hosting the loader, which also fetches more code at runtime.
 - `https://www.google.com/jsapi` (`dashboard/session_stats.html:12`): this is the old Charts loader. Switch it to `gstatic.com/charts/loader.js` with `google.charts.load` in 9C, so there's one allowed host.
-- Google Analytics `analytics.js` (`weallcode/templates/weallcode/_base.html:86-94`, property `UA-78618586-1`): Universal Analytics stopped processing data in 2023, so this script does nothing. Whether to remove it is Ali's call (D5). Don't vendor it.
+- Google Analytics: the dead UA `analytics.js` snippet (`weallcode/templates/weallcode/_base.html:86-94`) is removed, and GA4 `https://www.googletagmanager.com/gtag/js?id=<GA_MEASUREMENT_ID>` replaces it (D5). Google's tag can't be self-hosted, so `www.googletagmanager.com` is on the allowlist. GA4 sends hits to `*.google-analytics.com` from the browser; that's beacon traffic, not an asset.
 
 **Vendored layout (fixed paths, so templates and files can be built in parallel).** Everything goes under `coderdojochi/static/vendor/`, which is served as `{% static 'vendor/…' %}` because `coderdojochi` is an installed app. Each library's license file sits next to it.
 
@@ -342,6 +342,12 @@ Ali (2026-11-24): vendor every third-party font, CSS and JS file into the repo a
 - Replace the cdnjs Font Awesome 5, fonts.googleapis, jQuery, what-input and Foundation tags with `{% static 'vendor/…' %}`. Fonts: link `vendor/fonts/bungee/400.css`, `vendor/fonts/poppins/400.css` and `vendor/fonts/open-sans/400.css`, which is today's request (no weights given = 400). Keep the local `weallcode/css/foundation.min.css` (6.5.1 CSS, which is fine with 6.9 JS).
 - Remove the seamless-scroll-polyfill `<script>` (it's dead in 2.x; native `scroll-behavior` covers it). If `weallcode/static/weallcode/css/app.css` has no `scroll-behavior: smooth`, report that; don't edit app.css.
 - Drop the `<!--[if IE]>` block.
+- Replace the UA snippet (`:86-94`) with the standard GA4 gtag snippet inside `{% if GA_MEASUREMENT_ID %}…{% endif %}`, using `{{ GA_MEASUREMENT_ID }}` in both the script URL and `gtag('config', …)`. The context variable comes from 9F.
+
+**9F. GA4 setting.** Files: `coderdojochi/settings.py` (one line near the other `env(...)` reads), `coderdojochi/context_processors.py` (or wherever `SENTRY_DSN` already reaches templates; grep `SENTRY_DSN` in `context_processors`/views first and reuse that path), `infra/vm/env.prod.example` and `infra/vm/env.staging.example` (document the key; staging leaves it empty).
+- `GA_MEASUREMENT_ID = env("GA_MEASUREMENT_ID", default="")`. Use a `""` default, never `False` (see the comment at `settings.py:336-338`).
+- Test (in 9E's file): with `override_settings(GA_MEASUREMENT_ID="G-TEST123")`, `/` contains `gtag/js?id=G-TEST123`; with `""` it contains no `googletagmanager`. Mutation: drop the `{% if %}` → the empty-ID test fails.
+- Prod check after release: once Ali adds the secret version and runs `release.sh --target prod --force <sha>`, GA4 Realtime shows a visit. No GA4 on staging.
 
 **9C. Dashboard templates.** Files: `coderdojochi/templates/dashboard/_admin_base.html`, `coderdojochi/templates/dashboard/session_stats.html`.
 - `_admin_base.html`: point Google Fonts (Open Sans 300/400/700, Quicksand 300/400/700), FA 4.7.0, Bootstrap 3.4.1 CSS/JS and jQuery 3.8.0 at the vendored files. Remove the old `integrity`/`crossorigin` attributes, which are wrong for local files. Remove the IE8 html5shiv/respond block (`oss.maxcdn.com` is dead).
@@ -353,11 +359,11 @@ Ali (2026-11-24): vendor every third-party font, CSS and JS file into the repo a
 - `500.html:26-37`: use the vendored `vendor/sentry/bundle.min.js` (errors only; no tracing or replay on an error page). Update the init for the v11 API. Check that `Sentry.showReportDialog` still exists in 11.x (`grep -c showReportDialog` on the bundle). If it doesn't, use the v11 user-feedback API and report what changed. Note: 500.html is rendered by Django's error handler; `{% static %}` works there as long as the static setup itself isn't what's broken.
 
 **9E. Guard tests.** Files: new `coderdojochi/tests/test_vendored_assets.py`.
-- Test 1, no CDN: render `/`, `/programs/`, `/account/login/` and (as a staff user) `/admin/` and `/welcome/` with the test client. Extract every `<script src>` and `<link href>` and assert that each one is either relative/`STATIC_URL` or on the allowlist (`www.google.com/recaptcha`, `www.gstatic.com/charts`, `www.google-analytics.com` unless D5 removes it). Also render `500.html` directly with `SENTRY_DSN` and `sentry_event_id` in the context.
+- Test 1, no CDN: render `/`, `/programs/`, `/account/login/` and (as a staff user) `/admin/` and `/welcome/` with the test client. Extract every `<script src>` and `<link href>` and assert that each one is either relative/`STATIC_URL` or on the allowlist (`www.google.com/recaptcha`, `www.gstatic.com/charts`, `www.googletagmanager.com`). Also render `500.html` directly with `SENTRY_DSN` and `sentry_event_id` in the context.
 - Test 2, the manifest builds: under `override_settings(STORAGES={"staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"}, …}, STATIC_ROOT=<tmpdir>)`, run `call_command("collectstatic", "--noinput")` and assert it doesn't raise and that `staticfiles.json` maps `vendor/fontawesome5/css/all.min.css`. This is the same post-processing the GCS `StaticStorage` does, so it catches missing fonts and maps before staging.
 - Mutations: put one cdnjs URL back in `_base.html` → test 1 fails; delete one file from `vendor/fontawesome5/webfonts/` → test 2 fails. Undo each with the exact reverse edit, or by restoring the file from the vendor task.
 
-- 9A–9E run in parallel, because the paths are fixed above. The lead runs `uv run invoke vendor` once after 9A if a template task needs the files to test.
+- 9A–9F run in parallel, because the paths are fixed above. 9F's test goes in 9E's file, so 9E writes it from 9F's spec. The lead runs `uv run invoke vendor` once after 9A if a template task needs the files to test.
 - Proof: the full test suite, including 9E. On staging, Playwright with **zero new console errors** compared with the 0.4 baseline, **no failed requests**, and **no request to any host outside the allowlist + `storage.googleapis.com` + the site itself** (record every request host per page). Check that font responses come back 200 with `Access-Control-Allow-Origin`, and that the computed `font-family` on `body`/headings is the vendored one (`document.fonts.check('16px Poppins')` is true). Pages: the public list, `/admin/` (cdc-admin dashboard, needs staff), `/welcome/` (needs a logged-in user without a role; use `upg-smoke` or a second temp user). Also open a Foundation menu/off-canvas at mobile width, open a Bootstrap dropdown on the dashboard, open the datepicker on `/welcome/`, and load a session stats page (Google Charts renders).
 
 ## Checkpoints
