@@ -259,7 +259,7 @@ Proof: `shellcheck infra/vm/check-edge-blocks.sh` passes. Run it against prod wi
 
 1. Ali adds "Zone → Zone WAF: Edit" and "Zone → Analytics: Read" to the token "weallcode Terraform" (My Profile → API Tokens → Edit; the `cf` CLI can't edit tokens, see the cache plan's Progress).
 2. Runner, read-only: for each of `http_request_firewall_custom` and `http_ratelimit`, `GET /zones/<zone_id>/rulesets/phases/<phase>/entrypoint`. Expect "could not find entrypoint ruleset". Otherwise record the ruleset id and rules in Progress; Task C imports them.
-3. Runner: with Analytics Read, query GraphQL `httpRequestsAdaptiveGroups` for 2026-11-25 03:42–03:43, `edgeResponseStatus: 404`, grouped by `clientIP`, `clientAsn` and `userAgent`. Record the scanner's IP and ASN in Progress, closing the open question in Why. Use the Terraform token with curl, never the dashboard session. Do this first, because GraphQL retention on Free is short. If the window is past retention, record "unavailable" and move on.
+3. Runner: with Analytics Read, query GraphQL `httpRequestsAdaptiveGroups` for 2026-11-25 03:42–03:43, `edgeResponseStatus: 404`, grouped by `clientIP`, `clientCountryName` and `userAgent` (`clientAsn` is not on Free). Record the scanner's IP in Progress, closing the open question in Why. Use the Terraform token with curl, never the dashboard session. Do this first, because GraphQL retention on Free is short. If the window is past retention, record "unavailable" and move on.
 
 **Checkpoint 1: origin backstop live.** Tasks A and B run in parallel, with separate files.
 
@@ -374,3 +374,7 @@ The reviewer confirmed these are safe as planned:
 
 ## Progress
 
+- **Checkpoint 0 done (2026-11-25, planning session).** Ali added WAF Edit and Analytics Read to the token.
+  - Step 2: both `http_request_firewall_custom` and `http_ratelimit` return "could not find entrypoint ruleset". Nothing to import; Task C creates both.
+  - Step 3: GraphQL works with the token. `clientAsn` is not available on Free ("does not have access to the field"), so query `clientIP`, `clientCountryName`, `userAgent` instead. Result for 03:42–03:43 UTC, 404s: 657 requests from `35.233.37.230` (Google Cloud, Belgium region), UA `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36…`. Scanner IP confirmed. Open question in Why is closed; still no IP rule (cloud IPs rotate).
+- Next: Checkpoint 1.
