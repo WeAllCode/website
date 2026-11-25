@@ -511,7 +511,10 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 2 — PR open (2026-11-25). Next: CI green → Ali OK for staging release
+### Checkpoint 2 — on staging (2026-11-25). Next: Ali merges #1627 → prod release
+
+- CI on #1627 all green (4 passing, dependabot skipped). With Ali's OK ("when CI is green, release to staging"), `release.sh --target staging origin/claude/upgrade-cp2-tooling`: `current-staging` `677141e…` → `7049da05d8753d8494556bee1d1182f786848d35`. Serial log: 14:03:14Z `deploying 7049da0… (was '677141e…')`, 14:05:24Z `wac-staging is running 7049da0…`, 14:05:29Z `done`, no rollback.
+- Staging smoke `--cp cp2-staging --baseline out/cp0-staging/report.json`: PASS, 0/24 failing, same hosts as CP0 (`/tmp/wac-smoke/out/cp2-staging/report.json`, `out/cp2-staging.log`). `--auth` still waits on `upg-smoke` (0.5).
 
 - With Ali's OK, pushed `claude/upgrade-cp2-tooling` and opened https://github.com/WeAllCode/website/pull/1627. CI not reported yet at open.
 
