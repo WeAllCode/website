@@ -511,7 +511,9 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 1 — built and committed locally (2026-11-24). Next: Ali pushes branch + opens PR (runbook step 2)
+### Checkpoint 1 — PR open (2026-11-24). Next: CP1 runbook steps 2–7 (CI green → Ali's OK for staging release → Playwright → Ali merges → prod), then Checkpoint 2
+
+- With Ali's OK, Claude pushed `claude/upgrade-cp1-safety-net` and opened https://github.com/WeAllCode/website/pull/1626. CI hadn't reported any checks yet when it was opened.
 
 - Branch `claude/upgrade-cp1-safety-net` from `origin/main` `ee9b6d0`, one commit `677141e`. Not pushed. 13 files: `.github/dependabot.yml`, `.github/workflows/ci.yml`, `coderdojochi/{admin,factories,forms,settings}.py`, `coderdojochi/tests/test_{admin_strtobool,calendar_view,forms_widgets,mentor_updates,password_session}.py`, `pyproject.toml`, `uv.lock`.
 - Process note: this session's edit tools only reach its own worktree, so CP1 was built here by switching this worktree to the CP1 branch; plan commits stay on `claude/dep-upgrades-94f27a`.
