@@ -568,6 +568,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Allowlist now: reCAPTCHA (`www.google.com`, `www.gstatic.com`, plus Roboto from `fonts.gstatic.com` *inside* the reCAPTCHA iframe), GA4 (prod only), donation widget, gravatar, Cloudflare Insights. No Google Charts, no Roboto on our pages.
 - CI on `31ce02c` all green (tests, pre-commit, django-postgres, infra; dependabot skipped). Ali: "Yes, staging on green". CP7a reported done (prod + staging = `367a8fd`, staging free). `release.sh --target staging origin/claude/upgrade-cp9-frontend` → `current-staging` = `31ce02c…`. Serial 03:07:44Z `python 3.11 (system)` (CP7a's new deploy-pull), 03:10:05Z `wac-staging is running 31ce02c…`, 03:10:09Z `done`, no Traceback/rollback.
 - Staging smoke `--cp cp9g-staging --cp9 …`: **PASS 0/24**, same page hosts as `cp9-staging-r2`. Staging `staticfiles.json` maps `vendor/chartjs/chart.umd.min.js` → `chart.umd.min.aa284506853a.js`, 200, 210040 bytes from the bucket. Logged-in dashboard pages not run on staging (no `upg-smoke`; Ali chose public-only); covered by 9E + the local Chart.js pass.
+- 2026-11-26 ~03:13Z: Ali chose "Merge + release prod". **Prod sha before: `367a8fd549272468d7966a80e08de13a27efab60`** (CP7a; rollback: `release.sh --target prod --force 367a8fd`). #1643 squash-merged as `933ac62` (directly on `367a8fd`). No migrations, so no backup step. CP6 watch over (02:41Z), CP7a done; no other release running.
 
 ### Checkpoint 6 — done, on prod (2026-11-26). 1h Sentry watch clean at 02:41Z, so CP7a's prod release may go
 
