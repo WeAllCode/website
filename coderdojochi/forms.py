@@ -2,6 +2,7 @@ import re
 
 from dateutil.relativedelta import relativedelta
 from django import forms
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.files.images import get_image_dimensions
 from django.forms import FileField
@@ -98,6 +99,21 @@ class CDCModelForm(ModelForm):
         fields = ("first_name", "last_name")
 
 
+# School accounts (Chicago Public Schools) often can't receive outside email,
+# so our messages bounce. Warn at signup instead of blocking (#887).
+SCHOOL_EMAIL_DOMAINS = ("cps.edu",)
+SCHOOL_EMAIL_WARNING = (
+    "School email addresses (like @cps.edu) often can't receive emails from"
+    " us, so you might miss class confirmations and reminders. Please add a"
+    " personal email address on your account page."
+)
+
+
+def is_school_email(address):
+    domain = (address or "").rsplit("@", 1)[-1].strip().lower()
+    return any(domain == d or domain.endswith("." + d) for d in SCHOOL_EMAIL_DOMAINS)
+
+
 class SignupForm(forms.Form):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
@@ -120,6 +136,8 @@ class SignupForm(forms.Form):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         user.save()
+        if is_school_email(user.email):
+            messages.warning(request, SCHOOL_EMAIL_WARNING)
 
 
 class MentorForm(CDCModelForm):
