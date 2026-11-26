@@ -532,6 +532,15 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
+### Checkpoint 7b — in progress (2026-11-26)
+
+- Started ~03:40Z: code branch `claude/upgrade-cp7b-py313` from `origin/main` `933ac62` (prod = `933ac62`, CP9). Dependabot open = only #1586 (superseded). Laptop uv 0.13.7; VM uv 0.13.9 and astral IPv6 HTTP 200 (CP7a).
+- Built by the lead (7 files, no sub-agent): commit `adb8a7b`. `.python-version` 3.13; `requires-python = ">=3.13,<3.14"`; ruff `py313`; pre-commit `python3.13`; `ci.yml` ×2 + `pre-commit.yml` `'3.13'`; Dockerfile `python:3.13.18` (latest 3.13 tag on Docker Hub, non-slim). `uv lock`: same 81 packages and versions as main (only `requires-python`, markers and cp313 wheels change).
+- sdist check: `uv export --no-dev` → `uv pip install --dry-run --python-platform x86_64-manylinux_2_36 --python-version 3.13 --only-binary :all:` resolves every prod dep, so the VM (glibc 2.36, no compiler) needs no sdist build.
+- Checks (local CPython 3.13.13): `ruff check .` ok, 0 new py313 fixes; `ruff format --check .` 125 formatted; `uv lock --check` ok; `Ran 118 tests … OK` (`-Wd`: no new 3.13 warnings); `pre-commit run --all-files` all Passed; `actionlint` ok. Runbook step 0 skipped: no package version changed, so no migrations possible.
+- Pushed, opened https://github.com/WeAllCode/website/pull/1644. CI pending.
+- Memory: the 0.5 baseline still doesn't exist (Ali declined serial-console steps). Plan: compare staging against itself on 3.11 vs 3.13 using whatever the laptop can read (see later entry).
+
 ### Checkpoint 7a — done, on prod (2026-11-26). Next: Checkpoint 7b (Python 3.13)
 
 - Started: code branch `claude/upgrade-cp7a-uv-python` at `origin/main` `78911c9` (prod = `78911c9`). Laptop uv 0.13.7; PyPI latest 0.13.10. `releases.astral.sh` (Cloudflare) and pypi.org/files.pythonhosted.org (Fastly) have AAAA. uv 0.13.7's 3.13 downloads point at `releases.astral.sh/github/python-build-standalone/…` (latest 3.13.18).
