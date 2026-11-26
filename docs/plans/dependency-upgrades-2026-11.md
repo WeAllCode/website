@@ -532,7 +532,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 7a — in progress (2026-11-26)
+### Checkpoint 7a — done, on prod (2026-11-26). Next: Checkpoint 7b (Python 3.13)
 
 - Started: code branch `claude/upgrade-cp7a-uv-python` at `origin/main` `78911c9` (prod = `78911c9`). Laptop uv 0.13.7; PyPI latest 0.13.10. `releases.astral.sh` (Cloudflare) and pypi.org/files.pythonhosted.org (Fastly) have AAAA. uv 0.13.7's 3.13 downloads point at `releases.astral.sh/github/python-build-standalone/…` (latest 3.13.18).
 - R9 gate: Ali declined manual serial-console steps ("do what you can"). So 7A was changed (above, and R3/R9 rows): uv upgrade + astral IPv6 probe run inside the prod deploy's `--install-files`, results read from `gcloud compute instances get-serial-port-output` (works from the laptop with `CLOUDSDK_ACTIVE_CONFIG_NAME=wac`).
@@ -540,6 +540,11 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - CI on #1642 all green (tests, pre-commit, django-postgres, infra incl. shellcheck; dependabot skipped).
 - Staging (staging was CP6's `6ac15c2`, no CP9 release yet): `release.sh --target staging --force origin/claude/upgrade-cp7a-uv-python` → `f033f99…:20261126T021820Z`. Serial 02:18:30Z deploying, 02:20:39Z `wac-staging is running f033f99…`, 02:20:43Z `done`, no Traceback/rollback. (Ran the *old* installed deploy-pull, as expected: staging never installs infra files.) Smoke `--cp cp7a-staging` with `smoke.pre-cp9.mjs` (CP9 is changing `smoke.mjs`) vs cp0-staging baseline: **PASS 0/24**.
 - 2026-11-26 02:27Z: Ali chose "Merge + prod" (and accepted the README isolation note). **Prod sha before: `78911c954703fd1365cd8312815c7e36ac93fcca`** (rollback: `release.sh --target prod --force 78911c9`). #1642 squash-merged as `367a8fd` (directly on `78911c9`). No migrations (infra-only), so no backup step. Prod release waits for CP6's 1h Sentry watch (~02:41Z).
+- 02:42Z (after the CP6 watch; prod pointer was still `78911c9`, no CP9 prod release): `release.sh --target prod 367a8fd549272468d7966a80e08de13a27efab60` (`origin/main` = that sha). Serial: 02:42:19Z deploying, 02:44:08Z `installed /usr/local/sbin/wac-deploy-pull` + `wac-provision`, 02:44:10Z **`uv --version: uv 0.13.9`** (already ≥ 0.13.7, so no upgrade ran), 02:44:10Z **`python download probe: HTTP 200`** for `releases.astral.sh/…/20261110/cpython-3.13.18+20261110-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz`, 02:44:29Z `wac-web is running 367a8fd…`, 02:44:33Z `done`, no Traceback/rollback. **Prod sha after: `367a8fd549272468d7966a80e08de13a27efab60`.** (This deploy ran the old deploy-pull; the next prod deploy logs `python 3.11 (system)`.)
+- **R3 met:** VM uv 0.13.9 ≥ 0.13.7, no `sudo wac-provision` needed. **R9 met:** VM reaches releases.astral.sh over IPv6 (HTTP 200), so 7B stays as written (no `file://` mirror).
+- Prod smoke `--cp cp7a-prod` (`smoke.pre-cp9.mjs`, vs cp0-prod baseline): **PASS 0/24**; origin `sessionid=x` `/privacy/` 200.
+- New deploy-pull exercised: after CP9 posted its staging smoke done, `release.sh --target staging --force 367a8fd…` (staging was CP9's `00802e0`) → serial 02:45:34Z **`python 3.11 (system): /usr/bin/python3.11`**, 02:47:18Z running, 02:47:22Z `done`. Staging is now `367a8fd` (= main); CP9 re-releases its branch when it needs staging.
+- 7b is unblocked (not started here).
 
 ### Checkpoint 9 — in progress (2026-11-26)
 
