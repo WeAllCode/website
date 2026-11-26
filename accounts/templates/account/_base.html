@@ -6,8 +6,8 @@
 {% block subheader %}
 {% if user.is_authenticated %}
   <div class="sub-menu">
-    <nav class="grid-container" role="navigation">
-      <ul class="menu">
+    <nav class="wrap" role="navigation">
+      <ul class="nav-list">
         <li><a href="{% url 'account_logout' %}">Log Out</a></li>
       </ul>
     </nav>

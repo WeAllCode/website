@@ -1,0 +1,16 @@
+/*
+ * Account home pages (guardian and mentor): the profile avatar frame.
+ * Values copied from Foundation's `.thumbnail`.
+ */
+
+@layer pages {
+  .avatar {
+    display: inline-block;
+    max-inline-size: 100%;
+    margin-block-end: 1rem;
+    border: 4px solid #fefefe;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgb(10 10 10 / 0.2);
+    line-height: 0;
+  }
+}

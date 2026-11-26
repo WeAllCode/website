@@ -1,34 +1,38 @@
 {% extends "coderdojochi/_base.html" %}
-{% load humanize %}
+{% load humanize static %}
 
 {% block title %}{{ mentor.full_name }} | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-mentor-detail{% endblock %}
 
+{% block extra_style %}<link rel="stylesheet" href="{% static 'weallcode/css/pages/meetings.css' %}">{% endblock %}
+
 {% block contained_content %}
 
-<div class="container">
-    <ul class="breadcrumbs">
-        <li><a href="{% url 'mentors' %}">All Mentors</a></li>
-        <li class="active">{{ mentor.full_name }}</li>
-    </ul>
+<div>
+    <nav class="crumbs" aria-label="Breadcrumb">
+        <ol>
+            <li><a href="{% url 'mentors' %}">All Mentors</a></li>
+            <li aria-current="page">{{ mentor.full_name }}</li>
+        </ol>
+    </nav>
 </div>
 
 
-<div class="container">
+<div>
     <div class="dojo-content">
         <h1 class="title">{{ mentor.full_name }}</h1>
         <p>{{ mentor.bio }}</p>
     </div>
     <div class="dojo-profile">
-        <div class="well well-sm">
+        <div>
             <img src="{{ mentor.get_avatar.thumbnail.url }}" width="283" height="283" class="avatar" alt="Photo of {{ mentor.full_name }}">
             <h3 class="title">Joined: {{ mentor.user.date_joined|naturalday|capfirst }}</h3>
         </div>
         {% if user.is_staff %}
-        <ul class="well well-sm well-admin list-group list-unstyled">
-            <li class="list-group-item"><a href="{% url 'admin:coderdojochi_mentor_change' mentor.id %}">Edit Mentor</a></li>
-        </div>
+        <ul class="well-admin list-unstyled">
+            <li><a href="{% url 'admin:coderdojochi_mentor_change' mentor.id %}">Edit Mentor</a></li>
+        </ul>
         {% endif %}
     </div>
 </div>

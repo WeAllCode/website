@@ -1,20 +1,22 @@
 {% extends "coderdojochi/_base.html" %}
-{% load humanize %}
+{% load humanize static %}
 
 {% block title %}My Dojo | {{ block.super }}{% endblock %}
 
 {% block body_class %}page-mentors{% endblock %}
 
-{% block contained_content %}
-<h1 class="title">Meet Our Mentors <a href="{% url 'account_signup' %}" class="button">Become a Volunteer</a></h1>
+{% block extra_style %}<link rel="stylesheet" href="{% static 'weallcode/css/pages/meetings.css' %}">{% endblock %}
 
-<div class="grid-x mentors">
+{% block contained_content %}
+<h1 class="title">Meet Our Mentors <a href="{% url 'account_signup' %}" class="cta">Become a Volunteer</a></h1>
+
+<div class="cols mentors">
     {% for mentor in object_list %}
-    <div class="cell small-4">
-        <a href="{% url 'mentor-detail' mentor.id %}" class="thumbnail">
+    <div class="span-4">
+        <a href="{% url 'mentor-detail' mentor.id %}" class="photo-link">
             <img src="{{ mentor.get_avatar.thumbnail.url }}" alt="Photo of {{ mentor.full_name }}">
         </a>
-        <p class="caption text-center"><a href="{% url 'mentor-detail' mentor.id %}">{{ mentor.full_name }}</a></p>
+        <p class="t-center"><a href="{% url 'mentor-detail' mentor.id %}">{{ mentor.full_name }}</a></p>
     </div>
     {% endfor %}
 </div>

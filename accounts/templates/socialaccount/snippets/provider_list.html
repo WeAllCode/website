@@ -6,7 +6,7 @@
 <li>
   <form method="post" action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}" class="social-login-form">
     {% csrf_token %}
-    <button type="submit" title="{{ provider.name }}" class="button secondary socialaccount_provider {{ provider.id }}">{{ provider.name }}</button>
+    <button type="submit" title="{{ provider.name }}" class="cta cta-secondary socialaccount_provider {{ provider.id }}">{{ provider.name }}</button>
   </form>
 </li>
 {% endif %}

@@ -13,7 +13,6 @@ from django.urls import reverse_lazy
 from django.utils import dateformat
 from django.utils import timezone
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 from django.utils.text import format_lazy
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV3
@@ -101,6 +100,15 @@ class CDCModelForm(ModelForm):
         fields = ("first_name", "last_name")
 
 
+class AccountUserForm(CDCModelForm):
+    """The name fields on the account page. Both are required (#847)."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["first_name"].required = True
+        self.fields["last_name"].required = True
+
+
 # School accounts (Chicago Public Schools) often can't receive outside email,
 # so our messages bounce. Warn at signup instead of blocking (#887).
 SCHOOL_EMAIL_DOMAINS = ("cps.edu",)
@@ -117,8 +125,14 @@ def is_school_email(address):
 
 
 class SignupForm(forms.Form):
-    first_name = forms.CharField(max_length=30)
-    last_name = forms.CharField(max_length=30)
+    first_name = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={"autocomplete": "given-name"}),
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={"autocomplete": "family-name"}),
+    )
     captcha = ReCaptchaField(
         label="",
         widget=ReCaptchaV3,
@@ -147,7 +161,6 @@ class MentorForm(CDCModelForm):
         widget=forms.Textarea(
             attrs={
                 "placeholder": "Short Bio",
-                "class": "form-control",
                 "rows": 4,
             },
         ),
@@ -157,7 +170,7 @@ class MentorForm(CDCModelForm):
 
     gender = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"},
+            attrs={"placeholder": ""},
         ),
         label="Gender",
         required=True,
@@ -171,7 +184,7 @@ class MentorForm(CDCModelForm):
 
     birthday = forms.CharField(
         widget=forms.DateInput(
-            attrs={"class": "form-control", "type": "date"},
+            attrs={"type": "date"},
             format="%Y-%m-%d",
         ),
         required=True,
@@ -179,7 +192,7 @@ class MentorForm(CDCModelForm):
 
     work_place = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"},
+            attrs={"placeholder": ""},
         ),
         label="Work Place",
         required=False,
@@ -188,7 +201,7 @@ class MentorForm(CDCModelForm):
     # Required so staff can reach volunteers on class day (#896).
     phone = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"},
+            attrs={"placeholder": ""},
         ),
         label="Phone",
     )
@@ -197,7 +210,7 @@ class MentorForm(CDCModelForm):
     zip = forms.RegexField(
         regex=ZIP_CODE,
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"},
+            attrs={"placeholder": ""},
         ),
         label="Zip Code",
         required=False,
@@ -266,21 +279,21 @@ class MentorForm(CDCModelForm):
 class GuardianForm(CDCModelForm):
     phone = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "Phone Number", "class": "form-control"},
+            attrs={"placeholder": "Phone Number"},
         ),
         label="Phone Number",
     )
 
     zip = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "Zip Code", "class": "form-control"},
+            attrs={"placeholder": "Zip Code"},
         ),
         label="Zip Code",
     )
 
     gender = forms.CharField(
         widget=forms.TextInput(
-            attrs={"placeholder": "", "class": "form-control"},
+            attrs={"placeholder": ""},
         ),
         label="Gender",
         required=True,
@@ -294,7 +307,7 @@ class GuardianForm(CDCModelForm):
 
     birthday = forms.CharField(
         widget=forms.DateInput(
-            attrs={"class": "form-control", "type": "date"},
+            attrs={"type": "date"},
             format="%Y-%m-%d",
         ),
         required=True,
@@ -322,7 +335,6 @@ class StudentForm(CDCModelForm):
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Jane",
-                "class": "form-control",
             },
         ),
         label="First Name",
@@ -332,7 +344,6 @@ class StudentForm(CDCModelForm):
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Doe",
-                "class": "form-control",
             },
         ),
         label="Last Name",
@@ -342,7 +353,6 @@ class StudentForm(CDCModelForm):
         widget=forms.TextInput(
             attrs={
                 "placeholder": "",
-                "class": "form-control",
             },
         ),
         label="Preferred Name",
@@ -354,7 +364,6 @@ class StudentForm(CDCModelForm):
         widget=forms.TextInput(
             attrs={
                 "placeholder": "",
-                "class": "form-control",
             },
         ),
         label="Gender",
@@ -362,9 +371,7 @@ class StudentForm(CDCModelForm):
 
     school_name = forms.CharField(
         widget=forms.TextInput(
-            attrs={
-                "class": "form-control",
-            },
+            attrs={},
         ),
         label="School Name",
         required=False,
@@ -385,7 +392,6 @@ class StudentForm(CDCModelForm):
     birthday = forms.CharField(
         widget=forms.DateInput(
             attrs={
-                "class": "form-control",
                 "type": "date",
                 "min": dateformat.format(
                     timezone.now() - relativedelta(years=19),
@@ -404,16 +410,13 @@ class StudentForm(CDCModelForm):
         widget=forms.Textarea(
             attrs={
                 "placeholder": "List any medications currently being taken.",
-                "class": "form-control hidden",
                 "rows": 5,
             },
         ),
         label=format_html(
             "{0} {1}",
             "Medications",
-            mark_safe(
-                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>',
-            ),
+            "expand",
         ),
         required=False,
     )
@@ -422,16 +425,13 @@ class StudentForm(CDCModelForm):
         widget=forms.Textarea(
             attrs={
                 "placeholder": "List any medical conditions.",
-                "class": "form-control hidden",
                 "rows": 5,
             },
         ),
         label=format_html(
             "{0} {1}",
             "Medical Conditions",
-            mark_safe(
-                '<span class="btn btn-xs btn-link js-expand-student-form">expand</span>',
-            ),
+            "expand",
         ),
         required=False,
     )

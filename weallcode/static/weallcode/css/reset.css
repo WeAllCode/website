@@ -186,14 +186,6 @@
     display: none !important;
   }
 
-  /* Foundation's [hidden] { display: none } (legacy layer) would also hide
-     until-found content from Find-in-page; give it back the browser's own
-     display. !important so the legacy bridge below can't undo it. Delete with
-     legacy.css in 4G. */
-  [hidden="until-found"] {
-    display: revert !important;
-  }
-
   select {
     box-sizing: border-box;
     inline-size: 100%;
@@ -239,42 +231,5 @@
   td {
     margin: 0;
     padding: 0;
-  }
-
-  /* Legacy bridge (CP2 to CP4; delete with legacy.css in 4G).
-     Foundation's class rules sit in the lower legacy layer, so the element
-     rules above would beat them (div { margin: 0 } over .grid-container, p
-     over .callout > :last-child, button over .button…). Until Foundation goes,
-     hand every property of an element that has a class, or sits inside a
-     Foundation component that styles class-less descendants, back to legacy.
-     Legacy holds Foundation's own element rules with the same values as
-     this file, so this changes nothing for elements without a class, and
-     renders classed ones exactly as before. Element rules here still apply
-     to class-less elements, so A/B proves them now.
-     Attribute selectors, not class selectors: no Foundation class is
-     redefined. The never-matching #legacy-bridge lifts :is() to ID
-     specificity, so this beats every element rule in the layer. */
-  :is(
-      [class],
-      :is(
-          [class~="menu"],
-          [class~="breadcrumbs"],
-          [class~="callout"],
-          [class~="button-group"],
-          [class~="input-group"],
-          [class~="flex-video"],
-          [class~="reveal"],
-          [class~="card"],
-          [class~="media-object"],
-          [class~="pagination"],
-          [class~="tabs"],
-          [class~="accordion"],
-          [class~="dropdown"],
-          [class~="top-bar"]
-        )
-        *,
-      #legacy-bridge
-    ) {
-    all: revert-layer;
   }
 }

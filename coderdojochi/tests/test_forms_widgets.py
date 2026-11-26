@@ -13,7 +13,7 @@ class DateWidgetTest(TestCase):
 
                 assert 'type="date"' in html
                 assert 'name="birthday"' in html
-                assert "form-control" in html
+                assert "form-control" not in html
 
     def test_student_birthday_keeps_age_bounds(self):
         html = str(StudentForm()["birthday"])

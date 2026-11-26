@@ -522,32 +522,4 @@
       page-break-after: avoid;
     }
   }
-
-  /* Legacy bridge (CP2 to CP4; delete with legacy.css in 4G). Same selector
-     and reasoning as the one at the end of reset.css: elements with a class,
-     or inside a Foundation component, get Foundation's rules back. html is
-     left out so scroll-behavior (not a Foundation property) always applies. */
-  :is(
-      [class]:not(html),
-      :is(
-          [class~="menu"],
-          [class~="breadcrumbs"],
-          [class~="callout"],
-          [class~="button-group"],
-          [class~="input-group"],
-          [class~="flex-video"],
-          [class~="reveal"],
-          [class~="card"],
-          [class~="media-object"],
-          [class~="pagination"],
-          [class~="tabs"],
-          [class~="accordion"],
-          [class~="dropdown"],
-          [class~="top-bar"]
-        )
-        *,
-      #legacy-bridge
-    ) {
-    all: revert-layer;
-  }
 }

@@ -11,46 +11,6 @@
       ]
     },
     {
-      "package": "what-input",
-      "version": "5.2.12",
-      "license": "MIT",
-      "files": [
-        {"from": "dist/what-input.min.js", "to": "what-input/what-input.min.js", "strip_sourcemap": true},
-        {"from": "LICENSE", "to": "what-input/LICENSE"}
-      ]
-    },
-    {
-      "package": "foundation-sites",
-      "version": "6.9.0",
-      "license": "MIT",
-      "files": [
-        {"from": "dist/js/foundation.min.js", "to": "foundation/foundation.min.js"},
-        {"from": "dist/js/foundation.min.js.map", "to": "foundation/foundation.min.js.map"},
-        {"from": "LICENSE", "to": "foundation/LICENSE"}
-      ]
-    },
-    {
-      "package": "@fortawesome/fontawesome-free",
-      "version": "5.15.4",
-      "license": "(CC-BY-4.0 AND OFL-1.1 AND MIT)",
-      "files": [
-        {"from": "css/all.min.css", "to": "fontawesome5/css/all.min.css", "drop_font_formats": ["svg"]},
-        {"from": "webfonts/fa-brands-400.eot", "to": "fontawesome5/webfonts/fa-brands-400.eot"},
-        {"from": "webfonts/fa-brands-400.ttf", "to": "fontawesome5/webfonts/fa-brands-400.ttf"},
-        {"from": "webfonts/fa-brands-400.woff", "to": "fontawesome5/webfonts/fa-brands-400.woff"},
-        {"from": "webfonts/fa-brands-400.woff2", "to": "fontawesome5/webfonts/fa-brands-400.woff2"},
-        {"from": "webfonts/fa-regular-400.eot", "to": "fontawesome5/webfonts/fa-regular-400.eot"},
-        {"from": "webfonts/fa-regular-400.ttf", "to": "fontawesome5/webfonts/fa-regular-400.ttf"},
-        {"from": "webfonts/fa-regular-400.woff", "to": "fontawesome5/webfonts/fa-regular-400.woff"},
-        {"from": "webfonts/fa-regular-400.woff2", "to": "fontawesome5/webfonts/fa-regular-400.woff2"},
-        {"from": "webfonts/fa-solid-900.eot", "to": "fontawesome5/webfonts/fa-solid-900.eot"},
-        {"from": "webfonts/fa-solid-900.ttf", "to": "fontawesome5/webfonts/fa-solid-900.ttf"},
-        {"from": "webfonts/fa-solid-900.woff", "to": "fontawesome5/webfonts/fa-solid-900.woff"},
-        {"from": "webfonts/fa-solid-900.woff2", "to": "fontawesome5/webfonts/fa-solid-900.woff2"},
-        {"from": "LICENSE.txt", "to": "fontawesome5/LICENSE.txt"}
-      ]
-    },
-    {
       "package": "@fortawesome/fontawesome-free",
       "version": "7.3.1",
       "license": "(CC-BY-4.0 AND OFL-1.1 AND MIT)",

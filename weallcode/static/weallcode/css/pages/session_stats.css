@@ -1,0 +1,35 @@
+@layer pages {
+  .attendance {
+    position: relative;
+    margin-block-end: 1rem;
+
+    & progress {
+      appearance: none;
+      display: block;
+      inline-size: 100%;
+      block-size: 1rem;
+      border: 0 solid;
+      border-radius: 3px;
+      background: #cacaca;
+      overflow: clip;
+    }
+
+    & progress::-webkit-progress-bar {
+      background: transparent;
+    }
+
+    & progress::-webkit-progress-value {
+      background: transparent;
+    }
+
+    & progress::-moz-progress-bar {
+      background: transparent;
+    }
+
+    & span {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+    }
+  }
+}

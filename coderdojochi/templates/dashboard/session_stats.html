@@ -6,39 +6,40 @@
 
 {% block body_class %}page-cdc-admin{% endblock %}
 
+{% block extra_style %}<link rel="stylesheet" href="{% static 'weallcode/css/pages/session_stats.css' %}">{% endblock %}
+
 {% block topnav %}{% endblock %}
 
 {% block contained_content %}
-<div class="container">
-    <ol class="breadcrumb">
+<div>
+    <ol>
         <li><a href="{% url 'cdc-admin' %}">We All Code Admin</a></li>
         <li><a href="{{ session.get_absolute_url }}">{{ session.start_date|date }} - {{ session.course.title }}</a></li>
-        <li class="active">Class Stats</li>
+        <li aria-current="page">Class Stats</li>
     </ol>
     {% if session.get_current_orders.count %}
 
               <h3 class="title">Attendance:</h3>
               <h2 class="title">{{ students_checked_in.count }} of {{ session.get_current_orders.count }}</h2>
-              <div class="progress">
-                  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ attendance_percentage }}%">
-                      {{ attendance_percentage }}%
-                  </div>
+              <div class="attendance">
+                  <progress max="100" value="{{ attendance_percentage }}" aria-label="Attendance"></progress>
+                  <span aria-hidden="true">{{ attendance_percentage }}%</span>
               </div>
 
-    <div class="grid-x">
-        <div class="cell medium-6">
+    <div class="cols">
+        <div class="md-span-6">
             <h3 class="title">Average Age: <b>{{ average_age }}</b></h3>
             <div id="age_chart" style="position: relative; height: 400px;"><canvas></canvas></div>
         </div>
 
-        <div class="cell medium-6">
+        <div class="md-span-6">
             <h3 class="title">Genders:</h3>
             <div id="gender_chart" style="position: relative; height: 400px;"><canvas></canvas></div>
         </div>
     </div>
     {% endif %}
     <h3 class="title">All Students</h3>
-    <table class="table table-striped">
+    <table>
         {% if session.get_current_orders %}
             <thead>
                 <tr>
@@ -51,7 +52,7 @@
             </thead>
             <tbody>
                 {% for order in session.get_current_orders %}
-                <tr {% if not order.check_in %}class="text-muted"{% endif %}>
+                <tr>
                     <form method="post" action=".">
                         {% csrf_token %}
                         <input type="hidden" name="order_id" value="{{ order.id }}">

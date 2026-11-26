@@ -1,8 +1,8 @@
 import re
 
 from django import template
-from django.template import Template
 from django.urls import reverse
+from django.utils.html import format_html
 
 from coderdojochi.models import Order
 
@@ -25,13 +25,13 @@ def student_session_order_count(student, session):
     return orders_count
 
 
-@register.simple_tag(takes_context=True)
-def student_register_link(context, student, session):
-    orders = Order.objects.filter(
-        student=student,
-        session=session,
-        is_active=True,
-    )
+@register.simple_tag
+def student_register_link(student, session):
+    """Render the Enroll / Can't make it control for one student.
+
+    Every value is escaped by `format_html`, and the markup is returned as is:
+    session fields are data, never template source.
+    """
 
     url = reverse(
         "session-sign-up",
@@ -41,87 +41,67 @@ def student_register_link(context, student, session):
         },
     )
 
-    button_tag = "a"
-    button_modifier = ""
-    button_additional_attributes = ""
-    button_msg = "Enroll"
-    button_href = f"href={url}"
+    if Order.objects.filter(
+        student=student,
+        session=session,
+        is_active=True,
+    ).exists():
+        return format_html(
+            '<a href="{}" class="cta cta-small cta-tertiary">Can\'t make it</a>',
+            url,
+        )
 
-    if orders.count():
-        button_modifier = "tertiary"
-        button_msg = "Can't make it"
-
-    elif not student.is_within_age_range(
+    in_age_range = student.is_within_age_range(
         session.minimum_age,
         session.maximum_age,
         session.start_date,
-    ) or not student.is_within_gender_limitation(session.gender_limitation):
-        button_modifier = "btn-default"
-        button_additional_attributes = "disabled"
-        button_tag = "span"
-
-        if not student.is_within_age_range(
-            session.minimum_age,
-            session.maximum_age,
-            session.start_date,
-        ) and not student.is_within_gender_limitation(
-            session.gender_limitation,
-        ):
-            title = "Limited event."
-            message = (
-                f"Sorry, this class is limited to {session.gender_limitation}s"
-                f" between {session.minimum_age} and"
-                f" {session.maximum_age} this time around."
-            )
-
-            button_href = (
-                'data-trigger="hover" data-placement="top"'
-                f' data-toggle="popover" title="" data-content="{message}"'
-                f' data-original-title="{title}"'
-            )
-
-        elif not student.is_within_age_range(
-            session.minimum_age,
-            session.maximum_age,
-            session.start_date,
-        ):
-            title = "Age-limited event."
-            message = (
-                "Sorry, this class is limited to student between ages"
-                f" {session.minimum_age} and {session.maximum_age} this time"
-                " around."
-            )
-
-            button_href = (
-                'data-trigger="hover" data-placement="top"'
-                f' data-toggle="popover" title="" data-content="{message}"'
-                f' data-original-title="{title}"'
-            )
-
-        elif not student.is_within_gender_limitation(
-            session.gender_limitation,
-        ):
-            if session.gender_limitation == "female":
-                title = "Girls-only event."
-            else:
-                title = "Boys-only event."
-
-            message = (
-                f"Sorry, this class is limited to {session.gender_limitation}s"
-                " this time around."
-            )
-            button_href = (
-                'data-trigger="hover" data-placement="top"'
-                f' data-toggle="popover" title="" data-content="{message}"'
-                f' data-original-title="{title}" '
-            )
-
-    form = (
-        f"<{button_tag} {button_href} class='button small {button_modifier}'"
-        f" {button_additional_attributes}>{button_msg}</{button_tag}>"
+    )
+    in_gender_limitation = student.is_within_gender_limitation(
+        session.gender_limitation,
     )
 
-    return Template(form).render(context)
+    if in_age_range and in_gender_limitation:
+        return format_html('<a href="{}" class="cta cta-small">Enroll</a>', url)
+
+    if not in_age_range and not in_gender_limitation:
+        title = "Limited event."
+        message = (
+            f"Sorry, this class is limited to {session.gender_limitation}s"
+            f" between {session.minimum_age} and"
+            f" {session.maximum_age} this time around."
+        )
+    elif not in_age_range:
+        title = "Age-limited event."
+        message = (
+            "Sorry, this class is limited to student between ages"
+            f" {session.minimum_age} and {session.maximum_age} this time"
+            " around."
+        )
+    else:
+        title = (
+            "Girls-only event."
+            if session.gender_limitation == "female"
+            else "Boys-only event."
+        )
+        message = (
+            f"Sorry, this class is limited to {session.gender_limitation}s"
+            " this time around."
+        )
+
+    # One eligibility hint for all three reasons. A natively disabled button
+    # can't take focus or interest, so the trigger is an `aria-disabled`
+    # button that does nothing when pressed.
+    hint_id = f"eligibility-hint-{session.id}-{student.id}"
+
+    return format_html(
+        '<button type="button" class="cta cta-small" aria-disabled="true"'
+        ' interestfor="{hint_id}" aria-describedby="{hint_id}">Enroll</button>'
+        '<div popover="hint" role="tooltip" id="{hint_id}" class="hint">'
+        "<strong>{title}</strong> {message}</div>",
+        hint_id=hint_id,
+        title=title,
+        message=message,
+    )
 
 
 @register.filter

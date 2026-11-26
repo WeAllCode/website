@@ -1,5 +1,5 @@
 {% extends "account/_base.html" %}
-{% load i18n socialaccount %}
+{% load i18n socialaccount icons %}
 
 {% block title_placeholder %}Login{% endblock %}
 
@@ -9,22 +9,22 @@
 <h1 class="title">{% trans "Register" %}</h1>
 <h2 class="subtitle">{% trans "Create an account to sign up for free classes and stay in touch." %}</h2>
 
-<div class="grid-x margin-top-2">
-    <form method="post" class="cell medium-6" action="{% url 'account_signup' %}{% if 'next' in request.GET %}?next={{ request.GET.next }}{% endif %}{% if 'enroll' in request.GET %}/enroll/{% endif %}">
+<div class="cols mt-2">
+    <form method="post" class="md-span-6" action="{% url 'account_signup' %}{% if 'next' in request.GET %}?next={{ request.GET.next }}{% endif %}{% if 'enroll' in request.GET %}/enroll/{% endif %}">
         {% csrf_token %}
         {% include "account/_form.html" with form=form %}
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <button class="button" type="submit">
-            {% trans 'Register' %} <i class="fas fa-chevron-right margin-left-1"></i>
+        <button class="cta" type="submit">
+            {% trans 'Register' %} {% icon "chevron-right" %}
         </button>
     </form>
-    <div class="cell medium-5 medium-offset-1 padding-top-1">
+    <div class="md-span-5 md-offset-1 pt-1">
         <form method="post" action="{% provider_login_url 'google' %}" class="social-login-form">
             {% csrf_token %}
-            <button type="submit" class="button secondary">
-                <i class="margin-right-1 fab fa-google"></i> {% trans "Sign up with Google" %} <i class="fas fa-chevron-right margin-left-1"></i>
+            <button type="submit" class="cta cta-secondary">
+                {% icon "google" %} {% trans "Sign up with Google" %} {% icon "chevron-right" %}
             </button>
         </form>
         <p><a href="{% url 'account_login' %}">{% trans "I already have an account" %}</a></p>

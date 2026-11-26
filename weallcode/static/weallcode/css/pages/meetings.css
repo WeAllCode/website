@@ -1,0 +1,39 @@
+/* Meetings, meeting detail and the mentors pages.
+   `.photo-link` keeps Foundation's `.thumbnail` look (a framed photo link).
+   `.meeting-main` keeps the negative side margin the `grid-margin-x` class put
+   on the meeting detail's main cell. `.link-button` is a button that reads as
+   a link (the staff "Announce" toggletip trigger). */
+
+@layer pages {
+  .photo-link {
+    display: inline-block;
+    max-inline-size: 100%;
+    margin-block-end: 1rem;
+    border: 4px solid #fefefe;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgb(10 10 10 / 0.2);
+    line-height: 0;
+    transition: box-shadow 0.2s ease-out;
+
+    &:hover,
+    &:focus {
+      box-shadow: 0 0 6px 1px rgb(66 108 255 / 0.5);
+    }
+  }
+
+  .meeting-main {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .link-button {
+    font: inherit;
+    line-height: inherit;
+    color: var(--link);
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      color: var(--link-hover);
+    }
+  }
+}
