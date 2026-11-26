@@ -26,6 +26,8 @@ from coderdojochi.models import RaceEthnicity
 from coderdojochi.models import Session
 from coderdojochi.models import Student
 
+ZIP_CODE = r"^\d{5}(-\d{4})?$"
+
 
 class CDCForm(Form):
     # strip leading or trailing whitespace
@@ -191,12 +193,15 @@ class MentorForm(CDCModelForm):
         label="Phone",
     )
 
-    home_address = forms.CharField(
+    # A zip code, not a full address, for grant and demographic reporting (#749).
+    zip = forms.RegexField(
+        regex=ZIP_CODE,
         widget=forms.TextInput(
             attrs={"placeholder": "", "class": "form-control"},
         ),
-        label="Home Address",
+        label="Zip Code",
         required=False,
+        error_messages={"invalid": "Enter a 5-digit zip code, like 60601."},
     )
 
     class Meta:
@@ -208,7 +213,7 @@ class MentorForm(CDCModelForm):
             "race_ethnicity",
             "birthday",
             "phone",
-            "home_address",
+            "zip",
             "work_place",
         )
 

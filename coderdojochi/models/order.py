@@ -53,6 +53,12 @@ class Order(CommonInfo):
     day_reminder_sent = models.BooleanField(
         default=False,
     )
+    # The "how was your first class?" email went out for this order (#811).
+    # db_default keeps the previous release able to insert orders after a rollback.
+    first_class_email_sent = models.BooleanField(
+        default=False,
+        db_default=False,
+    )
     # Why the student cancelled or didn't come (#930): set by the guardian when
     # cancelling online, or by staff in the admin for no-shows.
     cancel_reason = models.CharField(

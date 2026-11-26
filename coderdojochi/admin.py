@@ -130,6 +130,7 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "is_active",
         "is_public",
         "background_check",
+        "background_check_waived",
         "avatar_approved",
     ]
 
@@ -137,6 +138,7 @@ class MentorAdmin(ImportExportMixin, ImportExportActionModelAdmin):
         "is_active",
         "is_public",
         "background_check",
+        "background_check_waived",
         "avatar_approved",
     ]
 
