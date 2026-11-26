@@ -1,5 +1,5 @@
 {% extends "account/_base.html" %}
-{% load bootstrap3 humanize coderdojochi_extras %}
+{% load humanize coderdojochi_extras %}
 
 {% block body_class %}page-dojo{% endblock %}
 
@@ -12,17 +12,17 @@
   <form id="profile_form" enctype="multipart/form-data" action="" method="post">
     {% csrf_token %}
     <div class="grid-x grid-margin-x">
-      <div class="cell medium-6">{% bootstrap_field user_form.first_name %}</div>
-      <div class="cell medium-6">{% bootstrap_field user_form.last_name %}</div>
-      <div class="cell medium-6">{% bootstrap_field form.phone %}</div>
-      <div class="cell medium-6">{% bootstrap_field form.zip %}</div>
-      <div class="cell medium-6">{% bootstrap_field form.birthday %}</div>
-      <div class="cell medium-6">{% bootstrap_field form.gender %}</div>
-      <div class="cell medium-6">{% bootstrap_field form.race_ethnicity %}</div>
+      <div class="cell medium-6">{% include "account/_field.html" with field=user_form.first_name %}</div>
+      <div class="cell medium-6">{% include "account/_field.html" with field=user_form.last_name %}</div>
+      <div class="cell medium-6">{% include "account/_field.html" with field=form.phone %}</div>
+      <div class="cell medium-6">{% include "account/_field.html" with field=form.zip %}</div>
+      <div class="cell medium-6">{% include "account/_field.html" with field=form.birthday %}</div>
+      <div class="cell medium-6">{% include "account/_field.html" with field=form.gender %}</div>
+      <div class="cell medium-6">{% include "account/_field.html" with field=form.race_ethnicity %}</div>
     </div>
-    {% buttons %}
+    <div>
     <button type="submit" class="button">Save</button>
-    {% endbuttons %}
+    </div>
   </form>
 </section>
 

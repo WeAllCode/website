@@ -1,5 +1,5 @@
 {% extends "account/_base.html" %}
-{% load bootstrap3 humanize coderdojochi_extras %}
+{% load humanize coderdojochi_extras %}
 
 {% block body_class %}page-account{% endblock %}
 
@@ -63,19 +63,19 @@
                 Formats: <strong>.jpeg, .png, .gif</strong>
             </div>
 
-            <div class="cell medium-6">{% bootstrap_field form.bio %}</div>
-            <div class="cell medium-6">{% bootstrap_field user_form.first_name %}</div>
-            <div class="cell medium-6">{% bootstrap_field user_form.last_name %}</div>
-            <div class="cell medium-6">{% bootstrap_field form.birthday %}</div>
-            <div class="cell medium-6">{% bootstrap_field form.gender %}</div>
-            <div class="cell medium-6">{% bootstrap_field form.race_ethnicity %}</div>
-            <div class="cell medium-6">{% bootstrap_field form.work_place %}</div>
-            <div class="cell medium-6">{% bootstrap_field form.phone %}</div>
-            <div class="cell medium-6">{% bootstrap_field form.home_address %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=form.bio %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=user_form.first_name %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=user_form.last_name %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=form.birthday %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=form.gender %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=form.race_ethnicity %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=form.work_place %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=form.phone %}</div>
+            <div class="cell medium-6">{% include "account/_field.html" with field=form.home_address %}</div>
         </div>
-        {% buttons %}
+        <div>
         <button class="submit button">Save</button>
-        {% endbuttons %}
+        </div>
     </form>
 </section>
 

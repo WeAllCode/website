@@ -79,16 +79,6 @@
       ]
     },
     {
-      "package": "js-datepicker",
-      "version": "5.18.4",
-      "license": "MIT",
-      "files": [
-        {"from": "dist/datepicker.min.css", "to": "js-datepicker/datepicker.min.css"},
-        {"from": "dist/datepicker.min.js", "to": "js-datepicker/datepicker.min.js"},
-        {"from": "README.md", "to": "js-datepicker/README.md"}
-      ]
-    },
-    {
       "package": "chart.js",
       "version": "4.6.1",
       "license": "MIT",

@@ -1,5 +1,5 @@
 {% extends "account/_base.html" %}
-{% load i18n bootstrap3 socialaccount %}
+{% load i18n socialaccount %}
 
 {% block title_placeholder %}Login{% endblock %}
 
@@ -12,7 +12,7 @@
 <div class="grid-x margin-top-2">
     <form method="post" class="cell medium-6" action="{% url 'account_signup' %}{% if 'next' in request.GET %}?next={{ request.GET.next }}{% endif %}{% if 'enroll' in request.GET %}/enroll/{% endif %}">
         {% csrf_token %}
-        {% bootstrap_form form %}
+        {% include "account/_form.html" with form=form %}
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
