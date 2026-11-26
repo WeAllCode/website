@@ -10,4 +10,5 @@ def main_config_processor(request):
         "SITE_PROTOCOL": settings.META_SITE_PROTOCOL,
         "SITE_DOMAIN": settings.META_SITE_DOMAIN,
         "SITE_NAME": settings.META_SITE_NAME,
+        "GA_MEASUREMENT_ID": settings.GA_MEASUREMENT_ID,
     }

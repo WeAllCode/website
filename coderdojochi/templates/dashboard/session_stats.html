@@ -1,6 +1,6 @@
 {% extends "coderdojochi/_base.html" %}
 
-{% load i18n coderdojochi_extras %}
+{% load i18n static coderdojochi_extras %}
 
 {% block title %}{% if session.course.code %}{{ session.course.code }} | {% endif %}{{ session.course.title }} | {{ block.super }}{% endblock %}
 
@@ -9,51 +9,6 @@
 {% block topnav %}{% endblock %}
 
 {% block contained_content %}
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-  google.load("visualization", "1", {packages:["corechart"]});
-  google.setOnLoadCallback(drawChart);
-  function drawChart() {
-    var gender_data = google.visualization.arrayToDataTable([
-      ['Gender', 'Students'],
-      {% for key, value in gender_count %}
-      ['{{ key.title }}', {{ value }}],
-      {% endfor %}
-    ]);
-
-    var gender_options = {
-      legend: {
-        position: 'bottom',
-      },
-      // pieSliceText: 'label',
-      // title: 'Genders of Registered Students',
-      // pieStartAngle: 100,
-    };
-
-    var gender_chart = new google.visualization.PieChart(document.getElementById('gender_chart'));
-    gender_chart.draw(gender_data, gender_options);
-
-    var age_data = google.visualization.arrayToDataTable([
-      ['Age', 'Students'],
-      {% for key, value in age_count %}
-      ['{{ key }}', {{ value }}],
-      {% endfor %}
-    ]);
-
-    var age_options = {
-      legend: {
-        position: 'bottom',
-      },
-      // pieSliceText: 'label',
-      // title: 'Genders of Registered Students',
-      // pieStartAngle: 100,
-    };
-
-    var age_chart = new google.visualization.PieChart(document.getElementById('age_chart'));
-    age_chart.draw(age_data, age_options);
-  }
-</script>
-
 <div class="container">
     <ol class="breadcrumb">
         <li><a href="{% url 'cdc-admin' %}">We All Code Admin</a></li>
@@ -73,12 +28,12 @@
     <div class="grid-x">
         <div class="cell medium-6">
             <h3 class="title">Average Age: <b>{{ average_age }}</b></h3>
-            <div id="age_chart" style="height: 400px;"></div>
+            <div id="age_chart" style="position: relative; height: 400px;"><canvas></canvas></div>
         </div>
 
         <div class="cell medium-6">
             <h3 class="title">Genders:</h3>
-            <div id="gender_chart" style="height: 400px;"></div>
+            <div id="gender_chart" style="position: relative; height: 400px;"><canvas></canvas></div>
         </div>
     </div>
     {% endif %}
@@ -118,6 +73,65 @@
         {% endif %}
     </table>
 </div>
+{% endblock %}
+
+{% block extra_script %}
+{% if session.get_current_orders.count %}
+{{ gender_count|json_script:"gender-count-data" }}
+{{ age_count|json_script:"age-count-data" }}
+<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Google Charts' default palette, so the charts keep their old colors.
+    var COLORS = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395'];
+
+    function rows(id) {
+      return JSON.parse(document.getElementById(id).textContent);
+    }
+
+    // Same result as Django's |title filter (Python str.title()).
+    function titleCase(value) {
+      return String(value).replace(/[A-Za-z]+/g, function (word) {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      });
+    }
+
+    function percentLabel(context) {
+      var total = context.dataset.data.reduce(function (sum, n) { return sum + n; }, 0);
+      var pct = total ? Math.round((context.parsed / total) * 1000) / 10 : 0;
+      return ' ' + context.parsed + ' (' + pct + '%)';
+    }
+
+    function pie(selector, labels, data) {
+      new Chart(document.querySelector(selector), {
+        type: 'pie',
+        data: {labels: labels, datasets: [{label: 'Students', data: data, backgroundColor: COLORS}]},
+        options: {
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {position: 'bottom'},
+            tooltip: {callbacks: {label: percentLabel}}
+          }
+        }
+      });
+    }
+
+    var genderRows = rows('gender-count-data');
+    pie(
+      '#gender_chart canvas',
+      genderRows.map(function (row) { return titleCase(row[0]); }),
+      genderRows.map(function (row) { return row[1]; })
+    );
+
+    var ageRows = rows('age-count-data');
+    pie(
+      '#age_chart canvas',
+      ageRows.map(function (row) { return String(row[0]); }),
+      ageRows.map(function (row) { return row[1]; })
+    );
+  });
+</script>
+{% endif %}
 {% endblock %}
 
 

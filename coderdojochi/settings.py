@@ -338,6 +338,9 @@ SENDGRID_UNSUB_CLASSANNOUNCE = env.int("SENDGRID_UNSUB_CLASSANNOUNCE", default=N
 SLACK_WEBHOOK_URL = env("SLACK_WEBHOOK_URL", default="")
 SLACK_ALERTS_CHANNEL = env("SLACK_ALERTS_CHANNEL", default=None)
 
+# Google Analytics 4 (empty disables the gtag snippet)
+GA_MEASUREMENT_ID = env("GA_MEASUREMENT_ID", default="")
+
 # Sentry
 # default="" (not False): django-environ casts to type(default), and a bool
 # cast turns any DSN string into False, so Sentry never initialized.

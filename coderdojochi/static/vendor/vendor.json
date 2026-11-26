@@ -1,0 +1,173 @@
+{
+  "packages": [
+    {
+      "package": "jquery",
+      "version": "3.8.0",
+      "license": "MIT",
+      "files": [
+        {"from": "dist/jquery.min.js", "to": "jquery/jquery.min.js"},
+        {"from": "dist/jquery.min.map", "to": "jquery/jquery.min.map"},
+        {"from": "LICENSE.txt", "to": "jquery/LICENSE.txt"}
+      ]
+    },
+    {
+      "package": "what-input",
+      "version": "5.2.12",
+      "license": "MIT",
+      "files": [
+        {"from": "dist/what-input.min.js", "to": "what-input/what-input.min.js", "strip_sourcemap": true},
+        {"from": "LICENSE", "to": "what-input/LICENSE"}
+      ]
+    },
+    {
+      "package": "foundation-sites",
+      "version": "6.9.0",
+      "license": "MIT",
+      "files": [
+        {"from": "dist/js/foundation.min.js", "to": "foundation/foundation.min.js"},
+        {"from": "dist/js/foundation.min.js.map", "to": "foundation/foundation.min.js.map"},
+        {"from": "LICENSE", "to": "foundation/LICENSE"}
+      ]
+    },
+    {
+      "package": "@fortawesome/fontawesome-free",
+      "version": "5.15.4",
+      "license": "(CC-BY-4.0 AND OFL-1.1 AND MIT)",
+      "files": [
+        {"from": "css/all.min.css", "to": "fontawesome5/css/all.min.css", "drop_font_formats": ["svg"]},
+        {"from": "webfonts/fa-brands-400.eot", "to": "fontawesome5/webfonts/fa-brands-400.eot"},
+        {"from": "webfonts/fa-brands-400.ttf", "to": "fontawesome5/webfonts/fa-brands-400.ttf"},
+        {"from": "webfonts/fa-brands-400.woff", "to": "fontawesome5/webfonts/fa-brands-400.woff"},
+        {"from": "webfonts/fa-brands-400.woff2", "to": "fontawesome5/webfonts/fa-brands-400.woff2"},
+        {"from": "webfonts/fa-regular-400.eot", "to": "fontawesome5/webfonts/fa-regular-400.eot"},
+        {"from": "webfonts/fa-regular-400.ttf", "to": "fontawesome5/webfonts/fa-regular-400.ttf"},
+        {"from": "webfonts/fa-regular-400.woff", "to": "fontawesome5/webfonts/fa-regular-400.woff"},
+        {"from": "webfonts/fa-regular-400.woff2", "to": "fontawesome5/webfonts/fa-regular-400.woff2"},
+        {"from": "webfonts/fa-solid-900.eot", "to": "fontawesome5/webfonts/fa-solid-900.eot"},
+        {"from": "webfonts/fa-solid-900.ttf", "to": "fontawesome5/webfonts/fa-solid-900.ttf"},
+        {"from": "webfonts/fa-solid-900.woff", "to": "fontawesome5/webfonts/fa-solid-900.woff"},
+        {"from": "webfonts/fa-solid-900.woff2", "to": "fontawesome5/webfonts/fa-solid-900.woff2"},
+        {"from": "LICENSE.txt", "to": "fontawesome5/LICENSE.txt"}
+      ]
+    },
+    {
+      "package": "font-awesome",
+      "version": "4.7.0",
+      "license": "(OFL-1.1 AND MIT)",
+      "files": [
+        {"from": "css/font-awesome.min.css", "to": "fontawesome4/css/font-awesome.min.css", "drop_font_formats": ["svg"]},
+        {"from": "fonts/fontawesome-webfont.eot", "to": "fontawesome4/fonts/fontawesome-webfont.eot"},
+        {"from": "fonts/fontawesome-webfont.ttf", "to": "fontawesome4/fonts/fontawesome-webfont.ttf"},
+        {"from": "fonts/fontawesome-webfont.woff", "to": "fontawesome4/fonts/fontawesome-webfont.woff"},
+        {"from": "fonts/fontawesome-webfont.woff2", "to": "fontawesome4/fonts/fontawesome-webfont.woff2"},
+        {"from": "README.md", "to": "fontawesome4/README.md"}
+      ]
+    },
+    {
+      "package": "bootstrap",
+      "version": "3.4.1",
+      "license": "MIT",
+      "files": [
+        {"from": "dist/css/bootstrap.min.css", "to": "bootstrap3/css/bootstrap.min.css", "drop_font_formats": ["svg"]},
+        {"from": "dist/css/bootstrap.min.css.map", "to": "bootstrap3/css/bootstrap.min.css.map"},
+        {"from": "dist/js/bootstrap.min.js", "to": "bootstrap3/js/bootstrap.min.js"},
+        {"from": "dist/fonts/glyphicons-halflings-regular.eot", "to": "bootstrap3/fonts/glyphicons-halflings-regular.eot"},
+        {"from": "dist/fonts/glyphicons-halflings-regular.ttf", "to": "bootstrap3/fonts/glyphicons-halflings-regular.ttf"},
+        {"from": "dist/fonts/glyphicons-halflings-regular.woff", "to": "bootstrap3/fonts/glyphicons-halflings-regular.woff"},
+        {"from": "dist/fonts/glyphicons-halflings-regular.woff2", "to": "bootstrap3/fonts/glyphicons-halflings-regular.woff2"},
+        {"from": "LICENSE", "to": "bootstrap3/LICENSE"}
+      ]
+    },
+    {
+      "package": "js-datepicker",
+      "version": "5.18.4",
+      "license": "MIT",
+      "files": [
+        {"from": "dist/datepicker.min.css", "to": "js-datepicker/datepicker.min.css"},
+        {"from": "dist/datepicker.min.js", "to": "js-datepicker/datepicker.min.js"},
+        {"from": "README.md", "to": "js-datepicker/README.md"}
+      ]
+    },
+    {
+      "package": "chart.js",
+      "version": "4.6.1",
+      "license": "MIT",
+      "files": [
+        {"from": "dist/chart.umd.min.js", "to": "chartjs/chart.umd.min.js", "strip_sourcemap": true},
+        {"from": "LICENSE.md", "to": "chartjs/LICENSE.md"}
+      ]
+    },
+    {
+      "package": "@sentry/browser",
+      "version": "11.12.0",
+      "license": "MIT",
+      "files": [
+        {"from": "LICENSE", "to": "sentry/LICENSE"}
+      ],
+      "urls": [
+        {
+          "url": "https://browser.sentry-cdn.com/{version}/bundle.min.js",
+          "integrity": "sha384-fpjRzLWxkdRneAxDGo5pt5gKsjCWYV5ksPD+S1lx80QHBhs6Oe58hf8sKUKubCES",
+          "to": "sentry/bundle.min.js",
+          "strip_sourcemap": true
+        }
+      ]
+    },
+    {
+      "package": "@fontsource/bungee",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "files": [
+        {"from": "400.css", "to": "fonts/bungee/400.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "files/bungee-latin-400-normal.woff2", "to": "fonts/bungee/files/bungee-latin-400-normal.woff2"},
+        {"from": "files/bungee-latin-ext-400-normal.woff2", "to": "fonts/bungee/files/bungee-latin-ext-400-normal.woff2"},
+        {"from": "LICENSE", "to": "fonts/bungee/LICENSE"}
+      ]
+    },
+    {
+      "package": "@fontsource/poppins",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "files": [
+        {"from": "400.css", "to": "fonts/poppins/400.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "files/poppins-latin-400-normal.woff2", "to": "fonts/poppins/files/poppins-latin-400-normal.woff2"},
+        {"from": "files/poppins-latin-ext-400-normal.woff2", "to": "fonts/poppins/files/poppins-latin-ext-400-normal.woff2"},
+        {"from": "LICENSE", "to": "fonts/poppins/LICENSE"}
+      ]
+    },
+    {
+      "package": "@fontsource/open-sans",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "files": [
+        {"from": "300.css", "to": "fonts/open-sans/300.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "400.css", "to": "fonts/open-sans/400.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "700.css", "to": "fonts/open-sans/700.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "files/open-sans-latin-300-normal.woff2", "to": "fonts/open-sans/files/open-sans-latin-300-normal.woff2"},
+        {"from": "files/open-sans-latin-ext-300-normal.woff2", "to": "fonts/open-sans/files/open-sans-latin-ext-300-normal.woff2"},
+        {"from": "files/open-sans-latin-400-normal.woff2", "to": "fonts/open-sans/files/open-sans-latin-400-normal.woff2"},
+        {"from": "files/open-sans-latin-ext-400-normal.woff2", "to": "fonts/open-sans/files/open-sans-latin-ext-400-normal.woff2"},
+        {"from": "files/open-sans-latin-700-normal.woff2", "to": "fonts/open-sans/files/open-sans-latin-700-normal.woff2"},
+        {"from": "files/open-sans-latin-ext-700-normal.woff2", "to": "fonts/open-sans/files/open-sans-latin-ext-700-normal.woff2"},
+        {"from": "LICENSE", "to": "fonts/open-sans/LICENSE"}
+      ]
+    },
+    {
+      "package": "@fontsource/quicksand",
+      "version": "5.3.0",
+      "license": "OFL-1.1",
+      "files": [
+        {"from": "300.css", "to": "fonts/quicksand/300.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "400.css", "to": "fonts/quicksand/400.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "700.css", "to": "fonts/quicksand/700.css", "keep_subsets": ["latin", "latin-ext"], "drop_font_formats": ["woff"]},
+        {"from": "files/quicksand-latin-300-normal.woff2", "to": "fonts/quicksand/files/quicksand-latin-300-normal.woff2"},
+        {"from": "files/quicksand-latin-ext-300-normal.woff2", "to": "fonts/quicksand/files/quicksand-latin-ext-300-normal.woff2"},
+        {"from": "files/quicksand-latin-400-normal.woff2", "to": "fonts/quicksand/files/quicksand-latin-400-normal.woff2"},
+        {"from": "files/quicksand-latin-ext-400-normal.woff2", "to": "fonts/quicksand/files/quicksand-latin-ext-400-normal.woff2"},
+        {"from": "files/quicksand-latin-700-normal.woff2", "to": "fonts/quicksand/files/quicksand-latin-700-normal.woff2"},
+        {"from": "files/quicksand-latin-ext-700-normal.woff2", "to": "fonts/quicksand/files/quicksand-latin-ext-700-normal.woff2"},
+        {"from": "LICENSE", "to": "fonts/quicksand/LICENSE"}
+      ]
+    }
+  ]
+}

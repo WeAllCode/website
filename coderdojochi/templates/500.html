@@ -1,6 +1,6 @@
 {% extends "coderdojochi/_base.html" %}
 
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}Website Error | {{ block.super }}{% endblock %}
 {% block meta_facebook_title %}Website Error | {{ block.super }}{% endblock %}
@@ -23,16 +23,11 @@
 <p><b>Phone:</b> <a href="tel:+17738696536">(773) 869-6536</a></p>
 
 {% if SENTRY_DSN and sentry_event_id %}
-<script
-  src="https://browser.sentry-cdn.com/7.47.0/bundle.tracing.replay.min.js"
-  integrity="sha384-I2g6Fi9zxwCBZKReIiHPmwQl3DEe/r3dcYlzEUEGH9aRlVjejBp04GqXfrlicr7e"
-  crossorigin="anonymous"
-></script>
+<script src="{% static 'vendor/sentry/bundle.min.js' %}"></script>
 
 <script>
   Sentry.init({
     dsn: '{{ SENTRY_DSN }}',
-    integrations: [new Sentry.BrowserTracing()],
   });
   Sentry.showReportDialog({ eventId: '{{ sentry_event_id }}' });
 </script>
