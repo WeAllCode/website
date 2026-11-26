@@ -532,7 +532,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-### Checkpoint 7b — in progress (2026-11-26)
+### Checkpoint 7b — done, on prod (2026-11-26). Next: Checkpoint 8 (Django 6.2 LTS, April 2027)
 
 - Started ~03:40Z: code branch `claude/upgrade-cp7b-py313` from `origin/main` `933ac62` (prod = `933ac62`, CP9). Dependabot open = only #1586 (superseded). Laptop uv 0.13.7; VM uv 0.13.9 and astral IPv6 HTTP 200 (CP7a).
 - Built by the lead (7 files, no sub-agent): commit `adb8a7b`. `.python-version` 3.13; `requires-python = ">=3.13,<3.14"`; ruff `py313`; pre-commit `python3.13`; `ci.yml` ×2 + `pre-commit.yml` `'3.13'`; Dockerfile `python:3.13.18` (latest 3.13 tag on Docker Hub, non-slim). `uv lock`: same 81 packages and versions as main (only `requires-python`, markers and cp313 wheels change).
@@ -549,7 +549,11 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - 2026-11-26 ~04:20Z: Ali chose "Merge + prod", and "Yes, after prod" for squash-merging plan PR #1630. **Prod sha before: `933ac62efb8eb5e5090ba448bab377604fbd77a1`** (CP9; rollback: `release.sh --target prod --force 933ac62`; `/usr/bin/python3.11` stays installed). #1644 squash-merged as `6c1c1a2` (directly on `933ac62`). No migrations, so no backup step. CP9 1h Sentry watch logged at 04:15Z (above); my errors query for 03:15–04:23Z also = 0 prod events.
 - `release.sh --target prod 6c1c1a20292019d779dc4826a27f8f039c2b8c38` (04:22Z; `origin/main` = that sha, prod pointer was `933ac62`). Serial: 04:22:21Z **`python 3.13 (uv-managed): installing into /opt/wac-python-prod`**, `Installed Python 3.13.18 in 3.20s`, 04:22:27Z `Using CPython 3.13.18 interpreter at: /opt/wac-python-prod/…/python3.13`, `Installed 65 packages in 4.90s`, 0 `Building`/`Built` lines (no sdist), 04:25:02Z gunicorn listening, 04:25:08Z `wac-web is running 6c1c1a2…`, 04:25:11Z `done`, no Traceback/rollback. **Prod sha after: `6c1c1a20292019d779dc4826a27f8f039c2b8c38`.** `/etc/wac/reminders-enabled` not touched.
 - Prod smoke: `cp7b-prod` (04:25:30Z, inside the 60 s edge TTL) PASS 0/24; `cp7b-prod-r2` (past the TTL) **PASS 0/24**, same page hosts as `cp9-prod`. Origin `sessionid=x` `/privacy/` 200 (`cf-cache-status: DYNAMIC`).
-- Sentry 1h watch running (04:25–05:25Z).
+- Sentry watch **shortened by Ali** (04:35Z: "fake some traffic and have a shorter window") from 1h to ~15 min with generated traffic. 04:38–04:41Z: about 120 origin GETs (`sessionid=x`, ≤ ~1.4 req/s so under the #1635 rate limit): all public pages, `/account/{login,signup,password/reset}/`, `/mentors/` + 25 mentor pages, `/classes/100–260/` (step 5) and their `/calendar/` (.ics) → 97× 200, 1× 302, 22× 404 (missing ids / probes), **0× 5xx**, slowest 0.32 s. Sentry 04:25–05:00Z (queried 04:41Z): **0 prod error events**, no unresolved issue last-seen after the deploy (newest still PRODUCTION-43K, 2026-11-25 23:35Z); Sentry Logs 149 info, 29 warn (all `Not Found: …` from the crawl and smoke). **Watch passed.**
+- Memory with **both** targets on 3.13 (04:26–04:41Z, includes the crawl): VM `ram_used` median 893 MiB (+6.6% vs the 838 baseline), max 899 (−0.1%). Within +10%.
+- Rollback path unchanged: `release.sh --target prod --force 933ac62` (3.11; `/usr/bin/python3.11` still installed). `/opt/wac-python-{staging,prod}` hold 3.13.18; don't delete them while a kept release uses them.
+- Still open (not CP7b): per-unit `MemoryPeak` and removing the temporary staging Sentry DSN (0.5 visit); `--auth` smoke (`upg-smoke`); GA4 ID (CP9).
+- **Checkpoint 7b done, on prod.** Next: Checkpoint 8 (Django 6.2 LTS), gated by D1 to April 2027 and on django-storages and django-recaptcha releasing Django 6 support. Plan PR #1630 squash-merged after this entry (Ali: "Yes, after prod"); from now on the plan lives on `main`.
 
 ### Checkpoint 7a — done, on prod (2026-11-26). Next: Checkpoint 7b (Python 3.13)
 
