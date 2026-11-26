@@ -9,15 +9,6 @@ from coderdojochi.util import email
 
 
 class ContactForm(forms.Form):
-    widths = (
-        ("name", "small-6"),
-        ("email", "small-6"),
-        ("interest", "small-6"),
-        ("phone", "small-6"),
-        ("message", "small-12"),
-        ("captcha", ""),
-    )
-
     captcha = ReCaptchaField(
         widget=ReCaptchaV3,
     )
@@ -72,20 +63,6 @@ class ContactForm(forms.Form):
             },
         ),
     )
-
-    def as_grid(self):
-        return "".join([self.field_html(f[0], f[1]) for f in self.widths])
-
-    def field_html(self, field_name, field_classes):
-        field = self[field_name]
-
-        if field_classes == "":
-            return f"{field}{field.errors}"
-
-        return (
-            "<div class='cell"
-            f" {field_classes}'>{field.label_tag()}{field}{field.errors}</div>"
-        )
 
     def send_email(self):
         # send email using the self.cleaned_data dictionary

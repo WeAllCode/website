@@ -10,8 +10,8 @@
   {% endif %}
 
   <div class="sub-menu">
-    <nav class="grid-container" role="navigation">
-      <ul class="menu">
+    <nav class="wrap" role="navigation">
+      <ul class="nav-list">
         <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
         <li><a href="{% url 'weallcode-associate-board' %}">Associate Board</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#donate">Donate</a></li>
@@ -30,64 +30,64 @@
 
   <main id="main">
     <!-- Volunteer -->
-    <section id="volunteer" class="padding-vertical-3">
-      <div class="grid-container">
-        <div class="grid-x">
-          <div class="cell large-8 padding-right-2">
-            <h1 class="title text-tertiary margin-bottom-2">Join Us</h1>
+    <section id="volunteer" class="py-3">
+      <div class="wrap">
+        <div class="cols">
+          <div class="lg-span-8 pr-2">
+            <h1 class="title text-tertiary mb-2">Join Us</h1>
             <p>We All Code wouldn't exist without your support! Our instructors, volunteers, and sponsors make it possible for kids to explore their curiosity through coding.</p>
           </div>
-          <div class="cell large-4 position-relative">
+          <div class="lg-span-4 relative">
             <div class="aside-title">
               <div>
-                <span class="text-tertiary display-inline-block">Educate the </span>
-                <span class="text-tertiary display-inline-block">technology </span>
-                <span class="text-secondary display-inline-block">leaders of </span>
-                <span class="text-white display-inline-block">tomorrow</span>
+                <span class="text-tertiary inline-block">Educate the </span>
+                <span class="text-tertiary inline-block">technology </span>
+                <span class="text-secondary inline-block">leaders of </span>
+                <span class="text-white inline-block">tomorrow</span>
               </div>
-              <div class="line width-25 bg-primary margin-top-1"></div>
+              <div class="line w-25 bg-primary mt-1"></div>
             </div>
           </div>
         </div>
 
-        <div class="grid-x grid-padding-x margin-vertical-3">
-          <div class="cell medium-6">
+        <div class="cols pad-x my-3">
+          <div class="md-span-6">
             <div class="binary-drop-left">
-              <img class="width-100" src="{% static 'weallcode/images/photos/make-a-difference.jpg' %}" alt="Photo of student and mentor in class.">
+              <img class="w-100" src="{% static 'weallcode/images/photos/make-a-difference.jpg' %}" alt="Photo of student and mentor in class.">
             </div>
           </div>
-          <div class="cell medium-6">
-            <h3 class="title text-tertiary margin-vertical-2">Make a difference</h3>
+          <div class="md-span-6">
+            <h3 class="title text-tertiary my-2">Make a difference</h3>
 
             <ul class="list-plus">
-              <li class="margin-vertical-1"><strong>Free classes</strong> are open to kids across Chicago</li>
-              <li class="margin-vertical-1"><strong>Highly-trained instructors and mentors</strong> teach coding skills</li>
-              <li class="margin-vertical-1">Students are encouraged to <strong>show what they know with real working projects</strong></li>
-              <li class="margin-vertical-1"><strong>Kids work collaboratively</strong>, respect their peers, and have fun</li>
+              <li class="my-1"><strong>Free classes</strong> are open to kids across Chicago</li>
+              <li class="my-1"><strong>Highly-trained instructors and mentors</strong> teach coding skills</li>
+              <li class="my-1">Students are encouraged to <strong>show what they know with real working projects</strong></li>
+              <li class="my-1"><strong>Kids work collaboratively</strong>, respect their peers, and have fun</li>
             </ul>
           </div>
         </div>
 
-        <div class="text-center">
-          <a class="button large" href="{% url 'account_signup' %}">Become a Volunteer</a>
+        <div class="t-center">
+          <a class="cta cta-large" href="{% url 'account_signup' %}">Become a Volunteer</a>
         </div>
       </div>
     </section>
 
 
     <!-- Donate -->
-    <section id="donate" class="bg-binary padding-vertical-2">
-      <div class="grid-container">
-        <div class="grid-x margin-vertical-3">
-          <div class="cell medium-8 bg-white padding-2">
+    <section id="donate" class="bg-binary py-2">
+      <div class="wrap">
+        <div class="cols my-3">
+          <div class="md-span-8 bg-white p-2">
             <h2 class="title text-primary">Donate to make a difference</h2>
             <p><strong>Your generous financial support makes coding accessible to kids across Chicago.</strong> Every donation makes a difference!</p>
 
-            <p><a class="button large tertiary" href="javascript:donsPlus.openWidget();">Donate</a></p>
+            <p><a class="cta cta-large cta-tertiary" href="javascript:donsPlus.openWidget();">Donate</a></p>
           </div>
-          <div class="cell medium-4 bg-dark-blue text-white padding-2">
-            <div class="line bg-primary width-25 margin-bottom-3"></div>
-            <div class="text-huge text-uppercase text-bold line-height-1 margin-bottom-2">
+          <div class="md-span-4 bg-dark-blue text-white p-2">
+            <div class="line bg-primary w-25 mb-3"></div>
+            <div class="text-huge t-upper text-bold line-height-1 mb-2">
               <div class="text-tertiary">Money should</div>
               <div class="text-tertiary">never be a barrier</div>
               <div class="text-secondary">for kids</div>
@@ -101,54 +101,54 @@
 
 
     <!-- Sponsorship -->
-    <section id="sponsorship" class="bg-dark-blue padding-vertical-3">
-      <div class="grid-container">
-        <div class="text-white text-center">
+    <section id="sponsorship" class="bg-dark-blue py-3">
+      <div class="wrap">
+        <div class="text-white t-center">
           <h2 class="title">Sponsorship</h2>
-          <p class="medium-padding-horizontal-3">Help support us in our mission to <strong class="text-secondary">inspire, support, and teach kids STEM skills</strong> through corporate and organizational sponsorship. This can take many forms, and help provide even more opportunities to our kids. To get involved, email us at <a class="text-secondary" href="mailto:hello@weallcode.org">hello@weallcode.org</a>.</p>
+          <p class="md-px-3">Help support us in our mission to <strong class="text-secondary">inspire, support, and teach kids STEM skills</strong> through corporate and organizational sponsorship. This can take many forms, and help provide even more opportunities to our kids. To get involved, email us at <a class="text-secondary" href="mailto:hello@weallcode.org">hello@weallcode.org</a>.</p>
         </div>
 
-        <div class="margin-top-2 grid-x grid-margin-x grid-margin-y text-black">
-          <div class="cell medium-6 padding-1 bg-white">
-            <div class="grid-x">
-              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+        <div class="mt-2 cols gutter-x gutter-y text-black">
+          <div class="md-span-6 p-1 bg-white">
+            <div class="cols">
+              <svg class="span-2 md-span-3 pt-1 fill-tertiary program-icon">
                 <use xlink:href="#svg-parenting"></use>
               </svg>
-              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-                <h4 class="text-uppercase text-primary font-bold">Volunteer</h4>
+              <div class="span-10 md-span-9 pt-1 pl-2">
+                <h4 class="t-upper text-primary t-bold">Volunteer</h4>
                 <p><strong>Volunteer as individuals or a group</strong> to help with classes, programs, or events that benefit kids.</p>
               </div>
             </div>
           </div>
-          <div class="cell medium-6 padding-1 bg-white">
-            <div class="grid-x">
-              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+          <div class="md-span-6 p-1 bg-white">
+            <div class="cols">
+              <svg class="span-2 md-span-3 pt-1 fill-tertiary program-icon">
                 <use xlink:href="#svg-company"></use>
               </svg>
-              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-                <h4 class="text-uppercase text-primary font-bold">Locations</h4>
+              <div class="span-10 md-span-9 pt-1 pl-2">
+                <h4 class="t-upper text-primary t-bold">Locations</h4>
                 <p><strong>Provide locations for events or classes</strong> so kids around the city have access to education.</p>
               </div>
             </div>
           </div>
-          <div class="cell medium-6 padding-1 bg-white">
-            <div class="grid-x">
-              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+          <div class="md-span-6 p-1 bg-white">
+            <div class="cols">
+              <svg class="span-2 md-span-3 pt-1 fill-tertiary program-icon">
                 <use xlink:href="#svg-design"></use>
               </svg>
-              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-                <h4 class="text-uppercase text-primary font-bold">Equipment</h4>
+              <div class="span-10 md-span-9 pt-1 pl-2">
+                <h4 class="t-upper text-primary t-bold">Equipment</h4>
                 <p><strong>Donate equipment or other resources</strong> to expose more kids to different technologies.</p>
               </div>
             </div>
           </div>
-          <div class="cell medium-6 padding-1 bg-white">
-            <div class="grid-x">
-              <svg class="cell small-2 medium-3 padding-top-1 fill-tertiary program-icon">
+          <div class="md-span-6 p-1 bg-white">
+            <div class="cols">
+              <svg class="span-2 md-span-3 pt-1 fill-tertiary program-icon">
                 <use xlink:href="#svg-money"></use>
               </svg>
-              <div class="cell small-10 medium-9 padding-top-1 padding-left-2">
-                <h4 class="text-uppercase text-primary font-bold">Financial</h4>
+              <div class="span-10 md-span-9 pt-1 pl-2">
+                <h4 class="t-upper text-primary t-bold">Financial</h4>
                 <p><strong>100% of funding</strong> goes towards equipment and food for youth, attendees, and mentors.</p>
               </div>
             </div>
@@ -160,33 +160,38 @@
     {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/backgrounds/map.png" alt="map" %}
 
     <!-- Contact -->
-    <section id="contact" class="padding-vertical-3">
-      <div class="grid-container">
-        <div class="grid-x">
-          <div class="cell large-8 padding-right-2">
-            <h1 class="title text-tertiary margin-bottom-2">Contact Us</h1>
+    <section id="contact" class="py-3">
+      <div class="wrap">
+        <div class="cols">
+          <div class="lg-span-8 pr-2">
+            <h1 class="title text-tertiary mb-2">Contact Us</h1>
             <p><strong class="text-secondary">No matter the reason for contacting us, we care about you</strong> and connecting you with the information you need to get involved or learn more about us and what we are doing. If you prefer to email us, feel free to reach out at <a href="mailto:hello@weallcode.org" class="text-secondary">hello@weallcode.org</a></p>
           </div>
-          <div class="cell large-4 position-relative">
+          <div class="lg-span-4 relative">
             <div class="aside-title bg-primary text-white">
               <div>Volunteer</div>
               <div>Donate</div>
               <div>Sponsor</div>
               <div>Collaborate</div>
-              <div class="line width-25 bg-secondary margin-top-1"></div>
+              <div class="line w-25 bg-secondary mt-1"></div>
             </div>
           </div>
         </div>
 
         <form id="contact-form" method="POST" action="{% url 'weallcode-join-us' %}#contact-form">
           {% csrf_token %}
-          <div class="grid-x grid-padding-x margin-vertical-3">
+          <div class="cols pad-x my-3">
             {% if messages %}
-              <div class="cell">{% include 'weallcode/_messages.html' %}</div>
+              <div>{% include 'weallcode/_messages.html' %}</div>
             {% endif %}
-            {{ form.as_grid|safe }}
-            <div class="cell text-center">
-              <button type="submit" class="button padding-horizontal-3">Submit</button>
+            <div class="span-6">{{ form.name.as_field_group }}</div>
+            <div class="span-6">{{ form.email.as_field_group }}</div>
+            <div class="span-6">{{ form.interest.as_field_group }}</div>
+            <div class="span-6">{{ form.phone.as_field_group }}</div>
+            <div class="span-12">{{ form.message.as_field_group }}</div>
+            {{ form.captcha }}{{ form.captcha.errors }}
+            <div class="t-center">
+              <button type="submit" class="cta px-3">Submit</button>
             </div>
           </div>
         </form>

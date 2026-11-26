@@ -10,10 +10,10 @@
   {% endif %}
 
   <div class="sub-menu">
-    <nav class="grid-container" role="navigation">
-      <ul class="menu">
+    <nav class="wrap" role="navigation">
+      <ul class="nav-list">
         <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
-        <li class="active"><a href="{% url 'weallcode-associate-board' %}">Associate Board</a></li>
+        <li><a href="{% url 'weallcode-associate-board' %}" aria-current="page">Associate Board</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#donate">Donate</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#sponsorship">Sponsorship</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#contact">Contact Us</a></li>
@@ -30,28 +30,28 @@
 
   <main id="main">
     <!-- Introduction -->
-    <section id="introduction" class="padding-top-3">
-      <div class="grid-container">
-        <div class="grid-x margin-bottom-2">
-          <div class="cell large-8 padding-right-2">
+    <section id="introduction" class="pt-3">
+      <div class="wrap">
+        <div class="cols mb-2">
+          <div class="lg-span-8 pr-2">
             <h1 class="title text-tertiary">Associate Board</h1>
             <p>Joining We All Code's Associate Board is an exciting opportunity for early- to mid-career professionals who want to contribute their time, talent, and treasure to We All Code's mission, while building professional networks and enhancing leadership skills.</p>
           </div>
-          <div class="cell large-4 position-relative">
+          <div class="lg-span-4 relative">
             <div class="aside-title">
               <div>
-                <span class="text-tertiary display-inline-block">Educate the </span>
-                <span class="text-tertiary display-inline-block">technology </span>
-                <span class="text-secondary display-inline-block">leaders of </span>
-                <span class="text-white display-inline-block">tomorrow</span>
+                <span class="text-tertiary inline-block">Educate the </span>
+                <span class="text-tertiary inline-block">technology </span>
+                <span class="text-secondary inline-block">leaders of </span>
+                <span class="text-white inline-block">tomorrow</span>
               </div>
-              <div class="line width-25 bg-primary margin-top-1"></div>
+              <div class="line w-25 bg-primary mt-1"></div>
             </div>
           </div>
         </div>
 
-        <div class="grid-x grid-padding-x margin-vertical-2">
-          <div class="cell medium-8">
+        <div class="cols pad-x my-2">
+          <div class="md-span-8">
             <h3 class="title text-primary">Overview</h3>
 
             <p>The Associate Board provides an excellent opportunity for interested volunteers at an early stage in their careers to contribute to We All Code's mission on many levels (devoting time, treasure, talent) while building professional networks and enhancing leadership skills.</p>
@@ -71,10 +71,10 @@
     {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-team.jpg" alt="Associate Board" %}
 
     <!-- More Introduction -->
-    <section id="more-information" class="padding-top-3">
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x margin-bottom-3">
-          <div class="cell medium-6">
+    <section id="more-information" class="pt-3">
+      <div class="wrap">
+        <div class="cols pad-x mb-3">
+          <div class="md-span-6">
             <h3 class="title text-primary">Benefits of an Associate Board Membership</h3>
 
             <ul class="list-plus">
@@ -86,16 +86,16 @@
               <li>Opportunities to enjoy special privileges such as behind-the-scenes tours and previews of new programs and initiatives</li>
             </ul>
           </div>
-          <div class="cell medium-6">
+          <div class="md-span-6">
             <div class="binary-drop-right">
-              <img class="width-100" src="{% static 'weallcode/images/photos/volunteering-2.jpg' %}" alt="Photo of student and mentor in class.">
+              <img class="w-100" src="{% static 'weallcode/images/photos/volunteering-2.jpg' %}" alt="Photo of student and mentor in class.">
             </div>
           </div>
         </div>
 
-        <div class="grid-x grid-padding-x margin-bottom-3">
+        <div class="cols pad-x mb-3">
 
-          <div class="cell medium-8">
+          <div class="md-span-8">
             <h3 class="title text-primary">Membership Requirements</h3>
 
             <ul class="list-plus">
@@ -120,17 +120,17 @@
           </div>
         </div>
 
-        <div class="grid-x grid-padding-x margin-bottom-2">
-          <div class="cell medium-8">
+        <div class="cols pad-x mb-2">
+          <div class="md-span-8">
             <h3 class="title text-primary">Fundraising Goal</h3>
 
             <p>Each year, the Associate Board works with its liaison(s) from the Board of Directors to establish a fundraising goal for the fall event in addition to the Associate Board give/get requirements.</p>
           </div>
         </div>
 
-        <div class="grid-x grid-padding-x margin-bottom-2">
-          <div class="cell medium-6">
-            <h3 class="title text-primary margin-bottom-2">Associate Board Committees</h3>
+        <div class="cols pad-x mb-2">
+          <div class="md-span-6">
+            <h3 class="title text-primary mb-2">Associate Board Committees</h3>
 
             <p><strong>Outreach</strong> - The Associate Board Outreach Committee works to increase the reach of We All Code, build a network/pipeline, and ensure that multiple dimensions of We All Code are represented.</p>
 
@@ -138,37 +138,37 @@
 
             <p><strong>Volunteer</strong> - The Associate Board Volunteer Committee works to create opportunities that engage the Associate Board members with the mission of the organization in a hands-on, meaningful way that also creates social interaction with each other.</p>
 
-            <h3 class="title text-primary margin-vertical-2">Questions?</h3>
+            <h3 class="title text-primary my-2">Questions?</h3>
 
             <p>Please contact us at <a href="mailto:hello@weallcode.org">hello@weallcode.org</a> for any questions or more information.</p>
 
           </div>
-          <div class="cell medium-6">
+          <div class="md-span-6">
             <div class="binary-drop-right">
-              <img class="width-100" src="{% static 'weallcode/images/photos/volunteering-3-small.jpg' %}" alt="Photo of student and mentor in class.">
+              <img class="w-100" src="{% static 'weallcode/images/photos/volunteering-3-small.jpg' %}" alt="Photo of student and mentor in class.">
             </div>
           </div>
         </div>
 
-        <div class="text-center margin-bottom-2">
-          <a class="button large" href="{% url 'weallcode-associate-board' %}#form">Apply to the Associate Board</a>
+        <div class="t-center mb-2">
+          <a class="cta cta-large" href="{% url 'weallcode-associate-board' %}#form">Apply to the Associate Board</a>
         </div>
       </div>
     </section>
 
     <!-- Form -->
-    <section id="form" class="bg-binary padding-vertical-2">
-      <div class="grid-container">
-        <div class="grid-x margin-vertical-3">
-          <div class="cell medium-8 bg-white">
-            <h2 class="title text-primary padding-horizontal-2 padding-top-2">Apply to join the Associate Board</h2>
-            <p class="padding-horizontal-2"><strong>Don't miss this unique opportunity to give back to the Chicago community!</strong></p>
+    <section id="form" class="bg-binary py-2">
+      <div class="wrap">
+        <div class="cols my-3">
+          <div class="md-span-8 bg-white">
+            <h2 class="title text-primary px-2 pt-2">Apply to join the Associate Board</h2>
+            <p class="px-2"><strong>Don't miss this unique opportunity to give back to the Chicago community!</strong></p>
 
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScKzZFNOjjsuRDtEw8VsR98_8MSq38SoyGDdlmfh1ibFJLOcw/viewform?embedded=true" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
           </div>
-          <div class="cell medium-4 bg-dark-blue text-white padding-2">
-            <div class="line bg-secondary width-25 margin-bottom-3"></div>
-            <div class="text-huge text-uppercase text-bold line-height-1 margin-bottom-2">
+          <div class="md-span-4 bg-dark-blue text-white p-2">
+            <div class="line bg-secondary w-25 mb-3"></div>
+            <div class="text-huge t-upper text-bold line-height-1 mb-2">
               <span class="text-primary">Help us eliminate</span>
               <span class="text-secondary">the barriers preventing</span>
               <span class="text-tertiary">all Chicago kids from</span>

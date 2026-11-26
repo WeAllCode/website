@@ -6,29 +6,29 @@
 
 {% block content %}
   <!-- Hero -->
-  <section class="padding-vertical-3 bg-kid-overlay">
-    <div class="grid-container">
-      <div class="grid-x grid-padding-x grid-padding-y padding-bottom-1">
-        <div class="cell medium-6 text-white">
+  <section class="py-3 bg-kid-overlay">
+    <div class="wrap">
+      <div class="cols pad-x pad-y pb-1">
+        <div class="md-span-6 text-white">
           <h1 class="title">Let's explore<br> your coding<br> curiosity.</h1>
           <p>Our mission is to introduce a diverse group of children to the fun of coding by providing free educational resources and hands-on classes.</p>
         </div>
-        <div class="cell medium-5 medium-offset-1 large-4 large-offset-2">
+        <div class="md-span-5 md-offset-1 lg-span-4 lg-offset-2">
           {% if next_session %}
-            <div class="bg-dark-blue text-center radius overlap-bottom">
-              <h6 class="text-uppercase padding-1 margin-0 text-grey-for-white">Upcoming class</h6>
-              <div class="padding-1 padding-horizontal-2 bg-white">
-                <h4 class="text-blue text-uppercase text-primary"><a href="{{ next_session.get_absolute_url }}"><strong>{{ next_session.course.code  }}</strong></a></h4>
+            <div class="bg-dark-blue t-center overlap-bottom">
+              <h6 class="t-upper p-1 m-0 text-grey-for-white">Upcoming class</h6>
+              <div class="p-1 px-2 bg-white">
+                <h4 class="text-blue t-upper text-primary"><a href="{{ next_session.get_absolute_url }}"><strong>{{ next_session.course.code  }}</strong></a></h4>
                 <div><strong>{{ next_session.course.title }}</strong></div>
                 <div>{{ next_session.start_date|date }}</div>
-                <div class="line bg-secondary width-25 margin-vertical-half"></div>
+                <div class="line bg-secondary w-25 my-h"></div>
                 <div>{{ next_session.location.name }}</div>
                 {% if next_session.location.address %}
                 <div>{{ next_session.location.address }}</div>
                 <div>{{ next_session.location.city }} {{ next_session.location.state }} {{ next_session.location.zip }}</div>
                 {% endif %}
 
-                <a class="button bg-tertiary width-100 margin-top-1" href="{{ next_session.get_absolute_url }}">
+                <a class="cta bg-tertiary w-100 mt-1" href="{{ next_session.get_absolute_url }}">
                   {% if user.is_authenticated and user.role == 'mentor' %}
                     {% if next_session.mentor_capacity and next_session.get_mentor_orders.count >= next_session.mentor_capacity %}
                       Class Full
@@ -56,7 +56,7 @@
 
   <main id="main">
     <!-- Newsletter -->
-    <section class="padding-vertical-2 bg-binary">
+    <section class="py-2 bg-binary">
       <div class="learn-more-signup">
         <h2 class="learn-more-signup-title">Monthly Newsletter</h2>
         <p class="learn-more-signup-subtitle">Stay up to date on our class schedule, upcoming courses, and useful resources.</p>
@@ -69,7 +69,7 @@
                 <input type="email" value="" name="EMAIL" class="required email" placeholder="awesome.parent@gmail.com" id="mce-EMAIL">
               </div>
 
-              <div id="mce-responses" class="clear">
+              <div id="mce-responses">
                 <div class="response" id="mce-error-response" style="display:none"></div>
                 <div class="response" id="mce-success-response" style="display:none"></div>
               </div>
@@ -77,8 +77,8 @@
               <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
               <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_1cf2aba5bf83d6c4ff8bdda35_57426673d0" tabindex="-1" value=""></div>
 
-              <div class="clear">
-                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+              <div>
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="cta">
               </div>
             </div>
           </form>
@@ -87,29 +87,29 @@
     </section>
 
     <!-- Impact -->
-    <section class="margin-vertical-3">
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x padding-bottom-1">
-          <div class="medium-6 cell">
+    <section class="my-3">
+      <div class="wrap">
+        <div class="cols pad-x pb-1">
+          <div class="md-span-6">
             <div class="binary-drop-left">
-              <img class="width-100 margin-bottom-1" src="{% static 'weallcode/images/photos/real-coding-skills.jpg' %}" alt="After class photo">
+              <img class="w-100 mb-1" src="{% static 'weallcode/images/photos/real-coding-skills.jpg' %}" alt="After class photo">
             </div>
           </div>
-          <div class="medium-6 cell">
+          <div class="md-span-6">
             <h2 class="title text-primary">Real coding skills for every kid.</h2>
             <p>We help young people from 7-17 envision a future in STEM and gain the coding skills to make it real.</p>
-            <a class="button secondary" href="{% url 'weallcode-programs' %}#courses">View Our Courses</a>
+            <a class="cta cta-secondary" href="{% url 'weallcode-programs' %}#courses">View Our Courses</a>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Core Values -->
-    <section class="margin-bottom-3">
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x">
-          <div class="small-6 small-offset-3">
-            <h2 class="title text-tertiary text-center">Core Values</h2>
+    <section class="mb-3">
+      <div class="wrap">
+        <div class="cols pad-x">
+          <div class="span-6 offset-3">
+            <h2 class="title text-tertiary t-center">Core Values</h2>
           </div>
         </div>
 
@@ -118,82 +118,82 @@
     </section>
 
     <!-- Free Programs -->
-    <section class="padding-vertical-3 bg-binary">
-      <div class="grid-container">
-        <div class="grid-x grid-padding-x">
-          <div class="cell medium-7">
+    <section class="py-3 bg-binary">
+      <div class="wrap">
+        <div class="cols pad-x">
+          <div class="md-span-7">
             <h2 class="title text-primary">Free coding programs for kids and teens.</h2>
             <p>We All Code lessons teach STEM through experience. With one mentor for every two students, kids can build confidence and get the attention they need to thrive.</p>
-            <a href="{% url 'weallcode-programs' %}" class="button large">See All Programs</a>
+            <a href="{% url 'weallcode-programs' %}" class="cta cta-large">See All Programs</a>
           </div>
-          <div class="cell medium-5">
-            <img class="width-100" src="{% static 'weallcode/images/photos/mentor-ratio.jpg' %}" alt="mentor and student">
+          <div class="md-span-5">
+            <img class="w-100" src="{% static 'weallcode/images/photos/mentor-ratio.jpg' %}" alt="mentor and student">
           </div>
         </div>
       </div>
     </section>
 
     <!-- Join Us -->
-    <section class="padding-vertical-3 bg-dark-blue">
-      <div class="grid-container">
-        <h3 class="title text-white text-center">Join Us</h3>
+    <section class="py-3 bg-dark-blue">
+      <div class="wrap">
+        <h3 class="title text-white t-center">Join Us</h3>
 
-        <div class="grid-x grid-padding-x margin-vertical-3">
+        <div class="cols pad-x my-3">
           <!-- Cell -->
-          <div class="small-12 medium-6 large-4 cell margin-bottom-2">
-            <div class="bg-white radius">
-              <h6 class="text-uppercase padding-1 margin-0">Volunteers</h6>
-              <img class="width-100" src="{% static 'weallcode/images/photos/join-us-volunteer.jpg' %}" alt="">
-              <div class="padding-1 padding-horizontal-2 text-center">
-                <a class="button bg-gray-for-blue width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a>
+          <div class="span-12 md-span-6 lg-span-4 mb-2">
+            <div class="bg-white">
+              <h6 class="t-upper p-1 m-0">Volunteers</h6>
+              <img class="w-100" src="{% static 'weallcode/images/photos/join-us-volunteer.jpg' %}" alt="">
+              <div class="p-1 px-2 t-center">
+                <a class="cta bg-gray-for-blue w-100 mt-1" href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a>
               </div>
             </div>
           </div>
 
           <!-- Cell -->
-          <div class="small-12 medium-6 large-4 cell margin-bottom-2">
-            <div class="bg-white radius">
-              <h6 class="text-uppercase padding-1 margin-0">Donors</h6>
-              <img class="width-100" src="{% static 'weallcode/images/photos/join-us-donor.jpg' %}" alt="">
-              <div class="padding-1 padding-horizontal-2 text-center">
-                <a class="button bg-tertiary width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#donate">Donate</a>
+          <div class="span-12 md-span-6 lg-span-4 mb-2">
+            <div class="bg-white">
+              <h6 class="t-upper p-1 m-0">Donors</h6>
+              <img class="w-100" src="{% static 'weallcode/images/photos/join-us-donor.jpg' %}" alt="">
+              <div class="p-1 px-2 t-center">
+                <a class="cta bg-tertiary w-100 mt-1" href="{% url 'weallcode-join-us' %}#donate">Donate</a>
               </div>
             </div>
           </div>
 
           <!-- Cell -->
-          <div class="small-12 medium-6 large-4 cell margin-bottom-2">
-            <div class="bg-white radius">
-              <h6 class="text-uppercase padding-1 margin-0">Sponsors</h6>
-              <img class="width-100" src="{% static 'weallcode/images/photos/join-us-sponsor.jpg' %}" alt="">
-              <div class="padding-1 padding-horizontal-2 text-center">
-                <a class="button bg-primary width-100 margin-top-1" href="{% url 'weallcode-join-us' %}#sponsorship">Sponsor</a>
+          <div class="span-12 md-span-6 lg-span-4 mb-2">
+            <div class="bg-white">
+              <h6 class="t-upper p-1 m-0">Sponsors</h6>
+              <img class="w-100" src="{% static 'weallcode/images/photos/join-us-sponsor.jpg' %}" alt="">
+              <div class="p-1 px-2 t-center">
+                <a class="cta bg-primary w-100 mt-1" href="{% url 'weallcode-join-us' %}#sponsorship">Sponsor</a>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="grid-x grid-padding-x">
-          <div class="cell small-4 medium-auto margin-bottom-2">
-            <img class="width-100" src="{% static 'weallcode/images/supporters/activecampaign.png' %}" alt="Active Campaign">
+        <div class="cols pad-x">
+          <div class="span-4 md-span-auto mb-2">
+            <img class="w-100" src="{% static 'weallcode/images/supporters/activecampaign.png' %}" alt="Active Campaign">
           </div>
-          <div class="cell small-4 medium-auto margin-bottom-2">
-            <img class="width-100" src="{% static 'weallcode/images/supporters/cme-group-foundation.png' %}" alt="CME Group Foundation">
+          <div class="span-4 md-span-auto mb-2">
+            <img class="w-100" src="{% static 'weallcode/images/supporters/cme-group-foundation.png' %}" alt="CME Group Foundation">
           </div>
-          <div class="cell small-4 medium-auto margin-bottom-2">
-            <img class="width-100" src="{% static 'weallcode/images/supporters/mind-hand.png' %}" alt="Mind+Hand">
+          <div class="span-4 md-span-auto mb-2">
+            <img class="w-100" src="{% static 'weallcode/images/supporters/mind-hand.png' %}" alt="Mind+Hand">
           </div>
-          <div class="cell small-4 medium-auto margin-bottom-2">
-            <img class="width-100" src="{% static 'weallcode/images/supporters/spothero.png' %}" alt="SpotHero">
+          <div class="span-4 md-span-auto mb-2">
+            <img class="w-100" src="{% static 'weallcode/images/supporters/spothero.png' %}" alt="SpotHero">
           </div>
-          <div class="cell small-4 medium-auto margin-bottom-2">
-            <img class="width-100" src="{% static 'weallcode/images/supporters/the-nerdery.png' %}" alt="Nerdery">
+          <div class="span-4 md-span-auto mb-2">
+            <img class="w-100" src="{% static 'weallcode/images/supporters/the-nerdery.png' %}" alt="Nerdery">
           </div>
-          <div class="cell small-4 medium-auto margin-bottom-2">
-            <img class="width-100" src="{% static 'weallcode/images/supporters/west-town.png' %}" alt="West Town">
+          <div class="span-4 md-span-auto mb-2">
+            <img class="w-100" src="{% static 'weallcode/images/supporters/west-town.png' %}" alt="West Town">
           </div>
-          <div class="cell small-4 medium-auto margin-bottom-2">
-            <img class="width-100" src="{% static 'weallcode/images/supporters/wyzant.png' %}" alt="Wyzant">
+          <div class="span-4 md-span-auto mb-2">
+            <img class="w-100" src="{% static 'weallcode/images/supporters/wyzant.png' %}" alt="Wyzant">
           </div>
         </div>
       </div>

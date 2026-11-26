@@ -6,8 +6,8 @@
 
 {% block subheader %}
 <div class="sub-menu">
-  <nav class="grid-container" role="navigation">
-    <ul class="menu">
+  <nav class="wrap" role="navigation">
+    <ul class="nav-list">
       <li><a href="{% url 'weallcode-team' %}#leadership">Leadership</a></li>
       <li><a href="{% url 'weallcode-team' %}#board">Board</a></li>
       <li><a href="{% url 'weallcode-team' %}#associate-board">Associate Board</a></li>
@@ -23,22 +23,22 @@
 {% include "weallcode/snippets/hero_image.html" with src="weallcode/images/photos/hero-team.jpg" alt="our team" %}
 
 <main id="main">
-  <section class="padding-vertical-3">
-    <div class="grid-container">
-      <div class="grid-x">
-        <div class="cell large-7 text-center medium-text-left">
-          <h1 class="title text-tertiary margin-bottom-2">The Team</h1>
+  <section class="py-3">
+    <div class="wrap">
+      <div class="cols">
+        <div class="lg-span-7 t-center md-t-start">
+          <h1 class="title text-tertiary mb-2">The Team</h1>
           <p>Our dedicated team works hard to keep We All Code classes safe, supportive, and largely free. Our leaders, instructors, mentors, and volunteers work to help every child explore their kid creativity through coding.</p>
         </div>
-        <div class="cell large-offset-1 large-4 position-relative">
+        <div class="lg-offset-1 lg-span-4 relative">
           <div class="aside-title">
             <div>
-              <span class="text-tertiary display-inline-block">Team work </span>
-              <span class="text-tertiary display-inline-block">makes </span>
-              <span class="text-secondary display-inline-block">the dream </span>
-              <span class="text-white display-inline-block">work</span>
+              <span class="text-tertiary inline-block">Team work </span>
+              <span class="text-tertiary inline-block">makes </span>
+              <span class="text-secondary inline-block">the dream </span>
+              <span class="text-white inline-block">work</span>
             </div>
-            <div class="line width-25 bg-primary margin-top-1"></div>
+            <div class="line w-25 bg-primary mt-1"></div>
           </div>
         </div>
       </div>
@@ -46,16 +46,16 @@
   </section>
 
   <!-- Leadership -->
-  <section id="leadership" class="bg-dark-blue text-center padding-vertical-3">
-    <div class="grid-container">
+  <section id="leadership" class="bg-dark-blue t-center py-3">
+    <div class="wrap">
       <div class="text-white">
         <h2 class="title">Leadership</h2>
-        <p class="medium-padding-horizontal-3">Our full-time leadership staff works tirelessly toward one purpose: bringing STEM learning opportunities to every kid in Chicago and giving them the tools they need to excel.</p>
+        <p class="md-px-3">Our full-time leadership staff works tirelessly toward one purpose: bringing STEM learning opportunities to every kid in Chicago and giving them the tools they need to excel.</p>
       </div>
 
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-2 align-center">
+      <div class="cols gutter-x gutter-y mt-2 center">
         {% for person in staff %}
-          <div class="cell small-6">
+          <div class="span-6">
             {% include "weallcode/snippets/team_member.html" with is_on_dark=True color="secondary" name=person.name title=person.role image=person.image %}
           </div>
         {% endfor %}
@@ -64,14 +64,14 @@
   </section>
 
   <!-- Board -->
-  <section id="board" class="text-center padding-vertical-3 bg-light-gray">
-    <div class="grid-container">
+  <section id="board" class="t-center py-3 bg-light-gray">
+    <div class="wrap">
       <h2 class="title text-tertiary">Board</h2>
-      <p class="medium-padding-horizontal-3">Our dedicated board includes leaders from diverse backgrounds and fields across Chicago.</p>
+      <p class="md-px-3">Our dedicated board includes leaders from diverse backgrounds and fields across Chicago.</p>
 
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
+      <div class="cols gutter-x gutter-y mt-2">
         {% for member in board %}
-          <div class="cell small-6 medium-4">
+          <div class="span-6 md-span-4">
             {% include "weallcode/snippets/team_member.html" with is_small=True name=member.name image=member.image title=member.role description=member.description link=member.linkedin color="tertiary" %}
           </div>
         {% endfor %}
@@ -80,14 +80,14 @@
   </section>
 
   <!-- Associate Board -->
-  <section id="associate-board" class="text-center padding-vertical-3">
-    <div class="grid-container">
+  <section id="associate-board" class="t-center py-3">
+    <div class="wrap">
       <h2 class="title text-primary">Associate Board</h2>
-      <p class="medium-padding-horizontal-3">Our Associate Board of young professionals fuels our big ideas and is dedicated to We All Code's growth.</p>
+      <p class="md-px-3">Our Associate Board of young professionals fuels our big ideas and is dedicated to We All Code's growth.</p>
 
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
+      <div class="cols gutter-x gutter-y mt-2">
         {% for member in associate_board %}
-          <div class="cell small-6 medium-3">
+          <div class="span-6 md-span-3">
             {% include "weallcode/snippets/team_member.html" with is_small=True name=member.name image=member.image title=member.role description=member.description link=member.linkedin color="primary" %}
           </div>
         {% endfor %}
@@ -96,16 +96,16 @@
   </section>
 
   <!-- Instructors -->
-  <section id="instructors" class="bg-dark-blue text-center padding-vertical-3">
-    <div class="grid-container">
+  <section id="instructors" class="bg-dark-blue t-center py-3">
+    <div class="wrap">
       <div class="text-white">
         <h2 class="title">Instructors</h2>
-        <p class="medium-padding-horizontal-3">These highly-trained volunteers come from tech backgrounds and are skilled in creating a supportive, experiential learning environment to help every kid code.</p>
+        <p class="md-px-3">These highly-trained volunteers come from tech backgrounds and are skilled in creating a supportive, experiential learning environment to help every kid code.</p>
       </div>
 
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-2">
+      <div class="cols gutter-x gutter-y mt-2">
         {% for instructor in instructors %}
-          <div class="cell small-6 medium-4">
+          <div class="span-6 md-span-4">
             {% include "weallcode/snippets/team_member.html" with is_on_dark=True name=instructor.user.name image=instructor.avatar %}
           </div>
         {% endfor %}
@@ -115,23 +115,23 @@
   </section>
 
   <!-- Mentors -->
-  <section id="mentors" class="padding-vertical-3 bg-light-gray">
-    <div class="grid-container">
-      <div class="grid-x grid-padding-x">
-        <div class="cell medium-5">
+  <section id="mentors" class="py-3 bg-light-gray">
+    <div class="wrap">
+      <div class="cols pad-x">
+        <div class="md-span-5">
           <h2 class="title text-tertiary">Mentorship makes all the difference</h2>
           <p>Our volunteer mentors help students feel supported as they learn to code. We're proud of our exceptional 2-to-1 mentor-to-student ratio, ensuring your kids will always have a friendly face to turn to with questions.</p>
         </div>
-        <div class="cell medium-offset-1 medium-6">
+        <div class="md-offset-1 md-span-6">
           <div class="binary-drop-right">
-            <img class="width-100" src="{% static 'weallcode/images/photos/mentoring.jpg' %}" alt="mentors">
+            <img class="w-100" src="{% static 'weallcode/images/photos/mentoring.jpg' %}" alt="mentors">
           </div>
         </div>
       </div>
 
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
+      <div class="cols gutter-x gutter-y mt-3">
         {% for mentor in top_mentors %}
-          <div class="cell small-6 medium-3">
+          <div class="span-6 md-span-3">
             {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.get_avatar sublabel="classes" %}
           </div>
         {% endfor %}
@@ -156,24 +156,24 @@
   </section>
 
   <!-- Volunteers -->
-  <section id="volunteers" class="padding-vertical-3">
-    <div class="grid-container">
-      <div class="grid-x grid-padding-x">
-        <div class="cell show-for-large large-6">
+  <section id="volunteers" class="py-3">
+    <div class="wrap">
+      <div class="cols pad-x">
+        <div class="lg-up lg-span-6">
           <div class="binary-drop-left">
-            <img class="width-100" src="{% static 'weallcode/images/photos/volunteering.jpg' %}" alt="volunteers">
+            <img class="w-100" src="{% static 'weallcode/images/photos/volunteering.jpg' %}" alt="volunteers">
           </div>
         </div>
-        <div class="cell large-offset-1 large-5">
+        <div class="lg-offset-1 lg-span-5">
           <h2 class="title text-primary">Volunteering for a better tomorrow</h2>
           <p>Volunteers make our mission a reality! We rely on them to keep sessions running smoothly. Interested in volunteering?</p>
-          <a class="button large" href="{% url 'account_signup' %}">Become a Volunteer</a>
+          <a class="cta cta-large" href="{% url 'account_signup' %}">Become a Volunteer</a>
         </div>
       </div>
 
-      <div class="grid-x grid-margin-x grid-margin-y margin-top-3">
+      <div class="cols gutter-x gutter-y mt-3">
         {% for volunteer in top_volunteers %}
-          <div class="cell small-6 medium-3">
+          <div class="span-6 md-span-3">
             {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.get_avatar sublabel="classes" %}
           </div>
         {% endfor %}
