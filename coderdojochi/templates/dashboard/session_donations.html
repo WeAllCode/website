@@ -1,6 +1,6 @@
 {% extends "_admin_base.html" %}
 
-{% load i18n bootstrap3 %}
+{% load i18n %}
 
 {% block title %}We All Code Admin - Session Donations{% endblock %}
 
@@ -36,7 +36,7 @@
                 <div class="panel-body">
                     <form method="post" action="." class="form">
                         {% csrf_token %}
-                        {% bootstrap_form form %}
+                        {% include "account/_form.html" with form=form bootstrap=True %}
                         <input class="button" type="submit" value="{% trans 'Add New' %}" />
                     </form>
                     <hr>

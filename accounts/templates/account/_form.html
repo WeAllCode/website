@@ -1,0 +1,9 @@
+{% comment %}
+A whole form, with the markup django-bootstrap3's {% bootstrap_form %} made: non-field errors, then each field.
+Usage: {% include "account/_form.html" with form=form %}
+bootstrap=True keeps Bootstrap's classes and the alert's close button, for dashboard pages that load Bootstrap CSS and JS.
+{% endcomment %}{% if form.non_field_errors %}<div{% if bootstrap %} class="alert alert-danger alert-dismissable alert-link"{% endif %}>
+{% if bootstrap %}<button class="close" type="button" data-dismiss="alert" aria-hidden="true">&#215;</button>
+{% endif %}{% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}
+{% endfor %}</div>
+{% endif %}{% for field in form %}{% include "account/_field.html" %}{% endfor %}

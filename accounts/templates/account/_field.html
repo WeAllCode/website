@@ -1,0 +1,9 @@
+{% load form_fields %}{% comment %}
+One form field, with the markup django-bootstrap3's {% bootstrap_field %} made.
+Usage: {% include "account/_field.html" with field=form.name %}
+bootstrap=True keeps Bootstrap's classes, for dashboard pages that load Bootstrap CSS.
+Checkbox labels are not escaped, as bootstrap3 did: StudentForm.consent's label holds a link.
+{% endcomment %}{% with bootstrap=bootstrap|default:False %}{% if field.is_hidden %}{{ field }}{% else %}<div{% if bootstrap %} class="form-group{% if field.errors %} has-error{% elif field.form.is_bound %} has-success{% endif %}"{% endif %}>{% if field.widget_type == "checkbox" %}<div{% if bootstrap %} class="checkbox"{% endif %}><label{% if field.id_for_label %} for="{{ field.id_for_label }}"{% endif %}{% if field.help_text %} title="{{ field.help_text|striptags }}"{% endif %}>{{ field|render_widget:bootstrap }} {{ field.label|safe }}</label></div>{% else %}{% if field.label %}<label{% if bootstrap %} class="control-label"{% endif %}{% if field.id_for_label %} for="{{ field.id_for_label }}"{% endif %}>{{ field.label }}</label>{% endif %}{{ field|render_widget:bootstrap }}{% endif %}
+{% for error in field.errors %}<div{% if bootstrap %} class="help-block"{% endif %}>{{ error }}</div>
+{% endfor %}{% if field.help_text %}<div{% if bootstrap %} class="help-block"{% endif %}>{{ field.help_text|safe }}</div>
+{% endif %}</div>{% endif %}{% endwith %}
