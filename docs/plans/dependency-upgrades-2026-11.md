@@ -540,6 +540,10 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Checks (local CPython 3.13.13): `ruff check .` ok, 0 new py313 fixes; `ruff format --check .` 125 formatted; `uv lock --check` ok; `Ran 118 tests … OK` (`-Wd`: no new 3.13 warnings); `pre-commit run --all-files` all Passed; `actionlint` ok. Runbook step 0 skipped: no package version changed, so no migrations possible.
 - Pushed, opened https://github.com/WeAllCode/website/pull/1644. CI pending.
 - Memory: the 0.5 baseline still doesn't exist (Ali declined serial-console steps). Plan: compare staging against itself on 3.11 vs 3.13 using whatever the laptop can read (see later entry).
+- CI on #1644 (`adb8a7b`) all green (tests, pre-commit, django-postgres, infra; dependabot skipped).
+- Staging: `release.sh --target staging origin/claude/upgrade-cp7b-py313` (03:43Z; staging was CP9's `31ce02c`). Serial: 03:43:34Z **`python 3.13 (uv-managed): installing into /opt/wac-python-staging`**, `Downloading cpython-3.13.18-linux-x86_64-gnu (33.9MiB)`, `Installed Python 3.13.18 in 3.38s`; 03:43:40Z `Using CPython 3.13.18 interpreter at: /opt/wac-python-staging/cpython-3.13-linux-x86_64-gnu/bin/python3.13`, new `.venv`, `Installed 65 packages in 3.93s` — **0 `Building`/`Built` lines (no sdist)**; 03:46:06Z gunicorn listening, 03:46:11Z `wac-staging is running adb8a7b…`, 03:46:15Z `done`, no Traceback/rollback. First 3.13 deploy took 2m43s.
+- Staging smoke `--cp cp7b-staging --cp9 --basic-auth-op … --baseline out/cp0-staging/report.json`: **PASS 0/24**, same page hosts as `cp9g-staging`; jQuery 3.8.0, Foundation 6.9.0, vendored fonts load.
+- Memory source found that needs no serial console: Cloud Monitoring `compute.googleapis.com/instance/memory/balloon/ram_used` (whole VM, 1/min; script `scratchpad/mem.sh`). Not per-unit `MemoryPeak`, so it's a proxy. Baseline with both targets on 3.11 (prod `933ac62`, staging `31ce02c`), 03:16–03:43Z: n=24, median **838 MiB**, p90 897, max 900.
 
 ### Checkpoint 7a — done, on prod (2026-11-26). Next: Checkpoint 7b (Python 3.13)
 
