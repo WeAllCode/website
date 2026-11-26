@@ -546,7 +546,15 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - New deploy-pull exercised: after CP9 posted its staging smoke done, `release.sh --target staging --force 367a8fd…` (staging was CP9's `00802e0`) → serial 02:45:34Z **`python 3.11 (system): /usr/bin/python3.11`**, 02:47:18Z running, 02:47:22Z `done`. Staging is now `367a8fd` (= main); CP9 re-releases its branch when it needs staging.
 - 7b is unblocked (not started here).
 
-### Checkpoint 9 — in progress (2026-11-26)
+### Checkpoint 9 — done, on prod (2026-11-26)
+
+- `release.sh --target prod 933ac62efb8eb5e5090ba448bab377604fbd77a1` (`origin/main` = that sha): serial 03:12:29Z `python 3.11 (system)`, collectstatic ok, 03:14:57Z `wac-web is running 933ac62…`, 03:15:02Z `done`, no Traceback/rollback. **Prod sha after: `933ac62efb8eb5e5090ba448bab377604fbd77a1`.** `/etc/wac/reminders-enabled` not touched.
+- Prod smoke `--cp cp9-prod --cp9 --baseline out/cp0-prod/report.json` (03:16:11Z, past the 60 s edge TTL): **PASS 0/24**. Page hosts: site, `storage.googleapis.com`, reCAPTCHA (`www.google.com`, `www.gstatic.com`), donation widget, gravatar, Cloudflare Insights — no cdnjs/jsdelivr/fonts.googleapis/google-analytics. Origin (`sessionid=x`) `/privacy/` 200; `/` HTML has the vendored jQuery and no `googletagmanager` (GA4 off until the ID is set).
+- Sentry (`sentry-cli issues list`, production) at ~03:17Z: no issue last-seen after the 03:15Z deploy (newest is 2026-11-25 23:35Z). 1h re-check due ~04:15Z.
+- Open: (a) Ali adds `GA_MEASUREMENT_ID=G-…` to `wac-env-prod` and runs `release.sh --target prod --force 933ac62`; then GA4 Realtime shows a visit. (b) Sentry 1h re-check. (c) Logged-in dashboard pages on prod not exercised by the smoke (no prod login in the smoke); Ali can open `/admin/` to see the Chart.js charts. Follow-ups: `cdc_admin` `ZeroDivisionError` with no checked-in orders (`old_views.py:289`, also Sentry PRODUCTION-43J); dead `coderdojochi/static/js/cdc.js`; `handler404` (from CP6).
+- **Next: Checkpoint 7b** (Python 3.13), after 7a's provision/uv checks in its Progress.
+
+### Checkpoint 9 — build log (2026-11-26)
 
 - Started 02:13Z: code branch `claude/upgrade-cp9-frontend` from `origin/main` `78911c9` (prod = `78911c9`). Dependabot open = only #1586 (superseded). Ali chose to allow all 4 CP0 gap hosts (donation widget, gravatar, Cloudflare Insights); written into the CP9 allowlist above. No new jQuery/Foundation-dependent code (Ali).
 - Built (3 parallel sub-agents: 9A vendor; 9B+9C+9D+9F templates/settings; 9E tests): one commit `643702f` on `claude/upgrade-cp9-frontend`, **not pushed**. 82 files: `coderdojochi/static/vendor/**` (69 vendored + `vendor.json` + `README.md`, 3.9 MB), `tasks.py` (`invoke vendor`), `_base.html`, `_admin_base.html`, `session_stats.html`, `welcome.html`, `500.html`, `settings.py` (`GA_MEASUREMENT_ID`), `context_processors.py`, `infra/vm/env.{prod,staging}.example`, new `coderdojochi/tests/test_vendored_assets.py` (7 tests).
