@@ -35,7 +35,6 @@ from coderdojochi.models import Student
 ALLOWED_EXTERNAL = [
     ("www.google.com", "/recaptcha"),
     ("www.gstatic.com", "/recaptcha"),
-    ("www.gstatic.com", "/charts"),
     ("www.googletagmanager.com", "/"),
     ("embed.donsplus.com", "/"),
 ]

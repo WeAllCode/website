@@ -1,6 +1,6 @@
 {% extends "_admin_base.html" %}
 
-{% load i18n humanize coderdojochi_extras %}
+{% load i18n humanize static coderdojochi_extras %}
 
 {% block title %}Student Check In - We All Code{% endblock %}
 
@@ -52,82 +52,67 @@
             text-align: right;
         }
     </style>
+{% endblock %}
 
-    <!-- Google Charts -->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {packages: ['corechart', 'bar']});
-      google.charts.setOnLoadCallback(drawBasic);
+{% block extra_script %}
+    {% if active_orders.count %}
+    {{ gender_count|json_script:"gender-count-data" }}
+    {{ age_count|json_script:"age-count-data" }}
+    <script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Google Charts' default palette, so the charts keep their old colors.
+        var COLORS = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395'];
 
-      function drawBasic() {
-        var gender_data = google.visualization.arrayToDataTable([
-          ['Gender', 'Students'],
-          {% for key, value in gender_count %}
-          ['{{ key.title }}', {{ value }}],
-          {% endfor %}
-        ]);
+        function rows(id) {
+          return JSON.parse(document.getElementById(id).textContent);
+        }
 
-        var gender_options = {
-          legend: {
-            position: 'bottom',
+        // Same result as Django's |title filter (Python str.title()).
+        function titleCase(value) {
+          return String(value).replace(/[A-Za-z]+/g, function (word) {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+          });
+        }
+
+        function percentLabel(context) {
+          var total = context.dataset.data.reduce(function (sum, n) { return sum + n; }, 0);
+          var pct = total ? Math.round((context.parsed / total) * 1000) / 10 : 0;
+          return ' ' + context.parsed + ' (' + pct + '%)';
+        }
+
+        var genderRows = rows('gender-count-data');
+        new Chart(document.querySelector('#gender_chart canvas'), {
+          type: 'pie',
+          data: {
+            labels: genderRows.map(function (row) { return titleCase(row[0]); }),
+            datasets: [{label: 'Students', data: genderRows.map(function (row) { return row[1]; }), backgroundColor: COLORS}]
           },
-          // pieSliceText: 'label',
-          // title: 'Genders of Registered Students',
-          // pieStartAngle: 100,
-        };
+          options: {
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {position: 'bottom'},
+              tooltip: {callbacks: {label: percentLabel}}
+            }
+          }
+        });
 
-        var gender_chart = new google.visualization.PieChart(document.getElementById('gender_chart'));
-        gender_chart.draw(gender_data, gender_options);
-
-        // Age
-        var age_data = google.visualization.arrayToDataTable([
-          ['Age', 'Students'],
-          {% for key, value in age_count %}
-          ['{{ key }} y/o', {{ value }}],
-          {% endfor %}
-        ]);
-
-        // var age_options = {
-        //   legend: {
-        //     position: 'bottom',
-        //   },
-        //   pieSliceText: 'label',
-        //   title: 'Genders of Registered Students',
-        //   // pieStartAngle: 100,
-        // };
-
-        // var age_options = {
-          // title: 'Population of Largest U.S. Cities',
-          // chartArea: {width: '50%'},
-          // hAxis: {
-          //   title: 'Total Population',
-          //   minValue: 0
-          // },
-          // vAxis: {
-          //   title: 'City'
-          // }
-        // };
-
-        var age_options = {
-          // chart: {
-          //   title: 'Genders of Registered Students',
-          // },
-          // bars: 'horizontal', // Required for Material Bar Charts.
-          // hAxis: { format: 'short' },
-          legend: { position: 'none' },
-          annotations: {
-            alwaysOutside: true,
+        var ageRows = rows('age-count-data');
+        new Chart(document.querySelector('#age_chart canvas'), {
+          type: 'bar',
+          data: {
+            labels: ageRows.map(function (row) { return row[0] + ' y/o'; }),
+            datasets: [{label: 'Students', data: ageRows.map(function (row) { return row[1]; }), backgroundColor: '#4285f4'}]
           },
-        };
-
-        // var age_chart = new google.visualization.BarChart(document.getElementById('age_chart'));
-        // age_chart.draw(age_data, age_options);
-
-        var age_chart = new google.charts.Bar(document.getElementById('age_chart'));
-        age_chart.draw(age_data, age_options);
-
-      }
+          options: {
+            maintainAspectRatio: false,
+            plugins: {legend: {display: false}},
+            scales: {y: {beginAtZero: true, ticks: {precision: 0}}}
+          }
+        });
+      });
     </script>
+    {% endif %}
 {% endblock %}
 
 {% block topnav %}
@@ -165,7 +150,7 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <div id="age_chart"></div>
+                        <div id="age_chart" style="position: relative; height: 200px;"><canvas></canvas></div>
                     </div>
                 </div>
             </div>
@@ -174,7 +159,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Student Gender</div>
                     <div class="panel-body">
-                        <div id="gender_chart"></div>
+                        <div id="gender_chart" style="position: relative; height: 200px;"><canvas></canvas></div>
                     </div>
                 </div>
             </div>
