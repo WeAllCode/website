@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 
 import arrow
 from django.conf import settings
@@ -9,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.views.generic import TemplateView
@@ -188,6 +190,22 @@ class SessionDetailView(View):
             return False
 
 
+CANCEL_REASON_MAX = 255  # Order.cancel_reason max_length
+
+# Mentors can't drop a class this close to their arrival time (#843); staff can.
+MENTOR_CANCEL_CUTOFF = timedelta(hours=24)
+TOO_LATE_TO_CANCEL = (
+    "It's less than 24 hours before this class, so you can't cancel online."
+    " Please email hello@weallcode.org so we can plan around it."
+)
+
+
+def mentor_cancel_too_late(user, session_obj):
+    if user.is_staff:
+        return False
+    return session_obj.mentor_start_date - timezone.now() < MENTOR_CANCEL_CUTOFF
+
+
 class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
     template_name = "session_sign_up.html"
 
@@ -296,6 +314,12 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         context["session"] = kwargs["session_obj"]
         context["user_signed_up"] = kwargs.get("user_signed_up")
         context["student"] = kwargs.get("student")
+        context["too_late_to_cancel"] = bool(
+            kwargs.get("mentor")
+            and kwargs.get("user_signed_up")
+            and mentor_cancel_too_late(self.request.user, kwargs["session_obj"])
+        )
+        context["too_late_message"] = TOO_LATE_TO_CANCEL
         return context
 
     def post(self, request, *args, **kwargs):
@@ -306,6 +330,9 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         student = kwargs.get("student")
 
         if user_signed_up:
+            if mentor and mentor_cancel_too_late(request.user, session_obj):
+                messages.error(request, TOO_LATE_TO_CANCEL)
+                return redirect(session_obj.get_absolute_url())
             if mentor:
                 order = get_object_or_404(
                     MentorOrder,
@@ -319,6 +346,9 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
                     session=session_obj,
                     is_active=True,
                 )
+                # Optional, from the guardian's cancel form (#930).
+                reason = request.POST.get("cancel_reason", "").strip()
+                order.cancel_reason = reason[:CANCEL_REASON_MAX]
             order.is_active = False
             order.save()
 
@@ -343,6 +373,8 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
 
             order.ip = ip
             order.is_active = True
+            if not mentor:
+                order.cancel_reason = ""
             order.save()
 
             messages.success(request, "Success! See you there!")

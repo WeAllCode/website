@@ -229,7 +229,7 @@
                                     <input type="hidden" name="order_id" value="{{ order.id }}">
                                     <td class="vert-align">{{ forloop.counter|stringformat:"02d" }}</td>
                                     <td class="vert-align">
-                                      <strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}
+                                      <strong>{{ order.student.display_first_name }}</strong> {{ order.student.last_name }}{% if order.student.preferred_name %} <small>({{ order.student.first_name }})</small>{% endif %}
                                     </td>
                                     <td class="text-right vert-align">{{ order.student | student_age:session.start_date }}</td>
                                     <td class="student-gender">{{ order.student.get_clean_gender_short | upper }}</td>
@@ -298,7 +298,7 @@
                         {% for order in no_show_orders %}
                         <tr class="{% if order.check_in %}success{% endif %}">
                             <td class="vert-align">{{ forloop.counter|stringformat:"02d" }}</td>
-                            <td class="vert-align"><strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}</td>
+                            <td class="vert-align"><strong>{{ order.student.display_first_name }}</strong> {{ order.student.last_name }}{% if order.student.preferred_name %} <small>({{ order.student.first_name }})</small>{% endif %}</td>
                             <td class="text-right vert-align">{{ order.student | student_age:session.start_date }}</td>
                             <td class="student-gender">{{ order.student.get_clean_gender_short | upper }}</td>
                             <td>{% if order.alternate_guardian %}{{ order.alternate_guardian }}{% else %}{{ order.guardian.full_name }}{% endif %}</td>
@@ -342,7 +342,7 @@
                         {% for order in inactive_orders %}
                         <tr>
                             <td>{{ forloop.counter|stringformat:"02d" }}</td>
-                            <td><strong>{{ order.student.first_name }}</strong> {{ order.student.last_name }}</td>
+                            <td><strong>{{ order.student.display_first_name }}</strong> {{ order.student.last_name }}{% if order.student.preferred_name %} <small>({{ order.student.first_name }})</small>{% endif %}</td>
                             <td class="text-right">{{ order.student | student_age:session.start_date }}</td>
                             <td class="student-gender">{{ order.student.get_clean_gender_short | upper }}</td>
                             <td>{{ order.guardian.full_name }}</td>

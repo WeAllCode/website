@@ -315,6 +315,18 @@ class StudentForm(CDCModelForm):
         label="Last Name",
     )
 
+    preferred_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+            },
+        ),
+        label="Preferred Name",
+        help_text="What they like to be called, if different from their first name.",
+        required=False,
+    )
+
     gender = forms.CharField(
         widget=forms.TextInput(
             attrs={
