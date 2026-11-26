@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.db.models import Max
 from django.db.models import Q
 from django.db.models.aggregates import Count
 from django.urls import reverse_lazy
@@ -7,13 +8,16 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 
 from coderdojochi.models import Mentor
+from coderdojochi.models import MentorOrder
 from weallcode.models.associate_board_member import AssociateBoardMember
 from weallcode.models.board_member import BoardMember
 from weallcode.models.staff import StaffMember
 
 from .common import DefaultMetaTags
 
-# A volunteer is listed once they've taught this many classes in this many years.
+# A volunteer is listed once they've taught RECENT_MIN_CLASSES classes in the
+# RECENT_YEARS before the last class we held (not before today, so a quiet
+# stretch between classes doesn't empty the page).
 RECENT_MIN_CLASSES = 3
 RECENT_YEARS = 2
 
@@ -35,7 +39,14 @@ class TeamView(DefaultMetaTags, TemplateView):
     # Volunteers
     def get_volunteers(self, context, volunteers):
         attended = Q(mentororder__is_active=True, mentororder__check_in__isnull=False)
-        recent_since = timezone.now() - timedelta(days=365 * RECENT_YEARS)
+        # "Held" = a class with at least one volunteer checked in.
+        last_held = MentorOrder.objects.filter(
+            is_active=True,
+            check_in__isnull=False,
+        ).aggregate(last=Max("session__start_date"))["last"]
+        recent_since = (last_held or timezone.now()) - timedelta(
+            days=365 * RECENT_YEARS
+        )
         all_volunteers = (
             volunteers.annotate(
                 # Classes actually taught (checked in), not sign-ups (#688).
