@@ -20,7 +20,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v7.1.0
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v10.4.0
@@ -75,7 +75,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v7.1.0
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v10.4.0
