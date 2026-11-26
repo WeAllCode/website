@@ -4,6 +4,7 @@ from http import HTTPStatus
 from allauth.account.utils import user_display as allauth_user_display
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
+from django.core import mail
 from django.test import Client
 from django.test import TestCase
 from django.urls import reverse
@@ -11,6 +12,9 @@ from django.urls import reverse
 from accounts.display import user_display
 from coderdojochi.factories import CDCUserFactory
 from coderdojochi.models import CDCUser
+from coderdojochi.models import Guardian
+from coderdojochi.models import Mentor
+from coderdojochi.models import RaceEthnicity
 
 GOOGLE_FORM = re.compile(
     r'<form method="post" action="(?P<action>/account/google/login/[^"]*)"'
@@ -97,3 +101,71 @@ class UserDisplayTest(TestCase):
     def test_allauth_uses_it(self):
         user = CDCUserFactory(first_name="Ada", last_name="Lovelace")
         assert allauth_user_display(user) == "Ada Lovelace"
+
+
+class AccountNameRequiredTest(TestCase):
+    """#847: a mentor or guardian could clear their name and save."""
+
+    def setUp(self):
+        self.race = RaceEthnicity.objects.create(
+            race_ethnicity="Other",
+            is_visible=True,
+        )
+
+    def _login(self, role):
+        user = CDCUserFactory(
+            first_name="Ada",
+            last_name="Lovelace",
+            email=f"{role}@example.com",
+            role=role,
+        )
+        if role == "mentor":
+            Mentor.objects.create(user=user)
+        else:
+            Guardian.objects.create(user=user)
+        self.client.force_login(user)
+        return user
+
+    def _data(self, role, **overrides):
+        data = {
+            "first_name": "Grace",
+            "last_name": "Hopper",
+            "gender": "Female",
+            "race_ethnicity": [self.race.pk],
+            "birthday": "1990-01-02",
+            "phone": "312-555-0100",
+        }
+        if role == "guardian":
+            data["zip"] = "60601"
+        data.update(overrides)
+        return data
+
+    def _post(self, role, **overrides):
+        return self.client.post(
+            reverse("account_home"),
+            self._data(role, **overrides),
+            secure=True,
+        )
+
+    def test_empty_name_is_rejected(self):
+        for role in ("mentor", "guardian"):
+            for field in ("first_name", "last_name"):
+                with self.subTest(role=role, field=field):
+                    user = self._login(role)
+                    response = self._post(role, **{field: ""})
+                    assert response.status_code == HTTPStatus.OK
+                    assert field in response.context["user_form"].errors
+                    user.refresh_from_db()
+                    assert (user.first_name, user.last_name) == ("Ada", "Lovelace")
+                    assert len(mail.outbox) == 0
+                    user.delete()
+
+    def test_valid_post_saves(self):
+        for role in ("mentor", "guardian"):
+            with self.subTest(role=role):
+                user = self._login(role)
+                response = self._post(role)
+                assert response.status_code == HTTPStatus.FOUND
+                user.refresh_from_db()
+                assert (user.first_name, user.last_name) == ("Grace", "Hopper")
+                user.delete()

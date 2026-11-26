@@ -1,5 +1,5 @@
 {% extends "account/_base.html" %}
-{% load i18n %}
+{% load i18n icons %}
 
 {% block title_placeholder %}Logged Out{% endblock %}
 
@@ -8,13 +8,13 @@
 
 <p>{% trans 'Are you sure you want to log out?' %}</p>
 
-<form method="post" class="margin-top-2" action="{% url 'account_logout' %}">
+<form method="post" class="mt-2" action="{% url 'account_logout' %}">
     {% csrf_token %}
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
     {% endif %}
-    <button class="button" type="submit">
-        {% trans 'Log out' %} <i class="fas fa-chevron-right margin-left-1"></i>
+    <button class="cta" type="submit">
+        {% trans 'Log out' %} {% icon "chevron-right" %}
     </button>
 </form>
 {% endblock %}

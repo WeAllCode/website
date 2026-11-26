@@ -1,2 +1,2 @@
 /* Cascade layer order. Linked first, before every other stylesheet. */
-@layer legacy, reset, tokens, base, layout, components, pages, utilities;
+@layer reset, tokens, base, layout, components, pages, utilities;

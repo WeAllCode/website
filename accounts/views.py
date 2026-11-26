@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from meta.views import MetadataMixin
 
-from coderdojochi.forms import CDCModelForm
+from coderdojochi.forms import AccountUserForm
 from coderdojochi.forms import GuardianForm
 from coderdojochi.forms import MentorForm
 from coderdojochi.models import Guardian
@@ -176,7 +176,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
         context = self.get_context_data(**kwargs)
 
         context["form"] = MentorForm(instance=context["mentor"])
-        context["user_form"] = CDCModelForm(instance=context["mentor"].user)
+        context["user_form"] = AccountUserForm(instance=context["mentor"].user)
 
         return render(self.request, "account/mentor/home.html", context)
 
@@ -184,7 +184,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
         context = self.get_context_data(**kwargs)
 
         context["form"] = GuardianForm(instance=context["guardian"])
-        context["user_form"] = CDCModelForm(instance=context["guardian"].user)
+        context["user_form"] = AccountUserForm(instance=context["guardian"].user)
 
         return render(self.request, "account/guardian/home.html", context)
 
@@ -208,7 +208,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
             instance=mentor,
         )
 
-        user_form = CDCModelForm(
+        user_form = AccountUserForm(
             self.request.POST,
             self.request.FILES,
             instance=mentor.user,
@@ -238,7 +238,7 @@ class AccountHomeView(MetadataMixin, TemplateView):
 
         form = GuardianForm(self.request.POST, instance=guardian)
 
-        user_form = CDCModelForm(self.request.POST, instance=guardian.user)
+        user_form = AccountUserForm(self.request.POST, instance=guardian.user)
 
         if form.is_valid() and user_form.is_valid():
             form.save()

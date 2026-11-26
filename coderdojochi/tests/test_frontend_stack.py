@@ -16,8 +16,8 @@ Refresh the ratchet sets after a checkpoint (prints both sets as Python)::
 
 The legacy class names live in ``legacy_class_tokens.txt`` next to this file
 (about 1,100 names: too long for a readable constant, and the CSS it comes from
-is deleted in CP4/CP5). Regenerate it, while the legacy CSS still exists, with
-``write_token_file()`` the same way.
+is deleted in CP4/CP5). Regenerate it with ``write_token_file()`` the same way;
+deleted sources are read from git (``LEGACY_CSS_COMMIT``).
 """
 
 import ast
@@ -68,60 +68,28 @@ PYTHON_GLOBS = ["coderdojochi/forms.py", "coderdojochi/templatetags/*.py"]
 # Templates that still use a legacy class or attribute. Only ever remove lines.
 LEGACY_TEMPLATES = frozenset(
     {
-        "accounts/templates/account/_base.html",
         "accounts/templates/account/_field.html",
         "accounts/templates/account/_form.html",
-        "accounts/templates/account/email.html",
-        "accounts/templates/account/email_confirm.html",
-        "accounts/templates/account/guardian/home.html",
-        "accounts/templates/account/login.html",
-        "accounts/templates/account/logout.html",
-        "accounts/templates/account/mentor/home.html",
-        "accounts/templates/account/password_change.html",
-        "accounts/templates/account/password_reset.html",
-        "accounts/templates/account/password_reset_from_key.html",
-        "accounts/templates/account/password_set.html",
-        "accounts/templates/account/signup.html",
-        "accounts/templates/socialaccount/connections.html",
-        "accounts/templates/socialaccount/signup.html",
-        "accounts/templates/socialaccount/snippets/provider_list.html",
         "coderdojochi/templates/_messages_bootstrap.html",
-        "coderdojochi/templates/coderdojochi/mentor_detail.html",
-        "coderdojochi/templates/coderdojochi/mentor_list.html",
         "coderdojochi/templates/dashboard/admin.html",
         "coderdojochi/templates/dashboard/meeting_check_in.html",
         "coderdojochi/templates/dashboard/session_check_in.html",
         "coderdojochi/templates/dashboard/session_check_in_mentors.html",
         "coderdojochi/templates/dashboard/session_donations.html",
-        "coderdojochi/templates/dashboard/session_stats.html",
-        "coderdojochi/templates/guardian/session_detail.html",
-        "coderdojochi/templates/guardian/session_sign_up.html",
-        "coderdojochi/templates/meeting_detail.html",
-        "coderdojochi/templates/meeting_sign_up.html",
-        "coderdojochi/templates/meetings.html",
-        "coderdojochi/templates/mentor/session_detail.html",
-        "coderdojochi/templates/mentor/session_sign_up.html",
-        "coderdojochi/templates/public/session_detail.html",
-        "coderdojochi/templates/session_partner_password.html",
-        "coderdojochi/templates/student_detail.html",
-        "coderdojochi/templates/unsubscribe.html",
-        "coderdojochi/templates/welcome.html",
     },
 )
 
 # Python modules whose string literals still hold a legacy class or attribute.
-LEGACY_PYTHON = frozenset(
-    {
-        "coderdojochi/forms.py",
-        "coderdojochi/templatetags/coderdojochi_extras.py",
-    },
-)
+LEGACY_PYTHON = frozenset()
 
 LEGACY_CSS = {
     "foundation": "weallcode/static/weallcode/css/foundation.min.css",
     "bootstrap": "coderdojochi/static/vendor/bootstrap3/css/bootstrap.min.css",
     "app": "weallcode/static/weallcode/css/app.css",
 }
+# Last commit that had each deleted source (app.css: CP1; foundation: CP3).
+# Bootstrap 3 is deleted in CP5; add its commit then.
+LEGACY_CSS_COMMIT = {"app": "25ce01b7", "foundation": "788c94b7"}
 
 # Font Awesome 4/5 and Glyphicons, matched by name rather than listed.
 ICON_CLASS = re.compile(r"fa|fa[srbld]|fa-.+|glyphicons?(-.+)?")
@@ -274,17 +242,17 @@ def write_token_file():
     which 2C drops), minus the Font Awesome / Glyphicon names ``ICON_CLASS``
     already matches.
 
-    app.css was deleted in CP2 (split into brand.css / brand-legacy.css), so
-    this reads it from git at the last commit that had it (25ce01b7, CP1).
+    app.css was deleted in CP2 (split into brand.css / brand-legacy.css) and
+    foundation.min.css in CP4, so a deleted source is read from git at the
+    last commit that had it (``LEGACY_CSS_COMMIT``).
     """
-    sources = {
-        key: (REPO / rel).read_text()
-        for key, rel in LEGACY_CSS.items()
-        if (REPO / rel).exists()
-    }
-    if "app" not in sources:
-        sources["app"] = subprocess.run(  # noqa: S603 (fixed argv, dev helper)
-            ["git", "-C", str(REPO), "show", f"25ce01b7:{LEGACY_CSS['app']}"],  # noqa: S607
+    sources = {}
+    for key, rel in LEGACY_CSS.items():
+        if (REPO / rel).exists():
+            sources[key] = (REPO / rel).read_text()
+            continue
+        sources[key] = subprocess.run(  # noqa: S603 (fixed argv, dev helper)
+            ["git", "-C", str(REPO), "show", f"{LEGACY_CSS_COMMIT[key]}:{rel}"],  # noqa: S607
             capture_output=True,
             text=True,
             check=True,
@@ -377,7 +345,14 @@ class LegacyRatchetTest(SimpleTestCase):
 
 # Substrings of asset URLs for libraries removed so far. Later checkpoints append.
 # Public = pages on the weallcode base; dashboard = /admin/ and the check-in pages.
-REMOVED_PUBLIC = ["js-datepicker", "jquery", "what-input", "foundation.min.js"]
+REMOVED_PUBLIC = [
+    "js-datepicker",
+    "jquery",
+    "what-input",
+    "foundation",
+    "fontawesome5",
+    "legacy.css",  # legacy.css and brand-legacy.css (CP4)
+]
 REMOVED_DASHBOARD = ["js-datepicker"]
 
 
@@ -516,6 +491,14 @@ DEAD_FILES = [
     "coderdojochi/templates/_topnav.html",
     "weallcode/templates/weallcode/contact.html",
     "weallcode/templates/weallcode/snippets/card.html",
+    # Deleted in 4G.
+    "weallcode/static/weallcode/css/legacy.css",
+    "weallcode/static/weallcode/css/foundation.min.css",
+    "weallcode/static/weallcode/css/foundation.css",
+    "weallcode/static/weallcode/css/brand-legacy.css",
+    "coderdojochi/static/vendor/foundation",
+    "coderdojochi/static/vendor/fontawesome5",
+    "coderdojochi/static/vendor/what-input",
 ]
 
 # Deleted in 1B: (module, name).

@@ -249,6 +249,23 @@
     fill: currentColor;
   }
 
+  /* An icon in a button: the SVG's 1em box would stand 0.6px proud of the
+     label's line box (a glyph from the icon font did not), so lift it by that
+     much to keep the button as tall as before. A bare icon next to the label
+     sits 1rem from the text; wrap it in a span to space it another way. */
+  .cta .icon {
+    margin-block-start: -0.1em;
+    vertical-align: -0.165em;
+  }
+
+  .cta > .icon:first-child:not(:last-child) {
+    margin-inline-end: 1rem;
+  }
+
+  .cta > .icon:last-child {
+    margin-inline-start: 1rem;
+  }
+
   /* ---- Hint and toggletip (popover) ---------------------------------------
      .hint: <div popover="hint" role="tooltip" class="hint">, opened by an
      [interestfor] trigger. Foundation `.tooltip` look.

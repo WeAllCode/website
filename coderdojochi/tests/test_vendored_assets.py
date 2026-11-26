@@ -201,4 +201,5 @@ class ManifestStaticFilesTest(TestCase):
             call_command("collectstatic", "--noinput", verbosity=0)
 
         manifest = json.loads((Path(static_root) / "staticfiles.json").read_text())
-        assert "vendor/fontawesome5/css/all.min.css" in manifest["paths"]
+        assert "vendor/chartjs/chart.umd.min.js" in manifest["paths"]
+        assert "weallcode/css/layers.css" in manifest["paths"]

@@ -1,7 +1,5 @@
 /*
  * Brand styles moved from app.css (Checkpoint 2, task 2C).
- * Rules whose selectors use a Foundation class name, or app.css's own
- * Foundation-style spacing names, live in brand-legacy.css until 4G.
  * Brand tokens are in tokens.css, scroll-behavior is in base.css, and the
  * header and mobile nav are in nav.css.
  */
@@ -320,33 +318,17 @@
     }
   }
 
-  /* width and padding-left: see brand-legacy.css (Foundation grid cells used to win). */
   .program-icon {
     max-height: 7rem;
   }
 
-  /* Twins of the brand-legacy.css rules for Foundation grid cells: the guards
-     name the new vocabulary (.cols, .cols.pad-x). [class~="cell"] keeps these
-     off Foundation cells while they exist (drop it in 4G, when brand-legacy.css
-     goes and these two rules are the only copies). */
-  .program-icon:not(:where(.cols.pad-x > *, [class~="cell"])) {
+  /* A .program-icon in a .cols grid takes its width and gutter from the grid. */
+  .program-icon:not(:where(.cols.pad-x > *)) {
     padding-left: 10px;
   }
 
-  .program-icon:not(:where(.cols > *, [class~="cell"])) {
+  .program-icon:not(:where(.cols > *)) {
     width: 100%;
-  }
-
-  /* INTERIM, delete in 4G with brand-legacy.css: that file's unguarded
-     `.program-icon:not(:where(.grid-x > .cell, …))` also matches a cell in
-     .cols. A higher-specificity revert-layer drops this layer's width and
-     padding-left, so the .cols cell geometry (layout layer) applies. */
-  .cols.pad-x > .program-icon {
-    padding-left: revert-layer;
-  }
-
-  .cols > .program-icon {
-    width: revert-layer;
   }
 
   .small-container {
@@ -400,7 +382,7 @@
     }
   }
 
-  /* Sub Menu (page sub-headers; the .menu and .active rules are in brand-legacy.css) */
+  /* Sub Menu (page sub-headers) */
 
   .sub-menu a {
     font-size: 0.6em;
@@ -424,7 +406,6 @@
     }
   }
 
-  /* color: see brand-legacy.css (Foundation's .menu .active > a colour used to win). */
   .sub-menu a {
     margin: 0 auto;
     padding: 0.8rem 0.5rem;
@@ -436,12 +417,10 @@
     }
   }
 
-  /* Twin of `.sub-menu a:not(:where(.menu .active > a))` in brand-legacy.css. */
-  .sub-menu a:not(:where(.nav-list a[aria-current="page"], [class~="active"] > a)) {
+  .sub-menu a:not(:where(.nav-list a[aria-current="page"])) {
     color: var(--white);
   }
 
-  /* Twins of the .menu / .active sub-menu rules in brand-legacy.css. */
   @media screen and (min-width: 40em) {
     .sub-menu .nav-list {
       justify-content: flex-end;
@@ -545,7 +524,6 @@
     margin: 0 auto;
   }
 
-  /* Twins of the Foundation-named rules in brand-legacy.css. */
   .learn-more-signup-form .cta {
     width: 100%;
   }
@@ -559,16 +537,16 @@
     color: white;
   }
 
-  /* Fix link on specific background colors. `.bg-bg-primary` in the legacy
-     hover rule is a typo that matches nothing, so only .bg-dark-blue gets it. */
-  .class-info-box .bg-dark-blue a:not(.cta, [class~="button"]),
-  .class-info-box .bg-primary a:not(.cta, [class~="button"]) {
+  /* Fix link on specific background colors. Only .bg-dark-blue gets the
+     hover border. */
+  .class-info-box .bg-dark-blue a:not(.cta),
+  .class-info-box .bg-primary a:not(.cta) {
     color: var(--white);
     border-bottom: 1px solid var(--white);
   }
 
-  .class-info-box .bg-dark-blue a:not(.cta, [class~="button"]):focus,
-  .class-info-box .bg-dark-blue a:not(.cta, [class~="button"]):hover {
+  .class-info-box .bg-dark-blue a:not(.cta):focus,
+  .class-info-box .bg-dark-blue a:not(.cta):hover {
     border-bottom-width: 3px;
   }
 
@@ -590,17 +568,6 @@
 }
 
 @layer pages {
-  /* INTERIM, delete in 4G with brand-legacy.css: its `a:not(.button)` rules
-     also match a `.cta` link in .class-info-box. The pages layer beats them
-     (and the .cta colours are re-applied from the component tokens). */
-  .class-info-box :is(.bg-dark-blue, .bg-primary) a.cta {
-    border-bottom: 1px solid transparent;
-  }
-
-  .class-info-box :is(.bg-dark-blue, .bg-primary) a.cta:not(.text-white) {
-    color: var(--cta-fg);
-  }
-
   /* Page: Home */
 
   body.home .hero-logo {

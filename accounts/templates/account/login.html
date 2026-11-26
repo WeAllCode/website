@@ -1,5 +1,5 @@
 {% extends "weallcode/_base.html" %}
-{% load static socialaccount %}
+{% load socialaccount icons %}
 
 {% block page-class %}page-login{% endblock %}
 
@@ -9,8 +9,8 @@
   {% endif %}
 
   <div class="sub-menu">
-    <nav class="grid-container" role="navigation">
-      <ul class="menu">
+    <nav class="wrap" role="navigation">
+      <ul class="nav-list">
         <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#donate">Donate</a></li>
         <li><a href="{% url 'weallcode-join-us' %}#sponsorship">Sponsorship</a></li>
@@ -22,22 +22,22 @@
 
 {% block content %}
   <main id="main">
-    <div class="padding-vertical-3">
-        <div class="grid-container">
+    <div class="py-3">
+        <div class="wrap">
             <h1 class="title">Login</h1>
-            <div class="grid-x grid-padding-x">
-                <form action="{{ app_path }}" method="post" id="login-form" class="cell medium-6">
+            <div class="cols pad-x">
+                <form action="{{ app_path }}" method="post" id="login-form" class="md-span-6">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <input type="hidden" name="next" value="{{ next }}" />
-                    <button class="button" type="submit">Log in <i class="fas fa-chevron-right margin-left-1"></i>
+                    <button class="cta" type="submit">Log in {% icon "chevron-right" %}
                     </button>
                 </form>
-                <div class="cell medium-5 medium-offset-1 padding-top-1">
+                <div class="md-span-5 md-offset-1 pt-1">
                     <form method="post" action="{% provider_login_url 'google' %}" class="social-login-form">
                         {% csrf_token %}
-                        <button type="submit" class="button secondary">
-                            <i class="margin-right-1 fab fa-google"></i> Sign in with Google <i class="fas fa-chevron-right margin-left-1"></i>
+                        <button type="submit" class="cta cta-secondary">
+                            {% icon "google" %} Sign in with Google {% icon "chevron-right" %}
                         </button>
                     </form>
                     <p>Not yet a member? <a href="{% url 'account_signup' %}">Register now</a>!</p>
