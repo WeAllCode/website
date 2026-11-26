@@ -144,7 +144,9 @@ def meeting_sign_up(request, pk, template_name="meeting_sign_up.html"):
 
         else:
             if not settings.DEBUG:
-                ip = request.META["HTTP_X_FORWARDED_FOR"] or request.META["REMOTE_ADDR"]
+                ip = request.META.get("HTTP_X_FORWARDED_FOR") or request.META.get(
+                    "REMOTE_ADDR"
+                )
             else:
                 ip = request.META["REMOTE_ADDR"]
 

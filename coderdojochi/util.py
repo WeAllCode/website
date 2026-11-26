@@ -23,12 +23,14 @@ LEFTOVER_MERGE_FIELD = re.compile(r"\*\|\w+\|\*")
 UNSUBSCRIBE_SALT = "email-unsubscribe"
 SEND_INTERVAL_SECONDS = 0.6
 
-# Templates an unsubscribe link or a SendGrid group unsubscribe opts people out of.
+# Optional mail: an unsubscribe link or a SendGrid group unsubscribe opts people out.
 ANNOUNCEMENT_TEMPLATES = frozenset(
     {
         "class_announcement_guardian",
         "class_announcement_mentor",
         "meeting_announcement_mentor",
+        "birthday_mentor",
+        "first_class_guardian",
     },
 )
 # These reasons block announcements only; every other reason blocks all mail.

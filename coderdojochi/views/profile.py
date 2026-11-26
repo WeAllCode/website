@@ -59,7 +59,7 @@ class DojoMentorView(TemplateView):
             mentor.first_name
             and mentor.last_name
             and mentor.avatar
-            and mentor.background_check
+            and not mentor.needs_background_check
             and past_sessions.count() > 0
         ):
             context["account_complete"] = True

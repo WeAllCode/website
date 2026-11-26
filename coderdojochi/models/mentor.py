@@ -1,7 +1,9 @@
 import os
 
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from stdimage.models import StdImageField
 
 from ..notifications import NewMentorBgCheckNotification
@@ -15,6 +17,10 @@ def generate_filename(instance, filename):
     # file will be uploaded to MEDIA_ROOT/avatar/<username>
     filename, file_extension = os.path.splitext(filename)
     return f"avatar/{instance.user.username}{file_extension.lower()}"
+
+
+# Volunteers under this age can't get a background check, so they don't need one (#553).
+BACKGROUND_CHECK_MIN_AGE = 18
 
 
 # TODO: Add MentorManager
@@ -73,8 +79,20 @@ class Mentor(CommonInfo):
         blank=True,
         null=True,
     )
+    # No longer on the form (#749): a zip code is all the reporting needs.
     home_address = models.CharField(
         max_length=255,
+        blank=True,
+        null=True,
+    )
+    zip = models.CharField(
+        max_length=10,
+        blank=True,
+        default="",
+        db_default="",
+    )
+    # Year of the last birthday email (#762), so the twice-daily timer sends one.
+    birthday_email_year = models.PositiveSmallIntegerField(
         blank=True,
         null=True,
     )
@@ -97,6 +115,17 @@ class Mentor(CommonInfo):
     @property
     def email(self):
         return self.user.email
+
+    @property
+    def is_minor(self):
+        if not self.birthday:
+            return False
+        age = relativedelta(timezone.localdate(), self.birthday).years
+        return age < BACKGROUND_CHECK_MIN_AGE
+
+    @property
+    def needs_background_check(self):
+        return not self.background_check and not self.is_minor
 
     def save(self, *args, **kwargs):
         if self.pk is None:

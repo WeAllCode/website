@@ -1,5 +1,8 @@
 """Email class reminders a week and a day before each session.
 
+Also sends the "how was your first class?" email to families (#811) and a birthday
+email to volunteers (#762). Both are optional mail: the unsubscribe link stops them.
+
 Run by wac-reminders.timer on the prod VM (10:00 and 14:00 America/Chicago). Each
 order is claimed (its *_reminder_sent flag set) before its email goes out, so a rerun
 or an overlapping run never sends the same reminder twice.
@@ -13,6 +16,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from coderdojochi.models import Mentor
 from coderdojochi.models import MentorOrder
 from coderdojochi.models import Order
 from coderdojochi.util import email
@@ -67,6 +71,16 @@ REMINDERS = [
 ]
 
 
+# First-class emails go out at the first run at least this long after the class ends,
+# and not at all once the class is more than FIRST_CLASS_MAX_AGE old.
+FIRST_CLASS_DELAY = timedelta(minutes=20)
+FIRST_CLASS_MAX_AGE = timedelta(days=2)
+FIRST_CLASS_TEMPLATE = "first_class_guardian"
+FIRST_CLASS_SUBJECT = "Thanks for coming to your first class!"
+BIRTHDAY_TEMPLATE = "birthday_mentor"
+BIRTHDAY_SUBJECT = "Happy birthday from We All Code!"
+
+
 def _date(value):
     return arrow.get(value).to(settings.TIME_ZONE).format("dddd, MMMM D, YYYY")
 
@@ -114,7 +128,7 @@ def merge_fields(order):
     else:
         person = order.guardian
         fields = _session_fields(session, session.start_date, session.end_date)
-        fields["student_first_name"] = order.student.first_name
+        fields["student_first_name"] = order.student.display_first_name
         fields["student_last_name"] = order.student.last_name
     fields["first_name"] = person.first_name
     fields["last_name"] = person.last_name
@@ -155,8 +169,69 @@ def claim(order, flag):
     )
 
 
+def first_class_due(now):
+    """Checked-in orders for a student's first attended class, ended FIRST_CLASS_DELAY ago."""
+    candidates = (
+        Order.objects.filter(
+            is_active=True,
+            check_in__isnull=False,
+            first_class_email_sent=False,
+            session__start_date__gt=now - FIRST_CLASS_MAX_AGE,
+            session__start_date__lte=now,
+            guardian__is_active=True,
+            guardian__user__is_active=True,
+            student__is_active=True,
+        )
+        .select_related(
+            "session__course", "session__location", "guardian__user", "student"
+        )
+        .order_by("session__start_date", "id")
+    )
+    for order in candidates:
+        if order.session.end_date + FIRST_CLASS_DELAY > now:
+            continue
+        earlier = Order.objects.filter(
+            student=order.student,
+            check_in__isnull=False,
+            session__start_date__lt=order.session.start_date,
+        )
+        if not earlier.exists():
+            yield order
+
+
+def birthdays_due(today):
+    """Active volunteers whose birthday is today and who haven't had this year's email.
+
+    A Feb 29 birthday is celebrated on Feb 28 in other years.
+    """
+    days = [(today.month, today.day)]
+    is_leap = today.year % 4 == 0 and (today.year % 100 != 0 or today.year % 400 == 0)
+    if (today.month, today.day) == (2, 28) and not is_leap:
+        days.append((2, 29))
+    mentors = Mentor.objects.none()
+    for month, day in days:
+        mentors |= Mentor.objects.filter(birthday__month=month, birthday__day=day)
+    return (
+        mentors.filter(is_active=True, user__is_active=True)
+        .exclude(birthday_email_year=today.year)
+        .select_related("user")
+        .order_by("id")
+    )
+
+
+def claim_birthday(mentor, year):
+    return bool(
+        Mentor.objects.filter(pk=mentor.pk)
+        .exclude(birthday_email_year=year)
+        .update(birthday_email_year=year)
+    )
+
+
 class Command(BaseCommand):
-    help = "Email class reminders to guardians and mentors (a week and a day before)."
+    help = (
+        "Email class reminders (a week and a day before), first-class follow-ups"
+        " and volunteer birthday emails."
+    )
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -175,46 +250,84 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        dry_run = options["dry_run"]
-        limit = options["limit"]
-        if limit is None:
-            limit = email_daily_limit() // 2
+        self.dry_run = options["dry_run"]
+        self.limit = options["limit"]
+        if self.limit is None:
+            self.limit = email_daily_limit() // 2
+        self.sent = 0
+        self.left = 0
         now = timezone.now()
-        sent = 0
-        left = 0
 
         for kind, model, flag, window, template, subject, preheader in REMINDERS:
             for order in due(model, flag, window, now):
-                if sent >= limit:
-                    left += 1
-                    continue
                 recipient, fields = merge_fields(order)
-                if dry_run:
-                    self.stdout.write(
-                        f"would send {kind} to {recipient} ({order.session})"
-                    )
-                    sent += 1
-                    continue
-                if not recipient or not claim(order, flag):
-                    continue
-                sent += 1
-                try:
-                    email(
-                        subject=subject,
-                        template_name=template,
-                        merge_data={recipient: fields},
-                        recipients=[recipient],
-                        preheader=preheader,
-                        unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
-                    )
-                except Exception:
-                    # Already claimed, so it is not retried: one missed reminder beats a
-                    # resend loop. Logged at ERROR, which reaches Sentry.
-                    logger.exception("send_reminders: %s to %s failed", kind, recipient)
+                self.deliver(
+                    kind,
+                    recipient,
+                    fields,
+                    order.session,
+                    claim=lambda order=order, flag=flag: claim(order, flag),
+                    template=template,
+                    subject=subject,
+                    preheader=preheader,
+                )
 
-        verb = "would send" if dry_run else "sent"
-        summary = f"send_reminders: {verb} {sent} reminder(s)"
-        if left:
-            summary += f"; {left} over the limit of {limit}, left for the next run"
+        for order in first_class_due(now):
+            recipient, fields = merge_fields(order)
+            self.deliver(
+                "first class",
+                recipient,
+                fields,
+                order.session,
+                claim=lambda order=order: claim(order, "first_class_email_sent"),
+                template=FIRST_CLASS_TEMPLATE,
+                subject=FIRST_CLASS_SUBJECT,
+                preheader="We hope your student had a great time!",
+            )
+
+        today = timezone.localdate(now)
+        for mentor in birthdays_due(today):
+            self.deliver(
+                "birthday",
+                mentor.email,
+                {"first_name": mentor.first_name, "last_name": mentor.last_name},
+                "birthday",
+                claim=lambda mentor=mentor: claim_birthday(mentor, today.year),
+                template=BIRTHDAY_TEMPLATE,
+                subject=BIRTHDAY_SUBJECT,
+                preheader="Thank you for everything you do.",
+            )
+
+        verb = "would send" if self.dry_run else "sent"
+        summary = f"send_reminders: {verb} {self.sent} email(s)"
+        if self.left:
+            summary += (
+                f"; {self.left} over the limit of {self.limit}, left for the next run"
+            )
             logger.warning(summary)
         self.stdout.write(summary)
+
+    def deliver(self, kind, recipient, fields, about, *, claim, **message):
+        if self.sent >= self.limit:
+            self.left += 1
+            return
+        if self.dry_run:
+            self.stdout.write(f"would send {kind} to {recipient} ({about})")
+            self.sent += 1
+            return
+        if not recipient or not claim():
+            return
+        self.sent += 1
+        try:
+            email(
+                merge_data={recipient: fields},
+                recipients=[recipient],
+                unsub_group_id=settings.SENDGRID_UNSUB_CLASSANNOUNCE,
+                template_name=message["template"],
+                subject=message["subject"],
+                preheader=message["preheader"],
+            )
+        except Exception:
+            # Already claimed, so it is not retried: one missed email beats a resend
+            # loop. Logged at ERROR, which reaches Sentry.
+            logger.exception("send_reminders: %s to %s failed", kind, recipient)

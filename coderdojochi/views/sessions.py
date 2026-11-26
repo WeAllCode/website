@@ -256,7 +256,7 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         access_dict = {}
         # Returns a message and redirect url if not working as dict
         if kwargs.get("mentor"):
-            if not kwargs["mentor"].background_check:
+            if kwargs["mentor"].needs_background_check:
                 access_dict = {
                     "message": (
                         "You cannot sign up for a class until you <a"
@@ -357,7 +357,9 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
             ip = request.META["REMOTE_ADDR"]
 
             if not settings.DEBUG:
-                ip = request.META["HTTP_X_FORWARDED_FOR"] or request.META["REMOTE_ADDR"]
+                ip = request.META.get("HTTP_X_FORWARDED_FOR") or request.META.get(
+                    "REMOTE_ADDR"
+                )
 
             if mentor:
                 order, created = MentorOrder.objects.get_or_create(

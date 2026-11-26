@@ -12,6 +12,7 @@ from django.test import override_settings
 from django.utils import timezone
 
 from coderdojochi import util
+from coderdojochi.management.commands.send_reminders import birthdays_due
 from coderdojochi.models import Course
 from coderdojochi.models import EmailSuppression
 from coderdojochi.models import Guardian
@@ -26,6 +27,8 @@ GUARDIAN_WEEK = "Upcoming class reminder"
 GUARDIAN_DAY = "Your class is coming up!"
 MENTOR_WEEK = "Your We All Code class is in less than a week!"
 MENTOR_DAY = "Your We All Code class is tomorrow!"
+FIRST_CLASS = "Thanks for coming to your first class!"
+BIRTHDAY = "Happy birthday from We All Code!"
 
 
 def run(*args):
@@ -152,7 +155,7 @@ class SendRemindersTest(TestCase):
         assert [m.subject for m in mail.outbox] == [GUARDIAN_WEEK, GUARDIAN_DAY]
 
     def test_nothing_due_is_not_an_error(self):
-        assert "sent 0 reminder(s)" in run()
+        assert "sent 0 email(s)" in run()
         assert mail.outbox == []
 
     def test_skips_past_far_off_and_inactive(self):
@@ -218,7 +221,7 @@ class SendRemindersTest(TestCase):
         assert [m.to[0] for m in mail.outbox] == ["a1@example.com", "a2@example.com"]
         assert "1 over the limit of 2" in out
 
-        assert "sent 1 reminder(s)" in run("--limit", "2")
+        assert "sent 1 email(s)" in run("--limit", "2")
         assert mail.outbox[-1].to == ["a3@example.com"]
 
     @override_settings(EMAIL_DAILY_LIMIT=4)
@@ -291,3 +294,96 @@ class SendRemindersTest(TestCase):
         assert "Wendy" in body
         assert "Intro to Python" in body
         assert "*|" not in body
+
+    # #811: one "how was your first class?" email per student, after the class ends.
+    def attended(self, starts_in, guardian="pat", student="Ada"):
+        session = self.session(starts_in)
+        order = self.enroll(session, guardian, student_name=student)
+        order.check_in = session.start_date
+        order.save()
+        return order
+
+    def first_class_emails(self):
+        return [m for m in mail.outbox if m.subject == FIRST_CLASS]
+
+    def test_first_class_email_after_class_ends(self):
+        # The course runs 3 hours, so a class that started 4 hours ago has ended.
+        self.attended(-timedelta(hours=4))
+
+        run()
+        run()
+
+        emails = self.first_class_emails()
+        assert [m.to[0] for m in emails] == ["pat@example.com"]
+        assert "Ada" in emails[0].body
+        assert "*|" not in emails[0].body
+        assert "/unsubscribe/" in emails[0].body
+
+    def test_no_first_class_email_while_class_is_running(self):
+        self.attended(-timedelta(hours=1))
+        run()
+        assert self.first_class_emails() == []
+
+    def test_no_first_class_email_for_a_returning_student(self):
+        first = self.attended(-timedelta(days=30))
+        later = self.session(-timedelta(hours=4))
+        Order.objects.create(
+            guardian=first.guardian,
+            session=later,
+            student=first.student,
+            check_in=later.start_date,
+        )
+        run()
+        assert self.first_class_emails() == []
+
+    def test_no_first_class_email_without_check_in(self):
+        self.enroll(self.session(-timedelta(hours=4)), "pat")
+        run()
+        assert self.first_class_emails() == []
+
+    def test_first_class_email_honors_unsubscribe(self):
+        self.attended(-timedelta(hours=4))
+        EmailSuppression.objects.create(
+            email="pat@example.com",
+            reason=EmailSuppression.USER_UNSUBSCRIBE,
+        )
+        run()
+        assert self.first_class_emails() == []
+
+    # #762: a birthday email to volunteers, once a year.
+    def test_birthday_email_to_volunteer_once(self):
+        today = timezone.localdate()
+        mentor = self.mentor("bday")
+        mentor.birthday = today.replace(year=1990)
+        mentor.save()
+        other = self.mentor("notyet")
+        other.birthday = today.replace(year=1990) + timedelta(days=1)
+        other.save()
+
+        run()
+        run()
+
+        assert [m.to[0] for m in mail.outbox if m.subject == BIRTHDAY] == [
+            "bday@example.com",
+        ]
+        mentor.refresh_from_db()
+        assert mentor.birthday_email_year == today.year
+
+    def test_birthday_email_honors_unsubscribe(self):
+        mentor = self.mentor("bday")
+        mentor.birthday = timezone.localdate().replace(year=1990)
+        mentor.save()
+        EmailSuppression.objects.create(
+            email="bday@example.com",
+            reason=EmailSuppression.USER_UNSUBSCRIBE,
+        )
+        run()
+        assert mail.outbox == []
+
+    def test_feb_29_birthday_on_feb_28_in_other_years(self):
+        mentor = self.mentor("leap")
+        mentor.birthday = date(2000, 2, 29)
+        mentor.save()
+        assert list(birthdays_due(date(2027, 2, 28))) == [mentor]
+        assert list(birthdays_due(date(2028, 2, 28))) == []
+        assert list(birthdays_due(date(2028, 2, 29))) == [mentor]

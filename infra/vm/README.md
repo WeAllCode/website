@@ -148,7 +148,10 @@ sudo -u wac pg_restore -L toc --no-owner --no-acl --role=wac -d wac dump
 - `wac-reminders.timer` runs `manage.py send_reminders` for **prod only** at 10:00 and 14:00 America/Chicago (`Persistent=true`). Staging has no timer, so it never emails real users.
 - It emails guardians and mentors of active orders on active sessions: a week reminder 2-7 days before the class, a day reminder in the last 24 hours. Classes that already started are skipped.
 - Each order's `week_reminder_sent` / `day_reminder_sent` is set before its email goes out, so a rerun or catch-up never sends twice. A failed send is logged to Sentry and not retried.
-- Each run sends at most half of `EMAIL_DAILY_LIMIT` (two runs a day); the rest wait for the next run. Day reminders go first.
+- The same run also sends two optional emails, both stopped by the unsubscribe link:
+  - **First class (#811):** to the guardian of a student checked in to their first class, at the first run at least 20 minutes after the class ends (so usually the 14:00 run for a morning class). Skipped once the class is more than 2 days old. Flag: `Order.first_class_email_sent`.
+  - **Volunteer birthday (#762):** to active mentors on their birthday (Feb 29 birthdays get it on Feb 28 in other years). Flag: `Mentor.birthday_email_year`.
+- Each run sends at most half of `EMAIL_DAILY_LIMIT` (two runs a day); the rest wait for the next run. Day reminders go first, then first-class, then birthday emails.
 - **Off until turned on.** The service runs only while `/etc/wac/reminders-enabled` exists. No deploy or provision creates it, so shipping this sends nothing.
   - On: `sudo touch /etc/wac/reminders-enabled`
   - Off: `sudo rm /etc/wac/reminders-enabled`. Don't `disable` the timer instead: the next prod deploy re-enables it.
