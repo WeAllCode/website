@@ -1,4 +1,5 @@
 import json
+import re
 import tempfile
 from datetime import timedelta
 from http import HTTPStatus
@@ -23,6 +24,7 @@ from coderdojochi.models import Meeting
 from coderdojochi.models import MeetingType
 from coderdojochi.models import Mentor
 from coderdojochi.util import email
+from coderdojochi.util import unsubscribe_email_from_token
 from coderdojochi.util import unsubscribe_token
 
 TEMPLATE = "class_reminder_guardian_one_week"
@@ -160,8 +162,17 @@ class EmailTest(TestCase):
             recipients=["ada@example.com"],
         )
 
+        # The token embeds a timestamp (signing.dumps), so a token computed here
+        # can differ from the one in the email by a second (#1621). Decode the
+        # email's own link instead of comparing strings.
         body = mail.outbox[0].body
-        assert f"http://testserver{_unsubscribe_path('ada@example.com')}" in body
+        prefix = "http://testserver" + reverse(
+            "email-unsubscribe", kwargs={"token": "X"}
+        )
+        prefix = prefix.removesuffix("X/")
+        match = re.search(re.escape(prefix) + r"([^/\s]+)/", body)
+        assert match, f"no unsubscribe link in {body!r}"
+        assert unsubscribe_email_from_token(match.group(1)) == "ada@example.com"
 
     def test_failed_send_is_reported_and_others_still_sent(self):
         real_send = AnymailMessage.send
