@@ -19,6 +19,10 @@
             {% else %}
                 {% if students %}
                     <h4 class="title light">{{ students }} Student{{ students|pluralize }} Registered <i class="fas fa-check"></i></h4>
+                    <p class="welcome-next">
+                        <a class="button" href="{% url 'weallcode-programs' %}">Find a class</a>
+                        <a class="button secondary" href="{% url 'account_home' %}">Done</a>
+                    </p>
                     <h2 class="title text-primary">Register another student</h2>
                 {% else %}
                     <h2 class="title text-primary">Register your first student now</h2>
