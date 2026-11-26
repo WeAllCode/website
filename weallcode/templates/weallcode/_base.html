@@ -31,8 +31,10 @@
   <meta name="msapplication-config" content="{% static 'weallcode/images/favicon/browserconfig.xml' %}?v=12">
   <meta name="theme-color" content="#426cff">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee|Poppins|Open+Sans&display=swap">
+  <link rel="stylesheet" href="{% static 'vendor/fontawesome5/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/fonts/bungee/400.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/fonts/poppins/400.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/fonts/open-sans/400.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/foundation.min.css' %}">
   <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
 
@@ -40,9 +42,6 @@
   {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block page-class %}{% endblock %}">
-  <!--[if IE]>
-  <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-  <![endif]-->
   {% spaceless %}{% include 'weallcode/_svgs.html' %}{% endspaceless %}
   <a href="#main" class="show-for-sr show-on-focus">Skip to main content</a>
   <div class="app">
@@ -70,27 +69,23 @@
     {% include 'weallcode/_footer.html' %}
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.2.1/what-input.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.1/js/foundation.min.js"></script>
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'vendor/what-input/what-input.min.js' %}"></script>
+  <script src="{% static 'vendor/foundation/foundation.min.js' %}"></script>
   <script src="{% static 'weallcode/js/app.js' %}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/seamless-scroll-polyfill@1.0.0/dist/es5/seamless.auto-polyfill.min.js" data-seamless></script>
 
   {% block extra_script %}{% endblock %}
   {% block extra_body %}{% endblock %}
 
   <script src="https://embed.donsplus.com/e4ec89b0-3a4a-11eb-a446-c3ba623037fb"></script>
+  {% if GA_MEASUREMENT_ID %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_MEASUREMENT_ID }}"></script>
   <script>
-    window.ga = function () {
-      ga.q.push(arguments)
-    };
-    ga.q = [];
-    ga.l = +new Date;
-    ga('create', 'UA-78618586-1', 'auto');
-    ga('set', 'transport', 'beacon');
-    ga('send', 'pageview');
-
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ GA_MEASUREMENT_ID }}');
   </script>
-  <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+  {% endif %}
 </body>
 </html>

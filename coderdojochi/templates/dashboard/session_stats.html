@@ -9,10 +9,10 @@
 {% block topnav %}{% endblock %}
 
 {% block contained_content %}
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-  google.load("visualization", "1", {packages:["corechart"]});
-  google.setOnLoadCallback(drawChart);
+  google.charts.load('current', {packages: ['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
   function drawChart() {
     var gender_data = google.visualization.arrayToDataTable([
       ['Gender', 'Students'],
