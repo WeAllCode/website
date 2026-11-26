@@ -1,0 +1,553 @@
+/* Element defaults: Foundation 6.5.1's typography, form and table rules
+   (foundation.css:176-185, 264-659, 750-808, 3796-3830) with the same computed
+   values. Site-specific element rules (body font, heading font, small, footer)
+   live in brand.css, which sits above this layer. */
+@layer base {
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--paper);
+    font-family: var(--font-sans);
+    font-weight: normal;
+    line-height: 1.5;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Focus: the browser's own :focus-visible ring for keyboard users (as
+     today). Mouse users get no ring on links and buttons, which is what
+     Foundation did with what-input's [data-whatinput="mouse"]. */
+  :where(a[href], button, [type="button"], [type="submit"], [type="reset"], summary, [tabindex]):focus:not(:focus-visible) {
+    outline: 0;
+  }
+
+  /* Typography */
+
+  p {
+    margin-block-end: 1rem;
+    font-size: inherit;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  em,
+  i {
+    font-style: italic;
+    line-height: inherit;
+  }
+
+  strong,
+  b {
+    font-weight: bold;
+    line-height: inherit;
+  }
+
+  small {
+    font-size: 80%;
+    line-height: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-weight: normal;
+    color: inherit;
+    text-rendering: optimizeLegibility;
+    line-height: 1.4;
+    margin-block: 0 0.5rem;
+
+    & small {
+      line-height: 0;
+      color: var(--gray-line);
+    }
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1875rem;
+  }
+
+  h4 {
+    font-size: 1.125rem;
+  }
+
+  h5 {
+    font-size: 1.0625rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  @media print, screen and (min-width: 40em) {
+    h1 {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+    }
+
+    h3 {
+      font-size: 1.9375rem;
+    }
+
+    h4 {
+      font-size: 1.5625rem;
+    }
+
+    h5 {
+      font-size: 1.25rem;
+    }
+  }
+
+  a {
+    line-height: inherit;
+    color: var(--link);
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      color: var(--link-hover);
+    }
+
+    & img {
+      border: 0;
+    }
+  }
+
+  hr {
+    clear: both;
+    max-inline-size: var(--wrap-max);
+    block-size: 0;
+    margin: 1.25rem auto;
+    border: 0;
+    border-block-end: 1px solid var(--gray-line);
+  }
+
+  ul,
+  ol,
+  dl {
+    margin-block-end: 1rem;
+    list-style-position: outside;
+    line-height: 1.6;
+  }
+
+  li {
+    font-size: inherit;
+  }
+
+  ul {
+    margin-inline-start: 1.25rem;
+    list-style-type: disc;
+  }
+
+  ol {
+    margin-inline-start: 1.25rem;
+  }
+
+  :is(ul, ol) :is(ul, ol) {
+    margin-inline-start: 1.25rem;
+    margin-block-end: 0;
+  }
+
+  dl dt {
+    margin-block-end: 0.3rem;
+    font-weight: bold;
+  }
+
+  blockquote {
+    margin: 0 0 1rem;
+    padding-block: 0.5625rem 0;
+    padding-inline: 1.1875rem 1.25rem;
+    border-inline-start: 1px solid var(--gray-line);
+  }
+
+  blockquote,
+  blockquote p {
+    line-height: 1.6;
+    color: var(--gray-muted);
+  }
+
+  cite {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--gray-muted);
+
+    &::before {
+      content: "— ";
+    }
+  }
+
+  abbr,
+  abbr[title] {
+    border-block-end: 1px dotted var(--ink);
+    cursor: help;
+    text-decoration: none;
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  code {
+    padding: 0.125rem 0.3125rem 0.0625rem;
+    border: 1px solid var(--gray-line);
+    background-color: var(--gray-fill);
+    font-family: var(--font-mono);
+    font-weight: normal;
+    color: var(--ink);
+  }
+
+  kbd {
+    margin: 0;
+    padding: 0.125rem 0.25rem 0;
+    background-color: var(--gray-fill);
+    font-family: var(--font-mono);
+    color: var(--ink);
+    border-radius: var(--radius);
+  }
+
+  /* Forms */
+
+  :is(
+      [type="text"],
+      [type="password"],
+      [type="date"],
+      [type="datetime"],
+      [type="datetime-local"],
+      [type="month"],
+      [type="week"],
+      [type="email"],
+      [type="number"],
+      [type="search"],
+      [type="tel"],
+      [type="time"],
+      [type="url"],
+      [type="color"]
+    ),
+  textarea {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 2.4375rem;
+    margin: 0 0 1rem;
+    padding: 0.5rem;
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    background-color: var(--paper);
+    box-shadow: inset 0 1px 2px rgb(10 10 10 / 0.1);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.5;
+    color: var(--ink);
+    transition:
+      box-shadow 0.5s,
+      border-color 0.25s ease-in-out;
+    appearance: none;
+  }
+
+  /* Not nested: textarea:focus must keep its own (0,1,1) specificity, so
+     textarea[readonly] still wins as it does in Foundation. */
+  :is(
+      [type="text"],
+      [type="password"],
+      [type="date"],
+      [type="datetime"],
+      [type="datetime-local"],
+      [type="month"],
+      [type="week"],
+      [type="email"],
+      [type="number"],
+      [type="search"],
+      [type="tel"],
+      [type="time"],
+      [type="url"],
+      [type="color"]
+    ):focus,
+  textarea:focus {
+    outline: none;
+    border: 1px solid var(--gray-muted);
+    background-color: var(--paper);
+    box-shadow: 0 0 5px var(--gray-line);
+    transition:
+      box-shadow 0.5s,
+      border-color 0.25s ease-in-out;
+  }
+
+  textarea {
+    max-inline-size: 100%;
+
+    &[rows] {
+      block-size: auto;
+    }
+  }
+
+  input:disabled,
+  input[readonly],
+  textarea:disabled,
+  textarea[readonly] {
+    background-color: var(--gray-fill);
+    cursor: not-allowed;
+  }
+
+  [type="submit"],
+  [type="button"] {
+    appearance: none;
+    border-radius: var(--radius);
+  }
+
+  input[type="search"] {
+    box-sizing: border-box;
+  }
+
+  ::placeholder {
+    color: var(--gray-line);
+  }
+
+  [type="file"],
+  [type="checkbox"],
+  [type="radio"] {
+    margin: 0 0 1rem;
+  }
+
+  [type="checkbox"] + label,
+  [type="radio"] + label {
+    display: inline-block;
+    vertical-align: baseline;
+    margin-inline: 0.5rem 1rem;
+    margin-block-end: 0;
+
+    &[for] {
+      cursor: pointer;
+    }
+  }
+
+  label > [type="checkbox"],
+  label > [type="radio"] {
+    margin-inline-end: 0.5rem;
+  }
+
+  [type="file"] {
+    inline-size: 100%;
+  }
+
+  label {
+    display: block;
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: normal;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  legend {
+    max-inline-size: 100%;
+    margin-block-end: 0.5rem;
+  }
+
+  select {
+    block-size: 2.4375rem;
+    margin: 0 0 1rem;
+    padding: 0.5rem;
+    padding-inline-end: 1.5rem;
+    appearance: none;
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    background-color: var(--paper);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.5;
+    color: var(--ink);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='32' height='24' viewBox='0 0 32 24'><polygon points='0,0 32,0 16,24' style='fill: rgb%28138, 138, 138%29'></polygon></svg>");
+    background-origin: content-box;
+    background-position: right -1rem center;
+    background-repeat: no-repeat;
+    background-size: 9px 6px;
+    transition:
+      box-shadow 0.5s,
+      border-color 0.25s ease-in-out;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--gray-muted);
+      background-color: var(--paper);
+      box-shadow: 0 0 5px var(--gray-line);
+      transition:
+        box-shadow 0.5s,
+        border-color 0.25s ease-in-out;
+    }
+
+    &:disabled {
+      background-color: var(--gray-fill);
+      cursor: not-allowed;
+    }
+
+    &[multiple] {
+      block-size: auto;
+      background-image: none;
+    }
+  }
+
+  /* Tables */
+
+  table {
+    border-collapse: collapse;
+    inline-size: 100%;
+    margin-block-end: 1rem;
+    border-radius: var(--radius);
+  }
+
+  thead,
+  tbody,
+  tfoot {
+    border: 1px solid var(--table-line);
+    background-color: var(--paper);
+  }
+
+  caption {
+    padding: 0.5rem 0.625rem 0.625rem;
+    font-weight: bold;
+  }
+
+  thead {
+    background: var(--table-head);
+    color: var(--ink);
+  }
+
+  tfoot {
+    background: var(--table-line);
+    color: var(--ink);
+  }
+
+  :is(thead, tfoot) tr {
+    background: transparent;
+  }
+
+  :is(thead, tfoot) :is(th, td) {
+    padding: 0.5rem 0.625rem 0.625rem;
+    font-weight: bold;
+    text-align: start;
+  }
+
+  tbody :is(th, td) {
+    padding: 0.5rem 0.625rem 0.625rem;
+  }
+
+  tbody tr:nth-child(even) {
+    border-block-end: 0;
+    background-color: var(--table-line);
+  }
+
+  /* Print (foundation.css:496-552) */
+
+  @media print {
+    * {
+      background: transparent !important;
+      box-shadow: none !important;
+      color: black !important;
+      text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+      text-decoration: underline;
+    }
+
+    a[href]::after {
+      content: " (" attr(href) ")";
+    }
+
+    a[href^="javascript:"]::after,
+    a[href^="#"]::after {
+      content: "";
+    }
+
+    abbr[title]::after {
+      content: " (" attr(title) ")";
+    }
+
+    pre,
+    blockquote {
+      border: 1px solid var(--gray-muted);
+      page-break-inside: avoid;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    tr,
+    img {
+      page-break-inside: avoid;
+    }
+
+    img {
+      max-inline-size: 100% !important;
+    }
+
+    @page {
+      margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+      orphans: 3;
+      widows: 3;
+    }
+
+    h2,
+    h3 {
+      page-break-after: avoid;
+    }
+  }
+
+  /* Legacy bridge (CP2 to CP4; delete with legacy.css in 4G). Same selector
+     and reasoning as the one at the end of reset.css: elements with a class,
+     or inside a Foundation component, get Foundation's rules back. html is
+     left out so scroll-behavior (not a Foundation property) always applies. */
+  :is(
+      [class]:not(html),
+      :is(
+          [class~="menu"],
+          [class~="breadcrumbs"],
+          [class~="callout"],
+          [class~="button-group"],
+          [class~="input-group"],
+          [class~="flex-video"],
+          [class~="reveal"],
+          [class~="card"],
+          [class~="media-object"],
+          [class~="pagination"],
+          [class~="tabs"],
+          [class~="accordion"],
+          [class~="dropdown"],
+          [class~="top-bar"]
+        )
+        *,
+      #legacy-bridge
+    ) {
+    all: revert-layer;
+  }
+}

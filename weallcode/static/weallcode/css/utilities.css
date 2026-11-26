@@ -1,0 +1,207 @@
+/* Utilities: one property each, top layer. Values and !important as
+   Foundation 6.5.1's utilities (foundation.css:854-1349) and app.css's *-half
+   spacing, under new names. Breakpoints: md = 40em, lg = 64em. */
+@layer utilities {
+  /* Spacing: m/p + t, b, l, r (block/inline start/end), x (inline), y (block)
+     + 0, h (0.5rem), 1, 2, 3 (rem). Like Foundation, the all-sides classes and
+     the h step are not !important; the rest are. */
+
+  .m-0 { margin: var(--space-0); }
+  .mt-0 { margin-block-start: var(--space-0) !important; }
+  .mb-0 { margin-block-end: var(--space-0) !important; }
+  .ml-0 { margin-inline-start: var(--space-0) !important; }
+  .mr-0 { margin-inline-end: var(--space-0) !important; }
+  .mx-0 { margin-inline: var(--space-0) !important; }
+  .my-0 { margin-block: var(--space-0) !important; }
+
+  .m-h { margin: var(--space-h); }
+  .mt-h { margin-block-start: var(--space-h); }
+  .mb-h { margin-block-end: var(--space-h); }
+  .ml-h { margin-inline-start: var(--space-h); }
+  .mr-h { margin-inline-end: var(--space-h); }
+  .mx-h { margin-inline: var(--space-h); }
+  .my-h { margin-block: var(--space-h); }
+
+  .m-1 { margin: var(--space-1); }
+  .mt-1 { margin-block-start: var(--space-1) !important; }
+  .mb-1 { margin-block-end: var(--space-1) !important; }
+  .ml-1 { margin-inline-start: var(--space-1) !important; }
+  .mr-1 { margin-inline-end: var(--space-1) !important; }
+  .mx-1 { margin-inline: var(--space-1) !important; }
+  .my-1 { margin-block: var(--space-1) !important; }
+
+  .m-2 { margin: var(--space-2); }
+  .mt-2 { margin-block-start: var(--space-2) !important; }
+  .mb-2 { margin-block-end: var(--space-2) !important; }
+  .ml-2 { margin-inline-start: var(--space-2) !important; }
+  .mr-2 { margin-inline-end: var(--space-2) !important; }
+  .mx-2 { margin-inline: var(--space-2) !important; }
+  .my-2 { margin-block: var(--space-2) !important; }
+
+  .m-3 { margin: var(--space-3); }
+  .mt-3 { margin-block-start: var(--space-3) !important; }
+  .mb-3 { margin-block-end: var(--space-3) !important; }
+  .ml-3 { margin-inline-start: var(--space-3) !important; }
+  .mr-3 { margin-inline-end: var(--space-3) !important; }
+  .mx-3 { margin-inline: var(--space-3) !important; }
+  .my-3 { margin-block: var(--space-3) !important; }
+
+  .p-0 { padding: var(--space-0); }
+  .pt-0 { padding-block-start: var(--space-0) !important; }
+  .pb-0 { padding-block-end: var(--space-0) !important; }
+  .pl-0 { padding-inline-start: var(--space-0) !important; }
+  .pr-0 { padding-inline-end: var(--space-0) !important; }
+  .px-0 { padding-inline: var(--space-0) !important; }
+  .py-0 { padding-block: var(--space-0) !important; }
+
+  .p-h { padding: var(--space-h); }
+  .pt-h { padding-block-start: var(--space-h); }
+  .pb-h { padding-block-end: var(--space-h); }
+  .pl-h { padding-inline-start: var(--space-h); }
+  .pr-h { padding-inline-end: var(--space-h); }
+  .px-h { padding-inline: var(--space-h); }
+  .py-h { padding-block: var(--space-h); }
+
+  .p-1 { padding: var(--space-1); }
+  .pt-1 { padding-block-start: var(--space-1) !important; }
+  .pb-1 { padding-block-end: var(--space-1) !important; }
+  .pl-1 { padding-inline-start: var(--space-1) !important; }
+  .pr-1 { padding-inline-end: var(--space-1) !important; }
+  .px-1 { padding-inline: var(--space-1) !important; }
+  .py-1 { padding-block: var(--space-1) !important; }
+
+  .p-2 { padding: var(--space-2); }
+  .pt-2 { padding-block-start: var(--space-2) !important; }
+  .pb-2 { padding-block-end: var(--space-2) !important; }
+  .pl-2 { padding-inline-start: var(--space-2) !important; }
+  .pr-2 { padding-inline-end: var(--space-2) !important; }
+  .px-2 { padding-inline: var(--space-2) !important; }
+  .py-2 { padding-block: var(--space-2) !important; }
+
+  .p-3 { padding: var(--space-3); }
+  .pt-3 { padding-block-start: var(--space-3) !important; }
+  .pb-3 { padding-block-end: var(--space-3) !important; }
+  .pl-3 { padding-inline-start: var(--space-3) !important; }
+  .pr-3 { padding-inline-end: var(--space-3) !important; }
+  .px-3 { padding-inline: var(--space-3) !important; }
+  .py-3 { padding-block: var(--space-3) !important; }
+
+  /* Responsive padding (app.css medium-padding-horizontal-3,
+     medium-padding-vertical-3, large-padding-vertical-4; not !important). */
+  @media screen and (width >= 40em) {
+    .md-px-3 { padding-inline: var(--space-3); }
+    .md-py-3 { padding-block: var(--space-3); }
+  }
+
+  @media screen and (width >= 64em) {
+    .lg-py-4 { padding-block: var(--space-4); }
+  }
+
+  /* In Foundation the grid's cell rules out-rank the all-sides spacing
+     classes (padding-2 on a cell keeps the grid's side padding). Keep that. */
+  .cols.pad-x > :is(.p-0, .p-1, .p-2, .p-3) {
+    padding-inline: var(--gutter);
+  }
+
+  .cols.pad-y > :is(.p-0, .p-1, .p-2, .p-3) {
+    padding-block: var(--gutter);
+  }
+
+  .cols.gutter-x > :is(.m-0, .m-1, .m-2, .m-3):not([class*="offset-"]) {
+    margin-inline: var(--gutter);
+  }
+
+  .cols.gutter-y > :is(.m-0, .m-1, .m-2, .m-3) {
+    margin-block: var(--gutter);
+  }
+
+  /* Text */
+
+  .t-start { text-align: start; }
+  .t-end { text-align: end; }
+  .t-center { text-align: center; }
+  .t-justify { text-align: justify; }
+
+  @media print, screen and (width >= 40em) {
+    .md-t-start { text-align: start; }
+    .md-t-end { text-align: end; }
+    .md-t-center { text-align: center; }
+    .md-t-justify { text-align: justify; }
+  }
+
+  @media print, screen and (width >= 64em) {
+    .lg-t-start { text-align: start; }
+    .lg-t-end { text-align: end; }
+    .lg-t-center { text-align: center; }
+    .lg-t-justify { text-align: justify; }
+  }
+
+  .t-upper { text-transform: uppercase !important; }
+  .t-lower { text-transform: lowercase !important; }
+  .t-capitalize { text-transform: capitalize !important; }
+  .t-bold { font-weight: bold; }
+  .t-normal { font-weight: normal; }
+  .t-italic { font-style: italic !important; }
+  .t-nowrap { white-space: nowrap !important; }
+
+  /* Visibility */
+
+  /* Hidden on screen, kept for assistive tech; shown again while focused. */
+  .visually-hidden:where(:not(:focus-within, :active)) {
+    position: absolute !important;
+    clip-path: inset(50%) !important;
+    overflow: hidden !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* "Skip to content": hidden until focused, then pinned top-left so the
+     page doesn't shift (accessibility guide). */
+  .skip-link {
+    &:not(:focus, :active) {
+      position: absolute !important;
+      clip-path: inset(50%) !important;
+      overflow: hidden !important;
+      inline-size: 1px !important;
+      block-size: 1px !important;
+      margin: -1px !important;
+      padding: 0 !important;
+      border: 0 !important;
+      white-space: nowrap !important;
+    }
+
+    &:is(:focus, :active) {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      z-index: 1000;
+      padding: var(--space-h) var(--space-1);
+      background-color: var(--paper);
+    }
+  }
+
+  @media screen and (width < 40em) {
+    .md-up { display: none !important; }
+  }
+
+  @media screen and (width < 64em) {
+    .lg-up { display: none !important; }
+  }
+
+  @media print, screen and (width >= 40em) {
+    .sm-only { display: none !important; }
+  }
+
+  /* Sizing, display, position */
+
+  .w-100 { inline-size: 100% !important; }
+  .w-50 { inline-size: 50% !important; }
+  .w-25 { inline-size: 25% !important; }
+  .h-100 { block-size: 100% !important; }
+  .inline-block { display: inline-block !important; }
+  .relative { position: relative !important; }
+}

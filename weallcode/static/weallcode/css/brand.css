@@ -1,0 +1,529 @@
+/*
+ * Brand styles moved from app.css (Checkpoint 2, task 2C).
+ * Rules whose selectors use a Foundation class name, or app.css's own
+ * Foundation-style spacing names, live in brand-legacy.css until 4G.
+ * Brand tokens are in tokens.css, scroll-behavior is in base.css, and the
+ * header and mobile nav are in nav.css.
+ */
+
+@layer components {
+  body {
+    font-family: var(--font-base);
+  }
+
+  /* :not(:where(…)): on links, Foundation's a:hover / a:focus colour (more specific) used to win
+     over these unlayered rules. A layer beats specificity, so leave those states out (0 specificity). */
+  .text-primary:not(:where(a:hover, a:focus)) {
+    color: var(--we-blue);
+  }
+  .text-secondary:not(:where(a:hover, a:focus)) {
+    color: var(--all-yellow);
+  }
+  .text-tertiary:not(:where(a:hover, a:focus)) {
+    color: var(--code-red);
+  }
+  .text-dark-blue:not(:where(a:hover, a:focus)) {
+    color: var(--dark-blue);
+  }
+  .text-black:not(:where(a:hover, a:focus)) {
+    color: var(--black);
+  }
+  .text-white:not(:where(a:hover, a:focus)) {
+    color: var(--white);
+  }
+  .text-light-gray:not(:where(a:hover, a:focus)) {
+    color: var(--light-gray);
+  }
+  .text-grey-for-white:not(:where(a:hover, a:focus)) {
+    color: var(--gray-4-white);
+  }
+  .text-grey-for-blue:not(:where(a:hover, a:focus)) {
+    color: var(--gray-4-blue);
+  }
+
+  .fill-primary {
+    fill: var(--we-blue);
+  }
+  .fill-secondary {
+    fill: var(--all-yellow);
+  }
+  .fill-tertiary {
+    fill: var(--code-red);
+  }
+  .fill-dark-blue {
+    fill: var(--dark-blue);
+  }
+  .fill-black {
+    fill: var(--black);
+  }
+  .fill-white {
+    fill: var(--white);
+  }
+  .fill-light-gray {
+    fill: var(--light-gray);
+  }
+  .fill-gray-for-white {
+    fill: var(--gray-4-white);
+  }
+  .fill-gray-for-blue {
+    fill: var(--gray-4-blue);
+  }
+
+  .bg-primary {
+    background-color: var(--we-blue) !important;
+  }
+  .bg-secondary {
+    background-color: var(--all-yellow) !important;
+  }
+  .bg-tertiary {
+    background-color: var(--code-red) !important;
+  }
+  .bg-dark-blue {
+    background-color: var(--dark-blue) !important;
+  }
+  .bg-black {
+    background-color: var(--black) !important;
+  }
+  .bg-white {
+    background-color: var(--white) !important;
+  }
+  .bg-light-gray {
+    background-color: var(--light-gray) !important;
+  }
+  .bg-gray-for-white {
+    background-color: var(--gray-4-white) !important;
+  }
+  .bg-gray-for-blue {
+    background-color: var(--gray-4-blue) !important;
+  }
+
+  small {
+    font-size: 75%;
+  }
+
+  /* Social login buttons POST to allauth; keep them inline like the old links. */
+  .social-login-form {
+    display: inline;
+    margin: 0;
+  }
+
+  /* Like hide but for bots */
+  .edih {
+    display: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Poppins", cursive;
+  }
+
+  h1 {
+    line-height: 1.2em;
+  }
+
+  h2 {
+    line-height: 1.3em;
+  }
+
+  section {
+    outline: none;
+  }
+
+  ul.list-plus {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  ul.list-plus li {
+    background-image: url("../images/plus-red.svg");
+    background-position: 0.3em 0.47em;
+    background-repeat: no-repeat;
+    background-size: 0.66em;
+    padding-left: 1.5em;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .list-plus li {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .list-unstyled {
+    list-style: none;
+    margin-left: 0;
+  }
+
+  .errorlist {
+    color: var(--code-red);
+  }
+
+  .teaser-image {
+    max-width: 400px;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .title {
+    font-family: "Bungee", cursive;
+  }
+
+  .subtitle {
+    margin-top: -0.5em;
+    font-size: 1.5em;
+  }
+
+  .site {
+    max-width: 64em;
+    margin: 0 auto;
+    padding: 1em;
+  }
+
+  .text-bold {
+    font-weight: bold;
+  }
+
+  .text-gigantic {
+    font-size: 4.5em;
+  }
+  .text-huge {
+    font-size: 2.5em;
+  }
+  .text-large {
+    font-size: 1.25em;
+  }
+
+  .line-height-1 {
+    line-height: 1.1em;
+  }
+
+  .line {
+    padding: 3px;
+    display: inline-block;
+  }
+
+  .overlap-bottom {
+    margin-bottom: -6rem;
+  }
+
+  .bg-binary {
+    background-color: var(--all-yellow);
+    background-image: url(../images/backgrounds/binary-repeatable.png);
+    background-repeat: repeat;
+    background-size: 10%;
+  }
+
+  .bg-kid-overlay {
+    position: relative;
+    background-color: var(--all-yellow);
+    background-image: url(../images/photos/hero-our-story-small.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .bg-kid-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary);
+    opacity: 0.85;
+    z-index: 0;
+  }
+
+  .bg-kid-overlay > * {
+    z-index: 1;
+    position: relative;
+  }
+
+  .bg-avatar {
+    background-image: url(https://gravatar.com/avatar/?s=283&d=mm);
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .aside-title {
+    background-color: var(--dark-blue);
+    font-size: 2em;
+    padding: 2rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    bottom: 0;
+    right: 0;
+    left: 2rem;
+    line-height: 1.9em;
+    display: none;
+    position: absolute;
+
+    @media screen and (min-width: 64em) {
+      display: block;
+    }
+  }
+
+  /* Binary Drop (only visible on larger screens) */
+
+  @media screen and (min-width: 40em) {
+    .binary-drop-left,
+    .binary-drop-right {
+      position: relative;
+      display: block;
+    }
+
+    .binary-drop-left img,
+    .binary-drop-right img {
+      position: relative;
+    }
+
+    .binary-drop-left::before,
+    .binary-drop-right::before {
+      content: " ";
+      position: absolute;
+      display: block;
+      top: 1rem;
+      bottom: -1rem;
+      background-color: var(--all-yellow);
+      background-image: url(../images/backgrounds/binary-repeatable.png);
+      background-repeat: repeat;
+      background-size: 10%;
+    }
+
+    .binary-drop-left {
+      padding-left: 1rem;
+    }
+
+    .binary-drop-right {
+      padding-right: 1rem;
+    }
+
+    .binary-drop-left::before {
+      right: 1rem;
+      left: 0;
+    }
+
+    .binary-drop-right::before {
+      right: 0;
+      left: 1rem;
+    }
+
+    .binary-drop-left img,
+    .binary-drop-right img {
+      display: block;
+    }
+  }
+
+  /* width and padding-left: see brand-legacy.css (Foundation grid cells used to win). */
+  .program-icon {
+    max-height: 7rem;
+  }
+
+  .small-container {
+    margin: 0 auto;
+  }
+
+  /* To remove borders from cards and callouts when not needed */
+  .borderless {
+    border: none;
+  }
+
+  .bottom-label {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 0.3rem 0.5rem;
+    line-height: 0.83em;
+    text-transform: uppercase;
+  }
+
+  .hero {
+    max-height: 25rem;
+    overflow: hidden;
+  }
+
+  .hero img {
+    width: 100%;
+  }
+
+  .profile-image-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .profile-image {
+    width: 100%;
+    display: block;
+    background-color: var(--light-gray);
+    object-fit: cover;
+    object-position: center;
+    aspect-ratio: 1;
+  }
+
+  /* Kill Debug on Mobile */
+
+  @media screen and (max-width: 48em) {
+    #djDebug,
+    #djDebugToolbar,
+    #djDebugToolbarHandle {
+      display: none !important;
+    }
+  }
+
+  /* Sub Menu (page sub-headers; the .menu and .active rules are in brand-legacy.css) */
+
+  .sub-menu a {
+    font-size: 0.6em;
+
+    @media screen and (min-width: 48em) {
+      font-size: 0.83em;
+    }
+
+    @media screen and (min-width: 64em) {
+      font-size: 1em;
+    }
+  }
+
+  .sub-menu {
+    background-color: var(--primary);
+    font-family: "Poppins";
+    padding: 0.5rem 0;
+
+    @media screen and (min-width: 40em) {
+      padding: 0;
+    }
+  }
+
+  /* color: see brand-legacy.css (Foundation's .menu .active > a colour used to win). */
+  .sub-menu a {
+    margin: 0 auto;
+    padding: 0.8rem 0.5rem;
+    text-align: left;
+
+    @media screen and (min-width: 40em) {
+      padding: 1.2rem;
+      text-align: right;
+    }
+  }
+
+  @media screen and (min-width: 40em) {
+    .sub-menu li {
+      width: auto;
+    }
+
+    @media (hover: hover) {
+      .sub-menu a:hover {
+        padding-bottom: calc(1.2rem - 5px);
+        border-bottom: 5px solid var(--black);
+      }
+    }
+  }
+
+  /* Footer  */
+
+  footer {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 3em 0;
+  }
+
+  footer nav {
+    padding: 2em 0;
+    margin: 2em 0;
+    border: 1px solid var(--gray-4-blue);
+    border-left: 0;
+    border-right: 0;
+  }
+
+  footer ul,
+  footer li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  footer a {
+    display: inline-block;
+    font-weight: normal;
+    padding: 0.2em 0;
+  }
+
+  /* Foundation's a:hover / a:focus colour (more specific) used to win; keep it. */
+  footer a:not(:where(:hover, :focus)) {
+    color: var(--gray-4-white);
+  }
+
+  @media (hover: hover) {
+    footer a:hover {
+      color: white;
+    }
+  }
+
+  footer nav .group-link {
+    font-weight: 600;
+    color: white;
+    padding: 0.4em 0;
+    margin-bottom: auto;
+  }
+
+  footer small span {
+    padding-right: 2em;
+  }
+
+  /* Newsletter Signup */
+  .learn-more-signup {
+    padding-right: 0.9375rem;
+    padding-left: 0.9375rem;
+    max-width: 62.5rem;
+    margin: 0 auto;
+  }
+
+  .learn-more-signup-title {
+    font-family: var(--font-title);
+    color: var(--tertiary);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .learn-more-signup-subtitle {
+    font-family: var(--font-subtitle);
+    font-weight: normal;
+    text-align: center;
+  }
+
+  .learn-more-signup-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@layer pages {
+  /* Page: Home */
+
+  body.home .hero-logo {
+    max-width: 75%;
+    margin: 0 auto;
+    display: block;
+
+    @media screen and (min-width: 40em) {
+      padding: 3rem 0;
+    }
+  }
+
+  body.home .free-programs {
+    text-align: center;
+    padding: 2rem 1rem;
+
+    /* Medium and up */
+    @media screen and (min-width: 40em) {
+      padding: 3rem 2rem;
+      text-align: left;
+    }
+  }
+}

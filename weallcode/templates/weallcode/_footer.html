@@ -1,11 +1,11 @@
 <footer>
-  <div class="grid-container">
+  <div class="wrap">
     <p>Need immediate help? Please email us at <a class="text-tertiary" href="mailto:hello@weallcode.org">hello@weallcode.org</a></p>
   </div>
   <nav>
-    <div class="grid-container">
-      <ul class="grid-x">
-        <li class="cell medium-auto">
+    <div class="wrap">
+      <ul class="cols">
+        <li class="md-span-auto">
           <a href="{% url 'weallcode-our-story' %}" class="group-link">Our Story</a>
           <ul>
             <li><a href="{% url 'weallcode-our-story' %}#vision">Vision</a></li>
@@ -15,7 +15,7 @@
             <li><a href="{% url 'weallcode-our-story' %}#results">Results</a></li>
           </ul>
         </li>
-        <li class="cell medium-auto">
+        <li class="md-span-auto">
           <a href="{% url 'weallcode-programs' %}" class="group-link">Programs</a>
           <ul>
             <li><a href="{% url 'weallcode-programs' %}#classes">Classes</a></li>
@@ -25,7 +25,7 @@
 
           </ul>
         </li>
-        <li class="cell medium-auto">
+        <li class="md-span-auto">
           <a href="{% url 'weallcode-team' %}" class="group-link">Team</a>
           <ul>
             <li><a href="{% url 'weallcode-team' %}#leadership">Leadership</a></li>
@@ -35,7 +35,7 @@
             <li><a href="{% url 'weallcode-team' %}#volunteers">Volunteers</a></li>
           </ul>
         </li>
-        <li class="cell medium-auto">
+        <li class="md-span-auto">
           <a href="{% url 'weallcode-join-us' %}" class="group-link">Join Us</a>
           <ul>
             <li><a href="{% url 'weallcode-join-us' %}#volunteer">Volunteer</a></li>
@@ -45,7 +45,7 @@
             <li><a href="{% url 'weallcode-join-us' %}#contact">Contact Us</a></li>
           </ul>
         </li>
-        <li class="cell medium-auto">
+        <li class="md-span-auto">
           <p class="group-link">Follow Us</p>
           <ul>
             <li><a href="https://www.instagram.com/weallcode/">Instagram</a></li>
@@ -57,10 +57,10 @@
       </ul>
     </div>
   </nav>
-  <div class="grid-container">
-    <small class="grid-x">
-      <span class="small-12 medium-6 cell padding-bottom-1">&copy; {% now "Y" %} We All Code</span>
-      <div class="small-12 medium-6 cell padding-bottom-1 medium-text-right">
+  <div class="wrap">
+    <small class="cols">
+      <span class="md-span-6 pb-1">&copy; {% now "Y" %} We All Code</span>
+      <div class="md-span-6 pb-1 md-t-end">
         <span><a href="{% url 'weallcode-privacy' %}" class="group-link">Privacy &amp; Terms</a></span>
         <span><a href="{% url 'weallcode-credits' %}" class="group-link">Credits</a></span>
         <span><a href="https://www.guidestar.org/profile/46-4988098">We All Code is a registered 501(c)(3).</a></span>

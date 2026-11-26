@@ -94,7 +94,6 @@ INSTALLED_APPS = [
     "django.contrib.redirects",
     "django.contrib.sitemaps",
     # vendor
-    "active_link",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",

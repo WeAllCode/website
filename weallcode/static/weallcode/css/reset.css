@@ -1,0 +1,280 @@
+/* Reset: what Foundation 6.5.1's normalize.css v8 and its base reset do
+   (foundation.css:14-262), with the same values, so pages that depend on them
+   look the same once Foundation is gone. Rules that base.css overrides
+   completely are left out. */
+@layer reset {
+  html {
+    box-sizing: border-box;
+    font-size: 100%;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Needed for Foundation's box model; every page's layout depends on it. */
+  *,
+  ::before,
+  ::after {
+    box-sizing: inherit;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  hr {
+    box-sizing: content-box;
+    block-size: 0;
+    overflow: visible;
+  }
+
+  pre {
+    font-family: monospace, monospace;
+    font-size: 1em;
+    overflow: auto;
+  }
+
+  a {
+    background-color: transparent;
+  }
+
+  abbr[title] {
+    border-block-end: none;
+    text-decoration: underline dotted;
+  }
+
+  code,
+  kbd,
+  samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+  }
+
+  sub,
+  sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+
+  sub {
+    inset-block-end: -0.25em;
+  }
+
+  sup {
+    inset-block-start: -0.5em;
+  }
+
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    max-inline-size: 100%;
+    block-size: auto;
+    border-style: none;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  button,
+  input {
+    overflow: visible;
+  }
+
+  button,
+  select {
+    text-transform: none;
+  }
+
+  button,
+  [type="button"],
+  [type="reset"],
+  [type="submit"] {
+    appearance: button;
+  }
+
+  button::-moz-focus-inner,
+  [type="button"]::-moz-focus-inner,
+  [type="reset"]::-moz-focus-inner,
+  [type="submit"]::-moz-focus-inner {
+    border-style: none;
+    padding: 0;
+  }
+
+  button:-moz-focusring,
+  [type="button"]:-moz-focusring,
+  [type="reset"]:-moz-focusring,
+  [type="submit"]:-moz-focusring {
+    outline: 1px dotted ButtonText;
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  legend {
+    box-sizing: border-box;
+    color: inherit;
+    display: table;
+    max-inline-size: 100%;
+    padding: 0;
+    white-space: normal;
+  }
+
+  progress {
+    vertical-align: baseline;
+  }
+
+  textarea {
+    overflow: auto;
+    block-size: auto;
+    min-block-size: 50px;
+    border-radius: var(--radius);
+  }
+
+  [type="checkbox"],
+  [type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+  }
+
+  [type="number"]::-webkit-inner-spin-button,
+  [type="number"]::-webkit-outer-spin-button {
+    block-size: auto;
+  }
+
+  [type="search"] {
+    appearance: textfield;
+    outline-offset: -2px;
+  }
+
+  [type="search"]::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  ::-webkit-file-upload-button {
+    appearance: button;
+    font: inherit;
+  }
+
+  details {
+    display: block;
+  }
+
+  summary {
+    display: list-item;
+  }
+
+  template {
+    display: none;
+  }
+
+  /* hidden="until-found" must stay findable: never display:none on it. */
+  [hidden]:not([hidden="until-found"]) {
+    display: none !important;
+  }
+
+  /* Foundation's [hidden] { display: none } (legacy layer) would also hide
+     until-found content from Find-in-page; give it back the browser's own
+     display. !important so the legacy bridge below can't undo it. Delete with
+     legacy.css in 4G. */
+  [hidden="until-found"] {
+    display: revert !important;
+  }
+
+  select {
+    box-sizing: border-box;
+    inline-size: 100%;
+    border-radius: var(--radius);
+  }
+
+  button {
+    padding: 0;
+    appearance: none;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    line-height: 1;
+    cursor: auto;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  div,
+  dl,
+  dt,
+  dd,
+  ul,
+  ol,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  pre,
+  form,
+  p,
+  blockquote,
+  th,
+  td {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Legacy bridge (CP2 to CP4; delete with legacy.css in 4G).
+     Foundation's class rules sit in the lower legacy layer, so the element
+     rules above would beat them (div { margin: 0 } over .grid-container, p
+     over .callout > :last-child, button over .button…). Until Foundation goes,
+     hand every property of an element that has a class, or sits inside a
+     Foundation component that styles class-less descendants, back to legacy.
+     Legacy holds Foundation's own element rules with the same values as
+     this file, so this changes nothing for elements without a class, and
+     renders classed ones exactly as before. Element rules here still apply
+     to class-less elements, so A/B proves them now.
+     Attribute selectors, not class selectors: no Foundation class is
+     redefined. The never-matching #legacy-bridge lifts :is() to ID
+     specificity, so this beats every element rule in the layer. */
+  :is(
+      [class],
+      :is(
+          [class~="menu"],
+          [class~="breadcrumbs"],
+          [class~="callout"],
+          [class~="button-group"],
+          [class~="input-group"],
+          [class~="flex-video"],
+          [class~="reveal"],
+          [class~="card"],
+          [class~="media-object"],
+          [class~="pagination"],
+          [class~="tabs"],
+          [class~="accordion"],
+          [class~="dropdown"],
+          [class~="top-bar"]
+        )
+        *,
+      #legacy-bridge
+    ) {
+    all: revert-layer;
+  }
+}

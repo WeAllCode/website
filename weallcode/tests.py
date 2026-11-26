@@ -2,6 +2,9 @@ from email.utils import getaddresses
 from unittest import mock
 
 from django.core import mail
+from django.template import Context
+from django.template import Template
+from django.test import RequestFactory
 from django.test import TestCase
 from django.test import override_settings
 
@@ -71,3 +74,24 @@ class NotFoundPageTest(TestCase):
         self.assertTemplateUsed(response, "404.html")
         self.assertContains(response, "Missing Page", status_code=404)
         capture.assert_not_called()
+
+
+class NavCurrentTest(TestCase):
+    """Only the current section's header link gets aria-current="page"."""
+
+    @staticmethod
+    def render(path):
+        request = RequestFactory().get(path)
+        return Template(
+            "{% load nav %}<a{% nav_current 'weallcode-programs' %}>"
+        ).render(Context({"request": request}))
+
+    def test_home_marks_nothing(self):
+        assert self.render("/") == "<a>"
+
+    def test_section_and_subpage_are_current(self):
+        assert self.render("/programs/") == '<a aria-current="page">'
+        assert self.render("/programs/summer-camps/") == '<a aria-current="page">'
+
+    def test_other_section_is_not_current(self):
+        assert self.render("/team/") == "<a>"

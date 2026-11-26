@@ -1,7 +1,7 @@
 {% load static meta %}
 <!DOCTYPE html>
 <html lang="en">
-<head {% meta_namespaces %} class="no-js" dir="ltr">
+<head {% meta_namespaces %} dir="ltr">
   {% include "meta/meta.html" %}
 
   {% if meta and meta.title %}
@@ -35,15 +35,24 @@
   <link rel="stylesheet" href="{% static 'vendor/fonts/bungee/400.css' %}">
   <link rel="stylesheet" href="{% static 'vendor/fonts/poppins/400.css' %}">
   <link rel="stylesheet" href="{% static 'vendor/fonts/open-sans/400.css' %}">
-  <link rel="stylesheet" href="{% static 'weallcode/css/foundation.min.css' %}">
-  <link rel="stylesheet" href="{% static 'weallcode/css/app.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/layers.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/legacy.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/reset.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/nav.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/brand.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/brand-legacy.css' %}">
+  <link rel="stylesheet" href="{% static 'weallcode/css/utilities.css' %}">
 
   {% block extra_style %}{% endblock %}
   {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block page-class %}{% endblock %}">
   {% spaceless %}{% include 'weallcode/_svgs.html' %}{% endspaceless %}
-  <a href="#main" class="show-for-sr show-on-focus">Skip to main content</a>
+  <a href="#main" class="skip-link">Skip to main content</a>
   <div class="app">
     <header class="bg-dark-blue">
       {% block header %}{% include 'weallcode/_header.html' %}{% endblock %}
@@ -52,15 +61,15 @@
 
     {% block messages %}
     {% if messages %}
-    <div class="grid-container padding-vertical-1">
+    <div class="wrap py-1">
       {% include 'weallcode/_messages.html' %}
     </div>
     {% endif %}
     {% endblock %}
 
     {% block content %}
-    <main id="main" class="margin-vertical-3">
-      <div class="grid-container">
+    <main id="main" class="my-3">
+      <div class="wrap">
         {% block contained_content %}
         {% endblock %}
       </div>
@@ -69,10 +78,8 @@
     {% include 'weallcode/_footer.html' %}
   </div>
 
-  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'vendor/what-input/what-input.min.js' %}"></script>
-  <script src="{% static 'vendor/foundation/foundation.min.js' %}"></script>
-  <script src="{% static 'weallcode/js/app.js' %}"></script>
+  {# data-cfasync: keep Cloudflare Rocket Loader off this module; it rewrites it into a CORS-mismatched preload. #}
+  <script type="module" src="{% static 'weallcode/js/site.js' %}" data-cfasync="false"></script>
 
   {% block extra_script %}{% endblock %}
   {% block extra_body %}{% endblock %}

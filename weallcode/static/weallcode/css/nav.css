@@ -1,0 +1,163 @@
+/* Site header: logo, menu button and main menu (weallcode/_header.html).
+   One list (#site-nav.main-menu) is a native popover below 40em and an inline
+   menu from 40em up. Moved from app.css:514-597 and :691; the Foundation
+   `.menu`/`.menu a`/`.align-right` values it relied on are copied in. */
+@layer components {
+  /* app.css:516-525 */
+  .main-logo,
+  .mobile-nav-trigger {
+    box-sizing: content-box;
+    color: var(--white);
+    display: inline-block;
+    block-size: 1em;
+    line-height: 1em;
+    padding-block: 1.5em 1em;
+    padding-inline: 0.5em;
+    margin-inline-start: -0.5em;
+
+    /* app.css:533-538 */
+    @media (min-width: 48em) {
+      block-size: 1.5em;
+    }
+  }
+
+  /* app.css:527-531; the trigger is a <button> now, so reset its UA look. */
+  .mobile-nav-trigger {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    font: inherit;
+    line-height: 1em;
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+      color: var(--white);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--white);
+      outline-offset: -2px;
+    }
+  }
+
+  .main-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Below 40em: the open menu is today's .mobile-nav overlay (app.css:583-597). */
+  @media (width < 40em) {
+    .main-menu[popover] {
+      position: fixed;
+      inset: 3rem 0 0;
+      inline-size: auto;
+      block-size: auto;
+      margin: 0;
+      border: 0;
+      padding: 1.4rem;
+      overflow: auto;
+      background-color: var(--dark-blue);
+      color: inherit;
+      line-height: inherit;
+    }
+
+    .main-menu a:not(.cta) {
+      color: var(--white);
+      display: block;
+      padding: 0.7rem 0;
+    }
+
+    /* was <div class="margin-top-1"> around Donate */
+    .main-menu-donate {
+      margin-block-start: 1rem;
+    }
+  }
+
+  /* 40em and up: inline menu (Foundation .menu.align-right + app.css:540-579). */
+  @media (min-width: 40em) {
+    /* was <nav class="padding-vertical-1"> */
+    .header-nav {
+      padding-block: 1rem;
+    }
+
+    .mobile-nav-trigger {
+      display: none;
+    }
+
+    /* Undo the UA popover styles so the list shows in flow (navbar guide). */
+    .main-menu[popover] {
+      position: static;
+      inset: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      inline-size: auto;
+      block-size: auto;
+      margin: 0;
+      border: 0;
+      padding: 0;
+      overflow: visible;
+      background: transparent;
+      color: inherit;
+    }
+
+    .main-menu li {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .main-menu a {
+      display: block;
+      margin-block-end: 0;
+      padding: 0.7rem 1rem;
+      line-height: 1;
+      text-decoration: none;
+      color: var(--white);
+      font-family: "Poppins";
+      font-size: 0.6em;
+
+      @media (min-width: 48em) {
+        font-size: 0.83em;
+      }
+
+      @media (min-width: 64em) {
+        font-size: 1em;
+      }
+    }
+
+    .main-menu a:not(.cta)[aria-current="page"] {
+      margin-block-end: -16px;
+      padding-block-end: 22px;
+      border-block-end: 5px solid var(--secondary);
+    }
+
+    /* app.css:566 used html[data-whatintent="mouse"]; review row 2. */
+    @media (hover: hover) {
+      .main-menu a:not(.cta):hover {
+        margin-block-end: -16px;
+        padding-block-end: 22px;
+        border-block-end: 5px solid var(--white);
+      }
+    }
+
+    @media (forced-colors: active) {
+      .main-menu a:not(.cta)[aria-current="page"] {
+        border-block-end-color: CanvasText;
+      }
+    }
+
+    .main-menu .cta {
+      margin-inline-start: 1rem;
+    }
+  }
+
+  /* app.css:691 (app.js toggled .main-logo.show with the menu); review row 3. */
+  @supports selector(:popover-open) {
+    body.home:has(#site-nav:popover-open) .main-logo {
+      display: block;
+    }
+  }
+}
