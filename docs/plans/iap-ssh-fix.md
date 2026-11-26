@@ -22,6 +22,8 @@ Evidence:
 - Enabled APIs: `compute` and `oslogin`; `iap.googleapis.com` is not enabled.
 - IAM: `ali@weallcode.org` has `roles/owner`, which should include `iap.tunnelInstances.accessViaIAP` and `compute.instances.osAdminLogin`; T0 verifies this. Metadata has `enable-oslogin = TRUE`. No IAM change is expected.
 - Terraform state `gs://wac-tfstate-wac-website-7bda80/prod/default.tfstate` (serial 22) matches live for the firewall, APIs and NIC, so there is no drift. A full `terraform plan` was not run because there is no `terraform.tfvars` on this machine (it needs the Cloudflare token and the filled-in vars).
+- External research confirms it. The same error on the same setup (`IPV6_ONLY` with an `EXTERNAL` IPv6, code 4047) has a Google answer: "Directly accessing an IPv6-only VM using IAP TCP forwarding is not currently possible, if the VM uses an external (GUA)" (https://discuss.google.dev/t/failed-to-lookup-instance-when-using-iap-ssh-on-ipv6-only-vm/190749, June 2025). IAP's IPv6 range `2600:2d00:1:7::/64` only works for **internal** (ULA) IPv6 subnets (Google codelab: https://codelabs.developers.google.com/codelabs/private-nat64). `nic0` can't be internal IPv6, because Cloudflare needs its external IPv6. The docs say "IAP proxies connect to the primary internal IPv4 address of `nic0`" (https://docs.cloud.google.com/iap/docs/using-tcp-forwarding).
+- Stack type can't change in place. Google's docs say "You can't change the stack type of an IPv6-only instance"; in-place changes are only IPv4-only ↔ dual-stack (https://docs.cloud.google.com/compute/docs/ip-addresses/configure-ipv6-address). So the instance has to be recreated. Pinned provider: `hashicorp/google` 8.12.0.
 - Side effect: `gcloud compute ssh --troubleshoot` auto-answered "yes" and **enabled `networkmanagement.googleapis.com`** on the project, then failed because the change had not propagated. That API is not in Terraform. Ask Ali whether to disable it (`gcloud services disable networkmanagement.googleapis.com`).
 
 ## Decision Ali must make first
@@ -33,6 +35,23 @@ A NIC's stack type can't change in place, so adding an internal IPv4 needs a new
 | **C. New instance on the existing boot disk (recommended)** | A few minutes of downtime. No DB restore. $0/month (internal IPv4 only). | Yes |
 | A. New VM on a fresh disk, then restore the dump | Restore risk: an empty-DB deploy goes live, staging is empty, `/etc/wac` flags are lost | Yes |
 | B. Keep using the serial console (`infra/vm/README.md:171-179`) | Nothing | No; update the docs only |
+
+### Cost check (Cloud Billing Catalog API, 2026-11-26)
+
+Option C stays $0/month. The only one-off cost is the optional snapshot.
+
+| Item | Price | Effect |
+|---|---|---|
+| Internal IPv4 on `nic0` | No SKU, free | $0 |
+| IAP TCP forwarding | No IAP billing service or SKU, free | $0 |
+| Firewall rule, IAP API | Free | $0 |
+| External IPv6 (new address) | No IPv6 SKU, free | $0 |
+| e2-micro + 30 GB `pd-standard` | Free tier, unchanged (same single disk, same VM count) | $0 |
+| External IPv4 | Not added (`enable_ipv4` stays `false`) | $0 |
+| Safety snapshot (step 3.1) | "Storage PD Snapshot" $0.05/GiB-month, prorated, billed on used compressed data, not in the free tier | A few cents if it's deleted within days; ~$0.25–0.40/month if kept (est. 5–8 GiB used) |
+| `networkmanagement.googleapis.com` (enabled by accident) | Enabling it is free; only connectivity tests bill | $0 unless tests run; disable it anyway |
+
+To keep it at $0, delete the snapshot after the Proof passes (step 3.9). Brief IAP SSH sessions use negligible egress, well inside the 1 GB free tier.
 
 The rest of this plan is option C. Don't start until Ali approves and picks a window.
 
@@ -76,7 +95,7 @@ Pitfalls:
 1. Read the whole plan. You are the lead and write no code. Give T1 to one sub-agent. Its brief names T1 and only T1's files, gives the proof command, says not to run git, and asks for the list of changed files plus the proof output. Run T0 yourself at the same time.
 2. Check the actual diff yourself, run the proof, commit, and open a PR. Ali reviews and merges.
 3. Maintenance window, on a `main` checkout that includes the merge. Ali approves each step, because this is prod.
-   1. Safety net: run `gcloud compute disks snapshot <disk> --zone us-central1-a --snapshot-names wac-web-pre-iap-<date>`, and start a fresh `db/wac-*.dump` (`sudo systemctl start wac-backup` over the serial console, or rely on the most recent nightly dump and write down its timestamp).
+   1. Safety net: run `gcloud compute disks snapshot <disk> --zone us-central1-a --storage-location us-central1 --snapshot-names wac-web-pre-iap-<date>`, and start a fresh `db/wac-*.dump` (`sudo systemctl start wac-backup` over the serial console, or rely on the most recent nightly dump and write down its timestamp).
    2. Build `terraform.tfvars` from `terraform.tfvars.example` with Ali. Set the credentials (`infra/terraform/README.md:9-18`), then `terraform init -backend-config="bucket=wac-tfstate-wac-website-7bda80"` (check the backend prefix `prod` in `versions.tf`).
    3. `terraform import google_compute_disk.web projects/wac-website-7bda80/zones/us-central1-a/disks/<disk>`.
    4. If T0 showed `autoDelete = true`, run `gcloud compute instances set-disk-auto-delete wac-web --zone us-central1-a --disk <disk> --no-auto-delete`. Re-check it.
@@ -84,6 +103,7 @@ Pitfalls:
    6. `terraform plan`. Expect: create `google_compute_instance.web`, create `wac-ssh-iap` and `iap.googleapis.com`, update the Cloudflare AAAA records and `bootstrap`. **No change to `google_compute_disk.web`.** If you see anything else, stop and ask. Once Ali approves, `terraform apply`.
    7. Wait for the boot (`gcloud compute instances get-serial-port-output wac-web` until `wac-provision: done`). `provision.sh` is idempotent and keeps the existing DB, `/var/lib/wac/infra-vm` and `/etc/wac`.
    8. `terraform plan` shows no changes.
+   9. After the Proof passes and a day of normal running, run `gcloud compute snapshots delete wac-web-pre-iap-<date>` (back to $0). If Ali agrees, also run `gcloud services disable networkmanagement.googleapis.com`.
 4. Write the results and evidence into Progress.
 
 Rollback: if the new instance won't boot, create an instance from the snapshot with the old `IPV6_ONLY` config (`git revert` T1, then import). If the disk is lost, the last resort is a fresh VM plus a dump restore using the TOC filter at `infra/vm/README.md:139-144`, then `sudo wac-refresh-staging-db` and re-creating `/etc/wac/reminders-enabled` if it was there.
