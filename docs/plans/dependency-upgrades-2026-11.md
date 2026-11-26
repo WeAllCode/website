@@ -546,6 +546,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Memory source found that needs no serial console: Cloud Monitoring `compute.googleapis.com/instance/memory/balloon/ram_used` (whole VM, 1/min; script `scratchpad/mem.sh`). Not per-unit `MemoryPeak`, so it's a proxy. Baseline with both targets on 3.11 (prod `933ac62`, staging `31ce02c`), 03:16–03:43Z: n=24, median **838 MiB**, p90 897, max 900.
 - Memory with staging on 3.13 (03:47–04:08Z, after the smoke): n=19, median **868 MiB (+3.6%)**, p90 893 (−0.4%), max 907 (+0.8%). **Within +10% (AC5).** Whole-VM figure, includes page cache (the new CPython install and venv add some), so a per-unit `MemoryPeak` is still open for the 0.5 visit.
 - Staging Sentry 03:43–04:08Z: 0 error events; Sentry Logs arriving (31 info, 2 warn) — the temporary staging DSN from CP6 is still set.
+- 2026-11-26 ~04:20Z: Ali chose "Merge + prod", and "Yes, after prod" for squash-merging plan PR #1630. **Prod sha before: `933ac62efb8eb5e5090ba448bab377604fbd77a1`** (CP9; rollback: `release.sh --target prod --force 933ac62`; `/usr/bin/python3.11` stays installed). #1644 squash-merged as `6c1c1a2` (directly on `933ac62`). No migrations, so no backup step. CP9 1h Sentry watch logged at 04:15Z (above); my errors query for 03:15–04:23Z also = 0 prod events.
 
 ### Checkpoint 7a — done, on prod (2026-11-26). Next: Checkpoint 7b (Python 3.13)
 
