@@ -251,15 +251,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-active-link"
-version = "0.3.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8d/b3/6cb02af7ac8bfacd4555ea7a480595dd50ff3feb21d5b00f548169387570/django_active_link-0.3.0.tar.gz", hash = "sha256:0653ae337050ee1dd3559f7e2b86a202a8e1f9bc968a5968fcf65fbcb938fcad", size = 4473, upload-time = "2025-11-13T07:11:05.043Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/7c/79/0b452181cfd8fefe89f4fdd94e0d2782b8223f18b6422f44bbbdc4ca0271/django_active_link-0.3.0-py3-none-any.whl", hash = "sha256:1db90d2b3405b6d8f4966b9c1a1f684b21147640a3ad636a43d58e95f930e97d", size = 5819, upload-time = "2025-11-13T07:11:03.614Z" },
-]
-
-[[package]]
 name = "django-allauth"
 version = "65.22.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1068,7 +1059,6 @@ dependencies = [
     { name = "arrow" },
     { name = "dj-database-url" },
     { name = "django" },
-    { name = "django-active-link" },
     { name = "django-allauth", extra = ["socialaccount"] },
     { name = "django-anymail", extra = ["resend"] },
     { name = "django-appconf" },
@@ -1103,7 +1093,6 @@ requires-dist = [
     { name = "arrow", specifier = ">=1.4.0,<2.0.0" },
     { name = "dj-database-url", specifier = ">=3.1.2,<4.0" },
     { name = "django", specifier = ">=5.2.19,<6.0" },
-    { name = "django-active-link", specifier = ">=0.3.0,<0.4.0" },
     { name = "django-allauth", extras = ["socialaccount"], specifier = ">=65.22.1,<66.0.0" },
     { name = "django-anymail", extras = ["resend"], specifier = ">=15.3,<16" },
     { name = "django-appconf", specifier = ">=1.2.0,<2.0.0" },

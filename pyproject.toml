@@ -25,7 +25,6 @@ dependencies = [
     "django-anymail[resend]>=15.3,<16",
 
     # UI & Templates
-    "django-active-link>=0.3.0,<0.4.0",
     "django-meta>=2.5.1,<3.0.0",
 
     # Image Processing

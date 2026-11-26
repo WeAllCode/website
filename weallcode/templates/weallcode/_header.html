@@ -1,6 +1,6 @@
 {% load static %}
 {% load account %}
-{% load active_link_tags %}
+{% load nav %}
 {% load icons %}
 <div class="wrap">
   <div class="cols">
@@ -12,10 +12,10 @@
     <nav class="header-nav span-shrink md-span-9" aria-label="Main">
       <button class="mobile-nav-trigger" type="button" popovertarget="site-nav" aria-controls="site-nav">{% icon "bars" label="Menu" %}</button>
       <ul id="site-nav" class="main-menu" popover>
-        <li><a class="{% active_link 'weallcode-our-story' %}" aria-current="{% active_link 'weallcode-our-story' 'page' 'false' %}" href="{% url 'weallcode-our-story' %}">Our Story</a></li>
-        <li><a class="{% active_link 'weallcode-programs' %}" aria-current="{% active_link 'weallcode-programs' 'page' 'false' %}" href="{% url 'weallcode-programs' %}">Programs</a></li>
-        <li><a class="{% active_link 'weallcode-team' %}" aria-current="{% active_link 'weallcode-team' 'page' 'false' %}" href="{% url 'weallcode-team' %}">Team</a></li>
-        <li><a class="{% active_link 'weallcode-join-us' %}" aria-current="{% active_link 'weallcode-join-us' 'page' 'false' %}" href="{% url 'weallcode-join-us' %}">Join Us</a></li>
+        <li><a{% nav_current 'weallcode-our-story' %} href="{% url 'weallcode-our-story' %}">Our Story</a></li>
+        <li><a{% nav_current 'weallcode-programs' %} href="{% url 'weallcode-programs' %}">Programs</a></li>
+        <li><a{% nav_current 'weallcode-team' %} href="{% url 'weallcode-team' %}">Team</a></li>
+        <li><a{% nav_current 'weallcode-join-us' %} href="{% url 'weallcode-join-us' %}">Join Us</a></li>
         <li class="main-menu-donate"><a class="cta cta-tertiary" href="javascript:donsPlus.openWidget();">Donate</a></li>
         {% if user.is_authenticated %}
           <li><a class="cta" href="{% url 'account_home' %}">Account</a></li>

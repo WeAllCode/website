@@ -459,7 +459,9 @@ Fresh review sub-agent, 2026-11-25: 22 findings, 5 of them blockers. The lead sp
 - `ab.mjs` fixes (lead): `team-see-more` measures the wrapper's content (`hidden="until-found"` keeps a 0 px box); `applyMasks` skips elements that fail `checkVisibility()` or sit in `[hidden]`.
 - `write_token_file()` now reads `app.css` from git at `25ce01b7`.
 - PR #1650 (on main after this branch's base) shows volunteers only with ≥ 3 checked-in classes in 2 years. When both A/B trees move past it, `seed_objects.py` must give the 20 public mentors 3 checked-in classes each, or "See more" won't render.
-- Donation widget: untestable here (`embed.donsplus.com` → `embed.double.giving` is refused on this network; `donsPlus is not defined` identically on main). **Ali clicks Donate on staging.**
+- Donation widget: untestable here (`embed.donsplus.com` → `embed.double.giving` is refused on this network; `donsPlus is not defined` identically on main). Ali's browser on staging shows the same `ERR_CONNECTION_REFUSED` for `embed.double.giving`, so the check needs another network (e.g. a phone on cellular) against staging and prod.
+- **Bug fix (Ali spotted on staging, also on prod):** on `/` every header link was underlined. django-active-link 0.3.0's non-strict match also tests `path.startswith(request.path)`, which is always true for `/`. Replaced with `weallcode/templatetags/nav.py` `{% nav_current %}` (prefix match, never for `/`; emits only `aria-current="page"`) and removed `django-active-link` (pyproject, uv.lock, `INSTALLED_APPS`; no models). Test `weallcode.tests.NavCurrentTest`. A/B: `/` desktop 0.042 % (the removed underline, intended), every other page 0.000 %.
+- Cloudflare Rocket Loader rewrote the `type="module"` site.js into a preload with mismatched credentials (double fetch + console warning). `data-cfasync="false"` on the tag.
 
 **Evidence:**
 
