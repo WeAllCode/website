@@ -192,6 +192,7 @@ def first_class_due(now):
             continue
         earlier = Order.objects.filter(
             student=order.student,
+            is_active=True,
             check_in__isnull=False,
             session__start_date__lt=order.session.start_date,
         )

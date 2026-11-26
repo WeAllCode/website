@@ -336,6 +336,21 @@ class SendRemindersTest(TestCase):
         run()
         assert self.first_class_emails() == []
 
+    def test_cancelled_earlier_order_does_not_count(self):
+        # A cancelled order that still has a check-in time isn't an attended class.
+        cancelled = self.attended(-timedelta(days=30))
+        cancelled.is_active = False
+        cancelled.save()
+        later = self.session(-timedelta(hours=4))
+        Order.objects.create(
+            guardian=cancelled.guardian,
+            session=later,
+            student=cancelled.student,
+            check_in=later.start_date,
+        )
+        run()
+        assert [m.to[0] for m in self.first_class_emails()] == ["pat@example.com"]
+
     def test_no_first_class_email_without_check_in(self):
         self.enroll(self.session(-timedelta(hours=4)), "pat")
         run()

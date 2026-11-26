@@ -42,6 +42,13 @@ class Mentor(CommonInfo):
     is_public = models.BooleanField(
         default=False,
     )
+    # Staff confirmed this volunteer is under 18 (#553). Mentors edit their own
+    # birthday, so age alone never waives the background check.
+    background_check_waived = models.BooleanField(
+        default=False,
+        db_default=False,
+        help_text="Staff confirmed this volunteer is under 18, so no background check.",
+    )
     avatar = StdImageField(
         upload_to=generate_filename,
         blank=True,
@@ -125,7 +132,14 @@ class Mentor(CommonInfo):
 
     @property
     def needs_background_check(self):
-        return not self.background_check and not self.is_minor
+        """True unless checked, or staff waived it and the volunteer is still under 18."""
+        if self.background_check:
+            return False
+        return not (self.background_check_waived and self.is_minor)
+
+    @property
+    def awaiting_minor_waiver(self):
+        return self.needs_background_check and self.is_minor
 
     def save(self, *args, **kwargs):
         if self.pk is None:

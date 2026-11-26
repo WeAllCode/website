@@ -200,6 +200,13 @@ TOO_LATE_TO_CANCEL = (
 )
 
 
+# Under-18 volunteers skip the background check once staff confirm their age (#553).
+MINOR_WAIVER_MESSAGE = (
+    "Volunteers under 18 don't need a background check, but we need to confirm your"
+    " age first. Please email hello@weallcode.org and we'll set you up."
+)
+
+
 def mentor_cancel_too_late(user, session_obj):
     if user.is_staff:
         return False
@@ -256,7 +263,12 @@ class SessionSignUpView(RoleRedirectMixin, RoleTemplateMixin, TemplateView):
         access_dict = {}
         # Returns a message and redirect url if not working as dict
         if kwargs.get("mentor"):
-            if kwargs["mentor"].needs_background_check:
+            if kwargs["mentor"].awaiting_minor_waiver:
+                access_dict = {
+                    "message": MINOR_WAIVER_MESSAGE,
+                    "redirect": request.META.get("HTTP_REFERER", "/dojo"),
+                }
+            elif kwargs["mentor"].needs_background_check:
                 access_dict = {
                     "message": (
                         "You cannot sign up for a class until you <a"
