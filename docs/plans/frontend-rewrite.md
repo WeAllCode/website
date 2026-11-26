@@ -13,6 +13,12 @@ Status: **plan only, approved goal and criteria by Ali 2026-11-25.** Nothing bui
 - Dashboard: shared tokens and reset, plus its own `dashboard.css` that keeps today's Bootstrap look.
 - "Look the same" is a pixel threshold: each page differs from `main` by **< 1 % of pixels** at 1280 and 390 px. Only failures go to Ali.
 - One PR per checkpoint, each through CI, staging and prod with Ali's OK (same runbook as `docs/plans/dependency-upgrades-2026-11.md`).
+- **Never send any email (Ali, 2026-11-25).** This holds for local runs, staging and prod, for every task, check and manual step.
+  - Every local server and script runs with `EMAIL_BACKEND=anymail.backends.test.EmailBackend` and `RESEND_API_KEY=` (empty). `seed.sh` exports both. `ab.mjs` refuses to start unless the branch server's `/__debug__/`-free env shows them (check `manage.py shell -c "from django.conf import settings; print(settings.EMAIL_BACKEND)"` before starting the servers).
+  - No script or person submits a form that can send mail: sign-up, password reset, contact, join-us, associate board, session or meeting sign-up, announce, check-in, email change or verification. The only allowed submit is 1A's `--post-invalid` (an empty required field, so it can't validate), and only on the local server.
+  - The "Announce" check only opens the popover and reads the link's `href`. It never follows it.
+  - On staging and prod: read-only page loads only, and no form submits at all.
+  - If a step would need an email to prove itself, it gets a Django test with the anymail test backend (`mail.outbox`) instead.
 
 ## Goal and done
 
@@ -358,7 +364,7 @@ node /tmp/wac-smoke/ab.mjs --a http://127.0.0.1:8001 --b http://127.0.0.1:8000 -
 ### Manual
 
 - Before each PR: open `/` at 390 px in a real browser, open the nav with touch emulation and by keyboard, and click Donate (the donation widget opens).
-- CP4, on prod after the release: Ali (staff) opens a meeting that hasn't been announced and checks that "Announce" shows the confirm link. **Don't click it** unless he wants the emails sent.
+- CP4, on prod after the release: Ali (staff) opens a meeting that hasn't been announced and checks that "Announce" shows the confirm link. **Never click the link**: it emails every mentor. Close the popover with Escape.
 - CP5, on prod: Ali opens `/admin/`, toggles Show/Hide and opens the mobile nav.
 - Before calling the plan done: use prod through Cloudflare as a visitor, as a guardian or mentor, and as staff, and confirm that normal use still works.
 
