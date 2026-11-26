@@ -24,7 +24,7 @@ Evidence:
 - Terraform state `gs://wac-tfstate-wac-website-7bda80/prod/default.tfstate` (serial 22) matches live for the firewall, APIs and NIC, so there is no drift. A full `terraform plan` was not run because there is no `terraform.tfvars` on this machine (it needs the Cloudflare token and the filled-in vars).
 - External research confirms it. The same error on the same setup (`IPV6_ONLY` with an `EXTERNAL` IPv6, code 4047) has a Google answer: "Directly accessing an IPv6-only VM using IAP TCP forwarding is not currently possible, if the VM uses an external (GUA)" (https://discuss.google.dev/t/failed-to-lookup-instance-when-using-iap-ssh-on-ipv6-only-vm/190749, June 2025). IAP's IPv6 range `2600:2d00:1:7::/64` only works for **internal** (ULA) IPv6 subnets (Google codelab: https://codelabs.developers.google.com/codelabs/private-nat64). `nic0` can't be internal IPv6, because Cloudflare needs its external IPv6. The docs say "IAP proxies connect to the primary internal IPv4 address of `nic0`" (https://docs.cloud.google.com/iap/docs/using-tcp-forwarding).
 - Stack type can't change in place. Google's docs say "You can't change the stack type of an IPv6-only instance"; in-place changes are only IPv4-only ↔ dual-stack (https://docs.cloud.google.com/compute/docs/ip-addresses/configure-ipv6-address). So the instance has to be recreated. Pinned provider: `hashicorp/google` 8.12.0.
-- Side effect: `gcloud compute ssh --troubleshoot` auto-answered "yes" and **enabled `networkmanagement.googleapis.com`** on the project, then failed because the change had not propagated. That API is not in Terraform. Ask Ali whether to disable it (`gcloud services disable networkmanagement.googleapis.com`).
+- Side effect: `gcloud compute ssh --troubleshoot` auto-answered "yes" and **enabled `networkmanagement.googleapis.com`** on the project, then failed because the change had not propagated. That API is not in Terraform. It was disabled again on 2026-11-26, at Ali's request.
 
 ## Decision Ali must make first
 
@@ -49,7 +49,7 @@ Option C stays $0/month. The only one-off cost is the optional snapshot.
 | e2-micro + 30 GB `pd-standard` | Free tier, unchanged (same single disk, same VM count) | $0 |
 | External IPv4 | Not added (`enable_ipv4` stays `false`) | $0 |
 | Safety snapshot (step 3.1) | "Storage PD Snapshot" $0.05/GiB-month, prorated, billed on used compressed data, not in the free tier | A few cents if it's deleted within days; ~$0.25–0.40/month if kept (est. 5–8 GiB used) |
-| `networkmanagement.googleapis.com` (enabled by accident) | Enabling it is free; only connectivity tests bill | $0 unless tests run; disable it anyway |
+| `networkmanagement.googleapis.com` (enabled by accident) | Enabling it is free; only connectivity tests bill | Disabled 2026-11-26 |
 
 To keep it at $0, delete the snapshot after the Proof passes (step 3.9). Brief IAP SSH sessions use negligible egress, well inside the 1 GB free tier.
 
@@ -57,7 +57,8 @@ The rest of this plan is option C. Don't start until Ali approves and picks a wi
 
 ## Read first
 
-- `infra/terraform/vm.tf:39-69`: the instance, `boot_disk` (debian-12, 30 GB, `pd-standard`), and `network_interface` at 56-69. `vm.tf:90-91` is `prevent_destroy`.
+- `infra/terraform/vm.tf:41-105`: the instance. `boot_disk` is at 48-54 (debian-12, 30 GB, `pd-standard`), `network_interface` at 56-69, and the `lifecycle` block with `prevent_destroy` at 90-91.
+- CI (`.github/workflows/ci.yml:150-157`) only runs `fmt` and `validate`. Nothing applies on merge.
 - `infra/terraform/network.tf:21-49`: the firewall rules to copy for the IAP rule.
 - `infra/terraform/apis.tf`: the API list. The line-14 comment becomes wrong.
 - `infra/terraform/variables.tf:27-31`: `enable_ipv4`.
@@ -77,7 +78,7 @@ T0 can run in parallel with T1: T0 is gcloud reads only and T1 is file edits onl
 
 **T1: Terraform and docs** (files: `infra/terraform/vm.tf`, `network.tf`, `apis.tf`, `variables.tf`, `README.md`, `infra/vm/README.md`)
 
-- `vm.tf`: add `google_compute_disk.web` (name from T0, zone, `type = "pd-standard"`, `size = 30`, `image = "debian-cloud/debian-12"`, `lifecycle { prevent_destroy = true, ignore_changes = [image, snapshot] }`). Change `boot_disk` to `source = google_compute_disk.web.self_link` with `auto_delete = false`. Set `stack_type = "IPV4_IPV6"` always, and keep `access_config` gated on `var.enable_ipv4`. Keep `prevent_destroy` on the instance.
+- `vm.tf`: add `google_compute_disk.web` (name from T0, zone, `type = "pd-standard"`, `size = 30`, `image = "debian-cloud/debian-12"`, `lifecycle { prevent_destroy = true, ignore_changes = [image, snapshot] }`). Change `boot_disk` to `source = google_compute_disk.web.self_link` with `auto_delete = false`, and **remove `initialize_params`**, which conflicts with `source`. Set `stack_type = "IPV4_IPV6"` always, and keep `access_config` gated on `var.enable_ipv4`. Keep `prevent_destroy` on the instance.
 - `network.tf`: add `google_compute_firewall.ssh_iap` with name `wac-ssh-iap`, network `wac`, ingress, `source_ranges = ["35.235.240.0/20"]`, tcp:22, `target_tags = ["wac-web"]`, `count = var.iap_ssh ? 1 : 0`. Copy `https_cloudflare_ipv4` (`network.tf:36`) and update the comment at `:21`.
 - `apis.tf`: add `iap.googleapis.com` and replace the line-14 comment.
 - `variables.tf`: add `iap_ssh` (bool, default `true`, "Allow SSH from IAP's TCP-forwarding range"). Reword `enable_ipv4`: it now only adds an external IPv4, though changing it still recreates the instance.
@@ -93,27 +94,34 @@ Pitfalls:
 ## How to run it
 
 1. Read the whole plan. You are the lead and write no code. Give T1 to one sub-agent. Its brief names T1 and only T1's files, gives the proof command, says not to run git, and asks for the list of changed files plus the proof output. Run T0 yourself at the same time.
-2. Check the actual diff yourself, run the proof, commit, and open a PR. Ali reviews and merges.
+2. Check the actual diff yourself, run the proof, commit, and open a PR. **Before Ali merges**, do the tfvars gate:
+   1. Build `terraform.tfvars` from `terraform.tfvars.example` with Ali. Set the credentials (`infra/terraform/README.md:9-18`), then `terraform init -backend-config="bucket=wac-tfstate-wac-website-7bda80"` (check the backend prefix `prod` in `versions.tf`).
+   2. On pre-T1 `main`, run a full `terraform plan`. It **must show "No changes"**. If it doesn't, fix tfvars (`cutover`, `staging_basic_auth_hash`, `resend_dns_records`, …) until it does. This keeps a wrong var from deleting apex DNS or changing the new VM's metadata.
+   3. Ali merges T1.
 3. Maintenance window, on a `main` checkout that includes the merge. Ali approves each step, because this is prod.
-   1. Safety net: run `gcloud compute disks snapshot <disk> --zone us-central1-a --storage-location us-central1 --snapshot-names wac-web-pre-iap-<date>`, and start a fresh `db/wac-*.dump` (`sudo systemctl start wac-backup` over the serial console, or rely on the most recent nightly dump and write down its timestamp).
-   2. Build `terraform.tfvars` from `terraform.tfvars.example` with Ali. Set the credentials (`infra/terraform/README.md:9-18`), then `terraform init -backend-config="bucket=wac-tfstate-wac-website-7bda80"` (check the backend prefix `prod` in `versions.tf`).
-   3. `terraform import google_compute_disk.web projects/wac-website-7bda80/zones/us-central1-a/disks/<disk>`.
-   4. If T0 showed `autoDelete = true`, run `gcloud compute instances set-disk-auto-delete wac-web --zone us-central1-a --disk <disk> --no-auto-delete`. Re-check it.
-   5. `gcloud compute instances stop wac-web`, then `gcloud compute instances delete wac-web --zone us-central1-a --keep-disks=boot`, then `terraform state rm google_compute_instance.web`. Prod is down from here.
-   6. `terraform plan`. Expect: create `google_compute_instance.web`, create `wac-ssh-iap` and `iap.googleapis.com`, update the Cloudflare AAAA records and `bootstrap`. **No change to `google_compute_disk.web`.** If you see anything else, stop and ask. Once Ali approves, `terraform apply`.
-   7. Wait for the boot (`gcloud compute instances get-serial-port-output wac-web` until `wac-provision: done`). `provision.sh` is idempotent and keeps the existing DB, `/var/lib/wac/infra-vm` and `/etc/wac`.
+   1. Pre-swap evidence: download the newest nightly `db/wac-*.dump` from `gs://wac-backups-wac-website-7bda80` to the scratchpad, write down its name, and count users with `pg_restore --data-only -t coderdojochi_cdcuser -f - <dump> | awk '/^COPY/{f=1;next} /^\\\./{f=0} f' | wc -l`. This needs no VM access or serial console.
+   2. While prod is still up, run `terraform import google_compute_disk.web projects/wac-website-7bda80/zones/us-central1-a/disks/<disk>`, then `terraform plan -target=google_compute_disk.web`. It **must show "No changes"**. If it doesn't, fix the disk block in a follow-up PR and stop here. Nothing is down yet.
+   3. `gcloud compute instances stop wac-web --zone us-central1-a`. Prod is down from here.
+   4. Snapshot the stopped disk, so the copy is consistent: `gcloud compute disks snapshot <disk> --zone us-central1-a --storage-location us-central1 --snapshot-names wac-web-pre-iap-<date>`.
+   5. `gcloud compute instances delete wac-web --zone us-central1-a --keep-disks=boot` (`--keep-disks` makes a separate `set-disk-auto-delete` unnecessary), then `gcloud compute disks describe <disk> --zone us-central1-a` to confirm the disk still exists, then `terraform state rm google_compute_instance.web`.
+   6. `terraform plan`. Expect: create `google_compute_instance.web`, create `wac-ssh-iap` and `iap.googleapis.com`, update the Cloudflare AAAA records and `bootstrap`. **No change to `google_compute_disk.web`.** If you see anything else, stop and ask. Once Ali approves, `terraform apply`. DNS and the instance are created in the same apply, so downtime runs from step 3.3 until the boot in 3.7.
+   7. Wait for the boot (`gcloud compute instances get-serial-port-output wac-web --zone us-central1-a` until `wac-provision: done`). `provision.sh` is idempotent and keeps the existing DB, `/var/lib/wac/infra-vm` and `/etc/wac`.
    8. `terraform plan` shows no changes.
-   9. After the Proof passes and a day of normal running, run `gcloud compute snapshots delete wac-web-pre-iap-<date>` (back to $0). If Ali agrees, also run `gcloud services disable networkmanagement.googleapis.com`.
+   9. After the Proof passes and a day of normal running, run `gcloud compute snapshots delete wac-web-pre-iap-<date>` (back to $0).
 4. Write the results and evidence into Progress.
 
-Rollback: if the new instance won't boot, create an instance from the snapshot with the old `IPV6_ONLY` config (`git revert` T1, then import). If the disk is lost, the last resort is a fresh VM plus a dump restore using the TOC filter at `infra/vm/README.md:139-144`, then `sudo wac-refresh-staging-db` and re-creating `/etc/wac/reminders-enabled` if it was there.
+Rollback (the original disk survives step 3.5):
+
+- If the new instance fails: locally set `stack_type = "IPV6_ONLY"` (keep the disk resource and `boot_disk.source`), then `terraform apply`. That recreates the old network setup on the same disk, with metadata from Terraform.
+- If the disk itself is damaged: `gcloud compute disks create wac-web-restore --source-snapshot wac-web-pre-iap-<date> --zone us-central1-a --type pd-standard`, then point `google_compute_disk.web` at it (`state rm` plus import) and apply.
+- If both are lost: build a fresh VM and restore the dump with the TOC filter at `infra/vm/README.md:139-144`, then run `sudo wac-refresh-staging-db` and re-create `/etc/wac/reminders-enabled` if it was there.
 
 ## Proof
 
 | Criterion | Test | One-line break that must fail it |
 |---|---|---|
-| 1 | `CLOUDSDK_ACTIVE_CONFIG_NAME=wac gcloud compute ssh wac-web --zone us-central1-a --tunnel-through-iap -- 'sudo -n true && hostname'` prints `wac-web` | Set `iap_ssh = false` in tfvars: the plan must show the rule being destroyed (plan only; don't apply) |
-| 2 | `curl -sI https://www.weallcode.org` returns 200; staging returns 401 without auth; over SSH, `sudo -u wac psql -d wac -c 'select count(*) from auth_user'` matches the pre-swap dump; `test -f /etc/wac/reminders-enabled` gives the same result as before | n/a |
+| 1 | `CLOUDSDK_ACTIVE_CONFIG_NAME=wac gcloud compute ssh wac-web --zone us-central1-a --tunnel-through-iap -- 'sudo -n true && hostname'` prints `wac-web` | Set `iap_ssh = false` in tfvars: the plan must show `wac-ssh-iap` being destroyed. Optionally, with Ali's OK, apply it and check that the ssh command times out, then apply `iap_ssh = true` and check that it works again |
+| 2 | `curl -sI https://www.weallcode.org` returns 200; staging returns 401 without auth; over SSH, `sudo -u wac psql -d wac -tAc 'select count(*) from coderdojochi_cdcuser'` is **≥** the count from step 3.1 | n/a |
 | 3 | `gcloud compute firewall-rules list --filter=network~wac` shows only the 443 rule(s) plus `wac-ssh-iap` with `35.235.240.0/20` | n/a |
 | 4 | `terraform plan` reports "No changes" | n/a |
 
@@ -134,6 +142,21 @@ Fresh sub-agent, 2026-11-26. Findings and how the plan handles them:
 - Minor: line refs were off. **Fixed** (`vm.tf:56-69`, `network.tf:21-49`, `infra/vm/README.md:171-179`).
 - Minor: the plan also updates `bootstrap.tgz`. **Fixed:** it is in step 6's expected list, and the apply runs from merged `main`.
 - Minor: confirm the dump timestamp is after deploys stopped. **Covered:** step 3.1 notes the timestamp, and the disk is the real copy anyway.
+
+### Re-review (fresh sub-agent, 2026-11-26)
+
+- It confirmed that the IAP/IPv6 design works, and that `provision.sh` is safe on a reused disk with a new NIC: nftables already blocks staging's IPv4 metadata access, Postgres has `listen_addresses = ''`, Caddy on 10.x is firewalled, and the watcher tolerates missing nonces. It also confirmed the disk config plans cleanly (`ignore_changes` covers the image URL, and `guest_os_features`, `licenses` and `architecture` are Optional+Computed).
+- Blocker: the disk diff was first seen after prod was down. **Fixed:** step 3.2 runs the import plus `plan -target=google_compute_disk.web` while prod is up.
+- Major: tfvars rebuilt from scratch could delete apex DNS or change metadata. **Fixed:** the step 2 gate requires a full plan on pre-T1 `main` to show "No changes" before the merge.
+- Major: the snapshot was taken while the VM was running. **Fixed:** step 3.4 snapshots after the stop.
+- Major: Proof 2 used `auth_user`, but the user table is `coderdojochi_cdcuser`, and the pre-swap count needed the serial console. **Fixed:** step 3.1 counts users from the nightly dump locally, and Proof 2 queries `coderdojochi_cdcuser`.
+- Minor: T1 didn't remove `initialize_params`. **Fixed.**
+- Minor: `vm.tf` refs were off. **Fixed** (41-105, 48-54).
+- Minor: rollback went through the snapshot first. **Fixed:** the first option reuses the original disk.
+- Minor: `instances stop` had no `--zone`. **Fixed.**
+- Minor: the auto-delete step was redundant. **Removed**, because `--keep-disks=boot` covers it; there is now a check that the disk exists.
+- Minor: Proof 1's break test was plan-only. **Fixed:** an optional live check of the timeout was added.
+- Done 2026-11-26: `networkmanagement.googleapis.com` was disabled at Ali's request.
 
 ## Progress
 
