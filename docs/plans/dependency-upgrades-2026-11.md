@@ -618,7 +618,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Prod smoke `--cp cp5-prod --baseline out/cp0-prod/report.json` (past the 60 s edge TTL): **PASS 0/24**. Origin check `sessionid=x` `/privacy/` 200.
 - Not done (Ali): memory numbers vs the 0.5 baseline (`systemctl show wac-web wac-staging -p MemoryCurrent,MemoryPeak`), Sentry 1h watch, `--auth` smoke (needs `upg-smoke`).
 
-### Checkpoint 4 — in progress (2026-11-25)
+### Checkpoint 4 — done, on prod (2026-11-25)
 
 - Started: code branch `claude/upgrade-cp4-majors` from `origin/main` `25b441c` (#1632 on top of CP3 `7deb61d`). Prod is `7deb61d`.
 - Start-of-CP checks: Dependabot open = only #1586 (superseded). All 4A targets still latest on PyPI: anymail 15.3, debug-toolbar 8.0.0, icalendar 7.3.2, invoke 3.0.3, python-dateutil 4.0.0 (requires Python ≥ 3.11, OK), faker 40.63.0, pycparser 3.12. Baseline on `25b441c`: `Ran 108 tests … OK`. Greps for `fail_silently`, `UIDGenerator`, `decoded(`: no hits.
@@ -641,7 +641,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - **CP4 done, on prod.** Next: Checkpoint 5 (gunicorn 27).
 - Follow-ups (not in CP4): drop ignored `DEBUG_TOOLBAR_CONFIG["TAG"]` / `DEBUG_TOOLBAR_PATCH_SETTINGS`; check WAC Sentry for past "Resend does not support inline content-id" errors. Prod-only checks after release: password reset to Ali's address arrives + shows in Resend; serial-console `coderdojochi.util.email()` check; ideally one avatar change to confirm the approval email now arrives.
 
-### Checkpoint 3 — in progress (2026-11-25)
+### Checkpoint 3 — done, on prod (2026-11-25)
 
 - Plan branch rebased onto `origin/main` `9ce8c61` (#1628, Cloudflare page cache: `coderdojochi/middleware.py`, `settings.py` +6, `test_cache_headers.py`; no file CP3 owns). Prod is still `dc113b0` per CP2.
 - Start-of-CP checks: Dependabot open = only #1586 (superseded). Every 3A target is still the latest on PyPI (django 5.2.19 is the latest 5.2.x; 6.1.3 gated by D1). Baseline on `9ce8c61`: `Ran 93 tests … OK` (django 5.2.17, import-export 4.3.9).
