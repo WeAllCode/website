@@ -532,7 +532,6 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
-<<<<<<< HEAD
 ### Checkpoint 7a — in progress (2026-11-26)
 
 - Started: code branch `claude/upgrade-cp7a-uv-python` at `origin/main` `78911c9` (prod = `78911c9`). Laptop uv 0.13.7; PyPI latest 0.13.10. `releases.astral.sh` (Cloudflare) and pypi.org/files.pythonhosted.org (Fastly) have AAAA. uv 0.13.7's 3.13 downloads point at `releases.astral.sh/github/python-build-standalone/…` (latest 3.13.18).
