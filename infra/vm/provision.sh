@@ -192,11 +192,50 @@ start_watcher() {
 	return 0
 }
 
+# uv from PyPI (GitHub has no IPv6), upgraded when older than the floor. The floor matches the
+# uv that writes uv.lock (lock format) and can install uv-managed Pythons (deploy-pull).
+UV_SPEC='uv>=0.13.7,<0.14'
+UV_FLOOR=0.13.7
+
+uv_version() { /opt/uv/bin/uv --version 2>/dev/null | awk '{print $2}'; }
+
+# ensure_uv: install or upgrade /opt/uv; status 1 on failure (caller decides if that's fatal).
+ensure_uv() {
+	local have
+	if [ ! -x /opt/uv/bin/pip ]; then
+		python3 -m venv /opt/uv || return 1
+	fi
+	have=$(uv_version)
+	if [ -z "$have" ] || [ "$(printf '%s\n%s\n' "$UV_FLOOR" "$have" | sort -V | head -n 1)" != "$UV_FLOOR" ]; then
+		log "upgrading uv (have '${have:-none}', need $UV_SPEC)"
+		/opt/uv/bin/pip install --quiet --upgrade pip "$UV_SPEC" || return 1
+	fi
+	ln -sfn /opt/uv/bin/uv /usr/local/bin/uv
+	log "uv --version: $(/opt/uv/bin/uv --version)"
+}
+
+# probe_python_downloads: can the VM fetch a uv-managed CPython over IPv6 (R9)? Logs only.
+probe_python_downloads() {
+	local url code
+	url=$(cd / && env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/root UV_NO_CONFIG=1 \
+		/opt/uv/bin/uv python list --only-downloads --show-urls cpython-3.13-linux-x86_64-gnu 2>/dev/null |
+		awk 'NR == 1 {print $2}') || true
+	case "$url" in
+	https://*) ;;
+	*) url=https://releases.astral.sh/ ;;
+	esac
+	code=$(curl -6 -sS -o /dev/null -I --max-time 20 -w '%{http_code}' "$url" 2>&1) || true
+	log "python download probe: HTTP ${code:-none} for $url"
+}
+
 if [ "${1:-}" = "--install-files" ]; then
 	if [ $# -ne 2 ] || [ ! -d "$2" ]; then die "usage: provision.sh --install-files <dir>"; fi
 	[ "$(id -u)" -eq 0 ] || die "must run as root"
 	install_vm_files "$2"
 	reload_changed
+	# Never fatal here: a PyPI or download hiccup must not fail the deploy that runs this.
+	ensure_uv || log "WARNING: could not install $UV_SPEC; uv is $(uv_version || true)" >&2
+	probe_python_downloads || true
 	exit 0
 fi
 
@@ -260,11 +299,10 @@ if ! dpkg -s caddy >/dev/null 2>&1; then
 fi
 
 # --- uv from PyPI (GitHub has no IPv6) -----------------------------------------------------
-if [ ! -x /opt/uv/bin/uv ]; then
-	python3 -m venv /opt/uv
-	/opt/uv/bin/pip install --quiet --upgrade pip uv
-fi
-ln -sfn /opt/uv/bin/uv /usr/local/bin/uv
+ensure_uv || die "could not install $UV_SPEC"
+# uv-managed Pythons (deploy-pull, non-3.11 releases): one root-owned dir per target (R2).
+install -d -o root -g root -m 0755 /opt/wac-python-prod /opt/wac-python-staging
+install -d -o root -g root -m 0700 /var/cache/wac-uv-python-prod /var/cache/wac-uv-python-staging
 
 # --- Origin certificate and staging basic auth from metadata --------------------------------
 cert=$(md_attr_optional wac-origin-cert) || die "metadata key wac-origin-cert is missing"
