@@ -147,3 +147,17 @@ Second review (fresh sub-agent, the same day):
 Both reviewers confirmed that all the dropped gaps hold up, that no allowlisted view reads `request.GET` or paginates, and that the expression can't leak per-user content.
 
 ## Progress
+
+### Before (2026-11-26 17:26Z, prod)
+
+`/?utm_source=a<r>` → MISS, repeated → HIT, `/?utm_source=b<r>` → MISS. Every distinct query string gets its own cache entry.
+
+### Checkpoint 1 (2026-11-26)
+
+- Branch rebased onto main (`788c94b`); `_base.html:13` was unchanged.
+- Task A (sub-agent): new `infra/terraform/transform.tf` with the expression exactly as planned, plus a README "Edge cache" paragraph. Deviation: the rule has a `description`, like cache.tf.
+- Task B (sub-agent): `_base.html:13` now uses `request.path`; `weallcode/tests.py` gains `EdgeQueryStripTest` (2 tests). Deviation: the canonical assert checks against `settings.META_SITE_DOMAIN`.
+- Lead checks: full suite (199 tests) OK; `ruff check` and `ruff format --check` clean; `terraform fmt -check` and `validate` pass.
+- Mutations, each undone with the exact reverse edit: `get_full_path` fails `test_canonical_drops_query` (sub-agent); `/associate-board/` in transform.tf fails `test_rewrite_paths_match_allowlist` (lead). 2/2 killed.
+- `terraform plan` (`-lock=false`, read-only): `cloudflare_ruleset.transform` to add, plus unrelated drift (`google_compute_instance.web` and `google_storage_bucket_object.bootstrap` in place, from VM changes on main). The apply will use `-target=cloudflare_ruleset.transform`, so the VM isn't touched in this work.
+- Pre-check: `GET …/phases/http_request_transform/entrypoint` → "request is not authorized". The token "weallcode Terraform" has Cache Settings Write, Zone WAF Write, Zone Settings Write, Zone Read, SSL and Certificates Write, Cache Purge, DNS Write and Analytics Read, but **no Transform Rules permission**. Blocked on Ali adding "Transform Rules: Edit".
