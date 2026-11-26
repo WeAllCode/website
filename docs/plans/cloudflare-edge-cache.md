@@ -18,6 +18,8 @@ Acceptance criteria:
 4. AC4: repeating the load test with a unique query string on every request (`/?n=<counter>`) at concurrency 10 and 40 gives p95 under 1 s and 0% errors.
 5. AC5: `terraform plan` shows "No changes" after the apply, and CI passes.
 
+Known gap, accepted: a campaign link without its trailing slash (`/programs/summer-camps?utm_source=…`) gets Django's `APPEND_SLASH` 301 from the origin every time (`private`, `BYPASS`; checked on prod 2026-11-26). The redirect is cheap because it runs before the view, and it lands on the cached URL. Write campaign links with the trailing slash. If a spike still shows these 301s, an edge Redirect Rule is the follow-up.
+
 Out of scope: purge on deploy, the `csrftoken` cookie, `/dojo/` (all dropped below), and caching more views.
 
 ## Gaps checked and dropped
@@ -56,6 +58,7 @@ Owns: new `infra/terraform/transform.tf`, and `infra/terraform/README.md` (the "
    - `ref = "strip_query_public_html"`, `action = "rewrite"`
    - `action_parameters = { uri = { query = { value = "" } } }`
    - expression: `(http.host in {"${var.domain}" "www.${var.domain}"}) and http.request.method in {"GET" "HEAD"} and http.request.uri.query ne "" and not (http.cookie contains "sessionid=") and not (http.cookie contains "messages=") and (http.request.uri.path in {"/" "/our-story/" "/programs/" "/programs/summer-camps/" "/team/" "/join-us/associate-board/" "/privacy/" "/credits/" "/mentors/"} or (starts_with(http.request.uri.path, "/mentors/") and not ends_with(http.request.uri.path, "-avatar/")))`
+   - Above is the logical expression. In HCL, escape every inner quote as `\"` and use `${var.domain}` interpolation, exactly as `infra/terraform/cache.tf:18` does.
    - Add a comment at the top: this list must match `PUBLIC_CACHE_VIEW_NAMES` (Task B's test checks it), and Free can't ignore query strings in the cache key.
 3. README "Edge cache": one paragraph on what the rule strips and why, the kill switch (`enabled = false`, then apply), and the fact that the path list mirrors the middleware allowlist.
 
@@ -64,7 +67,7 @@ Pitfalls:
 - If the API rejects an empty `value`, or v5 stores `""` as null and `terraform plan` keeps showing a diff, don't invent a workaround: record it in Progress and stop for Ali.
 - Free has 10 Transform Rules, and this uses 1.
 
-Proof: `terraform fmt -check`, `terraform validate`, and `terraform plan` showing exactly one ruleset to add and nothing else. Report any drift instead of applying it.
+Proof: in a fresh worktree, first run `terraform -chdir=infra/terraform init -reconfigure -backend-config="bucket=wac-tfstate-wac-website-7bda80"`, and copy the gitignored `terraform.tfvars` from the main checkout. Then `terraform -chdir=infra/terraform fmt -check`, `validate`, and `plan` must show exactly one ruleset to add and nothing else. Report any drift instead of applying it.
 
 ### Task B: canonical without the query string (Checkpoint 1, in parallel with Task A: separate files)
 
@@ -72,7 +75,7 @@ Owns: `weallcode/templates/weallcode/_base.html` (line 13 only), and `weallcode/
 
 1. Change `{{ request.get_full_path }}` to `{{ request.path }}` in the canonical link.
 2. Test `test_canonical_drops_query`: `GET /?utm_source=x` → the response contains `<link rel="canonical" href="…/" />` and doesn't contain `utm_source`. Use `@override_settings(SECURE_SSL_REDIRECT=False)`.
-3. Test `test_rewrite_paths_match_allowlist`: parse the quoted paths out of the `strip_query_public_html` expression in `infra/terraform/transform.tf`, and assert that `{reverse(n) for n in PUBLIC_CACHE_VIEW_NAMES - {"mentor-detail"}}` equals that set, and that `reverse("mentor-detail", kwargs={"pk": 1})` starts with `/mentors/`. Write it against the expression text in Task A step 2; the lead runs it once both tasks are done.
+3. Test `test_rewrite_paths_match_allowlist`: read `Path(settings.BASE_DIR) / "infra/terraform/transform.tf"`, not a path relative to the cwd. Take the `http.request.uri.path in {…}` set from the `strip_query_public_html` expression, unescape the `\"` quotes, and keep only strings that start with `/`, so that `"GET"`, `"sessionid="`, `"-avatar/"` and the host strings are dropped. Then assert that `{reverse(n) for n in PUBLIC_CACHE_VIEW_NAMES - {"mentor-detail"}}` equals that set, and that `reverse("mentor-detail", kwargs={"pk": 1})` starts with `/mentors/`. Write it against the expression text in Task A step 2; the lead runs it once both tasks are done.
 
 Coordination: this touches `weallcode/templates/weallcode/_base.html`, which `docs/plans/frontend-rewrite.md` (4G, line 271) also edits. It's a one-line change on a different line, but rebase onto main before starting and check that line 13 is unchanged.
 
@@ -84,10 +87,11 @@ Proof: `DJANGO_SETTINGS_MODULE=coderdojochi.test_settings uv run python manage.p
 
 Check: the full suite (`DJANGO_SETTINGS_MODULE=coderdojochi.test_settings uv run python manage.py test coderdojochi.tests accounts weallcode`), `uv run ruff check .`, `uv run ruff format --check .`, `terraform fmt -check`, `terraform validate`, `terraform plan` (one add), the Task B mutation, then a draft PR with CI green. Stop for Ali's OK before Checkpoint 2.
 
-**Checkpoint 2: rule live.** This is a live Cloudflare change, so it needs Ali's OK first. Deploy Task B to prod through the normal merge and `release.sh --target prod`, also with Ali's OK.
+**Checkpoint 2: rule live.** This is a live Cloudflare change, so it needs Ali's OK first. Run it from the PR branch, before merging, so main never holds an unapplied or failed `transform.tf`.
 
-1. **Spike first.** Apply with the expression narrowed to `http.host eq "www.weallcode.org" and http.request.uri.path eq "/privacy/" and http.request.uri.query ne ""`. Then, with `r=$RANDOM`, curl `/privacy/?a=$r` and then `/privacy/?b=$r`. The second must be HIT, and `terraform plan` must show "No changes" (no perpetual diff from `value = ""`). If either fails (the cache key still uses the original query), **stop**: remove the rule, record it in Progress, and ask Ali. The fallbacks are a Worker, or accepting the gap.
-2. Widen to the full expression and apply. Run the AC1 and AC2 curls, then `terraform plan` → "No changes" (AC5). For AC2, also log in on prod through `/account/login/?next=/account/` in Ali's browser and check that it lands on `/account/`.
+1. **Spike first.** As a local, uncommitted edit of `transform.tf`, apply with the expression narrowed to `http.host eq "www.weallcode.org" and http.request.uri.path eq "/privacy/" and http.request.uri.query ne ""`. Then, with `r=$RANDOM`, curl `/privacy/?a=$r` and then `/privacy/?b=$r`. The second must be HIT, and `terraform plan` must show "No changes" (no perpetual diff from `value = ""`). If either fails (the cache key still uses the original query), **stop**: remove the rule, record it in Progress, and ask Ali. The fallbacks are a Worker, or accepting the gap.
+2. Restore the full expression with the exact reverse edit (`git diff` on `transform.tf` must be empty), then apply. Run the AC1 and AC2 curls, then `terraform plan` → "No changes" (AC5).
+3. Only then merge the PR and `release.sh --target prod` for Task B's canonical change, each with Ali's OK. For AC2, also log in on prod through `/account/login/?next=/account/` in Ali's browser and check that it lands on `/account/`.
 
 **Checkpoint 3: load test.** This needs Ali's OK, because the rate limit has to come off and go back on, and both are live changes.
 
@@ -130,6 +134,16 @@ A fresh sub-agent reviewed the plan. Each finding is folded into the text above:
 | 8 | Nit | The pre-check named no command | Exact curl and jq added |
 | 9 | Nit | The docs don't confirm URL rewrite on Free, or that it runs before the cache key is built | The spike runs first and stops if either is false |
 
-The reviewer confirmed that all the dropped gaps hold up, that no allowlisted view reads `request.GET` or paginates, and that the expression can't leak per-user content.
+Second review (fresh sub-agent, the same day):
+
+| # | Severity | Finding | Resolution |
+|---|---|---|---|
+| 10 | Should-fix | A link without the trailing slash gets an origin 301 on every click, and the query string survives it | Recorded as an accepted known gap under Goal; campaign links use the trailing slash |
+| 11 | Should-fix | The Task B test depended on the cwd, and a naive quote regex would capture `GET`, the cookies and `-avatar/` | Read via `settings.BASE_DIR`, unescape the quotes, keep only strings starting with `/` |
+| 12 | Should-fix | Checkpoint 2 merged before the spike, so a failed spike would leave main with an unapplied `transform.tf` | Spike from the branch as an uncommitted edit; merge only after it passes |
+| 13 | Nit | The plan showed the expression with bare quotes | Note added: escape as `\"`, like `cache.tf:18` |
+| 14 | Nit | The fresh worktree needs `terraform init`, and the commands lacked `-chdir` | Task A Proof spells out init, tfvars and `-chdir` |
+
+Both reviewers confirmed that all the dropped gaps hold up, that no allowlisted view reads `request.GET` or paginates, and that the expression can't leak per-user content.
 
 ## Progress
