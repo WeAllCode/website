@@ -540,6 +540,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Mutations (agent, reverted, `cmp` identical): `enable_tracing=True` → `TypeError: Unknown option 'enable_tracing'`; old block → `TypeError: Unknown option 'enable_logs'`; `send_default_pii` alone → TypeError.
 - Memory (startup only): `manage.py check` peak RSS 3.0.1 ≈128 MB vs 2.76 ≈129 MB. Runtime/span-streaming memory still needs staging + serial console.
 - Runbook step 0 skipped: no Django/app package changed, so no migrations possible.
+- 2026-11-25: Ali chose "Push + PR, staging when green" and to keep the 3.x `attach_stacktrace=True` default. Pushed `claude/upgrade-cp6-sentry` (`6ac15c2`), opened https://github.com/WeAllCode/website/pull/1640. CI pending. Staging release is pre-approved once CI is green **and** Ali confirms the temporary staging `SENTRY_DSN` + `SENTRY_ENVIRONMENT=staging` secret version (R8); release with `--force`. Merge and prod still need Ali's OK.
 
 ### Checkpoint 5 — done, on prod (2026-11-25). Next: Checkpoint 6 (sentry-sdk 3, gated by D3)
 
