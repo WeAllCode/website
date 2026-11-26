@@ -48,7 +48,7 @@ Option C stays $0/month. The only one-off cost is the optional snapshot.
 | External IPv6 (new address) | No IPv6 SKU, free | $0 |
 | e2-micro + 30 GB `pd-standard` | Free tier, unchanged (same single disk, same VM count) | $0 |
 | External IPv4 | Not added (`enable_ipv4` stays `false`) | $0 |
-| Safety snapshot (step 3.1) | "Storage PD Snapshot" $0.05/GiB-month, prorated, billed on used compressed data, not in the free tier | A few cents if it's deleted within days; ~$0.25–0.40/month if kept (est. 5–8 GiB used) |
+| Safety snapshot (step 3.4) | "Storage PD Snapshot" $0.05/GiB-month, prorated, billed on used compressed data, not in the free tier | A few cents if it's deleted within days; ~$0.25–0.40/month if kept (est. 5–8 GiB used) |
 | `networkmanagement.googleapis.com` (enabled by accident) | Enabling it is free; only connectivity tests bill | Disabled 2026-11-26 |
 
 To keep it at $0, delete the snapshot after the Proof passes (step 3.9). Brief IAP SSH sessions use negligible egress, well inside the 1 GB free tier.
