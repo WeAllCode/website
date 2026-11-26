@@ -60,3 +60,13 @@ class TeamPageVolunteersTest(TestCase):
         self.classes(veteran, 10, days_ago=3 * 365)
         self.classes(veteran, 3)
         assert self.listed() == {"Veteran": 13}
+
+    def test_window_ends_at_last_class_held(self):
+        # The 2 years count back from the last class held, not from today.
+        quiet = self.mentor("Quiet")
+        self.classes(quiet, 3, days_ago=2 * 365 + 200)  # 2.5 years ago
+        early = self.mentor("Early")
+        self.classes(early, 3, days_ago=5 * 365)  # 5 years ago
+        # The last class held: 1 year ago, taught by someone else.
+        self.classes(self.mentor("Last"), 1, days_ago=365)
+        assert self.listed() == {"Quiet": 3}
