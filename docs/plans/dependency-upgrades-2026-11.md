@@ -532,6 +532,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
 
+<<<<<<< HEAD
 ### Checkpoint 7a — in progress (2026-11-26)
 
 - Started: code branch `claude/upgrade-cp7a-uv-python` at `origin/main` `78911c9` (prod = `78911c9`). Laptop uv 0.13.7; PyPI latest 0.13.10. `releases.astral.sh` (Cloudflare) and pypi.org/files.pythonhosted.org (Fastly) have AAAA. uv 0.13.7's 3.13 downloads point at `releases.astral.sh/github/python-build-standalone/…` (latest 3.13.18).
@@ -560,7 +561,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - **CP9 staging smoke done** for `00802e0`. CP7a may use staging. 9G (Chart.js) is being built; it will need a second staging release.
 - 2026-11-26: Ali asked mid-CP: "pull all fonts locally and google charts locally" → chose "Replace with Chart.js" (9G added above; part of #1643).
 
-### Checkpoint 6 — in progress (2026-11-25)
+### Checkpoint 6 — done, on prod (2026-11-26). 1h Sentry watch clean at 02:41Z, so CP7a's prod release may go
 
 - Started: code branch `claude/upgrade-cp6-sentry-939993` at `origin/main` `13b7089` (#1637 docs on top of CP5 `b55d652`). Prod is `b55d652`. D3 gate met: sentry-sdk 3.0.0 (2026-11-23) and 3.0.1 (2026-11-25) on PyPI; 3.0.1 is latest. Dependabot open = only #1586 (superseded).
 - Built (one sub-agent, 6A): commit `6ac15c2` on local branch `claude/upgrade-cp6-sentry`. **Not pushed.** 3 files: `pyproject.toml` (`sentry-sdk>=3.0.1,<4`), `uv.lock` (only sentry-sdk 2.76.0→3.0.1; deps certifi/urllib3 unchanged), `coderdojochi/settings.py` (`import logging`; Sentry block).
@@ -580,7 +581,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - 2026-11-26: Ali chose "Merge + release prod" (memory check moves to the 0.5 visit, as in CP5). **Prod sha before: `b55d65201fd3b3406222da203c75074d80b16ec3`** (CP5; rollback: `release.sh --target prod --force b55d652`). #1640 squash-merged as `7078ef7` (on top of `5a1c0c3`, #1639: docs + `infra/terraform/storage.tf` + README only, no app code). No migrations, so no backup step.
 - `release.sh --target prod 7078ef7cf4714a543baa7e25333e1bba297adcf7` (`origin/main` = that sha): serial log 01:39:05Z `+ sentry-sdk==3.0.1`, 01:40:46Z gunicorn listening, 01:40:51Z `wac-web is running 7078ef7…`, 01:40:55Z `done`, no Traceback/rollback. **Prod sha after: `7078ef7cf4714a543baa7e25333e1bba297adcf7`.** `/etc/wac/reminders-enabled` not touched.
 - Prod smoke: `cp6-prod` (01:41:06Z, inside the 60 s edge TTL) PASS 0/24; `cp6-prod-r2` FAIL 1/24 (mobile `/account/signup/`, new host `csp.withgoogle.com` = the flaky reCAPTCHA CSP beacon seen in CP3); `cp6-prod-r3` **PASS 0/24**. Origin `sessionid=x` `/privacy/` 200.
-- Prod Sentry (via CLI, 30 min window at ~01:45Z): Logs from `sdk.version` 3.0.1 arriving (34), spans 3.0.1 (130), **0 error events**. 1h watch: re-query at ~02:41Z.
+- Prod Sentry (via CLI, 30 min window at ~01:45Z): Logs from `sdk.version` 3.0.1 arriving (34), spans 3.0.1 (130), **0 error events**. **1h watch passed** (01:40–02:41Z): 0 prod error events, 0 issues first or last seen since 01:40Z; Sentry Logs on 3.0.1: 183 info, 14 warn.
 - The plan's prod check "404 `sentry_event_id`" is n/a: the custom 404 handler never runs (see finding above).
 - Still open (Ali, 0.5 visit): serial-console `systemctl show wac-web wac-staging -p MemoryCurrent,MemoryPeak` vs baseline; then remove the temporary staging DSN secret version. Also from earlier: the serial-console `systemctl show wac-staging -p MemoryCurrent,MemoryPeak` vs 0.5 baseline; then remove the temporary staging DSN.
 
