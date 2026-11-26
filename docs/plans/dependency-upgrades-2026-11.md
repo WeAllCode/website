@@ -547,6 +547,9 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 - Memory with staging on 3.13 (03:47–04:08Z, after the smoke): n=19, median **868 MiB (+3.6%)**, p90 893 (−0.4%), max 907 (+0.8%). **Within +10% (AC5).** Whole-VM figure, includes page cache (the new CPython install and venv add some), so a per-unit `MemoryPeak` is still open for the 0.5 visit.
 - Staging Sentry 03:43–04:08Z: 0 error events; Sentry Logs arriving (31 info, 2 warn) — the temporary staging DSN from CP6 is still set.
 - 2026-11-26 ~04:20Z: Ali chose "Merge + prod", and "Yes, after prod" for squash-merging plan PR #1630. **Prod sha before: `933ac62efb8eb5e5090ba448bab377604fbd77a1`** (CP9; rollback: `release.sh --target prod --force 933ac62`; `/usr/bin/python3.11` stays installed). #1644 squash-merged as `6c1c1a2` (directly on `933ac62`). No migrations, so no backup step. CP9 1h Sentry watch logged at 04:15Z (above); my errors query for 03:15–04:23Z also = 0 prod events.
+- `release.sh --target prod 6c1c1a20292019d779dc4826a27f8f039c2b8c38` (04:22Z; `origin/main` = that sha, prod pointer was `933ac62`). Serial: 04:22:21Z **`python 3.13 (uv-managed): installing into /opt/wac-python-prod`**, `Installed Python 3.13.18 in 3.20s`, 04:22:27Z `Using CPython 3.13.18 interpreter at: /opt/wac-python-prod/…/python3.13`, `Installed 65 packages in 4.90s`, 0 `Building`/`Built` lines (no sdist), 04:25:02Z gunicorn listening, 04:25:08Z `wac-web is running 6c1c1a2…`, 04:25:11Z `done`, no Traceback/rollback. **Prod sha after: `6c1c1a20292019d779dc4826a27f8f039c2b8c38`.** `/etc/wac/reminders-enabled` not touched.
+- Prod smoke: `cp7b-prod` (04:25:30Z, inside the 60 s edge TTL) PASS 0/24; `cp7b-prod-r2` (past the TTL) **PASS 0/24**, same page hosts as `cp9-prod`. Origin `sessionid=x` `/privacy/` 200 (`cf-cache-status: DYNAMIC`).
+- Sentry 1h watch running (04:25–05:25Z).
 
 ### Checkpoint 7a — done, on prod (2026-11-26). Next: Checkpoint 7b (Python 3.13)
 
