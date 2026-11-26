@@ -1,12 +1,14 @@
 import re
 from http import HTTPStatus
 
+from allauth.account.utils import user_display as allauth_user_display
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
 from django.test import Client
 from django.test import TestCase
 from django.urls import reverse
 
+from accounts.display import user_display
 from coderdojochi.factories import CDCUserFactory
 from coderdojochi.models import CDCUser
 
@@ -78,3 +80,20 @@ class AccountHomeUnknownRoleTest(TestCase):
         response = self.client.post(reverse("account_home"), {}, secure=True)
         assert response.status_code == HTTPStatus.FOUND
         assert response["Location"] == reverse("welcome")
+
+
+class UserDisplayTest(TestCase):
+    # #846: allauth showed the generated username on screens and in emails.
+    def test_full_name(self):
+        user = CDCUserFactory(
+            first_name="Ada", last_name="Lovelace", email="ada@example.com"
+        )
+        assert user_display(user) == "Ada Lovelace"
+
+    def test_falls_back_to_email(self):
+        user = CDCUserFactory(email="ada@example.com")
+        assert user_display(user) == "ada@example.com"
+
+    def test_allauth_uses_it(self):
+        user = CDCUserFactory(first_name="Ada", last_name="Lovelace")
+        assert allauth_user_display(user) == "Ada Lovelace"

@@ -317,6 +317,7 @@ LOGIN_URL = "/account/login"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_DISPLAY = "accounts.display.user_display"
 ACCOUNT_SIGNUP_FORM_CLASS = "coderdojochi.forms.SignupForm"
 SOCIALACCOUNT_ADAPTER = "coderdojochi.social_account_adapter.SocialAccountAdapter"
 # Unix-socket gunicorn behind Cloudflare has no REMOTE_ADDR; allauth needs a client IP.
