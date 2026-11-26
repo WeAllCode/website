@@ -285,8 +285,8 @@ def cdc_admin(request, template_name="admin.html"):
         key=operator.itemgetter(0),
     )
 
-    # Average Age
-    average_age = int(round(sum(ages) / float(len(ages))))
+    # Average Age (0 when nobody has checked in yet)
+    average_age = round(sum(ages) / len(ages)) if ages else 0
 
     return render(
         request,

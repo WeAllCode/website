@@ -67,5 +67,3 @@ urlpatterns = [
         RedirectView.as_view(pattern_name="weallcode-join-us"),
     ),
 ]
-
-handler404 = "weallcode.views.page_not_found_view"
