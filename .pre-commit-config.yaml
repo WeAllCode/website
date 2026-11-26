@@ -1,4 +1,4 @@
-exclude: "^docs/|/migrations/|devcontainer.json"
+exclude: "^docs/|/migrations/|devcontainer.json|^coderdojochi/static/vendor/"
 default_stages: [pre-commit]
 minimum_pre_commit_version: "3.2.0"
 
