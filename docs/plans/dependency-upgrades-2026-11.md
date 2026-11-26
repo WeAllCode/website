@@ -534,6 +534,7 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 
 - Started: code branch `claude/upgrade-cp7a-uv-python` at `origin/main` `78911c9` (prod = `78911c9`). Laptop uv 0.13.7; PyPI latest 0.13.10. `releases.astral.sh` (Cloudflare) and pypi.org/files.pythonhosted.org (Fastly) have AAAA. uv 0.13.7's 3.13 downloads point at `releases.astral.sh/github/python-build-standalone/…` (latest 3.13.18).
 - R9 gate: Ali declined manual serial-console steps ("do what you can"). So 7A was changed (above, and R3/R9 rows): uv upgrade + astral IPv6 probe run inside the prod deploy's `--install-files`, results read from `gcloud compute instances get-serial-port-output` (works from the laptop with `CLOUDSDK_ACTIVE_CONFIG_NAME=wac`).
+- Built + pushed (lead, no sub-agent; 3 files): commit `f033f99` on `claude/upgrade-cp7a-uv-python`, https://github.com/WeAllCode/website/pull/1642. `shellcheck infra/vm/*.sh infra/vm/wac-manage` clean; pre-commit on the 3 files passed. Local check with uv 0.13.7 (same env as deploy-pull): `python install --no-bin 3.13` → 3.13.18, `python find 3.13` → managed binary, no `~/.local/bin` links. **Correction to 7A text:** `uv python find --managed-python` errors when `UV_PYTHON_PREFERENCE` is set; dropped it (`only-managed` already enforces it) and added `--no-bin`. uv floor compare (`sort -V`) checked for none/0.9.2/0.13.6 (upgrade) and 0.13.7/0.13.10/0.14.0 (keep). CI pending.
 
 ### Checkpoint 9 — in progress (2026-11-26)
 
