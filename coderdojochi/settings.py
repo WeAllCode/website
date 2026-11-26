@@ -361,9 +361,10 @@ if SENTRY_DSN:
                 breadcrumb_level=logging.INFO,
             ),
         ],
-        # Sample 10% of transactions by default to stay within the free
-        # span quota. Override with SENTRY_TRACES_SAMPLE_RATE.
-        traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.1),
+        # Sample every transaction. The sponsored Business plan's span quota
+        # (1.1B/mo) dwarfs our traffic, and Cloudflare serves most anonymous
+        # pages from cache. Override with SENTRY_TRACES_SAMPLE_RATE.
+        traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=1.0),
         # Attach the django.contrib.auth user (id, email, username) and
         # client IP to events. Replaces send_default_pii=True. Stack frame
         # locals with sensitive names (password, token, secret, ...) are
