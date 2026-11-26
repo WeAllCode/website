@@ -165,12 +165,12 @@ class MentorForm(CDCModelForm):
         required=False,
     )
 
+    # Required so staff can reach volunteers on class day (#896).
     phone = forms.CharField(
         widget=forms.TextInput(
             attrs={"placeholder": "", "class": "form-control"},
         ),
         label="Phone",
-        required=False,
     )
 
     home_address = forms.CharField(
