@@ -328,6 +328,7 @@ Ali (2026-11-24): vendor every third-party font, CSS and JS file into the repo a
 - Google reCAPTCHA (`django_recaptcha` widget): it is a live Google service and must load from Google.
 - Google Charts `https://www.gstatic.com/charts/loader.js` (`dashboard/admin.html:19`, `meeting_check_in.html:17`, `session_check_in.html:57`): Google's terms don't allow self-hosting the loader, which also fetches more code at runtime.
 - `https://www.google.com/jsapi` (`dashboard/session_stats.html:12`): this is the old Charts loader. Switch it to `gstatic.com/charts/loader.js` with `google.charts.load` in 9C, so there's one allowed host.
+- **Added 2026-11-26 (Ali, from the CP0 host list):** the donation widget (`embed.donsplus.com` script in `_base.html`, which loads `embed.double.giving`), `gravatar.com` / `www.gravatar.com` (mentor avatars and the default avatar in `app.css`), and `static.cloudflareinsights.com` (Cloudflare Web Analytics, injected at the edge, never in our HTML). All are live services, not libraries. 9E's test allowlist adds `embed.donsplus.com`; the Playwright host check allows all four. Also allowed in the Playwright check only: `csp.withgoogle.com` (reCAPTCHA CSP beacon, flaky since CP3), `*.google-analytics.com` (GA4 beacons), `www.youtube.com` iframe if a page embeds one.
 - Google Analytics: the dead UA `analytics.js` snippet (`weallcode/templates/weallcode/_base.html:86-94`) is removed, and GA4 `https://www.googletagmanager.com/gtag/js?id=<GA_MEASUREMENT_ID>` replaces it (D5). Google's tag can't be self-hosted, so `www.googletagmanager.com` is on the allowlist. GA4 sends hits to `*.google-analytics.com` from the browser; that's beacon traffic, not an asset.
 
 **Vendored layout (fixed paths, so templates and files can be built in parallel).** Everything goes under `coderdojochi/static/vendor/`, which is served as `{% static 'vendor/…' %}` because `coderdojochi` is an installed app. Each library's license file sits next to it.
@@ -528,6 +529,10 @@ Fresh review sub-agent, 2026-11-24. Every finding is folded into the plan text a
 ## Progress
 
 (The builder writes one entry per checkpoint: date, what was done, check output, evidence, prod sha before/after.)
+
+### Checkpoint 9 — in progress (2026-11-26)
+
+- Started 02:13Z: code branch `claude/upgrade-cp9-frontend` from `origin/main` `78911c9` (prod = `78911c9`). Dependabot open = only #1586 (superseded). Ali chose to allow all 4 CP0 gap hosts (donation widget, gravatar, Cloudflare Insights); written into the CP9 allowlist above. No new jQuery/Foundation-dependent code (Ali).
 
 ### Checkpoint 6 — in progress (2026-11-25)
 
