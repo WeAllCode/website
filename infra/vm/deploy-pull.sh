@@ -192,6 +192,46 @@ if [ "$target" = staging ]; then
 	/usr/sbin/nft -f /etc/wac/nftables-wac.nft
 fi
 
+# --- Python --------------------------------------------------------------------------------
+# .python-version picks the interpreter. 3.11 is Debian's /usr/bin/python3.11. Any other
+# version is a uv-managed CPython that root installs into a per-target dir (R2): from cwd /,
+# with a clean env and UV_NO_CONFIG, so nothing in the release (pyproject [tool.uv], uv.toml)
+# can choose the download source. uv checks each download against its built-in sha256, so a
+# staging release can only ever place an official build, and only in staging's own dir.
+py_ver=3.11
+if [ -f "$release_dir/.python-version" ]; then
+	py_ver=$(tr -d '[:space:]' <"$release_dir/.python-version")
+fi
+[[ "$py_ver" =~ ^3\.1[1-4]$ ]] || die ".python-version '$py_ver' is not 3.11-3.14"
+
+if [ "$py_ver" = 3.11 ]; then
+	python=/usr/bin/python3.11
+	log "python $py_ver (system): $python"
+else
+	py_dir=/opt/wac-python-$target
+	py_cache=/var/cache/wac-uv-python-$target
+	install -d -o root -g root -m 0755 "$py_dir"
+	install -d -o root -g root -m 0700 "$py_cache"
+	uv_root() {
+		(cd / && env -i \
+			PATH=/usr/local/bin:/usr/bin:/bin \
+			HOME=/root \
+			UV_NO_CONFIG=1 \
+			UV_PYTHON_PREFERENCE=only-managed \
+			UV_PYTHON_INSTALL_DIR="$py_dir" \
+			UV_CACHE_DIR="$py_cache" \
+			"$UV" "$@")
+	}
+	log "python $py_ver (uv-managed): installing into $py_dir"
+	# --no-bin: no python3.x links in /root/.local/bin. only-managed (above) = never a system one.
+	uv_root python install --no-bin "$py_ver"
+	chmod -R a+rX "$py_dir"
+	python=$(uv_root python find "$py_ver") || die "uv python find $py_ver failed"
+	[ -x "$python" ] || die "uv python find $py_ver gave '$python'"
+	log "python $py_ver (uv-managed): $python"
+	# Never delete an installed version here: kept releases' venvs symlink into $py_dir.
+fi
+
 # --- Build ---------------------------------------------------------------------------------
 install -d -o "$app_user" -g "$app_user" -m 0750 "$uv_cache"
 (
@@ -199,7 +239,7 @@ install -d -o "$app_user" -g "$app_user" -m 0750 "$uv_cache"
 	runuser -u "$app_user" -- env -i \
 		PATH=/usr/local/bin:/usr/bin:/bin \
 		HOME=/nonexistent \
-		UV_PYTHON=/usr/bin/python3.11 \
+		UV_PYTHON="$python" \
 		UV_PYTHON_DOWNLOADS=never \
 		UV_CACHE_DIR="$uv_cache" \
 		UV_NO_CONFIG=1 \

@@ -67,13 +67,22 @@ On the VM, `wac-deploy@prod.timer` and `wac-deploy@staging.timer` also run `wac-
 1. Reads the pointer. If it equals `/srv/wac/<target>/deployed` (whole-string compare), it stops. If it equals `/srv/wac/<target>/failed`, it also stops: a failed pointer is skipped until it changes.
 2. Downloads the tarball and extracts it to `/srv/wac/<target>/releases/<UTC time>-<sha12>`, owned by the target's user.
 3. Reads the latest secret version: `wac-env-<target>`, and for staging also `wac-staging-sa-key`. It refuses an env that sets `DATABASE_URL`, or a staging env whose `EMAIL_BACKEND` isn't the console backend.
-4. Runs `uv sync --frozen --no-dev` as the target's user (system Python 3.11, no uv Python downloads, its own uv cache).
-5. Runs `migrate` and `collectstatic` through `wac-manage`.
-6. Prod only: reinstalls changed infra files.
-7. Installs `/etc/wac/env-<target>`, flips `current` and restarts `wac-web` or `wac-staging`. If the service doesn't come up, it flips back to the previous release and env and restarts that.
-8. Writes `deployed` and keeps the newest 3 releases.
+4. Picks the Python from the release's `.python-version` (must be `3.11`–`3.14`). `3.11` is Debian's `/usr/bin/python3.11`. Any other version is a uv-managed CPython (see "Python versions" below).
+5. Runs `uv sync --frozen --no-dev` as the target's user with that Python (no uv Python downloads, its own uv cache).
+6. Runs `migrate` and `collectstatic` through `wac-manage`.
+7. Prod only: reinstalls changed infra files, upgrades uv when it's older than the floor in `provision.sh` (`UV_SPEC`), and logs a probe of the CPython download host (`python download probe: HTTP …`). Neither of the last two can fail the deploy.
+8. Installs `/etc/wac/env-<target>`, flips `current` and restarts `wac-web` or `wac-staging`. If the service doesn't come up, it flips back to the previous release and env and restarts that.
+9. Writes `deployed` and keeps the newest 3 releases.
 
-The gunicorn restart in step 7 takes ~20 s (`--preload` on the e2-micro), and its socket is gone meanwhile. Caddy doesn't return 502 straight away: every `reverse_proxy` (snippet `wac_proxy` in the `Caddyfile`) has `lb_try_duration 30s` / `lb_try_interval 250ms`, so it holds the request and redials until gunicorn is back. 30 s is well under Cloudflare's 100 s origin timeout. Only failed dials are retried, so no request reaches gunicorn twice; a restart longer than 30 s still gets a 502. The `Caddyfile` also strips Caddy's `Via` response header.
+### Python versions
+
+Debian 12 only ships Python 3.11. For any other `.python-version`, `wac-deploy-pull` runs `uv python install <version>` as root into `/opt/wac-python-<target>` (cache `/var/cache/wac-uv-python-<target>`), then builds the venv against it. uv downloads the build from `releases.astral.sh` over IPv6 and checks it against the sha256 built into uv.
+
+Isolation: a staging release (any branch) can make root download a CPython build, but only into staging's own dir, and only an official one. The version must match `^3\.1[1-4]$`; uv runs from `/` with a clean env and `UV_NO_CONFIG=1`, so nothing in the release (`[tool.uv]`, `uv.toml`, mirror settings) is read; and uv rejects a download whose sha256 doesn't match. Prod never uses `/opt/wac-python-staging`.
+
+The venvs symlink into these dirs, so don't delete an installed version while a kept release uses it. Rolling back to a 3.11 release always works: `/usr/bin/python3.11` stays installed and each release keeps its own venv.
+
+The gunicorn restart in step 8 takes ~20 s (`--preload` on the e2-micro), and its socket is gone meanwhile. Caddy doesn't return 502 straight away: every `reverse_proxy` (snippet `wac_proxy` in the `Caddyfile`) has `lb_try_duration 30s` / `lb_try_interval 250ms`, so it holds the request and redials until gunicorn is back. 30 s is well under Cloudflare's 100 s origin timeout. Only failed dials are retried, so no request reaches gunicorn twice; a restart longer than 30 s still gets a 502. The `Caddyfile` also strips Caddy's `Via` response header.
 
 Any failure leaves `current` and the env file as they were and writes the pointer to `failed`. To retry the same pointer, run `sudo rm /srv/wac/<target>/failed`, or release again with `--force`.
 
