@@ -18,6 +18,12 @@ class Student(CommonInfo):
     last_name = models.CharField(
         max_length=255,
     )
+    # What the student likes to be called (#1549), shown to mentors at check-in.
+    preferred_name = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+    )
     birthday = models.DateField()
     gender = models.CharField(
         max_length=255,
@@ -68,6 +74,11 @@ class Student(CommonInfo):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    @property
+    def display_first_name(self):
+        """Preferred name if given, else the first name."""
+        return self.preferred_name or self.first_name
 
     def is_registered_for_session(self, session):
         from .order import Order

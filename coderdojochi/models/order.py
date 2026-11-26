@@ -53,6 +53,13 @@ class Order(CommonInfo):
     day_reminder_sent = models.BooleanField(
         default=False,
     )
+    # Why the student cancelled or didn't come (#930): set by the guardian when
+    # cancelling online, or by staff in the admin for no-shows.
+    cancel_reason = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+    )
 
     def __str__(self):
         return f"{self.student.full_name} | {self.session.course.title}"

@@ -14,6 +14,8 @@
 
         <form class="form" method="POST" action="">
             {% csrf_token %}
+            <label for="cancel_reason">Can you tell us why? (optional)</label>
+            <textarea id="cancel_reason" name="cancel_reason" rows="2" maxlength="255"></textarea>
             <button class="button tertiary large">Yes, cancel</button>
             <a href="{{ session.get_absolute_url }}" class="button large secondary">Nevermind</a>
         </form>
