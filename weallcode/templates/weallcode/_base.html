@@ -78,7 +78,8 @@
     {% include 'weallcode/_footer.html' %}
   </div>
 
-  <script type="module" src="{% static 'weallcode/js/site.js' %}"></script>
+  {# data-cfasync: keep Cloudflare Rocket Loader off this module; it rewrites it into a CORS-mismatched preload. #}
+  <script type="module" src="{% static 'weallcode/js/site.js' %}" data-cfasync="false"></script>
 
   {% block extra_script %}{% endblock %}
   {% block extra_body %}{% endblock %}
