@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Case
 from django.db.models import Count
 from django.db.models import IntegerField
+from django.db.models import Q
 from django.db.models import When
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -181,12 +182,29 @@ def cdc_admin(request, template_name="admin.html"):
         )
         return redirect("weallcode-home")
 
+    # Count orders and mentor orders in this one query (distinct, because two
+    # reverse joins multiply rows) so the template doesn't query per row.
     sessions = (
         Session.objects.select_related()
         .annotate(
-            num_orders=Count("order"),
+            num_orders=Count("order", distinct=True),
             num_attended=Count(
-                Case(When(order__check_in__isnull=False, then=1)),
+                "order",
+                filter=Q(order__check_in__isnull=False),
+                distinct=True,
+            ),
+            num_mentor_orders=Count(
+                "mentororder",
+                filter=Q(mentororder__is_active=True),
+                distinct=True,
+            ),
+            num_mentor_attended=Count(
+                "mentororder",
+                filter=Q(
+                    mentororder__is_active=True,
+                    mentororder__check_in__isnull=False,
+                ),
+                distinct=True,
             ),
             is_future=Case(
                 When(start_date__gte=timezone.now(), then=1),
@@ -213,29 +231,33 @@ def cdc_admin(request, template_name="admin.html"):
         .order_by("-start_date")
     )
 
-    orders = Order.objects.select_related()
+    total_past_orders_count = Order.objects.filter(is_active=True).count()
 
-    total_past_orders = orders.filter(is_active=True)
-    total_past_orders_count = total_past_orders.count()
-    total_checked_in_orders = orders.filter(
-        is_active=True,
-        check_in__isnull=False,
+    # Only the three columns the stats need, not whole Order/Student/Session
+    # rows: building thousands of model instances took seconds on the VM.
+    checked_in = list(
+        Order.objects.filter(is_active=True, check_in__isnull=False).values_list(
+            "student__gender",
+            "student__birthday",
+            "session__start_date",
+        ),
     )
-    total_checked_in_orders_count = total_checked_in_orders.count()
+    total_checked_in_orders_count = len(checked_in)
+
+    # Unsaved Students reuse the model's gender cleanup and age rules.
+    students = [
+        (Student(gender=gender, birthday=birthday), start_date)
+        for gender, birthday, start_date in checked_in
+    ]
 
     # Genders
-    gender_count = list(
-        Counter(e.student.get_clean_gender() for e in total_checked_in_orders).items(),
-    )
     gender_count = sorted(
-        list(dict(gender_count).items()),
+        Counter(student.get_clean_gender() for student, _ in students).items(),
         key=operator.itemgetter(1),
     )
 
     # Ages
-    ages = sorted(
-        list(e.student.get_age(e.session.start_date) for e in total_checked_in_orders),
-    )
+    ages = sorted(student.get_age(start_date) for student, start_date in students)
     age_count = sorted(
         list(dict(list(Counter(ages).items())).items()),
         key=operator.itemgetter(0),

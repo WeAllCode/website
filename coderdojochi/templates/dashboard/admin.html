@@ -232,14 +232,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 </td>
                 <td class="text-center">
                     {% if not session.external_enrollment_url %}
-                        {{ session.get_checked_in_mentor_orders|length|default:'-' }}
+                        {{ session.num_mentor_attended|default:'-' }}
                     {% else %}
                         &times;
                     {% endif %}
                 </td>
                 <td class="text-center">
                     {% if not session.external_enrollment_url %}
-                        {{ session.get_mentor_orders|length|default:'-' }}
+                        {{ session.num_mentor_orders|default:'-' }}
                     {% else %}
                         &times;
                     {% endif %}
