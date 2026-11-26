@@ -92,5 +92,5 @@ docker compose build
 
 - Uses `django-environ` for environment variable management
 - `.env` file for local development settings
-- Heroku-ready with `django-heroku` integration
-- AWS S3 for production static/media files
+- Production runs on a GCP e2-micro VM (see `infra/vm/README.md`)
+- Google Cloud Storage for production static/media files

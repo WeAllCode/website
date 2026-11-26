@@ -53,8 +53,7 @@ dependencies = [
     # Monitoring & Logging
     "sentry-sdk>=3.0.1,<4",
 
-    # Task Management (Heroku Procfile release phase runs `invoke release`;
-    # move to dev once Procfile/app.json/tasks.py release are removed)
+    # Task Management (docker-compose runs `invoke release start`)
     "invoke>=3.0.3,<4",
 ]
 
