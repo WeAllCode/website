@@ -1,7 +1,7 @@
 {% load static %}
 
-<div class="text-center height-100 {% if is_on_dark %}bg-white{% else %}bg-dark-blue{% endif %}">
-  <div class="position-relative">
+<div class="t-center h-100 {% if is_on_dark %}bg-white{% else %}bg-dark-blue{% endif %}">
+  <div class="relative">
     {% if link %}
       <a href="{{ link }}" class="profile-image-wrapper bg-avatar">
     {% else %}
@@ -21,17 +21,17 @@
     {% endif %}
   </div>
 
-  <div class="padding-vertical-2 padding-horizontal-1">
+  <div class="py-2 px-1">
     {% if is_small %}
-      <h6 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h6>
+      <h6 class="t-upper {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h6>
     {% else %}
-      <h4 class="text-uppercase {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h4>
+      <h4 class="t-upper {% if is_on_dark %}text-primary{% else %}text-white{% endif %}">{{ name }}</h4>
     {% endif %}
 
     {% if title %}
-      <div class="line width-25 bg-{{ color|default:"secondary" }} margin-vertical-half"></div>
+      <div class="line w-25 bg-{{ color|default:"secondary" }} my-h"></div>
 
-      <div class="text-uppercase text-grey-for-white">
+      <div class="t-upper text-grey-for-white">
         {% if is_small %}<small>{% endif %}
         <p><strong>{{ title }}</strong></p>
         {% if description %}

@@ -325,6 +325,30 @@
     max-height: 7rem;
   }
 
+  /* Twins of the brand-legacy.css rules for Foundation grid cells: the guards
+     name the new vocabulary (.cols, .cols.pad-x). [class~="cell"] keeps these
+     off Foundation cells while they exist (drop it in 4G, when brand-legacy.css
+     goes and these two rules are the only copies). */
+  .program-icon:not(:where(.cols.pad-x > *, [class~="cell"])) {
+    padding-left: 10px;
+  }
+
+  .program-icon:not(:where(.cols > *, [class~="cell"])) {
+    width: 100%;
+  }
+
+  /* INTERIM, delete in 4G with brand-legacy.css: that file's unguarded
+     `.program-icon:not(:where(.grid-x > .cell, …))` also matches a cell in
+     .cols. A higher-specificity revert-layer drops this layer's width and
+     padding-left, so the .cols cell geometry (layout layer) applies. */
+  .cols.pad-x > .program-icon {
+    padding-left: revert-layer;
+  }
+
+  .cols > .program-icon {
+    width: revert-layer;
+  }
+
   .small-container {
     margin: 0 auto;
   }
@@ -409,6 +433,25 @@
     @media screen and (min-width: 40em) {
       padding: 1.2rem;
       text-align: right;
+    }
+  }
+
+  /* Twin of `.sub-menu a:not(:where(.menu .active > a))` in brand-legacy.css. */
+  .sub-menu a:not(:where(.nav-list a[aria-current="page"], [class~="active"] > a)) {
+    color: var(--white);
+  }
+
+  /* Twins of the .menu / .active sub-menu rules in brand-legacy.css. */
+  @media screen and (min-width: 40em) {
+    .sub-menu .nav-list {
+      justify-content: flex-end;
+      margin-left: -1.2rem;
+      margin-right: -1.2rem;
+    }
+
+    .sub-menu a[aria-current="page"] {
+      padding-bottom: calc(1.2rem - 5px);
+      border-bottom: 5px solid var(--black);
     }
   }
 
@@ -501,9 +544,63 @@
     max-width: 500px;
     margin: 0 auto;
   }
+
+  /* Twins of the Foundation-named rules in brand-legacy.css. */
+  .learn-more-signup-form .cta {
+    width: 100%;
+  }
+
+  .cta.text-white {
+    color: var(--white);
+  }
+
+  .cta.cta-tertiary {
+    background-color: var(--tertiary);
+    color: white;
+  }
+
+  /* Fix link on specific background colors. `.bg-bg-primary` in the legacy
+     hover rule is a typo that matches nothing, so only .bg-dark-blue gets it. */
+  .class-info-box .bg-dark-blue a:not(.cta, [class~="button"]),
+  .class-info-box .bg-primary a:not(.cta, [class~="button"]) {
+    color: var(--white);
+    border-bottom: 1px solid var(--white);
+  }
+
+  .class-info-box .bg-dark-blue a:not(.cta, [class~="button"]):focus,
+  .class-info-box .bg-dark-blue a:not(.cta, [class~="button"]):hover {
+    border-bottom-width: 3px;
+  }
+
+  /* Foundation's .h4 on a non-heading element (<p class="t-h4">). */
+  .t-h4 {
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-weight: normal;
+    color: inherit;
+    text-rendering: optimizeLegibility;
+    font-size: 1.125rem;
+    line-height: 1.4;
+    margin-block: 0 0.5rem;
+
+    @media print, screen and (min-width: 40em) {
+      font-size: 1.5625rem;
+    }
+  }
 }
 
 @layer pages {
+  /* INTERIM, delete in 4G with brand-legacy.css: its `a:not(.button)` rules
+     also match a `.cta` link in .class-info-box. The pages layer beats them
+     (and the .cta colours are re-applied from the component tokens). */
+  .class-info-box :is(.bg-dark-blue, .bg-primary) a.cta {
+    border-bottom: 1px solid transparent;
+  }
+
+  .class-info-box :is(.bg-dark-blue, .bg-primary) a.cta:not(.text-white) {
+    color: var(--cta-fg);
+  }
+
   /* Page: Home */
 
   body.home .hero-logo {

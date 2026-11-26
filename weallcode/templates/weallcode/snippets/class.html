@@ -1,21 +1,21 @@
-<div class="class-info-box grid-x text-white margin-top-2">
-  <div class="cell medium-8 bg-dark-blue padding-2">
+<div class="class-info-box cols text-white mt-2">
+  <div class="md-span-8 bg-dark-blue p-2">
     <a class="text-white" href="{{ session.get_absolute_url }}">
       <h2>{{ session.course.code }}</h2>
       <h4>{{ session.course.title }}</h4>
     </a>
     <p>{{ session.course.description|safe|truncatechars_html:280 }}</p>
 
-    <!-- <div class="grid-x">
-      <div class="cell medium-6">
-        <h6 class="text-uppercase margin-top-1">Prerequisities</h6>
+    <!-- <div class="cols">
+      <div class="md-span-6">
+        <h6 class="t-upper mt-1">Prerequisities</h6>
         <ul class="list-plus">
           <li>HTML 1.0</li>
           <li>CSS 1.0</li>
         </ul>
       </div>
-      <div class="cell medium-6">
-        <h6 class="text-uppercase margin-top-1">Pathways</h6>
+      <div class="md-span-6">
+        <h6 class="t-upper mt-1">Pathways</h6>
         <ul class="list-plus">
           <li>Front-end Development</li>
           <li>Design</li>
@@ -23,12 +23,12 @@
       </div>
     </div> -->
   </div>
-  <div class="cell medium-4 bg-primary padding-2">
-    <h5 class="text-uppercase">{{ session.start_date|date }}</h5>
+  <div class="md-span-4 bg-primary p-2">
+    <h5 class="t-upper">{{ session.start_date|date }}</h5>
 
     <p>{{ session.start_time|time:"P" }} to {{ session.end_time|time }}</p>
 
-    <h5 class="text-uppercase margin-top-2">{{ session.location.name }}</h5>
+    <h5 class="t-upper mt-2">{{ session.location.name }}</h5>
 
     {% if session.location.address %}
 
@@ -40,6 +40,6 @@
 
     {% endif %}
 
-    <a href="{{ session.get_absolute_url }}" class="button secondary width-100 text-uppercase margin-top-1">{{ session.class_status }}</a>
+    <a href="{{ session.get_absolute_url }}" class="cta cta-secondary w-100 t-upper mt-1">{{ session.class_status }}</a>
   </div>
 </div>
