@@ -1,5 +1,9 @@
+from datetime import timedelta
+
+from django.db.models import Q
 from django.db.models.aggregates import Count
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 from coderdojochi.models import Mentor
@@ -8,6 +12,10 @@ from weallcode.models.board_member import BoardMember
 from weallcode.models.staff import StaffMember
 
 from .common import DefaultMetaTags
+
+# A volunteer is listed once they've taught this many classes in this many years.
+RECENT_MIN_CLASSES = 3
+RECENT_YEARS = 2
 
 
 class TeamView(DefaultMetaTags, TemplateView):
@@ -26,9 +34,22 @@ class TeamView(DefaultMetaTags, TemplateView):
 
     # Volunteers
     def get_volunteers(self, context, volunteers):
-        all_volunteers = volunteers.annotate(
-            session_count=Count("mentororder"),
-        ).order_by("-user__role", "-session_count")
+        attended = Q(mentororder__is_active=True, mentororder__check_in__isnull=False)
+        recent_since = timezone.now() - timedelta(days=365 * RECENT_YEARS)
+        all_volunteers = (
+            volunteers.annotate(
+                # Classes actually taught (checked in), not sign-ups (#688).
+                session_count=Count("mentororder", filter=attended),
+                recent_count=Count(
+                    "mentororder",
+                    filter=attended
+                    & Q(mentororder__session__start_date__gte=recent_since),
+                ),
+            )
+            # Only volunteers active lately (#876).
+            .filter(recent_count__gte=RECENT_MIN_CLASSES)
+            .order_by("-user__role", "-session_count")
+        )
 
         mentors = []
         volunteers = []
