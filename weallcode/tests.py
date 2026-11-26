@@ -58,3 +58,16 @@ class ContactFormEmailTest(TestCase):
     def test_from_email_parses(self):
         msg = self.send("Ada Lovelace", "ada@example.com")
         assert getaddresses([msg.from_email])[0][0] == "We All Code"
+
+
+@override_settings(
+    SECURE_SSL_REDIRECT=False, SENTRY_DSN="https://public@example.invalid/1"
+)
+class NotFoundPageTest(TestCase):
+    def test_missing_page_renders_404_template(self):
+        with mock.patch("sentry_sdk.scope.Scope.capture_message") as capture:
+            response = self.client.get("/this-page-does-not-exist/")
+        assert response.status_code == 404
+        self.assertTemplateUsed(response, "404.html")
+        self.assertContains(response, "Missing Page", status_code=404)
+        capture.assert_not_called()

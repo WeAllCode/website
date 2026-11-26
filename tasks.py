@@ -208,7 +208,10 @@ def vendor(ctx):
                 )
 
     written = 0
-    for rel, data in sorted(outputs.items()):
+    for rel, raw in sorted(outputs.items()):
+        # .gitattributes `* text=auto` checks text files out with LF, so
+        # write them that way too; else a CRLF file is rewritten every run.
+        data = raw if b"\0" in raw else raw.replace(b"\r\n", b"\n")
         target = _target(rel)
         if target.is_file() and target.read_bytes() == data:
             continue

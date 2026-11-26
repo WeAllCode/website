@@ -90,7 +90,7 @@ class ProductionSecuritySettingsTest(SimpleTestCase):
         assert self.prod["CSRF_COOKIE_SECURE"] is True
 
     def test_csrf_cookie_readable_by_js(self):
-        # cdc.js reads csrftoken from document.cookie.
+        # Stays False (Django default) so page JS can read csrftoken.
         assert self.prod["CSRF_COOKIE_HTTPONLY"] is False
         assert self.prod["SESSION_COOKIE_HTTPONLY"] is True
 

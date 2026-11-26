@@ -58,7 +58,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 X_FRAME_OPTIONS = "DENY"
 # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
 SESSION_COOKIE_HTTPONLY = True
-# CSRF_COOKIE_HTTPONLY stays False: cdc.js reads csrftoken from document.cookie.
+# CSRF_COOKIE_HTTPONLY stays False (Django default) so page JS can read csrftoken.
 
 if not DEBUG:
     # Secure cookies and HSTS whenever DEBUG is off, independent of
@@ -100,7 +100,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.google",
-    "bootstrap3",
     "django_cleanup",
     "anymail",
     "loginas",

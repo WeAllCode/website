@@ -8,7 +8,6 @@ Third-party files served from our own static bucket instead of a CDN. Refresh wi
 - Font Awesome Free 5.15.4 — https://www.npmjs.com/package/@fortawesome/fontawesome-free/v/5.15.4 — CC BY 4.0 (icons), SIL OFL 1.1 (fonts), MIT (code)
 - Font Awesome 4.7.0 — https://www.npmjs.com/package/font-awesome/v/4.7.0 — SIL OFL 1.1 (fonts), MIT (CSS); license section in `fontawesome4/README.md`
 - Bootstrap 3.4.1 — https://www.npmjs.com/package/bootstrap/v/3.4.1 — MIT
-- js-datepicker 5.18.4 — https://www.npmjs.com/package/js-datepicker/v/5.18.4 — MIT; license section in `js-datepicker/README.md`
 - Chart.js 4.6.1 — https://www.npmjs.com/package/chart.js/v/4.6.1 — MIT
 - Sentry browser SDK 11.12.0 — https://www.npmjs.com/package/@sentry/browser/v/11.12.0 — MIT; `bundle.min.js` comes from browser.sentry-cdn.com (the npm package has no browser bundles), pinned by sha384 in `vendor.json`
 - Bungee (@fontsource/bungee) 5.3.0 — https://www.npmjs.com/package/@fontsource/bungee/v/5.3.0 — SIL OFL 1.1

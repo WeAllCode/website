@@ -46,50 +46,6 @@ logger = logging.getLogger(__name__)
 User = get_user_model()
 
 
-def home(request, template_name="home.html"):
-    upcoming_classes = Session.objects.filter(
-        is_active=True,
-        start_date__gte=timezone.now(),
-    ).order_by("start_date")
-
-    if not request.user.is_authenticated or not request.user.role == "mentor":
-        upcoming_classes = upcoming_classes.filter(is_public=True)
-
-    upcoming_classes = upcoming_classes[:3]
-
-    return render(
-        request,
-        template_name,
-        {"upcoming_classes": upcoming_classes},
-    )
-
-
-def volunteer(request, template_name="volunteer.html"):
-    mentors = (
-        Mentor.objects.select_related("user")
-        .filter(
-            is_active=True,
-            is_public=True,
-            background_check=True,
-            avatar_approved=True,
-        )
-        .annotate(session_count=Count("mentororder"))
-        .order_by("-user__role", "-session_count")
-    )
-
-    upcoming_meetings = Meeting.objects.filter(
-        is_active=True,
-        is_public=True,
-        end_date__gte=timezone.now(),
-    ).order_by("start_date")[:3]
-
-    return render(
-        request,
-        template_name,
-        {"mentors": mentors, "upcoming_meetings": upcoming_meetings},
-    )
-
-
 @login_required
 def mentor_approve_avatar(request, pk=None):
     mentor = get_object_or_404(Mentor, id=pk)
@@ -285,8 +241,8 @@ def cdc_admin(request, template_name="admin.html"):
         key=operator.itemgetter(0),
     )
 
-    # Average Age
-    average_age = int(round(sum(ages) / float(len(ages))))
+    # Average Age (0 when nobody has checked in yet)
+    average_age = round(sum(ages) / len(ages)) if ages else 0
 
     return render(
         request,

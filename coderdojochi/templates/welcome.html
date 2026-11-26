@@ -1,12 +1,8 @@
 {% extends "coderdojochi/_base.html" %}
 
-{% load i18n bootstrap3 static %}
+{% load i18n %}
 
 {% block title %}{{ class.title }} Sign Up | {{ block.super }}{% endblock %}
-
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'vendor/js-datepicker/datepicker.min.css' %}">
-{% endblock %}
 
 {% block body_class %}page-welcome{% endblock %}
 
@@ -44,7 +40,7 @@
         <form action="{% if next_url %}?next={{ next_url }}{% if 'enroll' in request.GET %}&enroll=True{% endif %}{% endif %}" method="post">
             {% csrf_token %}
             <div class="grid-x margin-top-3 grid-margin-x grid-margin-y">
-                <div class="cell medium-offset-3 medium-6">{% bootstrap_form form %}</div>
+                <div class="cell medium-offset-3 medium-6">{% include "account/_form.html" with form=form %}</div>
             </div>
             <button class="submit button margin-top-3">{% if not add_student %}Continue{% else %}Register{% endif %} <i class="fas fa-chevron-right margin-left-half"></i></button>
         </form>
@@ -73,34 +69,4 @@
         </div>
     {% endif %}
 </section>
-{% endblock %}
-
-{% block extra_script %}
-<script src="{% static 'vendor/js-datepicker/datepicker.min.js' %}"></script>
-
-<script>
-
-// Test whether a new date input falls back to a text input
-var testElement = document.createElement('input');
-
-try {
-  testElement.type = 'date';
-} catch (e) {
-  console.log(e.description);
-}
-
-// If it does, run the code inside the if () {} block
-if (testElement.type === 'text') {
-    var $birthday = document.querySelector("#id_birthday");
-    var picker = datepicker('#id_birthday', {
-        disableMobile: true,
-        startDate: new Date($birthday.attributes['max'].value),
-        minDate: new Date($birthday.attributes['min'].value),
-        maxDate: new Date($birthday.attributes['max'].value),
-        formatter: (input, date, instance) => {
-            input.value = date.toLocaleDateString('en-US')
-        }
-    });
-}
-</script>
 {% endblock %}

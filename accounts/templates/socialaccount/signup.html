@@ -1,6 +1,6 @@
 {% extends "socialaccount/_base.html" %}
 
-{% load i18n bootstrap3 %}
+{% load i18n %}
 
 {% block title_placeholder %}{% trans "Signup" %}{% endblock %}
 
@@ -11,7 +11,7 @@
 
     <form class="signup" id="signup_form" method="post" action="{% url 'socialaccount_signup' %}">
         {% csrf_token %}
-        {% bootstrap_form form %}
+        {% include "account/_form.html" with form=form %}
         {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}

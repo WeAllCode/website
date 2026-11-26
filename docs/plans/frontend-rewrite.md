@@ -413,6 +413,34 @@ Fresh review sub-agent, 2026-11-25: 22 findings, 5 of them blockers. The lead sp
 
 ## Progress
 
+### Checkpoint 1: built 2026-11-25, branch `claude/frontend-cp1-safety-net` (from `origin/main` `72aa0f44`). Not pushed.
+
+**Plan drift found and applied (these override the text above):**
+
+- `72aa0f44` (#1645) already deleted `cdc.js`, reworded the `settings.py`/`test_security_settings.py` comments and fixed the `cdc_admin` `ZeroDivisionError`. 1B skipped those.
+- `coderdojochi/templates/admin/filter.html` is **live**: it overrides Django admin's `ListFilter` template (`TEMPLATES` DIRS) on 16 ModelAdmins. Kept, and not in `DeadFilesTest`.
+- `dashboard/_admin_base.html` still included the deleted `_topnav.html` inside `{% block topnav %}`. The lead emptied the block.
+- 1D added `accounts/templatetags/form_fields.py` (`render_widget` filter, lead-approved), because templates can't add the placeholder/title widget attrs that bootstrap3 added. Its test is `accounts/test_form_fields.py`. `account/_field.html` and `_form.html` keep Bootstrap classes under `bootstrap=True` (only `dashboard/session_donations.html`). **Owners for later:** 4B takes `_field.html`/`_form.html` plain mode off the ratchet; 5D removes the `bootstrap` flag and the `form-control` literal in `form_fields.py`.
+- `invoke vendor` always wrote 1 file (`bootstrap3/LICENSE` is CRLF in npm, LF in git via `* text=auto`). `tasks.py` now writes text files with LF. Second run: 0 written.
+- Vocabulary: `.stack` is a Foundation class. Rename `.nav-list.stack` before 2B (lead decides; `.nav-list.column` suggested).
+- Ratchet token source is a committed data file, `coderdojochi/tests/legacy_class_tokens.txt` (1079 names, sha256s of the 3 source CSS files in its header). app.css names that are only in Bootstrap (`bg-primary`, `list-unstyled`, `show`, `text-primary`) are ours. app.css `*-half` spacing names are legacy (2C drops them). Regenerate the sets with `manage.py shell -c "from coderdojochi.tests.test_frontend_stack import print_legacy_sets; print_legacy_sets()"`.
+- URLs: meetings are under `/old/meetings/`; socialaccount is under `/account/3rdparty/`. Unreachable in A/B: staff student detail (redirects non-guardians; covered as guardian), socialaccount signup (needs a pending social login), provider login (off-site).
+- `test/cypress/.../create-account.spec.js:59,70` selects `.control-label` and `.checkbox > label`, which plain mode no longer renders. Cypress is not in CI.
+
+**A/B tooling (`/tmp`, rebuild from 1A if gone):** `/tmp/wac-ab/seed.sh [setup|start|stop|status|restart|sessions]`. Both servers run `DJANGO_SETTINGS_MODULE=ab_settings` (`/tmp/wac-ab/pyset/ab_settings.py`: imports the tree's settings, turns the debug toolbar off, forces the anymail test backend, drops sqlite `sslmode`). Seed: `loaddata fixtures/*.json` on sqlite (285 objects) + `/tmp/wac-ab/seed_objects.py` (5 users incl. `ab-mentor_nobg`; 4 students covering the 3 eligibility-hint branches; future girls-only class, partner class with password, unannounced meeting, sign-ups, 20 public mentors). `ab.mjs` extras: `--only`, `--vp`, `--jobs`, `--no-jquery`, `--post-invalid` (local only), `--require-smaller`; route guard aborts every non-GET except the post-invalid submit and any `*/announce/*`. Third-party request failures are warnings, not failures. Bytes = first-party CSS+JS+font. Mobile DPR 1.
+
+**`smoke.mjs --frontend` spec:** everything `--cp9` does; mobile `/` `[popovertarget="site-nav"]` opens `#site-nav:popover-open`; desktop `/team/` `[data-reveal-target]` reveals its `aria-controls` target; `weallcode/js/site*.js` 200 (+ ACAO cross-origin) on every non-admin page; `window.jQuery` unset on public pages. Fails by design before CP2.
+
+**Evidence:**
+
+- 1A proof, A = B = main: 98 runs (49 pages × 2), max 0.000 %, bytes equal 98/98, exit 0. Patched `app.css` (`body{font-size:17px}`): 82/94 runs fail, max 38.66 %, exit 1 (the 12 passes don't load `app.css`). `app.css` shasum identical after undo.
+- Lead A/B, main vs branch, `--interact --post-invalid`: **98 runs, 0 failing, max 0.006 %** (`not-found`, desktop 0.006 % / mobile 0.003 %: Django's technical 404 lists URL patterns). CSS+JS+font bytes equal 96/98, B > A on 0 (welcome drops js-datepicker). Interact: 5 pass on old markup (`nav-open-click`, `nav-tap`, `team-see-more`, `dash-nav`, `dash-rows`), 4 skipped as expected (`nav-open-keyboard`: old trigger has no href; 3 hints: known broken).
+- Guard tests: 1E mutations failed as required (`class="callout"` in a throwaway template; empty `cdc.js`; `bootstrap3` in `INSTALLED_APPS` fails while present). `LEGACY_TEMPLATES` 55, `LEGACY_PYTHON` 2.
+- Whole build: ruff + format clean (130 files); full suite **140 tests OK**; pre-commit all passed; `invoke vendor` 0 written twice; `import bootstrap3` fails; `makemigrations --check` no changes, no planned operations from bootstrap3.
+- `legacy-scan`: **6** (same baseline 6).
+
+**Next:** Ali pushes and opens PR 1, then the runbook (CI, staging smoke, merge, prod). Then Checkpoint 2.
+
 ## Sources
 
 - https://github.com/GoogleChrome/modern-web-guidance
