@@ -1,0 +1,57 @@
+/* Design tokens. Brand names are the ones app.css used; the rest are
+   Foundation 6.5.1's values from foundation.css, so pages look the same. */
+@layer tokens {
+  :root {
+    /* Primary */
+    --we-blue: #426cff;
+    --primary: #426cff;
+
+    /* Secondary */
+    --all-yellow: #f6bb47;
+    --secondary: #f6bb47;
+
+    /* Tertiary */
+    --code-red: #df504d;
+    --tertiary: #df504d;
+
+    /* Supporting Colors */
+    --dark-blue: #070834;
+    --black: #000000;
+    --gray-4-blue: #606060;
+    --gray-4-white: #b2b2b2;
+    --white: #ffffff;
+    --light-gray: #eaeaea;
+
+    /* Font */
+    --font-title: "Bungee", cursive;
+    --font-subtitle: "Poppins", sans-serif;
+    --font-base: "Open Sans", sans-serif;
+
+    /* Foundation's base palette (body text, page, links, rules, fields) */
+    --ink: #0a0a0a;
+    --paper: #fefefe;
+    --link: #426cff;
+    --link-hover: #1549ff;
+    --gray-line: #cacaca;
+    --gray-muted: #8a8a8a;
+    --gray-fill: #e6e6e6;
+    --table-line: #f1f1f1;
+    --table-head: #f8f8f8;
+    --font-sans: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    --font-mono: Consolas, "Liberation Mono", Courier, monospace;
+    --radius: 3px;
+
+    /* Spacing scale (Foundation's margin-* / padding-* utilities, app.css *-half) */
+    --space-0: 0rem;
+    --space-h: 0.5rem;
+    --space-1: 1rem;
+    --space-2: 2rem;
+    --space-3: 3rem;
+    --space-4: 4rem;
+
+    /* Grid: Foundation XY uses a 1.875rem (30 px) gutter at every breakpoint
+       in this build; --gutter is half of it, the space on each side of a cell. */
+    --gutter: 0.9375rem;
+    --wrap-max: 62.5rem;
+  }
+}

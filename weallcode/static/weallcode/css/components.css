@@ -1,0 +1,304 @@
+/*
+ * Components: calls to action, generic nav lists, notices, breadcrumbs,
+ * video embeds, icons, hints and toggletips.
+ *
+ * Values are copied from Foundation 6.5.1 (`foundation.min.css`) and the
+ * app.css overrides of `.button`, so swapping a Foundation class for its
+ * replacement here renders the same. The header and mobile nav are not here
+ * (they live in nav.css).
+ */
+
+@layer components {
+  /* ---- Call to action (Foundation `.button`) ----------------------------- */
+
+  /* Variants only change these component tokens. */
+  .cta {
+    --cta-bg: var(--primary);
+    --cta-bg-hover: #1247ff;
+    --cta-fg: #fefefe;
+    --cta-fg-hover: #fefefe;
+
+    display: inline-block;
+    vertical-align: middle;
+    margin-block: 0 1rem;
+    margin-inline: 0;
+    padding: 0.85em 1em;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition:
+      background-color 0.25s ease-out,
+      color 0.25s ease-out;
+    font-family: var(--font-subtitle);
+    font-size: 0.9rem;
+    appearance: none;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: var(--cta-bg);
+    color: var(--cta-fg);
+
+    /* :where() keeps state rules at the base specificity, as Foundation's
+       `.button:hover` lost to app.css's `.button.tertiary`. */
+    &:where(:hover, :focus-visible):where(:not([disabled], [aria-disabled="true"])) {
+      background-color: var(--cta-bg-hover);
+      color: var(--cta-fg-hover);
+    }
+
+    &:where([disabled], [aria-disabled="true"]) {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+  }
+
+  .cta-secondary {
+    --cta-bg: var(--secondary);
+    --cta-bg-hover: #f2a40c;
+    --cta-fg: #0a0a0a;
+    --cta-fg-hover: #0a0a0a;
+  }
+
+  /* app.css `.button.tertiary`: no hover change. */
+  .cta-tertiary {
+    --cta-bg: var(--tertiary);
+    --cta-bg-hover: var(--tertiary);
+    --cta-fg: var(--white);
+    --cta-fg-hover: var(--white);
+  }
+
+  /* Foundation `.button.alert`. */
+  .cta-danger {
+    --cta-bg: var(--code-red);
+    --cta-bg-hover: #cb2825;
+    --cta-fg: #0a0a0a;
+    --cta-fg-hover: #0a0a0a;
+  }
+
+  .cta-small {
+    font-size: 0.75rem;
+  }
+
+  .cta-large {
+    font-size: 1.25rem;
+  }
+
+  /* Foundation `.button.expanded`. */
+  .cta-block {
+    display: block;
+    inline-size: 100%;
+    margin-inline: 0;
+  }
+
+  /* ---- Nav list (Foundation `.menu`) ------------------------------------- */
+
+  .nav-list {
+    position: relative;
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    & a,
+    & .cta {
+      display: block;
+      padding: 0.7rem 1rem;
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    & :is(a, button, input, select) {
+      margin-block-end: 0;
+    }
+
+    & input {
+      display: inline-block;
+    }
+
+    /* Foundation `.menu .active > a`. */
+    & a[aria-current="page"] {
+      background: var(--primary);
+      color: #fefefe;
+    }
+  }
+
+  /* Foundation `.menu.vertical`. */
+  .nav-list-stack {
+    flex-flow: column nowrap;
+  }
+
+  /* Foundation `.menu.align-right` (plus the XY `.align-right` on the list). */
+  .nav-list.end {
+    justify-content: flex-end;
+
+    & li {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    &.nav-list-stack li {
+      display: block;
+      text-align: end;
+    }
+  }
+
+  /* ---- Notice (Foundation `.callout`) ------------------------------------ */
+
+  .notice {
+    --notice-bg: var(--white);
+
+    position: relative;
+    margin-block: 0 1rem;
+    margin-inline: 0;
+    padding: 1rem;
+    border: 1px solid rgb(10 10 10 / 0.25);
+    border-radius: 3px;
+    background-color: var(--notice-bg);
+    color: #0a0a0a;
+
+    & > :first-child {
+      margin-block-start: 0;
+    }
+
+    & > :last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  .notice-info {
+    --notice-bg: #e3e9ff;
+  }
+
+  .notice-alert {
+    --notice-bg: #fae5e4;
+  }
+
+  .notice-success {
+    --notice-bg: #e6f7d9;
+  }
+
+  .notice-warning {
+    --notice-bg: #fff3d9;
+  }
+
+  /* ---- Breadcrumbs (Foundation `.breadcrumbs`) ----------------------------
+     <nav class="crumbs" aria-label="Breadcrumb"><ol>…</ol></nav>; the
+     current page's item gets aria-current="page". */
+
+  .crumbs {
+    & :is(ol, ul) {
+      display: flex;
+      flex-wrap: wrap;
+      margin-block: 0 1rem;
+      margin-inline: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    & li {
+      font-size: 0.6875rem;
+      color: #0a0a0a;
+      cursor: default;
+      text-transform: uppercase;
+    }
+
+    & li:not(:last-child)::after {
+      position: relative;
+      margin-inline: 0.75rem;
+      content: "/";
+      content: "/" / "";
+      color: #cacaca;
+    }
+
+    & a {
+      color: var(--primary);
+    }
+
+    & a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  /* ---- Video embed (Foundation `.flex-video.widescreen`) ----------------- */
+
+  .video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin-block-end: 1rem;
+    overflow: hidden;
+
+    & > :is(iframe, embed, object, video) {
+      position: absolute;
+      inset: 0;
+      inline-size: 100%;
+      block-size: 100%;
+    }
+  }
+
+  /* ---- Icon ({% icon %} inline SVG) ---------------------------------------
+     Matches Font Awesome 5's webfont glyph box: 1em tall, sitting 0.125em
+     below the baseline, as wide as the glyph (the SVG's viewBox ratio). */
+
+  .icon {
+    display: inline-block;
+    flex: none;
+    block-size: 1em;
+    inline-size: auto;
+    overflow: visible;
+    vertical-align: -0.125em;
+    fill: currentColor;
+  }
+
+  /* ---- Hint and toggletip (popover) ---------------------------------------
+     .hint: <div popover="hint" role="tooltip" class="hint">, opened by an
+     [interestfor] trigger. Foundation `.tooltip` look.
+     .toggletip: a popover opened by a <button popovertarget>, placed under
+     it. Without anchor positioning both keep the UA's centred placement. */
+
+  .hint {
+    max-inline-size: 10rem;
+    padding: 0.75rem;
+    /* Transparent border shows up as a real edge in forced-colors mode. */
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background-color: #0a0a0a;
+    color: #fefefe;
+    font-size: 80%;
+  }
+
+  .toggletip {
+    max-inline-size: 20rem;
+    padding: 1rem;
+    border: 1px solid rgb(10 10 10 / 0.25);
+    border-radius: 3px;
+    background-color: var(--white);
+    color: #0a0a0a;
+
+    & > :last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  @supports (position-area: block-end) {
+    .hint,
+    .toggletip {
+      inset: auto;
+      margin: 0;
+      position-try-fallbacks: flip-block;
+    }
+
+    .hint {
+      position-area: block-start;
+      margin-block-end: 0.6495rem;
+    }
+
+    .toggletip {
+      position-area: block-end span-inline-end;
+      position-try-fallbacks:
+        flip-block,
+        flip-inline,
+        flip-block flip-inline;
+      margin-block-start: 0.5rem;
+    }
+  }
+}

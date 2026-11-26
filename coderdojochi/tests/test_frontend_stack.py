@@ -24,6 +24,7 @@ import ast
 import hashlib
 import importlib.util
 import re
+import subprocess
 import sys
 from datetime import date
 from html.parser import HTMLParser
@@ -105,10 +106,6 @@ LEGACY_TEMPLATES = frozenset(
         "coderdojochi/templates/student_detail.html",
         "coderdojochi/templates/unsubscribe.html",
         "coderdojochi/templates/welcome.html",
-        "weallcode/templates/weallcode/_base.html",
-        "weallcode/templates/weallcode/_footer.html",
-        "weallcode/templates/weallcode/_header.html",
-        "weallcode/templates/weallcode/_messages.html",
         "weallcode/templates/weallcode/_svgs.html",
         "weallcode/templates/weallcode/associate_board.html",
         "weallcode/templates/weallcode/home.html",
@@ -289,8 +286,22 @@ def write_token_file():
     Foundation-style spacing names (``margin-*-half``, ``medium-padding-*``…,
     which 2C drops), minus the Font Awesome / Glyphicon names ``ICON_CLASS``
     already matches.
+
+    app.css was deleted in CP2 (split into brand.css / brand-legacy.css), so
+    this reads it from git at the last commit that had it (25ce01b7, CP1).
     """
-    sources = {key: (REPO / rel).read_text() for key, rel in LEGACY_CSS.items()}
+    sources = {
+        key: (REPO / rel).read_text()
+        for key, rel in LEGACY_CSS.items()
+        if (REPO / rel).exists()
+    }
+    if "app" not in sources:
+        sources["app"] = subprocess.run(  # noqa: S603 (fixed argv, dev helper)
+            ["git", "-C", str(REPO), "show", f"25ce01b7:{LEGACY_CSS['app']}"],  # noqa: S607
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
     found = {key: css_class_selectors(css) for key, css in sources.items()}
     foundation, bootstrap, app = found["foundation"], found["bootstrap"], found["app"]
     spacing = re.compile(r"((small|medium|large)-)?(margin|padding)-.+")
@@ -379,7 +390,7 @@ class LegacyRatchetTest(SimpleTestCase):
 
 # Substrings of asset URLs for libraries removed so far. Later checkpoints append.
 # Public = pages on the weallcode base; dashboard = /admin/ and the check-in pages.
-REMOVED_PUBLIC = ["js-datepicker"]
+REMOVED_PUBLIC = ["js-datepicker", "jquery", "what-input", "foundation.min.js"]
 REMOVED_DASHBOARD = ["js-datepicker"]
 
 

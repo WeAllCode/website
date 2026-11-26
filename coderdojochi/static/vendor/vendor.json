@@ -51,6 +51,24 @@
       ]
     },
     {
+      "package": "@fortawesome/fontawesome-free",
+      "version": "7.3.1",
+      "license": "(CC-BY-4.0 AND OFL-1.1 AND MIT)",
+      "files": [
+        {"from": "svgs/solid/bars.svg", "to": "fa-svgs/solid/bars.svg"},
+        {"from": "svgs/solid/chevron-right.svg", "to": "fa-svgs/solid/chevron-right.svg"},
+        {"from": "svgs/solid/calendar.svg", "to": "fa-svgs/solid/calendar.svg"},
+        {"from": "svgs/regular/calendar-check.svg", "to": "fa-svgs/regular/calendar-check.svg"},
+        {"from": "svgs/brands/google.svg", "to": "fa-svgs/brands/google.svg"},
+        {"from": "svgs/solid/check.svg", "to": "fa-svgs/solid/check.svg"},
+        {"from": "svgs/solid/graduation-cap.svg", "to": "fa-svgs/solid/graduation-cap.svg"},
+        {"from": "svgs/solid/handshake-angle.svg", "to": "fa-svgs/solid/handshake-angle.svg"},
+        {"from": "svgs/regular/square-check.svg", "to": "fa-svgs/regular/square-check.svg"},
+        {"from": "svgs/solid/circle-exclamation.svg", "to": "fa-svgs/solid/circle-exclamation.svg"},
+        {"from": "LICENSE.txt", "to": "fa-svgs/LICENSE.txt"}
+      ]
+    },
+    {
       "package": "font-awesome",
       "version": "4.7.0",
       "license": "(OFL-1.1 AND MIT)",

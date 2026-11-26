@@ -6,6 +6,7 @@ Third-party files served from our own static bucket instead of a CDN. Refresh wi
 - what-input 5.2.12 — https://www.npmjs.com/package/what-input/v/5.2.12 — MIT
 - Foundation (foundation-sites) 6.9.0 — https://www.npmjs.com/package/foundation-sites/v/6.9.0 — MIT
 - Font Awesome Free 5.15.4 — https://www.npmjs.com/package/@fortawesome/fontawesome-free/v/5.15.4 — CC BY 4.0 (icons), SIL OFL 1.1 (fonts), MIT (code)
+- Font Awesome Free 7.3.1 (SVGs) — https://www.npmjs.com/package/@fortawesome/fontawesome-free/v/7.3.1 — CC BY 4.0 (icons); only the SVGs the `{% icon %}` tag maps, in `fa-svgs/`, inlined by `coderdojochi/templatetags/icons.py`
 - Font Awesome 4.7.0 — https://www.npmjs.com/package/font-awesome/v/4.7.0 — SIL OFL 1.1 (fonts), MIT (CSS); license section in `fontawesome4/README.md`
 - Bootstrap 3.4.1 — https://www.npmjs.com/package/bootstrap/v/3.4.1 — MIT
 - Chart.js 4.6.1 — https://www.npmjs.com/package/chart.js/v/4.6.1 — MIT

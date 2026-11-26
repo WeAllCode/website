@@ -1,0 +1,215 @@
+/* Layout: .wrap and the .cols grid. Same geometry as Foundation 6.5.1's XY
+   grid (foundation.css:4216-5075): a wrapping flex row, 12 columns, a 1.875rem
+   gutter made of negative container margins and cell margins (or padding).
+   Every direct child of .cols is a cell, full width unless a span class says
+   otherwise. Breakpoints: md = 40em, lg = 64em (Foundation medium, large). */
+@layer layout {
+  .wrap {
+    max-inline-size: var(--wrap-max);
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+  }
+
+  .cols {
+    display: flex;
+    flex-flow: row wrap;
+
+    &.end {
+      justify-content: flex-end;
+    }
+
+    &.center {
+      justify-content: center;
+    }
+  }
+
+  /* Cells. --gx is the cell's side margin: 0, or the gutter in .gutter-x. */
+  .cols > * {
+    --gx: 0px;
+    flex: 0 0 auto;
+    min-block-size: 0;
+    min-inline-size: 0;
+    inline-size: calc(100% - 2 * var(--gx));
+  }
+
+  /* Gutters as margins (Foundation grid-margin-x / grid-margin-y). */
+  .cols.gutter-x {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .cols.gutter-x > * {
+    --gx: var(--gutter);
+    margin-inline: var(--gutter);
+  }
+
+  .cols.gutter-y {
+    margin-block: calc(-1 * var(--gutter));
+  }
+
+  .cols.gutter-y > * {
+    margin-block: var(--gutter);
+  }
+
+  /* Gutters as padding (Foundation grid-padding-x / grid-padding-y). */
+  .cols.pad-x > * {
+    padding-inline: var(--gutter);
+  }
+
+  .wrap > .cols.pad-x,
+  .cols.pad-x .cols.pad-x {
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .cols.pad-y > * {
+    padding-block: var(--gutter);
+  }
+
+  .cols.pad-y .cols.pad-y {
+    margin-block: calc(-1 * var(--gutter));
+  }
+
+  /* Small and up */
+
+  .cols > .span-auto {
+    flex: 1 1 0px;
+    inline-size: auto;
+  }
+
+  .cols > .span-shrink {
+    flex: 0 0 auto;
+    inline-size: auto;
+  }
+
+  .cols > :is(.span-1, .span-2, .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-9, .span-10, .span-11, .span-12) {
+    flex: 0 0 auto;
+    inline-size: calc(var(--span) - 2 * var(--gx));
+  }
+
+  .cols > .span-1 { --span: 8.33333%; }
+  .cols > .span-2 { --span: 16.66667%; }
+  .cols > .span-3 { --span: 25%; }
+  .cols > .span-4 { --span: 33.33333%; }
+  .cols > .span-5 { --span: 41.66667%; }
+  .cols > .span-6 { --span: 50%; }
+  .cols > .span-7 { --span: 58.33333%; }
+  .cols > .span-8 { --span: 66.66667%; }
+  .cols > .span-9 { --span: 75%; }
+  .cols > .span-10 { --span: 83.33333%; }
+  .cols > .span-11 { --span: 91.66667%; }
+  .cols > .span-12 { --span: 100%; }
+
+  .cols > :is(.offset-0, .offset-1, .offset-2, .offset-3, .offset-4, .offset-5, .offset-6, .offset-7, .offset-8, .offset-9, .offset-10, .offset-11) {
+    margin-inline-start: calc(var(--offset) + var(--gx));
+  }
+
+  .cols > .offset-0 { --offset: 0%; }
+  .cols > .offset-1 { --offset: 8.33333%; }
+  .cols > .offset-2 { --offset: 16.66667%; }
+  .cols > .offset-3 { --offset: 25%; }
+  .cols > .offset-4 { --offset: 33.33333%; }
+  .cols > .offset-5 { --offset: 41.66667%; }
+  .cols > .offset-6 { --offset: 50%; }
+  .cols > .offset-7 { --offset: 58.33333%; }
+  .cols > .offset-8 { --offset: 66.66667%; }
+  .cols > .offset-9 { --offset: 75%; }
+  .cols > .offset-10 { --offset: 83.33333%; }
+  .cols > .offset-11 { --offset: 91.66667%; }
+
+  /* Medium and up */
+
+  @media print, screen and (width >= 40em) {
+    .cols > .md-span-auto {
+      flex: 1 1 0px;
+      inline-size: auto;
+    }
+
+    .cols > .md-span-shrink {
+      flex: 0 0 auto;
+      inline-size: auto;
+    }
+
+    .cols > :is(.md-span-1, .md-span-2, .md-span-3, .md-span-4, .md-span-5, .md-span-6, .md-span-7, .md-span-8, .md-span-9, .md-span-10, .md-span-11, .md-span-12) {
+      flex: 0 0 auto;
+      inline-size: calc(var(--span) - 2 * var(--gx));
+    }
+
+    .cols > .md-span-1 { --span: 8.33333%; }
+    .cols > .md-span-2 { --span: 16.66667%; }
+    .cols > .md-span-3 { --span: 25%; }
+    .cols > .md-span-4 { --span: 33.33333%; }
+    .cols > .md-span-5 { --span: 41.66667%; }
+    .cols > .md-span-6 { --span: 50%; }
+    .cols > .md-span-7 { --span: 58.33333%; }
+    .cols > .md-span-8 { --span: 66.66667%; }
+    .cols > .md-span-9 { --span: 75%; }
+    .cols > .md-span-10 { --span: 83.33333%; }
+    .cols > .md-span-11 { --span: 91.66667%; }
+    .cols > .md-span-12 { --span: 100%; }
+
+    .cols > :is(.md-offset-0, .md-offset-1, .md-offset-2, .md-offset-3, .md-offset-4, .md-offset-5, .md-offset-6, .md-offset-7, .md-offset-8, .md-offset-9, .md-offset-10, .md-offset-11) {
+      margin-inline-start: calc(var(--offset) + var(--gx));
+    }
+
+    .cols > .md-offset-0 { --offset: 0%; }
+    .cols > .md-offset-1 { --offset: 8.33333%; }
+    .cols > .md-offset-2 { --offset: 16.66667%; }
+    .cols > .md-offset-3 { --offset: 25%; }
+    .cols > .md-offset-4 { --offset: 33.33333%; }
+    .cols > .md-offset-5 { --offset: 41.66667%; }
+    .cols > .md-offset-6 { --offset: 50%; }
+    .cols > .md-offset-7 { --offset: 58.33333%; }
+    .cols > .md-offset-8 { --offset: 66.66667%; }
+    .cols > .md-offset-9 { --offset: 75%; }
+    .cols > .md-offset-10 { --offset: 83.33333%; }
+    .cols > .md-offset-11 { --offset: 91.66667%; }
+  }
+
+  /* Large and up */
+
+  @media print, screen and (width >= 64em) {
+    .cols > .lg-span-auto {
+      flex: 1 1 0px;
+      inline-size: auto;
+    }
+
+    .cols > .lg-span-shrink {
+      flex: 0 0 auto;
+      inline-size: auto;
+    }
+
+    .cols > :is(.lg-span-1, .lg-span-2, .lg-span-3, .lg-span-4, .lg-span-5, .lg-span-6, .lg-span-7, .lg-span-8, .lg-span-9, .lg-span-10, .lg-span-11, .lg-span-12) {
+      flex: 0 0 auto;
+      inline-size: calc(var(--span) - 2 * var(--gx));
+    }
+
+    .cols > .lg-span-1 { --span: 8.33333%; }
+    .cols > .lg-span-2 { --span: 16.66667%; }
+    .cols > .lg-span-3 { --span: 25%; }
+    .cols > .lg-span-4 { --span: 33.33333%; }
+    .cols > .lg-span-5 { --span: 41.66667%; }
+    .cols > .lg-span-6 { --span: 50%; }
+    .cols > .lg-span-7 { --span: 58.33333%; }
+    .cols > .lg-span-8 { --span: 66.66667%; }
+    .cols > .lg-span-9 { --span: 75%; }
+    .cols > .lg-span-10 { --span: 83.33333%; }
+    .cols > .lg-span-11 { --span: 91.66667%; }
+    .cols > .lg-span-12 { --span: 100%; }
+
+    .cols > :is(.lg-offset-0, .lg-offset-1, .lg-offset-2, .lg-offset-3, .lg-offset-4, .lg-offset-5, .lg-offset-6, .lg-offset-7, .lg-offset-8, .lg-offset-9, .lg-offset-10, .lg-offset-11) {
+      margin-inline-start: calc(var(--offset) + var(--gx));
+    }
+
+    .cols > .lg-offset-0 { --offset: 0%; }
+    .cols > .lg-offset-1 { --offset: 8.33333%; }
+    .cols > .lg-offset-2 { --offset: 16.66667%; }
+    .cols > .lg-offset-3 { --offset: 25%; }
+    .cols > .lg-offset-4 { --offset: 33.33333%; }
+    .cols > .lg-offset-5 { --offset: 41.66667%; }
+    .cols > .lg-offset-6 { --offset: 50%; }
+    .cols > .lg-offset-7 { --offset: 58.33333%; }
+    .cols > .lg-offset-8 { --offset: 66.66667%; }
+    .cols > .lg-offset-9 { --offset: 75%; }
+    .cols > .lg-offset-10 { --offset: 83.33333%; }
+    .cols > .lg-offset-11 { --offset: 91.66667%; }
+  }
+}

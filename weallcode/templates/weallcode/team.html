@@ -138,16 +138,18 @@
       </div>
 
       {% if other_mentors %}
-        <div class="mentor-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
-          {% for mentor in other_mentors %}
-            <div class="cell small-6 medium-3">
-              {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.get_avatar sublabel="classes" %}
-            </div>
-          {% endfor %}
+        <div id="more-mentors" hidden="until-found">
+          <div class="cols gutter-x gutter-y mt-1">
+            {% for mentor in other_mentors %}
+              <div class="span-6 md-span-3">
+                {% include "weallcode/snippets/team_member.html" with is_small=True name=mentor.full_name label=mentor.session_count image=mentor.get_avatar sublabel="classes" %}
+              </div>
+            {% endfor %}
+          </div>
         </div>
 
-        <div class="mentor-toggle text-center margin-vertical-2">
-          <button class="button secondary" data-toggler=".mentor-toggle" data-toggle-class="hide">See More Mentors</button>
+        <div class="t-center my-2">
+          <button class="cta cta-secondary" type="button" aria-expanded="false" aria-controls="more-mentors" data-reveal-target="more-mentors">See More Mentors</button>
         </div>
       {% endif %}
     </div>
@@ -177,19 +179,21 @@
         {% endfor %}
       </div>
 
-      <div class="volunteer-toggle hide grid-x grid-margin-x grid-margin-y margin-top-1">
-        {% for volunteer in other_volunteers %}
-          {% if volunteer.session_count %}
-            <div class="cell small-6 medium-3">
-              {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.get_avatar sublabel="classes" %}
-            </div>
-          {% endif %}
-        {% endfor %}
+      <div id="more-volunteers" hidden="until-found">
+        <div class="cols gutter-x gutter-y mt-1">
+          {% for volunteer in other_volunteers %}
+            {% if volunteer.session_count %}
+              <div class="span-6 md-span-3">
+                {% include "weallcode/snippets/team_member.html" with is_small=True name=volunteer.full_name label=volunteer.session_count image=volunteer.get_avatar sublabel="classes" %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
 
       {% if other_volunteers %}
-        <div class="volunteer-toggle text-center margin-vertical-2">
-          <button class="button secondary" data-toggler=".volunteer-toggle" data-toggle-class="hide">See More Volunteers</button>
+        <div class="t-center my-2">
+          <button class="cta cta-secondary" type="button" aria-expanded="false" aria-controls="more-volunteers" data-reveal-target="more-volunteers">See More Volunteers</button>
         </div>
       {% endif %}
 
