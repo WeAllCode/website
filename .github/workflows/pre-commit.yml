@@ -37,3 +37,7 @@ jobs:
       - name: Run pre-commit
         run: pre-commit run --all-files --show-diff-on-failure --color=always
         shell: bash
+        env:
+          # no-commit-to-branch guards local commits; on a push to main the
+          # checked-out branch is main, so it always fails in CI (#1620).
+          SKIP: no-commit-to-branch
