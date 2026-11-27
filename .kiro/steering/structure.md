@@ -105,4 +105,4 @@ Extends django-allauth for custom authentication:
 
 - `.env` file for local development
 - Environment-specific settings in `settings.py`
-- Heroku deployment ready with django-heroku
+- Production deploys to a GCP VM (see `infra/vm/README.md`)
