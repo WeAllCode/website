@@ -30,7 +30,7 @@ Status: **plan only.** Nothing built. Written 2026-11-26 from `main` at `7e29406
 7. **Login keeps intent too.** An existing user who clicks a start button, then "I already have an account" and logs in, lands on the same destination (after any missing step).
 8. **No dead ends.** A logged-in user without a role who opens a class page is sent to onboarding with that class as the intent (today: 404). An anonymous POST to a meeting sign-up redirects to login (today: 500).
 9. **A parent can only enroll their own students.** `/classes/<pk>/sign-up/<student_id>/` 404s for another guardian's student (today it doesn't check).
-10. **The edge cache is unaffected.** Logged-out GETs of the cached public pages (`PUBLIC_CACHE_VIEW_NAMES` in `coderdojochi/middleware.py:15`) and of public class pages set no session cookie. Only the start endpoints write the session.
+10. **The edge cache is unaffected.** Logged-out GETs of the cached public pages (`PUBLIC_CACHE_VIEW_NAMES` in `coderdojochi/middleware.py:15`) and of public class pages set no session cookie. For logged-out visitors on public pages, only the start endpoints write the session (logged-in views such as 1C, 1E and the partner-password page already have a session).
 11. **Old links still work.** A legacy `/welcome/?next=/classes/<pk>/&enroll=True` or `/account/?next=/old/meetings/<pk>/` (bookmarks, old emails) still reaches the same destination, through the same validation.
 12. Full test suite, `ruff check`, `ruff format --check` and `pre-commit run --all-files` pass. Every criterion has a test with a recorded mutation (Proof).
 
@@ -101,7 +101,7 @@ Noted, not fixed (follow-ups, listed in the PR):
 
 ## New flow
 
-**One idea:** a click on a start button stores a typed intent, never a URL: `{"kind": "session" | "meeting" | "none", "pk": int | None, "role": "guardian" | "mentor" | None, "new_student": bool}`. Only the start endpoints and a legacy link carrying `enroll` set a `role`; an intent captured any other way (a role-less user who browsed to a class, the legacy converter without `enroll`) has `role=None`, so the "Who are you?" screen still shows (Ali: infer only from the button). Where to go is always computed with `reverse()` from that intent, after checking the object still exists. Nothing from the request is ever passed to `redirect()`. This improves on "validate `next` once, then store it": a stored URL can still be any same-site path (logout, admin, a URL-name string); a stored `(kind, pk)` can only ever produce a class or meeting page.
+**One idea:** a click on a start button stores a typed intent, never a URL: `{"kind": "session" | "meeting" | "none", "pk": int | None, "role": "guardian" | "mentor" | None, "new_student": bool}`. Only buttons set a `role` (the exact list is "Who sets a role on an intent" under Tasks); an intent captured any other way (a role-less user who browsed to a class, the legacy converter without `enroll`) has `role=None`, so the "Who are you?" screen still shows (Ali: infer only from the button). Where to go is always computed with `reverse()` from that intent, after checking the object still exists. Nothing from the request is ever passed to `redirect()`. This improves on "validate `next` once, then store it": a stored URL can still be any same-site path (logout, admin, a URL-name string); a stored `(kind, pk)` can only ever produce a class or meeting page.
 
 **Start endpoints** (GET, not cached, the only views that write the intent):
 
@@ -114,12 +114,14 @@ Noted, not fixed (follow-ups, listed in the PR):
 | `/welcome/add-student/` | `add-student-start` | `none`, `guardian`, `new_student=True` (guardian home "Add another student") |
 | `/welcome/done/` | `welcome-done` | not a start: the PR 1655 "N students registered / Find a class / Done" page, its own URL so the router never loops on it |
 
-Each start stores the intent, then: logged out → `/account/signup/`; logged in → `onboarding.next_url(request)`. Each start checks what the object's own page checks: session `is_active` **and** partner password (`SessionDetailView.validate_partner_session_access`, `sessions.py:167-191`; without access → `session-password`); meeting `is_active`, and `is_public` for anonymous users (`meetings.py:50-59`). Responses carry `X-Robots-Tag: noindex, nofollow`, and every link to them has `rel="nofollow"`, so crawlers don't mint sessions (there is no `robots.txt` in the repo; adding one is a follow-up).
+Each start stores the intent, then: logged out → `/account/signup/`; logged in → `onboarding.next_url(request)`. Each start checks: session `is_active` (on purpose stricter than the class page, which renders inactive sessions because no class view filters on it, `sessions.py:145`; an inactive class's start link 404s) **and** partner password (`SessionDetailView.validate_partner_session_access`, `sessions.py:167-191`; without access → `session-password`); meeting `is_active`, and `is_public` for anonymous users (`meetings.py:50-59`). Responses carry `X-Robots-Tag: noindex, nofollow`, and every link to them has `rel="nofollow"`, so crawlers don't mint sessions (there is no `robots.txt` in the repo; adding one is a follow-up).
 
 **The router** `onboarding.next_url(request)` returns the first thing the user still needs, else the destination. A role other than `mentor` or `guardian` counts as no role, everywhere (router, `RoleRedirectMixin`, `RoleTemplateMixin`, `SessionDetailView`): use one helper, `intent.user_role(user) -> "guardian" | "mentor" | None`. The "pending role" is the role the user has, else `request.session["onboarding_role"]` (set by the role step or the switch link), else `intent["role"]`.
 
-1. **Role mismatch** (a guardian with a meeting or volunteer intent, a mentor with an enroll or `none` intent): clear the intent, flash `MISMATCH_MESSAGE` ("You're signed in as a parent, so …" / "…as a volunteer, so …"), destination = the object's page (`account_home` for kind `none`). Runs first so a mismatched user is never pushed through the other role's forms.
-2. No pending role → `/welcome/` role step. **In CP1, no saved role → `/welcome/` whatever the intent says** (CP1 has no inferred-role screens; the current welcome view shows "Who are you?").
+1. **Role mismatch**, judged on the **saved** role only (a saved guardian with a meeting or volunteer intent, a saved mentor with an enroll or `none` intent): clear the intent, flash `MISMATCH_MESSAGE` ("You're signed in as a parent, so …" / "…as a volunteer, so …"), destination = the object's page (`account_home` for kind `none`). Runs first so a mismatched user is never pushed through the other role's forms.
+2. No pending role → `/welcome/` role step. **In CP1, no saved role → `/welcome/` whatever the intent says** (CP1 has no inferred-role screens; the current welcome view shows "Who are you?"). 2B replaces this CP1 rule with the pending-role rule.
+
+The switch link calls `set_pending_role`, which also rewrites the intent so step 1 never fires on a switched user: kind `session` → swap `role` (`guardian` ↔ `mentor`); kind `meeting` switched to `guardian` → kind `none` (a parent can't attend a mentor meeting; they continue to the parent page and then `welcome-done`).
 3. Pending role `guardian` without phone or zip → `/welcome/` parent page: "About you + first student" if the guardian has no students, "About you" only if they already have students.
 4. Pending role `mentor` without birthday, phone or zip → `/welcome/` volunteer step. **CP2 only**: in CP1 the router has no mentor step (the CP1 welcome view redirects every named mentor, so a mentor step there would loop).
 5. Guardian with 0 students, or intent `new_student=True` and no `last_student` set yet → `/welcome/` student-only form.
@@ -132,7 +134,7 @@ Intents carry a `created` ISO timestamp; `get_intent` treats one older than 24 h
 
 `intent.current_step(request) -> "role" | "guardian" | "guardian-about" | "mentor" | "student" | None` is the same logic as steps 1-5, returning which `/welcome/` screen applies (`None` = no step, go to `next_url`). `next_url` uses it, so the view and the router can't disagree.
 
-Allauth hooks: a new `accounts/adapter.py` `AccountAdapter` overrides `get_login_redirect_url` and `get_signup_redirect_url` to return `next_url(request)`. Allauth still prefers a validated `next` when one is present (`allauth/account/utils.py:38-56`), so `login_required` round trips are unchanged; **in that case the adapter isn't called, so a `user_logged_in` signal receiver (`accounts/signals.py`, connected in `AccountsConfig.ready`) clears any stored intent when `allauth.account.utils.get_next_redirect_url(request)` is set**, or it would fire at a later, unrelated login. The signal covers password login, signup and the Google flow alike (`provider_login_url` carries the page's `next` into Google, `accounts/tests.py:42-48`, so `form_valid` alone would miss it). allauth also calls `get_login_redirect_url` when a logged-in user opens the login or signup page (`RedirectAuthenticatedUserMixin`, `allauth/account/mixins.py:89`), after email confirmation (`adapter.py:292`) and on reauth; that's fine because `next_url` only clears the intent when it returns a destination the user would have gone to anyway. Django's `login()` keeps an anonymous session's data (`cycle_key`), so the intent survives signup, login and the Google flow.
+Allauth hooks: a new `accounts/adapter.py` `AccountAdapter` overrides `get_login_redirect_url` and `get_signup_redirect_url` to return `next_url(request)`. Allauth still prefers a validated `next` when one is present (`allauth/account/utils.py:38-56`), so `login_required` round trips are unchanged; **in that case the adapter's redirect methods aren't called, so `AccountAdapter.post_login` (`allauth/account/adapter.py:551-572`) clears any stored intent when `redirect_url or get_next_redirect_url(request)` is set**, then calls `super()`, or the intent would fire at a later, unrelated login. `post_login` is the one place that sees Google's `next` too: allauth keeps it in `sociallogin.state` and passes it as `redirect_url` (`allauth/socialaccount/models.py:400-402`, `socialaccount/internal/flows/login.py:30`); the callback request itself carries no `next`, so a `user_logged_in` signal reading the request would miss it. allauth also calls `get_login_redirect_url` when a logged-in user opens the login or signup page (`RedirectAuthenticatedUserMixin`, `allauth/account/mixins.py:89`), after email confirmation (`adapter.py:292`) and on reauth; that's fine because `next_url` only clears the intent when it returns a destination the user would have gone to anyway. Django's `login()` keeps an anonymous session's data (`cycle_key`), so the intent survives signup, login and the Google flow.
 
 **Parent, new (from a class):** Enroll now → signup (name, email, password, or Google) → one page "About you + your first student" → class sign-up confirmation for that student → Confirm. **Two screens after signup instead of five; no role screen.**
 
@@ -155,14 +157,14 @@ The builder reads these before any task. Line numbers are on `main` at `7e29406d
 | `coderdojochi/forms.py` | 29, 119-143, 145-218, 266-305, 308-469 | `ZIP_CODE`; `SignupForm` (captcha, `signup()` sets names); `MentorForm` birthday/phone/zip widgets to copy; `GuardianForm`; `StudentForm` (excludes `guardian`) |
 | `coderdojochi/models/mentor.py` | 40-51, 84-100, 127-142 | `background_check_waived`, `phone`, `zip`, `is_minor`, `needs_background_check`, `awaiting_minor_waiver` |
 | `coderdojochi/models/session.py`, `meeting.py` | `session.py:285-289`, `meeting.py:89-93` | `get_absolute_url` / `get_sign_up_url` names |
-| `coderdojochi/urls.py` | 47-84, 200-226, 281-282 | Meeting and class URL blocks where the start endpoints go; `welcome` |
+| `coderdojochi/urls.py` | 47-84, 168-226, 276-283 | Meeting block; class block (`session-detail` at 183); welcome block |
 | `coderdojochi/middleware.py` | 1-70 | Edge-cache rules: a response that sets a cookie is never cached; keep start endpoints out of `PUBLIC_CACHE_VIEW_NAMES` |
 | `coderdojochi/settings.py` | 314-323 | allauth settings; add `ACCOUNT_ADAPTER` here |
 | `coderdojochi/templatetags/coderdojochi_extras.py` | 28-80 | `student_register_link`, the Enroll buttons on the guardian class page |
 | `coderdojochi/tests/test_signup_and_welcome.py` | all | Test style to copy (`@override_settings(SECURE_SSL_REDIRECT=False)`, `CDCUserFactory`, `force_login`) |
 | `coderdojochi/tests/test_mentor_minor.py` | 57-82 | How sign-up access is tested for minors |
 | `coderdojochi/tests/test_frontend_stack.py` | 69-110, 318-360, 456-485 | Legacy-template ratchet (new templates must use no legacy classes) and two `/welcome/` tests to update |
-| `accounts/tests.py` | 22-63 | `SocialApp` setup needed by any test that renders signup or login |
+| `accounts/tests.py` | 22-63 (about +3 after PR 1661) | `SocialApp` setup needed by any test that renders signup or login |
 | `docs/plans/frontend-rewrite.md` | "Class vocabulary", "Checkpoint 4", "Progress" | Class names for the new templates; what PR 1661 changed |
 | `.venv/…/allauth/account/adapter.py` | 246-268 | `get_signup_redirect_url`, `get_login_redirect_url` |
 | `.venv/…/allauth/account/utils.py` | 38-56 | `next` beats the adapter |
@@ -178,6 +180,7 @@ Test helpers every new test needs:
 - Signup in tests: `mock.patch("django_recaptcha.fields.ReCaptchaField.validate")` (the signup form has a reCAPTCHA v3 field, `forms.py:122`), and a Google `SocialApp` attached to the current `Site` (copy `accounts/tests.py:25-31`), or the template tag raises `SocialApp.DoesNotExist`.
 - `@override_settings(SECURE_SSL_REDIRECT=False)` on every client test.
 - Email: anymail's test backend (`test_settings.py:39`); assert on `mail.outbox`, never send.
+- Sessions: `SessionFactory(is_active=True)`. `Session.is_active` defaults to `False` (`models/session.py:120-121`) and the factory doesn't set it (`factories.py:48-56`), so a plain `SessionFactory()` makes every round-trip test 404 or land on `account_home`. Never change the code to make such a test pass.
 
 ## Template coordination with the front-end rewrite (PR 1661, CP4)
 
@@ -229,7 +232,7 @@ def set_intent(request, kind: str, pk: int | None, role: str | None, new_student
                                                 # keeps an existing intent for the same (kind, pk) if it has a role and the new one doesn't
 def get_intent(request) -> dict | None          # validated: unknown kind/role, non-int pk for session/meeting, or older than 24 h → None
 def clear_intent(request) -> None               # drops the intent, "onboarding_role" and "onboarding_last_student"
-def set_pending_role(request, role: str) -> None  # role step and switch link (CP2)
+def set_pending_role(request, role: str) -> None  # role step and switch link (CP2); also rewrites intent["role"] (see New flow)
 def intent_from_legacy_next(request) -> None    # reads GET["next"] once; stores an intent if valid; never returns a URL
 def set_last_student(request, student_id: int) -> None   # destination rule 6
 def current_step(request) -> str | None         # which /welcome/ screen applies (router steps 1-5)
@@ -269,18 +272,18 @@ def next_url(request) -> str                    # the router; always a reverse()
 - Pitfall: `SessionDetailView` also handles password-protected sessions first (`sessions.py:147-151`); keep that order.
 - Proof: test file passes. Cases: role-less user `GET /classes/<pk>/` → 302 to `/welcome/`, `get_intent` is the class with `role=None`; adult mentor needing a background check **and** an unwaived minor mentor, each `POST /classes/<pk>/sign-up/` with `HTTP_REFERER="https://evil.example/"` → `Location` is the class page; guardian B on guardian A's student → 404; guardian on the student-less sign-up URL → 404; password session not unlocked → `session-password`; guardian `POST` for a class 31+ days out → class page with the message, no `Order`; same for a class with `external_enrollment_url`; a user with `role="teacher"` on a sign-up URL → `/welcome/`, not a 500.
 
-**1D. Account home and the allauth adapter.** Files: `accounts/views.py` (lines 52-66 only), `accounts/adapter.py`, `accounts/signals.py`, `accounts/apps.py`, `coderdojochi/settings.py` (allauth block only), `accounts/test_onboarding_redirects.py`.
+**1D. Account home and the allauth adapter.** Files: `accounts/views.py` (lines 52-66 only), `accounts/adapter.py`, `coderdojochi/settings.py` (allauth block only), `accounts/test_onboarding_redirects.py`.
 - `AccountHomeView.dispatch`: no role → `intent.intent_from_legacy_next(self.request)` → `redirect("welcome")`. Keep the warning message when there was no `next`.
 - `AccountAdapter(DefaultAccountAdapter)`: `get_login_redirect_url` and `get_signup_redirect_url` return `intent.next_url(request)`. `ACCOUNT_ADAPTER = "accounts.adapter.AccountAdapter"`.
-- `accounts/signals.py`: a `django.contrib.auth.signals.user_logged_in` receiver calls `intent.clear_intent(request)` when `allauth.account.utils.get_next_redirect_url(request)` is truthy (a `next` that allauth will honour, so the adapter won't run). Connect it in `AccountsConfig.ready()` (`accounts/apps.py`). This covers password login, signup and Google.
+- `AccountAdapter.post_login(self, request, user, **kwargs)`: if `kwargs.get("redirect_url") or get_next_redirect_url(request)`, call `intent.clear_intent(request)`; then `return super().post_login(request, user, **kwargs)`. This covers password login, signup and Google (Google's `next` arrives as `redirect_url`).
 - Pitfall: don't touch PR 1661's lines (14, 176-241). `LOGIN_REDIRECT_URL` stays; the adapter now decides instead.
-- Proof: test file passes. Cases: `/account/?next=https://evil.example/` as role-less → `Location == "/welcome/"`; with an intent in the session, signup POST (captcha patched) → `Location == "/welcome/"`, and a complete mentor logging in with a meeting intent → `Location == meeting.get_absolute_url()`; `/account/login/?next=/account/` still lands on `/account/` (allauth's `next` wins) **and** leaves no intent behind; a logged-in user opening `/account/login/` with an intent is redirected without a crash; the signal receiver called directly with a request whose `GET` has `next=/account/` clears the intent (stands in for the Google callback); `test_legacy_meeting_next_still_works` (`/account/?next=/old/meetings/<pk>/` as role-less → `/welcome/` with a `meeting` intent; after picking Volunteer → the meeting).
+- Proof: test file passes. Cases: `/account/?next=https://evil.example/` as role-less → `Location == "/welcome/"`; with an intent in the session, signup POST (captcha patched) → `Location == "/welcome/"`, and a complete mentor logging in with a meeting intent → `Location == meeting.get_absolute_url()`; `/account/login/?next=/account/` still lands on `/account/` (allauth's `next` wins) **and** leaves no intent behind; a logged-in user opening `/account/login/` with an intent is redirected without a crash; `AccountAdapter().post_login(request, user, redirect_url="/account/", …)` called directly with an intent stored and **no** `next` in the request clears the intent (this is what Google's callback looks like); `test_legacy_meeting_next_still_works` (`/account/?next=/old/meetings/<pk>/` as role-less → `/welcome/` with a `meeting` intent; after picking Volunteer → the meeting).
 
 **1E. Meeting sign-up works.** Files: `coderdojochi/views/meetings.py`, `coderdojochi/tests/test_meeting_sign_up.py`.
-- `meeting_sign_up`: `@login_required`; no role → `set_intent(request, "meeting", pk, "mentor")` → `redirect("welcome")`; a guardian → `messages.info(…"Meetings are for volunteers…")` → `redirect("meeting-detail", pk)` (no intent); fix line 216 to `redirect("meeting-detail", meeting_obj.id)`.
+- `meeting_sign_up`: `@login_required`; the meeting must be `is_active`, and `is_public` unless the user is staff (`get_object_or_404(Meeting.objects.filter(...), pk=pk)`, matching `MeetingDetailView.get_queryset`, `meetings.py:50-59`); no role → `set_intent(request, "meeting", pk, "mentor")` → `redirect("welcome")`; a guardian → `messages.info(…"Meetings are for volunteers…")` → `redirect("meeting-detail", pk)` (no intent); fix line 216 to `redirect("meeting-detail", meeting_obj.id)`.
 - Proof: test file passes. Cases: mentor `POST /old/meetings/<pk>/register/` → 302 to the meeting, `MeetingOrder` active, one email in `mail.outbox`; anonymous POST → 302 to login; role-less → `/welcome/` with the meeting intent; guardian → the meeting page, no `MeetingOrder`.
 
-**Checkpoint 1 check (lead):** full suite, ruff, pre-commit; **every Proof row whose test file is created in CP1** (`test_onboarding_intent`, `test_welcome_redirects`, `test_session_onboarding`, `test_meeting_sign_up`, `accounts/test_onboarding_redirects`), which covers AC 1, 2, 3, 5, 6, 7, 8, 9 and 11; the probe scenario (mentor, `?next=https://evil.example/`) now returns `account_home`. Then a PR with CI green and Ali's OK to release.
+**Checkpoint 1 check (lead):** full suite, ruff, pre-commit; **every Proof row whose test file is created in CP1** (`test_onboarding_intent`, `test_welcome_redirects`, `test_session_onboarding`, `test_meeting_sign_up`, `accounts/test_onboarding_redirects`), which covers AC 1, 2, 3, 5, 6, 8, 9 and 11, and AC 7 only at the adapter level (CP1 has no way to store an intent for a logged-out visitor, so the test seeds the session; the real "I already have an account" round trip is proved in CP2 by `test_onboarding_flow::test_existing_user_login_round_trip`); the probe scenario (mentor, `?next=https://evil.example/`) now returns `account_home`. Then a PR with CI green and Ali's OK to release.
 
 ### Checkpoint 2: the new flow (after PR 1661 is merged)
 
@@ -291,10 +294,10 @@ def next_url(request) -> str                    # the router; always a reverse()
 - Pitfall: these must never be in `PUBLIC_CACHE_VIEW_NAMES`, and the public class page itself must not write the session.
 - Proof: test file passes. Cases: anonymous `GET /classes/<pk>/enroll/` → 302 to `/account/signup/` with a `sessionid` cookie and the intent stored; anonymous `GET /classes/<pk>/` sets no cookie; complete guardian with students `GET /classes/<pk>/enroll/` → the class page; `GET /classes/<pk>/enroll/new-student/` → `/welcome/`; mentor on `/classes/<pk>/enroll/` → class page, intent cleared (mismatch); password session not unlocked → `session-password`; anonymous on a non-public meeting's attend link → 404; `X-Robots-Tag` present.
 
-**2B. Onboarding steps.** Files: `coderdojochi/views/welcome.py`, `coderdojochi/onboarding/forms.py`, `coderdojochi/onboarding/intent.py` (router step 4 and `current_step` refinement only), `coderdojochi/templates/onboarding/{role,guardian,mentor}.html`, `coderdojochi/templates/welcome.html`, `coderdojochi/tests/test_onboarding_flow.py`, `coderdojochi/tests/test_frontend_stack.py` (only the two welcome tests, about 32 lines above their `main` position after PR 1661, and `PYTHON_GLOBS`: add `coderdojochi/onboarding/*.py` and `accounts/templatetags/*.py`; never add to `LEGACY_TEMPLATES`, which only shrinks), `coderdojochi/tests/test_signup_and_welcome.py` (`WelcomeNextStepsTest` must GET `reverse("welcome-done")`: after CP2 a complete guardian on `/welcome/` is redirected to `account_home`, so the test would read an empty body).
+**2B. Onboarding steps.** Files: `coderdojochi/views/welcome.py`, `coderdojochi/onboarding/forms.py`, `coderdojochi/onboarding/intent.py` (CP2 router changes: step 2 becomes the pending-role rule, step 3 gains `guardian-about`, step 4 (mentor) is added, step 6's no-intent guardian destination becomes `welcome-done`, `set_pending_role` rewrites the intent), `coderdojochi/tests/test_onboarding_intent.py` and `coderdojochi/tests/test_welcome_redirects.py` (retire or replace the CP1-only tests, see "CP1 tests at CP2" under Proof), `coderdojochi/templates/onboarding/{role,guardian,mentor}.html`, `coderdojochi/templates/welcome.html`, `coderdojochi/tests/test_onboarding_flow.py`, `coderdojochi/tests/test_frontend_stack.py` (only the two welcome tests, about 32 lines above their `main` position after PR 1661, and `PYTHON_GLOBS`: add `coderdojochi/onboarding/*.py` and `accounts/templatetags/*.py`; never add to `LEGACY_TEMPLATES`, which only shrinks), `coderdojochi/tests/test_signup_and_welcome.py` (`WelcomeNextStepsTest` must GET `reverse("welcome-done")`: after CP2 a complete guardian on `/welcome/` is redirected to `account_home`, so the test would read an empty body).
 - `WelcomeView` becomes a step dispatcher: `intent.current_step(request)` picks the template; `None` → `redirect(intent.next_url(request))` (never to itself). Add router step 4 (mentor) to `intent.py`. `WelcomeDoneView` (same file) renders the reduced `welcome.html` (PR 1655 buttons) and is never a router step. Role step: POST `role` calls `intent.set_pending_role` (session), not the user. Parent page: `GuardianForm(prefix="guardian")` + `StudentForm(prefix="student")`; both valid → in one `transaction.atomic()`: lock the user row (`select_for_update`); if `user.role` is already set, skip creation (double submit); `Guardian.objects.get_or_create(user=user)` (`Guardian.user` and `Mentor.user` are `ForeignKey`s, `guardian.py:9`, `mentor.py:28`, so a second row would make every `get_object_or_404(Guardian, user=…)` raise `MultipleObjectsReturned`); save the form onto it and call `save_m2m()` for `race_ethnicity`; `user.role = "guardian"`; save the student with that guardian; `set_last_student`. Send `welcome_guardian` (copy `welcome.py:206-220`) in `transaction.on_commit`, then redirect to `next_url`. "About you" only variant (`guardian-about`) when the guardian already has students; student-only variant when they have phone and zip. Volunteer step: same pattern: `atomic` + `select_for_update` + `Mentor.objects.get_or_create(user=user)`, `MentorStartForm(instance=mentor)`, `role = "mentor"`, `welcome_mentor` (copy `welcome.py:176-198`) in `on_commit`, redirect to `next_url`. The switch link is a POST of the other `role` to the same view (`set_pending_role`). Tests wrap submits in `self.captureOnCommitCallbacks(execute=True)` before asserting `mail.outbox`.
 - `MentorStartForm(ModelForm)`: `Mentor`, fields `birthday`, `phone`, `zip`, all required. Copy the widgets from `MentorForm` (`forms.py:172-204`) and `ZIP_CODE`; zip `required=True` here (Ali's decision), still optional on the account page.
-- Pitfalls: `Mentor.save()` sends a Slack notification on create (`mentor.py:144-146`); the tests already patch or tolerate it (see `test_slack_notifications.py`). `Guardian` creation must not happen on the role click (no orphans if the user switches). Existing role-set users without phone/zip (mentors with no birthday) will get the step at their next login; that's intended.
+- Pitfalls: `Mentor.save()` sends a Slack notification on create (`mentor.py:144-146`); the tests already patch or tolerate it (see `test_slack_notifications.py`). `Guardian` creation must not happen on the role click (no orphans if the user switches). Existing role-set users without phone/zip (mentors with no birthday) will get the step at their next login; that's intended, but **send `welcome_guardian`/`welcome_mentor` only when `user.role` was `None` before the submit** (today only `create_new_user` sends them, `welcome.py:148-225`). `WelcomeDoneView` is `login_required` and sends anyone who isn't a guardian to `account_home`.
 - Templates: CP4 vocabulary, `{% include "account/_form.html" %}` for fields, one `<h1>`, the intent line ("Enrolling in *Course title*, *date*") at the top, the switch link under the submit. Mobile first: one column.
 - Proof: test file passes; `test_frontend_stack` passes. Cases in "Proof" AC 2, 3, 4, 5, 6.
 
@@ -306,7 +309,7 @@ def next_url(request) -> str                    # the router; always a reverse()
 - Guardian home 54 → `{% url 'add-student-start' %}`. Signup 13: `action="{% url 'account_signup' %}"` only; keep allauth's hidden `next` input. Signup and login: intent line from the tag.
 - Proof: test file passes: signup HTML has no `enroll` and no unencoded `next` in `action`; with a class intent the course title shows.
 
-**Checkpoint 2 check (lead):** full suite, ruff, pre-commit, every mutation in Proof, then the manual walk-through. PR with CI green; Ali's OK to release.
+**Checkpoint 2 check (lead):** full suite, ruff, pre-commit, every mutation in Proof except rows retired in "CP1 tests at CP2", then the manual walk-through. PR with CI green; Ali's OK to release.
 
 ## Checkpoints
 
@@ -348,10 +351,16 @@ For each test: write it, make the one-line change, confirm the named test fails,
 | 5 | `test_onboarding_flow::test_switch_role_has_no_orphan` (no intent: POST `role=guardian`, then switch to volunteer, submit the volunteer step → no `Guardian` row) | Create the `Guardian` on the role POST instead of on the parent-form POST |
 | 5 | `test_onboarding_flow::test_guardian_with_students_gets_about_only` (existing guardian with a student and no zip, enroll intent → page has no student fields) | In `current_step`, drop the `guardian-about` branch |
 | 2 | `test_session_onboarding::test_sign_up_refused_before_window` (CP1) | Delete the parent-window check in `check_access` |
-| 2 | `test_onboarding_flow::test_double_submit_one_guardian` (POST the parent page twice → one `Guardian`, one student, one welcome email) | Replace `get_or_create` with `create` |
+| 2 | `test_onboarding_flow::test_double_submit_one_guardian` (POST the parent page twice → one `Guardian`, one student, one welcome email) | Delete the "`user.role` already set → skip creation" guard |
+| 2 | `test_onboarding_flow::test_stray_guardian_row_reused` (role-less user who already has a `Guardian` row, as today's `welcome.py:151-161` can leave, submits the parent page → still exactly one row) | Replace `get_or_create` with `create` |
+| 5 | `test_onboarding_flow::test_switch_on_volunteer_intent_reaches_parent_page` (volunteer intent for a class, switch to Parent, submit → `session-sign-up` for the new student, no mismatch flash) | In `set_pending_role`, don't rewrite `intent["role"]` |
+| 6 | `test_onboarding_flow::test_existing_mentor_step_sends_no_welcome` (saved mentor missing a zip submits the volunteer step → `mail.outbox` has no `Welcome!`) | Drop the "role was `None` before" condition on the welcome email |
+| 6 | `test_onboarding_flow::test_welcome_done_guardians_only` (anonymous → login; mentor → `account_home`) | Remove `login_required` from `WelcomeDoneView` |
+| 7 | `test_onboarding_flow::test_existing_user_login_round_trip` (CP2: anonymous → `session-enroll-start` → signup page → login page → log in as a complete guardian → class page) | In `StartView`, redirect anonymous users to `account_login` with no intent set |
+| 3 | `test_meeting_sign_up::test_inactive_meeting_404` (CP1) | Drop `is_active=True` from the `meeting_sign_up` queryset |
 | 6 | `test_onboarding_intent::test_intent_cleared_after_destination` | Delete the `clear_intent(request)` call in `next_url`'s destination branch |
 | 6 | `test_onboarding_flow::test_add_student_does_not_loop` (guardian home → add-student-start → submit → `welcome-done`, then `/welcome/` again → `account_home`) | In step 5, drop the "and no `last_student` set yet" condition |
-| 6 | `accounts/test_onboarding_redirects::test_valid_next_clears_intent` (password login with `next=/account/`, then the signal-direct case) | Delete the `clear_intent` call in the `user_logged_in` receiver |
+| 6 | `accounts/test_onboarding_redirects::test_valid_next_clears_intent` (password login with `next=/account/`, then the direct `post_login(redirect_url=…)` case) | In `post_login`, drop `kwargs.get("redirect_url") or` from the condition (the Google-shaped case then keeps the intent) |
 | 5 | `test_onboarding_intent::test_role_mismatch_goes_to_object_page` (asserts the page **and** the `MISMATCH_MESSAGE` flash: without step 1 the destination is the same page, so only the message tells them apart) | Delete router step 1 |
 | 5 | `test_session_onboarding::test_browsed_class_keeps_role_screen` (role-less user on a class page → `/welcome/`, and `get_intent(...)["role"] is None`; the CP1 welcome view always shows the role screen, so the HTML can't tell) | In `SessionDetailView.get`'s role-less branch, pass `role="guardian"` |
 | 1 | `test_welcome_redirects::test_named_new_mentor_no_loop` (CP1: named mentor with no zip → `account_home`, not `/welcome/`) | Add a mentor step (`if not mentor.zip: return reverse("welcome")`) to the CP1 router |
@@ -362,6 +371,18 @@ For each test: write it, make the one-line change, confirm the named test fails,
 | 9 | `test_session_onboarding::test_cannot_enroll_other_guardians_student` | Remove `guardian=kwargs["guardian"]` from the `Student` lookup |
 | 10 | `test_onboarding_start::test_public_class_page_sets_no_cookie` (only this test catches it: `session-detail` isn't in `PUBLIC_CACHE_VIEW_NAMES`, so `test_cache_headers` stays green) | Call `set_intent(...)` in `public.SessionDetailView.get_context_data` |
 | 11 | `accounts/test_onboarding_redirects::test_legacy_meeting_next_still_works` (`/account/?next=/old/meetings/<pk>/` as role-less → volunteer → meeting) | In `intent_from_legacy_next`, remove `"meeting-detail"` from the accepted names |
+
+### CP1 tests at CP2
+
+2B owns these. Each one is retired (deleted with its Proof row marked "retired at CP2" in Progress) or replaced as listed; the CP2 check fails if any of them is still red.
+
+| CP1 test | At CP2 |
+| --- | --- |
+| `test_onboarding_intent::test_cp1_roleless_mentor_intent_shows_welcome` | Replaced by `test_onboarding_flow::test_meeting_round_trip` (the volunteer step now shows); retire |
+| `test_welcome_redirects::test_named_new_mentor_no_loop` | Replaced: a named mentor with no zip now gets the volunteer step once, then `account_home` (`test_onboarding_flow::test_existing_mentor_step_sends_no_welcome` covers it); retire |
+| `test_welcome_redirects` "nameless mentor gets the 200 `MentorForm`" case | Retire (the volunteer step replaces `MentorForm` on `/welcome/`) |
+| `test_welcome_redirects::test_legacy_class_enroll_lands_on_sign_up` | Keep the URL, change the posts to the one prefixed parent form (`guardian-…` + `student-…` fields) |
+| `test_welcome_redirects::test_mentor_off_site_next_goes_home` | Keep the test; its mutation becomes "in `WelcomeView.get`, return `redirect(request.GET[\"next\"])` when present" |
 
 ### Whole-build commands (every checkpoint)
 
@@ -448,13 +469,30 @@ Fresh sub-agent review, 2026-11-26. Every finding is folded into the sections ab
 | 10 | should-fix | 1C | The role-less class-page branch overwrote a stronger same-class intent | `set_intent` keeps the role for the same `(kind, pk)` |
 | 11 | should-fix | CP2 order | 2A imports 2B's view; 2C/2D/2B need 2A's names; 2A's scope missed the welcome URL block; 1D's legacy test needs 1B | 2A first with a stub; scope widened; 1D Proof after 1B |
 | 12 | should-fix | CP1 check | Listed only some ACs' mutations | Every row whose test file is created in CP1 |
-| 13 | should-fix | Adapter | Google login with a `next` bypasses `form_valid`, so the intent survived; intents never expired | `user_logged_in` receiver; 24 h expiry |
+| 13 | should-fix | Adapter | Google login with a `next` bypasses `form_valid`, so the intent survived; intents never expired | `user_logged_in` receiver (superseded by third review #3: `post_login`); 24 h expiry |
 | 14 | nit | Proof AC 5 | The CP1 role screen always shows, so the HTML can't prove the role | Assert `role is None` |
 | 15 | nit | Proof | allauth's confirmation email lands in `mail.outbox` | Count by subject |
 | 16 | nit | New flow | Wrong allauth reference for the logged-in redirect | `allauth/account/mixins.py:89` |
 | 17 | nit | Manual | Shell env doesn't reach the container | Set the email vars in `.env` |
 | 18 | nit | 2C, router | "Log in or sign up" shown to logged-in users; kind `none` mismatch undefined | Copy by auth state; `none` mismatch → `account_home` |
 | 19 | nit | 1C | Unknown roles only handled in `SessionDetailView`; `RoleTemplateMixin` 500s | `intent.user_role` used in both mixins |
+
+**Third review** (fresh sub-agent, 2026-11-26). Every finding is folded into the sections above.
+
+| # | Severity | Section | Finding | Fix in plan |
+| --- | --- | --- | --- | --- |
+| 1 | blocker | CP2 tasks, Proof | CP2's router changes (steps 2, 3, 6) and the CP1 tests they turn red had no owner | 2B owns `intent.py`'s CP2 changes and both CP1 test files; new "CP1 tests at CP2" table |
+| 2 | should-fix | Proof | The double-submit mutation couldn't fail (the role guard returns first) | Mutation moved to the guard; new stray-row test carries the `get_or_create` mutation |
+| 3 | should-fix | 1D | Google's `next` lives in `sociallogin.state`, not the callback request, so the signal missed it | `AccountAdapter.post_login` with `redirect_url`; signal dropped |
+| 4 | should-fix | Router | Mismatch vs the switch link was undefined | Mismatch uses the saved role; `set_pending_role` rewrites the intent; switch test |
+| 5 | should-fix | 2B | Existing users routed through a step got "Welcome!" again | Email only when the role was `None`; test |
+| 6 | should-fix | Test helpers | `SessionFactory` makes inactive sessions; class pages don't filter on `is_active` | `SessionFactory(is_active=True)`; stricter start check stated on purpose |
+| 7 | should-fix | 2A/2B | `WelcomeDoneView` had no access rule | `login_required`, guardians only; test |
+| 8 | nit | AC 10 | "Only the start endpoints write the session" overstated | Scoped to logged-out visitors on public pages |
+| 9 | nit | New flow | Two lists of who sets a role | New flow defers to the Tasks list |
+| 10 | nit | Read first | `urls.py` and `accounts/tests.py` line refs | Fixed |
+| 11 | nit | CP1 check | AC 7 isn't end-to-end in CP1 | Stated; CP2 round-trip test added |
+| 12 | nit | 1E | `meeting_sign_up` ignored `is_active`/`is_public` | Added, with a test |
 
 ## Progress
 
