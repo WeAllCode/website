@@ -1,6 +1,6 @@
 # Terraform: weallcode.org on a GCP e2-micro
 
-One IPv6-only e2-micro VM (`wac-web`, Debian 12, us-central1-a), its buckets, secrets, service accounts, firewall, budget, and the Cloudflare DNS/TLS in front of it. The VM scripts live in `../vm/` (shipped to the VM as `bootstrap.tgz`, below).
+One e2-micro VM (`wac-web`, Debian 12, us-central1-a; dual-stack nic0 with an internal IPv4 but public over IPv6 only), its buckets, secrets, service accounts, firewall, budget, and the Cloudflare DNS/TLS in front of it. The VM scripts live in `../vm/` (shipped to the VM as `bootstrap.tgz`, below).
 
 Everything here is managed by Terraform except the state bucket, the billing account, the gmail project owner (imported later), secret versions, the staging SA key, and the Google Workspace MX/SPF records.
 
@@ -23,7 +23,7 @@ Stop if either `gcloud config get` prints the Braven account or `braven-data-inf
 1. Checkpoint 0b creates the project, links billing, and creates the state bucket by hand: `gcloud storage buckets create gs://wac-tfstate-<project_id> --location=us-central1 --uniform-bucket-level-access --public-access-prevention` then `gcloud storage buckets update gs://wac-tfstate-<project_id> --versioning`.
 2. `cp terraform.tfvars.example terraform.tfvars` and fill it in (it is gitignored). `resend_dns_records` comes from the Resend API response in 0b. Set `allow_all_member_domains = true` only if 0b found `iam.allowedPolicyMemberDomains` enforced.
 3. `terraform init -backend-config="bucket=wac-tfstate-<project_id>"`
-4. `terraform plan` and review: e2-micro, 30 GB `pd-standard`, us-central1, `stack_type = IPV6_ONLY`, no `access_config`. Ali approves, then `terraform apply`.
+4. `terraform plan` and review: e2-micro, 30 GB `pd-standard`, us-central1, `stack_type = IPV4_IPV6`, no `access_config`. Ali approves, then `terraform apply`.
 5. Right after the first apply, check `https://www.weallcode.org` (still Heroku) loads under `ssl = strict`.
 6. Add secret versions (Terraform never creates versions, so no values land in state). Pipe them in, never write them to a file in the repo: `... | gcloud secrets versions add wac-env-prod --data-file=-` and the same for `wac-env-staging`. Keep at most 2 versions per secret (free tier: 6 active versions); destroy the older one after adding a new one.
 7. Staging SA key (R10). Ali or the lead creates it with gcloud and pipes it straight into the secret (the key never lands in Terraform state or on disk):
@@ -77,13 +77,31 @@ Buckets are all in `US-CENTRAL1`. Deploy: versioned, noncurrent versions beyond 
 ## Switches
 
 - `cutover` (default `false`): `false` points only `gcp.<domain>` and `staging.<domain>` at the VM. `true` adds the proxied apex AAAA and `www` CNAME (and an apex A when `enable_ipv4`). Delete the Heroku-era apex and `www` records by hand first, or the create fails on the duplicate name. Rollback: `cutover = false`, apply, recreate the Heroku records from `cloudflare-records-before.json`.
-- `enable_ipv4` (default `false`): fallback when IPv6-only fails. Adds an external IPv4 (~$3.65/month) and a Cloudflare IPv4 firewall rule. The stack type is immutable, so this **replaces the VM** and wipes Postgres on its boot disk. `prevent_destroy` makes that plan fail on purpose. To go ahead: run `backup-db.sh`, verify the dump restores into a scratch DB, ask Ali, then temporarily remove the `lifecycle { prevent_destroy = true }` block, apply, restore the DB, and put the guard back.
-- `serial_console` (default `false`): turns on the interactive serial console (`gcloud compute connect-to-serial-port wac-web`), the only admin path (no SSH, no IAP: IAP needs an internal IPv4). With `serial_console_password_hash` set (`openssl passwd -6`), the hash is passed as `wac-serial-password-hash` for a temporary local login. Turn both off after use; it's a Terraform change, not drift.
+- `enable_ipv4` (default `false`): fallback when IPv6-only ingress fails. Adds an external IPv4 (~$3.65/month) and a Cloudflare IPv4 firewall rule. nic0 is always dual-stack (internal IPv4); this only adds the `access_config`, but changing it still **recreates the instance**. `prevent_destroy` makes that plan fail on purpose; use the instance swap below.
+- `iap_ssh` (default `true`): firewall rule `wac-ssh-iap` allowing TCP 22 from IAP's TCP-forwarding range `35.235.240.0/20` only (SSH via `gcloud compute ssh --tunnel-through-iap`, see `../vm/README.md`).
+- `serial_console` (default `false`): turns on the interactive serial console (`gcloud compute connect-to-serial-port wac-web`), the fallback admin path when IAP SSH is down. With `serial_console_password_hash` set (`openssl passwd -6`), the hash is passed as `wac-serial-password-hash` for a temporary local login. Turn both off after use; it's a Terraform change, not drift.
 - `allow_all_member_domains` (default `false`): project-level `allow_all` override of `iam.allowedPolicyMemberDomains` (R3). Needs Org Policy Admin.
+
+## Instance swap (keep the boot disk)
+
+Postgres lives on the boot disk `google_compute_disk.web` (`prevent_destroy`, `auto_delete = false`). Any change that recreates the instance (stack type, `enable_ipv4`, …) is done by hand so Terraform never deletes the VM itself. First run `backup-db.sh`, verify the dump restores into a scratch DB, and ask Ali. Then:
+
+```sh
+# only if the disk isn't in state yet
+terraform import google_compute_disk.web projects/<project_id>/zones/us-central1-a/disks/wac-web
+gcloud compute instances stop wac-web --zone us-central1-a
+gcloud compute snapshots create wac-web-pre-swap-$(date +%Y%m%d) --source-disk wac-web --source-disk-zone us-central1-a
+gcloud compute instances delete wac-web --zone us-central1-a --keep-disks=boot
+terraform state rm google_compute_instance.web
+terraform plan    # must create the instance and show no change to google_compute_disk.web
+terraform apply
+```
+
+Delete the snapshot once the site and DB check out.
 
 ## Firewall and TLS
 
-Ingress is TCP 443 from Cloudflare's IPv6 ranges only (plus its IPv4 ranges when `enable_ipv4`). Nothing on 80, no SSH. The zone SSL mode is `strict`; Caddy serves a Cloudflare Origin CA certificate (ECC, 15 years) for the apex, `www.`, `gcp.` and `staging.`. Its private key is in state (private, versioned bucket) and in instance metadata: accepted risk, see `../vm/README.md`.
+Ingress is TCP 443 from Cloudflare's IPv6 ranges only (plus its IPv4 ranges when `enable_ipv4`), and TCP 22 from IAP's `35.235.240.0/20` only (when `iap_ssh`). Nothing on 80. The zone SSL mode is `strict`; Caddy serves a Cloudflare Origin CA certificate (ECC, 15 years) for the apex, `www.`, `gcp.` and `staging.`. Its private key is in state (private, versioned bucket) and in instance metadata: accepted risk, see `../vm/README.md`.
 
 ## Edge cache
 

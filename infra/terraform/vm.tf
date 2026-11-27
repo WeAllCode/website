@@ -38,6 +38,22 @@ locals {
   )
 }
 
+# Imported from the live boot disk (`terraform import google_compute_disk.web
+# projects/<project_id>/zones/us-central1-a/disks/wac-web`). Postgres lives on it:
+# it must never be replaced. The instance can be recreated around it (README).
+resource "google_compute_disk" "web" {
+  name  = "wac-web"
+  zone  = local.zone
+  type  = "pd-standard"
+  size  = 30
+  image = "debian-cloud/debian-12"
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [image, snapshot]
+  }
+}
+
 resource "google_compute_instance" "web" {
   name                      = "wac-web"
   machine_type              = "e2-micro"
@@ -45,18 +61,17 @@ resource "google_compute_instance" "web" {
   allow_stopping_for_update = true
   tags                      = ["wac-web"]
 
+  # The disk outlives the instance, so a recreate keeps Postgres.
   boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-12"
-      size  = 30
-      type  = "pd-standard"
-    }
+    source      = google_compute_disk.web.self_link
+    auto_delete = false
   }
 
   network_interface {
     subnetwork = google_compute_subnetwork.wac.id
-    # IPV6_ONLY is not checked by `terraform validate`; a typo only shows at plan/apply.
-    stack_type = var.enable_ipv4 ? "IPV4_IPV6" : "IPV6_ONLY"
+    # Always dual-stack: nic0's internal IPv4 is what IAP TCP forwarding (SSH)
+    # needs. There is still no external IPv4 unless var.enable_ipv4.
+    stack_type = "IPV4_IPV6"
 
     ipv6_access_config {
       network_tier = "PREMIUM"
@@ -81,9 +96,10 @@ resource "google_compute_instance" "web" {
 
   metadata = local.vm_metadata
 
-  # R9: Postgres lives on the boot disk, so a replace wipes the database.
-  # Before any plan that replaces this VM: run backup-db.sh, verify the dump
-  # restores into a scratch DB, then ask Ali before removing this guard.
+  # R9: Postgres lives on the boot disk (google_compute_disk.web, auto_delete =
+  # false), so a replace no longer wipes it, but don't let Terraform do it: use
+  # the README's stop/snapshot/delete --keep-disks=boot/state rm swap, after
+  # backup-db.sh and asking Ali.
   #
   # deploy-nonce-<target> is written by infra/vm/release.sh (gcloud add-metadata) on every
   # release to trigger wac-deploy-watch; it is not Terraform's, so it must not show as drift.

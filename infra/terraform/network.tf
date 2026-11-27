@@ -18,8 +18,9 @@ resource "google_compute_subnetwork" "wac" {
 
 data "cloudflare_ip_ranges" "cf" {}
 
-# HTTPS from Cloudflare only. No SSH and nothing on port 80; admin access is
-# the serial console (var.serial_console).
+# HTTPS from Cloudflare only, nothing on port 80. SSH only from IAP's
+# TCP-forwarding range (ssh_iap, var.iap_ssh); the serial console
+# (var.serial_console) is the fallback.
 resource "google_compute_firewall" "https_cloudflare_ipv6" {
   name          = "wac-https-cloudflare-ipv6"
   network       = google_compute_network.wac.id
@@ -45,5 +46,21 @@ resource "google_compute_firewall" "https_cloudflare_ipv4" {
   allow {
     protocol = "tcp"
     ports    = ["443"]
+  }
+}
+
+# IAP TCP forwarding reaches nic0's internal IPv4 from this range.
+resource "google_compute_firewall" "ssh_iap" {
+  count = var.iap_ssh ? 1 : 0
+
+  name          = "wac-ssh-iap"
+  network       = google_compute_network.wac.id
+  direction     = "INGRESS"
+  source_ranges = ["35.235.240.0/20"]
+  target_tags   = ["wac-web"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
   }
 }

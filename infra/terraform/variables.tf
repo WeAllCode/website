@@ -25,9 +25,15 @@ variable "media_bucket_name" {
 }
 
 variable "enable_ipv4" {
-  description = "Fallback: give the VM an external IPv4 (~$3.65/month). Changing it replaces the VM (stack type is immutable); see README."
+  description = "nic0 is always dual-stack with an internal IPv4; this only adds an external IPv4 (access_config, ~$3.65/month). Changing it still recreates the instance; see README."
   type        = bool
   default     = false
+}
+
+variable "iap_ssh" {
+  description = "Allow SSH from IAP's TCP-forwarding range (35.235.240.0/20)"
+  type        = bool
+  default     = true
 }
 
 variable "serial_console" {
