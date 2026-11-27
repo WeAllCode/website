@@ -160,3 +160,24 @@ Fresh sub-agent, 2026-11-26. Findings and how the plan handles them:
 
 ## Progress
 
+Run 2026-11-26 (CST) by the lead session, with Ali's OK at each gated step.
+
+- T0: `testIamPermissions` (REST; this gcloud has no `projects test-iam-permissions`) returned all three permissions. Boot disk `wac-web`: `pd-standard`, 30 GB, `debian-12-bookworm-v20261117`, `autoDelete=true`, tag `wac-web`.
+- T1: a sub-agent wrote it, and the lead reviewed the diff. `fmt -check` and `validate` pass. It merged as WeAllCode/website#1662 (`76c83666`), with CI green.
+- Gate (step 2): `terraform.tfvars` was derived from state serial 24 and kept in the scratchpad, never committed. The Cloudflare token is `op://homelab/Cloudflare weallcode Terraform/credential`.
+  - The first full plan on pre-T1 `main` (`7e29406d`) wasn't "No changes". It showed 2 in-place updates from `infra/vm` changes on `main` that had never been applied (#1642, #1643, #1657): the `startup-script` metadata and `bootstrap.tgz`. There were no DNS, IAM or other diffs, so the tfvars were correct.
+  - Ali chose to apply them separately first: an in-place metadata update with no reboot. After that, the plan showed "No changes".
+- 3.1: the newest dump is `db/wac-20261126T093005.dump`, with 3639 `coderdojochi_cdcuser` rows.
+- 3.2: the disk was imported, and `plan -target=google_compute_disk.web` showed "No changes".
+- 3.3–3.4: the VM was stopped at 21:59 CST, when prod went down. Snapshot `wac-web-pre-iap-20261126` is READY (1.84 GB stored).
+- 3.5: `instances delete --keep-disks=boot` ran, and disk `wac-web` stayed READY with no users. `state rm google_compute_instance.web` ran.
+- 3.6: the plan was 3 to add (instance, `wac-ssh-iap`, `iap.googleapis.com`) and 5 to change (3 AAAA records, `bootstrap`, and the budget). The budget change came only from `data.google_project.this` being deferred, and the project number was the same. There was no change to the disk. It was applied at 22:08 CST, with 3 added and 4 changed. The new IPv6 is `2600:1900:4000:9c5b:0:1::`.
+- 3.7: `wac-provision: done 2026-11-27T04:09:24Z`, with uv 0.13.9. Downtime was about 10 min (21:59–22:09 CST).
+- 3.8: `terraform plan -detailed-exitcode` exited 0 ("No changes").
+- Proof 1: IAP SSH ran `sudo -n true && hostname` and printed `wac-web`. Break test: the plan with `-var iap_ssh=false` destroys only `google_compute_firewall.ssh_iap[0]`. The live timeout check was not run.
+- Proof 2: www returns `HTTP/2 200`, and staging returns 401. `coderdojochi_cdcuser` has 3640 rows, at least the dump's 3639.
+- Proof 3: network `wac` has only `wac-https-cloudflare-ipv6` (tcp:443) and `wac-ssh-iap` (`35.235.240.0/20` tcp:22). The `default-*` rules are on the unused `default` network.
+- Proof 4: "No changes". `fmt -check` and `validate` pass.
+- Timers: `wac-deploy@prod`/`@staging` ran OK after boot (04:11 and 04:12 UTC). `wac-backup` and `wac-reminders` are scheduled.
+- Pending: 3.9, deleting the snapshot after a day of normal running, with Ali's OK.
+
