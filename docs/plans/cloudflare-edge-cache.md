@@ -192,4 +192,21 @@ Both reviewers confirmed that all the dropped gaps hold up, that no allowlisted 
 
   **AC2 passes** (staging by reasoning).
 - AC5: the full `plan` shows only the unrelated VM drift (`google_compute_instance.web` and `google_storage_bucket_object.bootstrap`, from VM changes on main); `cloudflare_ruleset.transform` has no changes. CI is still to run on the PR.
-- Next: merge PR 1660 and `release.sh --target prod` (Task B's canonical change), both with Ali's OK; then Checkpoint 3.
+- Merged PR 1660 with Ali's OK (squash `7e29406d`) and released it to prod with Ali's OK at 03:38:27Z. The deploy was live by 03:41:15Z: with `Cookie: sessionid=x` (which bypasses the strip), `/?probe=…` now shows canonical `https://www.weallcode.org/`. **AC3 passes on prod.** `/`, `/programs/`, `/join-us/` and `/account/login/` all return 200.
+
+### Checkpoint 3 (2026-11-27 UTC)
+
+- With Ali's OK, `per_ip_60_per_10s` was set to `enabled = false` as a local edit and applied (`-target=cloudflare_ruleset.ratelimit`) at 03:41:33Z.
+- Ran `oha -z 20s -c N -t 10s --no-tui --output-format json --rand-regex-url 'https://www.weallcode.org/[?]n=[0-9]{8}'`; `--dump-urls` showed valid URLs. Every request had a unique query string. "Aborted due to deadline" equals c, meaning requests still in flight at 20 s, not errors.
+
+  | Run | c | req/s | p50 | p95 | success |
+  |---|---|---|---|---|---|
+  | 2026-11-25 baseline (no cache) | 10 | 3.3 | 2,808 ms | 7,515 ms | 98.2% |
+  | 2026-11-25 cached, no query | 40 | 973.9 | 39 ms | 61 ms | 100% |
+  | now, unique `?n=` | 10 | 525.3 | 18 ms | 27 ms | 100% (10,499 × 200) |
+  | now, unique `?n=` | 40 | 1,973.0 | 18 ms | 30 ms | 100% (39,436 × 200) |
+
+  **AC4 passes.** Before the strip, each unique `?n=` would have been a MISS that reached the VM.
+- The rate limit was re-enabled with the exact reverse edit and applied at 03:42:30Z. A cache-busted `/` with `sessionid=x` then answered 200 in 0.17 s, so the origin was healthy.
+- AC5: the full `plan` shows only the pre-existing VM drift (`google_compute_instance.web` and `google_storage_bucket_object.bootstrap`, from VM changes already on main, not from this work); the Cloudflare rulesets show no changes. CI was green on PR 1660.
+- Done. Open item for Ali: apply the VM drift, or have the VM work's owner do it.
