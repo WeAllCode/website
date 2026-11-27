@@ -1,6 +1,6 @@
 # infra/vm — the wac-web VM
 
-Everything that runs on the single e2-micro VM (Debian 12, IPv6-only): Postgres 17, Caddy, gunicorn for prod and staging, a pull-based deploy and a nightly backup. Terraform (`infra/terraform/`) creates the VM and passes `provision.sh` as its startup script.
+Everything that runs on the single e2-micro VM (Debian 12, public over IPv6 only; internal IPv4 for IAP SSH): Postgres 17, Caddy, gunicorn for prod and staging, a pull-based deploy and a nightly backup. Terraform (`infra/terraform/`) creates the VM and passes `provision.sh` as its startup script.
 
 ## How files reach the VM
 
@@ -168,9 +168,21 @@ journalctl -u google-startup-scripts    # provision.sh output (also on the seria
 systemctl list-timers 'wac-*'
 ```
 
-## Admin access (serial console)
+## Admin access
 
-There is no SSH (no rule, no port 80, no IPv4). To get in:
+### IAP SSH (first choice)
+
+```sh
+CLOUDSDK_ACTIVE_CONFIG_NAME=wac gcloud compute ssh wac-web --zone us-central1-a --tunnel-through-iap
+```
+
+SSH is open only to IAP's TCP-forwarding range (`35.235.240.0/20`, Terraform `iap_ssh`), which reaches nic0's internal IPv4. OS Login is on, so your account needs IAP-tunnel and OS Login roles (project owners have them).
+
+The VM has an internal IPv4 but no IPv4 egress (no Cloud NAT, no external IPv4), so IPv4-only hosts (e.g. `github.com`'s A records) time out; use hosts with IPv6 (preferred). Google APIs work over Private Google Access.
+
+### Serial console (fallback)
+
+When IAP SSH is down:
 
 1. Set Terraform `serial_console = true` and set metadata `wac-serial-password-hash` to a crypt hash, for example `openssl passwd -6`.
 2. Reboot, or re-run the startup script.

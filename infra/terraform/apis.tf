@@ -8,10 +8,11 @@ locals {
     "cloudresourcemanager.googleapis.com",
     "cloudbilling.googleapis.com",
     "orgpolicy.googleapis.com",
+    "iap.googleapis.com",
   ])
 }
 
-# No IAP: IAP TCP forwarding needs an internal IPv4, which an IPv6-only VM lacks.
+# iap: SSH via IAP TCP forwarding to nic0's internal IPv4 (the VM is dual-stack).
 resource "google_project_service" "apis" {
   for_each = local.apis
 
