@@ -161,3 +161,35 @@ Both reviewers confirmed that all the dropped gaps hold up, that no allowlisted 
 - Mutations, each undone with the exact reverse edit: `get_full_path` fails `test_canonical_drops_query` (sub-agent); `/associate-board/` in transform.tf fails `test_rewrite_paths_match_allowlist` (lead). 2/2 killed.
 - `terraform plan` (`-lock=false`, read-only): `cloudflare_ruleset.transform` to add, plus unrelated drift (`google_compute_instance.web` and `google_storage_bucket_object.bootstrap` in place, from VM changes on main). The apply will use `-target=cloudflare_ruleset.transform`, so the VM isn't touched in this work.
 - Pre-check: `GET …/phases/http_request_transform/entrypoint` → "request is not authorized". The token "weallcode Terraform" has Cache Settings Write, Zone WAF Write, Zone Settings Write, Zone Read, SSL and Certificates Write, Cache Purge, DNS Write and Analytics Read, but **no Transform Rules permission**. Blocked on Ali adding "Transform Rules: Edit".
+
+### Checkpoint 2 (2026-11-27 UTC)
+
+- Ali added "Zone Transform Rules Write" to the token (token `modified_on` 2026-11-27T03:31:44Z). The pre-check now returns "could not find entrypoint ruleset", so there was nothing to import.
+- The first apply failed before doing anything: the gcloud login for ali@weallcode.org needed reauthentication (`rapt_required`). Ali logged in again.
+- Spike (Ali's OK): `transform.tf` narrowed as a local, uncommitted edit to `http.host eq "www.${var.domain}" and http.request.uri.path eq "/privacy/" and http.request.uri.query ne ""`. Ran `apply -target=cloudflare_ruleset.transform` → 1 added (ruleset `01c0859735f54e389aa6716790f3bcc4`) at 03:33:36Z. Then `/privacy/?a=r` → EXPIRED, `?b=r` → HIT with `age: 2`, `?c=r` → HIT with `age: 4`. Control: `/?x=r` and `/?y=r` were both MISS, because `/` wasn't in the spike. A targeted `plan` showed "No changes", so `value = ""` causes no perpetual diff. **Spike passed.**
+- Restored the full expression with the exact reverse edit (`git diff` on `transform.tf` empty). Applied with Ali's OK at 03:36:19Z → 1 changed. A targeted `plan` showed "No changes".
+- AC1 (`?utm_source=a…`, then `?mc_eid=b…`, then `?fbclid=c…`; each row is one path on one host):
+
+  | URL | 1st | 2nd | 3rd |
+  |---|---|---|---|
+  | `www /` | EXPIRED | HIT | HIT |
+  | apex `/` | EXPIRED | HIT | EXPIRED (60 s TTL rollover) |
+  | `www /programs/summer-camps/` | EXPIRED | HIT | HIT |
+  | apex `/programs/summer-camps/` | MISS | HIT | HIT |
+  | `www /mentors/2/` | MISS | HIT | HIT |
+  | apex `/mentors/2/` | MISS | HIT | HIT |
+
+  **AC1 passes.** Before this change, every new query string was a MISS.
+- AC2. Prod still runs the old canonical (`get_full_path`), so the canonical shows the query string the origin received:
+  - anonymous `/?probe=1` → canonical `/` (stripped)
+  - `sessionid=x` `/?probe=2` → `/?probe=2` (intact)
+  - `messages=x` `/?probe=3` → `/?probe=3` (intact)
+  - `/join-us/?probe=4` → intact, `BYPASS`
+  - `/account/login/?next=/account/` → canonical keeps `?next=/account/`, and the page links carry `next=%2Faccount%2F`
+  - `/mentors/2/approve-avatar/?probe=7` → 302 to login, with `next` keeping `?probe=7`
+  - `gcp.weallcode.org/?probe=6` → intact
+  - Staging: not checked live. Two 1Password items are named "WAC staging basic auth" and the lookup was denied. Staging is excluded by the same host clause that gcp proves.
+
+  **AC2 passes** (staging by reasoning).
+- AC5: the full `plan` shows only the unrelated VM drift (`google_compute_instance.web` and `google_storage_bucket_object.bootstrap`, from VM changes on main); `cloudflare_ruleset.transform` has no changes. CI is still to run on the PR.
+- Next: merge PR 1660 and `release.sh --target prod` (Task B's canonical change), both with Ali's OK; then Checkpoint 3.
