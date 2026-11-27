@@ -1,13 +1,18 @@
+import re
 from email.utils import getaddresses
+from pathlib import Path
 from unittest import mock
 
+from django.conf import settings
 from django.core import mail
 from django.template import Context
 from django.template import Template
 from django.test import RequestFactory
 from django.test import TestCase
 from django.test import override_settings
+from django.urls import reverse
 
+from coderdojochi.middleware import PUBLIC_CACHE_VIEW_NAMES
 from weallcode.forms import ContactForm
 
 CONTACT_EMAIL = "staff@example.com"
@@ -95,3 +100,32 @@ class NavCurrentTest(TestCase):
 
     def test_other_section_is_not_current(self):
         assert self.render("/team/") == "<a>"
+
+
+def rewrite_paths(hcl):
+    """The `http.request.uri.path in {...}` set of a Transform Rule expression."""
+    match = re.search(r"http\.request\.uri\.path in \{([^}]*)\}", hcl)
+    assert match, "no http.request.uri.path in {...} clause"
+    values = re.findall(r'"([^"]*)"', match.group(1).replace('\\"', '"'))
+    return {v for v in values if v.startswith("/")}
+
+
+@override_settings(SECURE_SSL_REDIRECT=False)
+class EdgeQueryStripTest(TestCase):
+    """The edge strips query strings on cached pages (infra/terraform/transform.tf)."""
+
+    def test_canonical_drops_query(self):
+        response = self.client.get("/?utm_source=x")
+        assert response.status_code == 200
+        canonical = re.search(
+            r'<link rel="canonical" href="([^"]*)" />', response.content.decode()
+        )
+        assert canonical, "no canonical link"
+        assert canonical.group(1).endswith("://" + settings.META_SITE_DOMAIN + "/")
+        self.assertNotContains(response, "utm_source")
+
+    def test_rewrite_paths_match_allowlist(self):
+        hcl = (Path(settings.BASE_DIR) / "infra/terraform/transform.tf").read_text()
+        expected = {reverse(n) for n in PUBLIC_CACHE_VIEW_NAMES - {"mentor-detail"}}
+        assert rewrite_paths(hcl) == expected
+        assert reverse("mentor-detail", kwargs={"pk": 1}).startswith("/mentors/")

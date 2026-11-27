@@ -91,6 +91,8 @@ Ingress is TCP 443 from Cloudflare's IPv6 ranges only (plus its IPv4 ranges when
 
 Kill switch: set `PUBLIC_CACHE_SECONDS=0` in the `wac-env-prod` secret and release (every response becomes `private`), or delete `cache.tf` and apply.
 
+Query strings: the cache key includes the query string, and Free can't ignore it in a cache rule, so every unique `?utm_…`, `?fbclid=…`, `?gclid=…` or Mailchimp `?mc_eid=…` link (or a random `?x=…`) would be a cache miss. `transform.tf` adds one URL-rewrite Transform Rule (`cloudflare_ruleset.transform`, rule `strip_query_public_html`) that removes the query string before the cache lookup, only for logged-out (no `sessionid` or `messages` cookie) GET and HEAD requests to the apex and `www.` on the allowlisted public paths: `/`, `/our-story/`, `/programs/`, `/programs/summer-camps/`, `/team/`, `/join-us/associate-board/`, `/privacy/`, `/credits/`, `/mentors/` and `/mentors/<pk>/` (not the `-avatar/` staff actions). None of those views read `request.GET`, and GA4 still sees the campaign parameters in the browser URL. The path list mirrors `PUBLIC_CACHE_VIEW_NAMES` in `coderdojochi/middleware.py`; change both together (`test_rewrite_paths_match_allowlist` in `weallcode/tests.py` checks it). Kill switch: set `enabled = false` on the rule and apply. Write campaign links with the trailing slash: without it, Django's `APPEND_SLASH` 301 runs at the origin on every click.
+
 Manual purge (the token needs the "Cache Purge" permission; Free allows 5 purge-everything calls per minute):
 
 ```sh
